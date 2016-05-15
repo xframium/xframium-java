@@ -5,17 +5,17 @@ import java.util.Iterator;
 import java.util.Map;
 import javax.xml.namespace.NamespaceContext;
 
-public class MorelandNamespaceContext implements NamespaceContext
+public class XFramiumNamespaceContext implements NamespaceContext
 {
 
     private Map<String,String> namespaceMap;
     
-    public MorelandNamespaceContext( Map<String,String> namespaceMap )
+    public XFramiumNamespaceContext( Map<String,String> namespaceMap )
     {
         this.namespaceMap = namespaceMap;
     }
     
-    public MorelandNamespaceContext()
+    public XFramiumNamespaceContext()
     {
         this.namespaceMap = new HashMap<String,String>( 10 );
     }

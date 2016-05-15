@@ -41,7 +41,6 @@ import com.xframium.device.ConnectedDevice;
 import com.xframium.device.DeviceManager;
 import com.xframium.device.artifact.Artifact;
 import com.xframium.device.artifact.ArtifactProducer;
-import com.xframium.device.factory.spi.PerfectoWebDriver;
 import com.xframium.device.interrupt.DeviceInterrupt;
 import com.xframium.device.interrupt.DeviceInterruptThread;
 import com.xframium.spi.Device;
@@ -532,9 +531,8 @@ public class DeviceWebDriver implements WebDriver, JavascriptExecutor, ContextAw
 
         if ( webDriver != null )
         {
-            if ( webDriver instanceof PerfectoWebDriver )
-                return null;
-            else if ( webDriver instanceof RemoteWebDriver )
+
+            if ( webDriver instanceof RemoteWebDriver )
             {
                 RemoteExecuteMethod executeMethod = new RemoteExecuteMethod( (RemoteWebDriver) webDriver );
                 Map<String, String> params = new HashMap<String, String>( 5 );
@@ -545,6 +543,8 @@ public class DeviceWebDriver implements WebDriver, JavascriptExecutor, ContextAw
             {
                 ((AppiumDriver) webDriver).context( newContext );
             }
+            else
+                return null;
 
             if ( newContext.equals( _getContext() ) )
                 currentContext = newContext;
