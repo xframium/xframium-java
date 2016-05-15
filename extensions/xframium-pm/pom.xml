@@ -6,9 +6,9 @@
 	<name>XFramium Extension - Perfecto</name>
 	<repositories>
 		<repository>
-			<id>morelandlabs</id>
-			<name>Moreland Labs LLC</name>
-			<url>http://www.morelandlabs.com/repository</url>
+			<id>xframium</id>
+			<name>xFramium</name>
+			<url>http://www.xframium.org/repository</url>
 			<snapshots>
 				<enabled>true</enabled>
 				<updatePolicy>always</updatePolicy>
@@ -22,11 +22,10 @@
 	</repositories>
 	<distributionManagement>
 		<repository>
-			<id>Moreland FTP</id>
-			<name>Moreland Labs Repository</name>
-			<url>ftp://ftp.morelandlabs.com</url>
+			<id>xFramium FTP</id>
+			<name>xFramium Repository</name>
+			<url>ftp://www.xframium.org</url>
 		</repository>
-		
 	</distributionManagement>
 	<build>
 		<extensions>
