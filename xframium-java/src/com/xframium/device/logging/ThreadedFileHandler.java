@@ -11,13 +11,11 @@ import com.xframium.device.DeviceManager;
 public class ThreadedFileHandler extends Handler
 {
     
-    private static final String PERFECTO_NAMESPACE = "com.perfectoMobile";
-    private static final String MORELAND_NAMESPACE = "com.morelandLabs";
+    private static final String X_NAMESPACE = "org.xframium";
     
     public ThreadedFileHandler()
     {
-        LogFactory.getLog( "com.perfectoMobile" );
-        LogFactory.getLog( "com.morelandLabs" );
+        LogFactory.getLog( X_NAMESPACE );
     }
     
     public void configureHandler( Level baseLevel )
@@ -27,15 +25,10 @@ public class ThreadedFileHandler extends Handler
         
         LogManager.getLogManager().getLogger( "" ).addHandler( this );
         LogManager.getLogManager().getLogger( "" ).setLevel( baseLevel );
-        if ( LogManager.getLogManager().getLogger( PERFECTO_NAMESPACE ) != null )
+        if ( LogManager.getLogManager().getLogger( X_NAMESPACE ) != null )
         {
-	        LogManager.getLogManager().getLogger( PERFECTO_NAMESPACE ).setLevel( baseLevel );
-	        LogManager.getLogManager().getLogger( PERFECTO_NAMESPACE ).addHandler( this );
-        }
-        if ( LogManager.getLogManager().getLogger( MORELAND_NAMESPACE ) != null )
-        {
-	        LogManager.getLogManager().getLogger( MORELAND_NAMESPACE ).setLevel( baseLevel );
-	        LogManager.getLogManager().getLogger( MORELAND_NAMESPACE ).addHandler( this );
+	        LogManager.getLogManager().getLogger( X_NAMESPACE ).setLevel( baseLevel );
+	        LogManager.getLogManager().getLogger( X_NAMESPACE ).addHandler( this );
         }
     }
     

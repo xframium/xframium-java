@@ -1,0 +1,65 @@
+#
+# Cloud Registry
+#
+cloudRegistry.provider=XML
+cloudRegistry.fileName=C:/Projects/git/morelandLabs/customerProjects/xmlDriven/cloudRegistry.xml
+cloudRegistry.cloudUnderTest=partners
+
+#
+# Application Registry
+#
+applicationRegistry.provider=XML
+applicationRegistry.fileName=C:/Projects/git/morelandLabs/customerProjects/xmlDriven/applicationRegistry.xml
+applicationRegistry.applicationUnderTest=default
+
+#
+# Artifact Production
+# 
+artifactProducer.provider=Perfecto
+artifactProducer.parentFolder=test-output
+artifactProducer.storeImages=true
+artifactProducer.imageLocation=test-output
+artifactProducer.automated=EXECUTION_REPORT_HTML,FAILURE_SOURCE,CONSOLE_LOG,WCAG_REPORT,EXECUTION_RECORD_CSV,EXECUTION_RECORD_HTML
+
+#
+# Page Object Configuration
+#
+pageManagement.siteName=MLM
+pageManagement.provider=XML
+pageManagement.fileName=C:/Projects/git/morelandLabs/customerProjects/xmlDriven/ford/pageElements.xml
+pageManagement.pageData.provider=XML
+pageManagement.pageData.fileName=C:/Projects/git/morelandLabs/customerProjects/xmlDriven/ford/pageData.xml
+
+#
+# Device Management
+#
+#deviceManagement.provider=RESERVED - NAMED - AVAILABLE  CSV XML EXCEL
+deviceManagement.provider=NAMED
+deviceManagement.driverType=APPIUM
+#deviceManagement.fileName=C:/Projects/git/morelandLabs/customerProjects/xmlDriven/deviceRegistry.xml
+deviceManagement.deviceList=30EDD233,632E9899
+#deviceManagement.deviceList=78CD9AB49AB11C2B45292E3AC8E1E5FD2295C10D
+
+#
+#
+# Driver Configuration
+#
+driver.frameworkType=XML
+#driver.personas=Georgia,Ross,EMPTY
+#driver.deviceInterrupts=CALL,NOOP
+#driver.tagNames=config
+#driver.testNames=VersionTest
+driver.configName=C:/Projects/git/morelandLabs/customerProjects/xmlDriven/ford/tests.xml
+
+#
+# Third Party Package Integrations
+#
+#integrations.import=integrations.imaging
+
+#
+# Optional Imaging Implementation
+#
+integrations.imaging.initialization=com.perfectoMobile.imaging.ImagingInitializer
+integrations.imaging.opencv.libraryLocation=c:/projects/tools/opencv_java248.dll
+integrations.imaging.opencv.templateMatch.algorithms=1,3,5
+integrations.imaging.cacheLocation=c:/projects/tools

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applicationRegistry xmlns="http://www.xframium.org/applicationRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/applicationRegistry http://www.xframium.org/xsd/deviceManagement/applicationRegistry.xsd">
+   <application name="default" appPackage="" bundleId="" url=""  />
+   <application name="Settings" appPackage="com.android.settings" bundleId="com.apple.settings" url="" androidInstall="" iosInstall="" />
+   <application name="Google" appPackage="" bundleId="" url="http://www.google.com" />
+</applicationRegistry>
+
+
+
+

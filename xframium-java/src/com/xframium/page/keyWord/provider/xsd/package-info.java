@@ -5,5 +5,5 @@
 // Generated on: 2016.05.01 at 07:12:11 AM EDT 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.morelandlabs.com/testRegistry", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.xframium.org/testRegistry", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package com.xframium.page.keyWord.provider.xsd;

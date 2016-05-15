@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _CloudRegistry_QNAME = new QName("http://www.morelandlabs.com/cloudRegistry", "cloudRegistry");
+    private final static QName _CloudRegistry_QNAME = new QName("http://www.xframium.org/cloudRegistry", "cloudRegistry");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.perfectoMobile.device.cloud.xsd
@@ -60,7 +60,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link RegistryRoot }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.morelandlabs.com/cloudRegistry", name = "cloudRegistry")
+    @XmlElementDecl(namespace = "http://www.xframium.org/cloudRegistry", name = "cloudRegistry")
     public JAXBElement<RegistryRoot> createCloudRegistry(RegistryRoot value) {
         return new JAXBElement<RegistryRoot>(_CloudRegistry_QNAME, RegistryRoot.class, null, value);
     }

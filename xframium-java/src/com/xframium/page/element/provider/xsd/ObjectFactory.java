@@ -33,7 +33,7 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     /** The Constant _ElementDefinition_QNAME. */
-    private final static QName _ElementDefinition_QNAME = new QName("http://www.morelandlabs.com/pageRegistry", "elementDefinition");
+    private final static QName _ElementDefinition_QNAME = new QName("http://www.xframium.org/pageRegistry", "elementDefinition");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.perfectoMobile.page.element.provider.xsd
@@ -93,7 +93,7 @@ public class ObjectFactory {
      * @param value the value
      * @return the JAXB element< registry root>
      */
-    @XmlElementDecl(namespace = "http://www.morelandlabs.com/pageRegistry", name = "elementDefinition")
+    @XmlElementDecl(namespace = "http://www.xframium.org/pageRegistry", name = "elementDefinition")
     public JAXBElement<RegistryRoot> createElementDefinition(RegistryRoot value) {
         return new JAXBElement<RegistryRoot>(_ElementDefinition_QNAME, RegistryRoot.class, null, value);
     }

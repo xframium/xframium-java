@@ -5,5 +5,5 @@
 // Generated on: 2016.04.09 at 06:35:52 AM EDT 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.morelandlabs.com/deviceRegistry", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.xframium.org/deviceRegistry", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package com.xframium.device.data.xsd;

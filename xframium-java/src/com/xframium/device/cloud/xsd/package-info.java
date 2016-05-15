@@ -5,5 +5,5 @@
 // Generated on: 2016.03.08 at 09:26:41 AM EST 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.morelandlabs.com/cloudRegistry", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.xframium.org/cloudRegistry", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package com.xframium.device.cloud.xsd;

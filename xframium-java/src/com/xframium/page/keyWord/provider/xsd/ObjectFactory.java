@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _Suite_QNAME = new QName("http://www.morelandlabs.com/testRegistry", "suite");
+    private final static QName _Suite_QNAME = new QName("http://www.xframium.org/testRegistry", "suite");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.perfectoMobile.page.keyWord.provider.xsd
@@ -108,7 +108,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link RegistryRoot }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.morelandlabs.com/testRegistry", name = "suite")
+    @XmlElementDecl(namespace = "http://www.xframium.org/testRegistry", name = "suite")
     public JAXBElement<RegistryRoot> createSuite(RegistryRoot value) {
         return new JAXBElement<RegistryRoot>(_Suite_QNAME, RegistryRoot.class, null, value);
     }

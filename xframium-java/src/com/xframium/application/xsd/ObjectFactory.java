@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _ApplicationRegistry_QNAME = new QName("http://www.morelandlabs.com/applicationRegistry", "applicationRegistry");
+    private final static QName _ApplicationRegistry_QNAME = new QName("http://www.xframium.org/applicationRegistry", "applicationRegistry");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.morelandLabs.application.xsd
@@ -68,7 +68,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link RegistryRoot }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.morelandlabs.com/applicationRegistry", name = "applicationRegistry")
+    @XmlElementDecl(namespace = "http://www.xframium.org/applicationRegistry", name = "applicationRegistry")
     public JAXBElement<RegistryRoot> createApplicationRegistry(RegistryRoot value) {
         return new JAXBElement<RegistryRoot>(_ApplicationRegistry_QNAME, RegistryRoot.class, null, value);
     }
