@@ -84,8 +84,8 @@ public class SQLDataProvider implements DataProvider
     {
         this( username, password, url, driver, driverType );
         
-        this.deviceQuery = deviceQuery;
-        this.capabilityQuery = capabilityQuery;
+        this.deviceQuery = (( deviceQuery != null ) ? deviceQuery : DEF_QUERY );
+        this.capabilityQuery = (( capabilityQuery != null ) ? capabilityQuery : DEF_CAP_QUERY );
     }
 
     public void readData()

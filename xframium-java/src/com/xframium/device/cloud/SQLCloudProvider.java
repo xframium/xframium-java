@@ -63,7 +63,7 @@ public class SQLCloudProvider extends AbstractCloudProvider
     {
         this( username, password, url, driver );
 
-        this.query = query;
+        this.query = (( query != null ) ? query : DEF_QUERY );
         
         readData();
     }

@@ -91,7 +91,7 @@ public class SQLElementProvider
     public SQLElementProvider( String username, String password, String url, String driver, String query )
     {
         this( username, password, url, driver );
-        this.query = query;
+        this.query = (( query != null ) ? query : DEF_QUERY);
                 
         readElements();
     }

@@ -18,18 +18,21 @@ import com.xframium.application.XMLApplicationProvider;
 import com.xframium.artifact.ArtifactType;
 import com.xframium.content.ContentManager;
 import com.xframium.content.provider.ExcelContentProvider;
+import com.xframium.content.provider.SQLContentProvider;
 import com.xframium.content.provider.XMLContentProvider;
 import com.xframium.device.ConnectedDevice;
 import com.xframium.device.DeviceManager;
 import com.xframium.device.cloud.CSVCloudProvider;
 import com.xframium.device.cloud.CloudRegistry;
 import com.xframium.device.cloud.ExcelCloudProvider;
+import com.xframium.device.cloud.SQLCloudProvider;
 import com.xframium.device.cloud.XMLCloudProvider;
 import com.xframium.device.data.CSVDataProvider;
 import com.xframium.device.data.DataManager;
 import com.xframium.device.data.DataProvider.DriverType;
 import com.xframium.device.data.ExcelDataProvider;
 import com.xframium.device.data.NamedDataProvider;
+import com.xframium.device.data.SQLDataProvider;
 import com.xframium.device.data.XMLDataProvider;
 import com.xframium.device.data.perfectoMobile.AvailableHandsetValidator;
 import com.xframium.device.data.perfectoMobile.PerfectoMobileDataProvider;
@@ -47,9 +50,11 @@ import com.xframium.integrations.rest.bean.factory.XMLBeanFactory;
 import com.xframium.page.PageManager;
 import com.xframium.page.data.PageDataManager;
 import com.xframium.page.data.provider.ExcelPageDataProvider;
+import com.xframium.page.data.provider.SQLPageDataProvider;
 import com.xframium.page.data.provider.XMLPageDataProvider;
 import com.xframium.page.element.provider.CSVElementProvider;
 import com.xframium.page.element.provider.ExcelElementProvider;
+import com.xframium.page.element.provider.SQLElementProvider;
 import com.xframium.page.element.provider.XMLElementProvider;
 import com.xframium.page.keyWord.KeyWordDriver;
 import com.xframium.page.keyWord.KeyWordTest;
@@ -61,14 +66,20 @@ import com.xframium.utility.SeleniumSessionManager;
 
 public class TestDriver
 {
-    private static final String[] CLOUD = new String[] { "cloudRegistry.provider", "cloudRegistry.fileName", "cloudRegistry.cloudUnderTest" };
+    private static final String[] CLOUD = new String[] { "cloudRegistry.provider", "cloudRegistry.fileName", "cloudRegistry.cloudUnderTest",
+                                                         "cloudRegistry.query"  };
     private static final String[] APP = new String[] { "applicationRegistry.provider", "applicationRegistry.fileName", "applicationRegistry.applicationUnderTest" };
     private static final String[] ARTIFACT = new String[] { "artifactProducer.parentFolder" };
-    private static final String[] PAGE = new String[] { "pageManagement.siteName", "pageManagement.provider", "pageManagement.fileName" };
-    private static final String[] DATA = new String[] { "pageManagement.pageData.provider", "pageManagement.pageData.fileName" };
-    private static final String[] CONTENT = new String[] { "pageManagement.content.provider", "pageManagement.content.fileName" };
-    private static final String[] DEVICE = new String[] { "deviceManagement.provider", "deviceManagement.driverType" };
+    private static final String[] PAGE = new String[] { "pageManagement.siteName", "pageManagement.provider", "pageManagement.fileName",
+                                                        "pageManagement.query" };
+    private static final String[] DATA = new String[] { "pageManagement.pageData.provider", "pageManagement.pageData.fileName",
+                                                        "pageManagement.pageData.query" };
+    private static final String[] CONTENT = new String[] { "pageManagement.content.provider", "pageManagement.content.fileName",
+                                                           "pageManagement.content.query" };
+    private static final String[] DEVICE = new String[] { "deviceManagement.provider", "deviceManagement.driverType",
+                                                          "deviceManagement.device.query", "deviceManagement.capability.query" };
     private static final String[] DRIVER = new String[] { "driver.frameworkType", "driver.configName" };
+    private static final String[] JDBC = new String[] { "jdbc.username", "jdbc.password", "jdbc.url", "jdbc.driverClassName" };
 
     public static void main( String[] args )
     {
@@ -198,40 +209,53 @@ public class TestDriver
 
                     break;
             }
+
+            boolean dryRun = false;
+            String validateConfiguration = configProperties.getProperty( "driver.validateConfiguration" );
+            if ( validateConfiguration != null )
+                dryRun = Boolean.parseBoolean( validateConfiguration );
+            
+            DeviceManager.instance().setDryRun( dryRun );
+            
+            if ( dryRun )
+                System.out.println( "Performing Dry Run" );
+            else
+                System.out.println( "Executing Test Cases" );
+            
+            switch ( configProperties.getProperty( DRIVER[0] ).toUpperCase() )
+            {
+                case "XML":
+                {
+                    runTest( configProperties, XMLTestDriver.class );
+                    break;
+                }
+                
+                case "OBJ":
+                {
+                    runTest( configProperties, Class.forName( configProperties.getProperty( DRIVER[1] ) ) );
+                    break;
+                }
+            }
         }
         catch ( Exception e )
         {
             e.printStackTrace();
         }
+    }
 
-        boolean dryRun = false;
-        String validateConfiguration = configProperties.getProperty( "driver.validateConfiguration" );
-        if ( validateConfiguration != null )
-            dryRun = Boolean.parseBoolean( validateConfiguration );
-
-        DeviceManager.instance().setDryRun( dryRun );
-
-        if ( dryRun )
-            System.out.println( "Performing Dry Run" );
+    private static void runTest( Properties configProperties, Class theTest )
+    {
+        RunDetails.instance().setStartTime();
+        
+        TestNG testNg = new TestNG( true );
+        testNg.setOutputDirectory( configProperties.getProperty( ARTIFACT[0] ) + System.getProperty( "file.separator" ) + "testNg" );
+        testNg.setTestClasses( new Class[] { theTest } );
+        testNg.run();
+        
+        if ( testNg.hasFailure() )
+            System.exit( -1 );
         else
-            System.out.println( "Executing Test Cases" );
-
-        switch ( configProperties.getProperty( DRIVER[0] ).toUpperCase() )
-        {
-            case "XML":
-
-                RunDetails.instance().setStartTime();
-
-                TestNG testNg = new TestNG( true );
-                testNg.setOutputDirectory( configProperties.getProperty( ARTIFACT[0] ) + System.getProperty( "file.separator" ) + "testNg" );
-                testNg.setTestClasses( new Class[] { XMLTestDriver.class } );
-                testNg.run();
-
-                if ( testNg.hasFailure() )
-                    System.exit( -1 );
-                else
-                    System.exit( 0 );
-        }
+            System.exit( 0 );
 
     }
 
@@ -243,6 +267,14 @@ public class TestDriver
         {
             case "XML":
                 CloudRegistry.instance().setCloudProvider( new XMLCloudProvider( new File( configProperties.getProperty( CLOUD[1] ) ) ) );
+                break;
+
+            case "SQL":
+                CloudRegistry.instance().setCloudProvider( new SQLCloudProvider( configProperties.getProperty( JDBC[0] ),
+                                                                                 configProperties.getProperty( JDBC[1] ),
+                                                                                 configProperties.getProperty( JDBC[2] ),
+                                                                                 configProperties.getProperty( JDBC[3] ),
+                                                                                 configProperties.getProperty( CLOUD[3] )));
                 break;
 
             case "CSV":
@@ -368,6 +400,14 @@ public class TestDriver
                 PageManager.instance().setElementProvider( new XMLElementProvider( new File( configProperties.getProperty( PAGE[2] ) ) ) );
                 break;
 
+            case "SQL":
+                PageManager.instance().setElementProvider( new SQLElementProvider( configProperties.getProperty( JDBC[0] ),
+                                                                                   configProperties.getProperty( JDBC[1] ),
+                                                                                   configProperties.getProperty( JDBC[2] ),
+                                                                                   configProperties.getProperty( JDBC[3] ),
+                                                                                   configProperties.getProperty( PAGE[3] )));
+                break;
+
             case "CSV":
                 PageManager.instance().setElementProvider( new CSVElementProvider( new File( configProperties.getProperty( PAGE[2] ) ) ) );
                 break;
@@ -395,6 +435,14 @@ public class TestDriver
                     PageDataManager.instance().setPageDataProvider( new XMLPageDataProvider( new File( configProperties.getProperty( DATA[1] ) ) ) );
                     break;
 
+                case "SQL":
+                    PageDataManager.instance().setPageDataProvider( new SQLPageDataProvider( configProperties.getProperty( JDBC[0] ),
+                                                                                             configProperties.getProperty( JDBC[1] ),
+                                                                                             configProperties.getProperty( JDBC[2] ),
+                                                                                             configProperties.getProperty( JDBC[3] ),
+                                                                                             configProperties.getProperty( DATA[2] )));
+                    break;
+
                 case "EXCEL":
                     String[] fileNames = configProperties.getProperty( DATA[1] ).split( "," );
 
@@ -418,6 +466,14 @@ public class TestDriver
             {
                 case "XML":
                     ContentManager.instance().setContentProvider( new XMLContentProvider( new File( configProperties.getProperty( CONTENT[1] ) ) ) );
+                    break;
+
+                case "SQL":
+                    ContentManager.instance().setContentProvider( new SQLContentProvider( configProperties.getProperty( JDBC[0] ),
+                                                                                          configProperties.getProperty( JDBC[1] ),
+                                                                                          configProperties.getProperty( JDBC[2] ),
+                                                                                          configProperties.getProperty( JDBC[3] ),
+                                                                                          configProperties.getProperty( CONTENT[2] )));
                     break;
 
                 case "EXCEL":
@@ -496,6 +552,16 @@ public class TestDriver
                     System.exit( -1 );
                 }
                 DataManager.instance().readData( new XMLDataProvider( new File( xmlFileName ), DriverType.valueOf( configProperties.getProperty( DEVICE[1] ) ) ) );
+                break;
+
+            case "SQL":
+                DataManager.instance().readData( new SQLDataProvider( configProperties.getProperty( JDBC[0] ),
+                                                                      configProperties.getProperty( JDBC[1] ),
+                                                                      configProperties.getProperty( JDBC[2] ),
+                                                                      configProperties.getProperty( JDBC[3] ),
+                                                                      configProperties.getProperty( DEVICE[2] ),
+                                                                      configProperties.getProperty( DEVICE[3] ),
+                                                                      DriverType.valueOf( configProperties.getProperty( DEVICE[1] ))));
                 break;
 
             case "EXCEL":
