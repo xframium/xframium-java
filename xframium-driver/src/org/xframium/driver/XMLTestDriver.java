@@ -1,7 +1,7 @@
 /*******************************************************************************
  * xFramium
  *
- * Copyright 2016 by Moreland Labs LTD (http://www.morelandlabs.com)
+ * Copyright 2016 by Moreland Labs, Ltd. (http://www.morelandlabs.com)
  *
  * Some open source application is free software: you can redistribute 
  * it and/or modify it under the terms of the GNU General Public 
@@ -18,7 +18,7 @@
  *
  * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>
  *******************************************************************************/
-package com.xframium.driver;
+package org.xframium.driver;
 
 import org.testng.Assert;
 import org.testng.SkipException;
