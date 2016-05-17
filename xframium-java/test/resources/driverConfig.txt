@@ -1,0 +1,54 @@
+#
+# JDBC Properties
+#
+jdbc.username=moreland
+jdbc.password=password
+jdbc.url=jdbc:oracle:thin:@DESKTOP-J97DM4R:1521:XE
+jdbc.driverClassName=oracle.jdbc.driver.OracleDriver
+
+#
+# Cloud Registry
+#
+cloudRegistry.provider=SQL
+cloudRegistry.fileName=./cloudRegistry.xml
+cloudRegistry.cloudUnderTest=partners
+
+#
+# Application Registry
+#
+applicationRegistry.provider=XML
+applicationRegistry.fileName=./applicationRegistry.xml
+applicationRegistry.applicationUnderTest=Google
+
+#
+# Artifact Production
+# 
+artifactProducer.provider=Perfecto
+artifactProducer.parentFolder=test-output
+artifactProducer.storeImages=true
+artifactProducer.imageLocation=test-output
+#artifactProducer.automated=EXECUTION_REPORT_PDF,FAILURE_SOURCE,DEVICE_LOG
+artifactProducer.timingWriter=com.perfectoMobile.page.timingWriter.CSVExecutionTimingWriter
+artifactProducer.timingWriter.fileName=../../test-output/timingData.csv
+artifactProducer.recordWriter=com.perfectoMobile.page.recordWriter.HTMLExecutionRecordWriter
+artifactProducer.recordWriter.fileName=test-output
+
+#
+# Page Object Configuration
+#
+pageManagement.siteName=Google
+pageManagement.provider=SQL
+pageManagement.pageData.provider=SQL
+
+#
+# Device Management
+#
+deviceManagement.provider=SQL
+deviceManagement.driverType=APPIUM
+
+#
+# Driver Configuration
+#
+driver.frameworkType=OBJ
+driver.configName=com.xframium.test.SQLDataProvidersTest
+
