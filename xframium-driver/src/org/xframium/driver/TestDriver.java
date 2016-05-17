@@ -1,7 +1,7 @@
 /*******************************************************************************
  * xFramium
  *
- * Copyright 2016 by Moreland Labs, Ltd. (http://www.morelandlabs.com)
+ * Copyright 2016 by Moreland Labs LTD (http://www.morelandlabs.com)
  *
  * Some open source application is free software: you can redistribute 
  * it and/or modify it under the terms of the GNU General Public 
@@ -86,18 +86,18 @@ import com.xframium.utility.SeleniumSessionManager;
 
 public class TestDriver
 {
-    private static final String[] CLOUD = new String[] { "cloudRegistry.provider", "cloudRegistry.fileName", "cloudRegistry.cloudUnderTest",
-                                                         "cloudRegistry.query"  };
+    private static final String[] CLOUD = new String[] { "cloudRegistry.provider", "cloudRegistry.fileName", "cloudRegistry.cloudUnderTest" };
+    private static final String[] OPT_CLOUD = new String[] { "cloudRegistry.query" };
     private static final String[] APP = new String[] { "applicationRegistry.provider", "applicationRegistry.fileName", "applicationRegistry.applicationUnderTest" };
     private static final String[] ARTIFACT = new String[] { "artifactProducer.parentFolder" };
-    private static final String[] PAGE = new String[] { "pageManagement.siteName", "pageManagement.provider", "pageManagement.fileName",
-                                                        "pageManagement.query" };
-    private static final String[] DATA = new String[] { "pageManagement.pageData.provider", "pageManagement.pageData.fileName",
-                                                        "pageManagement.pageData.query" };
-    private static final String[] CONTENT = new String[] { "pageManagement.content.provider", "pageManagement.content.fileName",
-                                                           "pageManagement.content.query" };
-    private static final String[] DEVICE = new String[] { "deviceManagement.provider", "deviceManagement.driverType",
-                                                          "deviceManagement.device.query", "deviceManagement.capability.query" };
+    private static final String[] PAGE = new String[] { "pageManagement.siteName", "pageManagement.provider", "pageManagement.fileName" };
+    private static final String[] OPT_PAGE = new String[] { "pageManagement.query" };
+    private static final String[] DATA = new String[] { "pageManagement.pageData.provider", "pageManagement.pageData.fileName" };
+    private static final String[] OPT_DATA = new String[] { "pageManagement.pageData.query" };
+    private static final String[] CONTENT = new String[] { "pageManagement.content.provider", "pageManagement.content.fileName" };
+    private static final String[] OPT_CONTENT = new String[] { "pageManagement.content.query" };
+    private static final String[] DEVICE = new String[] { "deviceManagement.provider", "deviceManagement.driverType" };
+    private static final String[] OPT_DEVICE = new String[] { "deviceManagement.device.query", "deviceManagement.capability.query" };
     private static final String[] DRIVER = new String[] { "driver.frameworkType", "driver.configName" };
     private static final String[] JDBC = new String[] { "jdbc.username", "jdbc.password", "jdbc.url", "jdbc.driverClassName" };
 
@@ -294,7 +294,7 @@ public class TestDriver
                                                                                  configProperties.getProperty( JDBC[1] ),
                                                                                  configProperties.getProperty( JDBC[2] ),
                                                                                  configProperties.getProperty( JDBC[3] ),
-                                                                                 configProperties.getProperty( CLOUD[3] )));
+                                                                                 configProperties.getProperty( OPT_CLOUD[0] )));
                 break;
 
             case "CSV":
@@ -425,7 +425,7 @@ public class TestDriver
                                                                                    configProperties.getProperty( JDBC[1] ),
                                                                                    configProperties.getProperty( JDBC[2] ),
                                                                                    configProperties.getProperty( JDBC[3] ),
-                                                                                   configProperties.getProperty( PAGE[3] )));
+                                                                                   configProperties.getProperty( OPT_PAGE[0] )));
                 break;
 
             case "CSV":
@@ -460,7 +460,7 @@ public class TestDriver
                                                                                              configProperties.getProperty( JDBC[1] ),
                                                                                              configProperties.getProperty( JDBC[2] ),
                                                                                              configProperties.getProperty( JDBC[3] ),
-                                                                                             configProperties.getProperty( DATA[2] )));
+                                                                                             configProperties.getProperty( OPT_DATA[0] )));
                     break;
 
                 case "EXCEL":
@@ -493,7 +493,7 @@ public class TestDriver
                                                                                           configProperties.getProperty( JDBC[1] ),
                                                                                           configProperties.getProperty( JDBC[2] ),
                                                                                           configProperties.getProperty( JDBC[3] ),
-                                                                                          configProperties.getProperty( CONTENT[2] )));
+                                                                                          configProperties.getProperty( OPT_CONTENT[0] )));
                     break;
 
                 case "EXCEL":
@@ -579,8 +579,8 @@ public class TestDriver
                                                                       configProperties.getProperty( JDBC[1] ),
                                                                       configProperties.getProperty( JDBC[2] ),
                                                                       configProperties.getProperty( JDBC[3] ),
-                                                                      configProperties.getProperty( DEVICE[2] ),
-                                                                      configProperties.getProperty( DEVICE[3] ),
+                                                                      configProperties.getProperty( OPT_DEVICE[0] ),
+                                                                      configProperties.getProperty( OPT_DEVICE[1] ),
                                                                       DriverType.valueOf( configProperties.getProperty( DEVICE[1] ))));
                 break;
 
