@@ -24,12 +24,12 @@
 package com.xframium.device.factory.spi;
 
 import org.openqa.selenium.WebDriver;
+import org.xframium.application.ApplicationRegistry;
+import org.xframium.device.DeviceManager;
+import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.spi.driver.VisualDriverProvider;
 import com.perfectomobile.selenium.api.IMobileDevice;
 import com.perfectomobile.selenium.nativeapp.MobileNativeApplication;
-import com.xframium.application.ApplicationRegistry;
-import com.xframium.device.DeviceManager;
-import com.xframium.device.factory.DeviceWebDriver;
-import com.xframium.spi.driver.VisualDriverProvider;
 
 // TODO: Auto-generated Javadoc
 /**

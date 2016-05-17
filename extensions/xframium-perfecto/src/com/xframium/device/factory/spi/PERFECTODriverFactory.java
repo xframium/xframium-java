@@ -28,19 +28,19 @@ import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.xframium.application.ApplicationRegistry;
+import org.xframium.device.DeviceManager;
+import org.xframium.device.artifact.api.PerfectoArtifactProducer;
+import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.device.factory.AbstractDriverFactory;
+import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.spi.Device;
 import com.perfectomobile.selenium.MobileDriver;
 import com.perfectomobile.selenium.api.IMobileDevice;
 import com.perfectomobile.selenium.api.IMobileDriver;
 import com.perfectomobile.selenium.options.MobileDeviceFindOptions;
 import com.perfectomobile.selenium.options.MobileDeviceOS;
 import com.perfectomobile.selenium.options.MobileDeviceOpenOptions;
-import com.xframium.application.ApplicationRegistry;
-import com.xframium.device.DeviceManager;
-import com.xframium.device.artifact.api.PerfectoArtifactProducer;
-import com.xframium.device.cloud.CloudRegistry;
-import com.xframium.device.factory.AbstractDriverFactory;
-import com.xframium.device.factory.DeviceWebDriver;
-import com.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc
 /**

@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.URL;
 import java.util.Properties;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -28,10 +29,12 @@ import org.xframium.driver.TestDriver;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunListener;
 
+
 public class XFramium extends JFrame implements RunListener, ActionListener
 {
-    private ImageIcon failIcon = new ImageIcon( ClassLoader.getSystemClassLoader().getResource( "fail.png" ) );
-    private ImageIcon successIcon = new ImageIcon( ClassLoader.getSystemClassLoader().getResource( "success.png" ) );
+    private ImageIcon failIcon = null;
+    private ImageIcon successIcon = null;
+    
     private JTextField driverFile;
     private JButton browseDriver;
     private JButton executeTest;
@@ -55,8 +58,13 @@ public class XFramium extends JFrame implements RunListener, ActionListener
 
     public XFramium()
     {
+       
+        
         try
         {
+            failIcon = new ImageIcon( new URL( "http://www.xframium.org/fail.png" ) );
+            successIcon = new ImageIcon( new URL( "http://www.xframium.org/success.png" ) );
+            
             setTitle( "xFramium Test Execution" );
             UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
             DeviceManager.instance().addRunListener( this );
