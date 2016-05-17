@@ -30,58 +30,58 @@ import java.util.Properties;
 import java.util.logging.Level;
 import org.openqa.selenium.WebDriver;
 import org.testng.TestNG;
-import com.xframium.Initializable;
-import com.xframium.application.ApplicationRegistry;
-import com.xframium.application.CSVApplicationProvider;
-import com.xframium.application.ExcelApplicationProvider;
-import com.xframium.application.XMLApplicationProvider;
-import com.xframium.artifact.ArtifactType;
-import com.xframium.content.ContentManager;
-import com.xframium.content.provider.ExcelContentProvider;
-import com.xframium.content.provider.SQLContentProvider;
-import com.xframium.content.provider.XMLContentProvider;
-import com.xframium.device.ConnectedDevice;
-import com.xframium.device.DeviceManager;
-import com.xframium.device.cloud.CSVCloudProvider;
-import com.xframium.device.cloud.CloudRegistry;
-import com.xframium.device.cloud.ExcelCloudProvider;
-import com.xframium.device.cloud.SQLCloudProvider;
-import com.xframium.device.cloud.XMLCloudProvider;
-import com.xframium.device.data.CSVDataProvider;
-import com.xframium.device.data.DataManager;
-import com.xframium.device.data.DataProvider.DriverType;
-import com.xframium.device.data.ExcelDataProvider;
-import com.xframium.device.data.NamedDataProvider;
-import com.xframium.device.data.SQLDataProvider;
-import com.xframium.device.data.XMLDataProvider;
-import com.xframium.device.data.perfectoMobile.AvailableHandsetValidator;
-import com.xframium.device.data.perfectoMobile.PerfectoMobileDataProvider;
-import com.xframium.device.data.perfectoMobile.ReservedHandsetValidator;
-import com.xframium.device.logging.ThreadedFileHandler;
-import com.xframium.device.ng.AbstractSeleniumTest;
-import com.xframium.device.property.PropertyAdapter;
-import com.xframium.gesture.GestureManager;
-import com.xframium.gesture.device.action.DeviceActionManager;
-import com.xframium.gesture.device.action.spi.perfecto.PerfectoDeviceActionFactory;
-import com.xframium.gesture.factory.spi.PerfectoGestureFactory;
-import com.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
-import com.xframium.integrations.rest.bean.factory.BeanManager;
-import com.xframium.integrations.rest.bean.factory.XMLBeanFactory;
-import com.xframium.page.PageManager;
-import com.xframium.page.data.PageDataManager;
-import com.xframium.page.data.provider.ExcelPageDataProvider;
-import com.xframium.page.data.provider.SQLPageDataProvider;
-import com.xframium.page.data.provider.XMLPageDataProvider;
-import com.xframium.page.element.provider.CSVElementProvider;
-import com.xframium.page.element.provider.ExcelElementProvider;
-import com.xframium.page.element.provider.SQLElementProvider;
-import com.xframium.page.element.provider.XMLElementProvider;
-import com.xframium.page.keyWord.KeyWordDriver;
-import com.xframium.page.keyWord.KeyWordTest;
-import com.xframium.page.keyWord.provider.XMLKeyWordProvider;
-import com.xframium.spi.CSVRunListener;
-import com.xframium.spi.RunDetails;
-import com.xframium.utility.SeleniumSessionManager;
+import org.xframium.Initializable;
+import org.xframium.application.ApplicationRegistry;
+import org.xframium.application.CSVApplicationProvider;
+import org.xframium.application.ExcelApplicationProvider;
+import org.xframium.application.XMLApplicationProvider;
+import org.xframium.artifact.ArtifactType;
+import org.xframium.content.ContentManager;
+import org.xframium.content.provider.ExcelContentProvider;
+import org.xframium.content.provider.SQLContentProvider;
+import org.xframium.content.provider.XMLContentProvider;
+import org.xframium.device.ConnectedDevice;
+import org.xframium.device.DeviceManager;
+import org.xframium.device.cloud.CSVCloudProvider;
+import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.device.cloud.ExcelCloudProvider;
+import org.xframium.device.cloud.SQLCloudProvider;
+import org.xframium.device.cloud.XMLCloudProvider;
+import org.xframium.device.data.CSVDataProvider;
+import org.xframium.device.data.DataManager;
+import org.xframium.device.data.ExcelDataProvider;
+import org.xframium.device.data.NamedDataProvider;
+import org.xframium.device.data.SQLDataProvider;
+import org.xframium.device.data.XMLDataProvider;
+import org.xframium.device.data.DataProvider.DriverType;
+import org.xframium.device.data.perfectoMobile.AvailableHandsetValidator;
+import org.xframium.device.data.perfectoMobile.PerfectoMobileDataProvider;
+import org.xframium.device.data.perfectoMobile.ReservedHandsetValidator;
+import org.xframium.device.logging.ThreadedFileHandler;
+import org.xframium.device.ng.AbstractSeleniumTest;
+import org.xframium.device.property.PropertyAdapter;
+import org.xframium.gesture.GestureManager;
+import org.xframium.gesture.device.action.DeviceActionManager;
+import org.xframium.gesture.device.action.spi.perfecto.PerfectoDeviceActionFactory;
+import org.xframium.gesture.factory.spi.PerfectoGestureFactory;
+import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
+import org.xframium.integrations.rest.bean.factory.BeanManager;
+import org.xframium.integrations.rest.bean.factory.XMLBeanFactory;
+import org.xframium.page.PageManager;
+import org.xframium.page.data.PageDataManager;
+import org.xframium.page.data.provider.ExcelPageDataProvider;
+import org.xframium.page.data.provider.SQLPageDataProvider;
+import org.xframium.page.data.provider.XMLPageDataProvider;
+import org.xframium.page.element.provider.CSVElementProvider;
+import org.xframium.page.element.provider.ExcelElementProvider;
+import org.xframium.page.element.provider.SQLElementProvider;
+import org.xframium.page.element.provider.XMLElementProvider;
+import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
+import org.xframium.spi.CSVRunListener;
+import org.xframium.spi.RunDetails;
+import org.xframium.utility.SeleniumSessionManager;
 
 
 public class TestDriver
@@ -101,6 +101,7 @@ public class TestDriver
     private static final String[] DRIVER = new String[] { "driver.frameworkType", "driver.configName" };
     private static final String[] JDBC = new String[] { "jdbc.username", "jdbc.password", "jdbc.url", "jdbc.driverClassName" };
 
+    public static File configFolder;
     public static void main( String[] args )
     {
         if ( args.length != 1 )
@@ -110,6 +111,7 @@ public class TestDriver
         }
 
         File configFile = new File( args[0] );
+        configFolder = configFile.getParentFile();
         if ( !configFile.exists() )
         {
             System.err.println( "[" + configFile.getAbsolutePath() + "] could not be located" );
@@ -271,11 +273,6 @@ public class TestDriver
         testNg.setOutputDirectory( configProperties.getProperty( ARTIFACT[0] ) + System.getProperty( "file.separator" ) + "testNg" );
         testNg.setTestClasses( new Class[] { theTest } );
         testNg.run();
-        
-        if ( testNg.hasFailure() )
-            System.exit( -1 );
-        else
-            System.exit( 0 );
 
     }
 

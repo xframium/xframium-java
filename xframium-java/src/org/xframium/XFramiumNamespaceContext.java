@@ -27,7 +27,10 @@ import javax.xml.namespace.NamespaceContext;
 
 public class XFramiumNamespaceContext implements NamespaceContext
 {
-
+    public static void main( String args[] )
+    {
+        
+    }
     private Map<String,String> namespaceMap;
     
     public XFramiumNamespaceContext( Map<String,String> namespaceMap )

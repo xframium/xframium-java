@@ -43,7 +43,19 @@ public class ConnectedDevice
 	/** The persona. */
 	private String persona;
 	
-	/**
+	private boolean success;
+	
+	public boolean isSuccess()
+    {
+        return success;
+    }
+
+    public void setSuccess( boolean success )
+    {
+        this.success = success;
+    }
+
+    /**
 	 * Instantiates a new connected device.
 	 *
 	 * @param webDriver the web driver

@@ -23,11 +23,11 @@ package org.xframium.driver;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
-import com.xframium.device.DeviceManager;
-import com.xframium.device.ng.AbstractSeleniumTest;
-import com.xframium.page.PageManager;
-import com.xframium.page.keyWord.KeyWordDriver;
-import com.xframium.page.keyWord.KeyWordTest;
+import org.xframium.device.DeviceManager;
+import org.xframium.device.ng.AbstractSeleniumTest;
+import org.xframium.page.PageManager;
+import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordTest;
 
 
 public class XMLTestDriver extends AbstractSeleniumTest
