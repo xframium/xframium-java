@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<applicationRegistry xmlns="http://www.morelandlabs.com/applicationRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.morelandlabs.com/applicationRegistry http://www.morelandlabs.com/xsd/deviceManagement/applicationRegistry.xsd">
+<applicationRegistry xmlns="http://www.xframium.org/applicationRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/applicationRegistry http://www.xframium.org/xsd/deviceManagement/applicationRegistry.xsd">
    <application name="Google" appPackage="" bundleId="" url="http://www.google.com" />
 </applicationRegistry>
 

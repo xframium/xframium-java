@@ -45,7 +45,7 @@ public class SQLPageDataProvider extends AbstractPageDataProvider
         "       AT.NAME, AT.VALUE \n" +
         "FROM PERFECTO_PAGE_DATA_TYPE DT \n" +
         "     INNER JOIN PERFECTO_PAGE_DATA PG ON PG.TYPE_NAME = DT.NAME \n" +
-        "     INNER JOIN PERFECTO_PAGE_DATA_ATTRS ON AT.TYPE_NAME = DT.NAME AND AT.RECORD_NAME = PG.NAME";
+        "     INNER JOIN PERFECTO_PAGE_DATA_ATTRS AT ON AT.TYPE_NAME = DT.NAME AND AT.RECORD_NAME = PG.NAME";
 
     private static final String[] STR_ARR = new String[0];
 

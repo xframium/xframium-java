@@ -407,13 +407,12 @@ public class TestDriver
 
     private static void configurePageManagement( Properties configProperties )
     {
-        validateProperties( configProperties, PAGE );
-
         PageManager.instance().setSiteName( configProperties.getProperty( PAGE[0] ) );
 
         switch ( (configProperties.getProperty( PAGE[1] )).toUpperCase() )
         {
             case "XML":
+                validateProperties( configProperties, PAGE );
                 PageManager.instance().setElementProvider( new XMLElementProvider( new File( configProperties.getProperty( PAGE[2] ) ) ) );
                 break;
 
@@ -426,10 +425,12 @@ public class TestDriver
                 break;
 
             case "CSV":
+                validateProperties( configProperties, PAGE );
                 PageManager.instance().setElementProvider( new CSVElementProvider( new File( configProperties.getProperty( PAGE[2] ) ) ) );
                 break;
 
             case "EXCEL":
+                validateProperties( configProperties, PAGE );
                 String[] fileNames = configProperties.getProperty( PAGE[2] ).split( "," );
 
                 File[] files = new File[fileNames.length];
@@ -444,11 +445,10 @@ public class TestDriver
 
         if ( data != null && !data.isEmpty() )
         {
-            validateProperties( configProperties, DATA );
-
             switch ( (configProperties.getProperty( DATA[0] )).toUpperCase() )
             {
                 case "XML":
+                    validateProperties( configProperties, DATA );
                     PageDataManager.instance().setPageDataProvider( new XMLPageDataProvider( new File( configProperties.getProperty( DATA[1] ) ) ) );
                     break;
 
@@ -461,6 +461,7 @@ public class TestDriver
                     break;
 
                 case "EXCEL":
+                    validateProperties( configProperties, DATA );
                     String[] fileNames = configProperties.getProperty( DATA[1] ).split( "," );
 
                     File[] files = new File[fileNames.length];

@@ -65,7 +65,7 @@ public class SQLDataProvidersTest
         Element element = PageManager.instance().getElementProvider().getElement( elementDescriptor );
 
         Assert.assertTrue( element != null, "Got an element" );
-        Assert.assertTrue( "//input[@id='lst-ib']".equals( element.getValue()) , "Got the right element" );
+        Assert.assertTrue( "//input[@id='lst-ib']".equals( element.getKey()) , "Got the right element" );
     }
 
 }

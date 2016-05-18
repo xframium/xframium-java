@@ -78,6 +78,13 @@ public interface Element
 	 * @return true, if successful
 	 */
 	public boolean moveTo();
+
+    /**
+     * Get Element Key
+     *
+     * @return String
+     */
+    public String getKey();
 	
 	/**
 	 * Press.

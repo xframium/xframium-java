@@ -261,7 +261,7 @@ public abstract class AbstractElement implements Element
 	 *
 	 * @return the key
 	 */
-	String getKey()
+	public String getKey()
 	{
 		if ( !tokensApplied )
 		{

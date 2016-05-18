@@ -113,6 +113,19 @@ public class SQLUtil
             results.add( row );
         }
 
-        return (Object[][]) results.toArray();
+        return toOutArray( results, colCount );
+    }
+
+    private static Object[][] toOutArray( List listOfArray, int colCount )
+    {
+        int length = listOfArray.size();
+        Object[][] rtn = new Object[ length ][colCount ];
+
+        for( int i = 0; i < rtn.length; ++i )
+        {
+            rtn[i] = (Object[]) listOfArray.get( i );
+        }
+
+        return rtn;
     }
 }
