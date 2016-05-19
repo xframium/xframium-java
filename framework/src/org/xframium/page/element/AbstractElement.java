@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
 import org.xframium.page.BY;
 import org.xframium.page.PageManager;
@@ -49,6 +51,9 @@ public abstract class AbstractElement implements Element
 	 */
 	protected abstract Object _getNative();
 
+	protected abstract Dimension _getSize();
+	protected abstract Point _getAt();
+	
 	/**
 	 * _set value.
 	 *
@@ -625,13 +630,24 @@ public abstract class AbstractElement implements Element
     {
         return _release();
     }
-	
+
+	@Override
 	public boolean isFocused()
 	{
 	    return _isFocused();
 	}
-	
-	
+
+	@Override
+	public Dimension getSize()
+    {
+        return _getSize();
+    }
+
+	@Override
+    public Point getAt()
+    {
+        return _getAt();
+    }
 
 
 }

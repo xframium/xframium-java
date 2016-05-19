@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="xFramium Launcher" default="default" basedir=".">
+	<taskdef resource="net/sf/antcontrib/antlib.xml"/>
+	<property name="sourceRoot" value="${basedir}${file.separator}src" />
+	<property name="buildRoot" value="${basedir}${file.separator}bin" />
+	<property name="distRoot" value="${basedir}${file.separator}dist" />
+	<property name="libRoot" value="${basedir}${file.separator}lib" />
+	<property name="projectName" value="xFramium Launcher" />
+	<property name="projectTitle" value="xFramium-launcher" />
+
+	<target name="default">
+		<antcall target="clean" />
+        <antcall target="compile" />
+        <antcall target="package" />
+	</target>
+
+	<target name="init">
+		<path id="compileLib">
+			<fileset dir="${libRoot}">
+				<include name="**/*.jar"/>
+			</fileset>
+			<pathelement location="${buildRoot}" />
+		</path>
+	</target>
+
+	<target name="clean" depends="init">
+		<delete dir="${distRoot}" />
+		<delete dir="${buildRoot}" />
+	</target>
+
+	<target name="compile" depends="init">
+		<delete dir="${buildRoot}" />
+		<mkdir dir="${buildRoot}" />
+
+		<javac srcdir="${sourceRoot}${file.separator}org" destdir="${buildRoot}" nowarn="on" source="1.7" debug="yes" debugLevel="source">
+			<classpath refid="compileLib" />
+		</javac>
+
+		<!-- Copy any additional files such as configuration or xml -->
+		<copy todir="${buildRoot}">
+			<fileset dir="${sourceRoot}">
+				<exclude name="**/*.java" />
+				<exclude name="**/*.class" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="package" depends="init">
+		<mkdir dir="${distRoot}" />
+		<mkdir dir="${distRoot}${file.separator}lib" />
+
+		<copy todir="${distRoot}${file.separator}lib">
+			<fileset dir="${libRoot}">
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+
+		<jar jarfile="${distRoot}${file.separator}${projectTitle}.jar">
+			<fileset dir="${buildRoot}">
+				<include name="org/xframium/**/*" />
+			</fileset>
+		</jar>
+
+		<exec dir="${distRoot}" executable="pack200">
+			<arg line="${projectTitle}.pack.gz" />
+			<arg line="${projectTitle}.jar" />
+		</exec>
+
+		<for param="jarFile">
+			<path>
+				<fileset dir="${distRoot}" includes="**/*.jar" />
+			</path>
+			<sequential>
+				<signjar jar="@{jarFile}" keystore="c:/projects/git/morelandlabs/internal/xframium_org" alias="xframium" storepass="xframium" />
+			</sequential>
+		</for>
+	</target>
+
+	<target name="-initClassPath">
+		<path id="compileLib">
+			<pathelement location="${buildRoot}" />
+			<pathelement location="..${file.separator}..${file.separator}persistence${file.separator}build" />
+			<pathelement location="..${file.separator}..${file.separator}common${file.separator}build" />
+			<pathelement location="..${file.separator}..${file.separator}serialization${file.separator}build" />
+			<pathelement location="..${file.separator}..${file.separator}textComp${file.separator}build" />
+			<pathelement location="..${file.separator}..${file.separator}qbit${file.separator}build" />
+			<pathelement location="..${file.separator}..${file.separator}core${file.separator}build" />
+			<pathelement location="..${file.separator}..${file.separator}frac${file.separator}common${file.separator}build" />
+			<pathelement location="..${file.separator}..${file.separator}frac${file.separator}core${file.separator}build" />
+			<pathelement location="..${file.separator}..${file.separator}basic${file.separator}desktop${file.separator}build" />
+			<pathelement location="${libRoot}${file.separator}commons-logging.jar" />
+			<pathelement location="${libRoot}${file.separator}avalon-framework-4.2.0.jar" />
+			<pathelement location="${libRoot}${file.separator}barcode4j-fop-ext-complete.jar" />
+			<pathelement location="${libRoot}${file.separator}batik-all-1.7.jar" />
+			<pathelement location="${libRoot}${file.separator}commons-io-1.4.jar" />
+			<pathelement location="${libRoot}${file.separator}commons-logging.jar" />
+			<pathelement location="${libRoot}${file.separator}derby.jar" />
+			<pathelement location="${libRoot}${file.separator}dpfpenrollment.jar" />
+			<pathelement location="${libRoot}${file.separator}dpfpverification.jar" />
+			<pathelement location="${libRoot}${file.separator}dpotapi.jar" />
+			<pathelement location="${libRoot}${file.separator}dpotjni.jar" />
+			<pathelement location="${libRoot}${file.separator}fop.jar" />
+			<pathelement location="${libRoot}${file.separator}jai_codec.jar" />
+			<pathelement location="${libRoot}${file.separator}jai_core.jar" />
+			<pathelement location="${libRoot}${file.separator}jmfCustom.jar" />
+			<pathelement location="${libRoot}${file.separator}xml-apis-ext-1.3.04.jar" />
+			<pathelement location="${libRoot}${file.separator}xmlgraphics-commons-1.4.jar" />
+		</path>
+	</target>
+
+	
+</project>

@@ -22,6 +22,8 @@ package org.xframium.page.element;
 
 import java.awt.Image;
 import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
 
 
@@ -136,6 +138,9 @@ public interface Element
 	 */
 	public boolean isPresent();
 	
+	public Dimension getSize();
+	
+	public Point getAt();
 	
 	public boolean isFocused();
 	/**

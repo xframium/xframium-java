@@ -150,6 +150,8 @@ public class DefaultPageData implements PageData
 	 */
 	public void addValue( String fieldName, String value )
 	{
+	    if ( fieldName == null || value == null )
+	        return;
 	    if ( fieldName.equals( "name" ) )
 	        recordName = value;
 	    else if ( fieldName.equals( "active" ) )

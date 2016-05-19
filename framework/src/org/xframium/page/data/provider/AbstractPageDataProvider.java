@@ -155,6 +155,9 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	 */
 	protected void addRecord( PageData pageData )
 	{
+	    if ( !pageData.isActive() )
+	        return;
+	    
 		Deque<PageData> dataList = recordMap.get( pageData.getType() );
 		idMap.put( pageData.getType() + "." + pageData.getName(), pageData );
 		dataList.offer( pageData );

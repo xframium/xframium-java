@@ -31,7 +31,9 @@ import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.ContextAware;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.HasCapabilities;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -749,5 +751,19 @@ public class SeleniumElement extends AbstractElement
 		
 		return executionId;
 	}
+
+    @Override
+    protected Dimension _getSize()
+    {
+        WebElement webElement = getElement();
+        return webElement.getSize();
+    }
+
+    @Override
+    protected Point _getAt()
+    {
+        WebElement webElement = getElement();
+        return webElement.getLocation();
+    }
 
 }

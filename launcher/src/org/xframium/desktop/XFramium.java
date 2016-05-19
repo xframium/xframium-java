@@ -196,7 +196,7 @@ public class XFramium extends JFrame implements RunListener, ActionListener
     }
 
     @Override
-    public boolean beforeRun( Device currentDevice, String runKey )
+    public boolean beforeRun( final Device currentDevice, final String runKey )
     {
         SwingUtilities.invokeLater( new Runnable()
         {

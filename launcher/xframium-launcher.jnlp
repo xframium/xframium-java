@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jnlp spec="1.7+" codebase="http://www.xframium.org/jnlp/xframium-launcher">
+<jnlp spec="1.7+" codebase="https://www.xframium.org/jnlp/xframium-launcher">
     <information>
         <title>xFramium Launcher</title>
         <vendor>xFramium</vendor>
@@ -12,7 +12,7 @@
         <all-permissions/>
     </security>
     <resources>
-        <jar href="xframium-launcher.jar"/>"/>
+        <jar href="xFramium-launcher.jar"/>
         <jar href="lib/activation-1.1.jar"/>
 		<jar href="lib/asm-4.2.jar"/>
 		<jar href="lib/bsh-2.0b4.jar"/>
@@ -74,7 +74,6 @@
 		<jar href="lib/xml-apis-1.4.01.jar"/>
 		<jar href="lib/xframium-java.jar"/>
 		<jar href="lib/xframium-driver.jar"/>
-		<!-- <jar href="lib/xmlbeans-2.6.0.jar"/> -->
 
     </resources>
     <application-desc main-class="org.xframium.desktop.XFramium"/>
