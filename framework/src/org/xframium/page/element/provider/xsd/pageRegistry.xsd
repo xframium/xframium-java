@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.xframium.org/pageRegistry" xmlns:tns="http://www.xframium.org/pageRegistry" elementFormDefault="qualified">
+	<annotation>
+		<documentation xml:lang="en">
+			xFramium Page Element Registry Definition
+		</documentation>
+	</annotation>
+
+	<element name="elementDefinition" type="tns:RegistryRoot" />
+
+	<complexType name="RegistryRoot">
+		<sequence>
+			<element name="import" type="tns:Import" minOccurs="0" maxOccurs="unbounded" />
+			<element name="site" type="tns:Site" minOccurs="1" maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<complexType name="Import">
+		<attribute name="fileName" type="string" use="required" />
+	</complexType>
+
+	<complexType name="Site">
+		<sequence>
+			<element name="page" type="tns:Page" minOccurs="1" maxOccurs="unbounded" />
+		</sequence>
+		<attribute name="name" type="string" use="required" />
+	</complexType>
+
+	<complexType name="Page">
+		<sequence>
+			<element name="element" type="tns:Element" minOccurs="1" maxOccurs="unbounded" />
+		</sequence>
+		<attribute name="name" type="string" use="required" />
+	</complexType>
+
+	<complexType name="Element">
+		<attribute name="name" type="string" use="required" />
+		<attribute name="descriptor" use="required">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="XPATH" />
+					<enumeration value="CLASS" />
+					<enumeration value="CSS" />
+					<enumeration value="ID" />
+					<enumeration value="LINK_TEXT" />
+					<enumeration value="NAME" />
+					<enumeration value="TAG_NAME" />
+					<enumeration value="V_TEXT" />
+					<enumeration value="V_IMAGE" />
+					<enumeration value="HTML" />
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="value" type="string" use="required" />
+		<attribute name="contextName" type="string" use="optional" />
+	</complexType>
+
+
+</schema>

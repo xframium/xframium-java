@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<schema xmlns="http://www.w3.org/2001/XMLSchema"  targetNamespace="http://www.xframium.org/cloudRegistry" xmlns:tns="http://www.xframium.org/cloudRegistry" elementFormDefault="qualified">
+	<annotation>
+        <documentation xml:lang="en">
+            xFramium Cloud Registry Definition
+        </documentation>
+    </annotation>
+    
+    <element name="cloudRegistry" type="tns:RegistryRoot" />
+    
+    <complexType name="RegistryRoot">
+    	<sequence>
+    		<element name="cloud" type="tns:Cloud" minOccurs="1" maxOccurs="unbounded" />
+    	</sequence>
+    </complexType>
+    
+    <complexType name="Cloud">
+    	<attribute name="name" type="string" use="required" />    	
+    	<attribute name="hostName" type="string" use="required" />
+    	<attribute name="userName" type="string" use="optional" />
+    	<attribute name="password" type="string" use="optional" />
+    	<attribute name="proxyHost" type="string" use="optional" />
+    	<attribute name="proxyPort" type="integer" use="optional" />
+    	<attribute name="proxyUser" type="string" use="optional" />
+    	<attribute name="proxyPassword" type="string" use="optional" />
+    	<attribute name="grid" type="string" use="optional" />
+    </complexType>
+    
+</schema>

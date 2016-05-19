@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.xframium.org/testRegistry" xmlns:tns="http://www.xframium.org/testRegistry" elementFormDefault="qualified">
+	<annotation>
+		<documentation xml:lang="en">
+			xFramium Test Registry Definition
+		</documentation>
+	</annotation>
+
+	<element name="suite" type="tns:RegistryRoot" />
+
+	<complexType name="RegistryRoot">
+		<sequence>
+			<element name="import" type="tns:Import" minOccurs="0" maxOccurs="unbounded" />		
+			<element name="model" type="tns:Model" minOccurs="0" maxOccurs="1" />
+			<element name="test" type="tns:Test" minOccurs="0" maxOccurs="unbounded" />
+			<element name="function" type="tns:Test" minOccurs="0" maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<complexType name="Import">
+		<attribute name="fileName" type="string" use="required" />
+		<attribute name="includeTests" type="boolean" use="optional" default="true" />
+		<attribute name="includeFunctions" type="boolean" use="optional" default="true" />
+	</complexType>
+
+	<complexType name="Model">
+		<sequence>
+			<element name="page" type="tns:Page" minOccurs="1" maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<complexType name="Page">
+		<attribute name="name" type="string" use="required" />
+		<attribute name="class" type="string" use="optional" />
+	</complexType>
+
+	<complexType name="Test">
+		
+		<sequence>
+			<element name="step" type="tns:Step" minOccurs="1" maxOccurs="unbounded" />
+		</sequence>
+		
+		<attribute name="name" type="string" use="required" />
+		<attribute name="dataDriver" type="string" use="optional" />
+		<attribute name="dataProvider" type="string" use="optional" />
+		<attribute name="tagNames" type="string" use="optional" />
+		<attribute name="linkId" type="string" use="optional" />
+		<attribute name="timed" type="boolean" use="optional" default="false" />
+		<attribute name="threshold" type="integer" use="optional" default="0" />
+		<attribute name="active" type="boolean" use="optional" default="true" />
+		<attribute name="os" type="string" use="optional" />
+		
+	</complexType>
+	
+	<complexType name="Step">
+		<sequence>
+			<element name="parameter" type="tns:Parameter" minOccurs="0" maxOccurs="unbounded" />
+			<element name="token" type="tns:Token" minOccurs="0" maxOccurs="unbounded" />
+			<element name="step" type="tns:Step" minOccurs="0" maxOccurs="unbounded" />
+		</sequence>
+		<attribute name="name" type="string" use="required" />
+		<attribute name="page" type="string" use="optional" />
+		<attribute name="type" use="required">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="CALL" />
+					<enumeration value="CLICK" />
+					<enumeration value="EXISTS" />
+					<enumeration value="FUNCTION" />
+					<enumeration value="GESTURE" />
+					<enumeration value="RETURN" />
+					<enumeration value="SET" />
+					<enumeration value="VALUE" />
+					<enumeration value="GET" />
+					<enumeration value="WAIT" />
+					<enumeration value="WAIT_FOR" />
+					<enumeration value="ATTRIBUTE" />
+					<enumeration value="LOOP" />
+					<enumeration value="BREAK" />
+					<enumeration value="DEVICE" />
+					<enumeration value="FORK" />
+					<enumeration value="VISIBLE" />
+					<enumeration value="VERIFY_COLOR" />
+					<enumeration value="VERIFY_CONTRAST" />
+					<enumeration value="WINDOW" />
+					<enumeration value="EXECJS" />
+					<enumeration value="COMPARE" />
+					<enumeration value="STRING" />
+					<enumeration value="MATH" />
+					<enumeration value="MOUSE" />
+					<enumeration value="CACHE" />
+					<enumeration value="REPORT" />
+					<enumeration value="SYNC" />
+                    <enumeration value="OPEN_PAGE" />
+					<enumeration value="ADD_COOKIE" />
+					<enumeration value="DELETE_COOKIE" />
+					<enumeration value="DELETE_COOKIES" />
+					<enumeration value="GET_COOKIE" />
+					<enumeration value="GET_COOKIES" />
+					<enumeration value="ADD_DEVICE" />
+					<enumeration value="AT" />
+					<enumeration value="HAS_FOCUS" />
+					<enumeration value="ALIGN" />
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="active" type="boolean" use="optional" default="true" />
+		<attribute name="linkId" type="string" use="optional" />
+		<attribute name="os" type="string" use="optional" />
+		<attribute name="poi" type="string" use="optional" />
+		<attribute name="threshold" type="integer" use="optional" default="0"/>
+		<attribute name="timed" type="boolean" use="optional" default="false" />
+		<attribute name="inverse" type="boolean" use="optional" default="false" />
+		<attribute name="wait" type="integer" use="optional" default="0" />
+		<attribute name="failureMode" use="optional" default="ERROR">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="ERROR" />
+					<enumeration value="IGNORE" />
+					<enumeration value="LOG_IGNORE" />
+				</restriction>
+			</simpleType>
+		</attribute>
+		
+		<attribute name="validation" type="string" use="optional" />
+		<attribute name="validationType" use="optional">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="REGEX" />
+					<enumeration value="EMPTY" />
+					<enumeration value="NOT_EMPTY" />
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="context" type="string" use="optional" />
+                <attribute name="device" type="string" use="optional" />
+		
+	</complexType>
+	
+	<complexType name="Token">
+		<attribute name="type" use="optional">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="CONTEXT" />
+					<enumeration value="PROPERTY" />
+					<enumeration value="STATIC" />
+					<enumeration value="CONTENT" />
+					<enumeration value="DATA" />
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="value" type="string" use="required" />
+		<attribute name="name" type="string" use="required" />
+	</complexType>
+	
+	<complexType name="Parameter">
+		<attribute name="type" use="optional">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="CONTEXT" />
+					<enumeration value="PROPERTY" />
+					<enumeration value="STATIC" />
+					<enumeration value="CONTENT" />
+					<enumeration value="DATA" />
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="value" type="string" use="required" />
+	</complexType>
+	
+
+
+</schema>
