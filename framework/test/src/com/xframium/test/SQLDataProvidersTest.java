@@ -51,7 +51,7 @@ public class SQLDataProvidersTest
         PageData[] data = PageDataManager.instance().getRecords( "searchData1" );
 
         Assert.assertTrue( data != null, "Got some data" );
-        Assert.assertTrue( data.length > 0, "Got some data" );
+        Assert.assertTrue( data.length > 0, "Got some data II" );
         Assert.assertTrue( "perfecto".equals( data[0].getData( "text" )) , "Got the right data" );
     }
 

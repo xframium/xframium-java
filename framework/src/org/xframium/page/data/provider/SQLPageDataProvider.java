@@ -130,6 +130,7 @@ public class SQLPageDataProvider extends AbstractPageDataProvider
                 if( currentRecord == null )
                 {
                     currentRecord = new DefaultPageData( record_type_name, record_name, active );
+                    existingRecordsByName.put( record_name, currentRecord );
                 }
 
                 String currentName = (String) data[i][4];
