@@ -55,7 +55,10 @@ public enum BY
 	V_IMAGE( 8, "Visual Image", "VISUAL" ),
 	
 	/** The html. */
-	HTML( 9, "HTML Properties" );
+	HTML( 9, "HTML Properties" ),
+	
+	/** The html. */
+    PROP( 10, "Simplified Properties" );
 	
 	/** The id. */
 	private int id;

@@ -20,11 +20,64 @@
  *******************************************************************************/
 package org.xframium.utility;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.w3c.dom.Node;
 
 public class XPathGenerator
 {
-
+    private static final String COMMA = ",";
+    private static final String AMP = "&";
+    private static final String EQUALS = "=";
+    private static final String AT = "@";
+    private static final String COLON = ":";
+    private static final String RESOURCE_ID = "resource-id";
+    
+    public static void main( String[] args )
+    {
+        Map<String,String> map = new HashMap<String,String>();
+        map.put(  "resource-id", "com.discoverfinancial.mobile" );
+        
+        System.out.println( generateXPathFromProperty( map, "resource-id=password_field&name=Forgot Password,text=Bank" ) );
+        
+        
+    }
+    
+    public static String generateXPathFromProperty( Map<String,String> propertyMap, String propertyDefinition )
+    {
+        StringBuilder xpathBuilder = new StringBuilder();
+        String[] ors = propertyDefinition.split( COMMA );
+        
+        for ( String myOr : ors )
+        {
+            xpathBuilder.append( "/*" );
+            String[] ands = myOr.split( AMP );
+            
+            for ( int i=0; i<ands.length; i++ )
+            {
+                String[] nameValue = ands[ i ].split( EQUALS ); 
+                
+                xpathBuilder.append( "[" ).append( AT ).append( nameValue[ 0 ] ).append( EQUALS ).append( "'" );
+                if ( RESOURCE_ID.equals( nameValue[ 0 ].toLowerCase() ) )
+                {
+                    if ( propertyMap.get( RESOURCE_ID ) != null && !nameValue[ 1 ].contains( COLON ) )
+                        xpathBuilder.append( propertyMap.get( RESOURCE_ID ) ).append( ":id/" ).append(  nameValue[ 1 ] ).append( "'" );
+                    else
+                        xpathBuilder.append( nameValue[ 1 ] ).append( "'" );
+                }
+                else
+                    xpathBuilder.append( nameValue[ 1 ] ).append( "'" );
+                
+                xpathBuilder.append( "]" );
+            }
+            
+            xpathBuilder.append( "|" );
+        }
+        
+        return xpathBuilder.substring( 0, xpathBuilder.length() - 1 );
+        
+    }
+    
     public static String genrateXpath( Node currentNode )
     {
         StringBuilder xpath = new StringBuilder();

@@ -321,4 +321,7 @@ public interface Element
 	 * @return the element
 	 */
 	public Image getImage( Resolution imageResolution );
+	
+	public void setCacheNative( boolean cacheNative );
+	public boolean isCacheNative();
 }
