@@ -195,7 +195,7 @@ public class TestDriver
             switch ( configProperties.getProperty( DRIVER[0] ).toUpperCase() )
             {
                 case "XML":
-                    KeyWordDriver.instance().loadTests( new XMLKeyWordProvider( new File( configProperties.getProperty( DRIVER[1] ) ) ) );
+                    KeyWordDriver.instance().loadTests( new XMLKeyWordProvider( findFile( configFolder, new File( configProperties.getProperty( DRIVER[1] ) ) ) ) );
 
                     List<String> testArray = new ArrayList<String>( 10 );
 
@@ -283,7 +283,7 @@ public class TestDriver
         switch ( (configProperties.getProperty( CLOUD[0] )).toUpperCase() )
         {
             case "XML":
-                CloudRegistry.instance().setCloudProvider( new XMLCloudProvider( new File( configProperties.getProperty( CLOUD[1] ) ) ) );
+                CloudRegistry.instance().setCloudProvider( new XMLCloudProvider( findFile( configFolder, new File( configProperties.getProperty( CLOUD[1] ) ) ) ) );
                 break;
 
             case "SQL":
@@ -295,12 +295,12 @@ public class TestDriver
                 break;
 
             case "CSV":
-                CloudRegistry.instance().setCloudProvider( new CSVCloudProvider( new File( configProperties.getProperty( CLOUD[1] ) ) ) );
+                CloudRegistry.instance().setCloudProvider( new CSVCloudProvider( findFile( configFolder, new File( configProperties.getProperty( CLOUD[1] ) ) ) ) );
                 break;
 
             case "EXCEL":
                 validateProperties( configProperties, new String[] { "cloudRegistry.tabName" } );
-                CloudRegistry.instance().setCloudProvider( new ExcelCloudProvider( new File( configProperties.getProperty( CLOUD[1] ) ), configProperties.getProperty( "cloudRegistry.tabName" ) ) );
+                CloudRegistry.instance().setCloudProvider( new ExcelCloudProvider( findFile( configFolder, new File( configProperties.getProperty( CLOUD[1] ) ) ), configProperties.getProperty( "cloudRegistry.tabName" ) ) );
                 break;
         }
 
@@ -342,19 +342,21 @@ public class TestDriver
     {
         validateProperties( configProperties, APP );
 
+        File appFile = findFile( configFolder, new File( configProperties.getProperty( APP[1] ) ) );
+        
         switch ( (configProperties.getProperty( APP[0] )).toUpperCase() )
         {
             case "XML":
-                ApplicationRegistry.instance().setApplicationProvider( new XMLApplicationProvider( new File( configProperties.getProperty( APP[1] ) ) ) );
+                ApplicationRegistry.instance().setApplicationProvider( new XMLApplicationProvider( appFile ) );
                 break;
 
             case "CSV":
-                ApplicationRegistry.instance().setApplicationProvider( new CSVApplicationProvider( new File( configProperties.getProperty( APP[1] ) ) ) );
+                ApplicationRegistry.instance().setApplicationProvider( new CSVApplicationProvider( appFile ) );
                 break;
 
             case "EXCEL":
                 validateProperties( configProperties, new String[] { "applicationRegistry.tabName" } );
-                ApplicationRegistry.instance().setApplicationProvider( new ExcelApplicationProvider( new File( configProperties.getProperty( APP[1] ) ), configProperties.getProperty( "applicationRegistry.tabName" ) ) );
+                ApplicationRegistry.instance().setApplicationProvider( new ExcelApplicationProvider( appFile, configProperties.getProperty( "applicationRegistry.tabName" ) ) );
                 break;
         }
 
@@ -365,7 +367,7 @@ public class TestDriver
     {
         validateProperties( configProperties, ARTIFACT );
 
-        DataManager.instance().setReportFolder( new File( configProperties.getProperty( ARTIFACT[0] ) ) );
+        DataManager.instance().setReportFolder( new File( configFolder, configProperties.getProperty( ARTIFACT[0] ) ) );
         String storeImages = configProperties.getProperty( "artifactProducer.storeImages" );
         if ( storeImages != null && !storeImages.isEmpty() )
             PageManager.instance().setStoreImages( Boolean.parseBoolean( storeImages ) );
@@ -413,7 +415,8 @@ public class TestDriver
         {
             case "XML":
                 validateProperties( configProperties, PAGE );
-                PageManager.instance().setElementProvider( new XMLElementProvider( new File( configProperties.getProperty( PAGE[2] ) ) ) );
+                
+                PageManager.instance().setElementProvider( new XMLElementProvider( findFile( configFolder, new File( configProperties.getProperty( PAGE[2] ) ) ) ) );
                 break;
 
             case "SQL":
@@ -426,7 +429,7 @@ public class TestDriver
 
             case "CSV":
                 validateProperties( configProperties, PAGE );
-                PageManager.instance().setElementProvider( new CSVElementProvider( new File( configProperties.getProperty( PAGE[2] ) ) ) );
+                PageManager.instance().setElementProvider( new CSVElementProvider( findFile( configFolder, new File( configProperties.getProperty( PAGE[2] ) ) ) ) );
                 break;
 
             case "EXCEL":
@@ -435,7 +438,7 @@ public class TestDriver
 
                 File[] files = new File[fileNames.length];
                 for ( int i = 0; i < fileNames.length; i++ )
-                    files[i] = new File( fileNames[i] );
+                    files[i] = findFile( configFolder, new File( fileNames[i] ) );
 
                 PageManager.instance().setElementProvider( new ExcelElementProvider( files, configProperties.getProperty( PAGE[0] ) ) );
                 break;
@@ -449,7 +452,7 @@ public class TestDriver
             {
                 case "XML":
                     validateProperties( configProperties, DATA );
-                    PageDataManager.instance().setPageDataProvider( new XMLPageDataProvider( new File( configProperties.getProperty( DATA[1] ) ) ) );
+                    PageDataManager.instance().setPageDataProvider( new XMLPageDataProvider( findFile( configFolder, new File( configProperties.getProperty( DATA[1] ) ) ) ) );
                     break;
 
                 case "SQL":
@@ -466,7 +469,7 @@ public class TestDriver
 
                     File[] files = new File[fileNames.length];
                     for ( int i = 0; i < fileNames.length; i++ )
-                        files[i] = new File( fileNames[i] );
+                        files[i] = findFile( configFolder, new File( fileNames[i] ) );
                     
                     validateProperties( configProperties, new String[] { "pageManagement.pageData.tabNames" } );
                     PageDataManager.instance().setPageDataProvider( new ExcelPageDataProvider( files, configProperties.getProperty( "pageManagement.pageData.tabNames" ) ) );
@@ -482,7 +485,7 @@ public class TestDriver
             {
                 case "XML":
                     validateProperties( configProperties, CONTENT );
-                    ContentManager.instance().setContentProvider( new XMLContentProvider( new File( configProperties.getProperty( CONTENT[1] ) ) ) );
+                    ContentManager.instance().setContentProvider( new XMLContentProvider( findFile( configFolder, new File( configProperties.getProperty( CONTENT[1] ) ) ) ) );
                     break;
 
                 case "SQL":
@@ -503,7 +506,7 @@ public class TestDriver
                     for ( int i = 0; i < lookupString.length; i++ )
                         lookupColumns[i] = Integer.parseInt( lookupString[i].trim() );
 
-                    ContentManager.instance().setContentProvider( new ExcelContentProvider( new File( configProperties.getProperty( CONTENT[1] ) ), configProperties.getProperty( "pageManagement.content.tabName" ), keyColumn, lookupColumns ) );
+                    ContentManager.instance().setContentProvider( new ExcelContentProvider( findFile( configFolder, new File( configProperties.getProperty( CONTENT[1] ) ) ), configProperties.getProperty( "pageManagement.content.tabName" ), keyColumn, lookupColumns ) );
                     break;
 
             }
@@ -558,7 +561,7 @@ public class TestDriver
                     System.err.println( "******* Property [deviceManagement.fileName] was not specified" );
                     System.exit( -1 );
                 }
-                DataManager.instance().readData( new CSVDataProvider( new File( fileName ), DriverType.valueOf( configProperties.getProperty( DEVICE[1] ) ) ) );
+                DataManager.instance().readData( new CSVDataProvider( findFile( configFolder, new File( fileName ) ), DriverType.valueOf( configProperties.getProperty( DEVICE[1] ) ) ) );
                 break;
 
             case "XML":
@@ -568,7 +571,7 @@ public class TestDriver
                     System.err.println( "******* Property [deviceManagement.fileName] was not specified" );
                     System.exit( -1 );
                 }
-                DataManager.instance().readData( new XMLDataProvider( new File( xmlFileName ), DriverType.valueOf( configProperties.getProperty( DEVICE[1] ) ) ) );
+                DataManager.instance().readData( new XMLDataProvider( findFile( configFolder, new File( xmlFileName ) ), DriverType.valueOf( configProperties.getProperty( DEVICE[1] ) ) ) );
                 break;
 
             case "SQL":
@@ -585,7 +588,7 @@ public class TestDriver
                 validateProperties( configProperties, new String[] { "deviceManagement.tabName", "deviceManagement.fileName" } );
                 String excelFile = configProperties.getProperty( "deviceManagement.fileName" );
 
-                DataManager.instance().readData( new ExcelDataProvider( new File( excelFile ), configProperties.getProperty( "deviceManagement.tabName" ), DriverType.valueOf( configProperties.getProperty( DEVICE[1] ) ) ) );
+                DataManager.instance().readData( new ExcelDataProvider( findFile( configFolder, new File( excelFile ) ), configProperties.getProperty( "deviceManagement.tabName" ), DriverType.valueOf( configProperties.getProperty( DEVICE[1] ) ) ) );
                 break;
 
             case "NAMED":
@@ -624,5 +627,18 @@ public class TestDriver
         }
 
         return true;
+    }
+    
+    private static File findFile( File rootFolder, File useFile )
+    {
+        if ( useFile.exists() || useFile.isAbsolute() )
+            return useFile;
+        
+        File myFile = new File( rootFolder, useFile.getPath() );
+        if ( myFile.exists() )
+            return myFile;
+        
+        throw new IllegalArgumentException( "Could not find " + useFile.getName() + " at " + useFile.getPath() + " or " + myFile.getAbsolutePath() );
+        
     }
 }
