@@ -478,11 +478,10 @@ public class TestDriver
         String content = configProperties.getProperty( CONTENT[0] );
         if ( content != null && !content.isEmpty() )
         {
-            validateProperties( configProperties, CONTENT );
-
             switch ( (configProperties.getProperty( CONTENT[0] )).toUpperCase() )
             {
                 case "XML":
+                    validateProperties( configProperties, CONTENT );
                     ContentManager.instance().setContentProvider( new XMLContentProvider( new File( configProperties.getProperty( CONTENT[1] ) ) ) );
                     break;
 

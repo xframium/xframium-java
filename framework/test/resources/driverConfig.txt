@@ -52,3 +52,8 @@ deviceManagement.driverType=APPIUM
 driver.frameworkType=OBJ
 driver.configName=com.xframium.test.SQLDataProvidersTest
 
+#
+# Content Configuration
+#
+pageManagement.content.provider=SQL
+
