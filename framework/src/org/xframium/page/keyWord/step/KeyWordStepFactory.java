@@ -54,6 +54,7 @@ import org.xframium.page.keyWord.step.spi.KWSLoop;
 import org.xframium.page.keyWord.step.spi.KWSMath;
 import org.xframium.page.keyWord.step.spi.KWSMouse;
 import org.xframium.page.keyWord.step.spi.KWSOpenPage;
+import org.xframium.page.keyWord.step.spi.KWSPerfectoScript;
 import org.xframium.page.keyWord.step.spi.KWSReport;
 import org.xframium.page.keyWord.step.spi.KWSReturn;
 import org.xframium.page.keyWord.step.spi.KWSSet;
@@ -142,6 +143,7 @@ public class KeyWordStepFactory
         addKeyWord( "ALIGN", KWSAlign.class );
         addKeyWord( "SYNC", KWSSync.class );
         addKeyWord( "AT", KWSAt.class );
+        addKeyWord( "PERFECTO_SCRIPT", KWSPerfectoScript.class );
     }
 
     /**

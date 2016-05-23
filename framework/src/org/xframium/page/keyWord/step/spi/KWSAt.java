@@ -56,22 +56,11 @@ public class KWSAt extends AbstractKeyWordStep
 		currentElement.setCacheNative( true );
 		Point at = ( (WebElement) currentElement.getNative() ).getLocation();
         Dimension size = ( (WebElement) currentElement.getNative() ).getSize();
-        
-        
-        System.out.println( at );
-        System.out.println( size );
 		
 		if ( getContext() != null )
         {
             if ( log.isDebugEnabled() )
                 log.debug( "Setting Context Data to [" + currentElement.getValue() + "] for [" + getContext() + "]" );
-            
-            //Point at = ( (WebElement) currentElement.getNative() ).getLocation();
-            //Dimension size = ( (WebElement) currentElement.getNative() ).getSize();
-            
-            
-            System.out.println( at );
-            System.out.println( size );
             
             contextMap.put( getContext(), ( (WebElement) currentElement.getNative() ).getLocation() );
         }

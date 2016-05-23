@@ -26,6 +26,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.touch.TouchActions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.gesture.AbstractPressGesture;
+import org.xframium.integrations.common.PercentagePoint;
+import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.spi.driver.NativeDriverProvider;
 
 // TODO: Auto-generated Javadoc
@@ -41,26 +43,40 @@ public class PressGesture extends AbstractPressGesture
 	@Override
 	protected boolean _executeGesture( WebDriver webDriver )
 	{
-		RemoteWebDriver remoteDriver = null;
+	    String executionId = getExecutionId( webDriver );
+        String deviceName = getDeviceName( webDriver );
 		
-		if ( webDriver instanceof RemoteWebDriver )
-			remoteDriver = (RemoteWebDriver) webDriver;
-		else if ( webDriver instanceof NativeDriverProvider )
-		{
-			NativeDriverProvider nativeProvider = (NativeDriverProvider) webDriver;
-			if ( nativeProvider.getNativeDriver() instanceof RemoteWebDriver )
-				remoteDriver = (RemoteWebDriver) nativeProvider.getNativeDriver();
-			else
-				throw new IllegalArgumentException( "Unsupported Driver Type " + webDriver );
-		}
 		
-		Dimension screenDimension = remoteDriver.manage().window().getSize();
-		
-		Point pressPosition = getActualPoint( getPressPosition(), screenDimension );
-		
-		TouchActions swipeAction = new TouchActions( remoteDriver );
-		swipeAction.down(  pressPosition.getX(), pressPosition.getY() ).up(pressPosition.getX(), pressPosition.getY()).perform();
-		
+		if ( webElement != null )
+        {
+            if ( webElement.getLocation() != null && webElement.getSize() != null && webElement.getSize().getWidth() > 0 && webElement.getSize().getHeight() > 0 )
+            {
+                int x = (int) ( ( getPressPosition().getX() / 100.0 ) * (double) webElement.getSize().getWidth() + webElement.getLocation().getX() );
+                int y = (int) ( ( getPressPosition().getY() / 100.0 ) * (double) webElement.getSize().getHeight() + webElement.getLocation().getY() );
+                
+                PercentagePoint pressPosition = new PercentagePoint( x, y, false );
+                System.out.println( "Pressing at " + pressPosition );
+                
+                for ( int i=0; i<getPressCount(); i++ )
+                {
+                
+                    PerfectoMobile.instance().gestures().tapAt( executionId, deviceName, pressPosition );
+                    try
+                    {
+                        Thread.sleep( 500 );
+                    }
+                    catch(Exception e )
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            else
+            {
+                log.warn( "A relative elements was specified however no size could be determined" );
+                return false;
+            }
+        }
 		return true;
 	}
 
