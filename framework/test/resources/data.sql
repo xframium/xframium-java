@@ -44,6 +44,9 @@ values ( 'Google', 'Home', 'SEARCH_FOR', 'XPATH', '//input[@id=''lst-ib'']', nul
 insert into PERFECTO_ELEMENTS ( SITE_NAME, PAGE_NAME, NAME, DESCRIPTOR, VALUE, CONTEXT_NAME )
 values ( 'Google', 'Home', 'SEARCH', 'XPATH', '//button[@name=''btnG;'']', null );
 
+insert into PERFECTO_APPLICATIONS( NAME, APP_PACKAGE, BUNDLE_ID, URL, IOS_INSTALL, ANDROID_INSTALL )
+values ( 'Google', null, null, 'http://www.google.com', null, null );
+
 commit;
 
            

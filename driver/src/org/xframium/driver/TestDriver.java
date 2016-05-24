@@ -35,6 +35,7 @@ import org.xframium.application.ApplicationRegistry;
 import org.xframium.application.CSVApplicationProvider;
 import org.xframium.application.ExcelApplicationProvider;
 import org.xframium.application.XMLApplicationProvider;
+import org.xframium.application.SQLApplicationProvider;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.content.ContentManager;
 import org.xframium.content.provider.ExcelContentProvider;
@@ -89,6 +90,7 @@ public class TestDriver
     private static final String[] CLOUD = new String[] { "cloudRegistry.provider", "cloudRegistry.fileName", "cloudRegistry.cloudUnderTest" };
     private static final String[] OPT_CLOUD = new String[] { "cloudRegistry.query" };
     private static final String[] APP = new String[] { "applicationRegistry.provider", "applicationRegistry.fileName", "applicationRegistry.applicationUnderTest" };
+    private static final String[] OPT_APP = new String[] { "applicationRegistry.query", "applicationRegistry.capQuery" };
     private static final String[] ARTIFACT = new String[] { "artifactProducer.parentFolder" };
     private static final String[] PAGE = new String[] { "pageManagement.siteName", "pageManagement.provider", "pageManagement.fileName" };
     private static final String[] OPT_PAGE = new String[] { "pageManagement.query" };
@@ -340,19 +342,31 @@ public class TestDriver
 
     private static void configureApplicationRegistry( Properties configProperties )
     {
-        validateProperties( configProperties, APP );
+        
 
         switch ( (configProperties.getProperty( APP[0] )).toUpperCase() )
         {
             case "XML":
+                validateProperties( configProperties, APP );
                 ApplicationRegistry.instance().setApplicationProvider( new XMLApplicationProvider( new File( configProperties.getProperty( APP[1] ) ) ) );
                 break;
 
             case "CSV":
+                validateProperties( configProperties, APP );
                 ApplicationRegistry.instance().setApplicationProvider( new CSVApplicationProvider( new File( configProperties.getProperty( APP[1] ) ) ) );
                 break;
 
+            case "SQL":
+                ApplicationRegistry.instance().setApplicationProvider( new SQLApplicationProvider( configProperties.getProperty( JDBC[0] ),
+                                                                                                   configProperties.getProperty( JDBC[1] ),
+                                                                                                   configProperties.getProperty( JDBC[2] ),
+                                                                                                   configProperties.getProperty( JDBC[3] ),
+                                                                                                   configProperties.getProperty( OPT_APP[0] ),
+                                                                                                   configProperties.getProperty( OPT_APP[1] )));
+                break;
+
             case "EXCEL":
+                validateProperties( configProperties, APP );
                 validateProperties( configProperties, new String[] { "applicationRegistry.tabName" } );
                 ApplicationRegistry.instance().setApplicationProvider( new ExcelApplicationProvider( new File( configProperties.getProperty( APP[1] ) ), configProperties.getProperty( "applicationRegistry.tabName" ) ) );
                 break;
