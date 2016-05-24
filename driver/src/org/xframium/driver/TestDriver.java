@@ -343,8 +343,6 @@ public class TestDriver
     private static void configureApplicationRegistry( Properties configProperties )
     {
         
-
-        File appFile = findFile( configFolder, new File( configProperties.getProperty( APP[1] ) ) );
         
         switch ( (configProperties.getProperty( APP[0] )).toUpperCase() )
         {
@@ -368,6 +366,7 @@ public class TestDriver
                 break;
 
             case "EXCEL":
+                File appFile = findFile( configFolder, new File( configProperties.getProperty( APP[1] ) ) );
                 validateProperties( configProperties, APP );
                 validateProperties( configProperties, new String[] { "applicationRegistry.tabName" } );
                 ApplicationRegistry.instance().setApplicationProvider( new ExcelApplicationProvider( appFile, configProperties.getProperty( "applicationRegistry.tabName" ) ) );
