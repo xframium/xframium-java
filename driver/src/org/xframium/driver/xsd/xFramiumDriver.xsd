@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.xframium.org/xFramiumDriver" xmlns:tns="http://www.xframium.org/xFramiumDriver" elementFormDefault="qualified">
+	<annotation>
+		<documentation xml:lang="en">
+			xFramium Driver Definition
+		</documentation>
+	</annotation>
+
+	<element name="xFramium" type="tns:xFramiumRoot" />
+
+	<complexType name="xFramiumRoot">
+		<sequence>
+			<element name="application" type="tns:xApplication" minOccurs="1" maxOccurs="1" />
+			<element name="cloud" type="tns:xCloud" minOccurs="1" maxOccurs="1" />
+			<element name="site" type="tns:xSite" minOccurs="1" maxOccurs="1" />
+			<element name="suite" type="tns:xSuite" />
+		</sequence>
+	</complexType>
+
+	<complexType name="xApplication">
+		<sequence>
+			<element name="capability" type="tns:xDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
+		</sequence>
+		<attribute name="fileName" type="string" use="optional" />
+		<attribute name="provider" use="optional" default="LOCAL">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="XML" />
+					<enumeration value="SQL" />
+					<enumeration value="CSV" />
+					<enumeration value="EXCEL" />
+					<enumeration value="LOCAL" />
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="name" type="string" use="required" />
+		<attribute name="appPackage" type="string" use="optional" />
+		<attribute name="bundleId" type="string" use="optional" />
+		<attribute name="url" type="string" use="optional" />
+		<attribute name="iosInstall" type="string" use="optional" />
+		<attribute name="androidInstall" type="string" use="optional" />
+	</complexType>
+	
+	<complexType name="xDriver">
+		<sequence>
+			<element name="property" type="tns:xProperty" minOccurs="0" maxOccurs="unbounded" />
+			<element name="propertyAdapter" type="tns:xPropertyAdapter" minOccurs="0" maxOccurs="unbounded" />
+			<element name="artifact" type="tns:xArtifact" minOccurs="0" maxOccurs="unbounded" />
+		</sequence>
+		<attribute name="personas" type="string" use="optional" />
+		<attribute name="cachingEnabled" type="boolean" use="optional" default="false" />
+		<attribute name="stepTags" type="string" use="optional" />
+		<attribute name="testNames" type="string" use="optional" />
+		<attribute name="tagNames" type="string" use="optional" />
+		<attribute name="dryRun" type="boolean" use="optional" default="false" />
+		<attribute name="outputFolder" type="string" use="required" />
+	</complexType>
+	
+	<complexType name="xArtifact">
+		<attribute name="descriptor" use="required">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="EXECUTION_REPORT_PDF" />
+					<enumeration value="EXECUTION_REPORT_HTML" />
+					<enumeration value="EXECUTION_REPORT_XML" />
+					<enumeration value="EXECUTION_REPORT_CSV" />
+					<enumeration value="FAILURE_SOURCE" />
+					<enumeration value="WCAG_REPORT" />
+					<enumeration value="DEVICE_LOG" />
+					<enumeration value="EXECUTION_RECORD_HTML" />
+					<enumeration value="EXECUTION_RECORD_CSV" />
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="active" type="boolean" use="optional" default="true" />
+	</complexType>
+
+	<complexType name="xProperty">
+		<simpleContent>
+			<extension base="string">
+				<attribute name="name" type="string" use="required" />
+			</extension>
+		</simpleContent>
+	</complexType>
+	
+	<complexType name="xPropertyAdapter">
+		<simpleContent>
+			<extension base="string">
+				<attribute name="className" type="string" use="required" />
+			</extension>
+		</simpleContent>
+	</complexType>
+
+	<complexType name="xDeviceCapability">
+		<simpleContent>
+			<extension base="string">
+				<attribute name="name" type="string" use="required" />
+				<attribute name="class" default="STRING">
+					<simpleType>
+						<restriction base="string">
+							<enumeration value="BOOLEAN" />
+							<enumeration value="OBJECT" />
+							<enumeration value="PLATFORM" />
+							<enumeration value="STRING" />
+						</restriction>
+					</simpleType>
+				</attribute>
+			</extension>
+		</simpleContent>
+	</complexType>
+	
+	<complexType name="xCloud">
+		<attribute name="fileName" type="string" use="required" />
+    	<attribute name="name" type="string" use="required" />    	
+    	<attribute name="hostName" type="string" use="optional" />
+    	<attribute name="userName" type="string" use="optional" />
+    	<attribute name="password" type="string" use="optional" />
+    	<attribute name="proxyHost" type="string" use="optional" />
+    	<attribute name="proxyPort" type="integer" use="optional" />
+    	<attribute name="proxyUser" type="string" use="optional" />
+    	<attribute name="proxyPassword" type="string" use="optional" />
+    	<attribute name="grid" type="string" use="optional" />
+    </complexType>
+    
+    <complexType name="xSite">
+		<sequence>
+			<element name="page" type="tns:xPage" minOccurs="1" maxOccurs="unbounded" />
+		</sequence>
+		<attribute name="name" type="string" use="required" />
+	</complexType>
+
+	<complexType name="xPage">
+		<sequence>
+			<element name="element" type="tns:xElement" minOccurs="1" maxOccurs="unbounded" />
+		</sequence>
+		<attribute name="name" type="string" use="required" />
+	</complexType>
+
+	<complexType name="xElement">
+		<attribute name="name" type="string" use="required" />
+		<attribute name="descriptor" use="required">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="XPATH" />
+					<enumeration value="CLASS" />
+					<enumeration value="CSS" />
+					<enumeration value="ID" />
+					<enumeration value="LINK_TEXT" />
+					<enumeration value="NAME" />
+					<enumeration value="TAG_NAME" />
+					<enumeration value="V_TEXT" />
+					<enumeration value="V_IMAGE" />
+					<enumeration value="HTML" />
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="value" type="string" use="required" />
+		<attribute name="contextName" type="string" use="optional" />
+	</complexType>
+	
+	<complexType name="xSuite">
+		<sequence>	
+			<element name="model" type="tns:xModel" minOccurs="0" maxOccurs="1" />
+			<element name="test" type="tns:xTest" minOccurs="0" maxOccurs="unbounded" />
+			<element name="function" type="tns:xTest" minOccurs="0" maxOccurs="unbounded" />
+		</sequence>
+		<attribute name="fileName" type="string" use="optional" />
+	</complexType>
+
+	<complexType name="xModel">
+		<sequence>
+			<element name="page" type="tns:xTestPage" minOccurs="1" maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<complexType name="xTestPage">
+		<attribute name="name" type="string" use="required" />
+		<attribute name="class" type="string" use="optional" />
+	</complexType>
+
+	<complexType name="xTest">
+		
+		<sequence>
+			<element name="step" type="tns:xStep" minOccurs="1" maxOccurs="unbounded" />
+		</sequence>
+		
+		<attribute name="name" type="string" use="required" />
+		<attribute name="dataDriver" type="string" use="optional" />
+		<attribute name="dataProvider" type="string" use="optional" />
+		<attribute name="tagNames" type="string" use="optional" />
+		<attribute name="linkId" type="string" use="optional" />
+		<attribute name="timed" type="boolean" use="optional" default="false" />
+		<attribute name="threshold" type="integer" use="optional" default="0" />
+		<attribute name="active" type="boolean" use="optional" default="true" />
+		<attribute name="os" type="string" use="optional" />
+		
+	</complexType>
+	
+	<complexType name="xStep">
+		<sequence>
+			<element name="parameter" type="tns:xParameter" minOccurs="0" maxOccurs="unbounded" />
+			<element name="token" type="tns:xToken" minOccurs="0" maxOccurs="unbounded" />
+			<element name="step" type="tns:xStep" minOccurs="0" maxOccurs="unbounded" />
+		</sequence>
+		<attribute name="name" type="string" use="required" />
+		<attribute name="page" type="string" use="optional" />
+		<attribute name="type" use="required">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="CALL" />
+					<enumeration value="CLICK" />
+					<enumeration value="EXISTS" />
+					<enumeration value="FUNCTION" />
+					<enumeration value="GESTURE" />
+					<enumeration value="RETURN" />
+					<enumeration value="SET" />
+					<enumeration value="VALUE" />
+					<enumeration value="GET" />
+					<enumeration value="WAIT" />
+					<enumeration value="WAIT_FOR" />
+					<enumeration value="ATTRIBUTE" />
+					<enumeration value="LOOP" />
+					<enumeration value="BREAK" />
+					<enumeration value="DEVICE" />
+					<enumeration value="FORK" />
+					<enumeration value="VISIBLE" />
+					<enumeration value="VERIFY_COLOR" />
+					<enumeration value="VERIFY_CONTRAST" />
+					<enumeration value="WINDOW" />
+					<enumeration value="EXECJS" />
+					<enumeration value="COMPARE" />
+					<enumeration value="STRING" />
+					<enumeration value="MATH" />
+					<enumeration value="MOUSE" />
+					<enumeration value="CACHE" />
+					<enumeration value="REPORT" />
+					<enumeration value="SYNC" />
+                    <enumeration value="OPEN_PAGE" />
+					<enumeration value="ADD_COOKIE" />
+					<enumeration value="DELETE_COOKIE" />
+					<enumeration value="DELETE_COOKIES" />
+					<enumeration value="GET_COOKIE" />
+					<enumeration value="GET_COOKIES" />
+					<enumeration value="ADD_DEVICE" />
+					<enumeration value="AT" />
+					<enumeration value="HAS_FOCUS" />
+					<enumeration value="ALIGN" />
+					<enumeration value="PERFECTO_SCRIPT" />
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="active" type="boolean" use="optional" default="true" />
+		<attribute name="linkId" type="string" use="optional" />
+		<attribute name="os" type="string" use="optional" />
+		<attribute name="poi" type="string" use="optional" />
+		<attribute name="threshold" type="integer" use="optional" default="0"/>
+		<attribute name="timed" type="boolean" use="optional" default="false" />
+		<attribute name="inverse" type="boolean" use="optional" default="false" />
+		<attribute name="wait" type="integer" use="optional" default="0" />
+		<attribute name="failureMode" use="optional" default="ERROR">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="ERROR" />
+					<enumeration value="IGNORE" />
+					<enumeration value="LOG_IGNORE" />
+				</restriction>
+			</simpleType>
+		</attribute>
+		
+		<attribute name="validation" type="string" use="optional" />
+		<attribute name="validationType" use="optional">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="REGEX" />
+					<enumeration value="EMPTY" />
+					<enumeration value="NOT_EMPTY" />
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="context" type="string" use="optional" />
+                <attribute name="device" type="string" use="optional" />
+		
+	</complexType>
+	
+	<complexType name="xToken">
+		<attribute name="type" use="optional">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="CONTEXT" />
+					<enumeration value="PROPERTY" />
+					<enumeration value="STATIC" />
+					<enumeration value="CONTENT" />
+					<enumeration value="DATA" />
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="value" type="string" use="required" />
+		<attribute name="name" type="string" use="required" />
+	</complexType>
+	
+	<complexType name="xParameter">
+		<attribute name="type" use="optional">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="CONTEXT" />
+					<enumeration value="PROPERTY" />
+					<enumeration value="STATIC" />
+					<enumeration value="CONTENT" />
+					<enumeration value="DATA" />
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="value" type="string" use="required" />
+	</complexType>
+	
+	
+
+</schema>
