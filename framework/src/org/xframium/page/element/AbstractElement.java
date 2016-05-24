@@ -43,8 +43,19 @@ public abstract class AbstractElement implements Element
 	
 	/** The log. */
 	protected Log log = LogFactory.getLog( Element.class );
+	private boolean cacheNative = false;
 
-	/**
+	public boolean isCacheNative()
+    {
+        return cacheNative;
+    }
+
+    public void setCacheNative( boolean cacheNative )
+    {
+        this.cacheNative = cacheNative;
+    }
+
+    /**
 	 * _get native.
 	 *
 	 * @return the object

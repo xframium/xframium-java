@@ -23,7 +23,9 @@ package org.xframium.page.element;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import org.apache.commons.logging.Log;
@@ -42,6 +44,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.xframium.application.ApplicationRegistry;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.ImageFormat;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.MatchMode;
@@ -56,6 +59,7 @@ import org.xframium.spi.PropertyProvider;
 import org.xframium.spi.driver.CachedElement;
 import org.xframium.spi.driver.NativeDriverProvider;
 import org.xframium.spi.driver.VisualDriverProvider;
+import org.xframium.utility.XPathGenerator;
 import org.xframium.utility.html.HTMLElementLookup;
 import io.appium.java_client.AppiumDriver;
 
@@ -273,6 +277,11 @@ public class SeleniumElement extends AbstractElement
 			    HTMLElementLookup elementLookup = new HTMLElementLookup( getKey() );
 			    return By.xpath( elementLookup.toXPath() );
 			    
+			    
+			case PROP:
+			    Map<String,String> propertyMap = new HashMap<String,String>( 10 );
+			    propertyMap.put(  "resource-id", ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
+			    return By.xpath( XPathGenerator.generateXPathFromProperty( propertyMap, getKey() ) );
 
 			default:
 				return null;
@@ -388,7 +397,11 @@ public class SeleniumElement extends AbstractElement
 	private WebElement getElement()
 	{
 		if ( locatedElement != null )
+		{
+		    if ( log.isInfoEnabled() )
+		        log.info( Thread.currentThread().getName() + ": Element " + getKey() + " Read from cache" );
 			return locatedElement;
+		}
 		
 		String currentContext = null;
 		if (webDriver instanceof ContextAware)
@@ -428,6 +441,8 @@ public class SeleniumElement extends AbstractElement
 						log.info( Thread.currentThread().getName() + ": Element " + getKey() + " Located" );
 				}
 				
+				if ( isCacheNative() )
+				    locatedElement = webElement;
 				return webElement;
 			}
 

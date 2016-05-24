@@ -88,7 +88,7 @@ public class StepSync
             threadPool.submit( s );
             try
             {
-                Thread.sleep( 250 );
+                Thread.sleep( 500 );
             }
             catch( Exception e )
             {

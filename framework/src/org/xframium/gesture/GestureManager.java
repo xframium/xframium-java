@@ -140,7 +140,7 @@ public class GestureManager
 	 */
 	public Gesture createPress( Point pressPosition )
 	{
-		return createPress( pressPosition, 100l );
+		return createPress( pressPosition, 100l, 1 );
 	}
 	
 	/**
@@ -152,8 +152,13 @@ public class GestureManager
 	 */
 	public Gesture createPress( Point pressPosition, long pressLength )
 	{
-		return gestureFactory.createGesture( GestureType.PRESS, new Object[] { pressPosition, pressLength } );
+	    return createPress( pressPosition, pressLength, 1 );
 	}
+	
+	public Gesture createPress( Point pressPosition, long pressLength, int pressCount )
+    {
+        return gestureFactory.createGesture( GestureType.PRESS, new Object[] { pressPosition, pressLength, pressCount } );
+    }
 	
 	/**
 	 * Creates the key press.

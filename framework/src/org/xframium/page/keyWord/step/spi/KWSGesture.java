@@ -118,8 +118,16 @@ public class KWSGesture extends AbstractKeyWordStep
 				break;
 				
 			case PRESS:
-			    Point pressPoint = createPoint( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) );
-				GestureManager.instance().createPress( pressPoint ).executeGesture( webDriver, webElement );
+			    if ( getParameterList().size() > 1 )
+			    {
+    			    Point pressPoint = createPoint( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) );
+    				GestureManager.instance().createPress( pressPoint, 250, Integer.parseInt( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "") ).executeGesture( webDriver, webElement );
+			    }
+			    else
+			    {
+			        Point pressPoint = createPoint( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) );
+                    GestureManager.instance().createPress( pressPoint ).executeGesture( webDriver, webElement );
+			    }
 				break;
 				
 			case ROTATE:

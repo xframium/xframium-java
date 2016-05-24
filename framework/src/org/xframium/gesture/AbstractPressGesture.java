@@ -35,6 +35,8 @@ public abstract class AbstractPressGesture extends AbstractGesture
 	/** The press length. */
 	private int pressLength;
 	
+	private int pressCount;
+	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.gesture.Gesture#setParameters(java.lang.Object[])
 	 */
@@ -42,9 +44,21 @@ public abstract class AbstractPressGesture extends AbstractGesture
 	{
 		setPressPosition( (Point) parameterArray[ 0 ] );
 		setPressLength( ( (Long) parameterArray[ 1 ] ).intValue() );
+		setPressCount( ( (Integer) parameterArray[ 2 ] ).intValue() );
+		
 	}
 	
-	/**
+	public int getPressCount()
+    {
+        return pressCount;
+    }
+
+    public void setPressCount( int pressCount )
+    {
+        this.pressCount = pressCount;
+    }
+
+    /**
 	 * Gets the press position.
 	 *
 	 * @return the press position

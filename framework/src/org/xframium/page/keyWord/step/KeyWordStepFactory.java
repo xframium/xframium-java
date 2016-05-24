@@ -30,6 +30,7 @@ import org.xframium.page.keyWord.KeyWordStep.ValidationType;
 import org.xframium.page.keyWord.step.spi.KWSAddCookie;
 import org.xframium.page.keyWord.step.spi.KWSAddDevice;
 import org.xframium.page.keyWord.step.spi.KWSAlign;
+import org.xframium.page.keyWord.step.spi.KWSAt;
 import org.xframium.page.keyWord.step.spi.KWSAttribute;
 import org.xframium.page.keyWord.step.spi.KWSBreak;
 import org.xframium.page.keyWord.step.spi.KWSCache;
@@ -53,10 +54,12 @@ import org.xframium.page.keyWord.step.spi.KWSLoop;
 import org.xframium.page.keyWord.step.spi.KWSMath;
 import org.xframium.page.keyWord.step.spi.KWSMouse;
 import org.xframium.page.keyWord.step.spi.KWSOpenPage;
+import org.xframium.page.keyWord.step.spi.KWSPerfectoScript;
 import org.xframium.page.keyWord.step.spi.KWSReport;
 import org.xframium.page.keyWord.step.spi.KWSReturn;
 import org.xframium.page.keyWord.step.spi.KWSSet;
 import org.xframium.page.keyWord.step.spi.KWSString;
+import org.xframium.page.keyWord.step.spi.KWSSync;
 import org.xframium.page.keyWord.step.spi.KWSValue;
 import org.xframium.page.keyWord.step.spi.KWSVisible;
 import org.xframium.page.keyWord.step.spi.KWSWait;
@@ -138,6 +141,9 @@ public class KeyWordStepFactory
         addKeyWord( "ADD_DEVICE", KWSAddDevice.class );
         addKeyWord( "HAS_FOCUS", KWSFocus.class );
         addKeyWord( "ALIGN", KWSAlign.class );
+        addKeyWord( "SYNC", KWSSync.class );
+        addKeyWord( "AT", KWSAt.class );
+        addKeyWord( "PERFECTO_SCRIPT", KWSPerfectoScript.class );
     }
 
     /**

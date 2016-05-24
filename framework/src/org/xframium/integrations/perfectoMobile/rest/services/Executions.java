@@ -24,6 +24,7 @@ import org.xframium.integrations.perfectoMobile.rest.bean.Execution;
 import org.xframium.integrations.perfectoMobile.rest.bean.ExecutionCollection;
 import org.xframium.integrations.perfectoMobile.rest.bean.ExecutionResult;
 import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.Parameter;
+import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.PerfectoCommand;
 import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.ServiceDescriptor;
 
 // TODO: Auto-generated Javadoc
@@ -71,7 +72,11 @@ public interface Executions extends PerfectoService
 	 * @return the execution
 	 */
 	@Operation( operationName="execute" )
-	public Execution execute( @NameOverride( name="scriptKey" ) String scriptKey, @Parameter( name="DUT" ) String DUT );
+	public Execution executeScript( @NameOverride( name="scriptKey" ) String scriptKey, @Parameter( name="DUT" ) String DUT );
+	
+	@Operation( operationName="execute" )
+	@PerfectoCommand( commandName="execute", subCommandName = "script" )
+    public Execution execute( @ResourceID String executionId, @NameOverride( name="script" ) String script, @Parameter( name="DUT" ) String DUT );
 	
 	/**
 	 * Status.
