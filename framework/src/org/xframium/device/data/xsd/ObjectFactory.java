@@ -51,7 +51,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _DeviceRegistry_QNAME = new QName("http://www.morelandlabs.com/deviceRegistry", "deviceRegistry");
+    private final static QName _DeviceRegistry_QNAME = new QName("http://www.xframium.org/deviceRegistry", "deviceRegistry");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.perfectoMobile.device.data.xsd
@@ -88,7 +88,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link RegistryRoot }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.morelandlabs.com/deviceRegistry", name = "deviceRegistry")
+    @XmlElementDecl(namespace = "http://www.xframium.org/deviceRegistry", name = "deviceRegistry")
     public JAXBElement<RegistryRoot> createDeviceRegistry(RegistryRoot value) {
         return new JAXBElement<RegistryRoot>(_DeviceRegistry_QNAME, RegistryRoot.class, null, value);
     }

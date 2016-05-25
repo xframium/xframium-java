@@ -98,7 +98,7 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
             StringBuilder urlBuilder = new StringBuilder();
             urlBuilder.append( "https://" ).append( CloudRegistry.instance().getCloud().getHostName() ).append( "/services/reports/" ).append( parameterMap.get( REPORT_KEY ) );
             urlBuilder.append( "?operation=" ).append( operation ).append( "&user=" ).append( CloudRegistry.instance().getCloud().getUserName() ).append( "&password=" ).append( CloudRegistry.instance().getCloud().getPassword() );
-
+            urlBuilder.append( "&format=" ).append( "XML" );
             String format = parameterMap.get( FORMAT );
             if (format == null)
             {

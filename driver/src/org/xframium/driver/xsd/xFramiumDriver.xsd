@@ -14,7 +14,38 @@
 			<element name="cloud" type="tns:xCloud" minOccurs="1" maxOccurs="1" />
 			<element name="site" type="tns:xSite" minOccurs="1" maxOccurs="1" />
 			<element name="suite" type="tns:xSuite" />
+			<element name="content" type="tns:xContent" />
+			<element name="data" type="tns:xData" />
+			<element name="driver" type="tns:xDriver" />
 		</sequence>
+	</complexType>
+
+	<complexType name="xContent">
+		<attribute name="fileName" type="string" use="optional" />
+		<attribute name="provider" use="optional" default="EXCEL">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="XML" />
+					<enumeration value="SQL" />
+					<enumeration value="CSV" />
+					<enumeration value="EXCEL" />
+				</restriction>
+			</simpleType>
+		</attribute>
+	</complexType>
+	
+	<complexType name="xData">
+		<attribute name="fileName" type="string" use="optional" />
+		<attribute name="provider" use="optional" default="XML">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="XML" />
+					<enumeration value="SQL" />
+					<enumeration value="CSV" />
+					<enumeration value="EXCEL" />
+				</restriction>
+			</simpleType>
+		</attribute>
 	</complexType>
 
 	<complexType name="xApplication">
@@ -46,6 +77,7 @@
 			<element name="property" type="tns:xProperty" minOccurs="0" maxOccurs="unbounded" />
 			<element name="propertyAdapter" type="tns:xPropertyAdapter" minOccurs="0" maxOccurs="unbounded" />
 			<element name="artifact" type="tns:xArtifact" minOccurs="0" maxOccurs="unbounded" />
+			<element name="library" type="tns:xLibrary" minOccurs="0" maxOccurs="unbounded" />
 		</sequence>
 		<attribute name="personas" type="string" use="optional" />
 		<attribute name="cachingEnabled" type="boolean" use="optional" default="false" />
@@ -56,8 +88,13 @@
 		<attribute name="outputFolder" type="string" use="required" />
 	</complexType>
 	
+	<complexType name="xLibrary">
+		<attribute name="name" use="required" />
+		<attribute name="className" use="required" />
+	</complexType>
+	
 	<complexType name="xArtifact">
-		<attribute name="descriptor" use="required">
+		<attribute name="type" use="required">
 			<simpleType>
 				<restriction base="string">
 					<enumeration value="EXECUTION_REPORT_PDF" />
@@ -110,7 +147,18 @@
 	</complexType>
 	
 	<complexType name="xCloud">
-		<attribute name="fileName" type="string" use="required" />
+		<attribute name="provider" use="optional" default="LOCAL">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="XML" />
+					<enumeration value="SQL" />
+					<enumeration value="CSV" />
+					<enumeration value="EXCEL" />
+					<enumeration value="LOCAL" />
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="fileName" type="string" use="optional" />
     	<attribute name="name" type="string" use="required" />    	
     	<attribute name="hostName" type="string" use="optional" />
     	<attribute name="userName" type="string" use="optional" />
@@ -126,6 +174,18 @@
 		<sequence>
 			<element name="page" type="tns:xPage" minOccurs="1" maxOccurs="unbounded" />
 		</sequence>
+		<attribute name="fileName" type="string" use="optional" />
+		<attribute name="provider" use="optional" default="LOCAL">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="XML" />
+					<enumeration value="SQL" />
+					<enumeration value="CSV" />
+					<enumeration value="EXCEL" />
+					<enumeration value="LOCAL" />
+				</restriction>
+			</simpleType>
+		</attribute>
 		<attribute name="name" type="string" use="required" />
 	</complexType>
 
@@ -165,6 +225,14 @@
 			<element name="function" type="tns:xTest" minOccurs="0" maxOccurs="unbounded" />
 		</sequence>
 		<attribute name="fileName" type="string" use="optional" />
+		<attribute name="provider" use="optional" default="LOCAL">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="XML" />
+					<enumeration value="LOCAL" />
+				</restriction>
+			</simpleType>
+		</attribute>
 	</complexType>
 
 	<complexType name="xModel">
@@ -278,8 +346,8 @@
 			</simpleType>
 		</attribute>
 		<attribute name="context" type="string" use="optional" />
-                <attribute name="device" type="string" use="optional" />
-		
+        <attribute name="device" type="string" use="optional" />
+		<attribute name="tagNames" type="string" use="optional" />
 	</complexType>
 	
 	<complexType name="xToken">

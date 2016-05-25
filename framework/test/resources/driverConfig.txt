@@ -5,6 +5,8 @@ jdbc.username=moreland
 jdbc.password=password
 jdbc.url=jdbc:oracle:thin:@DESKTOP-J97DM4R:1521:XE
 jdbc.driverClassName=oracle.jdbc.driver.OracleDriver
+#jdbc.url=jdbc:mysql://localhost:3306/sys
+#jdbc.driverClassName=com.mysql.jdbc.Driver
 
 #
 # Cloud Registry
@@ -16,8 +18,7 @@ cloudRegistry.cloudUnderTest=partners
 #
 # Application Registry
 #
-applicationRegistry.provider=XML
-applicationRegistry.fileName=./applicationRegistry.xml
+applicationRegistry.provider=SQL
 applicationRegistry.applicationUnderTest=Google
 
 #

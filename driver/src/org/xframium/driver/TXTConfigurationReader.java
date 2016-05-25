@@ -13,6 +13,7 @@ import org.xframium.Initializable;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.application.CSVApplicationProvider;
 import org.xframium.application.ExcelApplicationProvider;
+import org.xframium.application.SQLApplicationProvider;
 import org.xframium.application.XMLApplicationProvider;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.content.ContentManager;
@@ -41,9 +42,6 @@ import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.device.property.PropertyAdapter;
 import org.xframium.gesture.device.action.DeviceActionManager;
 import org.xframium.gesture.device.action.spi.perfecto.PerfectoDeviceActionFactory;
-import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
-import org.xframium.integrations.rest.bean.factory.BeanManager;
-import org.xframium.integrations.rest.bean.factory.XMLBeanFactory;
 import org.xframium.page.PageManager;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.data.provider.ExcelPageDataProvider;
@@ -65,6 +63,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     private static final String[] CLOUD = new String[] { "cloudRegistry.provider", "cloudRegistry.fileName", "cloudRegistry.cloudUnderTest" };
     private static final String[] OPT_CLOUD = new String[] { "cloudRegistry.query" };
     private static final String[] APP = new String[] { "applicationRegistry.provider", "applicationRegistry.fileName", "applicationRegistry.applicationUnderTest" };
+    private static final String[] OPT_APP = new String[] { "applicationRegistry.query", "applicationRegistry.capQuery" };
     private static final String[] ARTIFACT = new String[] { "artifactProducer.parentFolder" };
     private static final String[] PAGE = new String[] { "pageManagement.siteName", "pageManagement.provider", "pageManagement.fileName" };
     private static final String[] OPT_PAGE = new String[] { "pageManagement.query" };
@@ -146,6 +145,15 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
 
             case "CSV":
                 ApplicationRegistry.instance().setApplicationProvider( new CSVApplicationProvider( appFile ) );
+                break;
+                
+            case "SQL":
+                ApplicationRegistry.instance().setApplicationProvider( new SQLApplicationProvider( configProperties.getProperty( JDBC[0] ),
+                                                                                                   configProperties.getProperty( JDBC[1] ),
+                                                                                                   configProperties.getProperty( JDBC[2] ),
+                                                                                                   configProperties.getProperty( JDBC[3] ),
+                                                                                                   configProperties.getProperty( OPT_APP[0] ),
+                                                                                                   configProperties.getProperty( OPT_APP[1] )));
                 break;
 
             case "EXCEL":

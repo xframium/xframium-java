@@ -97,7 +97,6 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 			String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
 			webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );
 			webDriver.setArtifactProducer( new PerfectoArtifactProducer() );
-			
 			return webDriver;
 		}
 		catch( Exception e )

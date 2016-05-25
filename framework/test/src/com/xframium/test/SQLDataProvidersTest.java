@@ -34,6 +34,7 @@ import org.xframium.page.*;
 import org.xframium.page.data.*;
 import org.xframium.page.element.*;
 import org.xframium.spi.Device;
+import org.xframium.application.*;
 
 
 public class SQLDataProvidersTest
@@ -54,6 +55,15 @@ public class SQLDataProvidersTest
 
         Assert.assertTrue( device != null, "Got a device" );
         Assert.assertTrue( "Android".equals( device.getOs()), "Got the right device" );
+    }
+
+    @Test
+    public void testSQLApplicationProvider()
+    {
+        ApplicationDescriptor app = ApplicationRegistry.instance().getApplication( "Google" );
+
+        Assert.assertTrue( app != null, "Got an application" );
+        Assert.assertTrue( "http://www.google.com".equals( app.getUrl()), "Got the right application" );
     }
 
     @Test

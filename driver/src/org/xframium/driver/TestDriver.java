@@ -21,11 +21,8 @@
 package org.xframium.driver;
 
 import java.io.File;
-
-
 public class TestDriver
 {
-    
 
     
     public static void main( String[] args )
@@ -51,14 +48,7 @@ public class TestDriver
         {
             new XMLConfigurationReader().readConfiguration( configFile );
         }
-
-        
-        
-        
-        
     }
-
-    
 
     
     

@@ -134,7 +134,8 @@
 			</simpleType>
 		</attribute>
 		<attribute name="context" type="string" use="optional" />
-                <attribute name="device" type="string" use="optional" />
+        <attribute name="device" type="string" use="optional" />
+        <attribute name="tagNames" type="string" use="optional" />
 		
 	</complexType>
 	
