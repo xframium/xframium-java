@@ -61,5 +61,5 @@ public interface Reports extends PerfectoService
 	public ExecutionReport download( @ResourceID String reportKey, @NameOverride( name="format" )ReportFormat format );
 	
 	@Operation( operationName="log" )
-    public byte[] download( @ResourceID String reportKey, @Parameter( name="attachment") String attachment, @Parameter( name="admin") boolean admin );
+    public byte[] download( @ResourceID String reportKey, @NameOverride( name="attachment") String attachment, @NameOverride( name="admin") boolean admin );
 }

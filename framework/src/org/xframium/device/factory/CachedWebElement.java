@@ -26,8 +26,11 @@ package org.xframium.device.factory;
 import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.w3c.dom.Node;
 import org.xframium.spi.driver.CachedElement;
@@ -239,5 +242,17 @@ public class CachedWebElement implements WebElement, CachedElement
 	{
 		return webDriver.findElement( by ).getCssValue( propertyName );
 	}
+
+    @Override
+    public <X> X getScreenshotAs( OutputType<X> arg0 ) throws WebDriverException
+    {
+        return null;
+    }
+
+    @Override
+    public Rectangle getRect()
+    {
+        return new Rectangle( getLocation(), getSize() );
+    }
 
 }

@@ -575,7 +575,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                 break;
             }
         }
-        return false;
+        return true;
     }
 
 

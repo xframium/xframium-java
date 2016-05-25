@@ -27,9 +27,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.server.SeleniumServer;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -71,7 +71,20 @@ public class CloudRegistry
 	/** The cut. */
 	private CloudDescriptor cut = null;
 	
-	/**
+	private boolean embeddedGrid = false;
+	private SeleniumServer _server = null;
+	
+	public boolean isEmbeddedGrid()
+    {
+        return embeddedGrid;
+    }
+
+    public void setEmbeddedGrid( boolean embeddedGrid )
+    {
+        this.embeddedGrid = embeddedGrid;
+    }
+
+    /**
 	 * Adds the cloud descriptor.
 	 *
 	 * @param cloudDescriptor the cloud descriptor
@@ -79,6 +92,7 @@ public class CloudRegistry
 	public void addCloudDescriptor( CloudDescriptor cloudDescriptor )
 	{
 		cloudMap.put( cloudDescriptor.getName(), cloudDescriptor );
+		
 	}
 	
 	/**
@@ -118,6 +132,22 @@ public class CloudRegistry
 		if ( log.isInfoEnabled() )
 			log.info( "cloud Under Test set to " + cut );
 		
+		if ( cut.getGridInstance() != null && cut.getGridInstance().equals( "EMBEDDED" ) )
+		{
+		    try
+		    {
+    		    _server = new SeleniumServer();
+    		    _server.boot();
+    		    _server.start();
+    		    CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( "EMBEDDED", "", "", "127.0.0.1:4444", "", "0", "", null ) );
+    		    embeddedGrid=true;
+		    }
+		    catch( Exception e )
+		    {
+		        log.fatal( "Could not start embedded grid", e );
+		    }
+		}
+		
 		System.setProperty( "__cloudUrl", "https://" + cut.getHostName() );
 		System.setProperty( "__userName", cut.getUserName() );
 		System.setProperty( "__password", cut.getPassword() );
@@ -149,5 +179,18 @@ public class CloudRegistry
 	public void clear()
 	{
 	    cloudMap.clear();
+	}
+	
+	public void shutdown()
+	{
+	    try
+	    {
+    	    if ( embeddedGrid && _server != null )
+    	        _server.stop();
+	    }
+	    catch( Exception e )
+	    {
+	        log.fatal( "Error shutting down embedded grid", e );
+	    }
 	}
 }

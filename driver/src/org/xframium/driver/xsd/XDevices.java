@@ -17,23 +17,28 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for xSuite complex type.
+ * <p>Java class for xDevices complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="xSuite"&gt;
+ * &lt;complexType name="xDevices"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="test" type="{http://www.xframium.org/xFramiumDriver}xTest" maxOccurs="unbounded" minOccurs="0"/&gt;
- *         &lt;element name="function" type="{http://www.xframium.org/xFramiumDriver}xTest" maxOccurs="unbounded" minOccurs="0"/&gt;
+ *         &lt;element name="device" type="{http://www.xframium.org/xFramiumDriver}xDevice" maxOccurs="unbounded" minOccurs="0"/&gt;
  *       &lt;/sequence&gt;
  *       &lt;attribute name="fileName" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *       &lt;attribute name="provider" default="LOCAL"&gt;
  *         &lt;simpleType&gt;
  *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
+ *             &lt;enumeration value="RESERVED"/&gt;
+ *             &lt;enumeration value="AVAILABLE"/&gt;
+ *             &lt;enumeration value="NAMED"/&gt;
  *             &lt;enumeration value="XML"/&gt;
+ *             &lt;enumeration value="SQL"/&gt;
+ *             &lt;enumeration value="CSV"/&gt;
+ *             &lt;enumeration value="EXCEL"/&gt;
  *             &lt;enumeration value="LOCAL"/&gt;
  *           &lt;/restriction&gt;
  *         &lt;/simpleType&gt;
@@ -46,75 +51,44 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "xSuite", propOrder = {
-    "test",
-    "function"
+@XmlType(name = "xDevices", propOrder = {
+    "device"
 })
-public class XSuite {
+public class XDevices {
 
-    protected List<XTest> test;
-    protected List<XTest> function;
+    protected List<XDevice> device;
     @XmlAttribute(name = "fileName")
     protected String fileName;
     @XmlAttribute(name = "provider")
     protected String provider;
 
     /**
-     * Gets the value of the test property.
+     * Gets the value of the device property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the test property.
+     * This is why there is not a <CODE>set</CODE> method for the device property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getTest().add(newItem);
+     *    getDevice().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link XTest }
+     * {@link XDevice }
      * 
      * 
      */
-    public List<XTest> getTest() {
-        if (test == null) {
-            test = new ArrayList<XTest>();
+    public List<XDevice> getDevice() {
+        if (device == null) {
+            device = new ArrayList<XDevice>();
         }
-        return this.test;
-    }
-
-    /**
-     * Gets the value of the function property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the function property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getFunction().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link XTest }
-     * 
-     * 
-     */
-    public List<XTest> getFunction() {
-        if (function == null) {
-            function = new ArrayList<XTest>();
-        }
-        return this.function;
+        return this.device;
     }
 
     /**

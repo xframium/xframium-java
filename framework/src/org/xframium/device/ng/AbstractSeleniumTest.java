@@ -51,6 +51,7 @@ import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.Artifact;
 import org.xframium.device.artifact.ArtifactProducer;
+import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.spi.Device;
@@ -581,6 +582,8 @@ public abstract class AbstractSeleniumTest
                 e.printStackTrace();
             }
         }
+        
+        CloudRegistry.instance().shutdown();
     }
 
     //
