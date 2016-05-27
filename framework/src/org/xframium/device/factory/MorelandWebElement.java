@@ -209,4 +209,11 @@ public class MorelandWebElement implements WebElement, Locatable
         return webElement.getRect();
     }
 
+    public WebElement getWebElement()
+    {
+        return webElement;
+    }
+    
+    
+
 }

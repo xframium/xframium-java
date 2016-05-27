@@ -40,6 +40,9 @@ public interface Element
 	/** The Constant CONTEXT_INDEX. */
 	public static final String CONTEXT_INDEX = "_CONTEXT.ELEMENT.INDEX";
 	
+	/** The Constant CONTEXT_INDEX. */
+    public static final String LOOP_INDEX = "_LOOP.INDEX";
+	
 	/**
 	 * The Enum WAIT_FOR.
 	 */

@@ -78,6 +78,7 @@ public class KWSLoop extends AbstractKeyWordStep
 			
 			for ( int i=0; i<loopCount; i++ )
 			{
+			    contextMap.put( Element.LOOP_INDEX, i );
 				if ( log.isDebugEnabled() )
 					log.debug( "Execution Function " + functionName + " - Iteration " + i + " of " + loopCount );
 				try

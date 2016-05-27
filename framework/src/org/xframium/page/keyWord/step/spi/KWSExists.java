@@ -51,14 +51,27 @@ public class KWSExists extends AbstractKeyWordStep
 		
 		Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap );
 		
-		if ( getContext() != null )
+		boolean returnValue = currentElement.isPresent();
+		
+		if ( returnValue && getContext() != null )
         {
-            if ( log.isDebugEnabled() )
-                log.debug( "Setting Context Data to [" + currentElement.getValue() + "] for [" + getContext() + "]" );
-            contextMap.put( getContext(), currentElement.getValue() );
+		    int elementCount = currentElement.getCount();
+		    
+		    if ( elementCount > 1 )
+		    {
+		        if ( log.isDebugEnabled() )
+	                log.debug( "Setting Context Data to [" + currentElement.getValue() + "] for [" + getContext() + "]" );
+	            contextMap.put( getContext(), elementCount + "" );
+		    }
+		    else
+		    {
+                if ( log.isDebugEnabled() )
+                    log.debug( "Setting Context Data to [" + currentElement.getValue() + "] for [" + getContext() + "]" );
+                contextMap.put( getContext(), currentElement.getValue() );
+		    }
         }
 		
-		return currentElement.isPresent();
+		return returnValue;
 	}
 	
 	/* (non-Javadoc)

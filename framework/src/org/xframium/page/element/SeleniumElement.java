@@ -45,6 +45,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.device.factory.MorelandWebElement;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.ImageFormat;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.MatchMode;
@@ -62,6 +63,7 @@ import org.xframium.spi.driver.VisualDriverProvider;
 import org.xframium.utility.XPathGenerator;
 import org.xframium.utility.html.HTMLElementLookup;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.ios.IOSElement;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -671,8 +673,15 @@ public class SeleniumElement extends AbstractElement
 		{
 			if (log.isInfoEnabled())
 				log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue );
-			webElement.clear();
-			webElement.sendKeys( currentValue );
+			
+			MorelandWebElement x = (MorelandWebElement) webElement;
+			if ( x.getWebElement() instanceof IOSElement )
+			    ( (IOSElement) x.getWebElement() ).setValue( currentValue );
+			else
+			{
+    			webElement.clear();
+    			webElement.sendKeys( currentValue );
+			}
 		}
 
 	}
