@@ -33,7 +33,7 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 /**
  * <b>Keyword(s):</b> <code>CALL</code><br>
  * The Call keyword allows the developer to execute a function or test defined in XML.  The test or function will inherit any dataProvider and dataDriver
- * data that was provided to the calling test/function.  If a function is called and the funcvtino defined a dataProvider that did not exist on the calling test/function
+ * data that was provided to the calling test/function.  If a function is called and the function defined a dataProvider that did not exist on the calling test/function
  * then it will be added during execution.  It is possible to override the name of a dataProvider/dataDriver using a parameter as defined below.  This allows a function 
  * to use a single dataProvider name while other calling function may use dataProvider/dataDrivers with different names<br><br>
  * <b>Attributes:</b> Attributes defined here are changes to the base attribute contract

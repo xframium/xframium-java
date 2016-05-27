@@ -30,16 +30,6 @@ import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 
-// TODO: Auto-generated Javadoc
-/**
- * <b>Keyword(s):</b> <code>EXISTS</code><br>
- * The exists keyword verifies that an element is present.  It does not check vo visibility it just verifies that it is in the XML structure<br><br>
- * <br><b>Example(s): </b><ul>
- * <li> This example will locate element named 'TEST_ELEMENT' from TEST_PAGE<br>
- * {@literal <step name="TEST_ELEMENT" type="EXISTS" page="TEST_PAGE" /> }<br>
- * </li>
- * </ul>
- */
 public class KWSAt extends AbstractKeyWordStep
 {
 
@@ -57,24 +47,24 @@ public class KWSAt extends AbstractKeyWordStep
 		Point at = ( (WebElement) currentElement.getNative() ).getLocation();
         Dimension size = ( (WebElement) currentElement.getNative() ).getSize();
 		
+        String contextName = getContext();
+        if ( contextName == null )
+            contextName = getName();
+        
 		if ( getContext() != null )
         {
             if ( log.isDebugEnabled() )
                 log.debug( "Setting Context Data to [" + currentElement.getValue() + "] for [" + getContext() + "]" );
             
-            contextMap.put( getContext(), ( (WebElement) currentElement.getNative() ).getLocation() );
+            contextMap.put( contextName+".x", at.getX() + "" );
+            contextMap.put( contextName+".y", at.getY() + "" );
+            contextMap.put( contextName+".width", size.getWidth() + "" );
+            contextMap.put( contextName+".height", size.getHeight() + "" );
         }
 		
 		return currentElement.isPresent();
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
-	 */
-	public boolean isRecordable()
-	{
-		return false;
-	}
+
 
 
 }
