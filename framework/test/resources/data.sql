@@ -47,6 +47,73 @@ values ( 'Google', 'Home', 'SEARCH', 'XPATH', '//button[@name=''btnG;'']', null 
 insert into PERFECTO_APPLICATIONS( NAME, APP_PACKAGE, BUNDLE_ID, URL, IOS_INSTALL, ANDROID_INSTALL )
 values ( 'Google', null, null, 'http://www.google.com', null, null );
 
+insert into PERFECTO_TEST_SUITES ( NAME, PAGE_NAME, CLASS_NAME )
+values( 'alternate-device', 'Home', NULL );
+
+insert into PERFECTO_TESTS ( SUITE_NAME, NAME, DATA_DRIVER, DATA_PROVIDER, LINK_ID, TIMED, THRESHOLD, ACTIVE, OS )
+values( 'alternate-device', 'MyTest', 'searchData', NULL, NULL, 'Y', NULL, 'Y', NULL );
+
+insert into PERFECTO_TEST_STEPS ( KEY, TEST_NAME, NAME, PAGE_NAME, TYPE, ACTIVE, LINK_ID, OS,
+                                 POI, THRESHOLD, TIMED, INVERSE, WAIT, FAILURE_MODE, VALIDATION, VALIDATION_TYPE,
+                                 DEVICE, TAG_NAMES, OFFSET )
+values ( 1, 'MyTest', 'LOAD', 'Home', 'OPEN_PAGE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1 );
+insert into PERFECTO_TEST_STEP_PARAMS ( STEP_KEY, TYPE, VALUE, OFFSET )
+values ( 1, 'DATA', 'searchData.url', 1 );
+insert into PERFECTO_TEST_STEPS ( KEY, TEST_NAME, NAME, PAGE_NAME, TYPE, ACTIVE, LINK_ID, OS,
+                                 POI, THRESHOLD, TIMED, INVERSE, WAIT, FAILURE_MODE, VALIDATION, VALIDATION_TYPE,
+                                 DEVICE, TAG_NAMES, OFFSET )
+values ( 2, 'MyTest', 'SEARCH_FOR', 'Home', 'SET', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2 );
+insert into PERFECTO_TEST_STEP_PARAMS ( STEP_KEY, TYPE, VALUE, OFFSET )
+values ( 2, 'DATA', 'searchData.text', 1 );
+insert into PERFECTO_TEST_STEPS ( KEY, TEST_NAME, NAME, PAGE_NAME, TYPE, ACTIVE, LINK_ID, OS,
+                                 POI, THRESHOLD, TIMED, INVERSE, WAIT, FAILURE_MODE, VALIDATION, VALIDATION_TYPE,
+                                 DEVICE, TAG_NAMES, OFFSET )
+values ( 3, 'MyTest', 'SEARCH', 'Home', 'CLICK', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3 );
+insert into PERFECTO_TEST_STEPS ( KEY, TEST_NAME, NAME, PAGE_NAME, TYPE, ACTIVE, LINK_ID, OS,
+                                 POI, THRESHOLD, TIMED, INVERSE, WAIT, FAILURE_MODE, VALIDATION, VALIDATION_TYPE,
+                                 DEVICE, TAG_NAMES, OFFSET )
+values ( 4, 'MyTest', 'OPEN-ALT-PHONE', 'Home', 'ADD_DEVICE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4 );
+insert into PERFECTO_TEST_STEP_PARAMS ( STEP_KEY, TYPE, VALUE, OFFSET )
+values ( 4, 'STATIC', 'alt', 1 );
+insert into PERFECTO_TEST_STEP_PARAMS ( STEP_KEY, TYPE, VALUE, OFFSET )
+values ( 4, 'STATIC', '02157DF2A1B46C22', 2 );
+insert into PERFECTO_TEST_STEPS ( KEY, TEST_NAME, NAME, PAGE_NAME, TYPE, ACTIVE, LINK_ID, OS,
+                                 POI, THRESHOLD, TIMED, INVERSE, WAIT, FAILURE_MODE, VALIDATION, VALIDATION_TYPE,
+                                 DEVICE, TAG_NAMES, OFFSET )
+values ( 5, 'MyTest', 'LOAD', 'Home', 'OPEN_PAGE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'alt', NULL, 5 );
+insert into PERFECTO_TEST_STEP_PARAMS ( STEP_KEY, TYPE, VALUE, OFFSET )
+values ( 5, 'DATA', 'searchData.url', 1 );
+insert into PERFECTO_TEST_STEPS ( KEY, TEST_NAME, NAME, PAGE_NAME, TYPE, ACTIVE, LINK_ID, OS,
+                                 POI, THRESHOLD, TIMED, INVERSE, WAIT, FAILURE_MODE, VALIDATION, VALIDATION_TYPE,
+                                 DEVICE, TAG_NAMES, OFFSET )
+values ( 6, 'MyTest', 'SEARCH_FOR', 'Home', 'SET', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'alt', NULL, 6 );
+insert into PERFECTO_TEST_STEP_PARAMS ( STEP_KEY, TYPE, VALUE, OFFSET )
+values ( 6, 'DATA', 'searchData.alttext', 1 );
+insert into PERFECTO_TEST_STEPS ( KEY, TEST_NAME, NAME, PAGE_NAME, TYPE, ACTIVE, LINK_ID, OS,
+                                 POI, THRESHOLD, TIMED, INVERSE, WAIT, FAILURE_MODE, VALIDATION, VALIDATION_TYPE,
+                                 DEVICE, TAG_NAMES, OFFSET )
+values ( 7, 'MyTest', 'SEARCH', 'Home', 'CLICK', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'alt', NULL, 7 );
+insert into PERFECTO_TEST_STEPS ( KEY, TEST_NAME, NAME, PAGE_NAME, TYPE, ACTIVE, LINK_ID, OS,
+                                 POI, THRESHOLD, TIMED, INVERSE, WAIT, FAILURE_MODE, VALIDATION, VALIDATION_TYPE,
+                                 DEVICE, TAG_NAMES, OFFSET )
+values ( 8, 'MyTest', 'SEARCH_FOR', 'Home', 'SET', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 8 );
+insert into PERFECTO_TEST_STEP_PARAMS ( STEP_KEY, TYPE, VALUE, OFFSET )
+values ( 8, 'DATA', 'searchData.text2', 1 );
+insert into PERFECTO_TEST_STEPS ( KEY, TEST_NAME, NAME, PAGE_NAME, TYPE, ACTIVE, LINK_ID, OS,
+                                 POI, THRESHOLD, TIMED, INVERSE, WAIT, FAILURE_MODE, VALIDATION, VALIDATION_TYPE,
+                                 DEVICE, TAG_NAMES, OFFSET )
+values ( 9, 'MyTest', 'SEARCH', 'Home', 'CLICK', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 9 );
+insert into PERFECTO_TEST_STEPS ( KEY, TEST_NAME, NAME, PAGE_NAME, TYPE, ACTIVE, LINK_ID, OS,
+                                 POI, THRESHOLD, TIMED, INVERSE, WAIT, FAILURE_MODE, VALIDATION, VALIDATION_TYPE,
+                                 DEVICE, TAG_NAMES, OFFSET )
+values ( 10, 'MyTest', 'SEARCH_FOR', 'Home', 'SET', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'alt', NULL, 10 );
+insert into PERFECTO_TEST_STEP_PARAMS ( STEP_KEY, TYPE, VALUE, OFFSET )
+values ( 10, 'DATA', 'searchData.alttext2', 1 );
+insert into PERFECTO_TEST_STEPS ( KEY, TEST_NAME, NAME, PAGE_NAME, TYPE, ACTIVE, LINK_ID, OS,
+                                 POI, THRESHOLD, TIMED, INVERSE, WAIT, FAILURE_MODE, VALIDATION, VALIDATION_TYPE,
+                                 DEVICE, TAG_NAMES, OFFSET )
+values ( 11, 'MyTest', 'SEARCH', 'Home', 'CLICK', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'alt', NULL, 11 );
+
 commit;
 
            
