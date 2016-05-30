@@ -94,7 +94,7 @@ public class SQLKeyWordProvider
     private static final String DEF_PARAM_QUERY =
         "SELECT STEP_KEY, TYPE, VALUE, OFFSET \n" +
         "FROM PERFECTO_TEST_STEP_PARAMS \n" +
-        "ORDER BY KEY, OFFSET";
+        "ORDER BY STEP_KEY, OFFSET";
     
     private static final String DEF_TOKEN_QUERY =
         "SELECT STEP_KEY, NAME, TYPE, VALUE \n" +
@@ -443,7 +443,7 @@ public class SQLKeyWordProvider
                 test.setDataProvider( (String) data.testData[i][3] );
                 test.setLinkId( (String) data.testData[i][4] );
                 test.setTimed( "Y".equals(data.testData[i][5]) );
-                if ( data.functionData[i][6] != null ) test.setThreshold( new BigInteger( data.testData[i][6].toString()));
+                if ( data.testData[i][6] != null ) test.setThreshold( new BigInteger( data.testData[i][6].toString()));
                 test.setActive( "Y".equals(data.testData[i][7]) );
                 test.setOs( (String) data.testData[i][8] );
                 test.setTagNames( (String) data.testData[i][9] );

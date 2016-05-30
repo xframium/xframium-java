@@ -146,6 +146,16 @@ public class KeyWordTest
 			stepList.add( step );
 		}
 	}
+
+        /**
+	 * Get step at offset.
+	 *
+	 * @param step the step
+	 */
+	public KeyWordStep getStepAt( int offset )
+	{
+            return (KeyWordStep) stepList.get( offset );
+	}
 	
 	/**
 	 * Gets the data providers.

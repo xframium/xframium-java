@@ -1,3 +1,28 @@
+truncate table PERFECTO_CONTENT;
+truncate table PERFECTO_CLOUDS;
+truncate table PERFECTO_DEVICES;
+truncate table PERFECTO_DEVICE_CAPABILITIES;
+truncate table PERFECTO_PAGE_DATA_TYPE;
+truncate table PERFECTO_PAGE_DATA;
+truncate table PERFECTO_PAGE_DATA_ATTRS;
+truncate table PERFECTO_SITES;
+truncate table PERFECTO_PAGES;
+truncate table PERFECTO_ELEMENTS;
+truncate table PERFECTO_ELEMENTS;
+truncate table PERFECTO_APPLICATIONS;
+truncate table PERFECTO_TEST_SUITES;
+truncate table PERFECTO_TEST_SUITE_PAGES;
+truncate table PERFECTO_TESTS;
+truncate table PERFECTO_CONTENT;
+truncate table PERFECTO_TEST_STEPS;
+truncate table PERFECTO_TEST_SUBSTEPS;
+truncate table PERFECTO_TEST_STEP_PARAMS;
+truncate table PERFECTO_TEST_STEP_TOKENS;
+truncate table PERFECTO_FUNCTIONS;
+truncate table PERFECTO_TEST_IMPORTED_SUITES;
+
+
+
 insert into PERFECTO_CONTENT( KEY_NAME, VALUE, OFFSET )
 values ( 'test', 'one', 0 );
 insert into PERFECTO_CONTENT( KEY_NAME, VALUE, OFFSET )
@@ -15,25 +40,19 @@ insert into PERFECTO_DEVICE_CAPABILITIES ( DEVICE_NAME, NAME, CLASS, VALUE )
 values ( 'Samsung S6', 'DUMMY-CAPABILITY', 'STRING', 'DUMMY-VALUE' );
 
 insert into PERFECTO_PAGE_DATA_TYPE ( NAME, LOCK_RECORDS )
-values ( 'searchData1', 'N' );
+values ( 'searchData', 'N' );
 insert into PERFECTO_PAGE_DATA ( TYPE_NAME, NAME, ACTIVE )
-values ( 'searchData1', 'one', 'Y' );
-insert into PERFECTO_PAGE_DATA ( TYPE_NAME, NAME, ACTIVE )
-values ( 'searchData1', 'two', 'Y' );
-insert into PERFECTO_PAGE_DATA ( TYPE_NAME, NAME, ACTIVE )
-values ( 'searchData1', 'three', 'Y' );
+values ( 'searchData', 'one', 'Y' );
 insert into PERFECTO_PAGE_DATA_ATTRS ( TYPE_NAME, RECORD_NAME, NAME, VALUE )
-values ( 'searchData1', 'one', 'text', 'perfecto' );
+values ( 'searchData', 'one', 'text', 'oracle' );
 insert into PERFECTO_PAGE_DATA_ATTRS ( TYPE_NAME, RECORD_NAME, NAME, VALUE )
-values ( 'searchData1', 'one', 'url', 'www.google.com' );
+values ( 'searchData', 'one', 'url', 'www.google.com' );
 insert into PERFECTO_PAGE_DATA_ATTRS ( TYPE_NAME, RECORD_NAME, NAME, VALUE )
-values ( 'searchData1', 'two', 'text', 'jaxb' );
+values ( 'searchData', 'one', 'alttext', 'db2' );
 insert into PERFECTO_PAGE_DATA_ATTRS ( TYPE_NAME, RECORD_NAME, NAME, VALUE )
-values ( 'searchData1', 'two', 'url', 'www.google.com' );
+values ( 'searchData', 'one', 'text2', 'wwbsphere' );
 insert into PERFECTO_PAGE_DATA_ATTRS ( TYPE_NAME, RECORD_NAME, NAME, VALUE )
-values ( 'searchData1', 'three', 'text', 'oracle' );
-insert into PERFECTO_PAGE_DATA_ATTRS ( TYPE_NAME, RECORD_NAME, NAME, VALUE )
-values ( 'searchData1', 'three', 'url', 'www.google.com' );
+values ( 'searchData', 'one', 'alttext2', 'weblogic' );
 
 insert into PERFECTO_SITES ( NAME )
 values ( 'Google' );

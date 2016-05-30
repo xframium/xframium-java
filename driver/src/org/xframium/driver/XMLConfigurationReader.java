@@ -91,6 +91,7 @@ import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.KeyWordToken.TokenType;
 import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
+import org.xframium.page.keyWord.provider.SQLKeyWordProvider;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunDetails;
@@ -105,6 +106,9 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     private static final String[] OPT_DATA = new String[] { "pageManagement.pageData.query" };
     private static final String[] OPT_CONTENT = new String[] { "pageManagement.content.query" };
     private static final String[] OPT_DEVICE = new String[] { "deviceManagement.device.query", "deviceManagement.capability.query" };
+    private static final String[] OPT_DRIVER = new String[] { "driver.suite", "driver.suiteQuery", "driver.pageQuery", "driver.importQuery",  "driver.testQuery",
+                                                              "driver.stepQuery", "driver.substepQuery", "driver.paramQuery", "driver.tokenQuery",
+                                                              "driver.functionQuery" };
     private XFramiumRoot xRoot;
     private Map<String,String> configProperties = new HashMap<String,String>( 10 );
     
@@ -620,9 +624,29 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             case "XML":
                 KeyWordDriver.instance().loadTests( new XMLKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ) ) );
 
-                
-
                 break;
+
+            case "SQL":
+            case "LOCAL-SQL":
+            {
+                KeyWordDriver.instance().loadTests( new SQLKeyWordProvider( configProperties.get( JDBC[0] ),
+                                                                            configProperties.get( JDBC[1] ),
+                                                                            configProperties.get( JDBC[2] ),
+                                                                            configProperties.get( JDBC[3] ),
+                                                                            xRoot.getSuite().getFileName(),
+                                                                            configProperties.get( OPT_DRIVER[1] ),
+                                                                            configProperties.get( OPT_DRIVER[2] ),
+                                                                            configProperties.get( OPT_DRIVER[3] ),
+                                                                            configProperties.get( OPT_DRIVER[4] ),
+                                                                            configProperties.get( OPT_DRIVER[5] ),
+                                                                            configProperties.get( OPT_DRIVER[6] ),
+                                                                            configProperties.get( OPT_DRIVER[7] ),
+                                                                            configProperties.get( OPT_DRIVER[8] ),
+                                                                            configProperties.get( OPT_DRIVER[9] )
+                                                                            ));
+                                                   
+                break;
+            }
         }
 
         List<String> testArray = new ArrayList<String>( 10 );
@@ -821,6 +845,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         {
             case "XML": 
             case "LOCAL":
+            case "LOCAL-SQL":
             {
                 runTest( xRoot.getDriver().getOutputFolder(), XMLTestDriver.class );
                 break;

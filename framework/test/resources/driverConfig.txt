@@ -50,7 +50,8 @@ deviceManagement.driverType=APPIUM
 #
 # Driver Configuration
 #
-driver.frameworkType=OBJ
+driver.frameworkType=OBJ-SQL
+driver.suite=alternate-device
 driver.configName=com.xframium.test.SQLDataProvidersTest
 
 #

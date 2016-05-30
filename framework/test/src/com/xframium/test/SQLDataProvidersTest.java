@@ -33,6 +33,7 @@ import org.xframium.device.data.*;
 import org.xframium.page.*;
 import org.xframium.page.data.*;
 import org.xframium.page.element.*;
+import org.xframium.page.keyWord.*;
 import org.xframium.spi.Device;
 import org.xframium.application.*;
 
@@ -78,11 +79,11 @@ public class SQLDataProvidersTest
     @Test
     public void testSQLPageDataProvider()
     {
-        PageData[] data = PageDataManager.instance().getRecords( "searchData1" );
+        PageData[] data = PageDataManager.instance().getRecords( "searchData" );
 
         Assert.assertTrue( data != null, "Got some data" );
         Assert.assertTrue( data.length > 0, "Got some data II" );
-        Assert.assertTrue( "perfecto".equals( data[0].getData( "text" )) , "Got the right data" );
+        Assert.assertTrue( "oracle".equals( data[0].getData( "text" )) , "Got the right data" );
     }
 
     @Test
@@ -96,6 +97,18 @@ public class SQLDataProvidersTest
 
         Assert.assertTrue( element != null, "Got an element" );
         Assert.assertTrue( "//input[@id='lst-ib']".equals( element.getKey()) , "Got the right element" );
+    }
+
+    @Test
+    public void testSQLKeyWordDriver()
+    {
+        KeyWordTest theTest = KeyWordDriver.instance().getTest( "MyTest!one" );
+
+        Assert.assertTrue( theTest != null, "Got a test" );
+
+        KeyWordStep theFirstStep = theTest.getStepAt( 0 );
+        
+        Assert.assertTrue( "LOAD".equals( theFirstStep.getName()) , "Got the right step" );
     }
 
 }
