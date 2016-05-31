@@ -38,4 +38,6 @@ public interface ElementProvider
 	 * @return the element
 	 */
 	Element getElement( ElementDescriptor elementDescriptor );
+	
+	boolean isInitialized();
 }

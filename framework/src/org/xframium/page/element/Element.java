@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
+import org.xframium.page.BY;
 
 
 // TODO: Auto-generated Javadoc
@@ -76,6 +77,8 @@ public interface Element
         /** The visible. */
         VISIBLE;
     }
+	
+	public BY getBy();
 	
 	/**
 	 * Move to.

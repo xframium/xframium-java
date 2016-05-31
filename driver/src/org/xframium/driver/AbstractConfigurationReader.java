@@ -47,60 +47,70 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         
         log.info( "Cloud: Configuring Cloud Registry" );
         configureCloud();
-        log.info( "Cloud: configured as " + CloudRegistry.instance().getCloud().getName() + " at " + CloudRegistry.instance().getCloud().getHostName() );
-        
-        if ( CloudRegistry.instance().getCloud().getProxyHost() != null && !CloudRegistry.instance().getCloud().getProxyHost().isEmpty() && Integer.parseInt( CloudRegistry.instance().getCloud().getProxyPort() ) > 0 )
-        {
-            log.info( "Cloud: Proxy configured as " + CloudRegistry.instance().getCloud().getProxyHost() + ":" + CloudRegistry.instance().getCloud().getProxyPort() );
-            System.setProperty( "http.proxyHost", CloudRegistry.instance().getCloud().getProxyHost() );
-            System.setProperty( "https.proxyHost", CloudRegistry.instance().getCloud().getProxyHost() );
-            System.setProperty( "http.proxyPort", CloudRegistry.instance().getCloud().getProxyPort() );
-            System.setProperty( "https.proxyPort", CloudRegistry.instance().getCloud().getProxyPort() );
-        }
-        
-        BeanManager.instance().setBeanFactory( new XMLBeanFactory() );
-        PerfectoMobile.instance().setUserName( CloudRegistry.instance().getCloud().getUserName() );
-        PerfectoMobile.instance().setPassword( CloudRegistry.instance().getCloud().getPassword() );
-        PerfectoMobile.instance().setBaseUrl( "https://" + CloudRegistry.instance().getCloud().getHostName() );
-        
-        log.info( "Application: Configuring Application Registry" );
-        configureApplication();
-        log.info( "Application: Configured as " + ApplicationRegistry.instance().getAUT().getName() );
-        
-        log.info( "Third Party: Configuring Third Party Library Support" );
-        configureThirdParty();
-        
-        log.info( "Artifact: Configuring Artifact Production" );
-        configureArtifacts();
-        
-        log.info( "Page: Configuring Object Repository" );
-        configurePageManagement();
-        
-        log.info( "Data: Configuring Data Driven Testing" );
-        configureData();
-        
-        log.info( "Content: Configuring Content Engine" );
-        configureContent();
-        
-        log.info( "Device: Configuring Device Acquisition Engine " );
-        configureDevice();
-        
-        log.info( "Property Adapter:  Configuring Property Adapters" );
-        configurePropertyAdapters();
-        
-        log.info( "Driver: Configuring Driver" );
-        configureDriver();
-        
-        log.info( "Go: Executing Tests" );
-        
         try
         {
-            executeTest();
+            log.info( "Cloud: configured as " + CloudRegistry.instance().getCloud().getName() + " at " + CloudRegistry.instance().getCloud().getHostName() );
+            
+            if ( CloudRegistry.instance().getCloud().getProxyHost() != null && !CloudRegistry.instance().getCloud().getProxyHost().isEmpty() && Integer.parseInt( CloudRegistry.instance().getCloud().getProxyPort() ) > 0 )
+            {
+                log.info( "Cloud: Proxy configured as " + CloudRegistry.instance().getCloud().getProxyHost() + ":" + CloudRegistry.instance().getCloud().getProxyPort() );
+                System.setProperty( "http.proxyHost", CloudRegistry.instance().getCloud().getProxyHost() );
+                System.setProperty( "https.proxyHost", CloudRegistry.instance().getCloud().getProxyHost() );
+                System.setProperty( "http.proxyPort", CloudRegistry.instance().getCloud().getProxyPort() );
+                System.setProperty( "https.proxyPort", CloudRegistry.instance().getCloud().getProxyPort() );
+            }
+            
+            BeanManager.instance().setBeanFactory( new XMLBeanFactory() );
+            PerfectoMobile.instance().setUserName( CloudRegistry.instance().getCloud().getUserName() );
+            PerfectoMobile.instance().setPassword( CloudRegistry.instance().getCloud().getPassword() );
+            PerfectoMobile.instance().setBaseUrl( "https://" + CloudRegistry.instance().getCloud().getHostName() );
+            
+            log.info( "Application: Configuring Application Registry" );
+            if ( !configureApplication() )
+                return;
+            log.info( "Application: Configured as " + ApplicationRegistry.instance().getAUT().getName() );
+            
+            log.info( "Third Party: Configuring Third Party Library Support" );
+            if ( !configureThirdParty() ) return;
+            
+            log.info( "Artifact: Configuring Artifact Production" );
+            if ( !configureArtifacts() ) return;
+            
+            log.info( "Page: Configuring Object Repository" );
+            if ( !configurePageManagement() ) return;
+            
+            log.info( "Data: Configuring Data Driven Testing" );
+            if ( !configureData() ) return;
+            
+            log.info( "Content: Configuring Content Engine" );
+            if ( !configureContent() ) return;
+            
+            log.info( "Device: Configuring Device Acquisition Engine " );
+            if ( !configureDevice() ) return;
+            
+            log.info( "Property Adapter:  Configuring Property Adapters" );
+            if ( !configurePropertyAdapters() ) return;
+            
+            log.info( "Driver: Configuring Driver" );
+            if ( !configureDriver() ) return;
+            
+            log.info( "Go: Executing Tests" );
+        
+            try
+            {
+                executeTest();
+            }
+            catch( Exception e )
+            {
+                log.fatal( "Error executing Tests", e );
+            }
         }
-        catch( Exception e )
+        finally
         {
-            log.fatal( "Error executing Tests", e );
+            CloudRegistry.instance().shutdown();
         }
+        
+        
         
         
     }

@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.xpath.XPathFactory;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.xframium.Initializable;
@@ -113,7 +114,18 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     private Map<String,String> configProperties = new HashMap<String,String>( 10 );
     
     private Map<String,Element> elementMap = new HashMap<String,Element>(20);
+    
+    private static XPathFactory xPathFactory = XPathFactory.newInstance();
 
+    
+    private boolean pageInitialized = false;
+    
+    @Override
+    public boolean isInitialized()
+    {
+        return pageInitialized;
+    }
+    
     @Override
     protected boolean readFile( File configFile )
     {
@@ -264,8 +276,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             }
         }
         
-        // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
@@ -325,25 +336,46 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 break;
                 
             case "LOCAL":
+                ElementDescriptor elementDescriptor = null;
+                Element currentElement = null;
+                boolean elementsRead = true;
                 for ( XPage page : xRoot.getModel().getPage() )
                 {
                     for ( XElement ele : page.getElement() )
                     {
-                        ElementDescriptor elementDescriptor = new ElementDescriptor( xRoot.getModel().getSiteName(), page.getName(), ele.getName() );
-                        Element currentElement = ElementFactory.instance().createElement( BY.valueOf( ele.getDescriptor() ), ele.getValue(), ele.getName(), page.getName(), ele.getContextName() );
+                        elementDescriptor = new ElementDescriptor( xRoot.getModel().getSiteName(), page.getName(), ele.getName() );
+                        currentElement = ElementFactory.instance().createElement( BY.valueOf( ele.getDescriptor() ), ele.getValue(), ele.getName(), page.getName(), ele.getContextName() );
                         
                         if (log.isDebugEnabled())
                             log.debug( "Adding XML Element using [" + elementDescriptor.toString() + "] as [" + currentElement + "]" );
-                        elementMap.put(elementDescriptor.toString(), currentElement );
+                        boolean elementRead = true;
+                        try
+                        {
+                            xPathFactory.newXPath().compile( currentElement.getKey().replace( "{", "" ).replace( "}", "" ) );
+                            elementMap.put(elementDescriptor.toString(), currentElement );
+                        }
+                        catch( Exception e )
+                        {
+                            log.fatal( "Could not process page element identified by [" + elementDescriptor.toString() + "] as [" + currentElement.getKey() + "]" );
+                            elementRead = false;
+                        }
+                        
+                        elementsRead = elementsRead & elementRead;
                     }
                 }
+                
+                pageInitialized = elementsRead;
+
                 PageManager.instance().setElementProvider( this );
                 
                 break;
         }
 
         
-        return true;
+        if ( PageManager.instance().getElementProvider() == null )
+            return false;
+        
+        return PageManager.instance().getElementProvider().isInitialized();
     }
     
     @Override
@@ -470,7 +502,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
 
         DeviceManager.instance().addRunListener( RunDetails.instance() );
         DeviceManager.instance().setDriverType( DriverType.valueOf( xRoot.getDriver().getType() ) );
-        return false;
+        return true;
     }
     
     private void parseDevice( XDevice device )

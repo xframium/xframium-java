@@ -27,17 +27,7 @@ import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 
-// TODO: Auto-generated Javadoc
-/**
- * <b>Keyword(s):</b> <code>EXISTS</code><br>
- * The exists keyword verifies that an element is present.  It does not check vo visibility it just verifies that it is in the XML structure<br><br>
- * <br><b>Example(s): </b><ul>
- * <li> This example will locate element named 'TEST_ELEMENT' from TEST_PAGE<br>
- * {@literal <step name="TEST_ELEMENT" type="EXISTS" page="TEST_PAGE" /> }<br>
- * </li>
- * </ul>
- */
-public class KWSExists extends AbstractKeyWordStep
+public class KWSElse extends AbstractKeyWordStep
 {
 
 	/* (non-Javadoc)
@@ -46,38 +36,8 @@ public class KWSExists extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
 	{
-		if ( pageObject == null )
-			throw new IllegalStateException( "There was no Page Object defined" );
-		
-		Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap );
-		
-		boolean returnValue = currentElement.isPresent();
-		
-		if ( getContext() != null )
-        {
-		    int elementCount = currentElement.getCount();
-		    
-		    if ( elementCount > 1 )
-		    {
-		        if ( log.isDebugEnabled() )
-	                log.debug( "Setting Context Data to [" + currentElement.getValue() + "] for [" + getContext() + "]" );
-	            contextMap.put( getContext() + "_count", elementCount + "" );
-		    }
-
-            if ( log.isDebugEnabled() )
-                log.debug( "Setting Context Data to [" + currentElement.getValue() + "] for [" + getContext() + "]" );
-            contextMap.put( getContext(), currentElement.getValue() );
-        }
-		
-		return returnValue;
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
-	 */
-	public boolean isRecordable()
-	{
-		return false;
+	    log.error( "We should not be here!" );
+		return true;
 	}
 
 

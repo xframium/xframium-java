@@ -39,15 +39,22 @@ public class TestDriver
             System.err.println( "[" + configFile.getAbsolutePath() + "] could not be located" );
             System.exit( -1 );
         }
-        
-        if ( configFile.getName().toLowerCase().endsWith( ".txt" ) )
+        try
         {
-            new TXTConfigurationReader().readConfiguration( configFile );
+            if ( configFile.getName().toLowerCase().endsWith( ".txt" ) )
+            {
+                new TXTConfigurationReader().readConfiguration( configFile );
+            }
+            else if ( configFile.getName().toLowerCase().endsWith( ".xml" ) )
+            {
+                new XMLConfigurationReader().readConfiguration( configFile );
+            }
         }
-        else if ( configFile.getName().toLowerCase().endsWith( ".xml" ) )
+        catch( Exception e )
         {
-            new XMLConfigurationReader().readConfiguration( configFile );
+            e.printStackTrace();
         }
+                
     }
 
     

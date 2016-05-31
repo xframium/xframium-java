@@ -90,6 +90,7 @@ public class CSVElementProvider extends AbstractElementProvider
 				if ( log.isInfoEnabled() )
 					log.info( "Reading from FILE SYSTEM as [" + fileName + "]" );
 				readElements( new FileInputStream( fileName ) );
+				
 			}
 			catch( FileNotFoundException e )
 			{
@@ -110,6 +111,7 @@ public class CSVElementProvider extends AbstractElementProvider
 		
 		try
 		{
+		    boolean elementsRead = true;
 			while ( ( currentLine = fileReader.readLine() ) != null )
 			{
 				if ( log.isDebugEnabled() )
@@ -129,9 +131,13 @@ public class CSVElementProvider extends AbstractElementProvider
 					
 					if ( log.isDebugEnabled() )
 						log.debug( "Adding CSV Element using [" + elementDescriptor.toString() + "] as [" + currentElement );
+					
+					elementsRead = elementsRead & validateElement( elementDescriptor, currentElement );
 					elementMap.put(elementDescriptor.toString(), currentElement );
 				}
 			}
+			
+			setInitialized( elementsRead );
 		}
 		catch( Exception e )
 		{

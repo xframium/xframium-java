@@ -102,6 +102,7 @@
 					<enumeration value="HAS_FOCUS" />
 					<enumeration value="ALIGN" />
 					<enumeration value="PERFECTO_SCRIPT" />
+                    <enumeration value="ELSE" />
 				</restriction>
 			</simpleType>
 		</attribute>
