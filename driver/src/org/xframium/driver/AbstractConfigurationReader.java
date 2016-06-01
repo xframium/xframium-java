@@ -1,11 +1,14 @@
 package org.xframium.driver;
 
+import java.awt.Desktop;
 import java.io.File;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.TestNG;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.artifact.ArtifactType;
 import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.device.data.DataManager;
 import org.xframium.gesture.GestureManager;
 import org.xframium.gesture.device.action.DeviceActionManager;
 import org.xframium.gesture.device.action.spi.perfecto.PerfectoDeviceActionFactory;
@@ -99,6 +102,22 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             try
             {
                 executeTest();
+                
+                if( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_HTML ) )
+                {
+                    File htmlFile = RunDetails.instance().getIndex( DataManager.instance().getReportFolder() );
+                    try
+                    {
+                        Desktop.getDesktop().browse( htmlFile.toURI() );
+                    }
+                    catch( Exception e )
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                
+                CloudRegistry.instance().shutdown();
+                
             }
             catch( Exception e )
             {
@@ -133,6 +152,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         RunDetails.instance().setStartTime();
         
         TestNG testNg = new TestNG( true );
+        testNg.setVerbose( 1 );
         testNg.setOutputDirectory( outputFolder + System.getProperty( "file.separator" ) + "testNg" );
         testNg.setTestClasses( new Class[] { theTest } );
         testNg.run();
