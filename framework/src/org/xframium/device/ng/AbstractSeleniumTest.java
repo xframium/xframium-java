@@ -575,6 +575,7 @@ public abstract class AbstractSeleniumTest
             File htmlFile = RunDetails.instance().getIndex( DataManager.instance().getReportFolder() );
             try
             {
+                log.warn( "Launching Browser at " +  htmlFile.toURI() );
                 Desktop.getDesktop().browse( htmlFile.toURI() );
             }
             catch( Exception e )

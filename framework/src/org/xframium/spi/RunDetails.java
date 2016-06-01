@@ -94,7 +94,7 @@ public class RunDetails implements RunListener
         
         for ( int i=0; i<detailsList.size(); i++ )
         {
-            String runKey = ((String) detailsList.get( i )[0] ).substring( 25 );
+            String runKey = (String) detailsList.get( i )[0];
             Device device = (Device) detailsList.get( i )[1];
             String location = runKey + "/" + device.getKey() + "/";
             boolean success = (boolean)detailsList.get( i )[2];

@@ -662,8 +662,9 @@ public class DeviceManager implements ArtifactListener
     }
 
     public String getRunKey( Device currentDevice, Method currentMethod, String testContext, boolean success, String personaName )
-    {
-        String runKey = currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() + ( testContext != null ? ( "." + testContext ) : "" );
+    {        
+        String runKey = ( testContext != null ? ( testContext ) : "" );
+        
         if ( personaName != null && !personaName.isEmpty() && !runKey.endsWith( personaName ) )
         {
             runKey = runKey + "." + personaName;
@@ -683,8 +684,6 @@ public class DeviceManager implements ArtifactListener
      */
     public void addRun( Device currentDevice, Method currentMethod, String testContext, boolean success, String personaName )
     {
-		
-		
         if (log.isDebugEnabled())
             log.debug( Thread.currentThread().getName() + ": Acquiring Device Manager Lock" );
         managerLock.lock();
