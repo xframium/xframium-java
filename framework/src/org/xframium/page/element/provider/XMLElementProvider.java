@@ -131,6 +131,7 @@ public class XMLElementProvider extends AbstractElementProvider
 
 			for ( Import imp : rRoot.getImport() )
 				parseImport( imp );
+			
 		}
 		catch( Exception e )
 		{
@@ -166,10 +167,12 @@ public class XMLElementProvider extends AbstractElementProvider
 	 *
 	 * @param site the site
 	 */
-	private void parseSite( Site site )
+	private void parseSite( Site site ) throws Exception
 	{
 		if ( log.isDebugEnabled() )
 			log.debug( "Extracted Site [" + site.getName() + "]" );
+		
+		boolean elementsRead = true;
 		
 		if ( PageManager.instance().getSiteName().equals( site.getName() ) )
 		{
@@ -182,9 +185,14 @@ public class XMLElementProvider extends AbstractElementProvider
 		            
 		            if (log.isDebugEnabled())
 		                log.debug( "Adding XML Element using [" + elementDescriptor.toString() + "] as [" + currentElement + "]" );
+		            
+		            elementsRead = elementsRead & validateElement( elementDescriptor, currentElement );
+		            
 		            elementMap.put(elementDescriptor.toString(), currentElement );
 		        }
 		    }
+		    
+		    setInitialized( elementsRead );
 		}
 	}
 	

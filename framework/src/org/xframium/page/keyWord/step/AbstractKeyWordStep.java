@@ -41,6 +41,7 @@ import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordToken;
+import org.xframium.page.keyWord.step.spi.KWSElse;
 import org.xframium.page.keyWord.step.spi.KWSLoopBreak;
 
 // TODO: Auto-generated Javadoc
@@ -614,6 +615,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 boolean subReturnValue = false;
                 for ( KeyWordStep step : getStepList() )
                 {
+                    if ( step instanceof KWSElse )
+                        continue;
                     try
                     {
                         subReturnValue = step.executeStep( pageObject, webDriver, contextMap, dataMap, pageMap );
@@ -644,6 +647,52 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         break;
                     }
 
+                }
+            }
+            
+            //
+            // Special case for the ELSE clause if found
+            //
+            if ( !fork && getStepList() != null && !getStepList().isEmpty() && !returnValue )
+            {
+                for ( KeyWordStep parentStep : getStepList() )
+                {
+                    if ( parentStep instanceof KWSElse && !parentStep.getStepList().isEmpty() )
+                    {
+                        for ( KeyWordStep step : parentStep.getStepList() )
+                        {
+                            boolean subReturnValue = false;
+                            try
+                            {
+                                subReturnValue = step.executeStep( pageObject, webDriver, contextMap, dataMap, pageMap );
+                            }
+                            catch ( KWSLoopBreak e )
+                            {
+                                throw e;
+                            }
+                            catch ( Exception e )
+                            {
+                                stepException = e;
+                                subReturnValue = false;
+                                log.debug( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " encoundered error: ", e );
+                            }
+    
+                            if ( step.isInverse() )
+                            {
+                                subReturnValue = !subReturnValue;
+                            }
+    
+                            if ( !subReturnValue )
+                            {
+                                returnValue = false;
+                                if ( step.getFailure().equals( StepStatus.FAILURE_IGNORED ) )
+                                    subFailure = false;
+                                else
+                                    subFailure = true;
+                                break;
+                            }
+                        }
+                    }
                 }
             }
 

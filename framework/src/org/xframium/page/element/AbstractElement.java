@@ -267,7 +267,7 @@ public abstract class AbstractElement implements Element
 	 *
 	 * @return the by
 	 */
-	BY getBy()
+	public BY getBy()
 	{
 		return by;
 	}

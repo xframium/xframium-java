@@ -168,7 +168,7 @@ public class ExcelElementProvider extends AbstractElementProvider
 		try
 		{
 			workbook = new XSSFWorkbook( inputStream );
-			
+			boolean elementsRead = true;
 			String[] tabs = tabNames.split( "," );
 			
 			for ( String tabName : tabs )
@@ -196,10 +196,13 @@ public class ExcelElementProvider extends AbstractElementProvider
 					
 					if ( log.isDebugEnabled() )
 						log.debug( "Adding Excel Element using [" + elementDescriptor.toString() + "] as [" + currentElement );
+					elementsRead = elementsRead & validateElement( elementDescriptor, currentElement );
 					elementMap.put(elementDescriptor.toString(), currentElement );
 					
 				}
 			}
+			
+			setInitialized( elementsRead );
 
 			
 		}

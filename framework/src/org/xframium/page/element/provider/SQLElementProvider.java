@@ -124,7 +124,7 @@ public class SQLElementProvider
         try
         {
             Object[][] data = SQLUtil.getResults( username, password, url, driver, query, null );
-
+            boolean elementsRead = true;
             for( int i = 0; i < data.length; ++i )
             {
                 String siteName = (String) data[i][0];
@@ -148,8 +148,11 @@ public class SQLElementProvider
                 if ( log.isDebugEnabled() )
                     log.debug( "Adding Excel Element using [" + elementDescriptor.toString() + "] as [" + currentElement );
                 
+                elementsRead = elementsRead & validateElement( elementDescriptor, currentElement );
                 elementMap.put(elementDescriptor.toString(), currentElement );
             }
+            
+            setInitialized( elementsRead );
         }
         catch (Exception e)
         {

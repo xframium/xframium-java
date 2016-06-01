@@ -285,8 +285,10 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                 break;
         }
 
+        if ( PageManager.instance().getElementProvider() == null )
+            return false;
         
-        return true;
+        return PageManager.instance().getElementProvider().isInitialized();
     }
     
     @Override
