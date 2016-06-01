@@ -42,6 +42,7 @@ import org.xframium.page.keyWord.step.spi.KWSContrastRatio;
 import org.xframium.page.keyWord.step.spi.KWSDeleteCookie;
 import org.xframium.page.keyWord.step.spi.KWSDeleteCookies;
 import org.xframium.page.keyWord.step.spi.KWSDevice;
+import org.xframium.page.keyWord.step.spi.KWSDumpState;
 import org.xframium.page.keyWord.step.spi.KWSElse;
 import org.xframium.page.keyWord.step.spi.KWSExecJS;
 import org.xframium.page.keyWord.step.spi.KWSExists;
@@ -146,6 +147,7 @@ public class KeyWordStepFactory
         addKeyWord( "AT", KWSAt.class );
         addKeyWord( "PERFECTO_SCRIPT", KWSPerfectoScript.class );
         addKeyWord( "ELSE", KWSElse.class );
+        addKeyWord( "STATE", KWSDumpState.class );
     }
 
     /**

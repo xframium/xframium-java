@@ -600,7 +600,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
 
         } );
         
-        return false;
+        return true;
     }
     
     @Override

@@ -103,6 +103,7 @@
 					<enumeration value="ALIGN" />
 					<enumeration value="PERFECTO_SCRIPT" />
                     <enumeration value="ELSE" />
+                    <enumeration value="STATE" />
 				</restriction>
 			</simpleType>
 		</attribute>

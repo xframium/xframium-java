@@ -352,35 +352,46 @@ public abstract class AbstractSeleniumTest
     @BeforeMethod
     public void beforeMethod( Method currentMethod, Object[] testArgs )
     {
-        Thread.currentThread().setName( testArgs[0].toString() );
-        if (log.isInfoEnabled())
-            log.info( "Attempting to acquire device for " + currentMethod.getName() );
-
-        ConnectedDevice connectedDevice = DeviceManager.instance().getDevice( currentMethod,
-                                                                              ( ( TestName ) testArgs[0] ).getTestName(),
-                                                                              true,
-                                                                              ( ( TestName ) testArgs[0] ).getPersonaName() );
-
-        
-        if( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
-            PerfectoMobile.instance().device().startDebug( connectedDevice.getExecutionId(), connectedDevice.getDeviceName() );
-        
-        TestContext ctx = new TestContext();
-        ctx.currentMethod = currentMethod;
-        ctx.testArgs = testArgs;
-
-        threadContext.set( ctx );
-
-        if (connectedDevice != null)
+        try
         {
-            putConnectedDevice( DEFAULT, connectedDevice );
-			
-            TestName testName = ( ( TestName ) testArgs[0] );
-            if ( testName.getTestName() == null || testName.getTestName().isEmpty() )
-                testName.setTestName( currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() );
-			
-            ( ( TestName ) testArgs[0] ).setFullName( testArgs[0].toString() );
             Thread.currentThread().setName( testArgs[0].toString() );
+            if (log.isInfoEnabled())
+                log.info( Thread.currentThread().getName() + ": Attempting to acquire device for " + currentMethod.getName() );
+            
+    
+            ConnectedDevice connectedDevice = DeviceManager.instance().getDevice( currentMethod,
+                                                                                  ( ( TestName ) testArgs[0] ).getTestName(),
+                                                                                  true,
+                                                                                  ( ( TestName ) testArgs[0] ).getPersonaName() );
+    
+            if (log.isInfoEnabled())
+                log.info( Thread.currentThread().getName() + ": Device acquired for " + currentMethod.getName() );
+            
+            
+            if( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
+                PerfectoMobile.instance().device().startDebug( connectedDevice.getExecutionId(), connectedDevice.getDeviceName() );
+            
+            TestContext ctx = new TestContext();
+            ctx.currentMethod = currentMethod;
+            ctx.testArgs = testArgs;
+    
+            threadContext.set( ctx );
+    
+            if (connectedDevice != null)
+            {
+                putConnectedDevice( DEFAULT, connectedDevice );
+    			
+                TestName testName = ( ( TestName ) testArgs[0] );
+                if ( testName.getTestName() == null || testName.getTestName().isEmpty() )
+                    testName.setTestName( currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() );
+    			
+                ( ( TestName ) testArgs[0] ).setFullName( testArgs[0].toString() );
+                Thread.currentThread().setName( testArgs[0].toString() );
+            }
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace();
         }
     }
 
@@ -441,7 +452,8 @@ public abstract class AbstractSeleniumTest
         //
         // Write out the index file for all tests
         //
-        
+        try
+        {
         if( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_HTML ) )
             RunDetails.instance().writeHTMLIndex( DataManager.instance().getReportFolder() );
         
@@ -449,6 +461,11 @@ public abstract class AbstractSeleniumTest
             RunDetails.instance().writeDefinitionIndex( DataManager.instance().getReportFolder() );
 		
         DeviceManager.instance().clearAllArtifacts();
+        }
+        catch( Exception e )
+        {
+            log.error( Thread.currentThread() + ": Error flushing artifacts", e );
+        }
     }
 
     private void cleanUpConnectedDevice( String name, ConnectedDevice device, Method currentMethod, Object[] testArgs, ITestResult testResult )
@@ -570,21 +587,7 @@ public abstract class AbstractSeleniumTest
     @AfterSuite
     public void afterSuite()
     {
-        if( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_HTML ) )
-        {
-            File htmlFile = RunDetails.instance().getIndex( DataManager.instance().getReportFolder() );
-            try
-            {
-                log.warn( "Launching Browser at " +  htmlFile.toURI() );
-                Desktop.getDesktop().browse( htmlFile.toURI() );
-            }
-            catch( Exception e )
-            {
-                e.printStackTrace();
-            }
-        }
         
-        CloudRegistry.instance().shutdown();
     }
 
     //
