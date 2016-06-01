@@ -533,6 +533,7 @@ public class SQLKeyWordProvider
                 step.setTagNames( tag_names );
 
                 stepsByKey.put( key, step );
+                test.getStep().add( step );
             }
         }
 

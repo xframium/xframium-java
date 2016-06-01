@@ -501,6 +501,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             case "XML":
             {
                 KeyWordDriver.instance().loadTests( new XMLKeyWordProvider( findFile( configFolder, new File( configProperties.getProperty( DRIVER[1] ) ) ) ) );
+                keywordsloaded = true;
 
                 break;
             }
@@ -523,6 +524,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                                                                             configProperties.getProperty( OPT_DRIVER[8] ),
                                                                             configProperties.getProperty( OPT_DRIVER[9] )
                                                                             ));
+                keywordsloaded = true;
                                                    
                 break;
             }
