@@ -871,7 +871,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     
 
     @Override
-    protected boolean executeTest() throws Exception
+    protected boolean _executeTest() throws Exception
     {
         switch ( xRoot.getSuite().getProvider() )
         {

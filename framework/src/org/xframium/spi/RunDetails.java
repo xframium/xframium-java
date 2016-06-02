@@ -77,6 +77,13 @@ public class RunDetails implements RunListener
         // TODO Auto-generated method stub
         return true;
     }
+    
+    @Override
+    public boolean validateDevice( Device currentDevice, String runKey )
+    {
+        // TODO Auto-generated method stub
+        return true;
+    }
 
     @Override
     public void afterRun( Device currentDevice, String runKey, boolean successful )

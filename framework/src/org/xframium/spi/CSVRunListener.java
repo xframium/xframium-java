@@ -68,6 +68,13 @@ public class CSVRunListener implements RunListener
 		
 		return true;
 	}
+	
+	@Override
+	public boolean validateDevice( Device currentDevice, String runKey )
+	{
+	    // TODO Auto-generated method stub
+	    return false;
+	}
 
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.device.listener.RunListener#afterRun(com.morelandLabs.spi.Device, java.lang.String, boolean)

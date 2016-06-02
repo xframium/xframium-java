@@ -4,5 +4,6 @@ import java.io.File;
 
 public interface ConfigurationReader
 {
-    public void readConfiguration( File configurationFile );
+    public void readConfiguration( File configurationFile, boolean runTest );
+    public boolean executeTest();
 }

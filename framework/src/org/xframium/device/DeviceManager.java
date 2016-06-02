@@ -353,6 +353,24 @@ public class DeviceManager implements ArtifactListener
 		
         return true;
     }
+    
+    private boolean notifyValidateDevice( Device currentDevice, String runKey )
+    {
+        for ( RunListener runListener : runListeners )
+        {
+            try
+            {
+                if ( !runListener.validateDevice( currentDevice, runKey ) )
+                    return false;
+            }
+            catch( Exception e )
+            {
+                log.error( "Error executing run listener", e );
+            }
+        }
+        
+        return true;
+    }
 	
     /**
      * Notify after run.
@@ -472,7 +490,7 @@ public class DeviceManager implements ArtifactListener
                                 //
                                 // Notify any listeners about this device acquisition and allow them to cancel it
                                 //
-                                if ( !notifyBeforeRun( currentDevice, runKey ) )
+                                if ( !notifyValidateDevice( currentDevice, runKey ) )
                                 {
                                     if (log.isDebugEnabled())
                                         log.debug( Thread.currentThread().getName() + ": A registered RUN LISTENER cancelled this device request - Releasing Semaphore for " + currentDevice );
@@ -506,6 +524,8 @@ public class DeviceManager implements ArtifactListener
 											
                                             if ( webDriver != null )
                                             {
+                                                notifyBeforeRun( currentDevice, getRunKey( currentDevice, currentMethod, testContext, true, personaName ) );
+                                                
                                                 if ( log.isDebugEnabled() )
                                                     log.debug( "WebDriver Created - Creating Connected Device for " + currentDevice );
 											

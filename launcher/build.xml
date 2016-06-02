@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="xFramium Launcher" default="default" basedir=".">
-	<taskdef resource="net/sf/antcontrib/antlib.xml"/>
+	<taskdef resource="net/sf/antcontrib/antlib.xml" />
 	<property name="sourceRoot" value="${basedir}${file.separator}src" />
 	<property name="buildRoot" value="${basedir}${file.separator}bin" />
 	<property name="distRoot" value="${basedir}${file.separator}dist" />
@@ -11,14 +11,14 @@
 
 	<target name="default">
 		<antcall target="clean" />
-        <antcall target="compile" />
-        <antcall target="package" />
+		<antcall target="compile" />
+		<antcall target="package" />
 	</target>
 
 	<target name="init">
 		<path id="compileLib">
 			<fileset dir="${libRoot}">
-				<include name="**/*.jar"/>
+				<include name="**/*.jar" />
 			</fileset>
 			<pathelement location="${buildRoot}" />
 		</path>
@@ -56,7 +56,15 @@
 			</fileset>
 		</copy>
 
-		<jar jarfile="${distRoot}${file.separator}${projectTitle}.jar">
+		<manifest file="MANIFEST.MF">
+			<attribute name="Built-By" value="Moreland Labs, Ltd." />
+			<attribute name="Permissions" value="all-permissions" />
+			<attribute name="Implementation-Title" value="xFramium" />
+			<attribute name="Implementation-Version" value="Cronos (1.0.1)" />
+			<attribute name="Implementation-Vendor" value="Moreland Labs, Ltd." />
+		</manifest>
+
+		<jar jarfile="${distRoot}${file.separator}${projectTitle}.jar" manifest="MANIFEST.MF">
 			<fileset dir="${buildRoot}">
 				<include name="org/xframium/**/*" />
 			</fileset>
@@ -72,7 +80,7 @@
 				<fileset dir="${distRoot}" includes="**/*.jar" />
 			</path>
 			<sequential>
-				<signjar jar="@{jarFile}" keystore="c:/projects/git/morelandlabs/internal/xframium_org" alias="xframium" storepass="xframium" />
+				<signjar jar="@{jarFile}" keystore="c:/projects/git/morelandlabs/internal/xframium" alias="xframium-code" storepass="xframium" />
 			</sequential>
 		</for>
 	</target>
@@ -109,5 +117,5 @@
 		</path>
 	</target>
 
-	
+
 </project>

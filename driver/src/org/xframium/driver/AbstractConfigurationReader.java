@@ -35,10 +35,10 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     protected abstract boolean configureDevice();
     protected abstract boolean configurePropertyAdapters();
     protected abstract boolean configureDriver();
-    protected abstract boolean executeTest() throws Exception;
+    protected abstract boolean _executeTest() throws Exception;
     
     @Override
-    public void readConfiguration( File configFile )
+    public void readConfiguration( File configFile, boolean runTest )
     {
         configFolder = configFile.getParentFile();
         
@@ -97,42 +97,50 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             log.info( "Driver: Configuring Driver" );
             if ( !configureDriver() ) return;
             
-            log.info( "Go: Executing Tests" );
-        
-            try
-            {
+            if ( runTest )
                 executeTest();
-                
-                if( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_HTML ) )
-                {
-                    File htmlFile = RunDetails.instance().getIndex( DataManager.instance().getReportFolder() );
-                    try
-                    {
-                        Desktop.getDesktop().browse( htmlFile.toURI() );
-                    }
-                    catch( Exception e )
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                
-                CloudRegistry.instance().shutdown();
-                
-            }
-            catch( Exception e )
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    public boolean executeTest()
+    {
+        log.info( "Go: Executing Tests" );
+        
+        try
+        {
+            _executeTest();
+            
+            if( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_HTML ) )
             {
-                log.fatal( "Error executing Tests", e );
+                File htmlFile = RunDetails.instance().getIndex( DataManager.instance().getReportFolder() );
+                try
+                {
+                    Desktop.getDesktop().browse( htmlFile.toURI() );
+                }
+                catch( Exception e )
+                {
+                    e.printStackTrace();
+                }
             }
+            
+            
+        }
+        catch( Exception e )
+        {
+            log.fatal( "Error executing Tests", e );
         }
         finally
         {
             CloudRegistry.instance().shutdown();
         }
         
-        
-        
-        
+        return true;
     }
+    
     
     protected File findFile( File rootFolder, File useFile )
     {
@@ -152,7 +160,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         RunDetails.instance().setStartTime();
         
         TestNG testNg = new TestNG( true );
-        testNg.setVerbose( 1 );
+        testNg.setVerbose( 10 );
         testNg.setOutputDirectory( outputFolder + System.getProperty( "file.separator" ) + "testNg" );
         testNg.setTestClasses( new Class[] { theTest } );
         testNg.run();

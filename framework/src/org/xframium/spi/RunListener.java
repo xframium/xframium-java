@@ -43,6 +43,9 @@ public interface RunListener
 	 * @param runKey the run key
 	 * @return true, if successful
 	 */
+    
+    public boolean validateDevice( Device currentDevice, String runKey );
+    
 	public boolean beforeRun( Device currentDevice, String runKey );
 	
 	/**

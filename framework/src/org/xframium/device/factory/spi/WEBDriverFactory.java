@@ -120,7 +120,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
 				if (useCloud == null)
 				{
 					useCloud = CloudRegistry.instance().getCloud();
-					log.warn( "A seperate grid instance was specified but it does not exist in your cloud registry [" + useCloud.getGridInstance() + "] - using the Cloud instance" );
+					log.warn( "A separate grid instance was specified but it does not exist in your cloud registry [" + useCloud.getGridInstance() + "] - using the Cloud instance" );
 				}
 			}
 
@@ -152,7 +152,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
 				dc.setCapability( name, currentDevice.getCapabilities().get( name ) );
 			
 			if ( log.isInfoEnabled() )
-				log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) );
+                log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 			
 			if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
 			{
@@ -232,15 +232,24 @@ public class WEBDriverFactory extends AbstractDriverFactory
 				dc.setCapability( USER_NAME, CloudRegistry.instance().getCloud().getUserName() );
 				dc.setCapability( PASSWORD, CloudRegistry.instance().getCloud().getPassword() );
 			}
+			
+			for ( String name : currentDevice.getCapabilities().keySet() )
+                dc.setCapability( name, currentDevice.getCapabilities().get( name ) );
+            
+            for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
+                dc.setCapability( name, ApplicationRegistry.instance().getAUT().getCapabilities().get( name ) );
+			
+			if ( log.isInfoEnabled() )
+                log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 
 			webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
 			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 
 			Capabilities caps = ( ( RemoteWebDriver ) webDriver.getWebDriver() ).getCapabilities();
-			webDriver.setExecutionId( caps.getCapability( "executionId" ).toString() );
-			webDriver.setReportKey( caps.getCapability( "reportKey" ).toString() );
-			webDriver.setDeviceName( caps.getCapability( "deviceName" ).toString() );
-			webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
+			webDriver.setExecutionId( caps.getCapability( "executionId" ) + "" );
+			webDriver.setReportKey( caps.getCapability( "reportKey" ) + "" );
+			webDriver.setDeviceName( caps.getCapability( "deviceName" ) + "" );
+			webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ) + "" );
 			webDriver.setArtifactProducer( new PerfectoArtifactProducer() );
 
 			if (ApplicationRegistry.instance().getAUT().getUrl() != null)

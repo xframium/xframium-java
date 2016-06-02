@@ -92,6 +92,18 @@ public abstract class AbstractSeleniumTest
         private String personaName;
 		
         private String testContext;
+        
+        private String rawName;
+
+        public String getRawName()
+        {
+            return rawName;
+        }
+
+        public void setRawName( String rawName )
+        {
+            this.rawName = rawName;
+        }
 
         /**
          * Gets the full name.
@@ -183,6 +195,7 @@ public abstract class AbstractSeleniumTest
         public void setTestName( String testName )
         {
             this.testName = testName;
+            rawName = testName;
             formatTestName();
         }
 

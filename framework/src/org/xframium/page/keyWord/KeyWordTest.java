@@ -255,6 +255,8 @@ public class KeyWordTest
 			    page = pageMap.get( step.getPageName() );
 			    if ( page == null )
 			    {
+			        if ( log.isInfoEnabled() )
+			            log.info( "Creating Page [" + step.getPageName() + "]" );
     				page = PageManager.instance().createPage( KeyWordDriver.instance().getPage( step.getPageName() ), webDriver );
     				pageMap.put( step.getPageName(), page );
 			    }
