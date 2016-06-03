@@ -24,8 +24,13 @@ import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
+import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.DeviceManager;
+import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.driver.ConfigurationReader;
+import org.xframium.driver.TXTConfigurationReader;
 import org.xframium.driver.TestDriver;
+import org.xframium.driver.XMLConfigurationReader;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunListener;
 
@@ -50,7 +55,7 @@ public class XFramium extends JFrame implements RunListener, ActionListener
     private JList<ListEntry> completeList;
     private DefaultListModel<ListEntry> completeModel = new DefaultListModel<ListEntry>();
 
-    private Properties driverProperties = new Properties();
+    private ConfigurationReader configReader = null;
     /**
      * 
      */
@@ -195,6 +200,13 @@ public class XFramium extends JFrame implements RunListener, ActionListener
         add( executeTest, c );
     }
 
+    @Override
+    public boolean validateDevice( Device currentDevice, String runKey )
+    {
+        // TODO Auto-generated method stub
+        return true;
+    }
+    
     @Override
     public boolean beforeRun( final Device currentDevice, final String runKey )
     {
@@ -346,7 +358,8 @@ public class XFramium extends JFrame implements RunListener, ActionListener
                 @Override
                 public void run()
                 {
-                    TestDriver.main( new String[] { driverFile.getText() } );
+                    if ( configReader != null )
+                        configReader.executeTest();
                 }
             }).start();
             
@@ -367,7 +380,7 @@ public class XFramium extends JFrame implements RunListener, ActionListener
                 @Override
                 public boolean accept( File f )
                 {
-                    if ( f.getName().equals( "driverConfig.txt" ) || f.isDirectory() )
+                    if ( f.getName().equals( "driverConfig.xml" ) || f.getName().equals( "driverConfig.txt" ) || f.isDirectory() )
                         return true;
 
                     return false;
@@ -379,28 +392,38 @@ public class XFramium extends JFrame implements RunListener, ActionListener
             if ( fileResponse == JFileChooser.APPROVE_OPTION )
             {
                 driverFile.setText( fileChooser.getSelectedFile().getAbsolutePath() );
-                driverProperties.clear();
                 try
                 {
-                    driverProperties.load( new FileInputStream( driverFile.getText() ) );
-                    cloud.setText( driverProperties.getProperty( "cloudRegistry.cloudUnderTest" ) + "  (" + driverProperties.getProperty( "cloudRegistry.fileName" ) + ")" );
-                    application.setText( driverProperties.getProperty( "applicationRegistry.applicationUnderTest" ) + "  (" + driverProperties.getProperty( "applicationRegistry.fileName" ) + ")" );
-                    switch ( driverProperties.getProperty( "deviceManagement.driverType" ) )
+                    
+                    if ( driverFile.getText().toLowerCase().endsWith( ".txt" ) )
                     {
-                        case "APPIUM":
+                        configReader = new TXTConfigurationReader();
+                    }
+                    else if (driverFile.getText().toLowerCase().endsWith( ".xml" ) )
+                    {
+                        configReader = new XMLConfigurationReader();
+                    }
+                    
+                    configReader.readConfiguration( fileChooser.getSelectedFile(), false );
+                    
+                    cloud.setText( CloudRegistry.instance().getCloud().getHostName() + "  (" + CloudRegistry.instance().getCloud().getName() + ")" );
+                    application.setText( ApplicationRegistry.instance().getAUT().getName() );
+                    switch ( DeviceManager.instance().getDriverType() )
+                    {
+                        case APPIUM:
                             testType.setText( "NATIVE (Appium)" );
                             break;
 
-                        case "WEB":
+                        case WEB:
                             testType.setText( "Website" );
                             break;
 
                         default:
-                            testType.setText( driverProperties.getProperty( "deviceManagement.provider" ) );
+                            testType.setText( DeviceManager.instance().getDriverType().toString() );
                     }
 
-                    test.setText( driverProperties.getProperty( "driver.configName" ) );
-                    device.setText( driverProperties.getProperty( "deviceManagement.provider" ) );
+                    test.setText( "XML" );
+                    device.setText( DeviceManager.instance().getDevices().size() > 1 ? "Multiple" : DeviceManager.instance().getDevices().get( 0 ).getDeviceName() );
 
                 }
                 catch ( Exception ex )

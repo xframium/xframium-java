@@ -77,6 +77,13 @@ public class RunDetails implements RunListener
         // TODO Auto-generated method stub
         return true;
     }
+    
+    @Override
+    public boolean validateDevice( Device currentDevice, String runKey )
+    {
+        // TODO Auto-generated method stub
+        return true;
+    }
 
     @Override
     public void afterRun( Device currentDevice, String runKey, boolean successful )
@@ -94,7 +101,7 @@ public class RunDetails implements RunListener
         
         for ( int i=0; i<detailsList.size(); i++ )
         {
-            String runKey = ((String) detailsList.get( i )[0] ).substring( 25 );
+            String runKey = (String) detailsList.get( i )[0];
             Device device = (Device) detailsList.get( i )[1];
             String location = runKey + "/" + device.getKey() + "/";
             boolean success = (boolean)detailsList.get( i )[2];
@@ -135,7 +142,7 @@ public class RunDetails implements RunListener
         
         for ( int i=0; i<detailsList.size(); i++ )
         {
-        	String runKey = ((String) detailsList.get( i )[0] ).substring( 25 );
+        	String runKey = (String) detailsList.get( i )[0] + "";
             Device device = (Device) detailsList.get( i )[1];
             String location = runKey + "/" + device.getKey() + "/";
         	

@@ -43,11 +43,11 @@ public class TestDriver
         {
             if ( configFile.getName().toLowerCase().endsWith( ".txt" ) )
             {
-                new TXTConfigurationReader().readConfiguration( configFile );
+                new TXTConfigurationReader().readConfiguration( configFile, true );
             }
             else if ( configFile.getName().toLowerCase().endsWith( ".xml" ) )
             {
-                new XMLConfigurationReader().readConfiguration( configFile );
+                new XMLConfigurationReader().readConfiguration( configFile, true );
             }
         }
         catch( Exception e )

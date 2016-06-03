@@ -353,6 +353,24 @@ public class DeviceManager implements ArtifactListener
 		
         return true;
     }
+    
+    private boolean notifyValidateDevice( Device currentDevice, String runKey )
+    {
+        for ( RunListener runListener : runListeners )
+        {
+            try
+            {
+                if ( !runListener.validateDevice( currentDevice, runKey ) )
+                    return false;
+            }
+            catch( Exception e )
+            {
+                log.error( "Error executing run listener", e );
+            }
+        }
+        
+        return true;
+    }
 	
     /**
      * Notify after run.
@@ -472,7 +490,7 @@ public class DeviceManager implements ArtifactListener
                                 //
                                 // Notify any listeners about this device acquisition and allow them to cancel it
                                 //
-                                if ( !notifyBeforeRun( currentDevice, runKey ) )
+                                if ( !notifyValidateDevice( currentDevice, runKey ) )
                                 {
                                     if (log.isDebugEnabled())
                                         log.debug( Thread.currentThread().getName() + ": A registered RUN LISTENER cancelled this device request - Releasing Semaphore for " + currentDevice );
@@ -506,6 +524,8 @@ public class DeviceManager implements ArtifactListener
 											
                                             if ( webDriver != null )
                                             {
+                                                notifyBeforeRun( currentDevice, getRunKey( currentDevice, currentMethod, testContext, true, personaName ) );
+                                                
                                                 if ( log.isDebugEnabled() )
                                                     log.debug( "WebDriver Created - Creating Connected Device for " + currentDevice );
 											
@@ -662,8 +682,9 @@ public class DeviceManager implements ArtifactListener
     }
 
     public String getRunKey( Device currentDevice, Method currentMethod, String testContext, boolean success, String personaName )
-    {
-        String runKey = currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() + ( testContext != null ? ( "." + testContext ) : "" );
+    {        
+        String runKey = ( testContext != null ? ( testContext ) : "" );
+        
         if ( personaName != null && !personaName.isEmpty() && !runKey.endsWith( personaName ) )
         {
             runKey = runKey + "." + personaName;
@@ -683,8 +704,6 @@ public class DeviceManager implements ArtifactListener
      */
     public void addRun( Device currentDevice, Method currentMethod, String testContext, boolean success, String personaName )
     {
-		
-		
         if (log.isDebugEnabled())
             log.debug( Thread.currentThread().getName() + ": Acquiring Device Manager Lock" );
         managerLock.lock();

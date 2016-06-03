@@ -604,7 +604,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     }
     
     @Override
-    protected boolean executeTest() throws Exception
+    protected boolean _executeTest() throws Exception
     {
         switch ( configProperties.getProperty( DRIVER[0] ).toUpperCase() )
         {

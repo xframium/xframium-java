@@ -29,26 +29,23 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.xframium.page.ElementDescriptor;
 import org.xframium.page.Page;
+import org.xframium.page.PageManager;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
+import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordParameter;
-import org.xframium.page.keyWord.KeyWordStep;
-import org.xframium.page.keyWord.KeyWordTest;
-import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
+import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
+import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.KeyWordToken.TokenType;
 import org.xframium.page.keyWord.provider.xsd.Import;
 import org.xframium.page.keyWord.provider.xsd.Model;
@@ -76,9 +73,6 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	
 	/** The resource name. */
 	private String resourceName;
-	
-	/** The as resource. */
-	private boolean asResource = false;
 
 	/**
 	 * Instantiates a new XML key word provider.
@@ -113,8 +107,8 @@ public class XMLKeyWordProvider implements KeyWordProvider
 		{
 			if (log.isInfoEnabled())
 				log.info( "Reading from CLASSPATH as XMLElementProvider.elementFile" );
+			
 			readElements( getClass().getClassLoader().getResourceAsStream( resourceName ), true, true );
-			asResource = true;
 		}
 		else
 		{
@@ -303,6 +297,12 @@ public class XMLKeyWordProvider implements KeyWordProvider
 
 		for ( Step xStep : xSteps )
 		{
+		    
+		    if ( xStep.getPage() != null && KeyWordDriver.instance().getPage( xStep.getPage() ) == null )
+		    {
+		        log.fatal( "The page [" + xStep.getPage() + "] defined the step " + xStep.getName() + " in " + testName + " was not specified in the Model" );
+		    }
+		    
 		    KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), xStep.getPage(), xStep.isActive(), xStep.getType(),
                                                                                  xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
                                                                                  xStep.getOs(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
