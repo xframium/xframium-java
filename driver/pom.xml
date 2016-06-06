@@ -57,7 +57,7 @@
           <arguments>
             <argument>-classpath</argument>
             <classpath />
-            <argument>com.morelandLabs.driver.TestDriver</argument>
+            <argument>org.xframium.driver.TestDriver</argument>
             <argument>${driverConfig}</argument>
           </arguments>
         </configuration>
