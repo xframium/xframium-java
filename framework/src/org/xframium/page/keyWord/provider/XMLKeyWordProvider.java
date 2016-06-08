@@ -22,6 +22,7 @@ package org.xframium.page.keyWord.provider;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -31,12 +32,9 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.xframium.page.ElementDescriptor;
 import org.xframium.page.Page;
-import org.xframium.page.PageManager;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
-import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordParameter;
@@ -337,8 +335,65 @@ public class XMLKeyWordProvider implements KeyWordProvider
 
 	    for ( Parameter p : pList )
 	    {
-	        parentStep.addParameter( new KeyWordParameter( ParameterType.valueOf( p.getType() ), p.getValue() ) );
+	        
+	        KeyWordParameter kp = new KeyWordParameter( ParameterType.valueOf( p.getType() ), p.getValue() );
+	        
+	        if ( p.equals( ParameterType.FILE ) )
+	        {
+	            File dataFile = new File( p.getValue() );
+	            if ( dataFile.isFile() )
+	            {
+	                try
+	                {
+    	                kp.setValue( readFile( new FileInputStream( dataFile ) ) );
+    	                kp.setFileName( dataFile.getAbsolutePath() );
+	                }
+	                catch( FileNotFoundException e )
+	                {
+	                    log.error( "Error reading parameter file", e );
+	                }
+	            }
+	            else
+	            {
+	                if ( fileName == null )
+	                {
+	                    kp.setValue( readFile( getClass().getClassLoader().getResourceAsStream( p.getValue() ) ) );
+	                    kp.setFileName( "classpath://" + p.getValue() );
+	                }
+	            }
+	                
+	        }
+	        
+	        parentStep.addParameter( kp );
 	    }
+	}
+	
+	private String readFile( InputStream inputStream )
+	{
+	    
+	    try
+	    {
+	        StringBuilder stringBuilder = new StringBuilder();
+	        int bytesRead = 0;
+	        byte[] buffer = new byte[512];
+
+	        while ( ( bytesRead = inputStream.read( buffer ) ) > 0 )
+	        {
+	            stringBuilder.append( new String( buffer, 0, bytesRead ) );
+	        }
+	        
+	        return stringBuilder.toString();
+	    }
+	    catch( Exception e )
+	    {
+	        e.printStackTrace();
+	    }
+	    finally
+	    {
+	        try { inputStream.close(); } catch( Exception e ) {}
+	    }
+	    
+	    return null;
 	}
 
 	/**

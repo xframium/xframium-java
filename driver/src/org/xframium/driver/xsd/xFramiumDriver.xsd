@@ -353,6 +353,7 @@
 					<enumeration value="PERFECTO_SCRIPT" />
                     <enumeration value="ELSE" />
                     <enumeration value="STATE" />
+                    <enumeration value="ALERT" />
 				</restriction>
 			</simpleType>
 		</attribute>
@@ -414,6 +415,7 @@
 					<enumeration value="PROPERTY" />
 					<enumeration value="CONTENT" />
 					<enumeration value="DATA" />
+                    <enumeration value="FILE" />
 				</restriction>
 			</simpleType>
 		</attribute>
