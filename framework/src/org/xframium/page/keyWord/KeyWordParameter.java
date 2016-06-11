@@ -26,63 +26,83 @@ package org.xframium.page.keyWord;
  */
 public class KeyWordParameter
 {
-	
-	/**
-	 * The Enum ParameterType.
-	 */
-	public enum ParameterType
-	{
-		
-		/** The context. */
-		CONTEXT, 
- /** The property. */
- PROPERTY, 
- /** The static. */
- STATIC, 
- /** The data. */
- DATA,
- 
- /** The content. */
- CONTENT;
-	}
-	
-	/** The type. */
-	private ParameterType type;
-	
-	/** The value. */
-	private String value;
 
-	
-	/**
-	 * Instantiates a new key word parameter.
-	 *
-	 * @param type the type
-	 * @param value the value
-	 */
-	public KeyWordParameter( ParameterType type, String value )
-	{
-		super();
-		this.type = type;
-		this.value = value;
-	}
+    /**
+     * The Enum ParameterType.
+     */
+    public enum ParameterType
+    {
 
-	/**
-	 * Gets the value.
-	 *
-	 * @return the value
-	 */
-	public String getValue()
-	{
-		return value;
-	}
+        /** The context. */
+        CONTEXT,
+        /** The property. */
+        PROPERTY,
+        /** The static. */
+        STATIC,
+        /** The data. */
+        DATA,
 
-	/**
-	 * Gets the type.
-	 *
-	 * @return the type
-	 */
-	public ParameterType getType()
-	{
-		return type;
-	}
+        /** The content. */
+        CONTENT,
+
+        FILE;
+    }
+
+    /** The type. */
+    private ParameterType type;
+
+    /** The value. */
+    private String value;
+    
+    private String fileName;
+
+    public void setValue( String value )
+    {
+        this.value = value;
+    }
+
+    public String getFileName()
+    {
+        return fileName;
+    }
+
+    public void setFileName( String fileName )
+    {
+        this.fileName = fileName;
+    }
+
+    /**
+     * Instantiates a new key word parameter.
+     *
+     * @param type
+     *            the type
+     * @param value
+     *            the value
+     */
+    public KeyWordParameter( ParameterType type, String value )
+    {
+        super();
+        this.type = type;
+        this.value = value;
+    }
+
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
+    public String getValue()
+    {
+        return value;
+    }
+
+    /**
+     * Gets the type.
+     *
+     * @return the type
+     */
+    public ParameterType getType()
+    {
+        return type;
+    }
 }

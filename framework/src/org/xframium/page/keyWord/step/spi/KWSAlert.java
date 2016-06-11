@@ -21,49 +21,65 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
-import org.openqa.selenium.By;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
-import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class KWSSet.
- */
-public class KWSSet extends AbstractKeyWordStep
+public class KWSAlert extends AbstractKeyWordStep
 {
-
+    
+    private enum ALERT_TYPE
+    {
+        ACCEPT,
+        DISMISS,
+        SEND_KEYS;
+    }
+    
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
 	{
-	    if ( pageObject == null )
-            throw new IllegalStateException( "There was no Page Object defined" );
+		if ( pageObject == null )
+			throw new IllegalStateException( "Page Object was not defined" );
+		try
+		{
+    		Alert currentAlert = webDriver.switchTo().alert();
+    		
+    		if ( getContext() != null && !getContext().isEmpty() )
+    		    contextMap.put( getContext(), currentAlert.getText() );
+    		
+    		switch( ALERT_TYPE.valueOf( getName() ) )
+    		{
+    		    case ACCEPT:
+    		        currentAlert.accept();
+    		        break;
+    		        		        
+    		    case DISMISS:
+    		        currentAlert.dismiss();
+    		        break;
+    		        
+    		    case SEND_KEYS:
+    		        currentAlert.sendKeys( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
+    		        currentAlert.accept();
+    		        break;
+    		        
+    		    default:
+    		        log.warn( "Unhandled Alert Type: " + getName() );
+    		            
+    		}
+		}
+		catch( NoAlertPresentException e )
+		{
+		    return false;
+		}
 		
-		if ( getParameterList().size() < 1 )
-			throw new IllegalArgumentException( "You must provide 1 parameter to setValue" );
 		
-		String newValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
-		
-		if ( log.isInfoEnabled() )
-			log.info( "Attmepting to set " + getName() + " to [" + newValue + "]" );
-		
-		Element elt = getElement( pageObject, contextMap, webDriver, dataMap );
-        elt.setValue( newValue );
-                    
 		return true;
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
-	 */
-	public boolean isRecordable()
-	{
-		return false;
 	}
 
 }

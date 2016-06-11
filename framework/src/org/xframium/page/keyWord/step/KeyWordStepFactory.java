@@ -29,6 +29,7 @@ import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
 import org.xframium.page.keyWord.step.spi.KWSAddCookie;
 import org.xframium.page.keyWord.step.spi.KWSAddDevice;
+import org.xframium.page.keyWord.step.spi.KWSAlert;
 import org.xframium.page.keyWord.step.spi.KWSAlign;
 import org.xframium.page.keyWord.step.spi.KWSAt;
 import org.xframium.page.keyWord.step.spi.KWSAttribute;
@@ -148,6 +149,7 @@ public class KeyWordStepFactory
         addKeyWord( "PERFECTO_SCRIPT", KWSPerfectoScript.class );
         addKeyWord( "ELSE", KWSElse.class );
         addKeyWord( "STATE", KWSDumpState.class );
+        addKeyWord( "ALERT", KWSAlert.class );
     }
 
     /**
