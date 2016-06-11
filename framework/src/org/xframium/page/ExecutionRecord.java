@@ -291,26 +291,26 @@ public class ExecutionRecord
 	 *
 	 * @return the string
 	 */
-	public String toHTML()
+	public String toHTML( int index )
 	{
 		StringBuffer stringBuffer = new StringBuffer();
 		
 		switch( status )
 		{
 			case FAILURE:
-				stringBuffer.append( "<tr bgcolor='#ff3333'>" );
+				stringBuffer.append( "<tr class=\"danger\">" );
 				break;
 			case FAILURE_IGNORED:
-				stringBuffer.append( "<tr bgcolor='#F5DEB3'>" );
+				stringBuffer.append( "<tr class=\"warning\">" );
 				break;
 			case REPORT:
-                stringBuffer.append( "<tr bgcolor='#ff99ff'>" );
+                stringBuffer.append( "<tr>" );
                 break;	
 			case SUCCESS:
 			    if ( fromCache )
-			        stringBuffer.append( "<tr bgcolor='#33ccff'>" );
+			        stringBuffer.append( "<tr class=\"info\">" );
 			    else
-			        stringBuffer.append( "<tr bgcolor='#66FF99'>" );
+			        stringBuffer.append( "<tr class=\"success\">" );
 				break;
 		}
 		
@@ -332,35 +332,35 @@ public class ExecutionRecord
 			switch( status )
 			{
 				case FAILURE:
-					backgroundColor = "#ff3333";
+					backgroundColor = " class=\"danger\" ";
 					break;
 				case FAILURE_IGNORED:
-					backgroundColor = "#F5DEB3";
+					backgroundColor = " class=\"warning\" ";
 					break;
 				case REPORT:
-				    backgroundColor= "#ff99ff";
+				    backgroundColor= " ";
 				    break;
 				    
 				case SUCCESS:
 				    if ( fromCache )
-				        backgroundColor = "#33ccff";
+				        backgroundColor = " class=\"info\" ";
 	                else
-				        backgroundColor = "#66FF99";
+				        backgroundColor = " class=\"success\" ";
 					
 					break;
 			}
 			
 			
-			stringBuffer.append( "<tr><td></td><td colSpan='5' color='" + backgroundColor + "'><font size='1'>" ).append( detail ).append( "</font></td></tr>");
+			stringBuffer.append( "<tr" ).append( backgroundColor ).append( "><td></td><td colSpan='5' ><div class=\"bs-callout bs-callout-danger\" id=callout-overview-dependencies>" ).append( detail ).append( "</div></td></tr>");
 			if ( t != null )
 			{
-				stringBuffer.append( "<tr><td></td><td colSpan='5' color='" + backgroundColor + "'><b><font size='1'>" );
+				stringBuffer.append( "<tr" ).append( backgroundColor ).append( "><td></td><td colSpan='5'><a class=\"btn btn-primary\" role=\"button\" data-toggle=\"collapse\" href=\"#exception").append( index ).append( "\" aria-expanded=\"false\">View Error Detail</a><div class=\"collapse\" id=\"exception").append( index  ).append( "\"><kbd>" );
 				
 				stringBuffer.append( t.getMessage() ).append( "<br/>");
 				t.fillInStackTrace();
 				for( StackTraceElement s : t.getStackTrace() )
 					stringBuffer.append( "&nbsp;&nbsp;&nbsp;&nbsp;").append( s.toString() ).append( "<br/>");
-				stringBuffer.append( "</font></b></td></tr>");
+				stringBuffer.append( "</kbd></div></td></tr>");
 				
 			}
 		}

@@ -23,7 +23,6 @@ package org.xframium.integrations.perfectoMobile.rest.bean;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.xframium.integrations.perfectoMobile.rest.services.Application;
 import org.xframium.integrations.rest.bean.AbstractBean;
 import org.xframium.integrations.rest.bean.Bean.BeanDescriptor;
 

@@ -95,9 +95,11 @@ public class RunDetails implements RunListener
     {
         File useFile = getIndex( rootFolder );
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append( "<html><body><table cellspacing='0' border='1'>" );
+        stringBuilder.append( "<html>" );
+        stringBuilder.append( "<head><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\" integrity=\"sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7\" crossorigin=\"anonymous\"><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css\" integrity=\"sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r\" crossorigin=\"anonymous\"></head>"  );
+        stringBuilder.append( "<body><div class=\"table-responsive\"><table class=\"table table-hover table-condensed table-striped\">" );
         
-        stringBuilder.append( "<tr><th>ID</th><th>Test Case</th><th>Device</th><th>Device ID</th><th>Status</th><th></th></tr>" );
+        stringBuilder.append( "<tr><th>ID</th><th>Test Case</th><th>Device</th><th>Device ID</th><th>Status</th><th></th></tr><tbody>" );
         
         for ( int i=0; i<detailsList.size(); i++ )
         {
@@ -110,7 +112,9 @@ public class RunDetails implements RunListener
             stringBuilder.append( success ).append( "</td><td align='center'>" );
             if ( !success )
             {
-                stringBuilder.append( "<img height='150' src='").append( location ).append("failure-screenshot.png'/>" );
+                //"<a hRef=\"../../artifacts/" + randomFile.getName() + "\" class=\"thumbnail\"><img class=\"img-rounded img-responsive\" src=\"../../artifacts/" + randomFile.getName() + "\" style=\"height: 200px;\"/></a>"
+                stringBuilder.append( "<a hRef=\"" + location + "failure-screenshot.png\" class=\"thumbnail\"><img class=\"img-rounded img-responsive\" src=\"" + location + "failure-screenshot.png\" style=\"height: 200px;\"/></a>" );
+                //stringBuilder.append( "<img height='150' src='").append( location ).append("failure-screenshot.png'/>" );
             }
             stringBuilder.append( "</td></tr>" );
         }
@@ -119,7 +123,10 @@ public class RunDetails implements RunListener
         
         stringBuilder.append( "<tr><td colSpan='6' align='center'>" ).append( new File( rootFolder, getRootFolder() + System.getProperty( "file.separator" ) + "executionMap.properties" ).getAbsolutePath() ).append( "</td></tr>" );
         
-        stringBuilder.append( "</table></body></html>" );
+        stringBuilder.append( "</tbody></table></div>" );
+        stringBuilder.append( "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>");
+        stringBuilder.append( "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\" integrity=\"sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS\" crossorigin=\"anonymous\"></script>" );
+        stringBuilder.append( "</body></html>" );
         
         try
         {

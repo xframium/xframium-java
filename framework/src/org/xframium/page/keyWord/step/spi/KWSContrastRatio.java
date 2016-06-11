@@ -22,7 +22,6 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.awt.image.BufferedImage;
 import java.util.Map;
-
 import org.openqa.selenium.WebDriver;
 import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactType;

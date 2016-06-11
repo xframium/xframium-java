@@ -21,14 +21,13 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
-
 import org.openqa.selenium.Point;
 import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.xframium.gesture.GestureManager;
 import org.xframium.gesture.Gesture.Direction;
 import org.xframium.gesture.Gesture.GestureType;
+import org.xframium.gesture.GestureManager;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;

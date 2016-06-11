@@ -21,21 +21,23 @@
 package com.xframium.test;
     
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
-import org.xframium.content.*;
-import org.xframium.device.*;
-import org.xframium.device.cloud.*;
-import org.xframium.device.data.*;
-import org.xframium.page.*;
-import org.xframium.page.data.*;
-import org.xframium.page.element.*;
-import org.xframium.page.keyWord.*;
+import org.xframium.application.ApplicationDescriptor;
+import org.xframium.application.ApplicationRegistry;
+import org.xframium.content.ContentData;
+import org.xframium.content.ContentManager;
+import org.xframium.device.DeviceManager;
+import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.page.ElementDescriptor;
+import org.xframium.page.PageManager;
+import org.xframium.page.data.PageData;
+import org.xframium.page.data.PageDataManager;
+import org.xframium.page.element.Element;
+import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordStep;
+import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.spi.Device;
-import org.xframium.application.*;
 
 
 public class SQLDataProvidersTest

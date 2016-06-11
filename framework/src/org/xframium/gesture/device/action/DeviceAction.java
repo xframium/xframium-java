@@ -21,7 +21,6 @@
 package org.xframium.gesture.device.action;
 
 import java.util.List;
-
 import org.openqa.selenium.WebDriver;
 
 // TODO: Auto-generated Javadoc

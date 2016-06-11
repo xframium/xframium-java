@@ -20,12 +20,8 @@
  *******************************************************************************/
 package org.xframium.gesture.factory.spi.perfecto;
 
-import java.io.InputStream;
-import java.net.URL;
-
 import org.openqa.selenium.WebDriver;
 import org.xframium.gesture.AbstractRotateGesture;
-import org.xframium.integrations.common.PercentagePoint;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.services.Device.ScreenOrientation;
 

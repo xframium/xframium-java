@@ -2,6 +2,8 @@ package org.xframium.driver;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -351,7 +353,8 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                         boolean elementRead = true;
                         try
                         {
-                            xPathFactory.newXPath().compile( currentElement.getKey().replace( "{", "" ).replace( "}", "" ) );
+                            if ( currentElement.getBy() == BY.XPATH )
+                                xPathFactory.newXPath().compile( currentElement.getKey().replace( "{", "" ).replace( "}", "" ) );
                             elementMap.put(elementDescriptor.toString(), currentElement );
                         }
                         catch( Exception e )
@@ -842,8 +845,71 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
 
         for ( XParameter p : pList )
         {
-            parentStep.addParameter( new KeyWordParameter( ParameterType.valueOf( p.getType() ), p.getValue() ) );
+            KeyWordParameter kp = new KeyWordParameter( ParameterType.valueOf( p.getType() ), p.getValue() );
+            
+            if ( p.equals( ParameterType.FILE ) )
+            {
+                File dataFile = new File( p.getValue() );
+                if ( dataFile.isFile() )
+                {
+                    try
+                    {
+                        kp.setValue( readFile( new FileInputStream( dataFile ) ) );
+                        kp.setFileName( dataFile.getAbsolutePath() );
+                    }
+                    catch( FileNotFoundException e )
+                    {
+                        log.error( "Error reading parameter file", e );
+                    }
+                }
+                else
+                {
+                    dataFile = new File( configFolder, p.getValue() );
+                    if ( dataFile.isFile() )
+                    {
+                        try
+                        {
+                            kp.setValue( readFile( new FileInputStream( dataFile ) ) );
+                            kp.setFileName( dataFile.getAbsolutePath() );
+                        }
+                        catch( FileNotFoundException e )
+                        {
+                            log.error( "Error reading parameter file", e );
+                        }
+                    }
+                }  
+            }
+            
+            parentStep.addParameter( kp );
         }
+    }
+    
+    private String readFile( InputStream inputStream )
+    {
+        
+        try
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            int bytesRead = 0;
+            byte[] buffer = new byte[512];
+
+            while ( ( bytesRead = inputStream.read( buffer ) ) > 0 )
+            {
+                stringBuilder.append( new String( buffer, 0, bytesRead ) );
+            }
+            
+            return stringBuilder.toString();
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            try { inputStream.close(); } catch( Exception e ) {}
+        }
+        
+        return null;
     }
 
     /**

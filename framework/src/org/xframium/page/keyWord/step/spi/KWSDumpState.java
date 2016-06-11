@@ -65,7 +65,9 @@ public class KWSDumpState extends AbstractKeyWordStep
                 os.write( screenShot );
                 os.flush();
                 os.close();
-                PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), "<img src='../../artifacts/" + randomFile.getName() + "' height='200' />", "SCREENSHOT", startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, getThreshold(), getDescription(), false );
+                String data = "<a hRef=\"../../artifacts/" + randomFile.getName() + "\" class=\"thumbnail\"><img class=\"img-rounded img-responsive\" src=\"../../artifacts/" + randomFile.getName() + "\" style=\"height: 200px;\"/></a>"; 
+
+                PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), data, "SCREENSHOT", startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, getThreshold(), getDescription(), false );
             }
             catch( Exception e )
             {
@@ -87,7 +89,7 @@ public class KWSDumpState extends AbstractKeyWordStep
             outputStream.write( XMLEscape.toXML( webDriver.getPageSource() ).getBytes() );
             outputStream.flush();
             outputStream.close();
-            PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), "<a hRef='../../artifacts/" + randomFile.getName() + "' >Device State</a>", "STATE", startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, getThreshold(), getDescription(), false );            
+            PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), "<a class=\"btn btn-primary\" hRef='../../artifacts/" + randomFile.getName() + "' >Device State</a>", "STATE", startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, getThreshold(), getDescription(), false );            
         }
         catch( Exception e )
         {

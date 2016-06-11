@@ -20,13 +20,11 @@
  *******************************************************************************/
 package org.xframium.page.data.provider;
 
-import java.util.*;
-import org.xframium.page.BY;
-import org.xframium.page.ElementDescriptor;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import org.xframium.page.data.DefaultPageData;
 import org.xframium.page.data.PageData;
-import org.xframium.page.element.Element;
-import org.xframium.page.element.ElementFactory;
 import org.xframium.utility.SQLUtil;
 
 

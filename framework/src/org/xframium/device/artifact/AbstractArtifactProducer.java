@@ -43,7 +43,6 @@ import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.ExecutionRecord;
 import org.xframium.page.StepStatus;
 import org.xframium.spi.Device;
-import org.xframium.spi.RunDetails;
 import org.xframium.wcag.WCAGRecord;
 
 // TODO: Auto-generated Javadoc
@@ -106,16 +105,19 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
 	{
 	    StringBuffer stringBuffer = new StringBuffer();
         stringBuffer = new StringBuffer();
+        stringBuffer.append( "<html>" );
+        stringBuffer.append( "<head><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\" integrity=\"sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7\" crossorigin=\"anonymous\"><link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css\" integrity=\"sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r\" crossorigin=\"anonymous\"></head>"  );
         if ( device != null )
         {
-            stringBuffer.append( "<html><body><table><tr><td align='right'><b>Device Name:</b></td><td>" ).append( device.getManufacturer() ).append( " " ).append( device.getModel() ).append( " (" ).append( device.getKey() ).append(")</td></tr>");
+            stringBuffer.append( "<body><table><tr><td align='right'><b>Device Name:</b></td><td>" ).append( device.getManufacturer() ).append( " " ).append( device.getModel() ).append( " (" ).append( device.getKey() ).append(")</td></tr>");
             stringBuffer.append( "<tr><td align='right'><b>OS:</b></td><td>" ).append( device.getOs() ).append( " (" ).append( device.getOsVersion() ).append(")</td></tr>");
-            stringBuffer.append( "<tr><td align='right'><b>Test Name:</b></td><td>" ).append( testName ).append("</td></tr></table><table><br><br>");
+            stringBuffer.append( "<tr><td align='right'><b>Test Name:</b></td><td>" ).append( testName ).append("</td></tr></table><br><br><div class=\"table-responsive\"><table class=\"table table-hover table-condensed\">");
         }
         else
-            stringBuffer.append( "<html><body><table cellspacing='0'>").append( DeviceManager.instance().getExecutionId() );
+            stringBuffer.append( "<body><div class=\"table-responsive\"><table class=\"table table-hover table-condensed\">").append( DeviceManager.instance().getExecutionId() );
         
         boolean success = true;
+        int spaceCount = 0;
         if ( DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) != null && !DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ).isEmpty() )
         {
             for ( Object item : DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) )
@@ -131,9 +133,14 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
                 
                 if ( eItem.getStatus().equals( StepStatus.FAILURE ) )
                     success = false;
-                stringBuffer.append( eItem.toHTML() );
+                stringBuffer.append( eItem.toHTML( spaceCount ) );
+                spaceCount++;
             }
         }
+        
+        String wtUrl = ( (DeviceWebDriver) webDriver ).getWindTunnelReport();
+        if ( wtUrl != null && !wtUrl.isEmpty() )
+            stringBuffer.append( "<tr><td align='center' colspan='2'><a href='" + wtUrl + "'>Single Test Report</a></td></tr>" );
         
         if ( !success && DataManager.instance().isArtifactEnabled( ArtifactType.FAILURE_SOURCE ) )
             stringBuffer.append( "<tr><td align='center' colspan='2'><a href='failureDom.xml'>DOM at Failure</a></td><td rowspan='7' colspan='4' align='center'><img height='500' src='failure-screenshot.png'/></td></tr>" );
@@ -145,7 +152,13 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
             stringBuffer.append( "<tr><td align='center' colspan='2'><a href='" + testName + ".csv'>Execution CSV</a></td></tr>" );
         
         if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT ) || DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_PDF ) )
-            stringBuffer.append( "<tr><td align='center' colspan='2'><a href='EXECUTION_REPORT_PDF.pdf'>Exeuction Report</a></td></tr>" );
+            stringBuffer.append( "<tr><td align='center' colspan='2'><a href='EXECUTION_REPORT_PDF.pdf'>Legacy Execution Report (PDF)</a></td></tr>" );
+        
+        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_HTML ) )
+            stringBuffer.append( "<tr><td align='center' colspan='2'><a href='EXECUTION_REPORT_HTML.html'>Legacy Execution Report (HTML)</a></td></tr>" );
+        
+        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_XML ) )
+            stringBuffer.append( "<tr><td align='center' colspan='2'><a href='EXECUTION_REPORT_XML.xml'>Legacy Execution Report (XML)</a></td></tr>" );
         
         if ( DataManager.instance().isArtifactEnabled( ArtifactType.WCAG_REPORT ) )
             stringBuffer.append( "<tr><td align='center' colspan='2'><a href='wcag.html'>WCAG Report</a></td></tr>" );
@@ -154,10 +167,10 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
             stringBuffer.append( "<tr><td align='center' colspan='2'><br/><br/><br/><a href='deviceLog.txt'>Device Log</a></td></tr>" );
         
         
-        String wtUrl = ( (DeviceWebDriver) webDriver ).getWindTunnelReport();
-        if ( wtUrl != null && !wtUrl.isEmpty() )
-        
-        stringBuffer.append( "</TABLE></BODY></HTML>" );
+        stringBuffer.append( "</TABLE></div></BODY>" );
+        stringBuffer.append( "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>");
+        stringBuffer.append( "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\" integrity=\"sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS\" crossorigin=\"anonymous\"></script>" );
+        stringBuffer.append( "</HTML>" );
         
         return new Artifact( rootFolder + testName + ".html", stringBuffer.toString().getBytes() );
 	}

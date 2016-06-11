@@ -21,14 +21,10 @@
 package org.xframium.gesture.device.action.spi.perfecto;
 
 import java.util.List;
-
 import org.openqa.selenium.WebDriver;
-import org.xframium.application.ApplicationDescriptor;
-import org.xframium.application.ApplicationRegistry;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
-import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
 
 // TODO: Auto-generated Javadoc
 /**

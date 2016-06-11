@@ -160,7 +160,15 @@ public class XMLKeyWordProvider implements KeyWordProvider
 			        
 			        if (currentTest.getDataDriver() != null && !currentTest.getDataDriver().isEmpty())
                     {
-                        PageData[] pageData = PageDataManager.instance().getRecords( currentTest.getDataDriver() );
+			            PageData[] pageData = null;
+			            try
+			            {
+			                pageData = PageDataManager.instance().getRecords( currentTest.getDataDriver() );
+			            }
+			            catch( Exception e )
+			            {
+			                
+			            }
                         if (pageData == null)
                         {
                             log.warn( "Specified Data Driver [" + currentTest.getDataDriver() + "] could not be located. Make sure it exists and it was populated prior to initializing your keyword factory" );
@@ -360,8 +368,23 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	                    kp.setValue( readFile( getClass().getClassLoader().getResourceAsStream( p.getValue() ) ) );
 	                    kp.setFileName( "classpath://" + p.getValue() );
 	                }
-	            }
-	                
+	                else
+	                {
+	                    dataFile = new File( fileName.getParentFile(), p.getValue() );
+	                    if ( dataFile.isFile() )
+	                    {
+	                        try
+	                        {
+	                            kp.setValue( readFile( new FileInputStream( dataFile ) ) );
+	                            kp.setFileName( dataFile.getAbsolutePath() );
+	                        }
+	                        catch( FileNotFoundException e )
+	                        {
+	                            log.error( "Error reading parameter file", e );
+	                        }
+	                    }
+	                }
+	            }  
 	        }
 	        
 	        parentStep.addParameter( kp );

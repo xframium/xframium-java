@@ -23,8 +23,6 @@ package org.xframium.integrations.perfectoMobile.rest.services;
 import org.xframium.integrations.perfectoMobile.rest.bean.Execution;
 import org.xframium.integrations.perfectoMobile.rest.bean.ExecutionCollection;
 import org.xframium.integrations.perfectoMobile.rest.bean.ExecutionResult;
-import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.Parameter;
-import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.PerfectoCommand;
 import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.ServiceDescriptor;
 
 // TODO: Auto-generated Javadoc

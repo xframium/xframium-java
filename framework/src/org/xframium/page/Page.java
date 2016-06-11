@@ -22,7 +22,6 @@ package org.xframium.page;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import org.xframium.page.Page.TimeMethod;
 import org.xframium.page.element.Element;
 
 

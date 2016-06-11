@@ -25,7 +25,6 @@ package org.xframium.device.factory.spi;
 
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
-
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.DesiredCapabilities;

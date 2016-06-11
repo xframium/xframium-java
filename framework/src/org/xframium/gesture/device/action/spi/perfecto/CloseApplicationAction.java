@@ -21,7 +21,6 @@
 package org.xframium.gesture.device.action.spi.perfecto;
 
 import java.util.List;
-
 import org.openqa.selenium.WebDriver;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;

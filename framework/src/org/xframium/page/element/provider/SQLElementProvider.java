@@ -20,23 +20,12 @@
  *******************************************************************************/
 package org.xframium.page.element.provider;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
-import org.xframium.page.PageManager;
 import org.xframium.page.element.Element;
 import org.xframium.page.element.ElementFactory;
-import org.xframium.page.element.provider.xsd.Import;
-import org.xframium.page.element.provider.xsd.ObjectFactory;
-import org.xframium.page.element.provider.xsd.Page;
-import org.xframium.page.element.provider.xsd.RegistryRoot;
-import org.xframium.page.element.provider.xsd.Site;
 import org.xframium.utility.SQLUtil;
 
 /**

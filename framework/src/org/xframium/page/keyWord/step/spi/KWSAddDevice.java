@@ -21,14 +21,11 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
-import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
-import org.xframium.spi.driver.NativeDriverProvider;
 
 // TODO: Auto-generated Javadoc
 /**

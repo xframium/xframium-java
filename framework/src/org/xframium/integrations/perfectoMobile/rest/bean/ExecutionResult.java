@@ -22,7 +22,6 @@ package org.xframium.integrations.perfectoMobile.rest.bean;
 
 import org.xframium.integrations.rest.bean.AbstractBean;
 import org.xframium.integrations.rest.bean.Bean.BeanDescriptor;
-import org.xframium.integrations.rest.bean.Bean.FieldDescriptor;
 
 // TODO: Auto-generated Javadoc
 /**

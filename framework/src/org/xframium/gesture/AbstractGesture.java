@@ -23,7 +23,6 @@ package org.xframium.gesture;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Capabilities;
@@ -32,8 +31,6 @@ import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.xframium.integrations.common.PercentagePoint;
-import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.spi.PropertyProvider;
 import org.xframium.spi.driver.NativeDriverProvider;
 
