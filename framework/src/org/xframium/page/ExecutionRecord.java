@@ -323,8 +323,28 @@ public class ExecutionRecord
 		    stringBuffer.append( "<td>" ).append( name ).append( "</td>" );
 		stringBuffer.append( "<td>" ).append( type ).append( "</td>" );
 		stringBuffer.append( "<td>" ).append( timeFormat.format( new Date( timeStamp ) ) ).append( "</td>" );
-		stringBuffer.append( "<td>" ).append( runTime ).append( "</td>" );
-		stringBuffer.append( "<td>" ).append( status ).append( "</td>" );
+		stringBuffer.append( "<td><span class=\"badge\">" ).append( runTime ).append( "</span></td>" );
+		
+		
+		switch( status )
+        {
+            case FAILURE:
+                stringBuffer.append( "<td valign=\"center\"><span class=\"label label-danger\">Fail</span></td>" );
+                break;
+            case FAILURE_IGNORED:
+                stringBuffer.append( "<td valign=\"center\"><span class=\"label label-warning\">Ignored</span></td>" );
+                break;
+            case REPORT:
+                stringBuffer.append( "<td valign=\"center\"><span class=\"label label-info\">Information</span></td>" );
+                break;  
+            case SUCCESS:
+                if ( fromCache )
+                    stringBuffer.append( "<td valign=\"center\"><span class=\"label label-success\">Pass</span></td>" );
+                else
+                    stringBuffer.append( "<td valign=\"center\"><span class=\"label label-success\"><b>Pass</b></span></td>" );
+                break;
+        }
+		
 		stringBuffer.append( "</tr>" );
 		if ( !status.equals( StepStatus.SUCCESS ) && detail != null && !detail.isEmpty() )
 		{
@@ -338,14 +358,11 @@ public class ExecutionRecord
 					backgroundColor = " class=\"warning\" ";
 					break;
 				case REPORT:
-				    backgroundColor= " ";
+				    backgroundColor= " class=\"info\" ";
 				    break;
 				    
 				case SUCCESS:
-				    if ( fromCache )
-				        backgroundColor = " class=\"info\" ";
-	                else
-				        backgroundColor = " class=\"success\" ";
+				    backgroundColor = " class=\"success\" ";
 					
 					break;
 			}
