@@ -21,10 +21,8 @@
 package org.xframium.gesture.factory.spi.perfecto;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.gesture.AbstractKeyPressGesture;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
-import org.xframium.spi.driver.NativeDriverProvider;
 
 // TODO: Auto-generated Javadoc
 /**

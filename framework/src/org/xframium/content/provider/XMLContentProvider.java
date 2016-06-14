@@ -24,26 +24,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xframium.content.ContentData;
 import org.xframium.content.ContentManager;
 import org.xframium.content.DefaultContentData;
-import org.xframium.page.BY;
-import org.xframium.page.ElementDescriptor;
-import org.xframium.page.PageManager;
-import org.xframium.page.element.Element;
-import org.xframium.page.element.ElementFactory;
 
 // TODO: Auto-generated Javadoc
 /**

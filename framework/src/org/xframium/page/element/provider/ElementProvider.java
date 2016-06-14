@@ -21,7 +21,6 @@
 package org.xframium.page.element.provider;
 
 import org.xframium.page.ElementDescriptor;
-import org.xframium.page.Page;
 import org.xframium.page.element.Element;
 
 // TODO: Auto-generated Javadoc

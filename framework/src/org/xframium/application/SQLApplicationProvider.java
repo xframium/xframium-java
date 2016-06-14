@@ -21,9 +21,7 @@
 package org.xframium.application;
 
 import java.util.HashMap;
-
 import org.openqa.selenium.Platform;
-
 import org.xframium.utility.SQLUtil;
 
 /**

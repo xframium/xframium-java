@@ -37,6 +37,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
 	{
 		String deviceOs = getDevice().getOs();
 		
+		log.error( testName.getTestName() );
 		KeyWordTest test = KeyWordDriver.instance().getTest( testName.getTestName().split( "\\." )[ 0 ] );
 		if ( test == null )
 			throw new IllegalArgumentException( "The Test Name " + testName + " does not exist" );

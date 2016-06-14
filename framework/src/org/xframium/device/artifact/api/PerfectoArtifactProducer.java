@@ -144,6 +144,7 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 
 			case FAILURE_SOURCE:
 			    return new Artifact( rootFolder + "failureDOM.xml", webDriver.getPageSource().getBytes());
+			    
 
 			case CONSOLE_LOG:
 			    Artifact consoleArtifact = new Artifact( rootFolder + "console.txt", DeviceManager.instance().getLog().getBytes() );

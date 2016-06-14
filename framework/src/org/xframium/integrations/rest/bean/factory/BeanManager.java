@@ -20,19 +20,7 @@
  *******************************************************************************/
 package org.xframium.integrations.rest.bean.factory;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-
-import javax.imageio.ImageIO;
-import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
-import org.xframium.integrations.perfectoMobile.rest.bean.Execution;
-import org.xframium.integrations.perfectoMobile.rest.services.Imaging.ImageFormat;
-import org.xframium.integrations.perfectoMobile.rest.services.Imaging.MatchMode;
-import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
-import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Screen;
-import org.xframium.integrations.perfectoMobile.rest.services.Repositories.RepositoryType;
 import org.xframium.integrations.rest.bean.Bean;
 
 // TODO: Auto-generated Javadoc

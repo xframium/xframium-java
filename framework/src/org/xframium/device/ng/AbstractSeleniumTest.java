@@ -23,17 +23,14 @@
  */
 package org.xframium.device.ng;
 
-import java.awt.Desktop;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Iterator;
 import java.util.HashMap;
-import java.util.ArrayList;
-
+import java.util.Iterator;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.OutputType;
@@ -51,7 +48,6 @@ import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.Artifact;
 import org.xframium.device.artifact.ArtifactProducer;
-import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.spi.Device;

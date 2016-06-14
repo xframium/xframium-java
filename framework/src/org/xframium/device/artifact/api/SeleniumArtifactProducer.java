@@ -38,7 +38,6 @@ import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.AbstractArtifactProducer;
 import org.xframium.device.artifact.Artifact;
-import org.xframium.utility.XMLEscape;
 
 // TODO: Auto-generated Javadoc
 /**

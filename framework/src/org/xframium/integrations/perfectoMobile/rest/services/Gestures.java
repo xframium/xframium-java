@@ -20,7 +20,6 @@
  *******************************************************************************/
 package org.xframium.integrations.perfectoMobile.rest.services;
 
-import java.awt.Point;
 import org.xframium.integrations.common.PercentagePoint;
 import org.xframium.integrations.perfectoMobile.rest.bean.Execution;
 import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.ServiceDescriptor;

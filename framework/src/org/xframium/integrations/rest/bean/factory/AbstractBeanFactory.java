@@ -21,7 +21,6 @@
 package org.xframium.integrations.rest.bean.factory;
 
 import java.io.InputStream;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.integrations.rest.bean.Bean;

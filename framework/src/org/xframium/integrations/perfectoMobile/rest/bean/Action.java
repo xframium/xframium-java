@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.xframium.integrations.rest.bean.AbstractBean;
 import org.xframium.integrations.rest.bean.Bean.BeanDescriptor;
-import org.xframium.integrations.rest.bean.Bean.FieldCollection;
 import org.xframium.integrations.rest.bean.factory.XMLBeanFactory;
 
 // TODO: Auto-generated Javadoc

@@ -22,7 +22,6 @@ package org.xframium.page.keyWord;
 
 import java.util.List;
 import java.util.Map;
-
 import org.openqa.selenium.WebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;

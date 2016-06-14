@@ -20,7 +20,6 @@
  *******************************************************************************/
 package org.xframium.gesture.factory;
 
-import java.util.List;
 import org.xframium.gesture.Gesture;
 import org.xframium.gesture.Gesture.GestureType;
 

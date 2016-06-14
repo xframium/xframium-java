@@ -23,7 +23,6 @@ package org.xframium.gesture.device.action.spi.perfecto;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
-
 import org.openqa.selenium.WebDriver;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;

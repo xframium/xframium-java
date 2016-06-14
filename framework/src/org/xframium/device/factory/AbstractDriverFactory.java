@@ -29,10 +29,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.xframium.device.data.DataManager;
 import org.xframium.device.interrupt.DeviceInterrupt;
-import org.xframium.device.interrupt.DeviceInterruptFactory;
 import org.xframium.device.interrupt.DeviceInterrupt.INTERRUPT_TYPE;
+import org.xframium.device.interrupt.DeviceInterruptFactory;
 import org.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc

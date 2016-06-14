@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import org.xframium.spi.RunDetails;
 
 public class ExecutionDefinitionMap 
 {

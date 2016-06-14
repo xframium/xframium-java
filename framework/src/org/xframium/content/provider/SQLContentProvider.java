@@ -20,7 +20,10 @@
  *******************************************************************************/
 package org.xframium.content.provider;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import org.xframium.content.ContentData;
 import org.xframium.content.ContentManager;
 import org.xframium.content.DefaultContentData;

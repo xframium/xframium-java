@@ -21,12 +21,10 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
-
 import org.openqa.selenium.WebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
-import org.openqa.selenium.JavascriptExecutor;
 
 // TODO: Auto-generated Javadoc
 /**

@@ -23,7 +23,6 @@ package org.xframium.page;
 import java.util.HashMap;
 import java.util.Map;
 import org.xframium.page.element.Element;
-import org.xframium.page.element.provider.ElementDataSource;
 
 // TODO: Auto-generated Javadoc
 /**

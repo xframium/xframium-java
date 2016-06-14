@@ -22,10 +22,8 @@ package org.xframium.page.element;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 
 // TODO: Auto-generated Javadoc
 /**

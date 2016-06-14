@@ -20,19 +20,12 @@
  *******************************************************************************/
 package org.xframium.device.data;
 
-import java.util.*;
-
+import java.util.HashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Platform;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.SimpleDevice;
-import org.xframium.device.data.xsd.DeviceCapability;
-import org.xframium.device.data.xsd.ObjectFactory;
-import org.xframium.device.data.xsd.RegistryRoot;
 import org.xframium.spi.Device;
 import org.xframium.utility.SQLUtil;
 

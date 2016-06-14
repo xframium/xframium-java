@@ -20,9 +20,9 @@
  *******************************************************************************/
 package org.xframium.gesture.device.action.spi.perfecto;
 
+import org.xframium.gesture.device.action.DeviceAction.ActionType;
 import org.xframium.gesture.device.action.DeviceActionFactory;
 import org.xframium.gesture.device.action.DeviceActionManager;
-import org.xframium.gesture.device.action.DeviceAction.ActionType;
 
 // TODO: Auto-generated Javadoc
 /**
