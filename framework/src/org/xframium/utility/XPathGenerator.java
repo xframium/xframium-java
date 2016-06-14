@@ -143,7 +143,7 @@ public class XPathGenerator
                                                              "." + element );
             if ( substitution != null )
             {
-                xpath = xpath.replaceFirst( element, substitution );
+                xpath = replaceAll( xpath, element, substitution );
             }
         }
 
@@ -156,7 +156,7 @@ public class XPathGenerator
                                                              "." + attr );
             if ( substitution != null )
             {
-                xpath = xpath.replaceFirst( "@" + attr, "@" + substitution );
+                xpath = xpath.replaceAll( "@" + attr, "@" + substitution );
             }
         }
 
@@ -281,5 +281,23 @@ public class XPathGenerator
         }
             
         return substitutions;
+    }
+
+    private static String replaceAll( String xpath, String element, String substitution )
+    {
+        //
+        // The problem is that a perfecto element (ex. text) can also be a function name (ex. text()) or an attribute (ex. @text).  So,
+        // we'll hide functions and attributes with this element's name before replacing the element name.
+        //
+
+        xpath = xpath.replaceAll( element + "\\(\\)", "zzzzzz" );
+        xpath = xpath.replaceAll( "\\@" + element, "yyyyyy" );
+
+        xpath = xpath.replaceAll( element, substitution );
+
+        xpath = xpath.replaceAll( "zzzzzz", element + "\\(\\)" );
+        xpath = xpath.replaceAll( "yyyyyy", "\\@" + element );
+
+        return xpath;
     }
 }
