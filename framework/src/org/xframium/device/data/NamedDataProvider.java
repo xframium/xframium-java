@@ -72,6 +72,22 @@ public class NamedDataProvider implements DataProvider
 
     public static Device lookupDeviceById( String device, DriverType driverType )
     {
+        if ( device.equals( "FIREFOX" ) )
+        {
+            return new SimpleDevice( device,
+                    "Microsoft",
+                    "Windows",
+                    "Windows",
+                    null,
+                    "firefox",
+                    null,
+                    1,
+                    "WEB",
+                    true,
+                    device );
+        }
+        
+        
         Handset handset = PerfectoMobile.instance().devices().getDevice( device );
 			
         String driverName = "";

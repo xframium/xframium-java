@@ -21,7 +21,9 @@
 package org.xframium.gesture.device.action.spi.perfecto;
 
 import java.util.List;
+import org.openqa.selenium.By;
 import org.openqa.selenium.ContextAware;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
@@ -50,19 +52,30 @@ public class OpenApplicationAction extends AbstractDefaultAction implements Devi
 
 		ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
 	
-		Handset localDevice = PerfectoMobile.instance().devices().getDevice( deviceName );
-		
-		if ( localDevice.getOs().toLowerCase().equals( "ios" ) )				
-			PerfectoMobile.instance().application().open( executionId, deviceName, appDesc.getName(), appDesc.getAppleIdentifier() );
-		else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-			PerfectoMobile.instance().application().open( executionId, deviceName, appDesc.getName(), appDesc.getAndroidIdentifier() );
+		if ( appDesc.isWeb() )
+		{
+    		String selectLinkOpeninNewTab = Keys.chord(Keys.CONTROL,"t");
+    		if ( webDriver.getWindowHandles() != null && webDriver.getWindowHandles().size() > 0 )
+    		    webDriver.findElement(By.tagName("body")).sendKeys(selectLinkOpeninNewTab);
+    		
+    		webDriver.get( appDesc.getUrl() );
+    		    
+		}
 		else
-			throw new IllegalArgumentException( "Could not install application to " + localDevice.getOs() );
-		
-		
-		if ( webDriver instanceof ContextAware )
-			( ( ContextAware ) webDriver ).context( "NATIVE_APP" );
-		
+		{
+    		Handset localDevice = PerfectoMobile.instance().devices().getDevice( deviceName );
+    		
+    		if ( localDevice.getOs().toLowerCase().equals( "ios" ) )				
+    			PerfectoMobile.instance().application().open( executionId, deviceName, appDesc.getName(), appDesc.getAppleIdentifier() );
+    		else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
+    			PerfectoMobile.instance().application().open( executionId, deviceName, appDesc.getName(), appDesc.getAndroidIdentifier() );
+    		else
+    			throw new IllegalArgumentException( "Could not install application to " + localDevice.getOs() );
+    		
+    		
+    		if ( webDriver instanceof ContextAware )
+    			( ( ContextAware ) webDriver ).context( "NATIVE_APP" );
+		}
 		return true;
 	}
 

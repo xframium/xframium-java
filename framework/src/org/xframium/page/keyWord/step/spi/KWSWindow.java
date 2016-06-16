@@ -154,6 +154,7 @@ public class KWSWindow extends AbstractKeyWordStep
         boolean bSwitchWindow = false;
         String winActValue = "";
         Set<String> availableWindows = webDriver.getWindowHandles();
+        
         if ( !availableWindows.isEmpty() )
         {
             for ( String windowId : availableWindows )
@@ -166,9 +167,9 @@ public class KWSWindow extends AbstractKeyWordStep
                 {
                     winActValue = webDriver.switchTo().window( windowId ).getCurrentUrl().trim().toLowerCase();
                 }
-
+                    
                 winExpValue = winExpValue.trim().toLowerCase();
-                System.out.println( "Exp value  " + winExpValue + "Actual value :" + winActValue );
+                
                 if ( winActValue.contains( winExpValue ) )
                 {
                     bSwitchWindow = true;
