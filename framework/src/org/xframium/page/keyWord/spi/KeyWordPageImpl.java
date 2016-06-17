@@ -1,5 +1,5 @@
 /*******************************************************************************
- * xFramium
+* xFramium
  *
  * Copyright 2016 by Moreland Labs, Ltd. (http://www.morelandlabs.com)
  *

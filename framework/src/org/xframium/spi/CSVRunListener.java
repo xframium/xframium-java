@@ -75,12 +75,19 @@ public class CSVRunListener implements RunListener
 	    // TODO Auto-generated method stub
 	    return false;
 	}
+	
+	 @Override
+	public void skipRun( Device currentDevice, String runKey )
+	{
+	    // TODO Auto-generated method stub
+	    
+	}
 
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.device.listener.RunListener#afterRun(com.morelandLabs.spi.Device, java.lang.String, boolean)
 	 */
 	@Override
-	public synchronized void afterRun( Device currentDevice, String runKey, boolean successful )
+	public synchronized void afterRun( Device currentDevice, String runKey, boolean successful, int stepsPassed, int stepsFailed, int stepsIgnored, long startTime, long stopTime )
 	{
 		FileOutputStream outputStream = null;
 		

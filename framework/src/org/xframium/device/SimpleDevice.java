@@ -71,7 +71,21 @@ public class SimpleDevice implements Device
 	/** The active. */
 	private boolean active;
 	
-	/** The capabilities. */
+	private String resolution;
+	private String environment;
+	
+	public String getResolution()
+    {
+        return resolution;
+    }
+
+    public void setResolution( String resolution )
+    {
+        this.resolution = resolution;
+        generateEnv();
+    }
+
+    /** The capabilities. */
 	private Map<String,Object> capabilities = new HashMap<String,Object>( 10 );
 	
 	/* (non-Javadoc)
@@ -82,7 +96,43 @@ public class SimpleDevice implements Device
 		return active;
 	}
 
+	private void generateEnv()
+	{
+	    StringBuilder stringBuilder = new StringBuilder();
+	    if ( manufacturer != null )
+	    {
+	        stringBuilder.append( manufacturer );
+	        if ( model != null )
+	            stringBuilder.append( " " ).append( model );
+	            
+	    }
+	    else if ( browserName != null )
+	    {
+	        stringBuilder.append( browserName );
+	        if ( browserVersion != null )
+	            stringBuilder.append( " " ).append( browserVersion );
+	    }
+	    else
+	        stringBuilder.append( "Unknown Device" );
+	    
+	    if ( os != null )
+	    {
+	        stringBuilder.append( " / " ).append( os );
+	        if ( osVersion != null )
+	            stringBuilder.append( " " ).append( osVersion );
+	    }
+	    
+	    if ( resolution != null )
+	        stringBuilder.append( " (" ).append( resolution ).append( ")" );
+	    
+	    environment = stringBuilder.toString();
+	    
+	}
 	
+	public String getEnvironment()
+	{
+	    return environment;
+	}
 
 	/** The cached string. */
 	private String cachedString;
@@ -100,6 +150,7 @@ public class SimpleDevice implements Device
 		availableDevices = 1;
 		deviceLock = new Semaphore( availableDevices );
 		this.driverType = driverType;
+		generateEnv();
 	}
 	
 	/**
@@ -134,6 +185,7 @@ public class SimpleDevice implements Device
 		deviceLock = new Semaphore( availableDevices );
 		
 		cachedString = manufacturer + " " + model + " [" + key + "]";
+		generateEnv();
 	}
 
 	/* (non-Javadoc)

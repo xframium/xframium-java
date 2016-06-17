@@ -39,7 +39,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.By.ByXPath;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.ContextAware;
+import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -75,7 +77,7 @@ import io.appium.java_client.AppiumDriver;
 /**
  * The Class DeviceWebDriver.
  */
-public class DeviceWebDriver implements WebDriver, JavascriptExecutor, ContextAware, ExecuteMethod, ArtifactProducer, NativeDriverProvider, PropertyProvider, TakesScreenshot, DeviceProvider, HasInputDevices, CachingDriver
+public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptExecutor, ContextAware, ExecuteMethod, ArtifactProducer, NativeDriverProvider, PropertyProvider, TakesScreenshot, DeviceProvider, HasInputDevices, CachingDriver
 {
 
     private List<DeviceInterrupt> interruptList;
@@ -775,6 +777,15 @@ public class DeviceWebDriver implements WebDriver, JavascriptExecutor, ContextAw
         if ( webDriver instanceof HasInputDevices )
             return ( (HasInputDevices) webDriver ).getMouse();
         else 
+            return null;
+    }
+
+    @Override
+    public Capabilities getCapabilities()
+    {
+        if ( webDriver instanceof HasCapabilities )
+            return ( (HasCapabilities) webDriver ).getCapabilities();
+        else
             return null;
     }
 }

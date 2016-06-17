@@ -258,6 +258,11 @@ public abstract class AbstractSeleniumTest
     {
         List<Device> deviceList = DeviceManager.instance().getDevices();
 
+        return getDeviceData( deviceList );
+    }
+    
+    public Object[][] getDeviceData( List<Device> deviceList )
+    {
         int testCount = 0;
         boolean hasPersonas = false;
 
@@ -271,7 +276,7 @@ public abstract class AbstractSeleniumTest
             hasPersonas = true;
             testCount = testCount * DataManager.instance().getPersonas().length;
         }
-		
+        
         Object[][] newArray = new Object[testCount][1];
 
         int currentPosition = 0;
@@ -313,6 +318,8 @@ public abstract class AbstractSeleniumTest
 
         return newArray;
     }
+    
+    
 
     /**
      * Adds the capabilities.

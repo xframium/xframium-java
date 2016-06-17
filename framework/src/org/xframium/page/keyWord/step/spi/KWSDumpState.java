@@ -89,7 +89,7 @@ public class KWSDumpState extends AbstractKeyWordStep
             outputStream.write( XMLEscape.toXML( webDriver.getPageSource() ).getBytes() );
             outputStream.flush();
             outputStream.close();
-            PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), "<a class=\"btn btn-primary\" hRef='../../artifacts/" + randomFile.getName() + "' >Device State</a>", "STATE", startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, getThreshold(), getDescription(), false );            
+            PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), "<a target=\"_blank\" class=\"btn btn-primary\" hRef='../../artifacts/" + randomFile.getName() + "' >Device State</a>", "STATE", startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, getThreshold(), getDescription(), false );            
         }
         catch( Exception e )
         {
