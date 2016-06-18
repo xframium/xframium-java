@@ -485,6 +485,9 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             DataManager.instance().setPersonas( personaNames );
             PageManager.instance().setWindTunnelEnabled( true );
         }
+        
+        if ( configProperties.getProperty( "driver.displayResults" ) != null )
+            displayResults = Boolean.parseBoolean( configProperties.getProperty( "driver.displayResults" ) );
 
         DeviceManager.instance().setCachingEnabled( Boolean.parseBoolean( configProperties.getProperty( "driver.enableCaching" ) ) );
 
