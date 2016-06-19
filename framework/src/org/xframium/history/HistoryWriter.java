@@ -35,6 +35,7 @@ public class HistoryWriter
     private static Log log = LogFactory.getLog( HistoryWriter.class );
     private static final String HISTORY_FILE = "tcHistory.xml";
     private static final String INDEX_FILE = "index.html";
+    private static final String TC_SUMMARY = "tcSummary.html";
     private File rootFolder;
     private String suiteName;
 
@@ -126,7 +127,7 @@ public class HistoryWriter
 
     }
 
-    public void writeData()
+    public void writeData( String fileName, long startTime, long endTime )
     {
         OutputStream os = null;
 
@@ -238,6 +239,67 @@ public class HistoryWriter
         writePageHeader( stringBuilder, 1, null );
 
         stringBuilder.append( "<br /><div class=\"row statcards\">" );
+        Set<Execution> executionList = new TreeSet<Execution>( new TimeComparator() );
+        
+        int tP = 0;
+        int tF = 0;
+        int sP = 0;
+        int sF = 0;
+        int sI = 0;
+        
+        for ( TestCase tc : testMap.values() )
+        {    
+            for ( Environment env : tc.getEnvironment() )
+            {
+                for ( Execution exe : env.getExecution() )
+                {
+                    if ( exe.isSuccess() )
+                        tP++;
+                    else
+                        tF++;
+                    
+                    sP+= exe.getPassed();
+                    sF+= exe.getFailed();
+                    sI+= exe.getIgnored();
+                }
+                executionList.addAll( env.getExecution() );
+            }
+        }
+
+        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">Test Executions</span><h2>" ).append( executionList.size() ).append( "</h2></div></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">Environments</span><h2>" ).append( environmentMap.size() ).append( "</h2></div></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">Test Cases</span><h2>" ).append( testMap.size() ).append( "</h2></div></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Passed Executions</span><h2>" ).append( tP ).append( "</h2></div></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Failed Executions</span><h2>" ).append( tF ).append( "</h2></div></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Passed</span><h2>" ).append( sP ).append( "</h2></div></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Failed</span><h2>" ).append( sF ).append( "</h2></div></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-warning\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Ignored</span><h2>" ).append( sI ).append( "</h2></div></div></div>" );
+        
+        stringBuilder.append( "</div><br />" );
+
+        writePageFooter( stringBuilder );
+
+        try
+        {
+            File useFile = new File( rootFolder, INDEX_FILE );
+            FileWriter fileWriter = new FileWriter( useFile );
+            fileWriter.write( stringBuilder.toString() );
+            fileWriter.close();
+            
+            writeTCSummary();
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    public void writeTCSummary()
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        writePageHeader( stringBuilder, 2, null );
+
+        stringBuilder.append( "<br /><div class=\"row statcards\">" );
         for ( TestCase tc : testMap.values() )
         {
             writeTestCase( tc );
@@ -310,7 +372,7 @@ public class HistoryWriter
 
         try
         {
-            File useFile = new File( rootFolder, INDEX_FILE );
+            File useFile = new File( rootFolder, TC_SUMMARY );
             FileWriter fileWriter = new FileWriter( useFile );
             fileWriter.write( stringBuilder.toString() );
             fileWriter.close();
@@ -361,7 +423,7 @@ public class HistoryWriter
     public void writeTestCase( TestCase testCase )
     {
         StringBuilder stringBuilder = new StringBuilder();
-        writePageHeader( stringBuilder, 1, testCase );
+        writePageHeader( stringBuilder, 2, testCase );
 
         stringBuilder.append( "<br /><center><h2>" + testCase.getName() + "</h2></center><div class=\"row statcards\">" );
         
@@ -591,8 +653,12 @@ public class HistoryWriter
         stringBuilder.append(
                 "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"></head>" );
         stringBuilder.append( "<body><div class=\"container\"><div class=\"row\">" );
+        
+        stringBuilder.append( "<div class=\"col-sm-3 sidebar\"><nav class=\"sidebar-nav\"><div class=\"collapse nav-toggleable-sm\" id=\"nav-toggleable-sm\"><ul class=\"nav nav-pills nav-stacked\"><li " + (activeIndex == 1 ? " class=\"active\"" : "")
+                + "><a href=\"index.html\">Execution Summary</a></li><li " + (activeIndex == 2 ? " class=\"active\"" : "") + "><a href=\"tcSummary.html\">Test Summary</a></li>"
+                + "</ul><hr class=\"visible-xs m-t\"></div></nav></div>" );
 
-        stringBuilder.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">Updated " ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
+        stringBuilder.append( "<div class=\"col-sm-9 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">Updated " ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
                 .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\"><a hRef=\"index.html\">" + suiteName + "</a></h3></div>" );
 
         stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );

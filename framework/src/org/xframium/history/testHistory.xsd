@@ -11,8 +11,15 @@
   <complexType name="History">
     <sequence>
       <element name="testCase" type="tns:TestCase" minOccurs="0" maxOccurs="unbounded" />
+      <element name="suite" type="tns:TestSuite" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="name" type="string" use="required" />
+  </complexType>
+
+  <complexType name="TestSuite">
+    <attribute name="startTime" type="long" use="required" />
+    <attribute name="endTime" type="long" use="required" />
+    <attribute name="fileName" type="long" use="required" />
   </complexType>
 
   <complexType name="TestCase">

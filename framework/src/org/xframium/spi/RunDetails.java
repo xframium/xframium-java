@@ -272,7 +272,7 @@ public class RunDetails implements RunListener
             writeHTMLOSSummary( rootFolder );
             writeHTMLTCSummary( rootFolder );
 
-            historyWriter.writeData();
+            historyWriter.writeData( useFile.getName(), startTime, System.currentTimeMillis() );
 
         }
         catch ( Exception e )
