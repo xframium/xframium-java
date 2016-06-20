@@ -327,11 +327,8 @@ public class HistoryWriter
                 TimeUnit.MILLISECONDS.toSeconds( averageTime ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( averageTime ) ) );
         
 
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">Test Executions</span><h2>" ).append( executionList.size() ).append( "</h2></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">Environments</span><h2>" ).append( environmentMap.size() ).append( "</h2></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">Test Cases</span><h2>" ).append( testMap.size() ).append( "</h2></div></div></div>" );
-        
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-" + panelType + "\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h2>" ).append( testRunLength ).append( "</h2><hr class=\"-hr m-a-0\"></div>" );
+        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">Test Executions</span><h2>" ).append( executionList.size() ).append( "</h2></div></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-" + panelType + "\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h2>" ).append( testRunLength ).append( "</h2><hr class=\"-hr m-a-0\"></div>" );
         stringBuilder.append( "<canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
         for ( TestSuite ss : suiteSet )
         {
@@ -345,6 +342,10 @@ public class HistoryWriter
         }
         stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
         stringBuilder.append( "]\" style=\"width: 189px; height: 47px;\"></canvas></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">Environments</span><h2>" ).append( environmentMap.size() ).append( "</h2></div></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">Test Cases</span><h2>" ).append( testMap.size() ).append( "</h2></div></div></div>" );
+        
+        
         
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Passed Executions</span><h2>" ).append( tP ).append( "</h2></div></div></div>" );
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Failed Executions</span><h2>" ).append( tF ).append( "</h2></div></div></div>" );
