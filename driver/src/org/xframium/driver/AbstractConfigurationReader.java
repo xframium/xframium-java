@@ -119,6 +119,8 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             if( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_HTML ) )
             {
+            	RunDetails.instance().writeHTMLIndex( DataManager.instance().getReportFolder(), true );
+            	
                 File htmlFile = RunDetails.instance().getIndex( DataManager.instance().getReportFolder() );
                 try
                 {

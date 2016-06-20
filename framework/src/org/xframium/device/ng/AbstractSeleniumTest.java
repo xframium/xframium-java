@@ -471,7 +471,7 @@ public abstract class AbstractSeleniumTest
         try
         {
         if( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_HTML ) )
-            RunDetails.instance().writeHTMLIndex( DataManager.instance().getReportFolder() );
+            RunDetails.instance().writeHTMLIndex( DataManager.instance().getReportFolder(), false );
         
         if( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_DEFINITION ) )
             RunDetails.instance().writeDefinitionIndex( DataManager.instance().getReportFolder() );

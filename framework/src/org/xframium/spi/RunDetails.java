@@ -149,7 +149,7 @@ public class RunDetails implements RunListener
 
     }
 
-    public synchronized void writeHTMLIndex( File rootFolder )
+    public synchronized void writeHTMLIndex( File rootFolder, boolean complete )
     {
         Collections.sort( detailsList, new RunComparator() );
 
@@ -272,6 +272,7 @@ public class RunDetails implements RunListener
             writeHTMLOSSummary( rootFolder );
             writeHTMLTCSummary( rootFolder );
 
+            if ( complete )
             historyWriter.writeData( useFile.getName(), startTime, System.currentTimeMillis() );
 
         }

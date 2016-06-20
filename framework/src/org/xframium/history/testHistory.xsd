@@ -19,7 +19,7 @@
   <complexType name="TestSuite">
     <attribute name="startTime" type="long" use="required" />
     <attribute name="endTime" type="long" use="required" />
-    <attribute name="fileName" type="long" use="required" />
+    <attribute name="fileName" type="string" use="required" />
   </complexType>
 
   <complexType name="TestCase">
