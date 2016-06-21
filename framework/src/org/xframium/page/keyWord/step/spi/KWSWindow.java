@@ -22,12 +22,15 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import java.util.Set;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
+import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 
 // TODO: Auto-generated Javadoc
@@ -55,6 +58,8 @@ public class KWSWindow extends AbstractKeyWordStep
  BY_DEFAULT, 
  /** The by winclose. */
  BY_WINCLOSE, 
+ 
+ BY_ELEMENT,
  /** The by alert. */
  BY_ALERT;
     }
@@ -100,6 +105,8 @@ public class KWSWindow extends AbstractKeyWordStep
                     switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
                     webDriver.switchTo().frame( switchExpValue );
                     break;
+                    
+                    
                 case BY_PARENTFRAME:
                     webDriver.switchTo().parentFrame();
                     break;
@@ -109,6 +116,18 @@ public class KWSWindow extends AbstractKeyWordStep
                 case BY_WINCLOSE:
                     webDriver.close();
                     break;
+                    
+                case BY_ELEMENT:
+                	Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap );
+                	if ( currentElement == null )
+                	{
+                		log.warn( "Attempting to switch to frame identified by " + getName() + " that does not exist" );
+                		return false;
+                	}
+                	
+                	webDriver.switchTo().frame( (WebElement) currentElement.getNative() ); 
+                	break;
+                	
                 case BY_ALERT:
                     WebDriverWait alertWait = new WebDriverWait( webDriver, 5 );
                     alertWait.until( ExpectedConditions.alertIsPresent() );
