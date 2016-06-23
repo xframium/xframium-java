@@ -20,6 +20,10 @@
     <attribute name="startTime" type="long" use="required" />
     <attribute name="endTime" type="long" use="required" />
     <attribute name="fileName" type="string" use="required" />
+    <attribute name="pass" type="int" use="required" />
+    <attribute name="fail" type="int" use="required" />
+    <attribute name="env" type="int" use="required" />
+    <attribute name="os" type="int" use="required" />
   </complexType>
 
   <complexType name="TestCase">

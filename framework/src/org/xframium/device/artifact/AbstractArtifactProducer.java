@@ -167,7 +167,7 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-warning\"><div class=\"p-a\"><span class=\"statcard-desc\">Ignored</span><h4 class=\"statcard-number\">" + ignoreCount + "</h4></div></div></div>" );
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Failed</span><h4 class=\"statcard-number\">" + failureCount + "</h4></div></div></div>" );
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Total</span><h4 class=\"statcard-number\">" + recordCount + "</h4></div></div></div>" );
-            stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Run Time</span><h4 class=\"statcard-number\">" + runLength + "</h4></div></div></div>" );
+            stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h4 class=\"statcard-number\">" + runLength + "</h4></div></div></div>" );
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">OS</span><h4 class=\"statcard-number\">" + device.getOs() + "</h4></div></div></div>" );
             stringBuffer.append( "</div><br />" );
         }
@@ -187,19 +187,12 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         
         stringBuffer.append( "<br/>" );
         stringBuffer.append( "<ul class=\"nav nav-tabs\" role=\"tablist\">" );
-        stringBuffer.append( "<li role=\"presentation\" class=\"active\"><a href=\"#summary\" aria-controls=\"summary\" role=\"tab\" data-toggle=\"tab\">Summary</a></li>" );
+        stringBuffer.append( "<li role=\"presentation\" class=\"active\"><a href=\"#summary\" aria-controls=\"summary\" role=\"tab\" data-toggle=\"tab\">Environment</a></li>" );
         stringBuffer.append( "<li role=\"presentation\" ><a href=\"#detail\" aria-controls=\"detail\" role=\"tab\" data-toggle=\"tab\">Steps</a></li>" );
         
         if ( DataManager.instance().isArtifactEnabled( ArtifactType.CONSOLE_LOG ) )
             stringBuffer.append( "<li role=\"presentation\"><a href=\"#console\" aria-controls=\"console\" role=\"tab\" data-toggle=\"tab\">Console Log</a></li>" );
-        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT ) || DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_PDF ) )
-            stringBuffer.append( "<li role=\"presentation\"><a href=\"#pdf\" aria-controls=\"pdf\" role=\"tab\" data-toggle=\"tab\">Execution Report (PDF)</a></li>" );
         
-        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_HTML ) )
-            stringBuffer.append( "<li role=\"presentation\"><a href=\"#html\" aria-controls=\"html\" role=\"tab\" data-toggle=\"tab\">Execution Report (HTML)</a></li>" );
-        
-        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_XML ) )
-            stringBuffer.append( "<li role=\"presentation\"><a href=\"#xml\" aria-controls=\"xml\" role=\"tab\" data-toggle=\"tab\">Execution Report (XML)</a></li>" );
         
         if ( DataManager.instance().isArtifactEnabled( ArtifactType.WCAG_REPORT ) )
             stringBuffer.append( "<li role=\"presentation\"><a href=\"#wcag\" aria-controls=\"wcag\" role=\"tab\" data-toggle=\"tab\">WCAG Report</a></li>" );
@@ -207,49 +200,56 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         if ( !success && DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
             stringBuffer.append( "<li role=\"presentation\"><a href=\"#deviceLog\" aria-controls=\"deviceLog\" role=\"tab\" data-toggle=\"tab\">Device Log</a></li>" );
         
+        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_CSV ) )
+            stringBuffer.append( "<li role=\"presentation\"><a class=link-tab hRef=\"" + testName + ".csv\" class=\"list-group-item\">Execution Record</a></li>" );
+        
         if ( !success && DataManager.instance().isArtifactEnabled( ArtifactType.FAILURE_SOURCE ) )
         {
             stringBuffer.append( "<li role=\"presentation\"><a href=\"#source\" aria-controls=\"source\" role=\"tab\" data-toggle=\"tab\">Failure Source</a></li>" );
             stringBuffer.append( "<li role=\"presentation\"><a href=\"#screenshot\" aria-controls=\"screenshot\" role=\"tab\" data-toggle=\"tab\">Screenshot</a></li>" );
         }
         
-        stringBuffer.append( "<li role=\"presentation\" class=\"dropdown\"><a class=dropdown-toggle data-toggle=dropdown aria-controls=myTabDrop1-contents>Links<span class=caret></span></a><ul class=dropdown-menu aria-labelledby=myTabDrop1 id=myTabDrop1-contents>" );
+        stringBuffer.append( "<li role=\"presentation\"><a href=\"#external\" aria-controls=\"external\" role=\"tab\" data-toggle=\"tab\">Links</a></li>" );
         
-        String wtUrl = ( (DeviceWebDriver) webDriver ).getWindTunnelReport();
-        if ( wtUrl != null && !wtUrl.isEmpty() )
-            stringBuffer.append( "<li><a class=link-tab href=\"" + UriEncoder.encode( wtUrl ).replace( "%3F", "?" ) + "\" id=dropdown1-tab data-toggle=tab aria-controls=dropdown1>Single Test Report</a></li>" );
-        
-        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_CSV ) )
-            stringBuffer.append( "<li><a class=link-tab hRef=\"" + testName + ".csv\" id=dropdown2-tab data-toggle=tab aria-controls=dropdown2>Execution Report (CSV)</a></li>" );
-        
-        stringBuffer.append( "</ul></ul>" );
+
+        stringBuffer.append( "<span class=\"pull-right text-muted\"><a hRef=\"../../index.html\">Return to Summary</a></span></ul>" );
         
         
         stringBuffer.append( "<div class=\"tab-content\">" );
+        
+        
+        
         stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane active\" id=\"summary\">" );
         
         if ( device != null )
         {
             stringBuffer.append( "<div class=\"list-group\">" );
-            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Test Name</b> " ).append( testName ).append( "</a>" );
-            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Execution ID</b> " ).append( DeviceManager.instance().getExecutionId() ).append( "</a>" );
-            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>OS</b> " ).append( device.getOs() ).append( " " ).append( device.getOsVersion() ).append( "</a>" );
-            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Device</b> " ).append( device.getManufacturer() ).append( " " ).append( device.getModel() ).append( " (" ).append( device.getKey() ).append(")</a>" );
+            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Device ID: </b> " ).append( device.getKey() ).append("</a>" );
+            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>OS: </b> " ).append( device.getOs() ).append( "</a>" );
+            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>OS Version: </b> " ).append( device.getOsVersion() !=null ? device.getOsVersion() : "Unknown" ).append( "</a>" );
+            if ( ApplicationRegistry.instance().getAUT().isWeb() )
+            {
+	            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Browser Name: </b> " ).append( device.getBrowserName() !=null ? device.getBrowserName() : "Unknown" ).append( "</a>" );
+	            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Browser Version: </b> " ).append( device.getBrowserVersion() !=null ? device.getBrowserVersion() : "Unknown" ).append( "</a>" );
+            }
+            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Manufacturer: </b> " ).append( device.getManufacturer() ).append("</a>" );
+            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Model: </b> " ).append( device.getModel() ).append("</a>" );
+            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Resolution: </b> " ).append( device.getResolution() != null ? device.getResolution() : "Unknown" ).append( "</a>" );
             stringBuffer.append( "</div>" );
             
         }
         else
         {
             stringBuffer.append( "<div class=\"list-group\">" );
-            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Test Name</b> " ).append( testName ).append( "</a>" );
-            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Execution ID</b> " ).append( DeviceManager.instance().getExecutionId() ).append( "</a>" );            
+            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Test Name: </b> " ).append( testName ).append( "</a>" );
+            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Execution ID: </b> " ).append( DeviceManager.instance().getExecutionId() ).append( "</a>" );            
             stringBuffer.append( "</div>" );
         }
         
         
         stringBuffer.append( "</div><div role=\"tabpanel\" class=\"tab-pane\" id=\"detail\">" );
         stringBuffer.append( "<div class=\"table-responsive table-bordered\"><table class=\"table table-hover table-condensed\">");
-        stringBuffer.append( "<thead><th width=\"10%\">Page</th><th width=\"20%\">Element</th><th width=\"80%\">Description</th><th width=\"20%\">Start time</th><th width=\"0%\" align=center>Time</th><th align=center width=\"0%\">Status</th></thead>" );
+        stringBuffer.append( "<thead><th width=\"10%\">Page</th><th width=\"20%\">Element</th><th width=\"80%\">Steps Performed</th><th width=\"20%\">Start time</th><th width=\"0%\" align=center>Time</th><th align=center width=\"0%\">Status</th></thead>" );
         if ( DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) != null && !DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ).isEmpty() )
         {
             for ( Object item : DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) )
@@ -272,15 +272,6 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         if ( DataManager.instance().isArtifactEnabled( ArtifactType.CONSOLE_LOG ) )
             stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane\" id=\"console\"><div id=\"list\"><p><iframe src=\"console.txt\" frameborder=\"0\" height=\"100%\" width=\"100%\"></iframe></p></div></div>" );
         
-        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT ) || DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_PDF ) )
-            stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane\" id=\"pdf\"><div id=\"list\"><p><iframe src=\"EXECUTION_REPORT_PDF.pdf\" frameborder=\"0\" height=\"100%\" width=\"100%\"></iframe></p></div></div>" );
-       
-        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_HTML ) )
-            stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane\" id=\"html\"><div id=\"list\"><p><iframe src=\"EXECUTION_REPORT_HTML.html\" frameborder=\"0\" height=\"100%\" width=\"100%\"></iframe></p></div></div>" );
-        
-        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_XML ) )
-            stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane\" id=\"html\"><div id=\"list\"><p><iframe src=\"EXECUTION_REPORT_HTML.xml\" frameborder=\"0\" height=\"100%\" width=\"100%\"></iframe></p></div></div>" );
-        
         if ( DataManager.instance().isArtifactEnabled( ArtifactType.WCAG_REPORT ) )
             stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane\" id=\"wcag\"><div id=\"list\"><p><iframe src=\"wcag.html\" frameborder=\"0\" height=\"100%\" width=\"100%\"></iframe></p></div></div>" );
         
@@ -293,7 +284,27 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
             stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane\" id=\"screenshot\"><div id=\"list\"><p><iframe src=\"failure-screenshot.png\" frameborder=\"0\" height=\"100%\" width=\"100%\"></iframe></p></div></div>" );
         }
         
-        stringBuffer.append( "</div>" );
+        stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane\" id=\"external\">" );
+        stringBuffer.append( "<div class=\"list-group\">" );
+
+        String wtUrl = ( (DeviceWebDriver) webDriver ).getWindTunnelReport();
+        if ( wtUrl != null && !wtUrl.isEmpty() )
+            stringBuffer.append( "<a target=_blank hRef=\"" + UriEncoder.encode( wtUrl ).replace( "%3F", "?" ) + "\" class=\"list-group-item\">Perfecto Single Test Report</a>" );
+        
+        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_CSV ) )
+            stringBuffer.append( "<a target=_blank hRef=\"EXECUTION_REPORT_CSV.csv\" class=\"list-group-item\">Perfecto Execution Report (CSV)</a>" );
+        
+        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT ) || DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_PDF ) )
+        	stringBuffer.append( "<a target=_blank hRef=\"EXECUTION_REPORT_PDF.pdf\" class=\"list-group-item\">Perfecto Execution Report (PDF)</a>" );
+        
+        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_HTML ) )
+        	stringBuffer.append( "<a target=_blank hRef=\"EXECUTION_REPORT_HTML.html\" class=\"list-group-item\">Perfecto Execution Report (HTML)</a>" );
+        
+        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_XML ) )
+        	stringBuffer.append( "<a target=_blank hRef=\"EXECUTION_REPORT_XML.xml\" class=\"list-group-item\">Perfecto Execution Report (XML)</a>" );
+        
+        
+        stringBuffer.append( "</div></div>" );
         
         
         stringBuffer.append( "</div></div></BODY>" );

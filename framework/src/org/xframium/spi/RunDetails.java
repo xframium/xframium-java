@@ -157,6 +157,7 @@ public class RunDetails implements RunListener
         TreeMap<String, int[]> caseMap = new TreeMap<String, int[]>();
         TreeMap<String, int[]> deviceMap = new TreeMap<String, int[]>();
         TreeMap<String, int[]> osMap = new TreeMap<String, int[]>();
+        TreeMap<String, int[]> envMap = new TreeMap<String, int[]>();
         int[] stepBreakdown = new int[3];
         int successCount = 0;
         for ( int i = 0; i < detailsList.size(); i++ )
@@ -176,6 +177,18 @@ public class RunDetails implements RunListener
             {
                 caseValue = new int[] { 0, 0 };
                 caseMap.put( runKey, caseValue );
+            }
+
+            if ( success )
+                caseValue[0]++;
+            else
+                caseValue[1]++;
+            
+            caseValue = envMap.get( device.getEnvironment() );
+            if ( caseValue == null )
+            {
+                caseValue = new int[] { 0, 0 };
+                envMap.put( device.getEnvironment(), caseValue );
             }
 
             if ( success )
@@ -228,7 +241,7 @@ public class RunDetails implements RunListener
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Passed</span><h3 class=\"statcard-number\">" + successCount + "</h3></div></div></div>" );
         stringBuilder
                 .append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Failed</span><h3 class=\"statcard-number\">" + (detailsList.size() - successCount) + "</h3></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Total</span><h3 class=\"statcard-number\">" + detailsList.size() + "</h3></div></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Environments</span><h3 class=\"statcard-number\">" + envMap.size() + "</h3></div></div></div>" );
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h3 class=\"statcard-number\">" + runLength + "</h3></div></div></div>" );
         stringBuilder.append( "</div><br />" );
         stringBuilder.append( "<table class=\"table table-hover table-condensed\">" );
@@ -273,7 +286,7 @@ public class RunDetails implements RunListener
             writeHTMLTCSummary( rootFolder );
 
             if ( complete )
-            historyWriter.writeData( useFile.getName(), startTime, System.currentTimeMillis() );
+            	historyWriter.writeData( getRootFolder() + System.getProperty( "file.separator" ) + "index.html", startTime, System.currentTimeMillis(), envMap.size(), osMap.size(), successCount, detailsList.size() - successCount );
 
         }
         catch ( Exception e )
@@ -572,7 +585,7 @@ public class RunDetails implements RunListener
         stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-6 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( successCount ).append( ", color: '#009900', label: 'Passed' }," );
         stringBuilder.append( "{ value: " ).append( detailsList.size() - successCount ).append( ", color: '#990000', label: 'Failed' }," );
-        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" /></div><center><strong class=\"text-muted\"><a href=\"index.html\">Tests Executed</a></strong></center></div>" );
+        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" /></div><center><strong class=\"text-muted\"><a href=\"index.html\">Tests Executions</a></strong></center></div>" );
 
         stringBuilder.append( "<div class=\"col-sm-6 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
 

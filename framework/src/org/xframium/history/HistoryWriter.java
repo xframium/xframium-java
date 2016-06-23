@@ -40,6 +40,7 @@ public class HistoryWriter
     private static final String HISTORY_FILE = "tcHistory.xml";
     private static final String INDEX_FILE = "index.html";
     private static final String TC_SUMMARY = "tcSummary.html";
+    private static final String EXE_DETAIL = "executionDetail.html";
     private File rootFolder;
     private String suiteName;
 
@@ -132,7 +133,7 @@ public class HistoryWriter
 
     }
 
-    public void writeData( String fileName, long startTime, long endTime )
+    public void writeData( String fileName, long startTime, long endTime, int env, int oss, int pass, int fail )
     {
         OutputStream os = null;
 
@@ -147,6 +148,11 @@ public class HistoryWriter
         testSuite.setFileName( fileName );
         testSuite.setStartTime( startTime );
         testSuite.setEndTime( endTime );
+        testSuite.setEnv( env );
+        testSuite.setOs( oss );
+        testSuite.setPass( pass );
+        testSuite.setFail( fail );
+        
         
         executionList.add( testSuite );
         hRoot.getSuite().addAll( executionList );
@@ -256,6 +262,53 @@ public class HistoryWriter
         }
     }
 
+    public void writeExecutionDetail()
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        writePageHeader( stringBuilder, 3, null );
+
+        stringBuilder.append( "<br />" );
+        Set<TestSuite> executionList = new TreeSet<TestSuite>( new SuiteTimeComparator() );
+        executionList.addAll( this.executionList );
+        
+        stringBuilder.append( "<table class=\"table table-hover table-condensed\">" );
+        stringBuilder.append( "<tr><th>Execution Date</th><th>Execution Time</th><th>Duration</th><th>Environments</th><th>Tests</th><th>Passed</th><th>Failed</th></tr><tbody>" );
+        
+        for ( TestSuite t : executionList )
+        {
+        	long testRunTime = t.getEndTime() - t.getStartTime();
+            String testRunLength = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( testRunTime ), TimeUnit.MILLISECONDS.toMinutes( testRunTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( testRunTime ) ),
+                    TimeUnit.MILLISECONDS.toSeconds( testRunTime ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( testRunTime ) ) );
+            
+            stringBuilder.append( "<tr>" );
+            stringBuilder.append( "<td><a target=_blank hRef=\"" ).append( t.getFileName().replace( "\\", "/") ).append( "\">").append( simpleDateFormat.format( new Date( t.getStartTime() ) ) ).append( "</a></td>" );
+            stringBuilder.append( "<td><a target=_blank hRef=\"" ).append( t.getFileName().replace( "\\", "/") ).append( "\">").append( simpleTimeFormat.format( new Date( t.getStartTime() ) ) ).append( "</a></td>" );
+            stringBuilder.append( "<td>" ).append( testRunLength ).append( "</td>" );
+            stringBuilder.append( "<td>" ).append( t.getEnv() ).append( "</td>" );
+            stringBuilder.append( "<td>" ).append( t.getPass() + t.getFail() ).append( "</td>" );
+            stringBuilder.append( "<td>" ).append( t.getPass() ).append( "</td>" );
+            stringBuilder.append( "<td>" ).append( t.getFail() ).append( "</td>" );
+            stringBuilder.append( "</tr>" );
+            
+        }
+        
+        stringBuilder.append( "</tbody></table>" );
+        
+        writePageFooter( stringBuilder );
+
+        try
+        {
+            File useFile = new File( rootFolder, EXE_DETAIL );
+            FileWriter fileWriter = new FileWriter( useFile );
+            fileWriter.write( stringBuilder.toString() );
+            fileWriter.close();
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
+    }
+    
     public void writeIndex()
     {
         StringBuilder stringBuilder = new StringBuilder();
@@ -327,9 +380,11 @@ public class HistoryWriter
                 TimeUnit.MILLISECONDS.toSeconds( averageTime ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( averageTime ) ) );
         
 
-        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">Test Executions</span><h2>" ).append( executionList.size() ).append( "</h2></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-" + panelType + "\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h2>" ).append( testRunLength ).append( "</h2><hr class=\"-hr m-a-0\"></div>" );
-        stringBuilder.append( "<canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
+        stringBuilder.append( "<div class=\"col-sm-12 m-b\"><div class=\"statcard statcard-" + panelType + "\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h2>" ).append( testRunLength );
+        if ( deviation != 0 )
+            stringBuilder.append( "<small class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "</small>" );
+
+        stringBuilder.append( "</h2><hr class=\"-hr m-a-0\"></div><canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
         for ( TestSuite ss : suiteSet )
         {
             stringBuilder.append( (ss.getEndTime() - ss.getStartTime()) / 1000 ).append( "," );
@@ -342,13 +397,14 @@ public class HistoryWriter
         }
         stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
         stringBuilder.append( "]\" style=\"width: 189px; height: 47px;\"></canvas></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">Suite Executions</span><h2>" ).append( this.executionList.size() ).append( "</h2></div></div></div>" );
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">Environments</span><h2>" ).append( environmentMap.size() ).append( "</h2></div></div></div>" );
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">Test Cases</span><h2>" ).append( testMap.size() ).append( "</h2></div></div></div>" );
         
         
         
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Passed Executions</span><h2>" ).append( tP ).append( "</h2></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Failed Executions</span><h2>" ).append( tF ).append( "</h2></div></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Tests Passed</span><h2>" ).append( tP ).append( "</h2></div></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Tests Failed</span><h2>" ).append( tF ).append( "</h2></div></div></div>" );
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Passed</span><h2>" ).append( sP ).append( "</h2></div></div></div>" );
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Failed</span><h2>" ).append( sF ).append( "</h2></div></div></div>" );
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-warning\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Ignored</span><h2>" ).append( sI ).append( "</h2></div></div></div>" );
@@ -365,6 +421,7 @@ public class HistoryWriter
             fileWriter.close();
             
             writeTCSummary();
+            writeExecutionDetail();
         }
         catch ( Exception e )
         {
@@ -566,58 +623,8 @@ public class HistoryWriter
             stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
             stringBuilder.append( "]\" style=\"width: 189px; height: 47px;\"></canvas></div></div>" );
         }
-        stringBuilder.append( "</div><br />" );
-        
-        
-        
-        for ( Environment env : testCase.getEnvironment() )
-        {
-            int successCount = 0;
-            int failCount = 0;
-            
-            for ( Execution exe : env.getExecution() )
-            {
-                if ( exe.isSuccess() )
-                    successCount++;
-                else
-                    failCount++;
-            }
-            
-            String panelType = "primary";
-            double successPercent = (double) successCount / (double) env.getExecution().size();
-            if ( successPercent < 0.75 )
-                panelType = "warning";
-            
-            if ( successPercent < 0.50 )
-                panelType = "danger";
-            
-            
-            if ( successPercent == 1 )
-                panelType = "success";
-            
-            stringBuilder.append( "<br/><div class=\"panel panel-" + panelType + "\" id=\"" + env.getName() + "\"><div class=panel-heading><div class=panel-title>" + env.getName() + "</div></div><div class=panel-body>" );
+        stringBuilder.append( "</div>" );
 
-            stringBuilder.append( "<table class=\"table table-hover table-condensed\">" );
-            stringBuilder.append( "<thead><tr><th>Execution Time</th><th>Steps Passed</th><th>Steps Failed</th><th>Steps Ignored</th><th>Duration</th><th>Status</th></thead></tr><tbody>" );
-            for ( Execution exe : env.getExecution() )
-            {
-                long averageTime = exe.getStopTime() - exe.getStartTime();
-                String runLength = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( averageTime ), TimeUnit.MILLISECONDS.toMinutes( averageTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( averageTime ) ),
-                        TimeUnit.MILLISECONDS.toSeconds( averageTime ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( averageTime ) ) );
-                stringBuilder.append( "<tr>" );
-                stringBuilder.append( "<td><a hRef=\"" + exe.getFileName().replace( "\\", "/" ) + "\">" ).append( simpleDateFormat.format( new Date( exe.getStartTime() ) ) ).append( " " ).append( simpleTimeFormat.format( new Date( exe.getStartTime() ) ) ).append( "</a></td>" );
-                stringBuilder.append( "<td>" ).append( exe.getPassed() ).append( "</td>" );
-                stringBuilder.append( "<td>" ).append( exe.getFailed() ).append( "</td>" );
-                stringBuilder.append( "<td>" ).append( exe.getIgnored() ).append( "</td>" );
-                stringBuilder.append( "<td>" ).append( runLength ).append( "</td>" );
-                if ( exe.isSuccess() )
-                    stringBuilder.append( "<td><span class=\"label label-success\">Pass</span></td>" );
-                else
-                    stringBuilder.append( "<td><span class=\"label label-danger\">Fail</span><td>" );
-                stringBuilder.append( "</tr>" );
-            }
-            stringBuilder.append( "</tbody></table></div></div>" );
-        }
 
         
 
@@ -729,11 +736,11 @@ public class HistoryWriter
 
         stringBuilder.append( "<html>" );
         stringBuilder.append(
-                "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"></head>" );
+                "<head><meta http-equiv=\"refresh\" content=\"30\"><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"></head>" );
         stringBuilder.append( "<body><div class=\"container\"><div class=\"row\">" );
         
         stringBuilder.append( "<div class=\"col-sm-3 sidebar\"><nav class=\"sidebar-nav\"><div class=\"collapse nav-toggleable-sm\" id=\"nav-toggleable-sm\"><ul class=\"nav nav-pills nav-stacked\"><li " + (activeIndex == 1 ? " class=\"active\"" : "")
-                + "><a href=\"index.html\">Execution Summary</a></li><li " + (activeIndex == 2 ? " class=\"active\"" : "") + "><a href=\"tcSummary.html\">Test Summary</a></li>"
+                + "><a href=\"index.html\">Execution Summary</a></li><li " + (activeIndex == 2 ? " class=\"active\"" : "") + "><a href=\"tcSummary.html\">Test Summary</a></li><li " + (activeIndex == 3 ? " class=\"active\"" : "") + "><a href=\"executionDetail.html\">Execution Detail</a></li>"
                 + "</ul><hr class=\"visible-xs m-t\"></div></nav></div>" );
 
         stringBuilder.append( "<div class=\"col-sm-9 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">Updated " ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
