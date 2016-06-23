@@ -115,7 +115,7 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
 	    StringBuffer stringBuffer = new StringBuffer();
         stringBuffer = new StringBuffer();
         stringBuffer.append( "<html>" );
-        stringBuffer.append( "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"></head>" );
+        stringBuffer.append( "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"><style>iframe {background-color: #eaeae1;}</style></head>" );
         
         int successCount = 0;
         int failureCount = 0;

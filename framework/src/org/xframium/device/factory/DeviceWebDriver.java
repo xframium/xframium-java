@@ -157,9 +157,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
     public String getPageSource()
     {
     	
-    	if ( ApplicationRegistry.instance().getAUT().isWeb() )
-    		context( "WEB_VIEW1" );
-    	else
+    	if ( !ApplicationRegistry.instance().getAUT().isWeb() )
     		context( "NATIVE_APP" );
     		
     	
