@@ -144,7 +144,9 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 
 			case FAILURE_SOURCE:
 			    return new Artifact( rootFolder + "failureDOM.xml", webDriver.getPageSource().getBytes());
-			    
+			
+			case FAILURE_SOURCE_HTML:
+				return new Artifact( rootFolder + "failureDOM.html", ( "<html><head><link href=\"http://www.xframium.org/output/assets/css/prism.css\" rel=\"stylesheet\"><script src=\"http://www.xframium.org/output/assets/js/prism.js\"></script><body><pre class\"line-numbers\"><code class=\"language-markup\">" + webDriver.getPageSource().replace( "<", "&lt;" ).replace( ">", "&gt;" ).replace( "\t", "  ") + "</code></pre></body></html>" ).getBytes());
 
 			case CONSOLE_LOG:
 			    Artifact consoleArtifact = new Artifact( rootFolder + "console.txt", DeviceManager.instance().getLog().getBytes() );

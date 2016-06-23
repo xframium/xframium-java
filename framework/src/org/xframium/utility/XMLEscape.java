@@ -22,10 +22,12 @@ package org.xframium.utility;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.htmlcleaner.HtmlCleaner;
-import org.htmlcleaner.SimpleXmlSerializer;
+import org.htmlcleaner.PrettyXmlSerializer;
 import org.htmlcleaner.TagNode;
 import org.w3c.dom.Document;
 
@@ -68,26 +70,30 @@ public class XMLEscape
         // We assume HTML at this point
         //
 
-        try
+        return toHTML( xmlIn );
+
+        
+    }
+    
+    public static String toHTML( String htmlIn )
+    {
+    	try
         {
             HtmlCleaner cleaner = new HtmlCleaner();
-            TagNode node = cleaner.clean( new ByteArrayInputStream( xmlIn.getBytes()) );
-            
+
             ByteArrayOutputStream htmlDocument = new ByteArrayOutputStream();
-            new SimpleXmlSerializer( cleaner.getProperties() ).writeToStream( node, htmlDocument );
+            String htmlData = new PrettyXmlSerializer( cleaner.getProperties()).getAsString( htmlIn );
             
-            String htmlOutput = new String( htmlDocument.toByteArray() );
-            if ( validateDocument( htmlOutput ) )
-                return htmlOutput;
+            htmlData = htmlData.replaceAll("(?m)^[ \t]*\r?\n", "");
+            
+            return htmlData;
+
         }
         catch( Exception e )
         {
-            
+        	e.printStackTrace();
+            return null;
         }
-        
-        return null;
-
-        
     }
     
     private static boolean validateDocument( String inputDocument )

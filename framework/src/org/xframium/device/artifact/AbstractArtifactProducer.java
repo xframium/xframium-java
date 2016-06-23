@@ -23,19 +23,25 @@
  */
 package org.xframium.device.artifact;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
@@ -44,6 +50,7 @@ import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.ExecutionRecord;
 import org.xframium.page.StepStatus;
 import org.xframium.spi.Device;
+import org.xframium.spi.RunDetails;
 import org.xframium.wcag.WCAGRecord;
 import org.yaml.snakeyaml.util.UriEncoder;
 
@@ -108,7 +115,7 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
 	    StringBuffer stringBuffer = new StringBuffer();
         stringBuffer = new StringBuffer();
         stringBuffer.append( "<html>" );
-        stringBuffer.append( "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"><style>iframe {background-color: #eaeae1;}</style></head>" );
+        stringBuffer.append( "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"></head>" );
         
         int successCount = 0;
         int failureCount = 0;
@@ -282,7 +289,7 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         
         if ( !success && DataManager.instance().isArtifactEnabled( ArtifactType.FAILURE_SOURCE ) )
         {
-            stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane\" id=\"source\"><div id=\"list\"><p><iframe sandbox src=\"failureDOM.xml\" frameborder=\"0\" height=\"100%\" width=\"100%\"></iframe></p></div></div>" );
+        	stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane\" id=\"source\"><div id=\"list\"><p><iframe src=\"failureDOM.html\" frameborder=\"0\" height=\"100%\" width=\"100%\"></iframe></p></div></div>" );
             stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane\" id=\"screenshot\"><div id=\"list\"><p><iframe src=\"failure-screenshot.png\" frameborder=\"0\" height=\"100%\" width=\"100%\"></iframe></p></div></div>" );
         }
         

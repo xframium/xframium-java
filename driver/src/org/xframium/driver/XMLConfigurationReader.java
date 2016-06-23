@@ -299,6 +299,8 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         for( XArtifact artifact : xRoot.getDriver().getArtifact() )
         {
             artifactList.add( ArtifactType.valueOf( artifact.getType() ) );
+            if ( artifact.getType().equals( "FAILURE_SOURCE" ) )
+            	artifactList.add( ArtifactType.FAILURE_SOURCE_HTML );
         }
         
         DataManager.instance().setAutomaticDownloads( artifactList.toArray( new ArtifactType[0] ) );

@@ -226,6 +226,9 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                 try
                 {
                     artifactList.add( ArtifactType.valueOf( type ) );
+                    if ( type.equals( "FAILURE_SOURCE" ) )
+                    	artifactList.add( ArtifactType.FAILURE_SOURCE_HTML );
+                    
                     if ( ArtifactType.valueOf( type ).equals( ArtifactType.CONSOLE_LOG ) )
                     {
                         String logLevel = configProperties.getProperty( "artifactProducer.logLevel" );

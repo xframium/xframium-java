@@ -30,11 +30,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -58,6 +60,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
@@ -71,6 +74,7 @@ import org.xframium.spi.driver.CachingDriver;
 import org.xframium.spi.driver.DeviceProvider;
 import org.xframium.spi.driver.NativeDriverProvider;
 import org.xframium.utility.XMLEscape;
+
 import io.appium.java_client.AppiumDriver;
 
 // TODO: Auto-generated Javadoc
@@ -152,9 +156,22 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
     @Override
     public String getPageSource()
     {
-        String pageSource = webDriver.getPageSource();
+    	
+    	if ( ApplicationRegistry.instance().getAUT().isWeb() )
+    		context( "WEB_VIEW1" );
+    	else
+    		context( "NATIVE_APP" );
+    		
+    	
+    	String pageSource = webDriver.getPageSource();
+        
         if ( pageSource != null )
-            return XMLEscape.toXML( pageSource );
+        {
+        	if ( ApplicationRegistry.instance().getAUT().isWeb() )
+        		return XMLEscape.toHTML( pageSource );
+        	else
+        		return XMLEscape.toXML( pageSource );
+        }
         else
             return "";
     }
