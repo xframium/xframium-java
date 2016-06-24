@@ -27,9 +27,21 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class SQLUtil
 {
+    //
+    // Class Data
+    //
+
+    private static final Map[] EMPTY_MAP_ARRAY = new Map[0];
+    
+    //
+    // Implementation
+    //
+    
     public static Object[][] getResults( String username,
                                          String password,
                                          String url,
@@ -75,7 +87,53 @@ public class SQLUtil
             try { conn.close(); }
             catch( Throwable e ) {}
         }
+    }
 
+    public static Map[] getRow( String username,
+                              String password,
+                              String url,
+                              String driver,
+                              String query,
+                              String[] params )
+        throws Exception
+    {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            conn = getConnection( username,
+                                  password,
+                                  url,
+                                  driver );
+
+            pstmt = conn.prepareStatement( query );
+
+            if ( params != null )
+            {
+                int offset = 1;
+                for( String param : params )
+                {
+                    pstmt.setString( offset++, param );
+                }
+            }
+
+            rs = pstmt.executeQuery();
+
+            return consume2( rs );
+        }
+        finally
+        {
+            try { rs.close(); }
+            catch( Throwable e ) {}
+
+            try { pstmt.close(); }
+            catch( Throwable e ) {}
+            
+            try { conn.close(); }
+            catch( Throwable e ) {}
+        }
     }
 
     //
@@ -121,6 +179,31 @@ public class SQLUtil
         return toOutArray( results, colCount );
     }
 
+    private static Map[] consume2( ResultSet rs )
+        throws Exception
+    {
+        ResultSetMetaData rsmd = rs.getMetaData();
+        ArrayList results = new ArrayList();
+        int colCount = rsmd.getColumnCount();
+
+        while( rs.next() )
+        {
+            Map row = new HashMap();
+
+            for( int i = 1; i <= colCount; ++i )
+            {
+                Object val = rs.getObject( i );
+                
+                row.put( rsmd.getColumnName( i ), val );
+                row.put( i, val );
+            }
+
+            results.add( row );
+        }
+
+        return toOutArray2( results );
+     }
+
     private static Object[][] toOutArray( List listOfArray, int colCount )
     {
         int length = listOfArray.size();
@@ -132,5 +215,10 @@ public class SQLUtil
         }
 
         return rtn;
+    }
+
+    private static Map[] toOutArray2( List listOfMaps )
+    {
+        return (Map[]) listOfMaps.toArray( EMPTY_MAP_ARRAY );
     }
 }
