@@ -49,6 +49,9 @@ public enum ArtifactType
     /** The failure source. */
     FAILURE_SOURCE( ArtifactTime.ON_FAILURE ),
     
+    /** The failure source. */
+    FAILURE_SOURCE_HTML( ArtifactTime.ON_FAILURE ),
+    
     /** The execution report. */
     WCAG_REPORT ( ArtifactTime.AFTER_TEST ),
     

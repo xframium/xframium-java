@@ -51,6 +51,9 @@ public interface Device
 	 */
 	String getManufacturer();
 	
+	String getResolution();
+	void setResolution( String res );
+	
 	/**
 	 * Gets the model.
 	 *
@@ -92,6 +95,8 @@ public interface Device
 	 * @return the available devices
 	 */
 	int getAvailableDevices();
+	
+	String getEnvironment();
 	
 	/**
 	 * Gets the key.

@@ -132,7 +132,8 @@
 		<attribute name="testNames" type="string" use="optional" />
 		<attribute name="tagNames" type="string" use="optional" />
 		<attribute name="dryRun" type="boolean" use="optional" default="false" />
-		<attribute name="outputFolder" type="string" use="required" />
+        <attribute name="displayResults" type="boolean" use="optional" default="true" />
+		<attribute name="outputFolder" type="string" use="required" /> 
 	</complexType>
 	
 	<complexType name="xLibrary">

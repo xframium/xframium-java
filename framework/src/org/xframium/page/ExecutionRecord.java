@@ -295,26 +295,8 @@ public class ExecutionRecord
 	{
 		StringBuffer stringBuffer = new StringBuffer();
 		
-		switch( status )
-		{
-			case FAILURE:
-				stringBuffer.append( "<tr class=\"danger\">" );
-				break;
-			case FAILURE_IGNORED:
-				stringBuffer.append( "<tr class=\"warning\">" );
-				break;
-			case REPORT:
-                stringBuffer.append( "<tr>" );
-                break;	
-			case SUCCESS:
-			    if ( fromCache )
-			        stringBuffer.append( "<tr class=\"info\">" );
-			    else
-			        stringBuffer.append( "<tr class=\"success\">" );
-				break;
-		}
 		
-			
+		stringBuffer.append( "<tr>" );	
 		stringBuffer.append( "<td>" ).append( group == null ? "" : group ).append( "</td>" );
 		
 		if ( status.equals( StepStatus.REPORT ) )
@@ -323,49 +305,32 @@ public class ExecutionRecord
 		    stringBuffer.append( "<td>" ).append( name ).append( "</td>" );
 		stringBuffer.append( "<td>" ).append( type ).append( "</td>" );
 		stringBuffer.append( "<td>" ).append( timeFormat.format( new Date( timeStamp ) ) ).append( "</td>" );
-		stringBuffer.append( "<td><span class=\"badge\">" ).append( runTime ).append( "</span></td>" );
+		stringBuffer.append( "<td align=\"center\"  style=\"padding-top: 8px; \"><span class=\"badge\">" ).append( runTime ).append( "</span></td>" );
 		
 		
 		switch( status )
         {
             case FAILURE:
-                stringBuffer.append( "<td valign=\"center\"><span class=\"label label-danger\">Fail</span></td>" );
+                stringBuffer.append( "<td style=\"padding-top: 10px; \" align=\"center\"><span class=\"label label-danger\">Fail</span></td>" );
                 break;
             case FAILURE_IGNORED:
-                stringBuffer.append( "<td valign=\"center\"><span class=\"label label-warning\">Ignored</span></td>" );
+                stringBuffer.append( "<td style=\"padding-top: 10px; \" align=\"center\"><span class=\"label label-warning\">Ignored</span></td>" );
                 break;
             case REPORT:
-                stringBuffer.append( "<td valign=\"center\"><span class=\"label label-info\">Information</span></td>" );
+                stringBuffer.append( "<td style=\"padding-top: 10px; \" align=\"center\"><span class=\"label label-info\">Information</span></td>" );
                 break;  
             case SUCCESS:
                 if ( fromCache )
-                    stringBuffer.append( "<td valign=\"center\"><span class=\"label label-success\">Pass</span></td>" );
+                    stringBuffer.append( "<td style=\"padding-top: 10px; \" align=\"center\"><span class=\"label label-success\">Pass</span></td>" );
                 else
-                    stringBuffer.append( "<td valign=\"center\"><span class=\"label label-success\"><b>Pass</b></span></td>" );
+                    stringBuffer.append( "<td style=\"padding-top: 10px; \" align=\"center\"><span class=\"label label-success\"><b>Pass</b></span></td>" );
                 break;
         }
 		
 		stringBuffer.append( "</tr>" );
 		if ( !status.equals( StepStatus.SUCCESS ) && detail != null && !detail.isEmpty() )
 		{
-			String backgroundColor = null;
-			switch( status )
-			{
-				case FAILURE:
-					backgroundColor = " class=\"danger\" ";
-					break;
-				case FAILURE_IGNORED:
-					backgroundColor = " class=\"warning\" ";
-					break;
-				case REPORT:
-				    backgroundColor= " class=\"info\" ";
-				    break;
-				    
-				case SUCCESS:
-				    backgroundColor = " class=\"success\" ";
-					
-					break;
-			}
+			String backgroundColor = "";
 			
 			
 			stringBuffer.append( "<tr" ).append( backgroundColor ).append( "><td></td><td colSpan='5' ><div class=\"bs-callout bs-callout-danger\" id=callout-overview-dependencies>" ).append( detail ).append( "</div></td></tr>");

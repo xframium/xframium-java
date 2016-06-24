@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
@@ -88,16 +89,6 @@ public class WEBDriverFactory extends AbstractDriverFactory
 			return _createMobileDriver( currentDevice );
 
 	}
-	
-	public DeviceWebDriver createDriver( Device currentDevice )
-    {
-        if ( log.isDebugEnabled() )
-            log.debug( "Creating Driver for " + getClass().getSimpleName() );
-        
-        DeviceWebDriver webDriver = _createDriver( currentDevice ); 
-        
-        return webDriver;
-    }
 
 	/**
 	 * _create desktop driver.
@@ -164,6 +155,13 @@ public class WEBDriverFactory extends AbstractDriverFactory
 			webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
 			webDriver.setArtifactProducer( new SeleniumArtifactProducer() );
 
+			Dimension winDim = webDriver.manage().window().getSize();
+			if ( winDim != null )
+			    currentDevice.setResolution( winDim.getWidth() + " x " + winDim.height );
+			else
+			    currentDevice.setResolution( null );
+			
+			
 			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 
 			Capabilities caps = ( ( RemoteWebDriver ) webDriver.getWebDriver() ).getCapabilities();

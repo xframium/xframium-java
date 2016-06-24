@@ -47,6 +47,7 @@ public interface RunListener
     public boolean validateDevice( Device currentDevice, String runKey );
     
 	public boolean beforeRun( Device currentDevice, String runKey );
+	public void skipRun( Device currentDevice, String runKey );
 	
 	/**
 	 * After run.
@@ -55,5 +56,5 @@ public interface RunListener
 	 * @param runKey the run key
 	 * @param successful the successful
 	 */
-	public void afterRun( Device currentDevice, String runKey, boolean successful );
+	public void afterRun( Device currentDevice, String runKey, boolean successful, int stepsPassed, int stepsFailed, int stepsIgnored, long startTime, long stopTime );
 }

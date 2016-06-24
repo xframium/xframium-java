@@ -23,6 +23,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     protected Log log = LogFactory.getLog(ConfigurationReader.class);
     protected File configFolder;
     protected boolean dryRun = false;
+    protected boolean displayResults = true;
     
     protected abstract boolean readFile( File configFile );
     protected abstract boolean configureCloud();
@@ -97,6 +98,8 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             log.info( "Driver: Configuring Driver" );
             if ( !configureDriver() ) return;
             
+            RunDetails.instance().setTestName( ApplicationRegistry.instance().getAUT().getName() + " (" + CloudRegistry.instance().getCloud().getHostName() + ")" );
+            
             if ( runTest )
                 executeTest();
         }
@@ -116,6 +119,8 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             if( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_HTML ) )
             {
+            	RunDetails.instance().writeHTMLIndex( DataManager.instance().getReportFolder(), true );
+            	
                 File htmlFile = RunDetails.instance().getIndex( DataManager.instance().getReportFolder() );
                 try
                 {

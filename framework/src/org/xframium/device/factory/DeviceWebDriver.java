@@ -30,16 +30,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.By.ByXPath;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.ContextAware;
+import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -56,6 +60,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
@@ -69,13 +74,14 @@ import org.xframium.spi.driver.CachingDriver;
 import org.xframium.spi.driver.DeviceProvider;
 import org.xframium.spi.driver.NativeDriverProvider;
 import org.xframium.utility.XMLEscape;
+
 import io.appium.java_client.AppiumDriver;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class DeviceWebDriver.
  */
-public class DeviceWebDriver implements WebDriver, JavascriptExecutor, ContextAware, ExecuteMethod, ArtifactProducer, NativeDriverProvider, PropertyProvider, TakesScreenshot, DeviceProvider, HasInputDevices, CachingDriver
+public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptExecutor, ContextAware, ExecuteMethod, ArtifactProducer, NativeDriverProvider, PropertyProvider, TakesScreenshot, DeviceProvider, HasInputDevices, CachingDriver
 {
 
     private List<DeviceInterrupt> interruptList;
@@ -150,9 +156,20 @@ public class DeviceWebDriver implements WebDriver, JavascriptExecutor, ContextAw
     @Override
     public String getPageSource()
     {
-        String pageSource = webDriver.getPageSource();
+    	
+    	if ( !ApplicationRegistry.instance().getAUT().isWeb() )
+    		context( "NATIVE_APP" );
+    		
+    	
+    	String pageSource = webDriver.getPageSource();
+        
         if ( pageSource != null )
-            return XMLEscape.toXML( pageSource );
+        {
+        	if ( ApplicationRegistry.instance().getAUT().isWeb() )
+        		return XMLEscape.toHTML( pageSource );
+        	else
+        		return XMLEscape.toXML( pageSource );
+        }
         else
             return "";
     }
@@ -775,6 +792,15 @@ public class DeviceWebDriver implements WebDriver, JavascriptExecutor, ContextAw
         if ( webDriver instanceof HasInputDevices )
             return ( (HasInputDevices) webDriver ).getMouse();
         else 
+            return null;
+    }
+
+    @Override
+    public Capabilities getCapabilities()
+    {
+        if ( webDriver instanceof HasCapabilities )
+            return ( (HasCapabilities) webDriver ).getCapabilities();
+        else
             return null;
     }
 }

@@ -118,6 +118,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     private Map<String,Element> elementMap = new HashMap<String,Element>(20);
     
     private static XPathFactory xPathFactory = XPathFactory.newInstance();
+    
 
     
     private boolean pageInitialized = false;
@@ -133,6 +134,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     {
         try
         {
+            
             configFolder = configFile.getParentFile();
             JAXBContext jc = JAXBContext.newInstance( ObjectFactory.class );
             Unmarshaller u = jc.createUnmarshaller();
@@ -297,6 +299,8 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         for( XArtifact artifact : xRoot.getDriver().getArtifact() )
         {
             artifactList.add( ArtifactType.valueOf( artifact.getType() ) );
+            if ( artifact.getType().equals( "FAILURE_SOURCE" ) )
+            	artifactList.add( ArtifactType.FAILURE_SOURCE_HTML );
         }
         
         DataManager.instance().setAutomaticDownloads( artifactList.toArray( new ArtifactType[0] ) );
@@ -599,6 +603,8 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             DataManager.instance().setPersonas( personaNames );
             PageManager.instance().setWindTunnelEnabled( true );
         }
+        
+        displayResults = xRoot.getDriver().isDisplayResults();
 
         DeviceManager.instance().setCachingEnabled( xRoot.getDriver().isCachingEnabled() );
 

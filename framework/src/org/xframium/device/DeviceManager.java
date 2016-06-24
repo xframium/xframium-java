@@ -47,6 +47,7 @@ import org.xframium.device.data.NamedDataProvider;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.factory.DriverManager;
 import org.xframium.device.property.PropertyAdapter;
+import org.xframium.page.ExecutionRecord;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunListener;
 
@@ -268,6 +269,16 @@ public class DeviceManager implements ArtifactListener
 
 	
 	
+    public Map<String, DeviceAnalytics> getAnalyticsMap()
+    {
+        return analyticsMap;
+    }
+
+    public void setAnalyticsMap( Map<String, DeviceAnalytics> analyticsMap )
+    {
+        this.analyticsMap = analyticsMap;
+    }
+
     /**
      * Checks if is dry run.
      *
@@ -372,6 +383,21 @@ public class DeviceManager implements ArtifactListener
         return true;
     }
 	
+    private void notifySkipRun( Device currentDevice, String runKey )
+    {
+        for ( RunListener runListener : runListeners )
+        {
+            try
+            {
+                runListener.skipRun( currentDevice, runKey );
+            }
+            catch( Exception e )
+            {
+                log.error( "Error executing run listener", e );
+            }
+        }
+    }
+    
     /**
      * Notify after run.
      *
@@ -385,7 +411,42 @@ public class DeviceManager implements ArtifactListener
         {
             try
             {
-                runListener.afterRun( currentDevice, runKey, successful );
+                int stepsPassed = 0;
+                int stepsFailed = 0;
+                int stepsIgnored = 0;
+                long startTime = 0;
+                long stopTime = 0;
+                if ( DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) != null && !DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ).isEmpty() )
+                {
+                    
+                    for ( Object item : DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) )
+                    {
+                        ExecutionRecord eItem = (ExecutionRecord) item;
+
+                        if ( startTime == 0 )
+                            startTime = eItem.getTimeStamp();
+                        
+                        if( eItem.getTimeStamp() + eItem.getRunTime() > stopTime )
+                            stopTime = eItem.getTimeStamp() + eItem.getRunTime();
+                        
+                        switch( eItem.getStatus() )
+                        {
+                            case FAILURE:
+                                stepsFailed++;
+                                break;
+                                
+                            case FAILURE_IGNORED:
+                                stepsIgnored++;
+                                break;
+                            case REPORT:
+                            case SUCCESS:
+                                stepsPassed++;
+                                break;
+                        }
+                    }
+                }
+                
+                runListener.afterRun( currentDevice, runKey, successful, stepsPassed, stepsFailed, stepsIgnored, startTime, stopTime );
             }
             catch( Exception e )
             {
@@ -586,8 +647,10 @@ public class DeviceManager implements ArtifactListener
                 catch( Exception e )
                 {}
             }
+            
+            
         }
-
+        
         return null;
 
     }

@@ -226,6 +226,9 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                 try
                 {
                     artifactList.add( ArtifactType.valueOf( type ) );
+                    if ( type.equals( "FAILURE_SOURCE" ) )
+                    	artifactList.add( ArtifactType.FAILURE_SOURCE_HTML );
+                    
                     if ( ArtifactType.valueOf( type ).equals( ArtifactType.CONSOLE_LOG ) )
                     {
                         String logLevel = configProperties.getProperty( "artifactProducer.logLevel" );
@@ -485,6 +488,9 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             DataManager.instance().setPersonas( personaNames );
             PageManager.instance().setWindTunnelEnabled( true );
         }
+        
+        if ( configProperties.getProperty( "driver.displayResults" ) != null )
+            displayResults = Boolean.parseBoolean( configProperties.getProperty( "driver.displayResults" ) );
 
         DeviceManager.instance().setCachingEnabled( Boolean.parseBoolean( configProperties.getProperty( "driver.enableCaching" ) ) );
 
