@@ -169,13 +169,15 @@ public class RunDetails implements RunListener
             stepBreakdown[0] += (int) detailsList.get( i )[3];
             stepBreakdown[1] += (int) detailsList.get( i )[4];
             stepBreakdown[2] += (int) detailsList.get( i )[5];
+            long startTime = (long) detailsList.get( i )[6];
+            long stopTime = (long) detailsList.get( i )[7];
 
             String deviceKey = device.getEnvironment();
 
             int[] caseValue = caseMap.get( runKey );
             if ( caseValue == null )
             {
-                caseValue = new int[] { 0, 0 };
+                caseValue = new int[] { 0, 0, 0, 0 };
                 caseMap.put( runKey, caseValue );
             }
 
@@ -183,6 +185,9 @@ public class RunDetails implements RunListener
                 caseValue[0]++;
             else
                 caseValue[1]++;
+
+            caseValue[2]++;
+            caseValue[3] += (stopTime - startTime);
             
             caseValue = envMap.get( device.getEnvironment() );
             if ( caseValue == null )
@@ -244,7 +249,7 @@ public class RunDetails implements RunListener
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Environments</span><h3 class=\"statcard-number\">" + envMap.size() + "</h3></div></div></div>" );
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h3 class=\"statcard-number\">" + runLength + "</h3></div></div></div>" );
         stringBuilder.append( "</div><br />" );
-        stringBuilder.append( "<table class=\"table table-hover table-condensed\">" );
+        stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Execution Detail</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
         stringBuilder.append( "<tr><th width=\"40%\">Test</th><th width=\"40%\">Environment</th><th width=\"20%\">Duration</th><th>Status</th></tr><tbody>" );
         for ( int i = 0; i < detailsList.size(); i++ )
         {
@@ -270,7 +275,45 @@ public class RunDetails implements RunListener
             stringBuilder.append( "</td></tr>" );
         }
 
-        stringBuilder.append( "<tr><td colSpan='6' align='center'><h6>" ).append( new File( rootFolder, getRootFolder() + System.getProperty( "file.separator" ) + "executionMap.properties" ).getAbsolutePath() ).append( "</h6></td></tr></tbody></table>" );
+        stringBuilder.append( "<tr><td colSpan='6' align='center'><h6>" ).append( new File( rootFolder, getRootFolder() + System.getProperty( "file.separator" ) + "executionMap.properties" ).getAbsolutePath() ).append( "</h6></td></tr></tbody></table></div></div>" );
+        
+        stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Environment Summary</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
+        stringBuilder.append( "<thead><tr><th width=60%>Environment</th><th nowrap>Pass Rate</th></thead></tr><tbody>" );
+
+        for ( String deviceName : envMap.keySet() )
+        {
+            int[] currentRecord = deviceMap.get( deviceName );
+            int totalValue = currentRecord[0] + currentRecord[1];
+            double successValue = 0;
+            if ( totalValue > 0 )
+                successValue = ((double) currentRecord[0] / (double) totalValue) * 100;
+
+            stringBuilder.append( "<tr><td width=60%>" ).append( deviceName ).append( "</td><td>" ).append( percentFormat.format( successValue ) ).append( "%</td></tr>" );
+        }
+
+        stringBuilder.append( "</tbody></table></div></div>" );
+        
+        
+        stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Test Summary</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
+        stringBuilder.append( "<thead><tr><th width=60%>Test</th><th nowrap>Pass Rate</th><th nowrap>Average Duration</th></thead></tr><tbody>" );
+
+        for ( String deviceName : caseMap.keySet() )
+        {
+            int[] currentRecord = caseMap.get( deviceName );
+            int totalValue = currentRecord[0] + currentRecord[1];
+            double successValue = 0;
+            if ( totalValue > 0 )
+                successValue = ((double) currentRecord[0] / (double) totalValue) * 100;
+
+            int runTimex = (int) ((double) currentRecord[3] / (double) currentRecord[2]);
+            String runLengthx = String.format( "%02dh %02dm %02ds", TimeUnit.MILLISECONDS.toHours( runTimex ), TimeUnit.MILLISECONDS.toMinutes( runTimex ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( runTimex ) ),
+                    TimeUnit.MILLISECONDS.toSeconds( runTimex ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( runTimex ) ) );
+
+            stringBuilder.append( "<tr><td width=60%>" ).append( deviceName ).append( "</td><td>" ).append( percentFormat.format( successValue ) ).append( "%</td><td>" ).append( runLengthx ).append( "</td></tr>" );
+        }
+
+        stringBuilder.append( "</tbody></table></div></div></div>" );
+        
         writePageFooter( stringBuilder );
 
         try
@@ -576,24 +619,24 @@ public class RunDetails implements RunListener
                 "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"></head>" );
         stringBuilder.append( "<body><div class=\"container\"><div class=\"row\">" );
 
-        stringBuilder.append( "<div class=\"col-sm-3 sidebar\"><nav class=\"sidebar-nav\"><div class=\"collapse nav-toggleable-sm\" id=\"nav-toggleable-sm\"><ul class=\"nav nav-pills nav-stacked\"><li " + (activeIndex == 1 ? " class=\"active\"" : "")
-                + "><a href=\"index.html\">Execution Results</a></li><li " + (activeIndex == 2 ? " class=\"active\"" : "") + "><a href=\"deviceSummary.html\">Device Summary</a></li><li " + (activeIndex == 3 ? " class=\"active\"" : "")
-                + "><a href=\"testSummary.html\">Test Summary</a></li><li " + (activeIndex == 4 ? " class=\"active\"" : "") + "><a href=\"osSummary.html\">OS Summary</a></li></ul><hr class=\"visible-xs m-t\"></div></nav></div>" );
-        stringBuilder.append( "<div class=\"col-sm-9 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
+        //stringBuilder.append( "<div class=\"col-sm-3 sidebar\"><nav class=\"sidebar-nav\"><div class=\"collapse nav-toggleable-sm\" id=\"nav-toggleable-sm\"><ul class=\"nav nav-pills nav-stacked\"><li " + (activeIndex == 1 ? " class=\"active\"" : "")
+        //        + "><a href=\"index.html\">Execution Results</a></li><li " + (activeIndex == 2 ? " class=\"active\"" : "") + "><a href=\"deviceSummary.html\">Device Summary</a></li><li " + (activeIndex == 3 ? " class=\"active\"" : "")
+        //        + "><a href=\"testSummary.html\">Test Summary</a></li><li " + (activeIndex == 4 ? " class=\"active\"" : "") + "><a href=\"osSummary.html\">OS Summary</a></li></ul><hr class=\"visible-xs m-t\"></div></nav></div>" );
+        stringBuilder.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
                 .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">Test Suite Execution Summary</h3></div>" );
 
-        stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-6 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
+        stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2 m-b-md\"></div><div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( successCount ).append( ", color: '#009900', label: 'Passed' }," );
         stringBuilder.append( "{ value: " ).append( detailsList.size() - successCount ).append( ", color: '#990000', label: 'Failed' }," );
-        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" /></div><center><strong class=\"text-muted\"><a href=\"index.html\">Tests Executions</a></strong></center></div>" );
+        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" /></div><center><strong class=\"text-muted\">Test Executions</strong></center></div>" );
 
-        stringBuilder.append( "<div class=\"col-sm-6 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
+        stringBuilder.append( "<div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
 
         stringBuilder.append( "{ value: " ).append( stepBreakdown[0] ).append( ", color: '#009900', label: 'Passed' }," );
         stringBuilder.append( "{ value: " ).append( stepBreakdown[1] ).append( ", color: '#990000', label: 'Failed' }," );
         stringBuilder.append( "{ value: " ).append( stepBreakdown[2] ).append( ", color: '#999900', label: 'Ignored' }" );
 
-        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" /></div><center><strong class=\"text-muted\"><a href=\"testSummary.html\">Tests Steps</a></strong></center></div>" );
+        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" /></div><center><strong class=\"text-muted\">Tests Steps</strong></center></div>" );
 
         stringBuilder.append( "</div>" );
     }

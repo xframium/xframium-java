@@ -28,6 +28,7 @@ import java.util.Map;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
@@ -85,11 +86,23 @@ public class KWSDumpState extends AbstractKeyWordStep
         try
         {
             File randomFile = File.createTempFile( "dom-", ".xml", useFolder );
+            File htmlFile = new File( randomFile.getParentFile(), randomFile.getName().replace( ".xml", ".html" ) );
+            String pageSource = webDriver.getPageSource();
             outputStream = new FileOutputStream( randomFile );
-            outputStream.write( XMLEscape.toXML( webDriver.getPageSource() ).getBytes() );
+            if ( ApplicationRegistry.instance().getAUT().isWeb() )
+            	outputStream.write( XMLEscape.toXML( pageSource ).getBytes() );
+            else
+            	outputStream.write( XMLEscape.toHTML( pageSource ).getBytes() );
+            
             outputStream.flush();
             outputStream.close();
-            PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), "", "<a target=\"_blank\" class=\"btn btn-primary\" hRef='../../artifacts/" + randomFile.getName() + "' >Device State</a>", startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, getThreshold(), getDescription(), false );            
+            
+            outputStream = new FileOutputStream( htmlFile );
+            outputStream.write( ("<html><head><link href=\"http://www.xframium.org/output/assets/css/prism.css\" rel=\"stylesheet\"><script src=\"http://www.xframium.org/output/assets/js/prism.js\"></script><body><pre class\"line-numbers\"><code class=\"language-markup\">" + pageSource.replace( "<", "&lt;" ).replace( ">", "&gt;" ).replace( "\t", "  ") + "</code></pre></body></html>").getBytes() );
+            outputStream.flush();
+            outputStream.close();
+            
+            PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), "", "<a target=\"_blank\" class=\"btn btn-primary\" hRef='../../artifacts/" + htmlFile.getName() + "' >Device State</a>", startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, getThreshold(), getDescription(), false );            
         }
         catch( Exception e )
         {

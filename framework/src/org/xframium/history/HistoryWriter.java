@@ -34,6 +34,7 @@ public class HistoryWriter
 {
     private static NumberFormat percentFormat = new DecimalFormat( "##.##" );
 
+    private static DateFormat rangeDate = new SimpleDateFormat( "dd-MMM-yyyy HH:mm z" );
     private static DateFormat simpleTimeFormat = new SimpleDateFormat( "HH:mm:ss z" );
     private static DateFormat simpleDateFormat = new SimpleDateFormat( "dd-MMM-yyyy" );
     private static Log log = LogFactory.getLog( HistoryWriter.class );
@@ -195,6 +196,7 @@ public class HistoryWriter
 
     public synchronized void readData()
     {
+    	suiteName = RunDetails.instance().getTestName();
         if ( fileLoaded )
             return;
 
@@ -212,7 +214,7 @@ public class HistoryWriter
                 JAXBElement<?> rootElement = (JAXBElement<?>) u.unmarshal( inputStream );
                 History hRoot = (History) rootElement.getValue();
 
-                suiteName = hRoot.getName();
+                suiteName = RunDetails.instance().getTestName();
 
                 for ( TestCase tc : hRoot.testCase )
                 {
@@ -380,7 +382,10 @@ public class HistoryWriter
                 TimeUnit.MILLISECONDS.toSeconds( averageTime ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( averageTime ) ) );
         
 
-        stringBuilder.append( "<div class=\"col-sm-12 m-b\"><div class=\"statcard statcard-" + panelType + "\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h2>" ).append( testRunLength );
+        stringBuilder.append( "<div class=\"col-sm-12 m-b\">" );
+        
+        stringBuilder.append( "<h4 class=\"text-muted\">Results for " ).append( rangeDate.format( new Date( suiteSet.toArray( new TestSuite[ 0 ] )[ 0 ].getStartTime() ) ) ).append( " to " ).append( rangeDate.format( new Date( suiteSet.toArray( new TestSuite[ 0 ] )[ suiteSet.size() - 1 ].getStartTime() ) ) ).append( "</h4>");
+        stringBuilder.append( "<div class=\"statcard statcard-" + panelType + "\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h2>" ).append( testRunLength );
         if ( deviation != 0 )
             stringBuilder.append( "<small class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "</small>" );
 
@@ -397,19 +402,37 @@ public class HistoryWriter
         }
         stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
         stringBuilder.append( "]\" style=\"width: 189px; height: 47px;\"></canvas></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">Suite Executions</span><h2>" ).append( this.executionList.size() ).append( "</h2></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">Environments</span><h2>" ).append( environmentMap.size() ).append( "</h2></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">Test Cases</span><h2>" ).append( testMap.size() ).append( "</h2></div></div></div>" );
         
-        
-        
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Tests Passed</span><h2>" ).append( tP ).append( "</h2></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Tests Failed</span><h2>" ).append( tF ).append( "</h2></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Passed</span><h2>" ).append( sP ).append( "</h2></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Failed</span><h2>" ).append( sF ).append( "</h2></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-warning\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Ignored</span><h2>" ).append( sI ).append( "</h2></div></div></div>" );
-        
+        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Tests Passed</span><h2>" ).append( tP ).append( "</h2></div></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Tests Failed</span><h2>" ).append( tF ).append( "</h2></div></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Passed</span><h2>" ).append( sP ).append( "</h2></div></div></div>" );
+        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Failed</span><h2>" ).append( sF ).append( "</h2></div></div></div>" );
+
         stringBuilder.append( "</div><br />" );
+
+        
+        stringBuilder.append( "<table class=\"table table-hover table-condensed\">" );
+        stringBuilder.append( "<tr><th>Execution Date</th><th>Execution Time</th><th>Duration</th><th>Environments</th><th>Tests</th><th>Passed</th><th>Failed</th></tr><tbody>" );
+        
+        for ( TestSuite t : suiteSet )
+        {
+        	long testRunTime = t.getEndTime() - t.getStartTime();
+            String useRun = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( testRunTime ), TimeUnit.MILLISECONDS.toMinutes( testRunTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( testRunTime ) ),
+                    TimeUnit.MILLISECONDS.toSeconds( testRunTime ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( testRunTime ) ) );
+            
+            stringBuilder.append( "<tr>" );
+            stringBuilder.append( "<td><a target=_blank hRef=\"" ).append( t.getFileName().replace( "\\", "/") ).append( "\">").append( simpleDateFormat.format( new Date( t.getStartTime() ) ) ).append( "</a></td>" );
+            stringBuilder.append( "<td><a target=_blank hRef=\"" ).append( t.getFileName().replace( "\\", "/") ).append( "\">").append( simpleTimeFormat.format( new Date( t.getStartTime() ) ) ).append( "</a></td>" );
+            stringBuilder.append( "<td>" ).append( useRun ).append( "</td>" );
+            stringBuilder.append( "<td>" ).append( t.getEnv() ).append( "</td>" );
+            stringBuilder.append( "<td>" ).append( t.getPass() + t.getFail() ).append( "</td>" );
+            stringBuilder.append( "<td>" ).append( t.getPass() ).append( "</td>" );
+            stringBuilder.append( "<td>" ).append( t.getFail() ).append( "</td>" );
+            stringBuilder.append( "</tr>" );
+            
+        }
+        
+        stringBuilder.append( "</tbody></table>" );
 
         writePageFooter( stringBuilder );
 
@@ -739,14 +762,14 @@ public class HistoryWriter
                 "<head><meta http-equiv=\"refresh\" content=\"30\"><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"></head>" );
         stringBuilder.append( "<body><div class=\"container\"><div class=\"row\">" );
         
-        stringBuilder.append( "<div class=\"col-sm-3 sidebar\"><nav class=\"sidebar-nav\"><div class=\"collapse nav-toggleable-sm\" id=\"nav-toggleable-sm\"><ul class=\"nav nav-pills nav-stacked\"><li " + (activeIndex == 1 ? " class=\"active\"" : "")
-                + "><a href=\"index.html\">Execution Summary</a></li><li " + (activeIndex == 2 ? " class=\"active\"" : "") + "><a href=\"tcSummary.html\">Test Summary</a></li><li " + (activeIndex == 3 ? " class=\"active\"" : "") + "><a href=\"executionDetail.html\">Execution Detail</a></li>"
-                + "</ul><hr class=\"visible-xs m-t\"></div></nav></div>" );
+        //stringBuilder.append( "<div class=\"col-sm-3 sidebar\"><nav class=\"sidebar-nav\"><div class=\"collapse nav-toggleable-sm\" id=\"nav-toggleable-sm\"><ul class=\"nav nav-pills nav-stacked\"><li " + (activeIndex == 1 ? " class=\"active\"" : "")
+        //        + "><a href=\"index.html\">Execution Summary</a></li><li " + (activeIndex == 2 ? " class=\"active\"" : "") + "><a href=\"tcSummary.html\">Test Summary</a></li><li " + (activeIndex == 3 ? " class=\"active\"" : "") + "><a href=\"executionDetail.html\">Execution Detail</a></li>"
+        //        + "</ul><hr class=\"visible-xs m-t\"></div></nav></div>" );
 
-        stringBuilder.append( "<div class=\"col-sm-9 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">Updated " ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
-                .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\"><a hRef=\"index.html\">" + suiteName + "</a></h3></div>" );
+        stringBuilder.append( "<div class=\"col-sm-10 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">Updated " ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
+                .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">Test Suite Execution History</h3><h6>" + suiteName + "</div>" );
 
-        stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
+        stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2\"></div><div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( testSuccess ).append( ", color: '#009900', label: 'Passed' }," );
         stringBuilder.append( "{ value: " ).append( testFail ).append( ", color: '#990000', label: 'Failed' }," );
         stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" /></div><center><strong class=\"text-muted\">Tests Executed</strong></center></div>" );
@@ -759,18 +782,6 @@ public class HistoryWriter
 
         stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" /></div><center><strong class=\"text-muted\">Tests Steps</strong></center></div>" );
 
-        stringBuilder.append( "<div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
-        for ( String deviceName : envMap.keySet() )
-        {
-            int[] currentRecord = envMap.get( deviceName );
-
-            stringBuilder.append( "{ value: " ).append( currentRecord[0] ).append( ", color: '#009900', label: '" ).append( deviceName ).append( "' }," );
-            stringBuilder.append( "{ value: " ).append( currentRecord[1] ).append( ", color: '#990000', label: '" ).append( deviceName ).append( "' }," );
-        }
-        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
-        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" /></div><center><strong class=\"text-muted\">OS</strong></center></div>" );
-
-        stringBuilder.append( "</div>" );
     }
 
 }

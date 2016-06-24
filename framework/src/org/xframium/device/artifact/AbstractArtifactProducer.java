@@ -124,7 +124,7 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         
         stringBuffer.append( "<body><div class=\"container\">" );
         
-        stringBuffer.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">" + testName + "</h3></div>" );
+        stringBuffer.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h6>Test Execution Results</h6><h3 class=\"dashhead-title\">" + testName + "</h3></div>" );
 
         String panelClass = "default";
         if ( DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) != null && !DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ).isEmpty() )
@@ -203,16 +203,12 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_CSV ) )
             stringBuffer.append( "<li role=\"presentation\"><a class=link-tab hRef=\"" + testName + ".csv\" class=\"list-group-item\">Execution Record</a></li>" );
         
-        if ( !success && DataManager.instance().isArtifactEnabled( ArtifactType.FAILURE_SOURCE ) )
-        {
-            stringBuffer.append( "<li role=\"presentation\"><a href=\"#source\" aria-controls=\"source\" role=\"tab\" data-toggle=\"tab\">Failure Source</a></li>" );
-            stringBuffer.append( "<li role=\"presentation\"><a href=\"#screenshot\" aria-controls=\"screenshot\" role=\"tab\" data-toggle=\"tab\">Screenshot</a></li>" );
-        }
+        
         
         stringBuffer.append( "<li role=\"presentation\"><a href=\"#external\" aria-controls=\"external\" role=\"tab\" data-toggle=\"tab\">Links</a></li>" );
         
 
-        stringBuffer.append( "<span class=\"pull-right text-muted\"><a hRef=\"../../index.html\">Return to Summary</a></span></ul>" );
+        stringBuffer.append( "<span class=\"pull-right text-muted\"><a hRef=\"../../index.html\">Return to Test Execution Summary</a></span></ul>" );
         
         
         stringBuffer.append( "<div class=\"tab-content\">" );
@@ -267,6 +263,13 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
                 spaceCount++;
             }
         }
+        
+        if ( !success && DataManager.instance().isArtifactEnabled( ArtifactType.FAILURE_SOURCE ) )
+        {
+            stringBuffer.append( "<tr><td></td><td></td><td><a target=\"_blank\" class=\"btn btn-danger\" hRef='failureDOM.html'>Device State</a></td><td></td><td></td><td></td></tr>" );
+            stringBuffer.append( "<tr><td></td><td></td><td><a hRef=\"failure-screenshot.png\" class=\"thumbnail\"><img class=\"img-rounded img-responsive\" src=\"failure-screenshot.png\" style=\"height: 200px;\"/></a></td><td></td><td></td><td></td></tr>" );
+        }
+        
         stringBuffer.append( "</TABLE></div></div>" );
         
         if ( DataManager.instance().isArtifactEnabled( ArtifactType.CONSOLE_LOG ) )
@@ -278,11 +281,6 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         if ( !success && DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
             stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane\" id=\"deviceLog\"><div id=\"list\"><p><iframe src=\"deviceLog.txt\" frameborder=\"0\" height=\"100%\" width=\"100%\"></iframe></p></div></div>" );
         
-        if ( !success && DataManager.instance().isArtifactEnabled( ArtifactType.FAILURE_SOURCE ) )
-        {
-        	stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane\" id=\"source\"><div id=\"list\"><p><iframe src=\"failureDOM.html\" frameborder=\"0\" height=\"100%\" width=\"100%\"></iframe></p></div></div>" );
-            stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane\" id=\"screenshot\"><div id=\"list\"><p><iframe src=\"failure-screenshot.png\" frameborder=\"0\" height=\"100%\" width=\"100%\"></iframe></p></div></div>" );
-        }
         
         stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane\" id=\"external\">" );
         stringBuffer.append( "<div class=\"list-group\">" );
