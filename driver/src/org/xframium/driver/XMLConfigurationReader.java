@@ -690,6 +690,10 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             }
         }
 
+        Properties props = new Properties();
+        props.putAll( configProperties );
+        KeyWordDriver.instance().setConfigProperties( props );
+
         List<String> testArray = new ArrayList<String>( 10 );
 
         //

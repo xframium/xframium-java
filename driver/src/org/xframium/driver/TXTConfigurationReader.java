@@ -538,6 +538,8 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             }
         }
 
+        KeyWordDriver.instance().setConfigProperties( configProperties );
+
         if ( keywordsloaded )
         {
             List<String> testArray = new ArrayList<String>( 10 );

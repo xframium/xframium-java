@@ -61,6 +61,7 @@ import org.xframium.page.keyWord.step.spi.KWSPerfectoScript;
 import org.xframium.page.keyWord.step.spi.KWSReport;
 import org.xframium.page.keyWord.step.spi.KWSReturn;
 import org.xframium.page.keyWord.step.spi.KWSSet;
+import org.xframium.page.keyWord.step.spi.KWSSQL;
 import org.xframium.page.keyWord.step.spi.KWSString;
 import org.xframium.page.keyWord.step.spi.KWSSync;
 import org.xframium.page.keyWord.step.spi.KWSValue;
@@ -150,6 +151,7 @@ public class KeyWordStepFactory
         addKeyWord( "ELSE", KWSElse.class );
         addKeyWord( "STATE", KWSDumpState.class );
         addKeyWord( "ALERT", KWSAlert.class );
+        addKeyWord( "SQL", KWSSQL.class );
     }
 
     /**
