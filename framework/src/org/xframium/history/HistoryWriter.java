@@ -917,7 +917,7 @@ public class HistoryWriter
         //        + "><a href=\"index.html\">Execution Summary</a></li><li " + (activeIndex == 2 ? " class=\"active\"" : "") + "><a href=\"tcSummary.html\">Test Summary</a></li><li " + (activeIndex == 3 ? " class=\"active\"" : "") + "><a href=\"executionDetail.html\">Execution Detail</a></li>"
         //        + "</ul><hr class=\"visible-xs m-t\"></div></nav></div>" );
 
-        stringBuilder.append( "<div class=\"col-sm-10 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">Updated " ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
+        stringBuilder.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">Updated " ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
                 .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">Test Suite Execution History</h3><h6>" + suiteName + "</h6></div>" );
 
         stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2\"></div><div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
