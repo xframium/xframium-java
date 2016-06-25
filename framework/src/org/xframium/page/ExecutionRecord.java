@@ -30,7 +30,7 @@ import java.util.Date;
  */
 public class ExecutionRecord
 {
-    private static DateFormat timeFormat = new SimpleDateFormat( "HH:mm:ss.SSS");
+    private static DateFormat timeFormat = new SimpleDateFormat( "HH:mm:ss");
 	/** The group. */
 	private String group;
 	
@@ -295,15 +295,24 @@ public class ExecutionRecord
 	{
 		StringBuffer stringBuffer = new StringBuffer();
 		
+		String useGroup = group;
+		if ( useGroup == null )
+			if ( name != null && !name.isEmpty() )
+				useGroup = useGroup + "." + name;
+		else
+			if ( name != null && !name.isEmpty() )
+				useGroup = name;
+			else
+				useGroup = "";
 		
-		stringBuffer.append( "<tr>" );	
-		stringBuffer.append( "<td>" ).append( group == null ? "" : group ).append( "</td>" );
+		
+		stringBuffer.append( "<tr><td>" );	
 		
 		if ( status.equals( StepStatus.REPORT ) )
-		    stringBuffer.append( "<td>" ).append( name.replace( "\t", "<br/>" ) ).append( "</td>" );
+		    stringBuffer.append( useGroup.replace( "\t", "<br/>" ) );
 		else
-		    stringBuffer.append( "<td>" ).append( name ).append( "</td>" );
-		stringBuffer.append( "<td>" ).append( type ).append( "</td>" );
+			stringBuffer.append( useGroup );
+		stringBuffer.append( "</td><td>" ).append( type ).append( "</td>" );
 		stringBuffer.append( "<td>" ).append( timeFormat.format( new Date( timeStamp ) ) ).append( "</td>" );
 		stringBuffer.append( "<td align=\"center\"  style=\"padding-top: 8px; \"><span class=\"badge\">" ).append( runTime ).append( "</span></td>" );
 		
@@ -333,10 +342,10 @@ public class ExecutionRecord
 			String backgroundColor = "";
 			
 			
-			stringBuffer.append( "<tr" ).append( backgroundColor ).append( "><td></td><td></td><td ><h6>" ).append( detail ).append( "</h6></td></tr>");
+			stringBuffer.append( "<tr" ).append( backgroundColor ).append( "><td></td><td ><h6>" ).append( detail ).append( "</h6></td></tr>");
 			if ( t != null )
 			{
-				stringBuffer.append( "<tr" ).append( backgroundColor ).append( "><td></td><td></td><td colSpan='4'><a class=\"btn btn-danger\" role=\"button\" data-toggle=\"collapse\" href=\"#exception").append( index ).append( "\" aria-expanded=\"false\">View Error Detail</a><div class=\"collapse\" id=\"exception").append( index  ).append( "\"><h6>" );
+				stringBuffer.append( "<tr" ).append( backgroundColor ).append( "><td></td><td colSpan='4'><a class=\"btn btn-danger\" role=\"button\" data-toggle=\"collapse\" href=\"#exception").append( index ).append( "\" aria-expanded=\"false\">View Error Detail</a><div class=\"collapse\" id=\"exception").append( index  ).append( "\"><h6>" );
 				
 				stringBuffer.append( t.getMessage() ).append( "<br/>");
 				t.fillInStackTrace();

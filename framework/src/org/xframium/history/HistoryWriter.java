@@ -215,6 +215,8 @@ public class HistoryWriter
                 History hRoot = (History) rootElement.getValue();
 
                 suiteName = RunDetails.instance().getTestName();
+                if  (suiteName == null )
+                	suiteName = hRoot.getName();
 
                 for ( TestCase tc : hRoot.testCase )
                 {
@@ -263,53 +265,16 @@ public class HistoryWriter
             return Long.compare( o1.getStartTime(), o2.getStartTime() );
         }
     }
-
-    public void writeExecutionDetail()
+    
+    private class ReverseSuiteTimeComparator implements Comparator<TestSuite>
     {
-        StringBuilder stringBuilder = new StringBuilder();
-        writePageHeader( stringBuilder, 3, null );
-
-        stringBuilder.append( "<br />" );
-        Set<TestSuite> executionList = new TreeSet<TestSuite>( new SuiteTimeComparator() );
-        executionList.addAll( this.executionList );
-        
-        stringBuilder.append( "<table class=\"table table-hover table-condensed\">" );
-        stringBuilder.append( "<tr><th>Execution Date</th><th>Execution Time</th><th>Duration</th><th>Environments</th><th>Tests</th><th>Passed</th><th>Failed</th></tr><tbody>" );
-        
-        for ( TestSuite t : executionList )
+        @Override
+        public int compare( TestSuite o1, TestSuite o2 )
         {
-        	long testRunTime = t.getEndTime() - t.getStartTime();
-            String testRunLength = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( testRunTime ), TimeUnit.MILLISECONDS.toMinutes( testRunTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( testRunTime ) ),
-                    TimeUnit.MILLISECONDS.toSeconds( testRunTime ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( testRunTime ) ) );
-            
-            stringBuilder.append( "<tr>" );
-            stringBuilder.append( "<td><a target=_blank hRef=\"" ).append( t.getFileName().replace( "\\", "/") ).append( "\">").append( simpleDateFormat.format( new Date( t.getStartTime() ) ) ).append( "</a></td>" );
-            stringBuilder.append( "<td><a target=_blank hRef=\"" ).append( t.getFileName().replace( "\\", "/") ).append( "\">").append( simpleTimeFormat.format( new Date( t.getStartTime() ) ) ).append( "</a></td>" );
-            stringBuilder.append( "<td>" ).append( testRunLength ).append( "</td>" );
-            stringBuilder.append( "<td>" ).append( t.getEnv() ).append( "</td>" );
-            stringBuilder.append( "<td>" ).append( t.getPass() + t.getFail() ).append( "</td>" );
-            stringBuilder.append( "<td>" ).append( t.getPass() ).append( "</td>" );
-            stringBuilder.append( "<td>" ).append( t.getFail() ).append( "</td>" );
-            stringBuilder.append( "</tr>" );
-            
-        }
-        
-        stringBuilder.append( "</tbody></table>" );
-        
-        writePageFooter( stringBuilder );
-
-        try
-        {
-            File useFile = new File( rootFolder, EXE_DETAIL );
-            FileWriter fileWriter = new FileWriter( useFile );
-            fileWriter.write( stringBuilder.toString() );
-            fileWriter.close();
-        }
-        catch ( Exception e )
-        {
-            e.printStackTrace();
+            return Long.compare( o2.getStartTime(), o1.getStartTime() );
         }
     }
+   
     
     public void writeIndex()
     {
@@ -346,6 +311,10 @@ public class HistoryWriter
         
         Set<TestSuite> suiteSet = new TreeSet<TestSuite>( new SuiteTimeComparator() );
         suiteSet.addAll( this.executionList );
+        
+        Set<TestSuite> reverseSuiteSet = new TreeSet<TestSuite>( new ReverseSuiteTimeComparator() );
+        reverseSuiteSet.addAll( this.executionList );
+        
         long totalTime = 0;
         long lastTime = 0;
 
@@ -354,7 +323,7 @@ public class HistoryWriter
             lastTime = (ss.getEndTime() - ss.getStartTime());
             totalTime += lastTime;
         }
-        long averageTime = totalTime / suiteSet.size();
+        double averageTime = (double)totalTime / (double)suiteSet.size();
 
         boolean up = lastTime > averageTime;
 
@@ -378,8 +347,8 @@ public class HistoryWriter
                 panelType = "danger";
         }
         
-        String testRunLength = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( averageTime ), TimeUnit.MILLISECONDS.toMinutes( averageTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( averageTime ) ),
-                TimeUnit.MILLISECONDS.toSeconds( averageTime ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( averageTime ) ) );
+        String testRunLength = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( (long)averageTime ), TimeUnit.MILLISECONDS.toMinutes( (long)averageTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours((long) averageTime ) ),
+                TimeUnit.MILLISECONDS.toSeconds( (long)averageTime ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( (long)averageTime ) ) );
         
 
         stringBuilder.append( "<div class=\"col-sm-12 m-b\">" );
@@ -387,7 +356,7 @@ public class HistoryWriter
         stringBuilder.append( "<h4 class=\"text-muted\">Results for " ).append( rangeDate.format( new Date( suiteSet.toArray( new TestSuite[ 0 ] )[ 0 ].getStartTime() ) ) ).append( " to " ).append( rangeDate.format( new Date( suiteSet.toArray( new TestSuite[ 0 ] )[ suiteSet.size() - 1 ].getStartTime() ) ) ).append( "</h4>");
         stringBuilder.append( "<div class=\"statcard statcard-" + panelType + "\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h2>" ).append( testRunLength );
         if ( deviation != 0 )
-            stringBuilder.append( "<small class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "</small>" );
+            stringBuilder.append( "<small class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</small>" );
 
         stringBuilder.append( "</h2><hr class=\"-hr m-a-0\"></div><canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
         for ( TestSuite ss : suiteSet )
@@ -403,18 +372,202 @@ public class HistoryWriter
         stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
         stringBuilder.append( "]\" style=\"width: 189px; height: 47px;\"></canvas></div></div>" );
         
-        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Tests Passed</span><h2>" ).append( tP ).append( "</h2></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Tests Failed</span><h2>" ).append( tF ).append( "</h2></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Passed</span><h2>" ).append( sP ).append( "</h2></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Failed</span><h2>" ).append( sF ).append( "</h2></div></div></div>" );
+        
+        
+        //
+        // Tests Passed
+        //
+        totalTime = 0;
 
+        for ( TestSuite ss : suiteSet )
+        {
+        	lastTime = ss.getPass();
+            totalTime += lastTime;
+        }
+        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Tests Passed</span><h2>" ).append( tP );
+        
+        
+        
+        averageTime = (double)totalTime / (double)suiteSet.size();
+        
+        deviation = 0;
+
+        if ( averageTime != lastTime )
+        {
+            if ( up )
+                deviation = 1 - ((double) averageTime / (double) lastTime);
+            else
+                deviation = 1 - ((double) lastTime / (double) averageTime);
+        }
+        
+        if ( deviation != 0 )
+            stringBuilder.append( "<small class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</small>" );
+
+        stringBuilder.append( "</h2><hr class=\"-hr m-a-0\"></div><canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
+        for ( TestSuite ss : suiteSet )
+        {
+            stringBuilder.append( ss.getPass() ).append( "," );
+        }
+        
+        
+        
+        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
+        stringBuilder.append( "]}]\" data-labels=\"[" );
+        for ( TestSuite ss : suiteSet )
+        {
+            stringBuilder.append( "'" ).append( ss.getPass() ).append( "'," );
+        }
+        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
+        stringBuilder.append( "]\" style=\"width: 189px; height: 47px;\"></canvas></div></div>" );
+        
+        
+        
+        //
+        // Tests Failed
+        //
+        totalTime = 0;
+
+        for ( TestSuite ss : suiteSet )
+        {
+        	lastTime = ss.getFail();
+            totalTime += lastTime;
+        }
+        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Tests Failed</span><h2>" ).append( tF );
+        
+        
+        
+        averageTime = (double)totalTime / (double)suiteSet.size();
+        
+        deviation = 0;
+
+        if ( averageTime > 0 && averageTime != lastTime )
+        {
+            if ( up )
+                deviation = 1 - ((double) averageTime / (double) lastTime);
+            else
+                deviation = 1 - ((double) lastTime / (double) averageTime);
+        }
+        
+        if ( deviation != 0 )
+            stringBuilder.append( "<small class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</small>" );
+
+        stringBuilder.append( "</h2><hr class=\"-hr m-a-0\"></div><canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
+        for ( TestSuite ss : suiteSet )
+        {
+            stringBuilder.append( ss.getFail() ).append( "," );
+        }
+        
+
+        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
+        stringBuilder.append( "]}]\" data-labels=\"[" );
+        for ( TestSuite ss : suiteSet )
+        {
+            stringBuilder.append( "'" ).append( ss.getPass() ).append( "'," );
+        }
+        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
+        stringBuilder.append( "]\" style=\"width: 189px; height: 47px;\"></canvas></div></div>" );
+        
+        
+        
+        //
+        // Steps Passed
+        //
+        totalTime = 0;
+
+        for ( Execution exe : executionList )
+        {
+        	lastTime = exe.getPassed();
+            totalTime += lastTime;
+        }
+        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Passed</span><h2>" ).append( sP );
+        
+        
+        
+        averageTime = (double)totalTime / (double)executionList.size();
+        
+        deviation = 0;
+
+        if ( averageTime != lastTime )
+        {
+            if ( up )
+                deviation = 1 - ((double) averageTime / (double) lastTime);
+            else
+                deviation = 1 - ((double) lastTime / (double) averageTime);
+        }
+        
+        if ( deviation != 0 )
+            stringBuilder.append( "<small class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</small>" );
+
+        stringBuilder.append( "</h2><hr class=\"-hr m-a-0\"></div><canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
+        for ( Execution exe : executionList )
+        {
+            stringBuilder.append( exe.getPassed() ).append( "," );
+        }
+        
+        
+        
+        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
+        stringBuilder.append( "]}]\" data-labels=\"[" );
+        for ( Execution exe : executionList )
+        {
+            stringBuilder.append( "'" ).append( exe.getPassed() ).append( "'," );
+        }
+        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
+        stringBuilder.append( "]\" style=\"width: 189px; height: 47px;\"></canvas></div></div>" );
+        
+        
+        
+        //
+        // Steps Failed
+        //
+        totalTime = 0;
+
+        for ( Execution exe : executionList )
+        {
+        	lastTime = exe.getFailed();
+            totalTime += lastTime;
+        }
+        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Failed</span><h2>" ).append( sF );
+        
+        
+        
+        averageTime = (double)totalTime / (double)executionList.size();
+        
+        deviation = 0;
+
+        if ( averageTime > 0 && averageTime != lastTime )
+        {
+            if ( up )
+                deviation = 1 - ((double) averageTime / (double) lastTime);
+            else
+                deviation = 1 - ((double) lastTime / (double) averageTime);
+        }
+        
+        if ( deviation != 0 )
+            stringBuilder.append( "<small class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</small>" );
+
+        stringBuilder.append( "</h2><hr class=\"-hr m-a-0\"></div><canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
+        for ( Execution exe : executionList )
+        {
+            stringBuilder.append( exe.getFailed() ).append( "," );
+        }
+        
+
+        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
+        stringBuilder.append( "]}]\" data-labels=\"[" );
+        for ( Execution exe : executionList )
+        {
+            stringBuilder.append( "'" ).append( exe.getPassed() ).append( "'," );
+        }
+        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
+        stringBuilder.append( "]\" style=\"width: 189px; height: 47px;\"></canvas></div></div>" );
         stringBuilder.append( "</div><br />" );
 
         
         stringBuilder.append( "<table class=\"table table-hover table-condensed\">" );
         stringBuilder.append( "<tr><th>Execution Date</th><th>Execution Time</th><th>Duration</th><th>Environments</th><th>Tests</th><th>Passed</th><th>Failed</th></tr><tbody>" );
         
-        for ( TestSuite t : suiteSet )
+        for ( TestSuite t : reverseSuiteSet )
         {
         	long testRunTime = t.getEndTime() - t.getStartTime();
             String useRun = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( testRunTime ), TimeUnit.MILLISECONDS.toMinutes( testRunTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( testRunTime ) ),
@@ -444,7 +597,6 @@ public class HistoryWriter
             fileWriter.close();
             
             writeTCSummary();
-            writeExecutionDetail();
         }
         catch ( Exception e )
         {

@@ -60,7 +60,7 @@ import org.yaml.snakeyaml.util.UriEncoder;
  */
 public abstract class AbstractArtifactProducer implements ArtifactProducer
 {
-    protected static DateFormat timeFormat = new SimpleDateFormat( "HH:mm:ss.SSS");
+    protected static DateFormat timeFormat = new SimpleDateFormat( "HH:mm:ss z");
     protected static DateFormat dateFormat = new SimpleDateFormat( "MM-dd_HH-mm-ss");
     protected static DateFormat simpleDateFormat = new SimpleDateFormat( "MM-dd-yyyy");
     private static final String COMMA = ",";
@@ -162,13 +162,12 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
             String runLength = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( runTime ), TimeUnit.MILLISECONDS.toMinutes( runTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( runTime ) ),TimeUnit.MILLISECONDS.toSeconds( runTime ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( runTime ) ) );
             
             
-            stringBuffer.append( "<br /><div class=\"row statcards\">" );
+            stringBuffer.append( "<br /><div class=\"row statcards\"><div class=\"col-sm-1 m-b\"></div>" );
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Passed</span><h4 class=\"statcard-number\">" + successCount + "</h4></div></div></div>" );
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-warning\"><div class=\"p-a\"><span class=\"statcard-desc\">Ignored</span><h4 class=\"statcard-number\">" + ignoreCount + "</h4></div></div></div>" );
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Failed</span><h4 class=\"statcard-number\">" + failureCount + "</h4></div></div></div>" );
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Total</span><h4 class=\"statcard-number\">" + recordCount + "</h4></div></div></div>" );
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h4 class=\"statcard-number\">" + runLength + "</h4></div></div></div>" );
-            stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-primary\"><div class=\"p-a\"><span class=\"statcard-desc\">OS</span><h4 class=\"statcard-number\">" + device.getOs() + "</h4></div></div></div>" );
             stringBuffer.append( "</div><br />" );
         }
 
@@ -187,8 +186,8 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         
         stringBuffer.append( "<br/>" );
         stringBuffer.append( "<ul class=\"nav nav-tabs\" role=\"tablist\">" );
-        stringBuffer.append( "<li role=\"presentation\" class=\"active\"><a href=\"#summary\" aria-controls=\"summary\" role=\"tab\" data-toggle=\"tab\">Environment</a></li>" );
-        stringBuffer.append( "<li role=\"presentation\" ><a href=\"#detail\" aria-controls=\"detail\" role=\"tab\" data-toggle=\"tab\">Steps</a></li>" );
+        stringBuffer.append( "<li role=\"presentation\" class=\"active\"><a href=\"#detail\" aria-controls=\"detail\" role=\"tab\" data-toggle=\"tab\">Steps</a></li>" );
+        stringBuffer.append( "<li role=\"presentation\" ><a href=\"#summary\" aria-controls=\"summary\" role=\"tab\" data-toggle=\"tab\">Environment</a></li>" );
         
         if ( DataManager.instance().isArtifactEnabled( ArtifactType.CONSOLE_LOG ) )
             stringBuffer.append( "<li role=\"presentation\"><a href=\"#console\" aria-controls=\"console\" role=\"tab\" data-toggle=\"tab\">Console Log</a></li>" );
@@ -215,22 +214,13 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         
         
         
-        stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane active\" id=\"summary\">" );
+        stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane\" id=\"summary\">" );
         
         if ( device != null )
         {
             stringBuffer.append( "<div class=\"list-group\">" );
             stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Device ID: </b> " ).append( device.getKey() ).append("</a>" );
-            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>OS: </b> " ).append( device.getOs() ).append( "</a>" );
-            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>OS Version: </b> " ).append( device.getOsVersion() !=null ? device.getOsVersion() : "Unknown" ).append( "</a>" );
-            if ( ApplicationRegistry.instance().getAUT().isWeb() )
-            {
-	            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Browser Name: </b> " ).append( device.getBrowserName() !=null ? device.getBrowserName() : "Unknown" ).append( "</a>" );
-	            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Browser Version: </b> " ).append( device.getBrowserVersion() !=null ? device.getBrowserVersion() : "Unknown" ).append( "</a>" );
-            }
-            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Manufacturer: </b> " ).append( device.getManufacturer() ).append("</a>" );
-            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Model: </b> " ).append( device.getModel() ).append("</a>" );
-            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Resolution: </b> " ).append( device.getResolution() != null ? device.getResolution() : "Unknown" ).append( "</a>" );
+            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Environment: </b> " ).append( device.getEnvironment() ).append( "</a>" );
             stringBuffer.append( "</div>" );
             
         }
@@ -243,9 +233,9 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         }
         
         
-        stringBuffer.append( "</div><div role=\"tabpanel\" class=\"tab-pane\" id=\"detail\">" );
+        stringBuffer.append( "</div><div role=\"tabpanel\" class=\"tab-pane active\" id=\"detail\">" );
         stringBuffer.append( "<div class=\"table-responsive table-bordered\"><table class=\"table table-hover table-condensed\">");
-        stringBuffer.append( "<thead><th width=\"10%\">Page</th><th width=\"20%\">Element</th><th width=\"80%\">Steps Performed</th><th width=\"20%\">Start time</th><th width=\"0%\" align=center>Time</th><th align=center width=\"0%\">Status</th></thead>" );
+        stringBuffer.append( "<thead><th width=\"20%\">Element</th><th width=\"80%\">Steps Performed & Results</th><th width=\"20%\">Start time</th><th width=\"0%\" align=center>Time</th><th align=center width=\"0%\">Status</th></thead>" );
         if ( DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) != null && !DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ).isEmpty() )
         {
             for ( Object item : DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) )
