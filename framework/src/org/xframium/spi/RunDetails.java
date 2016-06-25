@@ -33,6 +33,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+
+import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.history.HistoryWriter;
 
@@ -249,6 +251,7 @@ public class RunDetails implements RunListener
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Environments</span><h3 class=\"statcard-number\">" + envMap.size() + "</h3></div></div></div>" );
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h3 class=\"statcard-number\">" + runLength + "</h3></div></div></div>" );
         stringBuilder.append( "</div><br />" );
+        stringBuilder.append( "<span class=\"pull-right text-muted\"><a hRef=\"../index.html\">Return to Test Execution History</a></span></ul>" );
         stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Execution Detail</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
         stringBuilder.append( "<tr><th width=\"40%\">Test</th><th width=\"40%\">Environment</th><th width=\"20%\">Duration</th><th>Status</th></tr><tbody>" );
         for ( int i = 0; i < detailsList.size(); i++ )
@@ -519,7 +522,7 @@ public class RunDetails implements RunListener
                 successValue = ((double) currentRecord[0] / (double) totalValue) * 100;
 
             int runTime = (int) ((double) currentRecord[3] / (double) currentRecord[2]);
-            String runLength = String.format( "%02dh %02dm %02ds", TimeUnit.MILLISECONDS.toHours( runTime ), TimeUnit.MILLISECONDS.toMinutes( runTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( runTime ) ),
+            String runLength = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( runTime ), TimeUnit.MILLISECONDS.toMinutes( runTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( runTime ) ),
                     TimeUnit.MILLISECONDS.toSeconds( runTime ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( runTime ) ) );
 
             stringBuilder.append( "<tr><td width=60%>" ).append( deviceName ).append( "</td><td>" ).append( percentFormat.format( successValue ) ).append( "%</td><td>" ).append( runLength ).append( "</td></tr>" );
@@ -623,7 +626,7 @@ public class RunDetails implements RunListener
         //        + "><a href=\"index.html\">Execution Results</a></li><li " + (activeIndex == 2 ? " class=\"active\"" : "") + "><a href=\"deviceSummary.html\">Device Summary</a></li><li " + (activeIndex == 3 ? " class=\"active\"" : "")
         //        + "><a href=\"testSummary.html\">Test Summary</a></li><li " + (activeIndex == 4 ? " class=\"active\"" : "") + "><a href=\"osSummary.html\">OS Summary</a></li></ul><hr class=\"visible-xs m-t\"></div></nav></div>" );
         stringBuilder.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
-                .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">Test Suite Execution Summary</h3></div>" );
+                .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">Test Suite Execution Summary</h3><h6>" + ApplicationRegistry.instance().getAUT().getName() + "</h6></div>" );
 
         stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2 m-b-md\"></div><div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( successCount ).append( ", color: '#009900', label: 'Passed' }," );
@@ -638,7 +641,10 @@ public class RunDetails implements RunListener
 
         stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" /></div><center><strong class=\"text-muted\">Tests Steps</strong></center></div>" );
 
+        
+        
         stringBuilder.append( "</div>" );
+        
     }
 
     public synchronized void writeDefinitionIndex( File rootFolder )

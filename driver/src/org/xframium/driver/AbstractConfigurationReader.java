@@ -98,7 +98,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             log.info( "Driver: Configuring Driver" );
             if ( !configureDriver() ) return;
             
-            RunDetails.instance().setTestName( ApplicationRegistry.instance().getAUT().getName() + " (" + CloudRegistry.instance().getCloud().getHostName() + ")" );
+            RunDetails.instance().setTestName( ApplicationRegistry.instance().getAUT().getName() );
             
             if ( runTest )
                 executeTest();

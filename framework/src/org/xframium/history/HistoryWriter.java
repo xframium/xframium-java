@@ -564,8 +564,8 @@ public class HistoryWriter
         stringBuilder.append( "</div><br />" );
 
         
-        stringBuilder.append( "<table class=\"table table-hover table-condensed\">" );
-        stringBuilder.append( "<tr><th>Execution Date</th><th>Execution Time</th><th>Duration</th><th>Environments</th><th>Tests</th><th>Passed</th><th>Failed</th></tr><tbody>" );
+        stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Environment Summary</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
+        stringBuilder.append( "<tr><th>Executed on</th><th>Duration</th><th>Environments</th><th>Tests</th><th style=\"color: #1bc98e\">Passed</th><th style=\"color: #E64759\">Failed</th></tr><tbody>" );
         
         for ( TestSuite t : reverseSuiteSet )
         {
@@ -574,18 +574,17 @@ public class HistoryWriter
                     TimeUnit.MILLISECONDS.toSeconds( testRunTime ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( testRunTime ) ) );
             
             stringBuilder.append( "<tr>" );
-            stringBuilder.append( "<td><a target=_blank hRef=\"" ).append( t.getFileName().replace( "\\", "/") ).append( "\">").append( simpleDateFormat.format( new Date( t.getStartTime() ) ) ).append( "</a></td>" );
-            stringBuilder.append( "<td><a target=_blank hRef=\"" ).append( t.getFileName().replace( "\\", "/") ).append( "\">").append( simpleTimeFormat.format( new Date( t.getStartTime() ) ) ).append( "</a></td>" );
+            stringBuilder.append( "<td><a hRef=\"" ).append( t.getFileName().replace( "\\", "/") ).append( "\">").append( simpleDateFormat.format( new Date( t.getStartTime() ) ) ).append( " at ").append( simpleTimeFormat.format( new Date( t.getStartTime() ) ) ).append( "</a></td>" );
             stringBuilder.append( "<td>" ).append( useRun ).append( "</td>" );
             stringBuilder.append( "<td>" ).append( t.getEnv() ).append( "</td>" );
             stringBuilder.append( "<td>" ).append( t.getPass() + t.getFail() ).append( "</td>" );
-            stringBuilder.append( "<td>" ).append( t.getPass() ).append( "</td>" );
-            stringBuilder.append( "<td>" ).append( t.getFail() ).append( "</td>" );
+            stringBuilder.append( "<td  style=\"color: #1bc98e\">" ).append( t.getPass() ).append( "</td>" );
+            stringBuilder.append( "<td style=\"color: #E64759\">" ).append( t.getFail() ).append( "</td>" );
             stringBuilder.append( "</tr>" );
             
         }
         
-        stringBuilder.append( "</tbody></table>" );
+        stringBuilder.append( "</tbody></table></div></div>" );
 
         writePageFooter( stringBuilder );
 
@@ -911,7 +910,7 @@ public class HistoryWriter
 
         stringBuilder.append( "<html>" );
         stringBuilder.append(
-                "<head><meta http-equiv=\"refresh\" content=\"30\"><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"></head>" );
+                "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"></head>" );
         stringBuilder.append( "<body><div class=\"container\"><div class=\"row\">" );
         
         //stringBuilder.append( "<div class=\"col-sm-3 sidebar\"><nav class=\"sidebar-nav\"><div class=\"collapse nav-toggleable-sm\" id=\"nav-toggleable-sm\"><ul class=\"nav nav-pills nav-stacked\"><li " + (activeIndex == 1 ? " class=\"active\"" : "")
@@ -919,7 +918,7 @@ public class HistoryWriter
         //        + "</ul><hr class=\"visible-xs m-t\"></div></nav></div>" );
 
         stringBuilder.append( "<div class=\"col-sm-10 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">Updated " ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
-                .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">Test Suite Execution History</h3><h6>" + suiteName + "</div>" );
+                .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">Test Suite Execution History</h3><h6>" + suiteName + "</h6></div>" );
 
         stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2\"></div><div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( testSuccess ).append( ", color: '#009900', label: 'Passed' }," );

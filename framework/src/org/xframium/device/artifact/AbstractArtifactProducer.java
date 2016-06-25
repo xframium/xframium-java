@@ -124,7 +124,7 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         
         stringBuffer.append( "<body><div class=\"container\">" );
         
-        stringBuffer.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h6>Test Execution Results</h6><h3 class=\"dashhead-title\">" + testName + "</h3></div>" );
+        stringBuffer.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">" + testName + "</h3><h6>" + device.getEnvironment() + "</h6></div>" );
 
         String panelClass = "default";
         if ( DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) != null && !DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ).isEmpty() )
@@ -187,7 +187,6 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         stringBuffer.append( "<br/>" );
         stringBuffer.append( "<ul class=\"nav nav-tabs\" role=\"tablist\">" );
         stringBuffer.append( "<li role=\"presentation\" class=\"active\"><a href=\"#detail\" aria-controls=\"detail\" role=\"tab\" data-toggle=\"tab\">Steps</a></li>" );
-        stringBuffer.append( "<li role=\"presentation\" ><a href=\"#summary\" aria-controls=\"summary\" role=\"tab\" data-toggle=\"tab\">Environment</a></li>" );
         
         if ( DataManager.instance().isArtifactEnabled( ArtifactType.CONSOLE_LOG ) )
             stringBuffer.append( "<li role=\"presentation\"><a href=\"#console\" aria-controls=\"console\" role=\"tab\" data-toggle=\"tab\">Console Log</a></li>" );
@@ -213,29 +212,9 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         stringBuffer.append( "<div class=\"tab-content\">" );
         
         
-        
-        stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane\" id=\"summary\">" );
-        
-        if ( device != null )
-        {
-            stringBuffer.append( "<div class=\"list-group\">" );
-            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Device ID: </b> " ).append( device.getKey() ).append("</a>" );
-            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Environment: </b> " ).append( device.getEnvironment() ).append( "</a>" );
-            stringBuffer.append( "</div>" );
-            
-        }
-        else
-        {
-            stringBuffer.append( "<div class=\"list-group\">" );
-            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Test Name: </b> " ).append( testName ).append( "</a>" );
-            stringBuffer.append( "<a hRef=\"#\" class=\"list-group-item\"><b>Execution ID: </b> " ).append( DeviceManager.instance().getExecutionId() ).append( "</a>" );            
-            stringBuffer.append( "</div>" );
-        }
-        
-        
-        stringBuffer.append( "</div><div role=\"tabpanel\" class=\"tab-pane active\" id=\"detail\">" );
+        stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane active\" id=\"detail\">" );
         stringBuffer.append( "<div class=\"table-responsive table-bordered\"><table class=\"table table-hover table-condensed\">");
-        stringBuffer.append( "<thead><th width=\"20%\">Element</th><th width=\"80%\">Steps Performed & Results</th><th width=\"20%\">Start time</th><th width=\"0%\" align=center>Time</th><th align=center width=\"0%\">Status</th></thead>" );
+        stringBuffer.append( "<thead><th width=\"20%\">Element</th><th width=\"80%\">Steps Performed & Results</th><th width=\"20%\">Started</th><th align=center width=\"0%\">Status</th></thead>" );
         if ( DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) != null && !DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ).isEmpty() )
         {
             for ( Object item : DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) )
@@ -256,8 +235,8 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         
         if ( !success && DataManager.instance().isArtifactEnabled( ArtifactType.FAILURE_SOURCE ) )
         {
-            stringBuffer.append( "<tr><td></td><td></td><td><a target=\"_blank\" class=\"btn btn-danger\" hRef='failureDOM.html'>Device State</a></td><td></td><td></td><td></td></tr>" );
-            stringBuffer.append( "<tr><td></td><td></td><td><a hRef=\"failure-screenshot.png\" class=\"thumbnail\"><img class=\"img-rounded img-responsive\" src=\"failure-screenshot.png\" style=\"height: 200px;\"/></a></td><td></td><td></td><td></td></tr>" );
+            stringBuffer.append( "<tr><td></td><td><a target=\"_blank\" class=\"btn btn-danger\" hRef='failureDOM.html'>Device State</a></td><td></td><td></td><td></td></tr>" );
+            stringBuffer.append( "<tr><td></td><td><a hRef=\"failure-screenshot.png\" class=\"thumbnail\"><img class=\"img-rounded img-responsive\" src=\"failure-screenshot.png\" style=\"height: 200px;\"/></a></td><td></td><td></td><td></td></tr>" );
         }
         
         stringBuffer.append( "</TABLE></div></div>" );

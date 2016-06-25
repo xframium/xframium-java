@@ -313,8 +313,7 @@ public class ExecutionRecord
 		else
 			stringBuffer.append( useGroup );
 		stringBuffer.append( "</td><td>" ).append( type ).append( "</td>" );
-		stringBuffer.append( "<td>" ).append( timeFormat.format( new Date( timeStamp ) ) ).append( "</td>" );
-		stringBuffer.append( "<td align=\"center\"  style=\"padding-top: 8px; \"><span class=\"badge\">" ).append( runTime ).append( "</span></td>" );
+		stringBuffer.append( "<td>" ).append( timeFormat.format( new Date( timeStamp ) ) + "(" + runTime + ")" ).append( "</td>" );
 		
 		
 		switch( status )
