@@ -250,8 +250,7 @@ public class RunDetails implements RunListener
                 .append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Failed</span><h3 class=\"statcard-number\">" + (detailsList.size() - successCount) + "</h3></div></div></div>" );
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Environments</span><h3 class=\"statcard-number\">" + envMap.size() + "</h3></div></div></div>" );
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h3 class=\"statcard-number\">" + runLength + "</h3></div></div></div>" );
-        stringBuilder.append( "</div><br />" );
-        stringBuilder.append( "<span class=\"pull-right text-muted\"><a hRef=\"../index.html\">Return to Test Execution History</a></span></ul>" );
+        stringBuilder.append( "<div class=\"pull-right text-muted\"><a hRef=\"../index.html\">Return to Test Execution History</a>&nbsp;&nbsp;&nbsp;&nbsp;</div></div>" );
         stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Execution Detail</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
         stringBuilder.append( "<tr><th width=\"40%\">Test</th><th width=\"40%\">Environment</th><th width=\"20%\">Duration</th><th>Status</th></tr><tbody>" );
         for ( int i = 0; i < detailsList.size(); i++ )
