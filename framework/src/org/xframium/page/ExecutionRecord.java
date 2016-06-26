@@ -23,6 +23,7 @@ package org.xframium.page;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -296,7 +297,7 @@ public class ExecutionRecord
 		StringBuffer stringBuffer = new StringBuffer();
 		
 		String useGroup = group;
-		if ( useGroup == null )
+		if ( useGroup != null && !useGroup.isEmpty() )
 			if ( name != null && !name.isEmpty() )
 				useGroup = useGroup + "." + name;
 		else
@@ -312,6 +313,11 @@ public class ExecutionRecord
 		    stringBuffer.append( useGroup.replace( "\t", "<br/>" ) );
 		else
 			stringBuffer.append( useGroup );
+		
+		String testRunLength = String.format( "%,.3f", (double)runTime / 1000.0 );
+        
+		
+		
 		stringBuffer.append( "</td><td>" ).append( type ).append( "</td>" );
 		stringBuffer.append( "<td>" ).append( timeFormat.format( new Date( timeStamp ) ) + "(" + runTime + ")" ).append( "</td>" );
 		

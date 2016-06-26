@@ -328,35 +328,44 @@ public class HistoryWriter
         boolean up = lastTime > averageTime;
 
         double deviation = 0;
+        double deviationPercent = 0;
 
         if ( averageTime != lastTime )
         {
             if ( up )
-                deviation = 1 - ((double) averageTime / (double) lastTime);
+            {
+            	deviation = ((double) lastTime - (double) averageTime);
+            	deviationPercent = 1 - ((double) averageTime / (double) lastTime);
+            }
             else
-                deviation = 1 - ((double) lastTime / (double) averageTime);
+            {
+            	deviation = ((double) averageTime - (double) lastTime);
+            	deviationPercent = 1 - ((double) lastTime / (double) averageTime);
+            }
         }
 
         String panelType = "primary";
         if ( lastTime != averageTime )
         {
-            if ( deviation > 0.15 )
+            if ( deviationPercent > 0.15 )
                 panelType = "warning";
 
-            if ( deviation > 0.50 )
+            if ( deviationPercent > 0.50 )
                 panelType = "danger";
         }
         
         String testRunLength = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( (long)averageTime ), TimeUnit.MILLISECONDS.toMinutes( (long)averageTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours((long) averageTime ) ),
                 TimeUnit.MILLISECONDS.toSeconds( (long)averageTime ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( (long)averageTime ) ) );
         
+        String deviationTime = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( (long)deviation ), TimeUnit.MILLISECONDS.toMinutes( (long)deviation ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours((long) deviation ) ),
+                TimeUnit.MILLISECONDS.toSeconds( (long)deviation ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( (long)deviation ) ) );
 
         stringBuilder.append( "<div class=\"col-sm-12 m-b\">" );
         
         stringBuilder.append( "<h4 class=\"text-muted\">Results for " ).append( rangeDate.format( new Date( suiteSet.toArray( new TestSuite[ 0 ] )[ 0 ].getStartTime() ) ) ).append( " to " ).append( rangeDate.format( new Date( suiteSet.toArray( new TestSuite[ 0 ] )[ suiteSet.size() - 1 ].getStartTime() ) ) ).append( "</h4>");
         stringBuilder.append( "<div class=\"statcard statcard-" + panelType + "\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h2>" ).append( testRunLength );
         if ( deviation != 0 )
-            stringBuilder.append( "<small class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</small>" );
+            stringBuilder.append( "<small class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( deviationTime ).append( "</small>" );
 
         stringBuilder.append( "</h2><hr class=\"-hr m-a-0\"></div><canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
         for ( TestSuite ss : suiteSet )
@@ -391,6 +400,7 @@ public class HistoryWriter
         averageTime = (double)totalTime / (double)suiteSet.size();
         
         deviation = 0;
+        up = lastTime > averageTime;
 
         if ( averageTime != lastTime )
         {
@@ -437,7 +447,7 @@ public class HistoryWriter
         
         
         averageTime = (double)totalTime / (double)suiteSet.size();
-        
+        up = lastTime > averageTime;
         deviation = 0;
 
         if ( averageTime > 0 && averageTime != lastTime )
@@ -486,6 +496,7 @@ public class HistoryWriter
         averageTime = (double)totalTime / (double)executionList.size();
         
         deviation = 0;
+        up = lastTime > averageTime;
 
         if ( averageTime != lastTime )
         {
@@ -578,8 +589,8 @@ public class HistoryWriter
             stringBuilder.append( "<td>" ).append( useRun ).append( "</td>" );
             stringBuilder.append( "<td>" ).append( t.getEnv() ).append( "</td>" );
             stringBuilder.append( "<td>" ).append( t.getPass() + t.getFail() ).append( "</td>" );
-            stringBuilder.append( "<td  style=\"color: #1bc98e\">" ).append( t.getPass() ).append( "</td>" );
-            stringBuilder.append( "<td style=\"color: #E64759\">" ).append( t.getFail() ).append( "</td>" );
+            stringBuilder.append( "<td class=pass>" ).append( t.getPass() ).append( "</td>" );
+            stringBuilder.append( "<td class=fail>" ).append( t.getFail() ).append( "</td>" );
             stringBuilder.append( "</tr>" );
             
         }
@@ -836,6 +847,10 @@ public class HistoryWriter
         int stepFail = 0;
         int stepIgnore = 0;
         TreeMap<String, int[]> envMap = new TreeMap<String, int[]>();
+        
+        Set<TestSuite> reverseSuiteSet = new TreeSet<TestSuite>( new ReverseSuiteTimeComparator() );
+        reverseSuiteSet.addAll( this.executionList );
+        TestSuite latest = reverseSuiteSet.toArray( new TestSuite[ 0 ] )[ 0 ];
 
         if ( testCase == null )
         {
@@ -910,7 +925,7 @@ public class HistoryWriter
 
         stringBuilder.append( "<html>" );
         stringBuilder.append(
-                "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"></head>" );
+                "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"><style>.pass {color: #1bc98e;}.fail {color: #e64759;}</style></head>" );
         stringBuilder.append( "<body><div class=\"container\"><div class=\"row\">" );
         
         //stringBuilder.append( "<div class=\"col-sm-3 sidebar\"><nav class=\"sidebar-nav\"><div class=\"collapse nav-toggleable-sm\" id=\"nav-toggleable-sm\"><ul class=\"nav nav-pills nav-stacked\"><li " + (activeIndex == 1 ? " class=\"active\"" : "")
@@ -921,17 +936,17 @@ public class HistoryWriter
                 .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">Test Suite Execution History</h3><h6>" + suiteName + "</h6></div>" );
 
         stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2\"></div><div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
-        stringBuilder.append( "{ value: " ).append( testSuccess ).append( ", color: '#009900', label: 'Passed' }," );
-        stringBuilder.append( "{ value: " ).append( testFail ).append( ", color: '#990000', label: 'Failed' }," );
-        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" /></div><center><strong class=\"text-muted\">Tests Executed</strong></center></div>" );
+        stringBuilder.append( "{ value: " ).append( testSuccess ).append( ", color: '#1bc98e', label: 'Passed' }," );
+        stringBuilder.append( "{ value: " ).append( testFail ).append( ", color: '#e64759', label: 'Failed' }," );
+        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Tests Executed</strong></center></div>" );
 
         stringBuilder.append( "<div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
 
-        stringBuilder.append( "{ value: " ).append( stepSuccess ).append( ", color: '#009900', label: 'Passed' }," );
-        stringBuilder.append( "{ value: " ).append( stepFail ).append( ", color: '#990000', label: 'Failed' }," );
-        stringBuilder.append( "{ value: " ).append( stepIgnore ).append( ", color: '#999900', label: 'Ignored' }" );
+        stringBuilder.append( "{ value: " ).append( stepSuccess ).append( ", color: '#1bc98e', label: 'Passed' }," );
+        stringBuilder.append( "{ value: " ).append( stepFail ).append( ", color: '#e64759', label: 'Failed' }," );
+        stringBuilder.append( "{ value: " ).append( stepIgnore ).append( ", color: '#e4d836', label: 'Ignored' }" );
 
-        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" /></div><center><strong class=\"text-muted\">Tests Steps</strong></center></div>" );
+        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Tests Steps</strong></center></div>" );
 
     }
 

@@ -59,7 +59,7 @@ public class KWSReport extends AbstractKeyWordStep
 		for ( int i=0; i<getParameterList().size(); i++ )
 		    reportData.append( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) ).append( "\t" );
 		
-		PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), reportData.toString(), getClass().getSimpleName(), startTime, System.currentTimeMillis() - startTime, StepStatus.REPORT, "", null, getThreshold(), getDescription(), false );
+		PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), getClass().getSimpleName(), reportData.toString(), startTime, System.currentTimeMillis() - startTime, StepStatus.REPORT, "", null, getThreshold(), getDescription(), false );
 		
 		return true;
 	}

@@ -250,7 +250,7 @@ public class RunDetails implements RunListener
                 .append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Failed</span><h3 class=\"statcard-number\">" + (detailsList.size() - successCount) + "</h3></div></div></div>" );
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Environments</span><h3 class=\"statcard-number\">" + envMap.size() + "</h3></div></div></div>" );
         stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h3 class=\"statcard-number\">" + runLength + "</h3></div></div></div>" );
-        stringBuilder.append( "<div class=\"pull-right text-muted\"><a hRef=\"../index.html\" style=\"margin-right: 5px;\">Return to Test Execution History</a></div></div>" );
+        stringBuilder.append( "<div class=\"pull-right text-muted\"><a hRef=\"../index.html\" style=\"margin-right: 18px;\">Return to Test Execution History</a></div></div>" );
         stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Execution Detail</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
         stringBuilder.append( "<tr><th width=\"40%\">Test</th><th width=\"40%\">Environment</th><th width=\"20%\">Duration</th><th>Status</th></tr><tbody>" );
         for ( int i = 0; i < detailsList.size(); i++ )
@@ -559,6 +559,9 @@ public class RunDetails implements RunListener
         TreeMap<String, int[]> caseMap = new TreeMap<String, int[]>();
         TreeMap<String, int[]> deviceMap = new TreeMap<String, int[]>();
         TreeMap<String, int[]> osMap = new TreeMap<String, int[]>();
+        
+        int osSuccess=0;
+        int osFail = 0;
         int[] stepBreakdown = new int[3];
         int successCount = 0;
         for ( int i = 0; i < detailsList.size(); i++ )
@@ -596,7 +599,7 @@ public class RunDetails implements RunListener
             else
                 caseValue[1]++;
 
-            String osName = device.getOs();
+            String osName = device.getEnvironment();
             if ( osName == null )
                 osName = "Unknown";
 
@@ -615,6 +618,14 @@ public class RunDetails implements RunListener
             if ( (boolean) detailsList.get( i )[2] )
                 successCount++;
         }
+        
+        for ( int[] caseValue : osMap.values() )
+        {
+        	if ( caseValue[ 1 ] > 0 )
+        		osFail++;
+        	else
+        		osSuccess++;
+        }
 
         stringBuilder.append( "<html>" );
         stringBuilder.append(
@@ -627,20 +638,22 @@ public class RunDetails implements RunListener
         stringBuilder.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
                 .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">Test Suite Execution Summary</h3><h6>" + ApplicationRegistry.instance().getAUT().getName() + "</h6></div>" );
 
-        stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2 m-b-md\"></div><div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
-        stringBuilder.append( "{ value: " ).append( successCount ).append( ", color: '#009900', label: 'Passed' }," );
-        stringBuilder.append( "{ value: " ).append( detailsList.size() - successCount ).append( ", color: '#990000', label: 'Failed' }," );
-        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" /></div><center><strong class=\"text-muted\">Test Executions</strong></center></div>" );
+        stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2 m-b-md\"></div><div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
+        stringBuilder.append( "{ value: " ).append( successCount ).append( ", color: '#1bc98e', label: 'Passed' }," );
+        stringBuilder.append( "{ value: " ).append( detailsList.size() - successCount ).append( ", color: '#e64759', label: 'Failed' }," );
+        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Test Executions</strong></center></div>" );
 
-        stringBuilder.append( "<div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
+        stringBuilder.append( "{ value: " ).append( stepBreakdown[0] ).append( ", color: '#1bc98e', label: 'Passed' }," );
+        stringBuilder.append( "{ value: " ).append( stepBreakdown[1] ).append( ", color: '#e64759', label: 'Failed' }," );
+        stringBuilder.append( "{ value: " ).append( stepBreakdown[2] ).append( ", color: '#e4d836', label: 'Ignored' }" );
+        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Tests Steps</strong></center></div>" );
 
-        stringBuilder.append( "{ value: " ).append( stepBreakdown[0] ).append( ", color: '#009900', label: 'Passed' }," );
-        stringBuilder.append( "{ value: " ).append( stepBreakdown[1] ).append( ", color: '#990000', label: 'Failed' }," );
-        stringBuilder.append( "{ value: " ).append( stepBreakdown[2] ).append( ", color: '#999900', label: 'Ignored' }" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
+        stringBuilder.append( "{ value: " ).append( osSuccess ).append( ", color: '#1bc98e', label: 'Passed' }," );
+        stringBuilder.append( "{ value: " ).append( osFail ).append( ", color: '#e64759', label: 'Failed' }," );
+        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Environments</strong></center></div>" );
 
-        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" /></div><center><strong class=\"text-muted\">Tests Steps</strong></center></div>" );
-
-        
         
         stringBuilder.append( "</div>" );
         
