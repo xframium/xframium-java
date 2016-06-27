@@ -92,20 +92,23 @@ public class KWSSQL extends AbstractKeyWordStep
             //
             
             Iterator keys = results.keySet().iterator();
-            while( keys.hasNext() )
+            if ( getContext() != null && !getContext().isEmpty() )
             {
-                Object key = keys.next();
-                Object value = results.get( key );
-
-                if ( key instanceof Integer )
+                while( keys.hasNext() )
                 {
-                    continue;
+                    Object key = keys.next();
+                    Object value = results.get( key );
+    
+                    if ( key instanceof Integer )
+                    {
+                        continue;
+                    }
+                    
+                    if ( log.isDebugEnabled() )
+                        log.debug( "Setting Context Data to [" + value + "] for [" + key + "]" );
+                    
+                    contextMap.put( getContext() + "_" + key, value );
                 }
-                
-                if ( log.isDebugEnabled() )
-                    log.debug( "Setting Context Data to [" + value + "] for [" + key + "]" );
-                
-                contextMap.put( (String) key, value );
             }
 
             for( int i = 1; (( i < paramCount ) && ( rtn )); ++i )

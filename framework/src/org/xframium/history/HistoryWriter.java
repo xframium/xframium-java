@@ -187,7 +187,7 @@ public class HistoryWriter
 
     public static void main( String[] args )
     {
-        HistoryWriter x = new HistoryWriter( new File( "C:\\Users\\AJ\\git\\morelandLabs\\customerProjects\\xmlDriven\\google\\test-output" ) );
+        HistoryWriter x = new HistoryWriter( new File( "C:\\Users\\AJ\\git\\morelandLabs\\customerProjects\\xmlDriven\\salesForce\\test-output" ) );
         x.readData();
 
         x.writeIndex();
