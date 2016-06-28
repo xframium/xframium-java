@@ -91,9 +91,10 @@ public class KWSSQL extends AbstractKeyWordStep
             // Integer when setting contest data
             //
             
-            Iterator keys = results.keySet().iterator();
             if ( getContext() != null && !getContext().isEmpty() )
             {
+                Iterator keys = results.keySet().iterator();
+            
                 while( keys.hasNext() )
                 {
                     Object key = keys.next();
@@ -103,11 +104,13 @@ public class KWSSQL extends AbstractKeyWordStep
                     {
                         continue;
                     }
+
+                    String context_name = getContext() + "_" + key;
                     
                     if ( log.isDebugEnabled() )
-                        log.debug( "Setting Context Data to [" + value + "] for [" + key + "]" );
+                        log.debug( "Setting Context Data to [" + value + "] for [" + context_name + "]" );
                     
-                    contextMap.put( getContext() + "_" + key, value );
+                    contextMap.put( context_name, value );
                 }
             }
 
