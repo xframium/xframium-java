@@ -302,14 +302,14 @@ public interface Element
 	 * @param tokenName the token name
 	 * @param tokenValue the token value
 	 */
-	public void addToken( String tokenName, String tokenValue );
+	public Element addToken( String tokenName, String tokenValue );
 	
 	/**
 	 * Adds the token.
 	 *
 	 * @param tokenPairValue the token pair value
 	 */
-	public void addToken( String tokenPairValue );
+	public Element addToken( String tokenPairValue );
 	
 	/**
 	 * Clone element.

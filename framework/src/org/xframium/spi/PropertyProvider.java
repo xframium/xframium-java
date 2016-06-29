@@ -35,4 +35,5 @@ public interface PropertyProvider
 	 * A proeprty value
 	 */
 	public String getProperty( String propertyName );
+	public void setProperty( String Name, String value );
 }

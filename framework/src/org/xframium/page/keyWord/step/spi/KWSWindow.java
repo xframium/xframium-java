@@ -22,12 +22,12 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import java.util.Set;
-
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.xframium.device.factory.MorelandWebElement;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
@@ -125,7 +125,10 @@ public class KWSWindow extends AbstractKeyWordStep
                 		return false;
                 	}
                 	
-                	webDriver.switchTo().frame( (WebElement) currentElement.getNative() ); 
+                	WebElement nativeElement = (WebElement) currentElement.getNative();
+                	if ( nativeElement instanceof MorelandWebElement )
+                	    nativeElement = ( (MorelandWebElement) nativeElement ).getWebElement();
+                	webDriver.switchTo().frame( nativeElement ); 
                 	break;
                 	
                 case BY_ALERT:

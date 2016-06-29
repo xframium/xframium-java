@@ -65,7 +65,9 @@ public class KeyWordTest
 	/** The description. */
 	private String description;
 	
-	/** The threshold. */
+	
+
+    /** The threshold. */
 	private int threshold;
 	
 	/** The test tags. */
@@ -131,6 +133,11 @@ public class KeyWordTest
 	{
 		return dataDriver;
 	}
+	
+	public String getDescription()
+    {
+        return description;
+    }
 
 	/**
 	 * Adds the step.

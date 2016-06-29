@@ -187,7 +187,7 @@ public class HistoryWriter
 
     public static void main( String[] args )
     {
-        HistoryWriter x = new HistoryWriter( new File( "C:\\Users\\AJ\\git\\morelandLabs\\customerProjects\\xmlDriven\\salesForce\\test-output" ) );
+        HistoryWriter x = new HistoryWriter( new File( "C:\\Projects\\Git\\morelandLabs\\customerProjects\\xmlDriven\\google\\test-output" ) );
         x.readData();
 
         x.writeIndex();
@@ -365,7 +365,7 @@ public class HistoryWriter
         stringBuilder.append( "<h4 class=\"text-muted\">Results for " ).append( rangeDate.format( new Date( suiteSet.toArray( new TestSuite[ 0 ] )[ 0 ].getStartTime() ) ) ).append( " to " ).append( rangeDate.format( new Date( suiteSet.toArray( new TestSuite[ 0 ] )[ suiteSet.size() - 1 ].getStartTime() ) ) ).append( "</h4>");
         stringBuilder.append( "<div class=\"statcard statcard-" + panelType + "\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h2>" ).append( testRunLength );
         if ( deviation != 0 )
-            stringBuilder.append( "<small class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( deviationTime ).append( "</small>" );
+            stringBuilder.append( "<span style=\"position: absolute; right: 25px;\" class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( deviationTime ).append( "%</span>" );
 
         stringBuilder.append( "</h2><hr class=\"-hr m-a-0\"></div><canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
         for ( TestSuite ss : suiteSet )
@@ -393,7 +393,7 @@ public class HistoryWriter
         	lastTime = ss.getPass();
             totalTime += lastTime;
         }
-        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Tests Passed</span><h2>" ).append( tP );
+        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Tests Passed</span><h2>" ).append( String.format( "%,2d", tP ) );
         
         
         
@@ -411,7 +411,7 @@ public class HistoryWriter
         }
         
         if ( deviation != 0 )
-            stringBuilder.append( "<small class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</small>" );
+            stringBuilder.append( "<span style=\"position: absolute; right: 25px;\" class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</span>" );
 
         stringBuilder.append( "</h2><hr class=\"-hr m-a-0\"></div><canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
         for ( TestSuite ss : suiteSet )
@@ -442,7 +442,7 @@ public class HistoryWriter
         	lastTime = ss.getFail();
             totalTime += lastTime;
         }
-        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Tests Failed</span><h2>" ).append( tF );
+        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Tests Failed</span><h2>" ).append( String.format( "%,2d", tF ) );
         
         
         
@@ -459,7 +459,7 @@ public class HistoryWriter
         }
         
         if ( deviation != 0 )
-            stringBuilder.append( "<small class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</small>" );
+            stringBuilder.append( "<span style=\"position: absolute; right: 25px;\" class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</span>" );
 
         stringBuilder.append( "</h2><hr class=\"-hr m-a-0\"></div><canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
         for ( TestSuite ss : suiteSet )
@@ -489,7 +489,7 @@ public class HistoryWriter
         	lastTime = exe.getPassed();
             totalTime += lastTime;
         }
-        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Passed</span><h2>" ).append( sP );
+        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Passed</span><h2>" ).append( String.format( "%,2d%n", sP ) );
         
         
         
@@ -507,7 +507,7 @@ public class HistoryWriter
         }
         
         if ( deviation != 0 )
-            stringBuilder.append( "<small class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</small>" );
+            stringBuilder.append( "<span style=\"position: absolute; right: 25px;\" class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</span>" );
 
         stringBuilder.append( "</h2><hr class=\"-hr m-a-0\"></div><canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
         for ( Execution exe : executionList )
@@ -538,7 +538,7 @@ public class HistoryWriter
         	lastTime = exe.getFailed();
             totalTime += lastTime;
         }
-        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Failed</span><h2>" ).append( sF );
+        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Failed</span><h2>" ).append( String.format( "%,2d%n", sF ) );
         
         
         
@@ -555,7 +555,7 @@ public class HistoryWriter
         }
         
         if ( deviation != 0 )
-            stringBuilder.append( "<small class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</small>" );
+            stringBuilder.append( "<span style=\"position: absolute; right: 25px;\" class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</span>" );
 
         stringBuilder.append( "</h2><hr class=\"-hr m-a-0\"></div><canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
         for ( Execution exe : executionList )
@@ -575,7 +575,7 @@ public class HistoryWriter
         stringBuilder.append( "</div><br />" );
 
         
-        stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Environment Summary</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
+        stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Executions</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
         stringBuilder.append( "<tr><th>Executed on</th><th>Duration</th><th>Environments</th><th>Tests</th><th style=\"color: #1bc98e\">Passed</th><th style=\"color: #E64759\">Failed</th></tr><tbody>" );
         
         for ( TestSuite t : reverseSuiteSet )
@@ -669,7 +669,7 @@ public class HistoryWriter
                     .append( ")</a></span><h5>Averge Duration</h5><h4>" ).append( runLength );
 
             if ( !even )
-                stringBuilder.append( "<small class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "</small>" );
+                stringBuilder.append( "<span style=\"position: absolute; right: 25px;\" class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</span>" );
             stringBuilder.append( "</h4><hr class=\"-hr m-a-0\"></div>" );
             stringBuilder.append( "<canvas id=\"sparkline1\" width=\"378\" height=\"64\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
             for ( Execution exe : executionList )
@@ -792,7 +792,7 @@ public class HistoryWriter
                     .append( ")</a></h6></span><h3>" ).append( runLength );
 
             if ( !even )
-                stringBuilder.append( "<small class=\"pull-right text-muted delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "</small>" );
+                stringBuilder.append( "<span style=\"position: absolute; right: 25px;\" class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</span>" );
             stringBuilder.append( "</h3><hr class=\"-hr m-a-0\"></div>" );
             stringBuilder.append( "<canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
             for ( Execution exe : env.getExecution() )
@@ -850,7 +850,6 @@ public class HistoryWriter
         
         Set<TestSuite> reverseSuiteSet = new TreeSet<TestSuite>( new ReverseSuiteTimeComparator() );
         reverseSuiteSet.addAll( this.executionList );
-        TestSuite latest = reverseSuiteSet.toArray( new TestSuite[ 0 ] )[ 0 ];
 
         if ( testCase == null )
         {

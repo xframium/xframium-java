@@ -50,6 +50,7 @@ import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.ExecutionRecord;
 import org.xframium.page.StepStatus;
 import org.xframium.spi.Device;
+import org.xframium.spi.PropertyProvider;
 import org.xframium.spi.RunDetails;
 import org.xframium.wcag.WCAGRecord;
 import org.yaml.snakeyaml.util.UriEncoder;
@@ -124,8 +125,17 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         
         stringBuffer.append( "<body><div class=\"container\">" );
         
-        stringBuffer.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">" + testName + "</h3><h6>" + device.getEnvironment() + "</h6></div>" );
+        stringBuffer.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">" + testName + "</h3><h6>" + device.getEnvironment() + "</h6>" );
 
+        if ( webDriver instanceof PropertyProvider )
+        {
+            PropertyProvider pProvider = (PropertyProvider) webDriver;
+            if ( pProvider.getProperty( "testDescription" ) != null && !pProvider.getProperty( "testDescription" ).isEmpty() )
+                stringBuffer.append( "<h6 class=\"text-muted\"><i>" + pProvider.getProperty( "testDescription" ) + "</i></h6>" );
+        }
+        
+        stringBuffer.append( "</div>" );
+        
         String panelClass = "default";
         if ( DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) != null && !DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ).isEmpty() )
         {

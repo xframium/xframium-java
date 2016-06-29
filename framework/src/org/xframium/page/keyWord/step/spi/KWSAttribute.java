@@ -89,7 +89,6 @@ public class KWSAttribute extends AbstractKeyWordStep
                 attributeValue = getElement( pageObject, contextMap, webDriver, dataMap ).getAttribute( attributeName );
             
 			compareTo = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
-			attributeValue = getElement( pageObject, contextMap, webDriver, dataMap ).getAttribute( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" );
 			if ( !attributeValue.equals( compareTo ) )
 				throw new IllegalStateException( "ATTRIBUTE Expected [" + compareTo + "] but found [" + attributeValue + "]" );
 		}
