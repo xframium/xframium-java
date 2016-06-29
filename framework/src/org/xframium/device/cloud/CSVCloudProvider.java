@@ -111,7 +111,7 @@ public class CSVCloudProvider extends AbstractCloudProvider
 				
 				String[] lineData = currentLine.split( "," );
 				
-				CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( lineData[ 0 ], lineData[ 1 ], lineData[ 2 ], lineData[ 3 ], lineData[ 4 ], lineData[ 5 ], lineData[ 7 ], lineData[ 6 ] ) );
+				CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( lineData[ 0 ], lineData[ 1 ], lineData[ 2 ], lineData[ 3 ], lineData[ 4 ], lineData[ 5 ], lineData[ 7 ], lineData[ 6 ], lineData[ 8 ] ) );
 			}
 		}
 		catch( Exception e )

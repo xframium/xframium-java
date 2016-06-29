@@ -139,7 +139,7 @@ public class CloudRegistry
     		    _server = new SeleniumServer();
     		    _server.boot();
     		    _server.start();
-    		    CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( "EMBEDDED", "", "", "127.0.0.1:4444", "", "0", "", null ) );
+    		    CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( "EMBEDDED", "", "", "127.0.0.1:4444", "", "0", "", null, "SELENIUM" ) );
     		    embeddedGrid=true;
 		    }
 		    catch( Exception e )

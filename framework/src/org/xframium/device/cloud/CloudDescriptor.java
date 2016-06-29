@@ -57,13 +57,8 @@ public class CloudDescriptor
 	/** The grid instance. */
 	private String gridInstance;
 	
-	/**
-	 * Instantiates a new cloud descriptor.
-	 */
-	public CloudDescriptor()
-	{
-		
-	}
+	private String provider;
+	
 	
 	/**
 	 * Instantiates a new cloud descriptor.
@@ -77,7 +72,7 @@ public class CloudDescriptor
 	 * @param description the description
 	 * @param gridInstance the grid instance
 	 */
-	public CloudDescriptor( String name, String userName, String password, String hostName, String proxyHost, String proxyPort, String description, String gridInstance )
+	public CloudDescriptor( String name, String userName, String password, String hostName, String proxyHost, String proxyPort, String description, String gridInstance, String provider )
 	{
 		this.name = name;
 		this.userName = userName;
@@ -87,9 +82,18 @@ public class CloudDescriptor
 		this.proxyPort = proxyPort;
 		this.description = description;
 		this.gridInstance = gridInstance;
+		if ( provider == null || provider.isEmpty() )
+		    this.provider = "PERFECTO";
+		else
+		    this.provider = provider;
 	}
 	
-	/**
+	public String getProvider()
+    {
+        return provider;
+    }
+
+    /**
 	 * Gets the cloud url.
 	 *
 	 * @return the cloud url
@@ -99,7 +103,11 @@ public class CloudDescriptor
 		
 		try
 		{
-			return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/wd/hub";
+		    if ( provider != null && provider.equals( "PERFECTO" ) )
+		        return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/wd/hub";
+		    else
+		        return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/wd/hub";
+		    
 		}
 		catch (UnsupportedEncodingException e)
 		{

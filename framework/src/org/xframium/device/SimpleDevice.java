@@ -26,6 +26,9 @@ package org.xframium.device;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
+import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
+import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
 import org.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc
@@ -179,13 +182,65 @@ public class SimpleDevice implements Device
 		this.browserName = browserName;
 		this.browserVersion = browserVersion;
 		this.availableDevices = availableDevices;
+		
+		if ( availableDevices < 0)
+		{
+		    availableDevices = 0;
+		    if ( CloudRegistry.instance().getCloud().getProvider() != null && CloudRegistry.instance().getCloud().getProvider().equals( "PERFECTO" ) )
+            {
+                for ( Handset hs : PerfectoMobile.instance().devices().getDevices( false ).getHandsetList() )
+                {
+                    if ( !compareValues( manufacturer, hs.getManufacturer() ) )
+                        continue;
+                    
+                    if ( !compareValues( model, hs.getModel() ) )
+                        continue;
+                    
+                    if ( !compareValues( os, hs.getOs() ) )
+                        continue;
+                    
+                    if ( !compareValues( osVersion, hs.getOsVersion() ) )
+                        continue;
+                    
+                    availableDevices++;
+                }
+            }
+		}
+		
 		this.driverType = driverType;
 		this.deviceName = deviceName;
-		this.active = active;
+		if ( availableDevices < 1 )
+		    this.active = false;
+		else
+		    this.active = active;
 		deviceLock = new Semaphore( availableDevices );
 		
 		cachedString = manufacturer + " " + model + " [" + key + "]";
 		generateEnv();
+	}
+	
+	private boolean compareValues( String rootValue, String hsValue )
+	{
+	    if ( rootValue == null || rootValue.trim().isEmpty() )
+	        return true;
+	    
+	    if ( rootValue.contains( "*" ) )
+	    {
+	        String useValue = rootValue.replace( "*", "" ).trim();
+	        
+	        if ( hsValue.contains( useValue ) )
+	            return true;
+	        else
+	            return false;
+	    }
+	    
+	    if ( rootValue.trim().equals( hsValue ) )
+	    {
+	        return true;
+	    }
+	    
+	    return false;
+	    
 	}
 
 	/* (non-Javadoc)
