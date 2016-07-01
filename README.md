@@ -27,31 +27,23 @@ Refer to the [contributing guidelines](https://github.com/xframium/xframium-java
 xFramium development adheres to the [the Semantic Versioning guidelines](http://semver.org/) as closely as possible for all release information.  All release can be found via the [download and release notes](http://xframium.org/download.html#rn) section of the xframium.org website.
 
 ## Current Release
-1.0.1 
+1.0.2
 
-Chronos
-6/4/2016
- - Reorganization of package structure
- - Added checks for page object not appearing in the XML model.
- - Added checks for validating all XPATH statements - The test will error out at the begining if invalid XPATH statements are end
- - Added database backed application registry
- - Added database backed cloud registry
- - Added database backed device registry
- - Added database backed page data
- - Added database backed object registry
- - Added database backed test definitions
- - Added a simple else clause. The else clause can be added to a step to execute on failure
- - Pulled latest selenium JARS
- - Added context variable for looping for more loop control
- - XML configuration option added for xframium-driver. Added the ability for a self contained test for POC and small tests
- - Press gestures added relative to element by percentages
- - Configuration files are not located relative to the location of the driver configuration files
- - output files are now relative to the driver configuration file
- - Added the property object descriptor - this is a simplified descriptor finding elements using a simple property reference
- - Added the ALIGN keyword to allow for alignment checks to various elements in relation to other elements on teh page
- - Added the GUI Launcher
- - Various documentation additions and bug fixes
- - Added snapshot keyword to dumped screen shots and object tree into the HTML report
+Dionysus
+7/1/2016
+
+ - Updated xFramium Launcher
+ - Added ability to dump application state during a run
+ - Updated to latest TestNG version of resolved POM issues
+ - Added ability to interact with Alerts
+ - New mobile responsive reporting engine
+ - Added ability to generate historical reports for a run
+ - Added source code formatting for state reports
+ - Added SQL item lookup keyword for database checks. Allows for context storage and/or verification
+ - Added cloud provider type specification
+ - Added test description field and links to it on the report
+ - Available devices can now be set to -1 indicating that the value should be populated from the cloud
+
 
 ## Copyright and License
 
