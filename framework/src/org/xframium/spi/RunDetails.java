@@ -636,7 +636,7 @@ public class RunDetails implements RunListener
         //        + "><a href=\"index.html\">Execution Results</a></li><li " + (activeIndex == 2 ? " class=\"active\"" : "") + "><a href=\"deviceSummary.html\">Device Summary</a></li><li " + (activeIndex == 3 ? " class=\"active\"" : "")
         //        + "><a href=\"testSummary.html\">Test Summary</a></li><li " + (activeIndex == 4 ? " class=\"active\"" : "") + "><a href=\"osSummary.html\">OS Summary</a></li></ul><hr class=\"visible-xs m-t\"></div></nav></div>" );
         stringBuilder.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
-                .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">Test Suite Execution Summary</h3><h6>" + ApplicationRegistry.instance().getAUT().getName() + "</h6></div>" );
+                .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.2</h6><h3 class=\"dashhead-title\">Test Suite Execution Summary</h3><h6>" + ApplicationRegistry.instance().getAUT().getName() + "</h6></div>" );
 
         stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2 m-b-md\"></div><div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( successCount ).append( ", color: '#1bc98e', label: 'Passed' }," );

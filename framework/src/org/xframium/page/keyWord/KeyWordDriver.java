@@ -305,6 +305,52 @@ public class KeyWordDriver
 	    
         return testMap.values();
     }
+    
+    /**
+     * Gets the tagged tests.
+     *
+     * @param tagNames the tag names
+     * @return the tagged tests
+     */
+    public Collection<KeyWordTest> getNamedTests( String[] testNames ) 
+    {
+        Map<String,KeyWordTest> testMap = new HashMap<String,KeyWordTest>( 10 );
+        
+        for ( String tagName : testNames )
+        {
+            if ( log.isInfoEnabled() )
+                log.info( "Adding Tests by NAME [" + tagName.toLowerCase() + "]" );
+            
+            for ( KeyWordTest t : this.testMap.values() )
+            {
+                if ( tagName.contains( "*" ) )
+                {
+                    if ( tagName.startsWith( "*" ) )
+                    {
+                        if ( t.getName().toLowerCase().endsWith( tagName.replace( "*", "" ).trim() ) )
+                            testMap.put( t.getName(), t );
+                    }
+                    else if ( tagName.endsWith( "*" ) )
+                    {
+                        if ( t.getName().toLowerCase().startsWith( tagName.replace( "*", "" ).trim() ) )
+                            testMap.put( t.getName(), t );
+                    }
+                }
+                else
+                {
+                    if ( tagName.toLowerCase().equals( t.getName().toLowerCase() ) )
+                        testMap.put( t.getName(), t );
+                }
+                
+                
+                if ( log.isDebugEnabled() )
+                    log.debug( "Adding Test [" + t.getName() + "]" );
+                testMap.put( t.getName(), t );
+            }
+        }
+        
+        return testMap.values();
+    }
 
     /**
      * Execute test.

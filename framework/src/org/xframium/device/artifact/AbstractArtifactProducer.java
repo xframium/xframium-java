@@ -125,7 +125,7 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         
         stringBuffer.append( "<body><div class=\"container\">" );
         
-        stringBuffer.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">" + testName + "</h3><h6>" + device.getEnvironment() + "</h6>" );
+        stringBuffer.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.2</h6><h3 class=\"dashhead-title\">" + testName + "</h3><h6>" + device.getEnvironment() + "</h6>" );
 
         if ( webDriver instanceof PropertyProvider )
         {

@@ -78,7 +78,7 @@
     <dependency>
       <groupId>org.xframium</groupId>
       <artifactId>xframium-java</artifactId>
-      <version>1.0.2-SNAPSHOT</version>
+      <version>1.0.2</version>
     </dependency>
   </dependencies>
 </project>

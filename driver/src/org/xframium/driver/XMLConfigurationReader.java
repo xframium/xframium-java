@@ -700,8 +700,19 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         // Extract any named tests
         //
         String testNames = xRoot.getDriver().getTestNames();
+        
         if ( testNames != null && !testNames.isEmpty() )
+        {
+            Collection<KeyWordTest> testList = KeyWordDriver.instance().getNamedTests( testNames.split( "," ) );
+            
+            if ( testList.isEmpty() )
+            {
+                System.err.println( "No tests contained the names(s) [" + testNames + "]" );
+            }
+            
             testArray.addAll( Arrays.asList( testNames ) );
+        }
+
 
         //
         // Extract any tagged tests
@@ -713,8 +724,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
 
             if ( testList.isEmpty() )
             {
-                System.err.println( "No tests contianed the tag(s) [" + tagNames + "]" );
-                System.exit( -1 );
+                System.err.println( "No tests contained the tag(s) [" + tagNames + "]" );
             }
 
             for ( KeyWordTest t : testList )
