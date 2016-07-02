@@ -48,6 +48,7 @@ public class HistoryWriter
     private Map<String, TestCase> testMap = new HashMap<String, TestCase>( 20 );
     private Map<String, Environment> environmentMap = new HashMap<String, Environment>( 20 );
     private List<TestSuite> executionList = new ArrayList<TestSuite>( 10 );
+
     private boolean fileLoaded = false;
 
     public HistoryWriter( File rootFolder )
@@ -134,7 +135,7 @@ public class HistoryWriter
 
     }
 
-    public void writeData( String fileName, long startTime, long endTime, int env, int oss, int pass, int fail )
+    public void writeData( String fileName, long startTime, long endTime, int env, int oss, int pass, int fail, TreeMap<String, int[]> envMap )
     {
         OutputStream os = null;
 
@@ -153,6 +154,19 @@ public class HistoryWriter
         testSuite.setOs( oss );
         testSuite.setPass( pass );
         testSuite.setFail( fail );
+        
+        for ( String envName : envMap.keySet() )
+        {
+        	Environment newEnv = new Environment();
+        	newEnv.setName( envName );
+        	
+        	int[] ratio = envMap.get( envName );
+        	
+        	newEnv.setPass( ratio[ 0 ] );
+        	newEnv.setFail( ratio[ 1 ] );
+        	
+        	testSuite.getEnvironment().add( newEnv );
+        }
         
         
         executionList.add( testSuite );
@@ -187,7 +201,7 @@ public class HistoryWriter
 
     public static void main( String[] args )
     {
-        HistoryWriter x = new HistoryWriter( new File( "C:\\Projects\\Git\\morelandLabs\\customerProjects\\xmlDriven\\google\\test-output" ) );
+        HistoryWriter x = new HistoryWriter( new File( "C:/Users/AJ/git/morelandLabs/customerProjects/xmlDriven/google/test-output/" ) );
         x.readData();
 
         x.writeIndex();
@@ -363,7 +377,8 @@ public class HistoryWriter
         stringBuilder.append( "<div class=\"col-sm-12 m-b\">" );
         
         stringBuilder.append( "<h4 class=\"text-muted\">Results for " ).append( rangeDate.format( new Date( suiteSet.toArray( new TestSuite[ 0 ] )[ 0 ].getStartTime() ) ) ).append( " to " ).append( rangeDate.format( new Date( suiteSet.toArray( new TestSuite[ 0 ] )[ suiteSet.size() - 1 ].getStartTime() ) ) ).append( "</h4>");
-        stringBuilder.append( "<div class=\"statcard statcard-" + panelType + "\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h2>" ).append( testRunLength );
+
+        /*stringBuilder.append( "<div class=\"statcard statcard-" + panelType + "\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h2>" ).append( testRunLength );
         if ( deviation != 0 )
             stringBuilder.append( "<span style=\"position: absolute; right: 25px;\" class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( deviationTime ).append( "%</span>" );
 
@@ -379,200 +394,12 @@ public class HistoryWriter
             stringBuilder.append( "'" ).append( (ss.getEndTime() - ss.getStartTime()) / 1000 ).append( "'," );
         }
         stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
-        stringBuilder.append( "]\" style=\"width: 189px; height: 47px;\"></canvas></div></div>" );
+        stringBuilder.append( "]\" style=\"width: 189px; height: 47px;\"></canvas></div></div>" );*/
         
         
         
-        //
-        // Tests Passed
-        //
-        totalTime = 0;
-
-        for ( TestSuite ss : suiteSet )
-        {
-        	lastTime = ss.getPass();
-            totalTime += lastTime;
-        }
-        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Tests Passed</span><h2>" ).append( String.format( "%,2d", tP ) );
         
-        
-        
-        averageTime = (double)totalTime / (double)suiteSet.size();
-        
-        deviation = 0;
-        up = lastTime > averageTime;
-
-        if ( averageTime != lastTime )
-        {
-            if ( up )
-                deviation = 1 - ((double) averageTime / (double) lastTime);
-            else
-                deviation = 1 - ((double) lastTime / (double) averageTime);
-        }
-        
-        if ( deviation != 0 )
-            stringBuilder.append( "<span style=\"position: absolute; right: 25px;\" class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</span>" );
-
-        stringBuilder.append( "</h2><hr class=\"-hr m-a-0\"></div><canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
-        for ( TestSuite ss : suiteSet )
-        {
-            stringBuilder.append( ss.getPass() ).append( "," );
-        }
-        
-        
-        
-        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
-        stringBuilder.append( "]}]\" data-labels=\"[" );
-        for ( TestSuite ss : suiteSet )
-        {
-            stringBuilder.append( "'" ).append( ss.getPass() ).append( "'," );
-        }
-        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
-        stringBuilder.append( "]\" style=\"width: 189px; height: 47px;\"></canvas></div></div>" );
-        
-        
-        
-        //
-        // Tests Failed
-        //
-        totalTime = 0;
-
-        for ( TestSuite ss : suiteSet )
-        {
-        	lastTime = ss.getFail();
-            totalTime += lastTime;
-        }
-        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Tests Failed</span><h2>" ).append( String.format( "%,2d", tF ) );
-        
-        
-        
-        averageTime = (double)totalTime / (double)suiteSet.size();
-        up = lastTime > averageTime;
-        deviation = 0;
-
-        if ( averageTime > 0 && averageTime != lastTime )
-        {
-            if ( up )
-                deviation = 1 - ((double) averageTime / (double) lastTime);
-            else
-                deviation = 1 - ((double) lastTime / (double) averageTime);
-        }
-        
-        if ( deviation != 0 )
-            stringBuilder.append( "<span style=\"position: absolute; right: 25px;\" class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</span>" );
-
-        stringBuilder.append( "</h2><hr class=\"-hr m-a-0\"></div><canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
-        for ( TestSuite ss : suiteSet )
-        {
-            stringBuilder.append( ss.getFail() ).append( "," );
-        }
-        
-
-        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
-        stringBuilder.append( "]}]\" data-labels=\"[" );
-        for ( TestSuite ss : suiteSet )
-        {
-            stringBuilder.append( "'" ).append( ss.getPass() ).append( "'," );
-        }
-        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
-        stringBuilder.append( "]\" style=\"width: 189px; height: 47px;\"></canvas></div></div>" );
-        
-        
-        
-        //
-        // Steps Passed
-        //
-        totalTime = 0;
-
-        for ( Execution exe : executionList )
-        {
-        	lastTime = exe.getPassed();
-            totalTime += lastTime;
-        }
-        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Passed</span><h2>" ).append( String.format( "%,2d%n", sP ) );
-        
-        
-        
-        averageTime = (double)totalTime / (double)executionList.size();
-        
-        deviation = 0;
-        up = lastTime > averageTime;
-
-        if ( averageTime != lastTime )
-        {
-            if ( up )
-                deviation = 1 - ((double) averageTime / (double) lastTime);
-            else
-                deviation = 1 - ((double) lastTime / (double) averageTime);
-        }
-        
-        if ( deviation != 0 )
-            stringBuilder.append( "<span style=\"position: absolute; right: 25px;\" class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</span>" );
-
-        stringBuilder.append( "</h2><hr class=\"-hr m-a-0\"></div><canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
-        for ( Execution exe : executionList )
-        {
-            stringBuilder.append( exe.getPassed() ).append( "," );
-        }
-        
-        
-        
-        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
-        stringBuilder.append( "]}]\" data-labels=\"[" );
-        for ( Execution exe : executionList )
-        {
-            stringBuilder.append( "'" ).append( exe.getPassed() ).append( "'," );
-        }
-        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
-        stringBuilder.append( "]\" style=\"width: 189px; height: 47px;\"></canvas></div></div>" );
-        
-        
-        
-        //
-        // Steps Failed
-        //
-        totalTime = 0;
-
-        for ( Execution exe : executionList )
-        {
-        	lastTime = exe.getFailed();
-            totalTime += lastTime;
-        }
-        stringBuilder.append( "<div class=\"col-sm-6 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Steps Failed</span><h2>" ).append( String.format( "%,2d%n", sF ) );
-        
-        
-        
-        averageTime = (double)totalTime / (double)executionList.size();
-        
-        deviation = 0;
-
-        if ( averageTime > 0 && averageTime != lastTime )
-        {
-            if ( up )
-                deviation = 1 - ((double) averageTime / (double) lastTime);
-            else
-                deviation = 1 - ((double) lastTime / (double) averageTime);
-        }
-        
-        if ( deviation != 0 )
-            stringBuilder.append( "<span style=\"position: absolute; right: 25px;\" class=\"pull-right delta-indicator delta-" ).append( up ? "positive" : "negative" ).append( "\">" ).append( percentFormat.format( deviation ) ).append( "%</span>" );
-
-        stringBuilder.append( "</h2><hr class=\"-hr m-a-0\"></div><canvas id=\"sparkline1\" class=\"sparkline\" data-chart=\"spark-line\" data-value=\"[{data:[" );
-        for ( Execution exe : executionList )
-        {
-            stringBuilder.append( exe.getFailed() ).append( "," );
-        }
-        
-
-        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
-        stringBuilder.append( "]}]\" data-labels=\"[" );
-        for ( Execution exe : executionList )
-        {
-            stringBuilder.append( "'" ).append( exe.getPassed() ).append( "'," );
-        }
-        stringBuilder.deleteCharAt( stringBuilder.length() - 1 );
-        stringBuilder.append( "]\" style=\"width: 189px; height: 47px;\"></canvas></div></div>" );
-        stringBuilder.append( "</div><br />" );
+        stringBuilder.append( "</div></div><br />" );
 
         
         stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Executions</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
@@ -924,7 +751,7 @@ public class HistoryWriter
 
         stringBuilder.append( "<html>" );
         stringBuilder.append(
-                "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"><style>.pass {color: #1bc98e;}.fail {color: #e64759;}</style></head>" );
+                "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"><style>.abscenter { margin: auto; position: absolute; top: 0; left: 0; bottom: 0; right: 0; } .pass {color: #1bc98e;}.fail {color: #e64759;}</style></head>" );
         stringBuilder.append( "<body><div class=\"container\"><div class=\"row\">" );
         
         //stringBuilder.append( "<div class=\"col-sm-3 sidebar\"><nav class=\"sidebar-nav\"><div class=\"collapse nav-toggleable-sm\" id=\"nav-toggleable-sm\"><ul class=\"nav nav-pills nav-stacked\"><li " + (activeIndex == 1 ? " class=\"active\"" : "")
@@ -934,18 +761,22 @@ public class HistoryWriter
         stringBuilder.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">Updated " ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
                 .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.2</h6><h3 class=\"dashhead-title\">Test Suite Execution History</h3><h6>" + suiteName + "</h6></div>" );
 
-        stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2\"></div><div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
+        stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2\"></div><div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\">" );
+        stringBuilder.append( "<div class=\"abscenter\"  style=\"width: 100%; height: 120px; vertical-align: center;  line-height:19px; text-align: center; z-index: 999999999999999\"><h1 class=\"text-muted\"><b>" + (testSuccess + testFail) + "</b></h1><h4><span class=\"pass\">" + testSuccess + "</span> / <span class=\"fail\">" + testFail + "</span></h4></div>" );
+        stringBuilder.append( "<canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-animation=\"true\" data-animation-easing=\"easeOutQuart\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( testSuccess ).append( ", color: '#1bc98e', label: 'Passed' }," );
         stringBuilder.append( "{ value: " ).append( testFail ).append( ", color: '#e64759', label: 'Failed' }," );
-        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Tests Executed</strong></center></div>" );
+        stringBuilder.append( "]\" data-segment-stroke-color=\"white\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Tests Executed</strong></center></div>" );
 
-        stringBuilder.append( "<div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
+        stringBuilder.append( "<div class=\"col-sm-4 m-b-md\"><div class=\"w-lg m-x-auto\">" );
+        stringBuilder.append( "<div class=\"abscenter\"  style=\"width: 100%; height: 120px; vertical-align: center;  line-height:19px; text-align: center; z-index: 999999999999999\"><h1 class=\"text-muted\"><b>" + (stepSuccess + stepFail + stepIgnore) + "</b></h1><h4><span class=\"pass\">" + stepSuccess + "</span> / <span class=\"fail\">" + stepFail + "</span></h4></div>" );
+        stringBuilder.append( "<canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-animation=\"true\" data-animation-easing=\"easeOutQuart\" data-chart=\"doughnut\" data-value=\"[" );
 
         stringBuilder.append( "{ value: " ).append( stepSuccess ).append( ", color: '#1bc98e', label: 'Passed' }," );
         stringBuilder.append( "{ value: " ).append( stepFail ).append( ", color: '#e64759', label: 'Failed' }," );
         stringBuilder.append( "{ value: " ).append( stepIgnore ).append( ", color: '#e4d836', label: 'Ignored' }" );
 
-        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Tests Steps</strong></center></div>" );
+        stringBuilder.append( "]\" data-segment-stroke-color=\"white\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Tests Steps</strong></center></div>" );
 
     }
 

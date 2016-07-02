@@ -244,14 +244,8 @@ public class RunDetails implements RunListener
         String runLength = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( runTime ), TimeUnit.MILLISECONDS.toMinutes( runTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( runTime ) ),
                 TimeUnit.MILLISECONDS.toSeconds( runTime ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( runTime ) ) );
 
-        stringBuilder.append( "<br /><div class=\"row statcards\">" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Passed</span><h3 class=\"statcard-number\">" + successCount + "</h3></div></div></div>" );
-        stringBuilder
-                .append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Failed</span><h3 class=\"statcard-number\">" + (detailsList.size() - successCount) + "</h3></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Environments</span><h3 class=\"statcard-number\">" + envMap.size() + "</h3></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h3 class=\"statcard-number\">" + runLength + "</h3></div></div></div>" );
-        stringBuilder.append( "<div class=\"pull-right text-muted\"><a hRef=\"../index.html\" style=\"margin-right: 18px;\">Return to Test Execution History</a></div></div>" );
-        stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Execution Detail</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
+        stringBuilder.append( "<div class=\"row\"><div class=\"pull-right text-muted\"><a hRef=\"../index.html\" style=\"margin-right: 18px;\">Return to Test Execution History</a></div></div>" );
+        stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Execution Detail (" + runLength + ")</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
         stringBuilder.append( "<tr><th width=\"40%\">Test</th><th width=\"40%\">Environment</th><th width=\"20%\">Duration</th><th>Status</th></tr><tbody>" );
         for ( int i = 0; i < detailsList.size(); i++ )
         {
@@ -331,7 +325,7 @@ public class RunDetails implements RunListener
             writeHTMLTCSummary( rootFolder );
 
             if ( complete )
-            	historyWriter.writeData( getRootFolder() + System.getProperty( "file.separator" ) + "index.html", startTime, System.currentTimeMillis(), envMap.size(), osMap.size(), successCount, detailsList.size() - successCount );
+            	historyWriter.writeData( getRootFolder() + System.getProperty( "file.separator" ) + "index.html", startTime, System.currentTimeMillis(), envMap.size(), osMap.size(), successCount, detailsList.size() - successCount, envMap );
 
         }
         catch ( Exception e )
@@ -629,7 +623,7 @@ public class RunDetails implements RunListener
 
         stringBuilder.append( "<html>" );
         stringBuilder.append(
-                "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"></head>" );
+                "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"><style>.abscenter { margin: auto; position: absolute; top: 0; left: 0; bottom: 0; right: 0; } .pass {color: #1bc98e;}.fail {color: #e64759;}</style></head>" );
         stringBuilder.append( "<body><div class=\"container\"><div class=\"row\">" );
 
         //stringBuilder.append( "<div class=\"col-sm-3 sidebar\"><nav class=\"sidebar-nav\"><div class=\"collapse nav-toggleable-sm\" id=\"nav-toggleable-sm\"><ul class=\"nav nav-pills nav-stacked\"><li " + (activeIndex == 1 ? " class=\"active\"" : "")
@@ -638,21 +632,27 @@ public class RunDetails implements RunListener
         stringBuilder.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
                 .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.2</h6><h3 class=\"dashhead-title\">Test Suite Execution Summary</h3><h6>" + ApplicationRegistry.instance().getAUT().getName() + "</h6></div>" );
 
-        stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2 m-b-md\"></div><div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
+        stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2 m-b-md\"></div><div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\">" );
+        stringBuilder.append( "<div class=\"abscenter\"  style=\"width: 100%; height: 120px; vertical-align: center;  line-height:19px; text-align: center; z-index: 999999999999999\"><h1 class=\"text-muted\"><b>" + detailsList.size() + "</b></h1><h4><span class=\"pass\">" + successCount + "</span> / <span class=\"fail\">" + (detailsList.size() - successCount) + "</span></h4></div>" );
+        stringBuilder.append( "<canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-animation=\"true\" data-animation-easing=\"easeOutQuart\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( successCount ).append( ", color: '#1bc98e', label: 'Passed' }," );
         stringBuilder.append( "{ value: " ).append( detailsList.size() - successCount ).append( ", color: '#e64759', label: 'Failed' }," );
-        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Test Executions</strong></center></div>" );
+        stringBuilder.append( "]\" data-segment-stroke-color=\"white\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Test Executions</strong></center></div>" );
 
-        stringBuilder.append( "<div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\">" );
+        stringBuilder.append( "<div class=\"abscenter\"  style=\"width: 100%; height: 120px; vertical-align: center;  line-height:19px; text-align: center; z-index: 999999999999999\"><h1 class=\"text-muted\"><b>" + (stepBreakdown[0] + stepBreakdown[1] +stepBreakdown[2]) + "</b></h1><h4><span class=\"pass\">" + stepBreakdown[0] + "</span> / <span class=\"fail\">" + stepBreakdown[2] + "</span></h4></div>" );
+        stringBuilder.append( "<canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-animation=\"true\" data-animation-easing=\"easeOutQuart\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( stepBreakdown[0] ).append( ", color: '#1bc98e', label: 'Passed' }," );
         stringBuilder.append( "{ value: " ).append( stepBreakdown[1] ).append( ", color: '#e64759', label: 'Failed' }," );
         stringBuilder.append( "{ value: " ).append( stepBreakdown[2] ).append( ", color: '#e4d836', label: 'Ignored' }" );
-        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Tests Steps</strong></center></div>" );
+        stringBuilder.append( "]\" data-segment-stroke-color=\"white\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Tests Steps</strong></center></div>" );
 
-        stringBuilder.append( "<div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\">" );
+        stringBuilder.append( "<div class=\"abscenter\"  style=\"width: 100%; height: 120px; vertical-align: center;  line-height:19px; text-align: center; z-index: 999999999999999\"><h1 class=\"text-muted\"><b>" + (osSuccess + osFail) + "</b></h1><h4><span class=\"pass\">" + osSuccess + "</span> / <span class=\"fail\">" + osFail + "</span></h4></div>" );
+        stringBuilder.append( "<canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-animation=\"true\" data-animation-easing=\"easeOutQuart\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( osSuccess ).append( ", color: '#1bc98e', label: 'Passed' }," );
         stringBuilder.append( "{ value: " ).append( osFail ).append( ", color: '#e64759', label: 'Failed' }," );
-        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Environments</strong></center></div>" );
+        stringBuilder.append( "]\" data-segment-stroke-color=\"white\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Environments</strong></center></div>" );
 
         
         stringBuilder.append( "</div>" );
