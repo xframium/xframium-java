@@ -575,14 +575,14 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                 
                 for ( KeyWordTest t : testList )
                     testArray.add( t.getName() );
+                
+                if ( testArray.isEmpty() )
+                {
+                    System.err.println( "No tests were specified" );
+                    System.exit( -1 );
+                }
             }
-            
-            
-            if ( testArray.isEmpty() )
-            {
-                System.err.println( "No tests were specified" );
-                System.exit( -1 );
-            }
+
             
             if ( testArray.size() == 0 )
                 DataManager.instance().setTests( KeyWordDriver.instance().getTestNames() );
