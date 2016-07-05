@@ -323,14 +323,10 @@ public class HistoryWriter
         stringBuilder.append( "<canvas id=\"executionTime\" data-title=\"Execution Time (s)\" data-labels='[" );
         for ( TestSuite ts : suiteSet )
         {
-        	stringBuilder.append( "\"" ).append( ( ts.getEndTime() - ts.getStartTime() ) / 1000 ).append( "\",");
+        	stringBuilder.append( "\"" ).append( chartDateFormat.format( new Date( ts.getStartTime() ) ) ).append( "\",");
         }
-        stringBuilder.deleteCharAt( stringBuilder.length() - 1 ).append( "]' data-fail=\"[" );
-        for ( TestSuite ts : suiteSet )
-        {
-        	stringBuilder.append( ts.getFail() ).append( "," );
-        }
-        stringBuilder.deleteCharAt( stringBuilder.length() - 1 ).append( "]\" data-pass=\"[" );
+
+        stringBuilder.deleteCharAt( stringBuilder.length() - 1 ).append( "]' data-pass=\"[" );
         for ( TestSuite ts : suiteSet )
         {
         	stringBuilder.append( ( ts.getEndTime() - ts.getStartTime() ) / 1000 ).append( "," );
