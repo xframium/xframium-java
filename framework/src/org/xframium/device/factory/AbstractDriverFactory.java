@@ -29,6 +29,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.xframium.device.SimpleDevice;
+import org.xframium.device.cloud.CloudProvider;
+import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.interrupt.DeviceInterrupt;
 import org.xframium.device.interrupt.DeviceInterrupt.INTERRUPT_TYPE;
 import org.xframium.device.interrupt.DeviceInterruptFactory;
@@ -60,7 +64,27 @@ public abstract class AbstractDriverFactory implements DriverFactory
 		if ( log.isDebugEnabled() )
 			log.debug( "Creating Driver for " + getClass().getSimpleName() );
 		
-		DeviceWebDriver webDriver = _createDriver( currentDevice ); 
+		DeviceWebDriver webDriver = _createDriver( currentDevice );
+		
+		if ( webDriver != null )
+		{
+		    try
+		    {
+		        if ( currentDevice.getOs().equals( "Windows" ) )
+		            webDriver.setPopulatedDevice( currentDevice );
+		        else
+		        {
+    		        Device newDevice = new SimpleDevice( currentDevice.getKey(), currentDevice.getDriverType()  );
+    		        CloudActionProvider actionProvider = (CloudActionProvider) Class.forName( CloudActionProvider.class.getPackage().getName() + "." + CloudRegistry.instance().getCloud().getProvider() + "CloudActionProvider" ).newInstance();
+    		        actionProvider.popuplateDevice( webDriver.getDeviceName(), newDevice );
+    		        webDriver.setPopulatedDevice( newDevice );
+		        }
+		    }
+		    catch( Exception e )
+		    {
+		        log.error( "Error populating device specifics", e );
+		    }
+		}
 		
 		return webDriver;
 	}

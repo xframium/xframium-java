@@ -26,6 +26,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
+import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
@@ -264,7 +265,10 @@ public class KeyWordTest
 			    {
 			        if ( log.isInfoEnabled() )
 			            log.info( "Creating Page [" + step.getPageName() + "]" );
-    				page = PageManager.instance().createPage( KeyWordDriver.instance().getPage( step.getPageName() ), webDriver );
+			        
+			        page = PageManager.instance().createPage( KeyWordDriver.instance().getPage( step.getPageName() ), webDriver );
+			        if ( page == null )
+			            throw new ObjectConfigurationException( step.getPageName(), null );
     				pageMap.put( step.getPageName(), page );
 			    }
 			}

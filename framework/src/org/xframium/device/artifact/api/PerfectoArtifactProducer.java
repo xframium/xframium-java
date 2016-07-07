@@ -202,13 +202,13 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 			    return generateExecutionReport( "download", parameterMap, "xml", rootFolder, aType );
 				
 			case EXECUTION_RECORD_CSV:
-			    return generateCSVRecord( connectedDevice.getDevice(), testName, rootFolder );
+			    return generateCSVRecord( connectedDevice.getPopulatedDevice(), testName, rootFolder );
 			    
 			case EXECUTION_RECORD_HTML:
-                return generateHTMLRecord( connectedDevice.getDevice(), testName, rootFolder, webDriver );
+                return generateHTMLRecord( connectedDevice.getPopulatedDevice(), testName, rootFolder, webDriver );
 				
 			case WCAG_REPORT:
-			    return generateWCAG( connectedDevice.getDevice(), testName, rootFolder );
+			    return generateWCAG( connectedDevice.getPopulatedDevice(), testName, rootFolder );
 			default:
 				return null;
 

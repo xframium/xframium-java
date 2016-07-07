@@ -85,7 +85,7 @@ public class CloudDescriptor
 		if ( provider == null || provider.isEmpty() )
 		    this.provider = "PERFECTO";
 		else
-		    this.provider = provider;
+		    this.provider = provider.toUpperCase();
 	}
 	
 	public String getProvider()

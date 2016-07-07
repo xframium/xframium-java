@@ -78,7 +78,7 @@ public class KWSLoop extends AbstractKeyWordStep
 			
 			for ( int i=0; i<loopCount; i++ )
 			{
-			    contextMap.put( Element.LOOP_INDEX, i );
+			    contextMap.put( Element.LOOP_INDEX, i+1 );
 				if ( log.isDebugEnabled() )
 					log.debug( "Execution Function " + functionName + " - Iteration " + i + " of " + loopCount );
 				try
@@ -177,7 +177,7 @@ public class KWSLoop extends AbstractKeyWordStep
 						log.debug( "Execution Function " + functionName + " - Iteration " + i + " of " + elementArray.length );
 					
 					contextMap.put( Element.CONTEXT_ELEMENT, elementArray[ i ] );
-					contextMap.put( Element.CONTEXT_INDEX, i );
+					contextMap.put( Element.CONTEXT_INDEX, i+1 );
 					
 					try
 					{

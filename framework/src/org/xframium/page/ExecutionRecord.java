@@ -317,7 +317,6 @@ public class ExecutionRecord
 		String testRunLength = String.format( "%,.3f", (double)runTime / 1000.0 );
         
 		
-		
 		stringBuffer.append( "</td><td>" ).append( type ).append( "</td>" );
 		stringBuffer.append( "<td>" ).append( timeFormat.format( new Date( timeStamp ) ) + "(" + runTime + ")" ).append( "</td>" );
 		
@@ -353,7 +352,6 @@ public class ExecutionRecord
 				stringBuffer.append( "<tr" ).append( backgroundColor ).append( "><td></td><td colSpan='4'><a class=\"btn btn-danger\" role=\"button\" data-toggle=\"collapse\" href=\"#exception").append( index ).append( "\" aria-expanded=\"false\">View Error Detail</a><div class=\"collapse\" id=\"exception").append( index  ).append( "\"><h6>" );
 				
 				stringBuffer.append( t.getMessage() ).append( "<br/>");
-				t.fillInStackTrace();
 				for( StackTraceElement s : t.getStackTrace() )
 					stringBuffer.append( "&nbsp;&nbsp;&nbsp;&nbsp;").append( s.toString() ).append( "<br/>");
 				stringBuffer.append( "</h6></div></td></tr>");

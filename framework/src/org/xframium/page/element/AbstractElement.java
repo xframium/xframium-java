@@ -453,10 +453,6 @@ public abstract class AbstractElement implements Element
             success = true;
             
         }
-        catch( Exception e )
-        {
-            throw new IllegalStateException( e );
-        }
         finally
         {
             if ( timed )

@@ -26,12 +26,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
+import org.xframium.exception.DataConfigurationException;
+import org.xframium.exception.TestConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
+import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.keyWord.provider.KeyWordProvider;
@@ -365,6 +367,8 @@ public class KeyWordDriver
      */
     public boolean executeTest( String testName, WebDriver webDriver ) throws Exception
     {
+        boolean testStarted = false;
+        long startTime = System.currentTimeMillis();
         PageManager.instance().getPageCache().clear();
 	    
         if (log.isDebugEnabled())
@@ -373,7 +377,7 @@ public class KeyWordDriver
         KeyWordTest test = testMap.get( testName );
 
         if (test == null)
-            throw new IllegalArgumentException( "The test [" + testName + "] does not exist" );
+            throw new TestConfigurationException( testName );
 
         Map<String, PageData> dataMap = new HashMap<String, PageData>( 10 );
         Map<String, Page> pageMap = new HashMap<String, Page>( 10 );
@@ -406,7 +410,7 @@ public class KeyWordDriver
                     if ( pageData == null )
                     {
                         log.fatal( "Invalid page data value specified.  Ensure that [" + dataProvider + "] exists in your page data definition" );
-                        throw new IllegalArgumentException( "Invalid page data value specified.  Ensure that [" + dataProvider + "] exists in your page data definition");
+                        throw new DataConfigurationException( dataProvider, null );
                     }
 					
                     if (log.isInfoEnabled())
@@ -431,6 +435,7 @@ public class KeyWordDriver
             // Create a new context map and pass it along to all of the steps
             //
             contextMap.set( new HashMap<String, Object>( 10 ) );
+            testStarted = true;
             boolean returnValue = test.executeTest( webDriver, contextMap.get(), dataMap, pageMap );
             contextMap.set( null );
 
@@ -439,6 +444,8 @@ public class KeyWordDriver
         }
         catch (Throwable e)
         {
+            if ( testStarted )
+                PageManager.instance().addExecutionLog( null, null, "", testName, testName, startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE, e.getMessage(), e, 0, e.getMessage(), false );
             if ( PageManager.instance().getThrowable() == null )
                 PageManager.instance().setThrowable( e );
 			

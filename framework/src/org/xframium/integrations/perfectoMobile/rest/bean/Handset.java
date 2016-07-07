@@ -139,9 +139,11 @@ public class Handset extends AbstractBean
 	private String os;
 
 	/** The os version. */
+	@FieldDescriptor ( )
 	private String osVersion;
 
 	/** The resolution. */
+	@FieldDescriptor ( )
 	private String resolution;
 	
 	/**

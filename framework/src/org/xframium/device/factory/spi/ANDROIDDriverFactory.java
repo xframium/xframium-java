@@ -32,10 +32,13 @@ import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.api.PerfectoArtifactProducer;
 import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.factory.AbstractDriverFactory;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.exception.DeviceConfigurationException;
 import org.xframium.spi.Device;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -79,8 +82,6 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 			
 			dc.setCapability( AUTOMATION_NAME, "Appium" );
 			
-			if( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAndroidIdentifier().isEmpty() )
-				dc.setCapability( APPLICATION_PACKAGE, ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
 			
 			if ( log.isInfoEnabled() )
 				log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
@@ -94,11 +95,27 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 			webDriver.setReportKey( caps.getCapability( "reportKey" ).toString() );
 			webDriver.setDeviceName( caps.getCapability( "deviceName" ).toString() );
 			webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
+			
+			if( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAndroidIdentifier().isEmpty() )
+            {
+			    if ( ( (AndroidDriver) webDriver.getNativeDriver() ).isAppInstalled( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() ) )
+                {
+                    log.warn( "Attempting to start " + ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
+                    CloudActionProvider actionProvider = (CloudActionProvider) Class.forName( CloudActionProvider.class.getPackage().getName() + "." + CloudRegistry.instance().getCloud().getProvider() + "CloudActionProvider" ).newInstance();
+                    actionProvider.startApp( caps.getCapability( "executionId" ) + "", caps.getCapability( "deviceName" ) + "", ApplicationRegistry.instance().getAUT().getName(), ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
+                }
+                else
+                {
+                    throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
+                }
+            }
+			
 			String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
 			webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );
 			webDriver.setArtifactProducer( new PerfectoArtifactProducer() );
 			return webDriver;
 		}
+	
 		catch( Exception e )
 		{
 		    log.fatal( "Could not connect to Cloud instance for " + currentDevice, e );

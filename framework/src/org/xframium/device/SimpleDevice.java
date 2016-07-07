@@ -219,7 +219,56 @@ public class SimpleDevice implements Device
 		generateEnv();
 	}
 	
-	private boolean compareValues( String rootValue, String hsValue )
+	public void setKey( String key )
+    {
+        this.key = key;
+        generateEnv();
+    }
+
+    public void setManufacturer( String manufacturer )
+    {
+        this.manufacturer = manufacturer;
+        generateEnv();
+    }
+
+    public void setModel( String model )
+    {
+        this.model = model;
+        generateEnv();
+    }
+
+    public void setOs( String os )
+    {
+        this.os = os;
+        generateEnv();
+    }
+
+    public void setOsVersion( String osVersion )
+    {
+        this.osVersion = osVersion;
+        generateEnv();
+    }
+
+    public void setBrowserName( String browserName )
+    {
+        this.browserName = browserName;
+        generateEnv();
+    }
+
+    public void setBrowserVersion( String browserVersion )
+    {
+        this.browserVersion = browserVersion;
+        generateEnv();
+    }
+
+    public void setDeviceName( String deviceName )
+    {
+        this.deviceName = deviceName;
+        generateEnv();
+    }
+
+
+    private boolean compareValues( String rootValue, String hsValue )
 	{
 	    if ( rootValue == null || rootValue.trim().isEmpty() )
 	        return true;

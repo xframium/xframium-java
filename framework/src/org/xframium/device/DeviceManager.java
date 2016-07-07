@@ -38,6 +38,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.WebDriver;
 import org.xframium.artifact.ArtifactListener;
 import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactType;
@@ -75,6 +76,18 @@ public class DeviceManager implements ArtifactListener
     private Properties configurationProperties;
 	
     private Device selectedDevice;
+    
+    private List<WebDriver> holdList = new ArrayList<WebDriver>( 10 );
+
+    public List<WebDriver> getHoldList()
+    {
+        return holdList;
+    }
+
+    public void setHoldList( List<WebDriver> holdList )
+    {
+        this.holdList = holdList;
+    }
 
     private DriverType driverType;
 

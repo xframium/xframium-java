@@ -30,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.xframium.content.ContentManager;
+import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.services.WindTunnel.Status;
 import org.xframium.page.ElementDescriptor;
@@ -505,11 +506,16 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             }
             else
             {
-                Element elt = pageObject.getElement( pageName, useName );
-
-                elt.setDriver( webDriver );
-
-                return elt;
+                try
+                {
+                    Element elt = pageObject.getElement( pageName, useName );
+                    elt.setDriver( webDriver );
+                    return elt;
+                }
+                catch( NullPointerException e )
+                {
+                    throw new ObjectConfigurationException( pageName, useName );
+                }
             }
         }
     }
@@ -599,7 +605,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 stepException = e;
                 returnValue = false;
 
-                log.info( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " encoundered error: ", e );
+                log.info( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed " );
             }
 
             if ( inverse )

@@ -102,6 +102,17 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
 
     /** The current device. */
     private Device currentDevice;
+    private Device populatedDevice;
+
+    public Device getPopulatedDevice()
+    {
+        return populatedDevice;
+    }
+
+    public void setPopulatedDevice( Device populatedDevice )
+    {
+        this.populatedDevice = populatedDevice;
+    }
 
     /** The current context. */
     private String currentContext;
