@@ -76,8 +76,19 @@ public class SimpleDevice implements Device
 	
 	private String resolution;
 	private String environment;
+	private String cloud;
 	
-	public String getResolution()
+	public String getCloud()
+    {
+        return cloud;
+    }
+
+    public void setCloud( String cloud )
+    {
+        this.cloud = cloud;
+    }
+
+    public String getResolution()
     {
         return resolution;
     }

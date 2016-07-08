@@ -31,6 +31,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.api.PerfectoArtifactProducer;
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.factory.AbstractDriverFactory;
@@ -59,6 +60,17 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 			DesiredCapabilities dc = new DesiredCapabilities( "", "", Platform.ANY );
 			URL hubUrl = new URL( CloudRegistry.instance().getCloud().getCloudUrl() );
 			
+			CloudDescriptor useCloud = CloudRegistry.instance().getCloud();
+            
+            if ( currentDevice.getCloud() != null )
+            {
+                useCloud = CloudRegistry.instance().getCloud( currentDevice.getCloud() );
+                if (useCloud == null)
+                {
+                    useCloud = CloudRegistry.instance().getCloud();
+                    log.warn( "A separate grid instance was specified but it does not exist in your cloud registry [" + currentDevice.getCloud() + "] - using the default Cloud instance" );
+                }
+            }
 
 			if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )
 			{

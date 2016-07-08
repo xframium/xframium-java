@@ -318,7 +318,7 @@ public class ExecutionRecord
         
 		
 		stringBuffer.append( "</td><td>" ).append( type ).append( "</td>" );
-		stringBuffer.append( "<td>" ).append( timeFormat.format( new Date( timeStamp ) ) + "(" + runTime + ")" ).append( "</td>" );
+		stringBuffer.append( "<td>" ).append( timeFormat.format( new Date( timeStamp ) ) + "( " + runTime + "ms)" ).append( "</td>" );
 		
 		String buttonType = "danger";
 		switch( status )

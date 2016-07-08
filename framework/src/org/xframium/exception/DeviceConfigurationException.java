@@ -10,7 +10,7 @@ public class DeviceConfigurationException extends XFramiumException
 
     public DeviceConfigurationException( String appIdentifier )
     {
-        super( ExceptionType.SCRIPT );
+        super( ExceptionType.CLOUD );
         this.appIdentifier = appIdentifier;
     }
 

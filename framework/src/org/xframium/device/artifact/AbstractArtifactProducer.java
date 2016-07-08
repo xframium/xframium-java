@@ -176,7 +176,7 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Passed</span><h4 class=\"statcard-number\">" + successCount + "</h4></div></div></div>" );
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-warning\"><div class=\"p-a\"><span class=\"statcard-desc\">Ignored</span><h4 class=\"statcard-number\">" + ignoreCount + "</h4></div></div></div>" );
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Failed</span><h4 class=\"statcard-number\">" + failureCount + "</h4></div></div></div>" );
-            stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Total</span><h4 class=\"statcard-number\">" + recordCount + "</h4></div></div></div>" );
+            stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Total Steps</span><h4 class=\"statcard-number\">" + recordCount + "</h4></div></div></div>" );
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h4 class=\"statcard-number\">" + runLength + "</h4></div></div></div>" );
             stringBuffer.append( "</div><br />" );
         }

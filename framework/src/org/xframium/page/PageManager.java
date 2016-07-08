@@ -106,6 +106,8 @@ public class PageManager
     private SeleniumSessionManager altDriverSource = null;
     
     private String[] tagNames;
+    
+    
 
     
 	public String[] getTagNames()

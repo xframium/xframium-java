@@ -11,7 +11,7 @@ public class ObjectConfigurationException extends XFramiumException
     
     public ObjectConfigurationException( String pageName, String elementName )
     {
-        super( ExceptionType.SCRIPT );
+        super( ExceptionType.CONFIGURATION );
         this.pageName = pageName;
         this.elementName = elementName;
     }

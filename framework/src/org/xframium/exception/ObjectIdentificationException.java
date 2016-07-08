@@ -14,7 +14,7 @@ public class ObjectIdentificationException extends XFramiumException
     
     public ObjectIdentificationException( BY xBy, By by )
     {
-        super( ExceptionType.CONFIGURATION );
+        super( ExceptionType.SCRIPT );
         this.xBy = xBy;
         this.by = by;
     }

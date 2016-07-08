@@ -164,7 +164,9 @@ public class XMLDataProvider implements DataProvider
 				break;
 		}
 		
-		Device currentDevice = new SimpleDevice(device.getName(), device.getManufacturer(), device.getModel(), device.getOs(), device.getOsVersion(), device.getBrowserName(), null, device.getAvailableDevices().intValue(), driverName, device.isActive(), device.getId() );
+		SimpleDevice currentDevice = new SimpleDevice(device.getName(), device.getManufacturer(), device.getModel(), device.getOs(), device.getOsVersion(), device.getBrowserName(), device.getBrowserVersion(), device.getAvailableDevices().intValue(), driverName, device.isActive(), device.getId() );
+		if ( device.getCloud() != null && !device.getCloud().isEmpty() )
+		    currentDevice.setCloud( device.getCloud() );
 		if ( device.getCapability() != null )
 		{
 		    for ( DeviceCapability cap : device.getCapability() )

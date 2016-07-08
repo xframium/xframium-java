@@ -145,4 +145,6 @@ public interface Device
 	 * @return true, if is active
 	 */
 	boolean isActive();
+	
+	String getCloud();
 }

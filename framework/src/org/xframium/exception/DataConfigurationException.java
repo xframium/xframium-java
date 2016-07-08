@@ -11,7 +11,7 @@ public class DataConfigurationException extends XFramiumException
     
     public DataConfigurationException( String pageData, String elementName )
     {
-        super( ExceptionType.SCRIPT );
+        super( ExceptionType.CONFIGURATION );
         this.pageData = pageData;
         this.elementName = elementName;
     }

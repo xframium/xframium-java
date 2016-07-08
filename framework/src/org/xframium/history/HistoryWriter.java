@@ -47,6 +47,7 @@ public class HistoryWriter
     private String suiteName;
 
     private Map<String, TestCase> testMap = new HashMap<String, TestCase>( 20 );
+    private Map<String, TestCase> currentRun = new HashMap<String, TestCase>( 20 );
     private Map<String, Environment> environmentMap = new HashMap<String, Environment>( 20 );
     private List<TestSuite> executionList = new ArrayList<TestSuite>( 10 );
 
@@ -59,6 +60,9 @@ public class HistoryWriter
 
     public void addExecution( String testName, Device device, long startTime, long stopTime, int passed, int failed, int ignored, boolean success, String indexFile, int scriptFailures, int configFailures, int applicationFailures, int cloudFailures )
     {
+        
+        
+        
         String caseName = testName;
         String persona = null;
         String context = null;
@@ -84,6 +88,18 @@ public class HistoryWriter
                 persona = parts[1];
             }
         }
+        
+        Execution exe = new Execution();
+        exe.setContext( context );
+        exe.setFailed( failed );
+        exe.setFileName( indexFile );
+        exe.setPassed( passed );
+        exe.setIgnored( ignored );
+        exe.setPersona( persona );
+        exe.setStartTime( startTime );
+        exe.setStopTime( stopTime );
+        exe.setSuccess( success );
+        exe.setTotal( passed + failed + ignored );
 
         //
         // Get or create the Test Case container
@@ -95,6 +111,15 @@ public class HistoryWriter
             testCase.setName( caseName );
 
             testMap.put( caseName, testCase );
+        }
+        
+        TestCase currentTestCase = currentRun.get( caseName );
+        if ( currentTestCase == null )
+        {
+            currentTestCase = new TestCase();
+            currentTestCase.setName( caseName );
+
+            currentRun.put( caseName, currentTestCase );
         }
 
         Environment useEnv = null;
@@ -120,19 +145,38 @@ public class HistoryWriter
             useEnv.setResolution( device.getResolution() );
             testCase.getEnvironment().add( useEnv );
         }
-
-        Execution exe = new Execution();
-        exe.setContext( context );
-        exe.setFailed( failed );
-        exe.setFileName( indexFile );
-        exe.setPassed( passed );
-        exe.setIgnored( ignored );
-        exe.setPersona( persona );
-        exe.setStartTime( startTime );
-        exe.setStopTime( stopTime );
-        exe.setSuccess( success );
-        exe.setTotal( passed + failed + ignored );
+        
         useEnv.getExecution().add( exe );
+        
+        useEnv = null;
+        for ( Environment env : currentTestCase.getEnvironment() )
+        {
+            if ( device.getEnvironment().equals( env.getName() ) )
+            {
+                useEnv = env;
+                break;
+            }
+        }
+
+        if ( useEnv == null )
+        {
+            useEnv = new Environment();
+            useEnv.setBrowserName( device.getBrowserName() );
+            useEnv.setBrowserVersion( device.getBrowserVersion() );
+            useEnv.setMake( device.getManufacturer() );
+            useEnv.setModel( device.getModel() );
+            useEnv.setName( device.getEnvironment() );
+            useEnv.setOs( device.getOs() );
+            useEnv.setOsVersion( device.getOsVersion() );
+            useEnv.setResolution( device.getResolution() );
+            currentTestCase.getEnvironment().add( useEnv );
+        }
+        
+        useEnv.getExecution().add( exe );
+
+        
+        
+        
 
     }
 
@@ -155,6 +199,13 @@ public class HistoryWriter
         testSuite.setOs( oss );
         testSuite.setPass( pass );
         testSuite.setFail( fail );
+        testSuite.setCloudFailure( cloudFailures );
+        testSuite.setConfigFailure( configFailures );
+        testSuite.setApplicationFailure( applicationFailures );
+        testSuite.setScriptFailure( scriptFailures );
+        
+        
+        testSuite.getTestCase().addAll( currentRun.values() );
         
         for ( String envName : envMap.keySet() )
         {
@@ -202,7 +253,7 @@ public class HistoryWriter
 
     public static void main( String[] args )
     {
-        HistoryWriter x = new HistoryWriter( new File( "C:/Users/AJ/git/morelandLabs/customerProjects/xmlDriven/google/test-output/" ) );
+        HistoryWriter x = new HistoryWriter( new File( "C:/Projects/Git/morelandLabs/customerProjects/xmlDriven/google/test-output/" ) );
         x.readData();
 
         x.writeIndex();
@@ -326,7 +377,7 @@ public class HistoryWriter
         	stringBuilder.append( "\"" ).append( chartDateFormat.format( new Date( ts.getStartTime() ) ) ).append( "\",");
         }
 
-        stringBuilder.deleteCharAt( stringBuilder.length() - 1 ).append( "]' data-pass=\"[" );
+        stringBuilder.deleteCharAt( stringBuilder.length() - 1 ).append( "]' data-executed=\"[" );
         for ( TestSuite ts : suiteSet )
         {
         	stringBuilder.append( ( ts.getEndTime() - ts.getStartTime() ) / 1000 ).append( "," );
@@ -339,12 +390,42 @@ public class HistoryWriter
         
         for ( TestSuite ts : suiteSet )
         {
-        	stringBuilder.append( chartDateFormat.format( new Date( ts.getStartTime() ) ) ).append( ",");
+        	stringBuilder.append( "\"" + chartDateFormat.format( new Date( ts.getStartTime() ) ) + "\"" ).append( ",");
         }
-        stringBuilder.deleteCharAt( stringBuilder.length() - 1 ).append( "]' data-pass=\"[" );
+        stringBuilder.deleteCharAt( stringBuilder.length() - 1 ).append( "]' data-fail=\"[" );
         for ( TestSuite ts : suiteSet )
         {
-        	stringBuilder.append( ts.getPass() ).append( "," );
+            int stepCount = 0;
+            for ( TestCase tc : ts.getTestCase() )
+            {
+                for ( Environment env : tc.getEnvironment() )
+                {
+                    for ( Execution exe : env.getExecution() )
+                    {
+                        stepCount += exe.getFailed();
+                    }
+                }
+            }
+            
+            stringBuilder.append( stepCount ).append( "," );
+        }
+        
+        stringBuilder.deleteCharAt( stringBuilder.length() - 1 ).append( "]\" data-pass=\"[" );
+        for ( TestSuite ts : suiteSet )
+        {
+            int stepCount = 0;
+            for ( TestCase tc : ts.getTestCase() )
+            {
+                for ( Environment env : tc.getEnvironment() )
+                {
+                    for ( Execution exe : env.getExecution() )
+                    {
+                        stepCount += exe.getPassed();
+                    }
+                }
+            }
+            
+            stringBuilder.append( stepCount ).append( "," );
         }
         stringBuilder.deleteCharAt( stringBuilder.length() - 1 ).append( "]\"></canvas></div><div class=\"col-md-6\">" );
         
@@ -353,7 +434,7 @@ public class HistoryWriter
         stringBuilder.append( "<canvas id=\"environmentsTested\" data-title=\"Environments Tested\" data-labels='[" );
         for ( TestSuite ts : suiteSet )
         {
-        	stringBuilder.append( "\"" ).append( ( ts.getEndTime() - ts.getStartTime() ) / 1000 ).append( "\",");
+        	stringBuilder.append( "\"" + chartDateFormat.format( new Date( ts.getStartTime() ) ) + "\",");
         }
         stringBuilder.deleteCharAt( stringBuilder.length() - 1 ).append( "]' data-fail=\"[" );
         for ( TestSuite ts : suiteSet )
@@ -384,8 +465,8 @@ public class HistoryWriter
         Set<TestSuite> reverseSuiteSet = new TreeSet<TestSuite>( new ReverseSuiteTimeComparator() );
         reverseSuiteSet.addAll( this.executionList );
         
-        stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Executions</div></div><div class=panel-body><table class=\"table table-hover table-condensed\" id=executions>" );
-        stringBuilder.append( "<tr><th>When Executed</th><th>Duration</th><th>Environments</th><th>Tests</th><th style=\"color: #1bc98e\">Passed</th><th style=\"color: #E64759\">Failed</th></tr><tbody>" );
+        stringBuilder.append( "<table class=\"table table-hover table-condensed\" id=executions>" );
+        stringBuilder.append( "<thead><tr><th>When Executed</th><th>Duration</th><th>Environments</th><th>Tests</th><th style=\"color: #1bc98e\">Passed</th><th style=\"color: #E64759\">Failed</th></tr></thead><tbody>" );
         
         for ( TestSuite t : reverseSuiteSet )
         {
@@ -404,7 +485,7 @@ public class HistoryWriter
             
         }
         
-        stringBuilder.append( "</tbody></table></div></div>" );
+        stringBuilder.append( "</tbody></table>" );
 
         writePageFooter( stringBuilder );
 
@@ -568,7 +649,10 @@ public class HistoryWriter
                 lastTime = (exe.getStopTime() - exe.getStartTime());
                 totalTime += lastTime;
             }
-            long averageTime = totalTime / env.getExecution().size();
+            long averageTime = 0;
+            
+            if ( env.getExecution().size() > 0 )
+                averageTime = totalTime / env.getExecution().size();
 
             boolean up = lastTime > averageTime;
             boolean even = lastTime == averageTime;
@@ -644,7 +728,7 @@ public class HistoryWriter
     {
         stringBuilder.append( "</div></div></div></div>" );
         stringBuilder.append(
-                "<script src=\"http://www.xframium.org/output/assets/js/jquery.min.js\"></script><script src=\"http://www.xframium.org/output/assets/js/chart.js\"></script><script src=\"http://www.xframium.org/output/assets/js/tablesorter.min.js\"></script><script src=\"http://www.xframium.org/output/assets/js/toolkit.js\"></script><script src=\"http://www.xframium.org/output/assets/js/application.js\"></script><script src=\"http://www.xframium.org/js/history.js\"></script>" );
+                "<script src=\"http://www.xframium.org/output/assets/js/toolkit.js\"></script><script src=\"http://www.xframium.org/output/assets/js/application.js\"></script><script src=\"http://www.xframium.org/js/history.js\"></script>" );
         stringBuilder.append( "</body></html>" );
     }
 
@@ -732,7 +816,7 @@ public class HistoryWriter
     
 
         stringBuilder.append( "<html>" );
-        stringBuilder.append( "<head><base href=\"http://www.xframium.org/sample/index.html\" /><meta charset=\"utf-8\" /><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" /><title>Test Suite Execution History</title><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\" /><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\" /><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\" /><style> canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none;  } .row { margin-bottom: 40px; } .pass {color: #1bc98e;} .fail {color: #e64759;} .tablesorter-header-inner {display: inline;}th:focus {outline: 0;}</style><script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js\"></script><script src=\"http://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.bundle.js\"></script> <script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.26.5/js/jquery.tablesorter.min.js\"></script></head>" );
+        stringBuilder.append( "<head><meta charset=\"utf-8\" /><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" /><title>Test Suite Execution History</title><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\" /><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\" /><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\" /><style> canvas { -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none;  } .row { margin-bottom: 40px; } .pass {color: #1bc98e;} .fail {color: #e64759;} .tablesorter-header-inner {display: inline;}th:focus {outline: 0;}</style><script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js\"></script><script src=\"http://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.bundle.js\"></script> <script src=\"http://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.26.5/js/jquery.tablesorter.min.js\"></script></head>" );
         
         
         stringBuilder.append( "<body><div class=\"container\"><div class=\"row\">" );

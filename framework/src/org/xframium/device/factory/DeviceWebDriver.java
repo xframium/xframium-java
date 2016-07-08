@@ -106,7 +106,10 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
 
     public Device getPopulatedDevice()
     {
-        return populatedDevice;
+        if ( populatedDevice == null )
+            return currentDevice;
+        else
+            return populatedDevice;
     }
 
     public void setPopulatedDevice( Device populatedDevice )
