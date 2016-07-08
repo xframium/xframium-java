@@ -245,8 +245,8 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         
         if ( !success && DataManager.instance().isArtifactEnabled( ArtifactType.FAILURE_SOURCE ) )
         {
-            stringBuffer.append( "<tr><td></td><td><a target=\"_blank\" class=\"btn btn-danger\" hRef='failureDOM.html'>Device State</a></td><td></td><td></td><td></td></tr>" );
-            stringBuffer.append( "<tr><td></td><td><a hRef=\"failure-screenshot.png\" class=\"thumbnail\"><img class=\"img-rounded img-responsive\" src=\"failure-screenshot.png\" style=\"height: 200px;\"/></a></td><td></td><td></td><td></td></tr>" );
+            stringBuffer.append( "<tr><td></td><td colspan=3><a target=\"_blank\" class=\"btn btn-danger\" hRef='failureDOM.html'>Device State</a></td></tr>" );
+            stringBuffer.append( "<tr><td></td><td colzpan=3><a hRef=\"failure-screenshot.png\" class=\"thumbnail\"><img class=\"img-rounded img-responsive\" src=\"failure-screenshot.png\" style=\"height: 200px;\"/></a></td></tr>" );
         }
         
         stringBuffer.append( "</TABLE></div></div>" );

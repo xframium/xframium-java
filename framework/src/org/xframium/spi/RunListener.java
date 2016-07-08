@@ -56,5 +56,5 @@ public interface RunListener
 	 * @param runKey the run key
 	 * @param successful the successful
 	 */
-	public void afterRun( Device currentDevice, String runKey, boolean successful, int stepsPassed, int stepsFailed, int stepsIgnored, long startTime, long stopTime );
+	public void afterRun( Device currentDevice, String runKey, boolean successful, int stepsPassed, int stepsFailed, int stepsIgnored, long startTime, long stopTime, int scriptFailures, int configFailures, int applicationFailures, int cloudFailures );
 }

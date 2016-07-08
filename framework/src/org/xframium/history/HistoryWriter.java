@@ -57,7 +57,7 @@ public class HistoryWriter
         this.rootFolder = rootFolder;
     }
 
-    public void addExecution( String testName, Device device, long startTime, long stopTime, int passed, int failed, int ignored, boolean success, String indexFile )
+    public void addExecution( String testName, Device device, long startTime, long stopTime, int passed, int failed, int ignored, boolean success, String indexFile, int scriptFailures, int configFailures, int applicationFailures, int cloudFailures )
     {
         String caseName = testName;
         String persona = null;
@@ -136,7 +136,7 @@ public class HistoryWriter
 
     }
 
-    public void writeData( String fileName, long startTime, long endTime, int env, int oss, int pass, int fail, TreeMap<String, int[]> envMap )
+    public void writeData( String fileName, long startTime, long endTime, int env, int oss, int pass, int fail, TreeMap<String, int[]> envMap, int scriptFailures, int configFailures, int applicationFailures, int cloudFailures )
     {
         OutputStream os = null;
 

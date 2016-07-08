@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import javax.script.ScriptEngineFactory;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -87,7 +88,7 @@ public class CSVRunListener implements RunListener
 	 * @see com.perfectoMobile.device.listener.RunListener#afterRun(com.morelandLabs.spi.Device, java.lang.String, boolean)
 	 */
 	@Override
-	public synchronized void afterRun( Device currentDevice, String runKey, boolean successful, int stepsPassed, int stepsFailed, int stepsIgnored, long startTime, long stopTime )
+	public synchronized void afterRun( Device currentDevice, String runKey, boolean successful, int stepsPassed, int stepsFailed, int stepsIgnored, long startTime, long stopTime, int scriptFailures, int configFailures, int appFailures, int cloudFailures )
 	{
 		FileOutputStream outputStream = null;
 		

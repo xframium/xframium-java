@@ -48,6 +48,7 @@ import org.xframium.device.data.NamedDataProvider;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.factory.DriverManager;
 import org.xframium.device.property.PropertyAdapter;
+import org.xframium.exception.XFramiumException;
 import org.xframium.page.ExecutionRecord;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunListener;
@@ -429,9 +430,14 @@ public class DeviceManager implements ArtifactListener
                 int stepsIgnored = 0;
                 long startTime = 0;
                 long stopTime = 0;
+                int scriptFailures = 0;
+                int appFailures = 0;
+                int cloudFailures = 0;
+                int configFailures = 0;
+                
                 if ( DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) != null && !DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ).isEmpty() )
                 {
-                    
+
                     for ( Object item : DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) )
                     {
                         ExecutionRecord eItem = (ExecutionRecord) item;
@@ -442,10 +448,37 @@ public class DeviceManager implements ArtifactListener
                         if( eItem.getTimeStamp() + eItem.getRunTime() > stopTime )
                             stopTime = eItem.getTimeStamp() + eItem.getRunTime();
                         
+                        
                         switch( eItem.getStatus() )
                         {
                             case FAILURE:
                                 stepsFailed++;
+                                
+                                if ( eItem.getT() != null )
+                                {
+                                    if ( eItem.getT() instanceof XFramiumException )
+                                    {
+                                        switch ( ( (XFramiumException) eItem.getT() ).getType() )
+                                        {
+                                            case APPLICATION:
+                                                appFailures++;
+                                                break;
+                                                
+                                            case CLOUD:
+                                                cloudFailures++;
+                                                break;
+                                                
+                                            case CONFIGURATION:
+                                                configFailures++;
+                                                break;
+                                                
+                                            case SCRIPT:
+                                                scriptFailures++;
+                                                break;
+                                        }
+                                    }
+                                }
+                                
                                 break;
                                 
                             case FAILURE_IGNORED:
@@ -459,7 +492,7 @@ public class DeviceManager implements ArtifactListener
                     }
                 }
                 
-                runListener.afterRun( currentDevice, runKey, successful, stepsPassed, stepsFailed, stepsIgnored, startTime, stopTime );
+                runListener.afterRun( currentDevice, runKey, successful, stepsPassed, stepsFailed, stepsIgnored, startTime, stopTime, scriptFailures, configFailures, appFailures, cloudFailures );
             }
             catch( Exception e )
             {
