@@ -165,11 +165,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
 			webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
 			webDriver.setArtifactProducer( new SeleniumArtifactProducer() );
 
-			Dimension winDim = webDriver.manage().window().getSize();
-			if ( winDim != null )
-			    currentDevice.setResolution( winDim.getWidth() + " x " + winDim.height );
-			else
-			    currentDevice.setResolution( null );
+			
 			
 			
 			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );

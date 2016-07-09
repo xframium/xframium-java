@@ -264,7 +264,7 @@ public class DeviceManager implements ArtifactListener
     private Comparator<Device> deviceComparator = new WeightedDeviceComparator();
 	
     /** The retry count. */
-    private int retryCount = 25;
+    private int retryCount = 3;
 
     /** The analytics map. */
     private Map<String, DeviceAnalytics> analyticsMap = new HashMap<String, DeviceAnalytics>( 20 );
@@ -580,15 +580,15 @@ public class DeviceManager implements ArtifactListener
                         //
                         // Attempt to acquire a lock for the device
                         //
-                        if (log.isDebugEnabled())
-                            log.debug( Thread.currentThread().getName() + ": Attempting to acquire semaphore for " + currentDevice );
+                        if (log.isInfoEnabled())
+                            log.info( Thread.currentThread().getName() + ": Attempting to acquire semaphore for " + currentDevice );
                         if (currentDevice.getLock().tryAcquire())
                         {
                             //
                             // Now, make sure this test has not run on this device yet and that there are no active runs against it
                             //
-                            if (log.isDebugEnabled())
-                                log.debug( Thread.currentThread().getName() + ": Device Semaphore permitted for " + currentDevice );
+                            if (log.isInfoEnabled())
+                                log.info( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + Thread.currentThread().getName() + ": Device Semaphore permitted for " + currentDevice );
                             if (!analyticsMap.get( currentDevice.getKey() ).hasRun( runKey ) && !activeRuns.containsKey( currentDevice.getKey() + "." + runKey ) )
                             {
                                 if (log.isDebugEnabled())
@@ -602,7 +602,7 @@ public class DeviceManager implements ArtifactListener
                                     if (log.isDebugEnabled())
                                         log.debug( Thread.currentThread().getName() + ": A registered RUN LISTENER cancelled this device request - Releasing Semaphore for " + currentDevice );
 		
-                                    currentDevice.getLock().release();
+                                    releaseDevice( currentDevice );
                                 }
                                 else
                                 {
@@ -655,7 +655,7 @@ public class DeviceManager implements ArtifactListener
                                         //
                                         if (log.isDebugEnabled())
                                             log.debug( Thread.currentThread().getName() + ": Releasing unused Device Semaphore for " + currentDevice );
-                                        currentDevice.getLock().release();
+                                        releaseDevice( currentDevice );
 										
                                     }
                                     else
@@ -671,7 +671,7 @@ public class DeviceManager implements ArtifactListener
                             {
                                 if (log.isDebugEnabled())
                                     log.debug( Thread.currentThread().getName() + ": Releasing unused Device Semaphore for " + currentDevice );
-                                currentDevice.getLock().release();
+                                releaseDevice( currentDevice );
                             }
                         }
                     }
@@ -774,8 +774,8 @@ public class DeviceManager implements ArtifactListener
      */
     public void releaseDevice( Device currentDevice )
     {
-        if (log.isDebugEnabled())
-            log.debug( Thread.currentThread().getName() + ": Releasing Device Semaphore for " + currentDevice );
+        if (log.isInfoEnabled())
+            log.info( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + Thread.currentThread().getName() + ": Releasing Device Semaphore for " + currentDevice );
         currentDevice.getLock().release();
     }
 

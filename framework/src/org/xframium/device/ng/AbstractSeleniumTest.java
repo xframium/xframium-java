@@ -490,6 +490,8 @@ public abstract class AbstractSeleniumTest
         WebDriver webDriver = device.getWebDriver();
         Device currentDevice = device.getDevice();
 
+        try
+        {
         if (webDriver != null)
         {
             String runKey = ((DEFAULT.equals( name )) ? (( TestName ) testArgs[0] ).getTestName() : (( TestName ) testArgs[0] ).getTestName() + "-" + name );
@@ -592,14 +594,21 @@ public abstract class AbstractSeleniumTest
             {
             }
         }
-		
+
+        
         if (currentDevice != null)
         {
             if ( webDriver instanceof DeviceWebDriver )
                 DeviceManager.instance().addRun( ( (DeviceWebDriver) webDriver ).getPopulatedDevice(), currentMethod, ( ( TestName ) testArgs[0] ).getTestName(), testResult.isSuccess(), device.getPersona() );
             else
                 DeviceManager.instance().addRun( currentDevice, currentMethod, ( ( TestName ) testArgs[0] ).getTestName(), testResult.isSuccess(), device.getPersona() );
-            DeviceManager.instance().releaseDevice( currentDevice );
+            
+        }
+        }
+        finally
+        {
+            if ( currentDevice != null )
+                DeviceManager.instance().releaseDevice( currentDevice );
         }
 
     }

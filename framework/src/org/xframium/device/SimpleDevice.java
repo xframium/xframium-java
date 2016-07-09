@@ -120,22 +120,22 @@ public class SimpleDevice implements Device
 	            stringBuilder.append( " " ).append( model );
 	            
 	    }
-	    else if ( browserName != null )
+	    
+	    if ( os != null )
+        {
+            stringBuilder.append( " / " ).append( os );
+            if ( osVersion != null )
+                stringBuilder.append( " " ).append( osVersion );
+        }
+	    
+	    if ( browserName != null )
 	    {
-	        stringBuilder.append( browserName );
+	        stringBuilder.append( " " ).append( browserName );
 	        if ( browserVersion != null )
 	            stringBuilder.append( " " ).append( browserVersion );
 	    }
-	    else
-	        stringBuilder.append( "Unknown Device" );
 	    
-	    if ( os != null )
-	    {
-	        stringBuilder.append( " / " ).append( os );
-	        if ( osVersion != null )
-	            stringBuilder.append( " " ).append( osVersion );
-	    }
-	    
+	   
 	    if ( resolution != null )
 	        stringBuilder.append( " (" ).append( resolution ).append( ")" );
 	    
