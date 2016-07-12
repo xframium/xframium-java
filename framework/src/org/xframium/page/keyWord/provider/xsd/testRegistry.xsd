@@ -167,6 +167,9 @@
   </complexType>
 
   <complexType name="Parameter">
+    <sequence>
+      <element name="token" type="tns:Token" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
     <attribute name="type" use="optional">
       <simpleType>
         <restriction base="string">

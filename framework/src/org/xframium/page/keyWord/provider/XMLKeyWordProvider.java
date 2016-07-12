@@ -346,6 +346,14 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	        
 	        KeyWordParameter kp = new KeyWordParameter( ParameterType.valueOf( p.getType() ), p.getValue() );
 	        
+	        if ( p.getToken() != null && !p.getToken().isEmpty() )
+	        {
+	            for ( Token t : p.getToken() )
+	            {
+	                kp.addToken( new KeyWordToken( TokenType.valueOf(t.getType() ), t.getValue(), t.getName() ) );
+	            }
+	        }
+	        
 	        if ( p.equals( ParameterType.FILE ) )
 	        {
 	            File dataFile = new File( p.getValue() );
@@ -384,7 +392,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	                        }
 	                    }
 	                }
-	            }  
+	            } 
 	        }
 	        
 	        parentStep.addParameter( kp );

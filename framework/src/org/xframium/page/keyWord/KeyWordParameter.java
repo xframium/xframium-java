@@ -20,6 +20,9 @@
  *******************************************************************************/
 package org.xframium.page.keyWord;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class KeyWordParameter.
@@ -53,8 +56,11 @@ public class KeyWordParameter
 
     /** The value. */
     private String value;
-    
+
     private String fileName;
+
+    /** The token list. */
+    private List<KeyWordToken> tokenList = new ArrayList<KeyWordToken>( 10 );
 
     public void setValue( String value )
     {
@@ -72,6 +78,16 @@ public class KeyWordParameter
     }
 
     /**
+     * Gets the token list.
+     *
+     * @return the token list
+     */
+    public List<KeyWordToken> getTokenList()
+    {
+        return tokenList;
+    }
+
+    /**
      * Instantiates a new key word parameter.
      *
      * @param type
@@ -84,6 +100,11 @@ public class KeyWordParameter
         super();
         this.type = type;
         this.value = value;
+    }
+    
+    public void addToken( KeyWordToken token )
+    {
+        tokenList.add( token );
     }
 
     /**

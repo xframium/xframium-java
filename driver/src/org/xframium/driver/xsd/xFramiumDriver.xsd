@@ -415,6 +415,9 @@
   </complexType>
 
   <complexType name="xParameter">
+    <sequence>
+      <element name="token" type="tns:xToken" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
     <attribute name="type" use="required">
       <simpleType>
         <restriction base="string">

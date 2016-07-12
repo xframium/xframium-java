@@ -22,6 +22,7 @@ package org.xframium.spi;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -33,7 +34,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.xframium.Initializable;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.history.HistoryWriter;
 
@@ -150,6 +163,11 @@ public class RunDetails implements RunListener
 
     }
 
+    public static void main( String[] args )
+    {
+        System.out.println( Base64.encodeBase64String( "ageary@morelandlabs.com".getBytes() ) );
+    }
+
     public synchronized void writeHTMLIndex( File rootFolder, boolean complete )
     {
         Collections.sort( detailsList, new RunComparator() );
@@ -262,7 +280,7 @@ public class RunDetails implements RunListener
             boolean success = (boolean) detailsList.get( i )[2];
             long startTime = (long) detailsList.get( i )[6];
             long stopTime = (long) detailsList.get( i )[7];
-            
+
             localBreakdown[0] = (int) detailsList.get( i )[8];
             localBreakdown[1] = (int) detailsList.get( i )[9];
             localBreakdown[2] = (int) detailsList.get( i )[10];
@@ -325,21 +343,22 @@ public class RunDetails implements RunListener
                 successValue = ((double) currentRecord[0] / (double) totalValue) * 100;
 
             int runTimex = (int) ((double) currentRecord[3] / (double) currentRecord[2]);
-            String runLengthx = String.format( "%02dh %02dm %02ds", TimeUnit.MILLISECONDS.toHours( runTimex ), TimeUnit.MILLISECONDS.toMinutes( runTimex ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( runTimex ) ),
+            String runLengthx = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( runTimex ), TimeUnit.MILLISECONDS.toMinutes( runTimex ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( runTimex ) ),
                     TimeUnit.MILLISECONDS.toSeconds( runTimex ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( runTimex ) ) );
 
             stringBuilder.append( "<tr><td width=60%>" ).append( deviceName ).append( "</td><td>" ).append( percentFormat.format( successValue ) ).append( "%</td><td>" ).append( runLengthx ).append( "</td></tr>" );
         }
 
         stringBuilder.append( "</tbody></table></div></div>" );
-        
+
         stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Failure Breakdown</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
         stringBuilder.append( "<thead><tr><th width=90%>Failure Type</th><th nowrap>Failure Count</th></tr></thead><tbody>" );
-        stringBuilder.append( "<tbody><tr><td width=90%>Scripting Issues</td><td nowrap>" + failureBreakdown[ 0 ] + "</td></tr>" );
-        stringBuilder.append( "<tr><td width=90%>Configuration Issues</td><td nowrap>" + failureBreakdown[ 1 ] + "</td></tr>" );
-        stringBuilder.append( "<tr><td width=90%>Application Issues</td><td nowrap>" + failureBreakdown[ 2 ] + "</td></tr>" );
-        stringBuilder.append( "<tr><td width=90%>Cloud Issues</td><td nowrap>" + failureBreakdown[ 3 ] + "</td></tr>" );
+        stringBuilder.append( "<tbody><tr><td width=90%>Scripting Issues</td><td nowrap>" + failureBreakdown[0] + "</td></tr>" );
+        stringBuilder.append( "<tr><td width=90%>Configuration Issues</td><td nowrap>" + failureBreakdown[1] + "</td></tr>" );
+        stringBuilder.append( "<tr><td width=90%>Application Issues</td><td nowrap>" + failureBreakdown[2] + "</td></tr>" );
+        stringBuilder.append( "<tr><td width=90%>Cloud Issues</td><td nowrap>" + failureBreakdown[3] + "</td></tr>" );
         stringBuilder.append( "</tbody></table></div></div></div>" );
+        stringBuilder.append( "</div></div></div></div>" );
 
         writePageFooter( stringBuilder );
 
@@ -352,7 +371,8 @@ public class RunDetails implements RunListener
             fileWriter.close();
 
             if ( complete )
-                historyWriter.writeData( getRootFolder() + System.getProperty( "file.separator" ) + "index.html", startTime, System.currentTimeMillis(), envMap.size(), osMap.size(), successCount, detailsList.size() - successCount, envMap, failureBreakdown[0], failureBreakdown[1], failureBreakdown[2], failureBreakdown[3] );
+                historyWriter.writeData( getRootFolder() + System.getProperty( "file.separator" ) + "index.html", startTime, System.currentTimeMillis(), envMap.size(), osMap.size(), successCount, detailsList.size() - successCount, envMap,
+                        failureBreakdown[0], failureBreakdown[1], failureBreakdown[2], failureBreakdown[3] );
 
         }
         catch ( Exception e )
@@ -360,17 +380,56 @@ public class RunDetails implements RunListener
             e.printStackTrace();
         }
 
+        try
+        {
+            HttpClient httpclient = HttpClients.createDefault();
+            HttpPost httppost = new HttpPost( "http://www.google-analytics.com/collect" );
+
+            List<NameValuePair> params = new ArrayList<NameValuePair>( 2 );
+            params.add( new BasicNameValuePair( "v", "1" ) );
+            params.add( new BasicNameValuePair( "tid", "UA-80178289-1" ) );
+            params.add( new BasicNameValuePair( "cid", "555" ) );
+            params.add( new BasicNameValuePair( "t", "pageview" ) );
+            params.add( new BasicNameValuePair( "dt", "/testExecution" ) );
+            params.add( new BasicNameValuePair( "dp", ApplicationRegistry.instance().getAUT().getName() ) );
+            params.add( new BasicNameValuePair( "an", "xFramium" ) );
+            params.add( new BasicNameValuePair( "av", Initializable.VERSION ) );
+            params.add( new BasicNameValuePair( "dh", CloudRegistry.instance().getCloud().getHostName() ) );
+            
+            params.add( new BasicNameValuePair( "cm1", detailsList.size() + "" ) );
+            params.add( new BasicNameValuePair( "cm2", successCount + "" ) );
+            params.add( new BasicNameValuePair( "cm3", (detailsList.size() - successCount) + "" ) );
+            params.add( new BasicNameValuePair( "cm4", (stepBreakdown[0] + stepBreakdown[1] + stepBreakdown[2]) + "" ) );
+            params.add( new BasicNameValuePair( "cm5", stepBreakdown[0] + "" ) );
+            params.add( new BasicNameValuePair( "cm6", stepBreakdown[1] + "" ) );
+            params.add( new BasicNameValuePair( "cm7", stepBreakdown[2] + "" ) );
+            params.add( new BasicNameValuePair( "cm8", envMap.size() + "" ) );
+            params.add( new BasicNameValuePair( "cm9", (runTime / 1000) + "" ) );
+            
+            params.add( new BasicNameValuePair( "cd2", System.getProperty( "os.name" ) ) );
+            params.add( new BasicNameValuePair( "cd3", System.getProperty( "java.version" ) ) );
+            params.add( new BasicNameValuePair( "cd4", "X" + Base64.encodeBase64String( CloudRegistry.instance().getCloud().getUserName().getBytes() ) + "=" ) );
+            
+            httppost.setEntity( new UrlEncodedFormEntity( params, "UTF-8" ) );
+
+            // Execute and get the response.
+            HttpResponse response = httpclient.execute( httppost );
+
+
+        }
+        catch ( Exception e )
+        {
+            
+        }
+
     }
-
-    
-
-    
 
     private void writePageFooter( StringBuilder stringBuilder )
     {
-        stringBuilder.append( "</div></div></div></div>" );
+
         stringBuilder.append(
                 "<script src=\"http://www.xframium.org/output/assets/js/jquery.min.js\"></script><script src=\"http://www.xframium.org/output/assets/js/chart.js\"></script><script src=\"http://www.xframium.org/output/assets/js/tablesorter.min.js\"></script><script src=\"http://www.xframium.org/output/assets/js/toolkit.js\"></script><script src=\"http://www.xframium.org/output/assets/js/application.js\"></script><script>Chart.defaults.global.defaultFontSize=8;</script>" );
+
         stringBuilder.append( "</body></html>" );
     }
 
@@ -396,12 +455,11 @@ public class RunDetails implements RunListener
             stepBreakdown[0] += (int) detailsList.get( i )[3];
             stepBreakdown[1] += (int) detailsList.get( i )[4];
             stepBreakdown[2] += (int) detailsList.get( i )[5];
-            
+
             scriptFailure += (int) detailsList.get( i )[8];
             configFailure += (int) detailsList.get( i )[9];
             appFailure += (int) detailsList.get( i )[10];
             cloudFailure += (int) detailsList.get( i )[11];
-            
 
             String deviceKey = device.getManufacturer() + " " + device.getModel();
 
@@ -464,45 +522,45 @@ public class RunDetails implements RunListener
 
         stringBuilder.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
                 .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) )
-                .append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.2</h6><h3 class=\"dashhead-title\">Test Suite Execution Summary</h3><h6>" + ApplicationRegistry.instance().getAUT().getName() + "</h6></div>" );
+                .append( "</span><h6 class=\"dashhead-subtitle\">xFramium " + Initializable.VERSION + "</h6><h3 class=\"dashhead-title\">Test Suite Execution Summary</h3><h6>" + ApplicationRegistry.instance().getAUT().getName() + "</h6></div>" );
 
         stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2 m-b-md\"></div><div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\">" );
         stringBuilder.append( "<div class=\"abscenter\"  style=\"width: 100%; height: 100px; vertical-align: center;  line-height:19px; text-align: center; z-index: 999999999999999\"><h2 class=\"text-muted\"><b>" + detailsList.size()
                 + "</b></h2><h4><span class=\"pass\">" + successCount + "</span> / <span class=\"fail\">" + (detailsList.size() - successCount) + "</span></h4></div>" );
         stringBuilder.append( "<canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-animation=\"true\" data-animation-easing=\"easeOutQuart\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( successCount ).append( ", color: '#1bc98e', label: 'Passed' }," );
-        
+
         int failureCount = detailsList.size() - successCount;
-        
+
         if ( scriptFailure > 0 )
         {
             stringBuilder.append( "{ value: " ).append( scriptFailure ).append( ", color: '#ea6272', label: 'Script Issues' }," );
             failureCount -= scriptFailure;
         }
-        
+
         if ( configFailure > 0 )
         {
             stringBuilder.append( "{ value: " ).append( configFailure ).append( ", color: '#e74b5e', label: 'Configuration Issues' }," );
             failureCount -= configFailure;
         }
-        
+
         if ( appFailure > 0 )
         {
             stringBuilder.append( "{ value: " ).append( appFailure ).append( ", color: '#e33549', label: 'Application Issues' }," );
             failureCount -= appFailure;
         }
-        
+
         if ( cloudFailure > 0 )
         {
             stringBuilder.append( "{ value: " ).append( cloudFailure ).append( ", color: '#e01f35', label: 'Device Issues' }," );
             failureCount -= cloudFailure;
         }
-        
+
         if ( failureCount > 0 )
         {
             stringBuilder.append( "{ value: " ).append( failureCount ).append( ", color: '#e64759', label: 'General Failures' }," );
         }
-        
+
         stringBuilder.append( "]\" data-segment-stroke-color=\"white\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Test Executions</strong></center></div>" );
 
         stringBuilder.append( "<div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\">" );

@@ -23,6 +23,8 @@ package org.xframium.page.keyWord.step.spi;
 import java.util.List;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.exception.ObjectConfigurationException;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
@@ -49,10 +51,8 @@ public class KWSLoop extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap ) throws Exception
 	{
-		if ( pageObject == null )
-			throw new IllegalStateException( "Page Object was not defined" );
 		if ( getParameterList().size() < 2 )
-			throw new IllegalArgumentException( "You must provide one parameter specifying either the loop count or the name of the element to execute on along with a function name to execution" );
+			throw new ScriptConfigurationException( "You must provide one parameter specifying either the loop count or the name of the element to execute on along with a function name to execution" );
 		
 		String useValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
 		String functionName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";

@@ -94,6 +94,7 @@ import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.KeyWordToken.TokenType;
 import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
+import org.xframium.page.keyWord.provider.xsd.Token;
 import org.xframium.page.keyWord.provider.SQLKeyWordProvider;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import org.xframium.spi.Device;
@@ -868,6 +869,14 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         for ( XParameter p : pList )
         {
             KeyWordParameter kp = new KeyWordParameter( ParameterType.valueOf( p.getType() ), p.getValue() );
+            
+            if ( p.getToken() != null && !p.getToken().isEmpty() )
+            {
+                for ( XToken t : p.getToken() )
+                {
+                    kp.addToken( new KeyWordToken( TokenType.valueOf(t.getType() ), t.getValue(), t.getName() ) );
+                }
+            }
             
             if ( p.equals( ParameterType.FILE ) )
             {
