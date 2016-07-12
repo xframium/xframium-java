@@ -81,11 +81,6 @@
       <version>1.0.2</version>
     </dependency>
     <dependency>
-      <groupId>ojdbc</groupId>
-      <artifactId>ojdbc</artifactId>
-      <version>14</version>
-    </dependency>
-    <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <version>5.1.36</version>
