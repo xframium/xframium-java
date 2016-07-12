@@ -31,6 +31,7 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.xframium.content.ContentManager;
 import org.xframium.exception.ObjectConfigurationException;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.services.WindTunnel.Status;
 import org.xframium.page.ElementDescriptor;
@@ -1010,19 +1011,24 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      */
     protected Object getParameterValue( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap )
     {
+        String returnValue;
         switch ( param.getType() )
         {
             case CONTEXT:
-                return contextMap.get( param.getValue() );
+                returnValue = contextMap.get( param.getValue() ) + "";
+                break;
 
             case STATIC:
-                return param.getValue();
+                returnValue = param.getValue();
+                break;
 
             case PROPERTY:
-                return System.getProperty( param.getValue(), "" );
+                returnValue =  System.getProperty( param.getValue(), "" );
+                break;
 
             case CONTENT:
-                return ContentManager.instance().getContentValue( param.getValue() );
+                returnValue = ContentManager.instance().getContentValue( param.getValue() );
+                break;
 
             case DATA:
                 int dotPosition = param.getValue().lastIndexOf( "." );
@@ -1031,22 +1037,33 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 PageData pageData = getPageData( param.getValue(), dataMap );
                 if ( pageData == null )
                 {
-                    throw new IllegalArgumentException( Thread.currentThread().getName() + ": The Page Data record type [" + tableName + "] does not exist for this test - chexk your dataProvider or dataDriver attribute" );
+                    throw new ScriptConfigurationException( Thread.currentThread().getName() + ": The Page Data record type [" + tableName + "] does not exist for this test - check your dataProvider or dataDriver attribute" );
                 }
 
-                Object returnValue = pageData.getData( recordName );
+                returnValue = pageData.getData( recordName );
 
                 if ( returnValue == null )
-                    throw new IllegalArgumentException(
+                    throw new ScriptConfigurationException(
                             Thread.currentThread().getName() + ": The Page Data field [" + recordName + "] does not exist for the page data record type [" + tableName + "] - Reference one of the following fields - " + pageData );
 
-                return returnValue;
-
             default:
-                throw new IllegalArgumentException( Thread.currentThread().getName() + ": Unknown Parameter Type [" + param.getValue() + "]" );
+                throw new ScriptConfigurationException( Thread.currentThread().getName() + ": Unknown Parameter Type [" + param.getValue() + "]" );
         }
+        
+        for ( KeyWordToken token : param.getTokenList() )
+        {
+            if ( log.isDebugEnabled() )
+                log.debug( "Applying token " + token.getName() );
+                 
+            returnValue = returnValue.replace( "{" + token.getName() + "}", getTokenValue( token, contextMap, dataMap ) );
+        }
+        
+        return returnValue;
     }
 
+    
+    
+    
     /**
      * Gets the parameter value.
      *
@@ -1081,19 +1098,19 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 PageData pageData = getPageData( token.getValue(), dataMap );
                 if ( pageData == null )
                 {
-                    throw new IllegalArgumentException( Thread.currentThread().getName() + ": The Page Data record type [" + tableName + "] does not exist for this test - chexk your dataProvider or dataDriver attribute" );
+                    throw new ScriptConfigurationException( Thread.currentThread().getName() + ": The Page Data record type [" + tableName + "] does not exist for this test - chexk your dataProvider or dataDriver attribute" );
                 }
 
                 Object returnValue = pageData.getData( recordName );
 
                 if ( returnValue == null )
-                    throw new IllegalArgumentException(
+                    throw new ScriptConfigurationException(
                             Thread.currentThread().getName() + ": The Page Data field [" + recordName + "] does not exist for the page data record type [" + tableName + "] - Reference one of the following fields - " + pageData );
 
                 return returnValue + "";
 
             default:
-                throw new IllegalArgumentException( Thread.currentThread().getName() + ": Unknown Token Type [" + token.getValue() + "]" );
+                throw new ScriptConfigurationException( Thread.currentThread().getName() + ": Unknown Token Type [" + token.getValue() + "]" );
         }
     }
 
