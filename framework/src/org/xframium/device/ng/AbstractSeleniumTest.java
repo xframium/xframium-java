@@ -49,6 +49,7 @@ import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.Artifact;
 import org.xframium.device.artifact.ArtifactProducer;
 import org.xframium.device.data.DataManager;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunDetails;
@@ -489,6 +490,8 @@ public abstract class AbstractSeleniumTest
         WebDriver webDriver = device.getWebDriver();
         Device currentDevice = device.getDevice();
 
+        try
+        {
         if (webDriver != null)
         {
             String runKey = ((DEFAULT.equals( name )) ? (( TestName ) testArgs[0] ).getTestName() : (( TestName ) testArgs[0] ).getTestName() + "-" + name );
@@ -591,11 +594,21 @@ public abstract class AbstractSeleniumTest
             {
             }
         }
-		
+
+        
         if (currentDevice != null)
         {
-            DeviceManager.instance().addRun( currentDevice, currentMethod, ( ( TestName ) testArgs[0] ).getTestName(), testResult.isSuccess(), device.getPersona() );
-            DeviceManager.instance().releaseDevice( currentDevice );
+            if ( webDriver instanceof DeviceWebDriver )
+                DeviceManager.instance().addRun( ( (DeviceWebDriver) webDriver ).getPopulatedDevice(), currentMethod, ( ( TestName ) testArgs[0] ).getTestName(), testResult.isSuccess(), device.getPersona() );
+            else
+                DeviceManager.instance().addRun( currentDevice, currentMethod, ( ( TestName ) testArgs[0] ).getTestName(), testResult.isSuccess(), device.getPersona() );
+            
+        }
+        }
+        finally
+        {
+            if ( currentDevice != null )
+                DeviceManager.instance().releaseDevice( currentDevice );
         }
 
     }

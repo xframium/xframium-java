@@ -31,9 +31,12 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.api.PerfectoArtifactProducer;
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.factory.AbstractDriverFactory;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.exception.DeviceConfigurationException;
 import org.xframium.spi.Device;
 import io.appium.java_client.ios.IOSDriver;
 
@@ -54,6 +57,19 @@ public class IOSDriverFactory extends AbstractDriverFactory
 		try
 		{
 			DesiredCapabilities dc = new DesiredCapabilities( "", "", Platform.ANY );
+			
+			CloudDescriptor useCloud = CloudRegistry.instance().getCloud();
+            
+            if ( currentDevice.getCloud() != null )
+            {
+                useCloud = CloudRegistry.instance().getCloud( currentDevice.getCloud() );
+                if (useCloud == null)
+                {
+                    useCloud = CloudRegistry.instance().getCloud();
+                    log.warn( "A separate grid instance was specified but it does not exist in your cloud registry [" + currentDevice.getCloud() + "] - using the default Cloud instance" );
+                }
+            }
+			
 			URL hubUrl = new URL( CloudRegistry.instance().getCloud().getCloudUrl() );
 	
 			if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )
@@ -77,22 +93,34 @@ public class IOSDriverFactory extends AbstractDriverFactory
 				dc.setCapability( name, ApplicationRegistry.instance().getAUT().getCapabilities().get( name ) );
 			
 			dc.setCapability( AUTOMATION_NAME, "Appium" );
-			if( ApplicationRegistry.instance().getAUT().getAppleIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAppleIdentifier().isEmpty() )
-				dc.setCapability( BUNDLE_ID, ApplicationRegistry.instance().getAUT().getAppleIdentifier() );
-			
+
 			
 			if ( log.isInfoEnabled() )
 			    log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 			
 			webDriver = new DeviceWebDriver( new IOSDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
-
 			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
+			
 			
 			Capabilities caps = ( (IOSDriver) webDriver.getWebDriver() ).getCapabilities();
 			webDriver.setExecutionId( caps.getCapability( "executionId" ).toString() );
 			webDriver.setReportKey( caps.getCapability( "reportKey" ).toString() );
 			webDriver.setDeviceName( caps.getCapability( "deviceName" ).toString() );
 			webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
+			
+			
+			if( ApplicationRegistry.instance().getAUT().getAppleIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAppleIdentifier().isEmpty() )
+            {
+			    if ( ( (IOSDriver) webDriver.getNativeDriver() ).isAppInstalled( ApplicationRegistry.instance().getAUT().getAppleIdentifier() ) )
+			    {
+    			    log.warn( "Attempting to start " + ApplicationRegistry.instance().getAUT().getAppleIdentifier() );
+                    CloudActionProvider actionProvider = (CloudActionProvider) Class.forName( CloudActionProvider.class.getPackage().getName() + "." + CloudRegistry.instance().getCloud().getProvider() + "CloudActionProvider" ).newInstance();
+                    actionProvider.startApp( caps.getCapability( "executionId" ) + "", caps.getCapability( "deviceName" ) + "", ApplicationRegistry.instance().getAUT().getName(), ApplicationRegistry.instance().getAUT().getAppleIdentifier() );
+			    }
+			    else
+			        throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAppleIdentifier() );
+            }
+			
 			String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
             webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );
             webDriver.setArtifactProducer( new PerfectoArtifactProducer() );

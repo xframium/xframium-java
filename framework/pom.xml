@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.xframium</groupId>
   <artifactId>xframium-java</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.3-SNAPSHOT</version>
   <name>xframium-java</name>
   <repositories>
     <repository>
@@ -145,5 +145,10 @@
       <version>4.5</version>
     </dependency>
 
+    <dependency>
+      <groupId>eu.bitwalker</groupId>
+      <artifactId>UserAgentUtils</artifactId>
+      <version>1.20</version>
+    </dependency>
   </dependencies>
 </project>

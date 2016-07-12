@@ -28,6 +28,7 @@ import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.page.PageManager;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.spi.PropertyProvider;
 
 
 public class XMLTestDriver extends AbstractSeleniumTest
@@ -55,8 +56,10 @@ public class XMLTestDriver extends AbstractSeleniumTest
 		}
 		
 		
-		boolean returnValue = KeyWordDriver.instance().executeTest( testName.getTestName().split( "\\." )[ 0 ], getWebDriver() );
+		if ( test.getDescription() != null && !test.getDescription().isEmpty() && getWebDriver() instanceof PropertyProvider )
+		    ( (PropertyProvider) getWebDriver() ).setProperty( "testDescription", test.getDescription() );
 		
+		boolean returnValue = KeyWordDriver.instance().executeTest( testName.getTestName().split( "\\." )[ 0 ], getWebDriver() );
 		
 		if ( returnValue )
 			return;

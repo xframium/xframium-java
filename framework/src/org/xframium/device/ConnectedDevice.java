@@ -126,6 +126,11 @@ public class ConnectedDevice
 		return device;
 	}
 	
+	public Device getPopulatedDevice()
+    {
+	    return webDriver.getPopulatedDevice();
+    }
+	
 	/**
 	 * Sets the device.
 	 *

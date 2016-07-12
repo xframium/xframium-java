@@ -17,6 +17,10 @@
   </complexType>
 
   <complexType name="TestSuite">
+    <sequence>
+      <element name="environment" type="tns:Environment" minOccurs="0" maxOccurs="unbounded" />
+      <element name="testCase" type="tns:TestCase" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
     <attribute name="startTime" type="long" use="required" />
     <attribute name="endTime" type="long" use="required" />
     <attribute name="fileName" type="string" use="required" />
@@ -24,6 +28,10 @@
     <attribute name="fail" type="int" use="required" />
     <attribute name="env" type="int" use="required" />
     <attribute name="os" type="int" use="required" />
+    <attribute name="scriptFailure" type="int" use="optional" default="0" />
+    <attribute name="applicationFailure" type="int" use="optional" default="0" />
+    <attribute name="cloudFailure" type="int" use="optional" default="0" />
+    <attribute name="configFailure" type="int" use="optional" default="0" />
   </complexType>
 
   <complexType name="TestCase">
@@ -45,6 +53,8 @@
     <attribute name="browserName" type="string" use="optional" />
     <attribute name="browserVersion" type="string" use="optional" />
     <attribute name="resolution" type="string" use="optional" />
+    <attribute name="pass" type="int" use="optional" />
+    <attribute name="fail" type="int" use="optional" />
   </complexType>
   
   <complexType name="Execution">
@@ -58,6 +68,16 @@
     <attribute name="fileName" type="string" use="required" />
     <attribute name="persona" type="string" use="optional" />
     <attribute name="context" type="string" use="optional" />
+    <attribute name="failureType" use="required">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="SCRIPT" />
+          <enumeration value="APPLICATION" />
+          <enumeration value="CONFIG" />
+          <enumeration value="CLOUD" />
+        </restriction>
+      </simpleType>
+    </attribute>
   </complexType>
 
 </schema>

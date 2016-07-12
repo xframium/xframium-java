@@ -33,7 +33,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
-
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.history.HistoryWriter;
@@ -113,13 +112,13 @@ public class RunDetails implements RunListener
     }
 
     @Override
-    public void afterRun( Device currentDevice, String runKey, boolean successful, int stepsPassed, int stepsFailed, int stepsIgnored, long startTime, long stopTime )
+    public void afterRun( Device currentDevice, String runKey, boolean successful, int stepsPassed, int stepsFailed, int stepsIgnored, long startTime, long stopTime, int scriptFailures, int configFailures, int applicationFailures, int cloudFailures )
     {
-        detailsList.add( new Object[] { runKey, currentDevice, successful, stepsPassed, stepsFailed, stepsIgnored, startTime, stopTime } );
+        detailsList.add( new Object[] { runKey, currentDevice, successful, stepsPassed, stepsFailed, stepsIgnored, startTime, stopTime, scriptFailures, configFailures, applicationFailures, cloudFailures } );
 
         String location = runKey + "/" + currentDevice.getKey() + "/" + runKey + ".html";
         File indexFile = new File( getRootFolder(), location );
-        historyWriter.addExecution( runKey, currentDevice, startTime, stopTime, stepsPassed, stepsFailed, stepsIgnored, successful, indexFile.getPath() );
+        historyWriter.addExecution( runKey, currentDevice, startTime, stopTime, stepsPassed, stepsFailed, stepsIgnored, successful, indexFile.getPath(), scriptFailures, configFailures, applicationFailures, cloudFailures );
     }
 
     @Override
@@ -161,6 +160,8 @@ public class RunDetails implements RunListener
         TreeMap<String, int[]> osMap = new TreeMap<String, int[]>();
         TreeMap<String, int[]> envMap = new TreeMap<String, int[]>();
         int[] stepBreakdown = new int[3];
+        int[] failureBreakdown = new int[4];
+
         int successCount = 0;
         for ( int i = 0; i < detailsList.size(); i++ )
         {
@@ -173,6 +174,11 @@ public class RunDetails implements RunListener
             stepBreakdown[2] += (int) detailsList.get( i )[5];
             long startTime = (long) detailsList.get( i )[6];
             long stopTime = (long) detailsList.get( i )[7];
+
+            failureBreakdown[0] += (int) detailsList.get( i )[8];
+            failureBreakdown[1] += (int) detailsList.get( i )[9];
+            failureBreakdown[2] += (int) detailsList.get( i )[10];
+            failureBreakdown[3] += (int) detailsList.get( i )[11];
 
             String deviceKey = device.getEnvironment();
 
@@ -190,7 +196,7 @@ public class RunDetails implements RunListener
 
             caseValue[2]++;
             caseValue[3] += (stopTime - startTime);
-            
+
             caseValue = envMap.get( device.getEnvironment() );
             if ( caseValue == null )
             {
@@ -241,18 +247,13 @@ public class RunDetails implements RunListener
 
         writePageHeader( stringBuilder, 1 );
 
-        String runLength = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( runTime ), TimeUnit.MILLISECONDS.toMinutes( runTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( runTime ) ),
+        String runLength = String.format( "%dh %dm %ds", TimeUnit.MILLISECONDS.toHours( runTime ), TimeUnit.MILLISECONDS.toMinutes( runTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( runTime ) ),
                 TimeUnit.MILLISECONDS.toSeconds( runTime ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( runTime ) ) );
 
-        stringBuilder.append( "<br /><div class=\"row statcards\">" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Passed</span><h3 class=\"statcard-number\">" + successCount + "</h3></div></div></div>" );
-        stringBuilder
-                .append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Failed</span><h3 class=\"statcard-number\">" + (detailsList.size() - successCount) + "</h3></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Environments</span><h3 class=\"statcard-number\">" + envMap.size() + "</h3></div></div></div>" );
-        stringBuilder.append( "<div class=\"col-sm-3 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h3 class=\"statcard-number\">" + runLength + "</h3></div></div></div>" );
-        stringBuilder.append( "<div class=\"pull-right text-muted\"><a hRef=\"../index.html\" style=\"margin-right: 18px;\">Return to Test Execution History</a></div></div>" );
-        stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Execution Detail</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
+        stringBuilder.append( "<div class=\"row\"><div class=\"pull-right text-muted\"><a hRef=\"../index.html\" style=\"margin-right: 18px;\">Return to Test Execution History</a></div></div>" );
+        stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Execution Detail (" + runLength + ")</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
         stringBuilder.append( "<tr><th width=\"40%\">Test</th><th width=\"40%\">Environment</th><th width=\"20%\">Duration</th><th>Status</th></tr><tbody>" );
+        int[] localBreakdown = new int[4];
         for ( int i = 0; i < detailsList.size(); i++ )
         {
             String runKey = (String) detailsList.get( i )[0];
@@ -261,6 +262,11 @@ public class RunDetails implements RunListener
             boolean success = (boolean) detailsList.get( i )[2];
             long startTime = (long) detailsList.get( i )[6];
             long stopTime = (long) detailsList.get( i )[7];
+            
+            localBreakdown[0] = (int) detailsList.get( i )[8];
+            localBreakdown[1] = (int) detailsList.get( i )[9];
+            localBreakdown[2] = (int) detailsList.get( i )[10];
+            localBreakdown[3] = (int) detailsList.get( i )[11];
 
             long testRunTime = stopTime - startTime;
             String testRunLength = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( testRunTime ), TimeUnit.MILLISECONDS.toMinutes( testRunTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( testRunTime ) ),
@@ -272,13 +278,25 @@ public class RunDetails implements RunListener
             if ( success )
                 stringBuilder.append( "<span class=\"label label-success\">Pass</span>" );
             else
-                stringBuilder.append( "<span class=\"label label-danger\">Fail</span>" );
+            {
+                if ( localBreakdown[0] > 0 )
+                    stringBuilder.append( "<span class=\"label label-danger\">Script</span>" );
+                else if ( localBreakdown[1] > 0 )
+                    stringBuilder.append( "<span class=\"label label-danger\">Configuration</span>" );
+                else if ( localBreakdown[2] > 0 )
+                    stringBuilder.append( "<span class=\"label label-danger\">Application</span>" );
+                else if ( localBreakdown[3] > 0 )
+                    stringBuilder.append( "<span class=\"label label-danger\">Cloud</span>" );
+                else
+                    stringBuilder.append( "<span class=\"label label-danger\">Fail</span>" );
+            }
 
             stringBuilder.append( "</td></tr>" );
         }
 
-        stringBuilder.append( "<tr><td colSpan='6' align='center'><h6>" ).append( new File( rootFolder, getRootFolder() + System.getProperty( "file.separator" ) + "executionMap.properties" ).getAbsolutePath() ).append( "</h6></td></tr></tbody></table></div></div>" );
-        
+        stringBuilder.append( "<tr><td colSpan='6' align='center'><h6>" ).append( new File( rootFolder, getRootFolder() + System.getProperty( "file.separator" ) + "executionMap.properties" ).getAbsolutePath() )
+                .append( "</h6></td></tr></tbody></table></div></div>" );
+
         stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Environment Summary</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
         stringBuilder.append( "<thead><tr><th width=60%>Environment</th><th nowrap>Pass Rate</th></thead></tr><tbody>" );
 
@@ -294,8 +312,7 @@ public class RunDetails implements RunListener
         }
 
         stringBuilder.append( "</tbody></table></div></div>" );
-        
-        
+
         stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Test Summary</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
         stringBuilder.append( "<thead><tr><th width=60%>Test</th><th nowrap>Pass Rate</th><th nowrap>Average Duration</th></thead></tr><tbody>" );
 
@@ -314,8 +331,16 @@ public class RunDetails implements RunListener
             stringBuilder.append( "<tr><td width=60%>" ).append( deviceName ).append( "</td><td>" ).append( percentFormat.format( successValue ) ).append( "%</td><td>" ).append( runLengthx ).append( "</td></tr>" );
         }
 
-        stringBuilder.append( "</tbody></table></div></div></div>" );
+        stringBuilder.append( "</tbody></table></div></div>" );
         
+        stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Failure Breakdown</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
+        stringBuilder.append( "<thead><tr><th width=90%>Failure Type</th><th nowrap>Failure Count</th></tr></thead><tbody>" );
+        stringBuilder.append( "<tbody><tr><td width=90%>Scripting Issues</td><td nowrap>" + failureBreakdown[ 0 ] + "</td></tr>" );
+        stringBuilder.append( "<tr><td width=90%>Configuration Issues</td><td nowrap>" + failureBreakdown[ 1 ] + "</td></tr>" );
+        stringBuilder.append( "<tr><td width=90%>Application Issues</td><td nowrap>" + failureBreakdown[ 2 ] + "</td></tr>" );
+        stringBuilder.append( "<tr><td width=90%>Cloud Issues</td><td nowrap>" + failureBreakdown[ 3 ] + "</td></tr>" );
+        stringBuilder.append( "</tbody></table></div></div></div>" );
+
         writePageFooter( stringBuilder );
 
         try
@@ -325,13 +350,9 @@ public class RunDetails implements RunListener
             FileWriter fileWriter = new FileWriter( useFile );
             fileWriter.write( stringBuilder.toString() );
             fileWriter.close();
-
-            writeHTMLDeviceSummary( rootFolder );
-            writeHTMLOSSummary( rootFolder );
-            writeHTMLTCSummary( rootFolder );
 
             if ( complete )
-            	historyWriter.writeData( getRootFolder() + System.getProperty( "file.separator" ) + "index.html", startTime, System.currentTimeMillis(), envMap.size(), osMap.size(), successCount, detailsList.size() - successCount );
+                historyWriter.writeData( getRootFolder() + System.getProperty( "file.separator" ) + "index.html", startTime, System.currentTimeMillis(), envMap.size(), osMap.size(), successCount, detailsList.size() - successCount, envMap, failureBreakdown[0], failureBreakdown[1], failureBreakdown[2], failureBreakdown[3] );
 
         }
         catch ( Exception e )
@@ -341,210 +362,9 @@ public class RunDetails implements RunListener
 
     }
 
-    private synchronized void writeHTMLDeviceSummary( File rootFolder )
-    {
-        StringBuilder stringBuilder = new StringBuilder();
+    
 
-        TreeMap<String, int[]> deviceMap = new TreeMap<String, int[]>();
-
-        for ( int i = 0; i < detailsList.size(); i++ )
-        {
-            Device device = (Device) detailsList.get( i )[1];
-            boolean success = (boolean) detailsList.get( i )[2];
-
-            String deviceKey = device.getManufacturer() + " " + device.getModel();
-
-            int[] caseValue = deviceMap.get( deviceKey );
-            if ( caseValue == null )
-            {
-                caseValue = new int[] { 0, 0 };
-                deviceMap.put( deviceKey, caseValue );
-            }
-
-            if ( success )
-                caseValue[0]++;
-            else
-                caseValue[1]++;
-        }
-
-        File useFile = getDSIndex( rootFolder );
-
-        writePageHeader( stringBuilder, 2 );
-        stringBuilder.append( "<br/><div class=\"col-sm-12 m-b-md\">" );
-
-        stringBuilder.append( "<table class=\"table table-hover table-condensed\">" );
-        stringBuilder.append( "<thead><tr><th width=60%>Device</th><th nowrap>Pass Rate</th></thead></tr><tbody>" );
-
-        for ( String deviceName : deviceMap.keySet() )
-        {
-            int[] currentRecord = deviceMap.get( deviceName );
-            int totalValue = currentRecord[0] + currentRecord[1];
-            double successValue = 0;
-            if ( totalValue > 0 )
-                successValue = ((double) currentRecord[0] / (double) totalValue) * 100;
-
-            stringBuilder.append( "<tr><td width=60%>" ).append( deviceName ).append( "</td><td>" ).append( percentFormat.format( successValue ) ).append( "%</td></tr>" );
-        }
-
-        stringBuilder.append( "</tbody></table></div>" );
-
-        writePageFooter( stringBuilder );
-
-        try
-        {
-
-            useFile.getParentFile().mkdirs();
-            FileWriter fileWriter = new FileWriter( useFile );
-            fileWriter.write( stringBuilder.toString() );
-            fileWriter.close();
-        }
-        catch ( Exception e )
-        {
-            e.printStackTrace();
-        }
-
-    }
-
-    private synchronized void writeHTMLOSSummary( File rootFolder )
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        TreeMap<String, int[]> deviceMap = new TreeMap<String, int[]>();
-
-        for ( int i = 0; i < detailsList.size(); i++ )
-        {
-            Device device = (Device) detailsList.get( i )[1];
-            boolean success = (boolean) detailsList.get( i )[2];
-
-            String deviceKey = device.getOs();
-            if ( deviceKey == null )
-                deviceKey = "Unknown";
-
-            int[] caseValue = deviceMap.get( deviceKey );
-            if ( caseValue == null )
-            {
-                caseValue = new int[] { 0, 0 };
-                deviceMap.put( deviceKey, caseValue );
-            }
-
-            if ( success )
-                caseValue[0]++;
-            else
-                caseValue[1]++;
-        }
-
-        File useFile = getOSIndex( rootFolder );
-
-        writePageHeader( stringBuilder, 4 );
-        stringBuilder.append( "<br/><div class=\"col-sm-12 m-b-md\">" );
-
-        stringBuilder.append( "<table class=\"table table-hover table-condensed\">" );
-        stringBuilder.append( "<thead><tr><th width=60%>OS</th><th nowrap>Pass Rate</th></thead></tr><tbody>" );
-
-        for ( String deviceName : deviceMap.keySet() )
-        {
-            int[] currentRecord = deviceMap.get( deviceName );
-            int totalValue = currentRecord[0] + currentRecord[1];
-            double successValue = 0;
-            if ( totalValue > 0 )
-                successValue = ((double) currentRecord[0] / (double) totalValue) * 100;
-
-            stringBuilder.append( "<tr><td width=60%>" ).append( deviceName ).append( "</td><td>" ).append( percentFormat.format( successValue ) ).append( "%</td></tr>" );
-        }
-
-        stringBuilder.append( "</tbody></table></div>" );
-
-        writePageFooter( stringBuilder );
-
-        try
-        {
-
-            useFile.getParentFile().mkdirs();
-            FileWriter fileWriter = new FileWriter( useFile );
-            fileWriter.write( stringBuilder.toString() );
-            fileWriter.close();
-        }
-        catch ( Exception e )
-        {
-            e.printStackTrace();
-        }
-
-    }
-
-    private synchronized void writeHTMLTCSummary( File rootFolder )
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        TreeMap<String, int[]> deviceMap = new TreeMap<String, int[]>();
-
-        for ( int i = 0; i < detailsList.size(); i++ )
-        {
-            boolean success = (boolean) detailsList.get( i )[2];
-
-            String deviceKey = (String) detailsList.get( i )[0];
-            long startTime = (long) detailsList.get( i )[6];
-            long stopTime = (long) detailsList.get( i )[7];
-
-            if ( deviceKey == null )
-                deviceKey = "Unknown";
-
-            int[] caseValue = deviceMap.get( deviceKey );
-            if ( caseValue == null )
-            {
-                caseValue = new int[] { 0, 0, 0, 0 };
-                deviceMap.put( deviceKey, caseValue );
-            }
-
-            if ( success )
-                caseValue[0]++;
-            else
-                caseValue[1]++;
-
-            caseValue[2]++;
-            caseValue[3] += (stopTime - startTime);
-        }
-
-        File useFile = getTCIndex( rootFolder );
-
-        writePageHeader( stringBuilder, 3 );
-        stringBuilder.append( "<br/><div class=\"col-sm-12 m-b-md\">" );
-
-        stringBuilder.append( "<table class=\"table table-hover table-condensed\">" );
-        stringBuilder.append( "<thead><tr><th width=60%>Test</th><th nowrap>Pass Rate</th><th nowrap>Average Duration</th></thead></tr><tbody>" );
-
-        for ( String deviceName : deviceMap.keySet() )
-        {
-            int[] currentRecord = deviceMap.get( deviceName );
-            int totalValue = currentRecord[0] + currentRecord[1];
-            double successValue = 0;
-            if ( totalValue > 0 )
-                successValue = ((double) currentRecord[0] / (double) totalValue) * 100;
-
-            int runTime = (int) ((double) currentRecord[3] / (double) currentRecord[2]);
-            String runLength = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( runTime ), TimeUnit.MILLISECONDS.toMinutes( runTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( runTime ) ),
-                    TimeUnit.MILLISECONDS.toSeconds( runTime ) - TimeUnit.MINUTES.toSeconds( TimeUnit.MILLISECONDS.toMinutes( runTime ) ) );
-
-            stringBuilder.append( "<tr><td width=60%>" ).append( deviceName ).append( "</td><td>" ).append( percentFormat.format( successValue ) ).append( "%</td><td>" ).append( runLength ).append( "</td></tr>" );
-        }
-
-        stringBuilder.append( "</tbody></table></div>" );
-
-        writePageFooter( stringBuilder );
-
-        try
-        {
-
-            useFile.getParentFile().mkdirs();
-            FileWriter fileWriter = new FileWriter( useFile );
-            fileWriter.write( stringBuilder.toString() );
-            fileWriter.close();
-        }
-        catch ( Exception e )
-        {
-            e.printStackTrace();
-        }
-
-    }
+    
 
     private void writePageFooter( StringBuilder stringBuilder )
     {
@@ -559,11 +379,15 @@ public class RunDetails implements RunListener
         TreeMap<String, int[]> caseMap = new TreeMap<String, int[]>();
         TreeMap<String, int[]> deviceMap = new TreeMap<String, int[]>();
         TreeMap<String, int[]> osMap = new TreeMap<String, int[]>();
-        
-        int osSuccess=0;
+
+        int osSuccess = 0;
         int osFail = 0;
         int[] stepBreakdown = new int[3];
         int successCount = 0;
+        int scriptFailure = 0;
+        int configFailure = 0;
+        int appFailure = 0;
+        int cloudFailure = 0;
         for ( int i = 0; i < detailsList.size(); i++ )
         {
             String runKey = (String) detailsList.get( i )[0];
@@ -572,6 +396,12 @@ public class RunDetails implements RunListener
             stepBreakdown[0] += (int) detailsList.get( i )[3];
             stepBreakdown[1] += (int) detailsList.get( i )[4];
             stepBreakdown[2] += (int) detailsList.get( i )[5];
+            
+            scriptFailure += (int) detailsList.get( i )[8];
+            configFailure += (int) detailsList.get( i )[9];
+            appFailure += (int) detailsList.get( i )[10];
+            cloudFailure += (int) detailsList.get( i )[11];
+            
 
             String deviceKey = device.getManufacturer() + " " + device.getModel();
 
@@ -618,45 +448,82 @@ public class RunDetails implements RunListener
             if ( (boolean) detailsList.get( i )[2] )
                 successCount++;
         }
-        
+
         for ( int[] caseValue : osMap.values() )
         {
-        	if ( caseValue[ 1 ] > 0 )
-        		osFail++;
-        	else
-        		osSuccess++;
+            if ( caseValue[1] > 0 )
+                osFail++;
+            else
+                osSuccess++;
         }
 
         stringBuilder.append( "<html>" );
         stringBuilder.append(
-                "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"></head>" );
+                "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"><style>.abscenter { margin: auto; position: absolute; top: 0; left: 0; bottom: 0; right: 0; } h2 { margin-bottom: 0px;}  h4 { margin-bottom: 0px;} .pass {color: #1bc98e;}.fail {color: #e64759;}</style></head>" );
         stringBuilder.append( "<body><div class=\"container\"><div class=\"row\">" );
 
-        //stringBuilder.append( "<div class=\"col-sm-3 sidebar\"><nav class=\"sidebar-nav\"><div class=\"collapse nav-toggleable-sm\" id=\"nav-toggleable-sm\"><ul class=\"nav nav-pills nav-stacked\"><li " + (activeIndex == 1 ? " class=\"active\"" : "")
-        //        + "><a href=\"index.html\">Execution Results</a></li><li " + (activeIndex == 2 ? " class=\"active\"" : "") + "><a href=\"deviceSummary.html\">Device Summary</a></li><li " + (activeIndex == 3 ? " class=\"active\"" : "")
-        //        + "><a href=\"testSummary.html\">Test Summary</a></li><li " + (activeIndex == 4 ? " class=\"active\"" : "") + "><a href=\"osSummary.html\">OS Summary</a></li></ul><hr class=\"visible-xs m-t\"></div></nav></div>" );
         stringBuilder.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " )
-                .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">Test Suite Execution Summary</h3><h6>" + ApplicationRegistry.instance().getAUT().getName() + "</h6></div>" );
+                .append( simpleTimeFormat.format( new Date( System.currentTimeMillis() ) ) )
+                .append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.2</h6><h3 class=\"dashhead-title\">Test Suite Execution Summary</h3><h6>" + ApplicationRegistry.instance().getAUT().getName() + "</h6></div>" );
 
-        stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2 m-b-md\"></div><div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
+        stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2 m-b-md\"></div><div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\">" );
+        stringBuilder.append( "<div class=\"abscenter\"  style=\"width: 100%; height: 100px; vertical-align: center;  line-height:19px; text-align: center; z-index: 999999999999999\"><h2 class=\"text-muted\"><b>" + detailsList.size()
+                + "</b></h2><h4><span class=\"pass\">" + successCount + "</span> / <span class=\"fail\">" + (detailsList.size() - successCount) + "</span></h4></div>" );
+        stringBuilder.append( "<canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-animation=\"true\" data-animation-easing=\"easeOutQuart\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( successCount ).append( ", color: '#1bc98e', label: 'Passed' }," );
-        stringBuilder.append( "{ value: " ).append( detailsList.size() - successCount ).append( ", color: '#e64759', label: 'Failed' }," );
-        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Test Executions</strong></center></div>" );
+        
+        int failureCount = detailsList.size() - successCount;
+        
+        if ( scriptFailure > 0 )
+        {
+            stringBuilder.append( "{ value: " ).append( scriptFailure ).append( ", color: '#ea6272', label: 'Script Issues' }," );
+            failureCount -= scriptFailure;
+        }
+        
+        if ( configFailure > 0 )
+        {
+            stringBuilder.append( "{ value: " ).append( configFailure ).append( ", color: '#e74b5e', label: 'Configuration Issues' }," );
+            failureCount -= configFailure;
+        }
+        
+        if ( appFailure > 0 )
+        {
+            stringBuilder.append( "{ value: " ).append( appFailure ).append( ", color: '#e33549', label: 'Application Issues' }," );
+            failureCount -= appFailure;
+        }
+        
+        if ( cloudFailure > 0 )
+        {
+            stringBuilder.append( "{ value: " ).append( cloudFailure ).append( ", color: '#e01f35', label: 'Device Issues' }," );
+            failureCount -= cloudFailure;
+        }
+        
+        if ( failureCount > 0 )
+        {
+            stringBuilder.append( "{ value: " ).append( failureCount ).append( ", color: '#e64759', label: 'General Failures' }," );
+        }
+        
+        stringBuilder.append( "]\" data-segment-stroke-color=\"white\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Test Executions</strong></center></div>" );
 
-        stringBuilder.append( "<div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\">" );
+        stringBuilder.append( "<div class=\"abscenter\"  style=\"width: 100%; height: 100px; vertical-align: center;  line-height:19px; text-align: center; z-index: 999999999999999\"><h2 class=\"text-muted\"><b>"
+                + (stepBreakdown[0] + stepBreakdown[1] + stepBreakdown[2]) + "</b></h2><h4><span class=\"pass\">" + stepBreakdown[0] + "</span> / <span class=\"fail\">" + stepBreakdown[1] + "</span></h4></div>" );
+        stringBuilder.append( "<canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-animation=\"true\" data-animation-easing=\"easeOutQuart\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( stepBreakdown[0] ).append( ", color: '#1bc98e', label: 'Passed' }," );
         stringBuilder.append( "{ value: " ).append( stepBreakdown[1] ).append( ", color: '#e64759', label: 'Failed' }," );
         stringBuilder.append( "{ value: " ).append( stepBreakdown[2] ).append( ", color: '#e4d836', label: 'Ignored' }" );
-        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Tests Steps</strong></center></div>" );
+        stringBuilder.append( "]\" data-segment-stroke-color=\"white\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Tests Steps</strong></center></div>" );
 
-        stringBuilder.append( "<div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\"><canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-chart=\"doughnut\" data-value=\"[" );
+        stringBuilder.append( "<div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\">" );
+        stringBuilder.append( "<div class=\"abscenter\"  style=\"width: 100%; height: 100px; vertical-align: center;  line-height:19px; text-align: center; z-index: 999999999999999\"><h2 class=\"text-muted\"><b>" + (osSuccess + osFail)
+                + "</b></h2><h4><span class=\"pass\">" + osSuccess + "</span> / <span class=\"fail\">" + osFail + "</span></h4></div>" );
+        stringBuilder.append( "<canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-animation=\"true\" data-animation-easing=\"easeOutQuart\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( osSuccess ).append( ", color: '#1bc98e', label: 'Passed' }," );
         stringBuilder.append( "{ value: " ).append( osFail ).append( ", color: '#e64759', label: 'Failed' }," );
-        stringBuilder.append( "]\" data-segment-stroke-color=\"#222\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Environments</strong></center></div>" );
+        stringBuilder.append( "]\" data-segment-stroke-color=\"white\" data-percentage-inner-cutout=\"70\" /></div><center><strong class=\"text-muted\">Environments</strong></center></div>" );
 
-        
         stringBuilder.append( "</div>" );
-        
+
     }
 
     public synchronized void writeDefinitionIndex( File rootFolder )
@@ -691,21 +558,6 @@ public class RunDetails implements RunListener
     public File getIndex( File rootFolder )
     {
         return new File( rootFolder, getRootFolder() + System.getProperty( "file.separator" ) + "index.html" );
-    }
-
-    public File getDSIndex( File rootFolder )
-    {
-        return new File( rootFolder, getRootFolder() + System.getProperty( "file.separator" ) + "deviceSummary.html" );
-    }
-
-    public File getTCIndex( File rootFolder )
-    {
-        return new File( rootFolder, getRootFolder() + System.getProperty( "file.separator" ) + "testSummary.html" );
-    }
-
-    public File getOSIndex( File rootFolder )
-    {
-        return new File( rootFolder, getRootFolder() + System.getProperty( "file.separator" ) + "osSummary.html" );
     }
 
 }

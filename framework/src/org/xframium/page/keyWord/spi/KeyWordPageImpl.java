@@ -56,9 +56,20 @@ public class KeyWordPageImpl extends AbstractPage implements KeyWordPage
     	if ( log.isInfoEnabled() )
     		log.info( Thread.currentThread().getName() + ": Attempting to locate element using [" + elementDescriptor.toString() + "]" + " - " + webDriver );
     	
-    	Element myElement = PageManager.instance().getElementProvider().getElement( elementDescriptor ).cloneElement();
-    	myElement.setDriver( webDriver );
-    	return myElement;
+    	Element myElement = PageManager.instance().getElementProvider().getElement( elementDescriptor );
+    	
+    	if ( myElement == null )
+    	{
+    	    return null;
+    	}
+    	else
+    	{
+    	    myElement = myElement.cloneElement();
+    	    myElement.setDriver( webDriver );
+            return myElement;
+    	}
+    	
+    	
     }
 	
 	/* (non-Javadoc)

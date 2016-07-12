@@ -106,6 +106,8 @@ public class PageManager
     private SeleniumSessionManager altDriverSource = null;
     
     private String[] tagNames;
+    
+    
 
     
 	public String[] getTagNames()
@@ -398,6 +400,7 @@ public class PageManager
      */
     public void addExecutionLog( String executionId, String deviceName, String group, String name, String type, long timestamp, long runLength, StepStatus status, String detail, Throwable t, int threshold, String description, boolean fromCache )
     {
+        
         ArtifactManager.instance().notifyArtifactListeners( ArtifactType.EXECUTION_RECORD, new ExecutionRecord( group, name, type, timestamp, runLength, status, detail, t, fromCache, deviceName ) );
     }
 
@@ -408,6 +411,8 @@ public class PageManager
      */
     public void setThrowable( Throwable t )
     {
+        if ( t != null )
+            t.fillInStackTrace();
     	localException.set( t );
     }
     

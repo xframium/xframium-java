@@ -38,6 +38,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.WebDriver;
 import org.xframium.artifact.ArtifactListener;
 import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactType;
@@ -47,6 +48,7 @@ import org.xframium.device.data.NamedDataProvider;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.factory.DriverManager;
 import org.xframium.device.property.PropertyAdapter;
+import org.xframium.exception.XFramiumException;
 import org.xframium.page.ExecutionRecord;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunListener;
@@ -75,6 +77,18 @@ public class DeviceManager implements ArtifactListener
     private Properties configurationProperties;
 	
     private Device selectedDevice;
+    
+    private List<WebDriver> holdList = new ArrayList<WebDriver>( 10 );
+
+    public List<WebDriver> getHoldList()
+    {
+        return holdList;
+    }
+
+    public void setHoldList( List<WebDriver> holdList )
+    {
+        this.holdList = holdList;
+    }
 
     private DriverType driverType;
 
@@ -250,7 +264,7 @@ public class DeviceManager implements ArtifactListener
     private Comparator<Device> deviceComparator = new WeightedDeviceComparator();
 	
     /** The retry count. */
-    private int retryCount = 25;
+    private int retryCount = 3;
 
     /** The analytics map. */
     private Map<String, DeviceAnalytics> analyticsMap = new HashMap<String, DeviceAnalytics>( 20 );
@@ -416,9 +430,14 @@ public class DeviceManager implements ArtifactListener
                 int stepsIgnored = 0;
                 long startTime = 0;
                 long stopTime = 0;
+                int scriptFailures = 0;
+                int appFailures = 0;
+                int cloudFailures = 0;
+                int configFailures = 0;
+                
                 if ( DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) != null && !DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ).isEmpty() )
                 {
-                    
+
                     for ( Object item : DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) )
                     {
                         ExecutionRecord eItem = (ExecutionRecord) item;
@@ -429,10 +448,37 @@ public class DeviceManager implements ArtifactListener
                         if( eItem.getTimeStamp() + eItem.getRunTime() > stopTime )
                             stopTime = eItem.getTimeStamp() + eItem.getRunTime();
                         
+                        
                         switch( eItem.getStatus() )
                         {
                             case FAILURE:
                                 stepsFailed++;
+                                
+                                if ( eItem.getT() != null )
+                                {
+                                    if ( eItem.getT() instanceof XFramiumException )
+                                    {
+                                        switch ( ( (XFramiumException) eItem.getT() ).getType() )
+                                        {
+                                            case APPLICATION:
+                                                appFailures++;
+                                                break;
+                                                
+                                            case CLOUD:
+                                                cloudFailures++;
+                                                break;
+                                                
+                                            case CONFIGURATION:
+                                                configFailures++;
+                                                break;
+                                                
+                                            case SCRIPT:
+                                                scriptFailures++;
+                                                break;
+                                        }
+                                    }
+                                }
+                                
                                 break;
                                 
                             case FAILURE_IGNORED:
@@ -446,7 +492,7 @@ public class DeviceManager implements ArtifactListener
                     }
                 }
                 
-                runListener.afterRun( currentDevice, runKey, successful, stepsPassed, stepsFailed, stepsIgnored, startTime, stopTime );
+                runListener.afterRun( currentDevice, runKey, successful, stepsPassed, stepsFailed, stepsIgnored, startTime, stopTime, scriptFailures, configFailures, appFailures, cloudFailures );
             }
             catch( Exception e )
             {
@@ -534,15 +580,15 @@ public class DeviceManager implements ArtifactListener
                         //
                         // Attempt to acquire a lock for the device
                         //
-                        if (log.isDebugEnabled())
-                            log.debug( Thread.currentThread().getName() + ": Attempting to acquire semaphore for " + currentDevice );
+                        if (log.isInfoEnabled())
+                            log.info( Thread.currentThread().getName() + ": Attempting to acquire semaphore for " + currentDevice );
                         if (currentDevice.getLock().tryAcquire())
                         {
                             //
                             // Now, make sure this test has not run on this device yet and that there are no active runs against it
                             //
-                            if (log.isDebugEnabled())
-                                log.debug( Thread.currentThread().getName() + ": Device Semaphore permitted for " + currentDevice );
+                            if (log.isInfoEnabled())
+                                log.info( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + Thread.currentThread().getName() + ": Device Semaphore permitted for " + currentDevice );
                             if (!analyticsMap.get( currentDevice.getKey() ).hasRun( runKey ) && !activeRuns.containsKey( currentDevice.getKey() + "." + runKey ) )
                             {
                                 if (log.isDebugEnabled())
@@ -556,7 +602,7 @@ public class DeviceManager implements ArtifactListener
                                     if (log.isDebugEnabled())
                                         log.debug( Thread.currentThread().getName() + ": A registered RUN LISTENER cancelled this device request - Releasing Semaphore for " + currentDevice );
 		
-                                    currentDevice.getLock().release();
+                                    releaseDevice( currentDevice );
                                 }
                                 else
                                 {
@@ -609,7 +655,7 @@ public class DeviceManager implements ArtifactListener
                                         //
                                         if (log.isDebugEnabled())
                                             log.debug( Thread.currentThread().getName() + ": Releasing unused Device Semaphore for " + currentDevice );
-                                        currentDevice.getLock().release();
+                                        releaseDevice( currentDevice );
 										
                                     }
                                     else
@@ -625,7 +671,7 @@ public class DeviceManager implements ArtifactListener
                             {
                                 if (log.isDebugEnabled())
                                     log.debug( Thread.currentThread().getName() + ": Releasing unused Device Semaphore for " + currentDevice );
-                                currentDevice.getLock().release();
+                                releaseDevice( currentDevice );
                             }
                         }
                     }
@@ -728,8 +774,8 @@ public class DeviceManager implements ArtifactListener
      */
     public void releaseDevice( Device currentDevice )
     {
-        if (log.isDebugEnabled())
-            log.debug( Thread.currentThread().getName() + ": Releasing Device Semaphore for " + currentDevice );
+        if (log.isInfoEnabled())
+            log.info( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + Thread.currentThread().getName() + ": Releasing Device Semaphore for " + currentDevice );
         currentDevice.getLock().release();
     }
 

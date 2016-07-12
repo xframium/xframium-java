@@ -549,7 +549,16 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             //
             String testNames = configProperties.getProperty( "driver.testNames" );
             if ( testNames != null && !testNames.isEmpty() )
+            {
+                Collection<KeyWordTest> testList = KeyWordDriver.instance().getNamedTests( testNames.split( "," ) );
+                
+                if ( testList.isEmpty() )
+                {
+                    System.err.println( "No tests contained the names(s) [" + testNames + "]" );
+                }
+                
                 testArray.addAll( Arrays.asList( testNames ) );
+            }
             
             //
             // Extract any tagged tests
@@ -561,13 +570,19 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                 
                 if ( testList.isEmpty() )
                 {
-                    System.err.println( "No tests contianed the tag(s) [" + tagNames + "]" );
-                    System.exit( -1 );
+                    System.err.println( "No tests contained the tag(s) [" + tagNames + "]" );
                 }
                 
                 for ( KeyWordTest t : testList )
                     testArray.add( t.getName() );
+                
+                if ( testArray.isEmpty() )
+                {
+                    System.err.println( "No tests were specified" );
+                    System.exit( -1 );
+                }
             }
+
             
             if ( testArray.size() == 0 )
                 DataManager.instance().setTests( KeyWordDriver.instance().getTestNames() );

@@ -114,13 +114,23 @@ public class WEBDriverFactory extends AbstractDriverFactory
 					log.warn( "A separate grid instance was specified but it does not exist in your cloud registry [" + useCloud.getGridInstance() + "] - using the Cloud instance" );
 				}
 			}
+			
+			if ( currentDevice.getCloud() != null )
+			{
+			    useCloud = CloudRegistry.instance().getCloud( currentDevice.getCloud() );
+                if (useCloud == null)
+                {
+                    useCloud = CloudRegistry.instance().getCloud();
+                    log.warn( "A separate grid instance was specified but it does not exist in your cloud registry [" + currentDevice.getCloud() + "] - using the default Cloud instance" );
+                }
+			}
 
 			URL hubUrl = new URL( "http://" + useCloud.getHostName() + "/wd/hub" );
 			dc.setPlatform( Platform.ANY );
 			dc.setCapability( PLATFORM_NAME, currentDevice.getOs() );
 			if ( currentDevice.getOsVersion() != null && !currentDevice.getOsVersion().isEmpty() )
 				dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
-			dc.setCapability( BROWSER_NAME, currentDevice.getBrowserName().toLowerCase() );
+			dc.setCapability( BROWSER_NAME, currentDevice.getBrowserName() );
 			if ( currentDevice.getBrowserVersion() != null && !currentDevice.getBrowserVersion().isEmpty() )
 				dc.setCapability( BROWSER_VERSION, currentDevice.getBrowserVersion() );
 
@@ -155,11 +165,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
 			webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
 			webDriver.setArtifactProducer( new SeleniumArtifactProducer() );
 
-			Dimension winDim = webDriver.manage().window().getSize();
-			if ( winDim != null )
-			    currentDevice.setResolution( winDim.getWidth() + " x " + winDim.height );
-			else
-			    currentDevice.setResolution( null );
+			
 			
 			
 			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );

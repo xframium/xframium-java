@@ -29,6 +29,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 
@@ -56,7 +57,7 @@ public class DefaultPageFactory extends LocalPageFactory implements InvocationHa
     	
     	this.webDriver = webDriver;
     	if ( serviceInterface == null )
-    		throw new IllegalArgumentException( "You are attempting to create a page for non existent Page name - make sure you page name is defined properly and matches case" );
+    		return null;
     	
     	if ( log.isInfoEnabled() )
     		log.info( "Attempting to create PROXY interface by " + serviceInterface );

@@ -29,6 +29,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.xframium.device.SimpleDevice;
+import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.device.cloud.action.CloudActionProvider;
+import org.xframium.device.cloud.xsd.Cloud;
 import org.xframium.device.interrupt.DeviceInterrupt;
 import org.xframium.device.interrupt.DeviceInterrupt.INTERRUPT_TYPE;
 import org.xframium.device.interrupt.DeviceInterruptFactory;
@@ -60,7 +65,32 @@ public abstract class AbstractDriverFactory implements DriverFactory
 		if ( log.isDebugEnabled() )
 			log.debug( "Creating Driver for " + getClass().getSimpleName() );
 		
-		DeviceWebDriver webDriver = _createDriver( currentDevice ); 
+		DeviceWebDriver webDriver = _createDriver( currentDevice );
+		
+		if ( webDriver != null )
+		{
+		    try
+		    {
+		        String cloudProvider = CloudRegistry.instance().getCloud().getProvider();
+		        if ( currentDevice.getCloud() != null )
+		        {
+		            CloudDescriptor currentCloud = CloudRegistry.instance().getCloud( currentDevice.getCloud() );
+		            if ( currentCloud != null )
+		                cloudProvider = currentCloud.getProvider();
+		        }
+		            
+		        Device newDevice = new SimpleDevice( currentDevice.getKey(), currentDevice.getDriverType()  );
+		        newDevice.setBrowserName( currentDevice.getBrowserName() );
+		        newDevice.setBrowserVersion( currentDevice.getBrowserVersion() );
+		        CloudActionProvider actionProvider = (CloudActionProvider) Class.forName( CloudActionProvider.class.getPackage().getName() + "." + cloudProvider + "CloudActionProvider" ).newInstance();
+		        if ( actionProvider.popuplateDevice( webDriver, webDriver.getDeviceName(), newDevice ) )
+		            webDriver.setPopulatedDevice( newDevice );
+		    }
+		    catch( Exception e )
+		    {
+		        log.error( "Error populating device specifics", e );
+		    }
+		}
 		
 		return webDriver;
 	}

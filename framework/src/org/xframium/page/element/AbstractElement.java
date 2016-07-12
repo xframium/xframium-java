@@ -211,19 +211,21 @@ public abstract class AbstractElement implements Element
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.element.Element#addToken(java.lang.String, java.lang.String)
 	 */
-	public void addToken( String tokenName, String tokenValue )
+	public Element addToken( String tokenName, String tokenValue )
 	{
 		tokensApplied = false;
 		if ( tokenMap == null )
 			tokenMap = new HashMap<String,String>( 10 );
 		
 		tokenMap.put( tokenName, tokenValue );
+		
+		return this;
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.element.Element#addToken(java.lang.String)
 	 */
-	public void addToken( String tokenPairValue )
+	public Element addToken( String tokenPairValue )
 	{
 		tokensApplied = false;
 		if ( tokenMap == null )
@@ -234,6 +236,8 @@ public abstract class AbstractElement implements Element
 			throw new IllegalArgumentException( "You must specify a token in the format of name=value" );
 		
 		tokenMap.put( tokenPair[ 0 ].trim(), tokenPair[ 1 ].trim() );
+		
+		return this;
 	}
 	
 	/* (non-Javadoc)
@@ -448,10 +452,6 @@ public abstract class AbstractElement implements Element
             returnValue = _waitFor( timeOut, timeUnit, waitType, value );
             success = true;
             
-        }
-        catch( Exception e )
-        {
-            throw new IllegalStateException( e );
         }
         finally
         {

@@ -30,13 +30,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
@@ -74,7 +72,6 @@ import org.xframium.spi.driver.CachingDriver;
 import org.xframium.spi.driver.DeviceProvider;
 import org.xframium.spi.driver.NativeDriverProvider;
 import org.xframium.utility.XMLEscape;
-
 import io.appium.java_client.AppiumDriver;
 
 // TODO: Auto-generated Javadoc
@@ -105,6 +102,20 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
 
     /** The current device. */
     private Device currentDevice;
+    private Device populatedDevice;
+
+    public Device getPopulatedDevice()
+    {
+        if ( populatedDevice == null )
+            return currentDevice;
+        else
+            return populatedDevice;
+    }
+
+    public void setPopulatedDevice( Device populatedDevice )
+    {
+        this.populatedDevice = populatedDevice;
+    }
 
     /** The current context. */
     private String currentContext;
@@ -141,6 +152,8 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
 
     /** The Constant WIND_TUNNEL. */
     private static final String WIND_TUNNEL = "WIND_TUNNEL";
+    
+    private Map<String,String> propertyMap = new HashMap<String,String>( 20 );
 
     /*
      * (non-Javadoc)
@@ -152,23 +165,22 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
     {
         return currentDevice;
     }
-    
+
     @Override
     public String getPageSource()
     {
-    	
-    	if ( !ApplicationRegistry.instance().getAUT().isWeb() )
-    		context( "NATIVE_APP" );
-    		
-    	
-    	String pageSource = webDriver.getPageSource();
-        
+
+        if ( !ApplicationRegistry.instance().getAUT().isWeb() )
+            context( "NATIVE_APP" );
+
+        String pageSource = webDriver.getPageSource();
+
         if ( pageSource != null )
         {
-        	if ( ApplicationRegistry.instance().getAUT().isWeb() )
-        		return XMLEscape.toHTML( pageSource );
-        	else
-        		return XMLEscape.toXML( pageSource );
+            if ( ApplicationRegistry.instance().getAUT().isWeb() )
+                return XMLEscape.toHTML( pageSource );
+            else
+                return XMLEscape.toXML( pageSource );
         }
         else
             return "";
@@ -181,7 +193,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
     {
         if ( !cachingEnabled )
             return;
-        
+
         if ( log.isInfoEnabled() )
             log.info( Thread.currentThread().getName() + ": Caching page data" );
         String pageSource = getPageSource();
@@ -416,7 +428,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
 
         return webDriver.findElements( by );
     }
-    
+
     public void clearCache()
     {
         cachedDocument = null;
@@ -433,7 +445,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
         {
             if ( cachingEnabled && cachedDocument == null )
                 cacheData();
-    
+
             if ( cachingEnabled && cachedDocument != null )
             {
                 try
@@ -442,7 +454,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
                     String path = by.toString();
                     path = path.substring( path.indexOf( ": " ) + 2 );
                     Node node = (Node) xPath.evaluate( path, cachedDocument, XPathConstants.NODE );
-    
+
                     if ( node != null )
                         return new CachedWebElement( this, webDriver, by, node );
                     else
@@ -458,7 +470,6 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
         }
         return new MorelandWebElement( this, webDriver.findElement( by ) );
     }
-
 
     public boolean isCachingEnabled()
     {
@@ -732,19 +743,32 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
     @Override
     public String getProperty( String propertyName )
     {
+        String returnValue = propertyMap.get( propertyName );
+        
+        if ( returnValue != null )
+            return returnValue;
+        
         switch ( propertyName )
         {
-        case EXECUTION_ID:
-            return executionId;
+            case EXECUTION_ID:
+                return executionId;
 
-        case REPORT_KEY:
-            return reportKey;
+            case REPORT_KEY:
+                return reportKey;
 
-        case DEVICE_NAME:
-            return deviceName;
+            case DEVICE_NAME:
+                return deviceName;
 
         }
         return null;
+    }
+    
+    @Override
+    public void setProperty( String name, String value )
+    {
+        if ( name != null && value != null )
+            propertyMap.put( name, value );
+        
     }
 
     /*
@@ -781,8 +805,8 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
     public Keyboard getKeyboard()
     {
         if ( webDriver instanceof HasInputDevices )
-            return ( (HasInputDevices) webDriver ).getKeyboard();
-        else 
+            return ((HasInputDevices) webDriver).getKeyboard();
+        else
             return null;
     }
 
@@ -790,8 +814,8 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
     public Mouse getMouse()
     {
         if ( webDriver instanceof HasInputDevices )
-            return ( (HasInputDevices) webDriver ).getMouse();
-        else 
+            return ((HasInputDevices) webDriver).getMouse();
+        else
             return null;
     }
 
@@ -799,7 +823,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
     public Capabilities getCapabilities()
     {
         if ( webDriver instanceof HasCapabilities )
-            return ( (HasCapabilities) webDriver ).getCapabilities();
+            return ((HasCapabilities) webDriver).getCapabilities();
         else
             return null;
     }

@@ -50,6 +50,7 @@ public interface Device
 	 * @return the manufacturer
 	 */
 	String getManufacturer();
+	public void setManufacturer( String manu );
 	
 	String getResolution();
 	void setResolution( String res );
@@ -60,6 +61,7 @@ public interface Device
 	 * @return the model
 	 */
 	String getModel();
+	public void setModel( String model );
 	
 	/**
 	 * Gets the os.
@@ -67,6 +69,7 @@ public interface Device
 	 * @return the os
 	 */
 	String getOs();
+	public void setOs( String os );
 	
 	/**
 	 * Gets the os version.
@@ -74,6 +77,7 @@ public interface Device
 	 * @return the os version
 	 */
 	String getOsVersion();
+	public void setOsVersion( String osVersion );
 	
 	/**
 	 * Gets the browser name.
@@ -81,6 +85,7 @@ public interface Device
 	 * @return the browser name
 	 */
 	String getBrowserName();
+	public void setBrowserName( String browserName );
 	
 	/**
 	 * Gets the browser version.
@@ -88,6 +93,7 @@ public interface Device
 	 * @return the browser version
 	 */
 	String getBrowserVersion();
+	public void setBrowserVersion( String browserName );
 	
 	/**
 	 * Gets the available devices.
@@ -139,4 +145,6 @@ public interface Device
 	 * @return true, if is active
 	 */
 	boolean isActive();
+	
+	String getCloud();
 }

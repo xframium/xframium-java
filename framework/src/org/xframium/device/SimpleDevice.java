@@ -26,6 +26,9 @@ package org.xframium.device;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
+import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
+import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
 import org.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc
@@ -73,8 +76,19 @@ public class SimpleDevice implements Device
 	
 	private String resolution;
 	private String environment;
+	private String cloud;
 	
-	public String getResolution()
+	public String getCloud()
+    {
+        return cloud;
+    }
+
+    public void setCloud( String cloud )
+    {
+        this.cloud = cloud;
+    }
+
+    public String getResolution()
     {
         return resolution;
     }
@@ -106,22 +120,22 @@ public class SimpleDevice implements Device
 	            stringBuilder.append( " " ).append( model );
 	            
 	    }
-	    else if ( browserName != null )
+	    
+	    if ( os != null )
+        {
+            stringBuilder.append( " / " ).append( os );
+            if ( osVersion != null )
+                stringBuilder.append( " " ).append( osVersion );
+        }
+	    
+	    if ( browserName != null )
 	    {
-	        stringBuilder.append( browserName );
+	        stringBuilder.append( " " ).append( browserName );
 	        if ( browserVersion != null )
 	            stringBuilder.append( " " ).append( browserVersion );
 	    }
-	    else
-	        stringBuilder.append( "Unknown Device" );
 	    
-	    if ( os != null )
-	    {
-	        stringBuilder.append( " / " ).append( os );
-	        if ( osVersion != null )
-	            stringBuilder.append( " " ).append( osVersion );
-	    }
-	    
+	   
 	    if ( resolution != null )
 	        stringBuilder.append( " (" ).append( resolution ).append( ")" );
 	    
@@ -179,13 +193,114 @@ public class SimpleDevice implements Device
 		this.browserName = browserName;
 		this.browserVersion = browserVersion;
 		this.availableDevices = availableDevices;
+		
+		if ( availableDevices < 0)
+		{
+		    availableDevices = 0;
+		    if ( CloudRegistry.instance().getCloud().getProvider() != null && CloudRegistry.instance().getCloud().getProvider().equals( "PERFECTO" ) )
+            {
+                for ( Handset hs : PerfectoMobile.instance().devices().getDevices( false ).getHandsetList() )
+                {
+                    if ( !compareValues( manufacturer, hs.getManufacturer() ) )
+                        continue;
+                    
+                    if ( !compareValues( model, hs.getModel() ) )
+                        continue;
+                    
+                    if ( !compareValues( os, hs.getOs() ) )
+                        continue;
+                    
+                    if ( !compareValues( osVersion, hs.getOsVersion() ) )
+                        continue;
+                    
+                    availableDevices++;
+                }
+            }
+		}
+		
 		this.driverType = driverType;
 		this.deviceName = deviceName;
-		this.active = active;
+		if ( availableDevices < 1 )
+		    this.active = false;
+		else
+		    this.active = active;
 		deviceLock = new Semaphore( availableDevices );
 		
 		cachedString = manufacturer + " " + model + " [" + key + "]";
 		generateEnv();
+	}
+	
+	public void setKey( String key )
+    {
+        this.key = key;
+        generateEnv();
+    }
+
+    public void setManufacturer( String manufacturer )
+    {
+        this.manufacturer = manufacturer;
+        generateEnv();
+    }
+
+    public void setModel( String model )
+    {
+        this.model = model;
+        generateEnv();
+    }
+
+    public void setOs( String os )
+    {
+        this.os = os;
+        generateEnv();
+    }
+
+    public void setOsVersion( String osVersion )
+    {
+        this.osVersion = osVersion;
+        generateEnv();
+    }
+
+    public void setBrowserName( String browserName )
+    {
+        this.browserName = browserName;
+        generateEnv();
+    }
+
+    public void setBrowserVersion( String browserVersion )
+    {
+        this.browserVersion = browserVersion;
+        generateEnv();
+    }
+
+    public void setDeviceName( String deviceName )
+    {
+        this.deviceName = deviceName;
+        generateEnv();
+    }
+
+
+    private boolean compareValues( String rootValue, String hsValue )
+	{
+	    if ( rootValue == null || rootValue.trim().isEmpty() )
+	        return true;
+	    
+	    if ( rootValue.contains( "*" ) )
+	    {
+	        String useValue = rootValue.replace( "*", "" ).trim();
+	        
+	        if ( hsValue.contains( useValue ) )
+	            return true;
+	        else
+	            return false;
+	    }
+	    
+	    if ( rootValue.trim().equals( hsValue ) )
+	    {
+	        return true;
+	    }
+	    
+	    return false;
+	    
 	}
 
 	/* (non-Javadoc)

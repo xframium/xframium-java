@@ -110,7 +110,7 @@ public class SQLCloudProvider extends AbstractCloudProvider
                                                                                   (String) data[i][4],    // proxy host 
                                                                                   (String) data[i][5],    // proxy post
                                                                                   (String) data[i][6],    // description
-                                                                                  (String) data[i][7] )); // grid instance
+                                                                                  (String) data[i][7], "PERFECTO" )); // grid instance
             }
         }
         catch (Exception e)

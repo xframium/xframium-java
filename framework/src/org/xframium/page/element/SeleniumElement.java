@@ -35,6 +35,7 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.ContextAware;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.HasCapabilities;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -46,6 +47,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.factory.MorelandWebElement;
+import org.xframium.exception.ObjectIdentificationException;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.ImageFormat;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.MatchMode;
@@ -450,6 +452,10 @@ public class SeleniumElement extends AbstractElement
 
 			return null;
 		}
+		catch( NoSuchElementException e )
+		{
+		    throw new ObjectIdentificationException( getBy(), useBy() );
+		}
 		finally
 		{
 			if (currentContext != null && webDriver instanceof ContextAware)
@@ -640,7 +646,7 @@ public class SeleniumElement extends AbstractElement
 		catch (Exception e)
 		{
 			log.error( Thread.currentThread().getName() + ": Could not locate " + useBy(), e );
-			throw new IllegalStateException( "Could not locate " + getKey() + " on page " + getPageName(), e );
+			throw new ObjectIdentificationException( getBy(), useBy() );
 		}
 	}
 

@@ -50,6 +50,7 @@ import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.ExecutionRecord;
 import org.xframium.page.StepStatus;
 import org.xframium.spi.Device;
+import org.xframium.spi.PropertyProvider;
 import org.xframium.spi.RunDetails;
 import org.xframium.wcag.WCAGRecord;
 import org.yaml.snakeyaml.util.UriEncoder;
@@ -115,7 +116,7 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
 	    StringBuffer stringBuffer = new StringBuffer();
         stringBuffer = new StringBuffer();
         stringBuffer.append( "<html>" );
-        stringBuffer.append( "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"><style>iframe {background-color: #eaeae1;}</style></head>" );
+        stringBuffer.append( "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"><style>iframe {background-color: #eaeae1;} .abscenter { margin: auto; position: absolute; top: 0; left: 0; bottom: 0; right: 0; } .pass {color: #1bc98e;}.fail {color: #e64759;}</style></head>" );
         
         int successCount = 0;
         int failureCount = 0;
@@ -124,8 +125,17 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         
         stringBuffer.append( "<body><div class=\"container\">" );
         
-        stringBuffer.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.1</h6><h3 class=\"dashhead-title\">" + testName + "</h3><h6>" + device.getEnvironment() + "</h6></div>" );
+        stringBuffer.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium 1.0.2</h6><h3 class=\"dashhead-title\">" + testName + "</h3><h6>" + device.getEnvironment() + "</h6>" );
 
+        if ( webDriver instanceof PropertyProvider )
+        {
+            PropertyProvider pProvider = (PropertyProvider) webDriver;
+            if ( pProvider.getProperty( "testDescription" ) != null && !pProvider.getProperty( "testDescription" ).isEmpty() )
+                stringBuffer.append( "<h6 class=\"text-muted\"><i>" + pProvider.getProperty( "testDescription" ) + "</i></h6>" );
+        }
+        
+        stringBuffer.append( "</div>" );
+        
         String panelClass = "default";
         if ( DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) != null && !DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ).isEmpty() )
         {
@@ -166,7 +176,7 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-success\"><div class=\"p-a\"><span class=\"statcard-desc\">Passed</span><h4 class=\"statcard-number\">" + successCount + "</h4></div></div></div>" );
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-warning\"><div class=\"p-a\"><span class=\"statcard-desc\">Ignored</span><h4 class=\"statcard-number\">" + ignoreCount + "</h4></div></div></div>" );
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-danger\"><div class=\"p-a\"><span class=\"statcard-desc\">Failed</span><h4 class=\"statcard-number\">" + failureCount + "</h4></div></div></div>" );
-            stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Total</span><h4 class=\"statcard-number\">" + recordCount + "</h4></div></div></div>" );
+            stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Total Steps</span><h4 class=\"statcard-number\">" + recordCount + "</h4></div></div></div>" );
             stringBuffer.append( "<div class=\"col-sm-2 m-b\"><div class=\"statcard statcard-info\"><div class=\"p-a\"><span class=\"statcard-desc\">Duration</span><h4 class=\"statcard-number\">" + runLength + "</h4></div></div></div>" );
             stringBuffer.append( "</div><br />" );
         }
@@ -235,8 +245,8 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         
         if ( !success && DataManager.instance().isArtifactEnabled( ArtifactType.FAILURE_SOURCE ) )
         {
-            stringBuffer.append( "<tr><td></td><td><a target=\"_blank\" class=\"btn btn-danger\" hRef='failureDOM.html'>Device State</a></td><td></td><td></td><td></td></tr>" );
-            stringBuffer.append( "<tr><td></td><td><a hRef=\"failure-screenshot.png\" class=\"thumbnail\"><img class=\"img-rounded img-responsive\" src=\"failure-screenshot.png\" style=\"height: 200px;\"/></a></td><td></td><td></td><td></td></tr>" );
+            stringBuffer.append( "<tr><td></td><td colspan=3><a target=\"_blank\" class=\"btn btn-danger\" hRef='failureDOM.html'>Device State</a></td></tr>" );
+            stringBuffer.append( "<tr><td></td><td colzpan=3><a hRef=\"failure-screenshot.png\" class=\"thumbnail\"><img class=\"img-rounded img-responsive\" src=\"failure-screenshot.png\" style=\"height: 200px;\"/></a></td></tr>" );
         }
         
         stringBuffer.append( "</TABLE></div></div>" );

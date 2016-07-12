@@ -99,12 +99,6 @@ public class KWSDumpState extends AbstractKeyWordStep
             
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append( "<html><head><link href=\"http://www.xframium.org/output/assets/css/prism.css\" rel=\"stylesheet\"><script src=\"http://www.xframium.org/output/assets/js/prism.js\"></script>" );
-            //stringBuilder.append( "<script>var parseXml; if (typeof window.DOMParser != \"undefined\") { parseXml = function(xmlStr) { return ( new window.DOMParser() ).parseFromString(xmlStr, \"text/xml\"); };" );
-            //stringBuilder.append( "} else if (typeof window.ActiveXObject != \"undefined\" && new window.ActiveXObject(\"Microsoft.XMLDOM\")) { parseXml = function(xmlStr) { var xmlDoc = new window.ActiveXObject(\"Microsoft.XMLDOM\"); xmlDoc.async = \"false\"; xmlDoc.loadXML(xmlStr); return xmlDoc; }; } else { throw new Error(\"No XML parser found\"); }" );
-    
-            //stringBuilder.append( "var xml = parseXml(\" )" );
-            //stringBuilder.append (XMLEscape.toXML( pageSource ).replace( "\"", "&quot;").replace( "\r", " ").replace( "\n", " ") );
-            //stringBuilder.append( "\"); alert(xml.documentElement.nodeName);" );
             stringBuilder.append( "</script></head><body><pre class\"line-numbers\"><code class=\"language-markup\">" + pageSource.replace( "<", "&lt;" ).replace( ">", "&gt;" ).replace( "\t", "  ") + "</code></pre></body></html>" );
 
             outputStream = new FileOutputStream( htmlFile );

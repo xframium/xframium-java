@@ -317,11 +317,10 @@ public class ExecutionRecord
 		String testRunLength = String.format( "%,.3f", (double)runTime / 1000.0 );
         
 		
-		
 		stringBuffer.append( "</td><td>" ).append( type ).append( "</td>" );
-		stringBuffer.append( "<td>" ).append( timeFormat.format( new Date( timeStamp ) ) + "(" + runTime + ")" ).append( "</td>" );
+		stringBuffer.append( "<td>" ).append( timeFormat.format( new Date( timeStamp ) ) + "( " + runTime + "ms)" ).append( "</td>" );
 		
-		
+		String buttonType = "danger";
 		switch( status )
         {
             case FAILURE:
@@ -329,11 +328,13 @@ public class ExecutionRecord
                 break;
             case FAILURE_IGNORED:
                 stringBuffer.append( "<td style=\"padding-top: 10px; \" align=\"center\"><span class=\"label label-warning\">Ignored</span></td>" );
+                buttonType="warning";
                 break;
             case REPORT:
                 stringBuffer.append( "<td style=\"padding-top: 10px; \" align=\"center\"><span class=\"label label-info\">Information</span></td>" );
                 break;  
             case SUCCESS:
+                buttonType="success";
                 if ( fromCache )
                     stringBuffer.append( "<td style=\"padding-top: 10px; \" align=\"center\"><span class=\"label label-success\">Pass</span></td>" );
                 else
@@ -347,13 +348,12 @@ public class ExecutionRecord
 			String backgroundColor = "";
 			
 			
-			stringBuffer.append( "<tr" ).append( backgroundColor ).append( "><td></td><td ><h6>" ).append( detail ).append( "</h6></td></tr>");
+			stringBuffer.append( "<tr" ).append( backgroundColor ).append( "><td></td><td colspan=3><h6>" ).append( detail ).append( "</h6></td></tr>");
 			if ( t != null )
 			{
-				stringBuffer.append( "<tr" ).append( backgroundColor ).append( "><td></td><td colSpan='4'><a class=\"btn btn-danger\" role=\"button\" data-toggle=\"collapse\" href=\"#exception").append( index ).append( "\" aria-expanded=\"false\">View Error Detail</a><div class=\"collapse\" id=\"exception").append( index  ).append( "\"><h6>" );
+				stringBuffer.append( "<tr" ).append( backgroundColor ).append( "><td></td><td colSpan='3'><a class=\"btn btn-" + buttonType + "\" role=\"button\" data-toggle=\"collapse\" href=\"#exception").append( index ).append( "\" aria-expanded=\"false\">View Error Detail</a><div class=\"collapse\" id=\"exception").append( index  ).append( "\"><h6>" );
 				
 				stringBuffer.append( t.getMessage() ).append( "<br/>");
-				t.fillInStackTrace();
 				for( StackTraceElement s : t.getStackTrace() )
 					stringBuffer.append( "&nbsp;&nbsp;&nbsp;&nbsp;").append( s.toString() ).append( "<br/>");
 				stringBuffer.append( "</h6></div></td></tr>");

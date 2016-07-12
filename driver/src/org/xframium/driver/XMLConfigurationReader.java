@@ -181,7 +181,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 break;
                 
             case "LOCAL":
-                CloudDescriptor cloud = new CloudDescriptor( xRoot.getCloud().getName(), xRoot.getCloud().getUserName(), xRoot.getCloud().getPassword(), xRoot.getCloud().getHostName(), xRoot.getCloud().getProxyHost(), xRoot.getCloud().getProxyPort().intValue() + "", "", xRoot.getCloud().getGrid() );
+                CloudDescriptor cloud = new CloudDescriptor( xRoot.getCloud().getName(), xRoot.getCloud().getUserName(), xRoot.getCloud().getPassword(), xRoot.getCloud().getHostName(), xRoot.getCloud().getProxyHost(), xRoot.getCloud().getProxyPort().intValue() + "", "", xRoot.getCloud().getGrid(), xRoot.getCloud().getProviderType() );
                 CloudRegistry.instance().addCloudDescriptor( cloud );
                 break;
         }
@@ -537,7 +537,9 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 break;
         }
         
-        Device currentDevice = new SimpleDevice(device.getName(), device.getManufacturer(), device.getModel(), device.getOs(), device.getOsVersion(), device.getBrowserName(), null, device.getAvailableDevices().intValue(), driverName, device.isActive(), device.getId() );
+        SimpleDevice currentDevice = new SimpleDevice(device.getName(), device.getManufacturer(), device.getModel(), device.getOs(), device.getOsVersion(), device.getBrowserName(), device.getBrowserVersion(), device.getAvailableDevices().intValue(), driverName, device.isActive(), device.getId() );
+        if ( device.getCloud() != null && !device.getCloud().isEmpty() )
+            currentDevice.setCloud( device.getCloud() );
         if ( device.getCapability() != null )
         {
             for ( XDeviceCapability cap : device.getCapability() )
@@ -700,8 +702,19 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         // Extract any named tests
         //
         String testNames = xRoot.getDriver().getTestNames();
+        
         if ( testNames != null && !testNames.isEmpty() )
+        {
+            Collection<KeyWordTest> testList = KeyWordDriver.instance().getNamedTests( testNames.split( "," ) );
+            
+            if ( testList.isEmpty() )
+            {
+                System.err.println( "No tests contained the names(s) [" + testNames + "]" );
+            }
+            
             testArray.addAll( Arrays.asList( testNames ) );
+        }
+
 
         //
         // Extract any tagged tests
@@ -713,8 +726,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
 
             if ( testList.isEmpty() )
             {
-                System.err.println( "No tests contianed the tag(s) [" + tagNames + "]" );
-                System.exit( -1 );
+                System.err.println( "No tests contained the tag(s) [" + tagNames + "]" );
             }
 
             for ( KeyWordTest t : testList )
@@ -793,7 +805,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      */
     private KeyWordTest parseTest( XTest xTest, String typeName )
     {
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), "", xTest.getTagNames() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames() );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
 

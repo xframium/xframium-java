@@ -50,7 +50,6 @@ public class PressGesture extends AbstractPressGesture
                 int y = (int) ( ( getPressPosition().getY() / 100.0 ) * (double) webElement.getSize().getHeight() + webElement.getLocation().getY() );
                 
                 PercentagePoint pressPosition = new PercentagePoint( x, y, false );
-                System.out.println( "Pressing at " + pressPosition );
                 
                 for ( int i=0; i<getPressCount(); i++ )
                 {
@@ -72,6 +71,26 @@ public class PressGesture extends AbstractPressGesture
                 return false;
             }
         }
+		else
+		{
+		    PercentagePoint pressPosition = new PercentagePoint( getPressPosition().getX(), getPressPosition().getY(), true );
+		    for ( int i=0; i<getPressCount(); i++ )
+            {
+            
+                PerfectoMobile.instance().gestures().tapAt( executionId, deviceName, pressPosition );
+                try
+                {
+                    Thread.sleep( 500 );
+                }
+                catch(Exception e )
+                {
+                    e.printStackTrace();
+                }
+            }
+		}
+		
+		
+		
 		return true;
 	}
 
