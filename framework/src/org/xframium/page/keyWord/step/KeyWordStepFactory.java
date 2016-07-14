@@ -46,6 +46,7 @@ import org.xframium.page.keyWord.step.spi.KWSDevice;
 import org.xframium.page.keyWord.step.spi.KWSDumpState;
 import org.xframium.page.keyWord.step.spi.KWSElse;
 import org.xframium.page.keyWord.step.spi.KWSExecJS;
+import org.xframium.page.keyWord.step.spi.KWSExecWS;
 import org.xframium.page.keyWord.step.spi.KWSExists;
 import org.xframium.page.keyWord.step.spi.KWSFocus;
 import org.xframium.page.keyWord.step.spi.KWSFork;
@@ -130,6 +131,7 @@ public class KeyWordStepFactory
         addKeyWord( "VERIFY_CONTRAST", KWSContrastRatio.class );
         addKeyWord( "WINDOW", KWSWindow.class );
         addKeyWord( "EXECJS", KWSExecJS.class );
+        addKeyWord( "EXECWS", KWSExecWS.class );
         addKeyWord( "OPEN_PAGE", KWSOpenPage.class );
         addKeyWord( "ADD_COOKIE", KWSAddCookie.class );
         addKeyWord( "DELETE_COOKIE", KWSDeleteCookie.class );
