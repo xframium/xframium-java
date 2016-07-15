@@ -42,6 +42,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
+import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactTime;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.ConnectedDevice;
@@ -53,6 +54,10 @@ import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunDetails;
+import org.xframium.spi.driver.ReportiumProvider;
+import com.perfecto.reportium.client.ReportiumClientFactory;
+import com.perfecto.reportium.model.PerfectoExecutionContext;
+import com.perfecto.reportium.model.Project;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -396,6 +401,8 @@ public abstract class AbstractSeleniumTest
     
             if (connectedDevice != null)
             {
+                
+                
                 putConnectedDevice( DEFAULT, connectedDevice );
     			
                 TestName testName = ( ( TestName ) testArgs[0] );

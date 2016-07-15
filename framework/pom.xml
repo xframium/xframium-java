@@ -21,6 +21,11 @@
       <id>jenkins-releases</id>
       <url>http://repo.jenkins-ci.org/releases/</url>
     </repository>
+    <repository>
+      <id>perfectomobile</id>
+      <name>Perfecto mobile</name>
+      <url>http://repository-perfectomobile.forge.cloudbees.com/public</url>
+    </repository>
   </repositories>
   <distributionManagement>
     <repository>
@@ -155,6 +160,12 @@
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-analyticsreporting</artifactId>
       <version>v4-rev8-1.22.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.perfecto.reporting-sdk</groupId>
+      <artifactId>reportium-testng</artifactId>
+      <version>0.0.23</version>
     </dependency>
   </dependencies>
 </project>

@@ -566,6 +566,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             String tagNames = configProperties.getProperty( "driver.tagNames" );
             if ( tagNames != null && !tagNames.isEmpty() )
             {
+                DeviceManager.instance().setTagNames( tagNames.split( "," ) );
                 Collection<KeyWordTest> testList = KeyWordDriver.instance().getTaggedTests( tagNames.split( "," ) );
                 
                 if ( testList.isEmpty() )

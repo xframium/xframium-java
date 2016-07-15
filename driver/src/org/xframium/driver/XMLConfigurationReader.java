@@ -723,6 +723,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         String tagNames = xRoot.getDriver().getTagNames();
         if ( tagNames != null && !tagNames.isEmpty() )
         {
+            DeviceManager.instance().setTagNames( tagNames.split( "," ) );
             Collection<KeyWordTest> testList = KeyWordDriver.instance().getTaggedTests( tagNames.split( "," ) );
 
             if ( testList.isEmpty() )
