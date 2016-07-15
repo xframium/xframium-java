@@ -20,9 +20,9 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -53,6 +53,7 @@ public class KWSExecWS extends AbstractKeyWordStep
         KeyWordParameter inputSpec = null;
         CallDetails callDetails = null;
         KeyWordParameter outputSpec = null;
+        ResponceDetails responceDetails = null;
                         
         if ( getParameterList().size() >= 2 )
         {
@@ -64,15 +65,19 @@ public class KWSExecWS extends AbstractKeyWordStep
             }
             
             outputSpec = getParameterList().get( 1 );
+
+            responceDetails = loadResponceDetails( outputSpec );
         }
         else
         {
             throw new IllegalStateException( "KWSExecWS requires two tokenized parameters" );
         }
-		
+
+        Responce result = makeCall( callDetails );
+
         if ( getContext() != null )
         {
-
+            processResult( result, responceDetails, contextMap );
         }
 		
         return true;
@@ -164,6 +169,107 @@ public class KWSExecWS extends AbstractKeyWordStep
         throw new IllegalStateException( errorMsg );
     }
 
+    private ResponceDetails loadResponceDetails( KeyWordParameter outputSpec )
+    {
+        ResponceDetails rtn = new ResponceDetails();
+
+        Iterator<KeyWordToken> tokens = outputSpec.getTokenList().iterator();
+        while( tokens.hasNext() )
+        {
+            KeyWordToken token = tokens.next();
+
+            if ( "type".equalsIgnoreCase( token.getName() ))
+            {
+                rtn.type = token.getValue();
+            }
+            else
+            {
+                ResponceVariable var = new ResponceVariable();
+
+                var.name = token.getName();
+                var.path = token.getValue();
+
+                rtn.parameters.add( var );
+            }
+        }
+        
+        return rtn;
+    }
+
+    private Responce makeCall( CallDetails callDetails )
+    {
+        Responce rtn = new Responce();
+
+        HttpURLConnection connection = null;
+        String targetURL = buildURL( callDetails );
+        
+        try
+        {
+            URL obj = new URL( targetURL );
+            
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("User-Agent", "Java Program");
+            
+            int responseCode = con.getResponseCode();
+            
+            if (responseCode == HttpURLConnection.HTTP_OK ) // success
+            { 
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+                
+                while ((inputLine = in.readLine()) != null)
+                {
+                    response.append(inputLine);
+                }
+                
+                in.close();
+                
+		rtn.payload = response.toString();
+            }
+        }        
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+        finally
+        {
+            if(connection != null)
+            {
+                connection.disconnect(); 
+            }
+        }
+
+        return rtn;
+    }
+
+    private static String buildURL( CallDetails callDetails )
+    {
+        StringBuilder rtn = new StringBuilder();
+
+        rtn.append( callDetails.url );
+        rtn.append( "/" );
+
+        Iterator<CallParameter> params = callDetails.parameters.iterator();
+        while( params.hasNext() )
+        {
+            CallParameter param = params.next();
+
+            rtn.append( param.name );
+            rtn.append( "/" );
+            rtn.append( param.value );
+        }
+
+        return rtn.toString();
+    }
+
+    private void processResult( Responce result, ResponceDetails responceDetails, Map<String, Object> contextMap )
+    {
+
+    }
+
     private class CallDetails
     {
         public String url = null;
@@ -179,6 +285,11 @@ public class KWSExecWS extends AbstractKeyWordStep
     {
         public String name = null;
         public String value = null;
+    }
+
+    private class Responce
+    {
+        String payload = null;
     }
 
     private class ResponceDetails
