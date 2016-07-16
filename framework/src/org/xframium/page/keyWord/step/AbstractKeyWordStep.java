@@ -29,7 +29,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
+import org.xframium.artifact.ArtifactType;
 import org.xframium.content.ContentManager;
+import org.xframium.device.data.DataManager;
 import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
@@ -45,6 +47,7 @@ import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.step.spi.KWSElse;
 import org.xframium.page.keyWord.step.spi.KWSLoopBreak;
+import org.xframium.spi.driver.ReportiumProvider;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -594,7 +597,13 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             try
             {
                 WebDriver altWebDriver = getAltWebDriver();
-
+                if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
+                {
+                    if ( ( (ReportiumProvider) webDriver ).getReportiumClient() != null )
+                    {
+                        ( (ReportiumProvider) webDriver ).getReportiumClient().testStep( getPageName() + "." + getName() + " (" + getClass().getSimpleName() + ")" );
+                    }
+                }
                 returnValue = _executeStep( pageObject, ((altWebDriver != null) ? altWebDriver : webDriver), contextMap, dataMap, pageMap );
             }
             catch ( KWSLoopBreak lb )
@@ -1045,7 +1054,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 if ( returnValue == null )
                     throw new ScriptConfigurationException(
                             Thread.currentThread().getName() + ": The Page Data field [" + recordName + "] does not exist for the page data record type [" + tableName + "] - Reference one of the following fields - " + pageData );
-
+                break;
             default:
                 throw new ScriptConfigurationException( Thread.currentThread().getName() + ": Unknown Parameter Type [" + param.getValue() + "]" );
         }

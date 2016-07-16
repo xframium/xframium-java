@@ -183,6 +183,7 @@
       </simpleType>
     </attribute>
     <attribute name="value" type="string" use="required" />
+    <attribute name="name" type="string" use="optional" />
 
   </complexType>
 

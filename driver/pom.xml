@@ -85,12 +85,5 @@
       <artifactId>mysql-connector-java</artifactId>
       <version>5.1.36</version>
     </dependency>
-    <dependency>
-      <groupId>com.oracle</groupId>
-      <artifactId>oracle-jdbc-driver</artifactId>
-      <version>11.2.0.2</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/ojdbc6.jar</systemPath>
-    </dependency>
   </dependencies>
 </project>

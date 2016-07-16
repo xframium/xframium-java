@@ -53,6 +53,7 @@ import org.xframium.page.StepStatus;
 import org.xframium.spi.Device;
 import org.xframium.spi.PropertyProvider;
 import org.xframium.spi.RunDetails;
+import org.xframium.spi.driver.ReportiumProvider;
 import org.xframium.wcag.WCAGRecord;
 import org.yaml.snakeyaml.util.UriEncoder;
 
@@ -280,6 +281,15 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         
         if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_XML ) )
         	stringBuffer.append( "<a target=_blank hRef=\"EXECUTION_REPORT_XML.xml\" class=\"list-group-item\">Perfecto Execution Report (XML)</a>" );
+        
+        if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
+        {
+            if ( ( (ReportiumProvider) webDriver ).getReportiumClient() != null )
+            {
+                stringBuffer.append( "<a target=_blank hRef=\"" + ( (ReportiumProvider) webDriver ).getReportiumClient().getReportUrl() + "\" class=\"list-group-item\">Perfecto Reportium Report</a>" );
+            }
+        }
+            
         
         
         stringBuffer.append( "</div></div>" );
