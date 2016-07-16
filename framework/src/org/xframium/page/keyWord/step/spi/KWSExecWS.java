@@ -23,6 +23,13 @@ package org.xframium.page.keyWord.step.spi;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -38,6 +45,12 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSExecWS extends AbstractKeyWordStep
 {
+    //
+    // Class Data
+    //
+
+    private XPathFactory xPathFactory = XPathFactory.newInstance();
+    private DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
     /* (non-Javadoc)
      * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
@@ -67,17 +80,24 @@ public class KWSExecWS extends AbstractKeyWordStep
             outputSpec = getParameterList().get( 1 );
 
             responceDetails = loadResponceDetails( outputSpec );
+
+            try
+            {
+                Responce result = makeCall( callDetails );
+                
+                if ( getContext() != null )
+                {
+                    processResult( result, responceDetails, contextMap );
+                }
+            }
+            catch( Throwable e )
+            {
+                throw new IllegalStateException( "KWSExecWS failed with:", e );
+            }
         }
         else
         {
             throw new IllegalStateException( "KWSExecWS requires two tokenized parameters" );
-        }
-
-        Responce result = makeCall( callDetails );
-
-        if ( getContext() != null )
-        {
-            processResult( result, responceDetails, contextMap );
         }
 		
         return true;
@@ -197,6 +217,7 @@ public class KWSExecWS extends AbstractKeyWordStep
     }
 
     private Responce makeCall( CallDetails callDetails )
+        throws Exception
     {
         Responce rtn = new Responce();
 
@@ -229,11 +250,6 @@ public class KWSExecWS extends AbstractKeyWordStep
 		rtn.payload = response.toString();
             }
         }        
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
         finally
         {
             if(connection != null)
@@ -266,7 +282,29 @@ public class KWSExecWS extends AbstractKeyWordStep
     }
 
     private void processResult( Responce result, ResponceDetails responceDetails, Map<String, Object> contextMap )
+        throws Exception
     {
+        if ( "xml".equalsIgnoreCase( responceDetails.type ))
+        {
+            //
+            // In this case, result.payload is an XML document and the paths in responceDetails.parameters are XPATH
+            // expressions
+            //
+
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document document = dBuilder.parse( new ByteArrayInputStream( result.payload.getBytes() ) );
+            XPath xPath = xPathFactory.newXPath();
+
+            Iterator<ResponceVariable> params = responceDetails.parameters.iterator();
+            while( params.hasNext() )
+            {
+                ResponceVariable param = params.next();
+
+                Node node = (Node) xPath.evaluate( param.path, document, XPathConstants.NODE );
+
+                contextMap.put( param.name, node.getTextContent() );
+            }
+        }
 
     }
 
