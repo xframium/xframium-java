@@ -112,7 +112,7 @@ public class KeyWordDriver
      * @param pageClass
      *            the page class
      */
-    public void addPage( String pageName, Class<Page> pageClass )
+    public void addPage( String pageName, Class pageClass )
     {
         if (log.isDebugEnabled())
             log.debug( "Mapping Page [" + pageName + "] to [" + pageClass.getName() + "]" );

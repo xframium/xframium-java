@@ -93,6 +93,7 @@ import org.xframium.page.keyWord.KeyWordStep.ValidationType;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.KeyWordToken.TokenType;
+import org.xframium.page.keyWord.gherkinExtension.XMLFormatter;
 import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
 import org.xframium.page.keyWord.provider.xsd.Token;
 import org.xframium.page.keyWord.provider.SQLKeyWordProvider;
@@ -100,6 +101,7 @@ import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunDetails;
 import org.xframium.utility.SeleniumSessionManager;
+import gherkin.parser.Parser;
 
 public class XMLConfigurationReader extends AbstractConfigurationReader implements ElementProvider
 {
@@ -627,28 +629,39 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                         continue;
                     }
                     
-                    KeyWordTest currentTest = parseTest( test, "test" );
-                    
-                    if (currentTest.getDataDriver() != null && !currentTest.getDataDriver().isEmpty())
+                    if ( test.getType().equals( "BDD" ) )
                     {
-                        PageData[] pageData = PageDataManager.instance().getRecords( currentTest.getDataDriver() );
-                        if (pageData == null)
+                        XMLFormatter xmlFormatter = new XMLFormatter();
+                        Parser bddParser = new Parser( xmlFormatter );
+                        bddParser.parse( test.getDescription().getValue(), "", 0 );
+                        PageDataManager.instance().setPageDataProvider( xmlFormatter );
+                        
+                    }
+                    else if ( test.getType().equals( "XML" ) )
+                    {
+                        KeyWordTest currentTest = parseTest( test, "test" );
+                        
+                        if (currentTest.getDataDriver() != null && !currentTest.getDataDriver().isEmpty())
                         {
-                            log.warn( "Specified Data Driver [" + currentTest.getDataDriver() + "] could not be located. Make sure it exists and it was populated prior to initializing your keyword factory" );
-                            KeyWordDriver.instance().addTest( currentTest );
-                        }
-                        else
-                        {
-                            String testName = currentTest.getName();
-
-                            for (PageData record : pageData)
+                            PageData[] pageData = PageDataManager.instance().getRecords( currentTest.getDataDriver() );
+                            if (pageData == null)
                             {
-                                KeyWordDriver.instance().addTest( currentTest.copyTest( testName + "!" + record.getName() ) );
+                                log.warn( "Specified Data Driver [" + currentTest.getDataDriver() + "] could not be located. Make sure it exists and it was populated prior to initializing your keyword factory" );
+                                KeyWordDriver.instance().addTest( currentTest );
+                            }
+                            else
+                            {
+                                String testName = currentTest.getName();
+    
+                                for (PageData record : pageData)
+                                {
+                                    KeyWordDriver.instance().addTest( currentTest.copyTest( testName + "!" + record.getName() ) );
+                                }
                             }
                         }
+                        else
+                            KeyWordDriver.instance().addTest( currentTest );
                     }
-                    else
-                        KeyWordDriver.instance().addTest( currentTest );
                 }
                 
                 for( XTest test : xRoot.getSuite().getFunction() )
@@ -806,7 +819,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      * @return the key word test
      */
     private KeyWordTest parseTest( XTest xTest, String typeName )
-    {
+    { 
         KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames() );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );

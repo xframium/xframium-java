@@ -289,8 +289,16 @@
   <complexType name="xTest">
     <sequence>
       <element name="description" type="tns:xDescription" minOccurs="0" maxOccurs="1" />
-      <element name="step" type="tns:xStep" minOccurs="1" maxOccurs="unbounded" />
+      <element name="step" type="tns:xStep" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
+    <attribute name="type" use="optional" default="XML">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="XML" />
+          <enumeration value="BDD" />
+        </restriction>
+      </simpleType>
+    </attribute>
     <attribute name="name" type="string" use="required" />
     <attribute name="dataDriver" type="string" use="optional" />
     <attribute name="dataProvider" type="string" use="optional" />
