@@ -149,19 +149,21 @@
       <artifactId>antlr4</artifactId>
       <version>4.5</version>
     </dependency>
-
     <dependency>
       <groupId>eu.bitwalker</groupId>
       <artifactId>UserAgentUtils</artifactId>
       <version>1.20</version>
     </dependency>
-
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-analyticsreporting</artifactId>
       <version>v4-rev8-1.22.0</version>
     </dependency>
-
+    <dependency>
+      <groupId>com.jayway.jsonpath</groupId>
+      <artifactId>json-path</artifactId>
+      <version>2.0.0</version>
+    </dependency>
     <dependency>
       <groupId>com.perfecto.reporting-sdk</groupId>
       <artifactId>reportium-testng</artifactId>
