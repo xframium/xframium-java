@@ -46,6 +46,23 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 public class KWSExecWS extends AbstractKeyWordStep
 {
     //
+    // Constants
+    //
+
+    private static final String HTTP_GET = "GET";
+    private static final String HTTP_POST = "POST";
+
+    private static final String TOKEN_URL = "url";
+    private static final String TOKEN_METHOD = "method";
+    private static final String TOKEN_TYPE = "type";
+    private static final String TOKEN_PAYLOAD = "payload";
+    
+    private static final String CONTENT_XML = "xml";
+    private static final String CONTENT_JSON = "json";
+
+    private static final String PATH_DIVIDER = "/";
+    
+    //
     // Class Data
     //
 
@@ -126,25 +143,25 @@ public class KWSExecWS extends AbstractKeyWordStep
 
             switch( token.getName() )
             {
-                case "url":
+                case TOKEN_URL:
                 {
                     rtn.url = token.getValue();
                     break;
                 }
 
-                case "method":
+                case TOKEN_METHOD:
                 {
                     rtn.method = token.getValue();
                     break;
                 }
 
-                case "type":
+                case TOKEN_TYPE:
                 {
                     rtn.type = token.getValue();
                     break;
                 }
 
-                case "payload":
+                case TOKEN_PAYLOAD:
                 {
                     rtn.pathToPayload = token.getValue();
                     break;
@@ -161,14 +178,14 @@ public class KWSExecWS extends AbstractKeyWordStep
                     break;
                 }
             }
-
-            rtn.valid = (( rtn.url != null ) &&
-                         ( rtn.method != null ) &&
-                         ( rtn.type != null ) &&
-                         (( !rtn.method.equalsIgnoreCase( "POST" )) ||
-                          (( rtn.method.equalsIgnoreCase( "POST" )) && ( rtn.pathToPayload != null ))));
         }
 
+        rtn.valid = (( rtn.url != null ) &&
+                     ( rtn.method != null ) &&
+                     ( rtn.type != null ) &&
+                     (( !rtn.method.equalsIgnoreCase( HTTP_POST )) ||
+                      (( rtn.method.equalsIgnoreCase( HTTP_POST )) && ( rtn.pathToPayload != null ))));
+        
         return rtn;
     }
 
@@ -182,7 +199,7 @@ public class KWSExecWS extends AbstractKeyWordStep
             errorMsg = "Method token is missing";
         else if ( callDetails.type == null )
             errorMsg = "Call type token is missing";
-        else if (( callDetails.method.equalsIgnoreCase( "POST" ) ) &&
+        else if (( callDetails.method.equalsIgnoreCase( HTTP_POST ) ) &&
                  ( callDetails.pathToPayload == null ))
             errorMsg = "Payload token is missing for a call of type post";                          
 
@@ -198,7 +215,7 @@ public class KWSExecWS extends AbstractKeyWordStep
         {
             KeyWordToken token = tokens.next();
 
-            if ( "type".equalsIgnoreCase( token.getName() ))
+            if ( TOKEN_TYPE.equalsIgnoreCase( token.getName() ))
             {
                 rtn.type = token.getValue();
             }
@@ -229,7 +246,7 @@ public class KWSExecWS extends AbstractKeyWordStep
             URL obj = new URL( targetURL );
             
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-            con.setRequestMethod("GET");
+            con.setRequestMethod( HTTP_GET );
             con.setRequestProperty("User-Agent", "Java Program");
             
             int responseCode = con.getResponseCode();
@@ -266,7 +283,7 @@ public class KWSExecWS extends AbstractKeyWordStep
         StringBuilder rtn = new StringBuilder();
 
         rtn.append( callDetails.url );
-        rtn.append( "/" );
+        rtn.append( PATH_DIVIDER );
 
         Iterator<CallParameter> params = callDetails.parameters.iterator();
         while( params.hasNext() )
@@ -274,7 +291,7 @@ public class KWSExecWS extends AbstractKeyWordStep
             CallParameter param = params.next();
 
             rtn.append( param.name );
-            rtn.append( "/" );
+            rtn.append( PATH_DIVIDER );
             rtn.append( param.value );
         }
 
@@ -284,7 +301,7 @@ public class KWSExecWS extends AbstractKeyWordStep
     private void processResult( Responce result, ResponceDetails responceDetails, Map<String, Object> contextMap )
         throws Exception
     {
-        if ( "xml".equalsIgnoreCase( responceDetails.type ))
+        if ( CONTENT_XML.equalsIgnoreCase( responceDetails.type ))
         {
             //
             // In this case, result.payload is an XML document and the paths in responceDetails.parameters are XPATH
@@ -302,10 +319,15 @@ public class KWSExecWS extends AbstractKeyWordStep
 
                 Node node = (Node) xPath.evaluate( param.path, document, XPathConstants.NODE );
 
-                contextMap.put( param.name, node.getTextContent() );
+                String context_name = getContext() + "_" + param.name;
+                String value = node.getTextContent();
+
+                if ( log.isDebugEnabled() )
+                    log.debug( "Setting Context Data to [" + value + "] for [" + context_name + "]" );
+
+                contextMap.put( context_name, value );
             }
         }
-
     }
 
     private class CallDetails
