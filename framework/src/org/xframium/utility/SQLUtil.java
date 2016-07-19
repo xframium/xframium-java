@@ -41,7 +41,17 @@ public class SQLUtil
     //
     // Implementation
     //
-    
+    /**
+     * This method establishes the DB connection, executes the SQL statement and returns an array of Object
+     * @param username
+     * @param password
+     * @param url
+     * @param driver
+     * @param query
+     * @param params
+     * @return object
+     * @throws Exception
+     */
     public static Object[][] getResults( String username,
                                          String password,
                                          String url,
@@ -89,6 +99,17 @@ public class SQLUtil
         }
     }
 
+    /**
+     * This method establishes the DB connection, executes the SQL statement and returns a map
+     * @param username
+     * @param password
+     * @param url
+     * @param driver
+     * @param query
+     * @param params
+     * @return Map
+     * @throws Exception
+     */
     public static Map[] getRow( String username,
                               String password,
                               String url,
@@ -140,6 +161,15 @@ public class SQLUtil
     // Helpers
     //
 
+    /**
+     * Gets the DB connection
+     * @param username
+     * @param password
+     * @param url
+     * @param driver
+     * @return Connection
+     * @throws Exception
+     */
     private static Connection getConnection( String username,
                                              String password,
                                              String url,
@@ -157,6 +187,12 @@ public class SQLUtil
         return conn;
     }
 
+    /**
+     * This method converts the result set to a two dimensional array Object 
+     * @param rs - ResultSet
+     * @return Object[][]
+     * @throws Exception
+     */
     private static Object[][] consume( ResultSet rs )
         throws Exception
     {
@@ -179,6 +215,12 @@ public class SQLUtil
         return toOutArray( results, colCount );
     }
 
+    /**
+     * This method converts result set to an array of Map
+     * @param rs - ResultSet
+     * @return Map[]
+     * @throws Exception
+     */
     private static Map[] consume2( ResultSet rs )
         throws Exception
     {
@@ -204,6 +246,12 @@ public class SQLUtil
         return toOutArray2( results );
      }
 
+    /**
+     * Converts List of Array to a two dimensional object
+     * @param listOfArray
+     * @param colCount
+     * @return Object[][]
+     */
     private static Object[][] toOutArray( List listOfArray, int colCount )
     {
         int length = listOfArray.size();
@@ -217,6 +265,11 @@ public class SQLUtil
         return rtn;
     }
 
+    /**
+     * Converts List of Maps to a Map array
+     * @param listOfMaps
+     * @return Map[]
+     */
     private static Map[] toOutArray2( List listOfMaps )
     {
         return (Map[]) listOfMaps.toArray( EMPTY_MAP_ARRAY );
