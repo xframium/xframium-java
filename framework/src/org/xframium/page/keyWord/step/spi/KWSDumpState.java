@@ -68,7 +68,7 @@ public class KWSDumpState extends AbstractKeyWordStep
                 os.close();
                 String data = "<a hRef=\"../../artifacts/" + randomFile.getName() + "\" class=\"thumbnail\"><img class=\"img-rounded img-responsive\" src=\"../../artifacts/" + randomFile.getName() + "\" style=\"height: 200px;\"/></a>"; 
 
-                PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), "", data, startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, getThreshold(), getDescription(), false );
+                PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), data, "", startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, getThreshold(), getDescription(), false, null );
             }
             catch( Exception e )
             {
@@ -106,7 +106,7 @@ public class KWSDumpState extends AbstractKeyWordStep
             outputStream.flush();
             outputStream.close();
             
-            PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), "", "<a target=\"_blank\" class=\"btn btn-primary\" hRef='../../artifacts/" + htmlFile.getName() + "' >Device State</a>", startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, getThreshold(), getDescription(), false );            
+            PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), "<a target=\"_blank\" class=\"btn btn-primary\" hRef='../../artifacts/" + htmlFile.getName() + "' >Device State</a>", "", startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, getThreshold(), getDescription(), false, null );            
         }
         catch( Exception e )
         {

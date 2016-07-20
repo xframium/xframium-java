@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import javax.imageio.ImageIO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -107,13 +108,18 @@ public class PageManager
     
     private String[] tagNames;
     
+    private Properties outputFormatter = new Properties();
     
 
-    
 	public String[] getTagNames()
     {
         return tagNames;
     }
+	
+	public void addOutputFormatter( String name, String formatter )
+	{
+	    outputFormatter.put( name, formatter );
+	}
 
     public void setTagNames( String tagNames )
     {
@@ -246,7 +252,19 @@ public class PageManager
     /**
      * Instantiates a new page manager.
      */
-    private PageManager() {}
+    private PageManager() 
+    {
+        try
+        {
+            outputFormatter.load( getClass().getResourceAsStream( "outputFormatter.properties" ) );
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace();
+        }
+        
+        
+    }
     
     /**
      * Sets the page factory.
@@ -398,10 +416,29 @@ public class PageManager
      * @param description the description
      * @param fromCache the from cache
      */
-    public void addExecutionLog( String executionId, String deviceName, String group, String name, String type, long timestamp, long runLength, StepStatus status, String detail, Throwable t, int threshold, String description, boolean fromCache )
+    public void addExecutionLog( String executionId, String deviceName, String group, String name, String type, long timestamp, long runLength, StepStatus status, String detail, Throwable t, int threshold, String description, boolean fromCache, String[] parameterArray )
     {
+        List<Object> arrayList = new ArrayList<Object>( 10 );
+        arrayList.add( group );
+        arrayList.add( name );
         
-        ArtifactManager.instance().notifyArtifactListeners( ArtifactType.EXECUTION_RECORD, new ExecutionRecord( group, name, type, timestamp, runLength, status, detail, t, fromCache, deviceName ) );
+        if ( parameterArray != null )
+        {
+            for ( String param : parameterArray )
+                arrayList.add( param );
+        }
+        
+        String message = null;
+        if ( type != null )
+        {
+            message = outputFormatter.getProperty( type );
+            if ( message != null )
+            {
+                message = String.format( message, arrayList.toArray() );
+            }
+        }
+            
+        ArtifactManager.instance().notifyArtifactListeners( ArtifactType.EXECUTION_RECORD, new ExecutionRecord( group, name, type, timestamp, runLength, status, detail, t, fromCache, deviceName, message ) );
     }
 
     /**

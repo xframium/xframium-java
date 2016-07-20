@@ -85,5 +85,10 @@ public class KWSCall extends AbstractKeyWordStep
 		
 		return KeyWordDriver.instance().executionFunction( getName(), webDriver, dataMap, pageMap );
 	}
+	
+	public boolean isRecordable()
+    {
+        return false;
+    }
 
 }

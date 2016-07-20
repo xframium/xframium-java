@@ -118,7 +118,7 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
 	    StringBuffer stringBuffer = new StringBuffer();
         stringBuffer = new StringBuffer();
         stringBuffer.append( "<html>" );
-        stringBuffer.append( "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"><style>iframe {background-color: #eaeae1;} .abscenter { margin: auto; position: absolute; top: 0; left: 0; bottom: 0; right: 0; } .pass {color: #1bc98e;}.fail {color: #e64759;}</style></head>" );
+        stringBuffer.append( "<head><link href=\"http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/toolkit-inverse.css\" rel=\"stylesheet\"><link href=\"http://www.xframium.org/output/assets/css/application.css\" rel=\"stylesheet\"><style>iframe {background-color: #eaeae1;} .abscenter { margin: auto; position: absolute; top: 0; left: 0; bottom: 0; right: 0; } .pass {color: #1bc98e;}.fail {color: #e64759;} .pageName { color: #e4d836; } .elementName { color: #e4d836; }</style></head>" );
         
         int successCount = 0;
         int failureCount = 0;
@@ -226,7 +226,7 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         
         stringBuffer.append( "<div role=\"tabpanel\" class=\"tab-pane active\" id=\"detail\">" );
         stringBuffer.append( "<div class=\"table-responsive table-bordered\"><table class=\"table table-hover table-condensed\">");
-        stringBuffer.append( "<thead><th width=\"20%\">Element</th><th width=\"80%\">Steps Performed & Results</th><th width=\"20%\">Started</th><th align=center width=\"0%\">Status</th></thead>" );
+        stringBuffer.append( "<thead><th width=\"80%\">Steps Performed</th><th width=\"20%\">Started</th><th align=center width=\"0%\">Status</th></thead>" );
         if ( DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) != null && !DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ).isEmpty() )
         {
             for ( Object item : DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) )
