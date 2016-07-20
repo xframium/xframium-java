@@ -30,6 +30,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -321,6 +323,29 @@ public class KWSExecWS extends AbstractKeyWordStep
 
                 String context_name = getContext() + "_" + param.name;
                 String value = node.getTextContent();
+
+                if ( log.isDebugEnabled() )
+                    log.debug( "Setting Context Data to [" + value + "] for [" + context_name + "]" );
+
+                contextMap.put( context_name, value );
+            }
+        }
+        else if ( CONTENT_JSON.equalsIgnoreCase( responceDetails.type ))
+        {
+            //
+            // In this case, result.payload is an JSON document and the paths in responceDetails.parameters are JASONPATH
+            // (https://github.com/jayway/JsonPath) expressions
+            //
+
+            DocumentContext ctx = JsonPath.parse( result.payload );
+
+            Iterator<ResponceVariable> params = responceDetails.parameters.iterator();
+            while( params.hasNext() )
+            {
+                ResponceVariable param = params.next();
+
+                String context_name = getContext() + "_" + param.name;
+                String value = ctx.read( param.path );
 
                 if ( log.isDebugEnabled() )
                     log.debug( "Setting Context Data to [" + value + "] for [" + context_name + "]" );
