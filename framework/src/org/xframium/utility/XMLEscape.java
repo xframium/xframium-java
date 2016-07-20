@@ -35,6 +35,11 @@ public class XMLEscape
 {
     private static int[][] CHAR_LIST = new int[][] { { 0, 9 }, { 11, 13 }, {128, 255 }, {38, 39 } };
     
+    /**
+     * Replaces the XML escape characters to XML numeric replacement
+     * @param xmlIn - String
+     * @return String
+     */
     public static String escapeXML( String xmlIn )
     {
         String xmlOut = xmlIn;
@@ -50,6 +55,11 @@ public class XMLEscape
         return xmlOut;
     }
     
+    /**
+     * converts XML to HTML format
+     * @param xmlIn - XML String
+     * @return String - in HTML format
+     */
     public static String toXML( String xmlIn )
     {
         
@@ -75,6 +85,11 @@ public class XMLEscape
         
     }
     
+    /**
+     * Converts a given xml to HTML String
+     * @param htmlIn - xml in String
+     * @return String - in HTML format
+     */
     public static String toHTML( String htmlIn )
     {
     	try
@@ -96,6 +111,11 @@ public class XMLEscape
         }
     }
     
+    /**
+     * Checks if a given xml is a valid format
+     * @param inputDocument - String
+     * @return boolean
+     */
     private static boolean validateDocument( String inputDocument )
     {
         try

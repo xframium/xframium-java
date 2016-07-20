@@ -29,6 +29,11 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 public class BrowserCacheLogic
 {
 
+	/**
+	 * clears the Safari browser Cache for IOS environment
+	 * @param driver - RemoteWebDriver instance
+	 * @throws Exception
+	 */
     public static void clearSafariIOSCache( RemoteWebDriver driver )
         throws Exception
     {
@@ -148,6 +153,11 @@ public class BrowserCacheLogic
         }
     }
 
+    /**
+     * clears the Chrome browser Cache for Android environment
+     * @param driver - RemoteWebDriver instance
+     * @throws Exception
+     */
     public static void clearChromeAndroidCache( RemoteWebDriver driver )
         throws Exception
     {

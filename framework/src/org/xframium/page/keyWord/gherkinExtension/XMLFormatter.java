@@ -6,9 +6,11 @@ import org.xframium.page.data.DefaultPageData;
 import org.xframium.page.data.provider.AbstractPageDataProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordPage;
+import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.model.Background;
@@ -179,6 +181,8 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
             case FEATURE:
                 break;
             case OUTLINE:
+                if ( currentScenario.getDataDriver() != null )
+                    step.addParameter( new KeyWordParameter( ParameterType.STATIC, "bdd=" + currentScenario.getDataDriver() ) );
                 currentScenario.addStep( step );
                 break;
             case SCENARIOS:
