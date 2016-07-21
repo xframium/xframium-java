@@ -112,7 +112,7 @@ public class KeyWordDriver
      * @param pageClass
      *            the page class
      */
-    public void addPage( String pageName, Class<Page> pageClass )
+    public void addPage( String pageName, Class pageClass )
     {
         if (log.isDebugEnabled())
             log.debug( "Mapping Page [" + pageName + "] to [" + pageClass.getName() + "]" );
@@ -445,7 +445,7 @@ public class KeyWordDriver
         catch (Throwable e)
         {
             if ( !testStarted )
-                PageManager.instance().addExecutionLog( null, null, "", testName, testName, startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE, e.getMessage(), e, 0, e.getMessage(), false );
+                PageManager.instance().addExecutionLog( null, null, "", testName, testName, startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE, e.getMessage(), e, 0, e.getMessage(), false, null );
             if ( PageManager.instance().getThrowable() == null )
                 PageManager.instance().setThrowable( e );
 			

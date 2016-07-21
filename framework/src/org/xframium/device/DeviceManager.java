@@ -79,6 +79,18 @@ public class DeviceManager implements ArtifactListener
     private Device selectedDevice;
     
     private List<WebDriver> holdList = new ArrayList<WebDriver>( 10 );
+    
+    private String[] tagNames;
+
+    public String[] getTagNames()
+    {
+        return tagNames;
+    }
+
+    public void setTagNames( String[] tagNames )
+    {
+        this.tagNames = tagNames;
+    }
 
     public List<WebDriver> getHoldList()
     {
@@ -580,15 +592,15 @@ public class DeviceManager implements ArtifactListener
                         //
                         // Attempt to acquire a lock for the device
                         //
-                        if (log.isInfoEnabled())
-                            log.info( Thread.currentThread().getName() + ": Attempting to acquire semaphore for " + currentDevice );
+                        if (log.isDebugEnabled())
+                            log.debug( Thread.currentThread().getName() + ": Attempting to acquire semaphore for " + currentDevice );
                         if (currentDevice.getLock().tryAcquire())
                         {
                             //
                             // Now, make sure this test has not run on this device yet and that there are no active runs against it
                             //
-                            if (log.isInfoEnabled())
-                                log.info( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + Thread.currentThread().getName() + ": Device Semaphore permitted for " + currentDevice );
+                            if (log.isDebugEnabled())
+                                log.debug( Thread.currentThread().getName() + ": Device Semaphore permitted for " + currentDevice );
                             if (!analyticsMap.get( currentDevice.getKey() ).hasRun( runKey ) && !activeRuns.containsKey( currentDevice.getKey() + "." + runKey ) )
                             {
                                 if (log.isDebugEnabled())
@@ -774,8 +786,6 @@ public class DeviceManager implements ArtifactListener
      */
     public void releaseDevice( Device currentDevice )
     {
-        if (log.isInfoEnabled())
-            log.info( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + Thread.currentThread().getName() + ": Releasing Device Semaphore for " + currentDevice );
         currentDevice.getLock().release();
     }
 

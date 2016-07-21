@@ -37,6 +37,7 @@ import org.xframium.device.DeviceManager;
 import org.xframium.device.SimpleDevice;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataProvider;
+import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -133,6 +134,8 @@ public class PerfectoMobileDataProvider implements DataProvider
 				log.warn( pmValidator.getMessage() );
 			
 			inputStream.close();
+			
+			
 			
 		}
 		catch( Exception e )
