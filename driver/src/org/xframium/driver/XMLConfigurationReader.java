@@ -882,7 +882,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
 
         for ( XParameter p : pList )
         {
-            KeyWordParameter kp = new KeyWordParameter( ParameterType.valueOf( p.getType() ), p.getValue() );
+            KeyWordParameter kp = new KeyWordParameter( ParameterType.valueOf( p.getType() ), p.getValue(), null, null );
             
             if ( p.getToken() != null && !p.getToken().isEmpty() )
             {

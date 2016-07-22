@@ -62,6 +62,9 @@ public class KWSExecWS extends AbstractKeyWordStep
     private static final String CONTENT_XML = "xml";
     private static final String CONTENT_JSON = "json";
 
+    private static final String INPUT = "input";
+    private static final String OUTPUT = "output";
+
     private static final String PATH_DIVIDER = "/";
     
     //
@@ -82,43 +85,31 @@ public class KWSExecWS extends AbstractKeyWordStep
             throw new IllegalStateException( "Page Object was not defined" );
         }
 
-        KeyWordParameter inputSpec = null;
         CallDetails callDetails = null;
-        KeyWordParameter outputSpec = null;
         ResponceDetails responceDetails = null;
                         
-        if ( getParameterList().size() >= 2 )
+        callDetails = loadCallDetails( getParameterList() );
+        if ( !callDetails.valid )
         {
-            inputSpec = getParameterList().get( 0 );
-            callDetails = loadCallDetails( inputSpec );
-            if ( !callDetails.valid )
-            {
-                throwCallDetailsException( callDetails );
-            }
+            throwCallDetailsException( callDetails );
+        }
+        
+        responceDetails = loadResponceDetails( getParameterList() );
+
+        try
+        {
+            Responce result = makeCall( callDetails );
             
-            outputSpec = getParameterList().get( 1 );
-
-            responceDetails = loadResponceDetails( outputSpec );
-
-            try
+            if ( getContext() != null )
             {
-                Responce result = makeCall( callDetails );
-                
-                if ( getContext() != null )
-                {
-                    processResult( result, responceDetails, contextMap );
-                }
-            }
-            catch( Throwable e )
-            {
-                throw new IllegalStateException( "KWSExecWS failed with:", e );
+                processResult( result, responceDetails, contextMap );
             }
         }
-        else
+        catch( Throwable e )
         {
-            throw new IllegalStateException( "KWSExecWS requires two tokenized parameters" );
+            throw new IllegalStateException( "KWSExecWS failed with:", e );
         }
-		
+    
         return true;
     }
 	
@@ -134,48 +125,54 @@ public class KWSExecWS extends AbstractKeyWordStep
     // Helpers
     //
 
-    private CallDetails loadCallDetails( KeyWordParameter inputSpec )
+    private CallDetails loadCallDetails( List<KeyWordParameter> paramList )
     {
         CallDetails rtn = new CallDetails();
 
-        Iterator<KeyWordToken> tokens = inputSpec.getTokenList().iterator();
-        while( tokens.hasNext() )
+        Iterator<KeyWordParameter> params = paramList.iterator();
+        while( params.hasNext() )
         {
-            KeyWordToken token = tokens.next();
+            KeyWordParameter param = params.next();
 
-            switch( token.getName() )
+            if (( param.getUsage() == null ) ||
+                ( !INPUT.equalsIgnoreCase( param.getUsage() )))
+            {
+                continue;
+            }
+
+            switch( param.getName() )
             {
                 case TOKEN_URL:
                 {
-                    rtn.url = token.getValue();
+                    rtn.url = param.getValue();
                     break;
                 }
 
                 case TOKEN_METHOD:
                 {
-                    rtn.method = token.getValue();
+                    rtn.method = param.getValue();
                     break;
                 }
 
                 case TOKEN_TYPE:
                 {
-                    rtn.type = token.getValue();
+                    rtn.type = param.getValue();
                     break;
                 }
 
                 case TOKEN_PAYLOAD:
                 {
-                    rtn.pathToPayload = token.getValue();
+                    rtn.pathToPayload = param.getValue();
                     break;
                 }
 
                 default:
                 {
-                    CallParameter param = new CallParameter();
+                    CallParameter cparam = new CallParameter();
                     
-                    param.name = token.getName();
-                    param.value = token.getValue();
-                    rtn.parameters.add( param );
+                    cparam.name = param.getName();
+                    cparam.value = param.getValue();
+                    rtn.parameters.add( cparam );
                     
                     break;
                 }
@@ -208,25 +205,31 @@ public class KWSExecWS extends AbstractKeyWordStep
         throw new IllegalStateException( errorMsg );
     }
 
-    private ResponceDetails loadResponceDetails( KeyWordParameter outputSpec )
+    private ResponceDetails loadResponceDetails( List<KeyWordParameter> paramList )
     {
         ResponceDetails rtn = new ResponceDetails();
 
-        Iterator<KeyWordToken> tokens = outputSpec.getTokenList().iterator();
-        while( tokens.hasNext() )
+        Iterator<KeyWordParameter> params = paramList.iterator();
+        while( params.hasNext() )
         {
-            KeyWordToken token = tokens.next();
+            KeyWordParameter param = params.next();
 
-            if ( TOKEN_TYPE.equalsIgnoreCase( token.getName() ))
+            if (( param.getUsage() == null ) ||
+                ( !OUTPUT.equalsIgnoreCase( param.getUsage() )))
             {
-                rtn.type = token.getValue();
+                continue;
+            }
+
+            if ( TOKEN_TYPE.equalsIgnoreCase( param.getName() ))
+            {
+                rtn.type = param.getValue();
             }
             else
             {
                 ResponceVariable var = new ResponceVariable();
 
-                var.name = token.getName();
-                var.path = token.getValue();
+                var.name = param.getName();
+                var.path = param.getValue();
 
                 rtn.parameters.add( var );
             }

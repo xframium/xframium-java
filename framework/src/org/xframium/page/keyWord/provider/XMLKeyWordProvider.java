@@ -381,7 +381,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	    for ( Parameter p : pList )
 	    {
 	        
-	        KeyWordParameter kp = new KeyWordParameter( ParameterType.valueOf( p.getType() ), p.getValue() );
+	        KeyWordParameter kp = new KeyWordParameter( ParameterType.valueOf( p.getType() ), p.getValue(), p.getName(), p.getUsage() );
 	        
 	        if ( p.getToken() != null && !p.getToken().isEmpty() )
 	        {

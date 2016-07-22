@@ -197,13 +197,11 @@ public class MorelandWebElement implements WebElement, Locatable
             return null;
     }
 
-    @Override
     public <X> X getScreenshotAs( OutputType<X> arg0 ) throws WebDriverException
     {
         return webElement.getScreenshotAs( arg0 );
     }
 
-    @Override
     public Rectangle getRect()
     {
         return webElement.getRect();

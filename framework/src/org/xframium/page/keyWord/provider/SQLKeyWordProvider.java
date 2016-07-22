@@ -365,7 +365,7 @@ public class SQLKeyWordProvider
 
         for ( Parameter p : pList )
         {
-            parentStep.addParameter( new KeyWordParameter( ParameterType.valueOf( p.getType() ), p.getValue() ) );
+            parentStep.addParameter( new KeyWordParameter( ParameterType.valueOf( p.getType() ), p.getValue(), null, null ) );
         }
     }
 

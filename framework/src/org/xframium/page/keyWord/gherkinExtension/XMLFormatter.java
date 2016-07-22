@@ -182,7 +182,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
                 break;
             case OUTLINE:
                 if ( currentScenario.getDataDriver() != null )
-                    step.addParameter( new KeyWordParameter( ParameterType.STATIC, "bdd=" + currentScenario.getDataDriver() ) );
+                    step.addParameter( new KeyWordParameter( ParameterType.STATIC, "bdd=" + currentScenario.getDataDriver(), null, null ) );
                 currentScenario.addStep( step );
                 break;
             case SCENARIOS:

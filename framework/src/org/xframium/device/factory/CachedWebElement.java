@@ -243,13 +243,11 @@ public class CachedWebElement implements WebElement, CachedElement
 		return webDriver.findElement( by ).getCssValue( propertyName );
 	}
 
-    @Override
     public <X> X getScreenshotAs( OutputType<X> arg0 ) throws WebDriverException
     {
         return null;
     }
 
-    @Override
     public Rectangle getRect()
     {
         return new Rectangle( getLocation(), getSize() );
