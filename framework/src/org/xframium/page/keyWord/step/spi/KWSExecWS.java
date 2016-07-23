@@ -331,16 +331,20 @@ public class KWSExecWS extends AbstractKeyWordStep
         StringBuilder rtn = new StringBuilder();
 
         rtn.append( callDetails.url );
-        rtn.append( PATH_DIVIDER );
 
-        Iterator<CallParameter> params = callDetails.parameters.iterator();
-        while( params.hasNext() )
+        if ( HTTP_GET.equalsIgnoreCase( callDetails.method ))
         {
-            CallParameter param = params.next();
-
-            rtn.append( param.name );
             rtn.append( PATH_DIVIDER );
-            rtn.append( param.value );
+            
+            Iterator<CallParameter> params = callDetails.parameters.iterator();
+            while( params.hasNext() )
+            {
+                CallParameter param = params.next();
+                
+                rtn.append( param.name );
+                rtn.append( PATH_DIVIDER );
+                rtn.append( param.value );
+            }
         }
 
         return rtn.toString();
