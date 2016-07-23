@@ -70,7 +70,7 @@ public abstract class AbstractElement implements Element
 	 *
 	 * @param currentValue the current value
 	 */
-	protected abstract void _setValue( String currentValue );
+	protected abstract void _setValue( String currentValue, SetMethod setMethod );
 
 	/**
 	 * _get value.
@@ -548,24 +548,30 @@ public abstract class AbstractElement implements Element
 	@Override
 	public void setValue( String currentValue )
 	{
-		long startTime = System.currentTimeMillis();
-		boolean success = false;
-		try
-		{
-			_setValue( currentValue );
-			success = true;
-			PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), pageName, elementName, "setValue", System.currentTimeMillis(), System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, getKey(), null, 0, "", false, new String[] { currentValue } );
-		}
-		catch( Exception e )
-		{
-			throw new IllegalStateException( e );
-		}
-		finally
-		{
-			if ( timed )
-				PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".setValue(" + currentValue + ")", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
-		}
-
+		setValue( currentValue, SetMethod.DEFAULT );
+	}
+	
+	@Override
+	public void setValue( String currentValue, SetMethod setMethod )
+	{
+	    long startTime = System.currentTimeMillis();
+        boolean success = false;
+        try
+        {
+            _setValue( currentValue, setMethod );
+            success = true;
+            PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), pageName, elementName, "setValue", System.currentTimeMillis(), System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, getKey(), null, 0, "", false, new String[] { currentValue } );
+        }
+        catch( Exception e )
+        {
+            throw new IllegalStateException( e );
+        }
+        finally
+        {
+            if ( timed )
+                PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".setValue(" + currentValue + ")", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+        }
+	    
 	}
 
 	

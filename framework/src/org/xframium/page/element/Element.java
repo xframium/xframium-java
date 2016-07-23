@@ -43,6 +43,12 @@ public interface Element
 	
 	/** The Constant CONTEXT_INDEX. */
     public static final String LOOP_INDEX = "_LOOP.INDEX";
+    
+    public enum SetMethod
+    {
+        DEFAULT,
+        SINGLE;
+    }
 	
 	/**
 	 * The Enum WAIT_FOR.
@@ -192,6 +198,9 @@ public interface Element
 	 * @param currentValue the new value
 	 */
 	public void setValue( String currentValue  );
+	
+	public void setValue( String currentValue, SetMethod setMethod );
+	
 	
 	/**
 	 * Click.

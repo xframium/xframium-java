@@ -713,7 +713,7 @@ public class SeleniumElement extends AbstractElement
      * String)
      */
     @Override
-    protected void _setValue( String currentValue )
+    protected void _setValue( String currentValue, SetMethod setMethod )
     {
         WebElement webElement = getElement();
 
@@ -736,16 +736,28 @@ public class SeleniumElement extends AbstractElement
         }
         else
         {
-            if ( log.isInfoEnabled() )
-                log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue );
-
-            MorelandWebElement x = (MorelandWebElement) webElement;
-            if ( x.getWebElement() instanceof IOSElement )
-                ((IOSElement) x.getWebElement()).setValue( currentValue );
-            else
+            switch( setMethod )
             {
-                webElement.clear();
-                webElement.sendKeys( currentValue );
+                case DEFAULT:
+                    if ( log.isInfoEnabled() )
+                        log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue );
+        
+                    MorelandWebElement x = (MorelandWebElement) webElement;
+                    if ( x.getWebElement() instanceof IOSElement )
+                        ((IOSElement) x.getWebElement()).setValue( currentValue );
+                    else
+                    {
+                        webElement.clear();
+                        webElement.sendKeys( currentValue );
+                    }
+                    break;
+                    
+                case SINGLE:
+                    if ( log.isInfoEnabled() )
+                        log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue + " using individual send keys" );
+                    
+                    webElement.sendKeys( currentValue );
+                    
             }
         }
 

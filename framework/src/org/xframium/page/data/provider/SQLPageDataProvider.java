@@ -113,7 +113,7 @@ public class SQLPageDataProvider extends AbstractPageDataProvider
             for( int i = 0; i < data.length; ++i )
             {
                 String record_type_name = (String) data[i][0];
-                boolean lockRecords = "Y".equals( (String) data[i][1] );
+                boolean lockRecords = "Y".equals( (String) data[i][1] ) || "1".equals( (String) data[i][3] );
 
                 if ( !existingRecordTypes.contains( record_type_name ))
                 {
@@ -122,7 +122,7 @@ public class SQLPageDataProvider extends AbstractPageDataProvider
                 }
 
                 String record_name = (String) data[i][2];
-                boolean active = "Y".equals( (String) data[i][3] );
+                boolean active = "Y".equals( (String) data[i][3] ) || "1".equals( (String) data[i][3] );
 
                 DefaultPageData currentRecord = (DefaultPageData) existingRecordsByName.get( record_name );
                 if( currentRecord == null )
