@@ -190,7 +190,7 @@ public class MatrixTest
                     threshold = parseInt( testArray[i], 0 );
                     break;
 
-                case 0:
+                case 10:
                     active = parseBoolean( testArray[i], true );
                     break;
 

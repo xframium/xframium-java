@@ -94,11 +94,10 @@ import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.KeyWordToken.TokenType;
 import org.xframium.page.keyWord.gherkinExtension.XMLFormatter;
-import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
-import org.xframium.page.keyWord.provider.xsd.Token;
+import org.xframium.page.keyWord.provider.ExcelKeyWordProvider;
 import org.xframium.page.keyWord.provider.SQLKeyWordProvider;
+import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
-import org.xframium.spi.Device;
 import org.xframium.spi.RunDetails;
 import org.xframium.utility.SeleniumSessionManager;
 import gherkin.parser.Parser;
@@ -682,6 +681,11 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 KeyWordDriver.instance().loadTests( new XMLKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ) ) );
 
                 break;
+                
+            case "EXCEL":
+                KeyWordDriver.instance().loadTests( new ExcelKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ) ) );
+
+                break;
 
             case "SQL":
             case "LOCAL-SQL":
@@ -786,8 +790,6 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         
         return true;
     }
-    
-    
     
     private void parseModel( XModel model )
     {
@@ -986,7 +988,8 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     {
         switch ( xRoot.getSuite().getProvider() )
         {
-            case "XML": 
+            case "XML":
+            case "EXCEL": 
             case "LOCAL":
             case "LOCAL-SQL":
             {

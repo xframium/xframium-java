@@ -35,7 +35,9 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.page.Page;
 import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.matrixExtension.MatrixTest;
 
@@ -85,7 +87,7 @@ public class ExcelKeyWordProvider implements KeyWordProvider
 	
 	private String getCellValue( XSSFCell cell )
     {
-        if (cell != null)
+        if (cell != null )
         {
             switch (cell.getCellType())
             {
@@ -140,7 +142,39 @@ public class ExcelKeyWordProvider implements KeyWordProvider
         try
         {
             workbook = new XSSFWorkbook( inputStream );
-            XSSFSheet sheet = workbook.getSheet( "Tests" );
+            
+            XSSFSheet sheet = workbook.getSheet( "Model" );
+            //
+            // Extract the Tests
+            //
+            for (int i = 1; i <= sheet.getLastRowNum(); i++)
+            {
+                XSSFRow currentRow = sheet.getRow( i );
+                
+                String pageName = getCellValue( currentRow.getCell( 0 ) );
+                
+                if ( pageName.toLowerCase().equals( "name" ) )
+                    continue;
+                String className = getCellValue( currentRow.getCell( 1 ) );
+                
+                try
+                {
+                    Class useClass = KeyWordPage.class;
+                    if (className != null && !className.isEmpty() )
+                        useClass = ( Class<Page> ) Class.forName( className );
+                    
+                    if (log.isDebugEnabled())
+                        log.debug( "Creating page as " + useClass.getSimpleName() + " for " + pageName );
+        
+                    KeyWordDriver.instance().addPage( pageName, useClass );
+                }
+                catch( Exception e )
+                {
+                    log.error( "Error creating instance of [" + className + "]" );
+                }
+            }
+            
+            sheet = workbook.getSheet( "Tests" );
 
             //
             // Extract the Tests

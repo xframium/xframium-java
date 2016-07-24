@@ -10,7 +10,7 @@ public abstract class DataArray
         if ( dataDefinition != null )
         {
             this.dataDefinition = dataDefinition;
-            this.dataArray = dataDefinition.split( "\r\n" );
+            this.dataArray = dataDefinition.split( "\\r?\\n" );
         }
     }
 

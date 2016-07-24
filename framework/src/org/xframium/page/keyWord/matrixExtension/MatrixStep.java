@@ -21,18 +21,18 @@ public class MatrixStep
     private MatrixParameterArray parameterArray;
     private MatrixTokenArray tokenArray;
     private boolean active;
-    private StepFailure failureMode;
+    private StepFailure failureMode = StepFailure.ERROR;
     private boolean inverse;
     private String os;
-    private ValidationType vType;
+    private ValidationType vType = ValidationType.REGEX;
     private String validationDetail;
     private String context;
     private String device;
     private String poi;
     private boolean timed;
     private String tagNames;
-    private int threshold;
-    private int wait;
+    private int threshold = 0;
+    private int wait = 0;
     private String linkId;
     
 
