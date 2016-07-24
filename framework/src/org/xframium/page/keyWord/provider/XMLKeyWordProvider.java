@@ -250,7 +250,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	                readElements( new FileInputStream( findFile( new File( imp.getFileName() ) ) ), imp.isIncludeTests(), imp.isIncludeFunctions() );
 	            else if ( imp.getFileName().toLowerCase().endsWith( ".bdd" ) )
 	            {
-	                Parser bddParser = new Parser( new XMLFormatter() );
+	                Parser bddParser = new Parser( new XMLFormatter( PageDataManager.instance().getDataProvider() ) );
 	                
 	                byte[] buffer = new byte[512];
 	                int bytesRead = 0;

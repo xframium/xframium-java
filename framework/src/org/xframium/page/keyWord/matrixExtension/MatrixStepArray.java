@@ -21,7 +21,10 @@ public class MatrixStepArray
         {
             if ( currentStep != null && currentStep.toLowerCase().startsWith( "level" ) )
                 continue;
-            stepList.add( new MatrixStep( currentStep ) );
+            
+            MatrixStep x = new MatrixStep( currentStep );
+            if ( x.getName() != null && !x.getName().trim().isEmpty() )
+                stepList.add( x );
         }
     }
     
@@ -31,7 +34,9 @@ public class MatrixStepArray
         {
             if ( currentStep[0] != null && currentStep[0].toLowerCase().startsWith( "level" ) )
                 continue;
-            stepList.add( new MatrixStep( currentStep ) );
+            MatrixStep x = new MatrixStep( currentStep[ 0 ] );
+            if ( x.getName() != null && !x.getName().trim().isEmpty() )
+                stepList.add( x );
         }
     }
     
@@ -51,7 +56,11 @@ public class MatrixStepArray
             String currentLine;
             while ( (currentLine = numberReader.readLine() ) != null )
             {
-                stepList.add ( new MatrixStep( currentLine ) );
+
+                MatrixStep x = new MatrixStep( currentLine );
+                if ( x.getName() != null && !x.getName().trim().isEmpty() )
+                    stepList.add( x );
+                
             }
         }
         catch( Exception e )

@@ -52,18 +52,24 @@ public class MatrixStep
     public KeyWordStep createStep()
     {
         KeyWordStep kStep = KeyWordStepFactory.instance().createStep( name, pageName, active, type, linkId, timed, failureMode, inverse, os, poi, threshold, "", wait, context, validationDetail, device, vType, tagNames );
-        List<KeyWordParameter> parameterList = parameterArray.getParameters();
-        if ( parameterList != null )
+        if ( parameterArray != null )
         {
-            for ( KeyWordParameter p : parameterList )
-                kStep.addParameter( p );
+            List<KeyWordParameter> parameterList = parameterArray.getParameters();
+            if ( parameterList != null )
+            {
+                for ( KeyWordParameter p : parameterList )
+                    kStep.addParameter( p );
+            }
         }
         
-        List<KeyWordToken> tokenList = tokenArray.getTokens();
-        if ( tokenList != null )
+        if ( tokenArray != null )
         {
-            for ( KeyWordToken p : tokenList )
-                kStep.addToken( p );
+            List<KeyWordToken> tokenList = tokenArray.getTokens();
+            if ( tokenList != null )
+            {
+                for ( KeyWordToken p : tokenList )
+                    kStep.addToken( p );
+            }
         }
         
         return kStep;

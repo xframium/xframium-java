@@ -3,14 +3,16 @@ package org.xframium.page.keyWord.gherkinExtension;
 import java.util.ArrayList;
 import java.util.List;
 import org.xframium.page.data.DefaultPageData;
+import org.xframium.page.data.PageData;
 import org.xframium.page.data.provider.AbstractPageDataProvider;
+import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordParameter;
+import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordTest;
-import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.model.Background;
@@ -27,7 +29,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
     private List<KeyWordStep> backgroundSteps = new ArrayList<KeyWordStep>( 10 );
     private List<KeyWordTest> scenarioList = new ArrayList<KeyWordTest>( 10 );
     private KeyWordTest currentScenario;
-    
+    private PageDataProvider pageDataProvider;
     private Section currentSection = Section.FEATURE;
     
     private enum Section
@@ -38,6 +40,10 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
         OUTLINE,
     }
     
+    public XMLFormatter( PageDataProvider pageDataProvider )
+    {
+        this.pageDataProvider = pageDataProvider;
+    }
     
     @Override
     public void background( Background arg0 )
@@ -212,6 +218,48 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
     {
         // TODO Auto-generated method stub
         
+    }
+    
+    @Override
+    public PageData getRecord( String recordType )
+    {
+        PageData pageData = null;
+        if ( pageDataProvider != null )
+        {
+           pageData = pageDataProvider.getRecord( recordType );
+           if ( pageData != null )
+               return pageData;
+        }
+        
+        return super.getRecord( recordType );
+    }
+    
+    @Override
+    public PageData getRecord( String recordType, String recordId )
+    {
+        PageData pageData = null;
+        if ( pageDataProvider != null )
+        {
+           pageData = pageDataProvider.getRecord( recordType, recordId );
+           if ( pageData != null )
+               return pageData;
+        }
+        
+        return super.getRecord( recordType, recordId );
+    }
+    
+    @Override
+    public PageData[] getRecords( String recordType )
+    {
+        PageData[] pageData = null;
+        if ( pageDataProvider != null )
+        {
+           pageData = pageDataProvider.getRecords( recordType );
+           if ( pageData != null )
+               return pageData;
+        }
+        
+        return super.getRecords( recordType );
     }
 
 }

@@ -94,6 +94,7 @@ import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.KeyWordToken.TokenType;
 import org.xframium.page.keyWord.gherkinExtension.XMLFormatter;
+import org.xframium.page.keyWord.matrixExtension.MatrixTest;
 import org.xframium.page.keyWord.provider.ExcelKeyWordProvider;
 import org.xframium.page.keyWord.provider.SQLKeyWordProvider;
 import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
@@ -630,11 +631,31 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     
                     if ( test.getType().equals( "BDD" ) )
                     {
-                        XMLFormatter xmlFormatter = new XMLFormatter();
+                        XMLFormatter xmlFormatter = new XMLFormatter( PageDataManager.instance().getDataProvider() );
                         Parser bddParser = new Parser( xmlFormatter );
                         bddParser.parse( test.getDescription().getValue(), "", 0 );
                         PageDataManager.instance().setPageDataProvider( xmlFormatter );
+                    }
+                    else if ( test.getType().equals( "CSV" ) )
+                    {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        stringBuilder.append( test.getName() );
+                        stringBuilder.append( ",Test,," );
+                        stringBuilder.append( test.getDataProvider()!= null ? test.getDataProvider() : "" );
+                        stringBuilder.append( "," );
+                        stringBuilder.append( test.getDataDriver()!= null ? test.getDataDriver() : "" );
+                        stringBuilder.append( "," );
+                        stringBuilder.append( test.getTagNames() != null ? test.getTagNames() : "" );
+                        stringBuilder.append( ",," );
+                        stringBuilder.append( test.isTimed() );
+                        stringBuilder.append( ",0," );
+                        stringBuilder.append( test.isActive() );
+                        stringBuilder.append( "," );
+                        stringBuilder.append( test.getOs()!= null ? test.getOs() : "" );
                         
+                        MatrixTest matrixTest = new MatrixTest( stringBuilder.toString(), test.getDescription().getValue() );
+                        
+                        KeyWordDriver.instance().addTest( matrixTest.createTest() );
                     }
                     else if ( test.getType().equals( "XML" ) )
                     {

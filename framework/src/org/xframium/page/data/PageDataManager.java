@@ -61,6 +61,13 @@ public class PageDataManager
     	dataProvider.readPageData();
     }
     
+    
+    
+    public PageDataProvider getDataProvider()
+    {
+        return dataProvider;
+    }
+
     /**
      * Gets the records.
      *
