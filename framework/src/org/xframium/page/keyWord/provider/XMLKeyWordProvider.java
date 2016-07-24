@@ -380,8 +380,8 @@ public class XMLKeyWordProvider implements KeyWordProvider
 
 	    for ( Parameter p : pList )
 	    {
-	        
-	        KeyWordParameter kp = new KeyWordParameter( ParameterType.valueOf( p.getType() ), p.getValue(), p.getName(), p.getUsage() );
+	        ParameterType ptype = ParameterType.valueOf( p.getType() );
+	        KeyWordParameter kp = new KeyWordParameter( ptype, p.getValue(), p.getName(), p.getUsage() );
 	        
 	        if ( p.getToken() != null && !p.getToken().isEmpty() )
 	        {
@@ -391,15 +391,15 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	            }
 	        }
 	        
-	        if ( p.equals( ParameterType.FILE ) )
+	        if ( ParameterType.FILE.equals( ptype ))
 	        {
 	            File dataFile = new File( p.getValue() );
 	            if ( dataFile.isFile() )
 	            {
 	                try
 	                {
-    	                kp.setValue( readFile( new FileInputStream( dataFile ) ) );
-    	                kp.setFileName( dataFile.getAbsolutePath() );
+                            kp.setValue( readFile( new FileInputStream( dataFile ) ) );
+                            kp.setFileName( dataFile.getAbsolutePath() );
 	                }
 	                catch( FileNotFoundException e )
 	                {

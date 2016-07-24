@@ -1057,17 +1057,23 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     throw new ScriptConfigurationException(
                             Thread.currentThread().getName() + ": The Page Data field [" + recordName + "] does not exist for the page data record type [" + tableName + "] - Reference one of the following fields - " + pageData );
                 break;
+
+            case FILE:
+                returnValue = param.getValue();
+                for ( KeyWordToken token : param.getTokenList() )
+                {
+                    if ( log.isDebugEnabled() )
+                        log.debug( "Applying token " + token.getName() );
+                    
+                    returnValue = returnValue.replace( "{" + token.getName() + "}", getTokenValue( token, contextMap, dataMap ) );
+                }
+                break;
+                
             default:
                 throw new ScriptConfigurationException( Thread.currentThread().getName() + ": Unknown Parameter Type [" + param.getValue() + "]" );
         }
         
-        for ( KeyWordToken token : param.getTokenList() )
-        {
-            if ( log.isDebugEnabled() )
-                log.debug( "Applying token " + token.getName() );
-                 
-            returnValue = returnValue.replace( "{" + token.getName() + "}", getTokenValue( token, contextMap, dataMap ) );
-        }
+        
         
         return returnValue;
     }
