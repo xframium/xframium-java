@@ -20,10 +20,11 @@
  *******************************************************************************/
 package org.xframium.page;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -324,11 +325,25 @@ public class ExecutionRecord
      */
     public String toHTML( int index )
     {
+        String buttonType = "danger";
+        switch ( status )
+        {
+            case FAILURE_IGNORED:
+                buttonType = "warning";
+                break;
+
+            case SUCCESS:
+                buttonType = "success";
+                break;
+
+        }
+        
+        
         StringBuffer stringBuffer = new StringBuffer();
 
         stringBuffer.append( "<tr><td>" );
         if ( message != null && !message.trim().isEmpty() )
-            stringBuffer.append( message ).append( "</td>" );
+            stringBuffer.append( message );
         else
         {
 
@@ -342,57 +357,65 @@ public class ExecutionRecord
                 else
                     useGroup = "";
             }
-
+            
             if ( status.equals( StepStatus.REPORT ) )
                 stringBuffer.append( useGroup.replace( "\t", "<br/>" ) );
             else
                 stringBuffer.append( useGroup );
-
-            stringBuffer.append( type ).append( "</td>" );
+            
+            stringBuffer.append( type );
         }
 
-        stringBuffer.append( "<td nowrap>" ).append( timeFormat.format( new Date( timeStamp ) ) + " (" + runTime + "ms)" ).append( "</td>" );
+        if ( !status.equals( StepStatus.SUCCESS ) && detail != null && !detail.isEmpty() )
+        {
 
-        String buttonType = "danger";
+            if ( t != null )
+            {
+                stringBuffer.append( "<span class=\"pull-right text-muted\" <a role=\"button\" data-toggle=\"collapse\" href=\"#exception" ).append( index )
+                        .append( "\" aria-expanded=\"false\" style=\"padding-right: 10px\">View Error Detail</a></span><div class=\"collapse\" id=\"exception" ).append( index ).append( "\"><h6><br/>" );
+
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                PrintWriter printWriter = new PrintWriter( outputStream, true );
+                t.printStackTrace( printWriter );
+                
+                String stackTrace = outputStream.toString();
+                stackTrace = stackTrace.replace( "\n", "<br/>" );
+                stackTrace = stackTrace.replace( "\t", "&nbsp;&nbsp;&nbsp;&nbsp;" );
+                
+                stringBuffer.append( stackTrace );
+                
+
+                stringBuffer.append( "</h6></div>" );
+
+            }
+        }
+        
+        stringBuffer.append( "</td>" );
+
+
+        stringBuffer.append( "<td style=\"vertical-align; bottom;\" nowrap>" ).append( timeFormat.format( new Date( timeStamp ) ) + " (" + runTime + "ms)" ).append( "</td>" );
+
         switch ( status )
         {
             case FAILURE:
-                stringBuffer.append( "<td style=\"padding-top: 10px; \" align=\"center\"><span class=\"label label-danger\">Fail</span></td>" );
+                stringBuffer.append( "<td style=\"vertical-align; bottom; padding-top: 10px; \" align=\"center\"><span class=\"label label-danger\">Fail</span></td>" );
                 break;
             case FAILURE_IGNORED:
-                stringBuffer.append( "<td style=\"padding-top: 10px; \" align=\"center\"><span class=\"label label-warning\">Ignored</span></td>" );
-                buttonType = "warning";
+                stringBuffer.append( "<td style=\"vertical-align; bottom; padding-top: 10px; \" align=\"center\"><span class=\"label label-warning\">Ignored</span></td>" );
                 break;
             case REPORT:
-                stringBuffer.append( "<td style=\"padding-top: 10px; \" align=\"center\"><span class=\"label label-info\">Information</span></td>" );
+                stringBuffer.append( "<td style=\"vertical-align; bottom; padding-top: 10px; \" align=\"center\"><span class=\"label label-info\">Information</span></td>" );
                 break;
             case SUCCESS:
-                buttonType = "success";
                 if ( fromCache )
-                    stringBuffer.append( "<td style=\"padding-top: 10px; \" align=\"center\"><span class=\"label label-success\">Pass</span></td>" );
+                    stringBuffer.append( "<td style=\"vertical-align; bottom; padding-top: 10px; \" align=\"center\"><span class=\"label label-success\">Pass</span></td>" );
                 else
-                    stringBuffer.append( "<td style=\"padding-top: 10px; \" align=\"center\"><span class=\"label label-success\"><b>Pass</b></span></td>" );
+                    stringBuffer.append( "<td style=\"vertical-align; bottom; padding-top: 10px; \" align=\"center\"><span class=\"label label-success\"><b>Pass</b></span></td>" );
                 break;
         }
 
         stringBuffer.append( "</tr>" );
-        if ( !status.equals( StepStatus.SUCCESS ) && detail != null && !detail.isEmpty() )
-        {
-            String backgroundColor = "";
-
-            stringBuffer.append( "<tr" ).append( backgroundColor ).append( "><td colspan=3><h6>" ).append( detail ).append( "</h6></td></tr>" );
-            if ( t != null )
-            {
-                stringBuffer.append( "<tr" ).append( backgroundColor ).append( "><td colSpan='3'><a class=\"btn btn-" + buttonType + "\" role=\"button\" data-toggle=\"collapse\" href=\"#exception" ).append( index )
-                        .append( "\" aria-expanded=\"false\">View Error Detail</a><div class=\"collapse\" id=\"exception" ).append( index ).append( "\"><h6>" );
-
-                stringBuffer.append( t.getMessage() ).append( "<br/>" );
-                for ( StackTraceElement s : t.getStackTrace() )
-                    stringBuffer.append( "&nbsp;&nbsp;&nbsp;&nbsp;" ).append( s.toString() ).append( "<br/>" );
-                stringBuffer.append( "</h6></div></td></tr>" );
-
-            }
-        }
+        
 
         return stringBuffer.toString();
     }
