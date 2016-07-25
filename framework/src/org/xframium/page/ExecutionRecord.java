@@ -25,6 +25,9 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.openqa.selenium.remote.server.handler.GetPageSource;
+import org.xframium.artifact.ArtifactType;
+import org.xframium.device.data.DataManager;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -371,29 +374,25 @@ public class ExecutionRecord
 
             if ( t != null )
             {
-                stringBuffer.append( "<span class=\"pull-right text-muted\" <a role=\"button\" data-toggle=\"collapse\" href=\"#exception" ).append( index )
-                        .append( "\" aria-expanded=\"false\" style=\"padding-right: 10px\">View Error Detail</a></span><div class=\"collapse\" id=\"exception" ).append( index ).append( "\"><h6><br/>" );
-
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                PrintWriter printWriter = new PrintWriter( outputStream, true );
-                t.printStackTrace( printWriter );
-                
-                String stackTrace = outputStream.toString();
-                stackTrace = stackTrace.replace( "\n", "<br/>" );
-                stackTrace = stackTrace.replace( "\t", "&nbsp;&nbsp;&nbsp;&nbsp;" );
-                
-                stringBuffer.append( stackTrace );
-                
-
-                stringBuffer.append( "</h6></div>" );
+                stringBuffer.append( "<span class=\"pull-right text-muted\" <a role=\"button\" data-toggle=\"collapse\" href=\"#exception" ).append( index );
+                stringBuffer.append( "\" aria-expanded=\"false\" style=\"padding-right: 10px\">View Error Detail</a></span>" );
 
             }
+        }
+        else if ( type.equals( "KWSDumpState" ) )
+        {
+            stringBuffer.append( "<span class=\"pull-right\" <a role=\"button\" data-toggle=\"collapse\" href=\"#exception" ).append( index );
+            stringBuffer.append( "\" aria-expanded=\"false\" style=\"padding-right: 10px\">View Device State</a></span>" );
         }
         
         stringBuffer.append( "</td>" );
 
 
-        stringBuffer.append( "<td style=\"vertical-align; bottom;\" nowrap>" ).append( timeFormat.format( new Date( timeStamp ) ) + " (" + runTime + "ms)" ).append( "</td>" );
+        stringBuffer.append( "<td style=\"vertical-align; bottom;\" nowrap>" ).append( timeFormat.format( new Date( timeStamp ) ) + " (" + runTime + "ms)" );
+        
+        
+        
+        stringBuffer.append( "</td>" );
 
         switch ( status )
         {
@@ -415,6 +414,48 @@ public class ExecutionRecord
         }
 
         stringBuffer.append( "</tr>" );
+        
+        
+        if ( !status.equals( StepStatus.SUCCESS ) && detail != null && !detail.isEmpty() )
+        {
+
+            if ( t != null )
+            {
+                stringBuffer.append( "<tr class=\"collapse\" id=\"exception" + index + "\"><td><h6>" );
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                PrintWriter printWriter = new PrintWriter( outputStream, true );
+                t.printStackTrace( printWriter );
+                
+                String stackTrace = outputStream.toString();
+                stackTrace = stackTrace.replace( "\n", "<br/>" );
+                stackTrace = stackTrace.replace( "\t", "&nbsp;&nbsp;&nbsp;&nbsp;" );
+                
+                stringBuffer.append( stackTrace );
+                
+
+                stringBuffer.append( "</h6></td>" );
+                
+                if ( status.equals( StepStatus.FAILURE ) && DataManager.instance().isArtifactEnabled( ArtifactType.FAILURE_SOURCE ) )
+                {
+                    
+                    stringBuffer.append( "<td colSpan=\"2\" align=\"center\"><a hRef=\"failure-screenshot.png\" class=\"thumbnail\"><img class=\"img-rounded img-responsive\" src=\"failure-screenshot.png\" style=\"height: 200px;\"/></a>" );
+                    stringBuffer.append( "<a target=\"_blank\" class=\"btn btn-danger\" hRef='failureDOM.html'>View Device State</a></td>" );
+                }
+                else
+                    stringBuffer.append( "<td colSpan=\"2\"></td>" );
+                stringBuffer.append( "</tr>" );
+            }
+        }
+        else if ( type.equals( "KWSDumpState" ) )
+        {
+            stringBuffer.append( "<tr class=\"collapse\" id=\"exception" + index + "\"><td></td>" );
+            String[] files = group.split( "," );
+            
+            stringBuffer.append( "<td colSpan=\"2\" align=\"center\">" );
+            if ( files.length > 1 )
+                stringBuffer.append(  "<a hRef=\"../../artifacts/" + files[1] + "\" class=\"thumbnail\"><img class=\"img-rounded img-responsive\" src=\"../../artifacts/" + files[1] + "\" style=\"height: 200px;\"/></a>" );
+            stringBuffer.append( "<a target=\"_blank\" class=\"btn btn-success\" hRef='../../artifacts/" + files[0] + "'>View Device State</a></td></tr>" );
+        }
         
 
         return stringBuffer.toString();

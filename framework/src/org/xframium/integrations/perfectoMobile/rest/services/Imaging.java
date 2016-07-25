@@ -109,7 +109,7 @@ public interface Imaging extends PerfectoService
 	 */
 	@Operation( operationName="command" )
 	@PerfectoCommand( commandName="checkpoint", subCommandName = "text" )
-	public ImageExecution textExists( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="content" ) String content, @Parameter( name="timeout" ) Short timeout  );
+	public ImageExecution textExists( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="content" ) String content, @Parameter( name="timeout" ) Short timeout, @Parameter( name="threshold" ) Integer threshold   );
 	
 	
 	/**
