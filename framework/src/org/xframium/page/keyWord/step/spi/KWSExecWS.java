@@ -52,13 +52,17 @@ public class KWSExecWS extends AbstractKeyWordStep
     //
 
     private static final String HTTP_GET = "GET";
+    private static final String HTTP_DELETE = "DELETE";
     private static final String HTTP_POST = "POST";
+    private static final String HTTP_PUT = "PUT";
 
     private static final String TOKEN_URL = "url";
     private static final String TOKEN_METHOD = "method";
     private static final String TOKEN_TYPE = "type";
     private static final String TOKEN_PAYLOAD = "payload";
     private static final String TOKEN_MEDIA_TYPE = "media-type";
+    private static final String TOKEN_UNAME = "username";
+    private static final String TOKEN_PWD = "password";
     
     private static final String CONTENT_XML = "xml";
     private static final String CONTENT_JSON = "json";
@@ -169,6 +173,18 @@ public class KWSExecWS extends AbstractKeyWordStep
                     break;
                 }
 
+                case TOKEN_UNAME:
+                {
+                    rtn.username = param.getValue();
+                    break;
+                }
+
+                case TOKEN_PWD:
+                {
+                    rtn.password = param.getValue();
+                    break;
+                }
+
                 case TOKEN_PAYLOAD:
                 {
                     rtn.payload = (String) getParameterValue( param, contextMap, dataMap );
@@ -253,18 +269,22 @@ public class KWSExecWS extends AbstractKeyWordStep
     {
         Responce rtn = new Responce();
 
-        HttpURLConnection connection = null;
         String targetURL = buildURL( callDetails );
-        
+
+        HttpURLConnection con = null;
+
         try
         {
             URL obj = new URL( targetURL );
             
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con = (HttpURLConnection) obj.openConnection();
             con.setRequestMethod( callDetails.method );
             con.setRequestProperty("User-Agent", "Java Program");
 
-            if ( HTTP_GET.equals( callDetails.method ))
+            setBasicAuthIfRequested( con, callDetails );
+
+            if (( HTTP_GET.equalsIgnoreCase( callDetails.method )) ||
+                ( HTTP_DELETE.equalsIgnoreCase( callDetails.method )))
             {
                 int responseCode = con.getResponseCode();
                 
@@ -284,7 +304,8 @@ public class KWSExecWS extends AbstractKeyWordStep
                     rtn.payload = response.toString();
                 }
             }
-            else if ( HTTP_POST.equals( callDetails.method ))
+            else if (( HTTP_POST.equals( callDetails.method )) ||
+                     ( HTTP_PUT.equals( callDetails.method )))
             {
                 con.setDoOutput(true);
                 con.setRequestProperty("Content-Type", callDetails.media_type);
@@ -294,7 +315,7 @@ public class KWSExecWS extends AbstractKeyWordStep
 		os.flush();
                 
                 int responseCode = con.getResponseCode();
-                
+
                 if (responseCode == HttpURLConnection.HTTP_OK ) // success
                 { 
                     BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -303,7 +324,7 @@ public class KWSExecWS extends AbstractKeyWordStep
                     
                     while ((inputLine = in.readLine()) != null)
                     {
-                        response.append(inputLine);
+                        response.append(inputLine).append("\n");
                     }
                     
                     in.close();
@@ -311,15 +332,29 @@ public class KWSExecWS extends AbstractKeyWordStep
                     
                     rtn.payload = response.toString();
                 }
+                else
+                {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
+                    
+                    while ((inputLine = in.readLine()) != null)
+                    {
+                        response.append(inputLine).append("\n");
+                    }
+                    
+                    in.close();
+                    os.close();
+                    
+                    throw new IllegalStateException( response.toString() );
+                }
             }
-
-            con.disconnect();
         }        
         finally
         {
-            if(connection != null)
+            if( con != null)
             {
-                connection.disconnect(); 
+                con.disconnect(); 
             }
         }
 
@@ -332,7 +367,7 @@ public class KWSExecWS extends AbstractKeyWordStep
 
         rtn.append( callDetails.url );
 
-        if ( HTTP_GET.equalsIgnoreCase( callDetails.method ))
+        if ( callDetails.parameters.size() > 0 )
         {
             rtn.append( PATH_DIVIDER );
             
@@ -405,12 +440,26 @@ public class KWSExecWS extends AbstractKeyWordStep
         }
     }
 
+    private void setBasicAuthIfRequested( HttpURLConnection con, CallDetails callDetails )
+    {
+        if (( callDetails.username != null ) &&
+            ( callDetails.password != null ))
+        {
+            String userpass = callDetails.username + ":" + callDetails.password;
+            String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
+
+            con.setRequestProperty ("Authorization", basicAuth);
+        }
+    }
+
     private class CallDetails
     {
         public String url = null;
         public String method = null;
         public String media_type = null;
         public String type = null;
+        public String username = null;
+        public String password = null;
         public ArrayList<CallParameter> parameters = new ArrayList<CallParameter>();
         public String payload = null;
 
