@@ -449,6 +449,7 @@ public abstract class AbstractElement implements Element
         boolean success = false;
         try
         {
+            
             returnValue = _waitFor( timeOut, timeUnit, waitType, value );
             success = true;
             

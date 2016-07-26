@@ -261,6 +261,7 @@
       <simpleType>
         <restriction base="string">
           <enumeration value="XML" />
+          <enumeration value="EXCEL" />
           <enumeration value="LOCAL" />
         </restriction>
       </simpleType>
@@ -296,6 +297,7 @@
         <restriction base="string">
           <enumeration value="XML" />
           <enumeration value="BDD" />
+          <enumeration value="CSV" />
         </restriction>
       </simpleType>
     </attribute>
