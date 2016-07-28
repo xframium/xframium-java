@@ -17,6 +17,7 @@
 	<complexType name="Application">
 		<sequence>
 			<element name="capability" type="tns:DeviceCapability" minOccurs="0" maxOccurs="unbounded" />
+			<element name="objectCapability" type="tns:ObjectDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
 		</sequence>
 		<attribute name="name" type="string" use="required" />
 		<attribute name="appPackage" type="string" use="optional" />
@@ -34,7 +35,6 @@
 					<simpleType>
 						<restriction base="string">
 							<enumeration value="BOOLEAN" />
-							<enumeration value="OBJECT" />
 							<enumeration value="PLATFORM" />
 							<enumeration value="STRING" />
 						</restriction>
@@ -44,4 +44,32 @@
 		</simpleContent>
 	</complexType>
 
+	<!-- ObjectDeviceCapability is required whtne the Capability Class is Object  -->
+	<complexType name="ObjectDeviceCapability">
+		<sequence>
+			<element name="capabilities" type="tns:Capabilities" minOccurs="0" maxOccurs="unbounded" />
+		</sequence>
+		<attribute name="name" type="string" use="required" />
+	</complexType>
+
+	<complexType name="Capabilities">
+		<sequence>
+			<element name="options" type="tns:Options" minOccurs="0" maxOccurs="unbounded" />
+		</sequence>
+		<attribute name="factoryName" use="required">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="ChromeOptions" />
+				</restriction>
+			</simpleType>
+		</attribute>
+	</complexType>
+	
+	<complexType name="Options">
+		<simpleContent>
+			<extension base="string">
+				<attribute name="name" type="string" use="required" />
+			</extension>
+		</simpleContent>
+	</complexType>
 </schema>
