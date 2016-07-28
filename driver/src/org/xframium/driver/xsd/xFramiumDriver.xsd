@@ -45,7 +45,6 @@
   <complexType name="xDevice">
     <sequence>
       <element name="capability" type="tns:xDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
-      <element name="objectCapability" type="tns:xObjectDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="name" type="string" use="required" />
     <attribute name="manufacturer" type="string" use="required" />
@@ -91,7 +90,6 @@
   <complexType name="xApplication">
     <sequence>
       <element name="capability" type="tns:xDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
-      <element name="objectCapability" type="tns:xObjectDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="fileName" type="string" use="optional" />
     <attribute name="provider" use="optional" default="LOCAL">
@@ -263,6 +261,7 @@
       <simpleType>
         <restriction base="string">
           <enumeration value="XML" />
+          <enumeration value="EXCEL" />
           <enumeration value="LOCAL" />
         </restriction>
       </simpleType>
@@ -298,6 +297,7 @@
         <restriction base="string">
           <enumeration value="XML" />
           <enumeration value="BDD" />
+          <enumeration value="CSV" />
         </restriction>
       </simpleType>
     </attribute>
@@ -372,7 +372,6 @@
           <enumeration value="STATE" />
           <enumeration value="ALERT" />
           <enumeration value="SQL" />
-          <enumeration value="NAVIGATE" />
         </restriction>
       </simpleType>
     </attribute>
@@ -445,32 +444,6 @@
     <attribute name="name" type="string" use="optional" />
   </complexType>
 
-	<complexType name="xObjectDeviceCapability">
-		<sequence>
-			<element name="capabilities" type="tns:xCapabilities" minOccurs="0" maxOccurs="unbounded" />
-		</sequence>
-		<attribute name="name" type="string" use="required" />
-	</complexType>
 
-	<complexType name="xCapabilities">
-		<sequence>
-			<element name="options" type="tns:xOptions" minOccurs="0" maxOccurs="unbounded" />
-		</sequence>
-		<attribute name="factoryName" use="required">
-			<simpleType>
-				<restriction base="string">
-					<enumeration value="CHROMEOPTIONS" />
-				</restriction>
-			</simpleType>
-		</attribute>
-	</complexType>
-	
-	<complexType name="xOptions">
-		<simpleContent>
-			<extension base="string">
-				<attribute name="name" type="string" use="required" />
-			</extension>
-		</simpleContent>
-	</complexType>
 
 </schema>
