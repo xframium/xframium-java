@@ -53,8 +53,9 @@ import org.xframium.page.element.provider.SQLElementProvider;
 import org.xframium.page.element.provider.XMLElementProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordTest;
-import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
+import org.xframium.page.keyWord.provider.ExcelKeyWordProvider;
 import org.xframium.page.keyWord.provider.SQLKeyWordProvider;
+import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
 import org.xframium.spi.CSVRunListener;
 import org.xframium.spi.RunDetails;
 import org.xframium.utility.SeleniumSessionManager;
@@ -509,6 +510,14 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             case "XML":
             {
                 KeyWordDriver.instance().loadTests( new XMLKeyWordProvider( findFile( configFolder, new File( configProperties.getProperty( DRIVER[1] ) ) ) ) );
+                keywordsloaded = true;
+
+                break;
+            }
+            
+            case "EXCEL":
+            {
+                KeyWordDriver.instance().loadTests( new ExcelKeyWordProvider( findFile( configFolder, new File( configProperties.getProperty( DRIVER[1] ) ) ) ) );
                 keywordsloaded = true;
 
                 break;

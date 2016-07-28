@@ -91,6 +91,7 @@
           <enumeration value="VERIFY_CONTRAST" />
           <enumeration value="WINDOW" />
           <enumeration value="EXECJS" />
+          <enumeration value="EXECWS" />
           <enumeration value="COMPARE" />
           <enumeration value="STRING" />
           <enumeration value="MATH" />
@@ -184,6 +185,7 @@
     </attribute>
     <attribute name="value" type="string" use="required" />
     <attribute name="name" type="string" use="optional" />
+    <attribute name="usage" type="string" use="optional" />
 
   </complexType>
 

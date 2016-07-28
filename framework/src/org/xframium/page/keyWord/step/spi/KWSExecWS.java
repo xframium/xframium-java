@@ -52,15 +52,23 @@ public class KWSExecWS extends AbstractKeyWordStep
     //
 
     private static final String HTTP_GET = "GET";
+    private static final String HTTP_DELETE = "DELETE";
     private static final String HTTP_POST = "POST";
+    private static final String HTTP_PUT = "PUT";
 
     private static final String TOKEN_URL = "url";
     private static final String TOKEN_METHOD = "method";
     private static final String TOKEN_TYPE = "type";
     private static final String TOKEN_PAYLOAD = "payload";
+    private static final String TOKEN_MEDIA_TYPE = "media-type";
+    private static final String TOKEN_UNAME = "username";
+    private static final String TOKEN_PWD = "password";
     
     private static final String CONTENT_XML = "xml";
     private static final String CONTENT_JSON = "json";
+
+    private static final String INPUT = "input";
+    private static final String OUTPUT = "output";
 
     private static final String PATH_DIVIDER = "/";
     
@@ -82,43 +90,33 @@ public class KWSExecWS extends AbstractKeyWordStep
             throw new IllegalStateException( "Page Object was not defined" );
         }
 
-        KeyWordParameter inputSpec = null;
         CallDetails callDetails = null;
-        KeyWordParameter outputSpec = null;
         ResponceDetails responceDetails = null;
                         
-        if ( getParameterList().size() >= 2 )
+        callDetails = loadCallDetails( getParameterList(), contextMap, dataMap );
+        if ( !callDetails.valid )
         {
-            inputSpec = getParameterList().get( 0 );
-            callDetails = loadCallDetails( inputSpec );
-            if ( !callDetails.valid )
-            {
-                throwCallDetailsException( callDetails );
-            }
+            throwCallDetailsException( callDetails );
+        }
+        
+        responceDetails = loadResponceDetails( getParameterList() );
+
+        try
+        {
+            Responce result = makeCall( callDetails );
             
-            outputSpec = getParameterList().get( 1 );
-
-            responceDetails = loadResponceDetails( outputSpec );
-
-            try
+            if ( getContext() != null )
             {
-                Responce result = makeCall( callDetails );
-                
-                if ( getContext() != null )
-                {
-                    processResult( result, responceDetails, contextMap );
-                }
-            }
-            catch( Throwable e )
-            {
-                throw new IllegalStateException( "KWSExecWS failed with:", e );
+                processResult( result, responceDetails, contextMap );
             }
         }
-        else
+        catch( Throwable e )
         {
-            throw new IllegalStateException( "KWSExecWS requires two tokenized parameters" );
+            e.printStackTrace();
+            
+            throw new IllegalStateException( "KWSExecWS failed with:", e );
         }
-		
+    
         return true;
     }
 	
@@ -134,48 +132,72 @@ public class KWSExecWS extends AbstractKeyWordStep
     // Helpers
     //
 
-    private CallDetails loadCallDetails( KeyWordParameter inputSpec )
+    private CallDetails loadCallDetails( List<KeyWordParameter> paramList, Map<String, Object> contextMap, Map<String, PageData> dataMap )
     {
         CallDetails rtn = new CallDetails();
 
-        Iterator<KeyWordToken> tokens = inputSpec.getTokenList().iterator();
-        while( tokens.hasNext() )
+        Iterator<KeyWordParameter> params = paramList.iterator();
+        while( params.hasNext() )
         {
-            KeyWordToken token = tokens.next();
+            KeyWordParameter param = params.next();
 
-            switch( token.getName() )
+            if (( param.getUsage() == null ) ||
+                ( !INPUT.equalsIgnoreCase( param.getUsage() )))
+            {
+                continue;
+            }
+
+            switch( param.getName() )
             {
                 case TOKEN_URL:
                 {
-                    rtn.url = token.getValue();
+                    rtn.url = param.getValue();
                     break;
                 }
 
                 case TOKEN_METHOD:
                 {
-                    rtn.method = token.getValue();
+                    rtn.method = param.getValue();
                     break;
                 }
 
                 case TOKEN_TYPE:
                 {
-                    rtn.type = token.getValue();
+                    rtn.type = param.getValue();
+                    break;
+                }
+
+                case TOKEN_MEDIA_TYPE:
+                {
+                    rtn.media_type = param.getValue();
+                    break;
+                }
+
+                case TOKEN_UNAME:
+                {
+                    rtn.username = param.getValue();
+                    break;
+                }
+
+                case TOKEN_PWD:
+                {
+                    rtn.password = param.getValue();
                     break;
                 }
 
                 case TOKEN_PAYLOAD:
                 {
-                    rtn.pathToPayload = token.getValue();
+                    rtn.payload = (String) getParameterValue( param, contextMap, dataMap );
                     break;
                 }
 
                 default:
                 {
-                    CallParameter param = new CallParameter();
+                    CallParameter cparam = new CallParameter();
                     
-                    param.name = token.getName();
-                    param.value = token.getValue();
-                    rtn.parameters.add( param );
+                    cparam.name = param.getName();
+                    cparam.value = param.getValue();
+                    rtn.parameters.add( cparam );
                     
                     break;
                 }
@@ -186,7 +208,7 @@ public class KWSExecWS extends AbstractKeyWordStep
                      ( rtn.method != null ) &&
                      ( rtn.type != null ) &&
                      (( !rtn.method.equalsIgnoreCase( HTTP_POST )) ||
-                      (( rtn.method.equalsIgnoreCase( HTTP_POST )) && ( rtn.pathToPayload != null ))));
+                      (( rtn.method.equalsIgnoreCase( HTTP_POST )) && ( rtn.payload != null ) && ( rtn.media_type != null ))));
         
         return rtn;
     }
@@ -202,31 +224,38 @@ public class KWSExecWS extends AbstractKeyWordStep
         else if ( callDetails.type == null )
             errorMsg = "Call type token is missing";
         else if (( callDetails.method.equalsIgnoreCase( HTTP_POST ) ) &&
-                 ( callDetails.pathToPayload == null ))
-            errorMsg = "Payload token is missing for a call of type post";                          
+                 (( callDetails.payload == null ) ||
+                  ( callDetails.media_type == null )))
+            errorMsg = "Payload or media type token is missing for a call of type post";                          
 
         throw new IllegalStateException( errorMsg );
     }
 
-    private ResponceDetails loadResponceDetails( KeyWordParameter outputSpec )
+    private ResponceDetails loadResponceDetails( List<KeyWordParameter> paramList )
     {
         ResponceDetails rtn = new ResponceDetails();
 
-        Iterator<KeyWordToken> tokens = outputSpec.getTokenList().iterator();
-        while( tokens.hasNext() )
+        Iterator<KeyWordParameter> params = paramList.iterator();
+        while( params.hasNext() )
         {
-            KeyWordToken token = tokens.next();
+            KeyWordParameter param = params.next();
 
-            if ( TOKEN_TYPE.equalsIgnoreCase( token.getName() ))
+            if (( param.getUsage() == null ) ||
+                ( !OUTPUT.equalsIgnoreCase( param.getUsage() )))
             {
-                rtn.type = token.getValue();
+                continue;
+            }
+
+            if ( TOKEN_TYPE.equalsIgnoreCase( param.getName() ))
+            {
+                rtn.type = param.getValue();
             }
             else
             {
                 ResponceVariable var = new ResponceVariable();
 
-                var.name = token.getName();
-                var.path = token.getValue();
+                var.name = param.getName();
+                var.path = param.getValue();
 
                 rtn.parameters.add( var );
             }
@@ -240,40 +269,92 @@ public class KWSExecWS extends AbstractKeyWordStep
     {
         Responce rtn = new Responce();
 
-        HttpURLConnection connection = null;
         String targetURL = buildURL( callDetails );
-        
+
+        HttpURLConnection con = null;
+
         try
         {
             URL obj = new URL( targetURL );
             
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-            con.setRequestMethod( HTTP_GET );
+            con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod( callDetails.method );
             con.setRequestProperty("User-Agent", "Java Program");
-            
-            int responseCode = con.getResponseCode();
-            
-            if (responseCode == HttpURLConnection.HTTP_OK ) // success
-            { 
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                StringBuffer response = new StringBuffer();
+
+            setBasicAuthIfRequested( con, callDetails );
+
+            if (( HTTP_GET.equalsIgnoreCase( callDetails.method )) ||
+                ( HTTP_DELETE.equalsIgnoreCase( callDetails.method )))
+            {
+                int responseCode = con.getResponseCode();
                 
-                while ((inputLine = in.readLine()) != null)
-                {
-                    response.append(inputLine);
+                if (responseCode == HttpURLConnection.HTTP_OK ) // success
+                { 
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
+                    
+                    while ((inputLine = in.readLine()) != null)
+                    {
+                        response.append(inputLine);
+                    }
+                    
+                    in.close();
+                    
+                    rtn.payload = response.toString();
                 }
+            }
+            else if (( HTTP_POST.equals( callDetails.method )) ||
+                     ( HTTP_PUT.equals( callDetails.method )))
+            {
+                con.setDoOutput(true);
+                con.setRequestProperty("Content-Type", callDetails.media_type);
                 
-                in.close();
+                OutputStream os = con.getOutputStream();
+		os.write(callDetails.payload.getBytes());
+		os.flush();
                 
-		rtn.payload = response.toString();
+                int responseCode = con.getResponseCode();
+
+                if (responseCode == HttpURLConnection.HTTP_OK ) // success
+                { 
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
+                    
+                    while ((inputLine = in.readLine()) != null)
+                    {
+                        response.append(inputLine).append("\n");
+                    }
+                    
+                    in.close();
+                    os.close();
+                    
+                    rtn.payload = response.toString();
+                }
+                else
+                {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
+                    
+                    while ((inputLine = in.readLine()) != null)
+                    {
+                        response.append(inputLine).append("\n");
+                    }
+                    
+                    in.close();
+                    os.close();
+                    
+                    throw new IllegalStateException( response.toString() );
+                }
             }
         }        
         finally
         {
-            if(connection != null)
+            if( con != null)
             {
-                connection.disconnect(); 
+                con.disconnect(); 
             }
         }
 
@@ -285,16 +366,20 @@ public class KWSExecWS extends AbstractKeyWordStep
         StringBuilder rtn = new StringBuilder();
 
         rtn.append( callDetails.url );
-        rtn.append( PATH_DIVIDER );
 
-        Iterator<CallParameter> params = callDetails.parameters.iterator();
-        while( params.hasNext() )
+        if ( callDetails.parameters.size() > 0 )
         {
-            CallParameter param = params.next();
-
-            rtn.append( param.name );
             rtn.append( PATH_DIVIDER );
-            rtn.append( param.value );
+            
+            Iterator<CallParameter> params = callDetails.parameters.iterator();
+            while( params.hasNext() )
+            {
+                CallParameter param = params.next();
+                
+                rtn.append( param.name );
+                rtn.append( PATH_DIVIDER );
+                rtn.append( param.value );
+            }
         }
 
         return rtn.toString();
@@ -355,13 +440,28 @@ public class KWSExecWS extends AbstractKeyWordStep
         }
     }
 
+    private void setBasicAuthIfRequested( HttpURLConnection con, CallDetails callDetails )
+    {
+        if (( callDetails.username != null ) &&
+            ( callDetails.password != null ))
+        {
+            String userpass = callDetails.username + ":" + callDetails.password;
+            String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
+
+            con.setRequestProperty ("Authorization", basicAuth);
+        }
+    }
+
     private class CallDetails
     {
         public String url = null;
         public String method = null;
+        public String media_type = null;
         public String type = null;
+        public String username = null;
+        public String password = null;
         public ArrayList<CallParameter> parameters = new ArrayList<CallParameter>();
-        public String pathToPayload = null;
+        public String payload = null;
 
         public boolean valid = false;
     }

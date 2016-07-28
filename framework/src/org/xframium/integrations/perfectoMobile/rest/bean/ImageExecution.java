@@ -46,8 +46,42 @@ public class ImageExecution extends AbstractBean
 	/** The status. */
 	@FieldDescriptor ( fieldPath="returnValue" )
 	private String status;
+	
+	@FieldDescriptor ( fieldPath="screenAnalysis.resultRegion.top" )
+    private String top;
+	
+	@FieldDescriptor ( fieldPath="screenAnalysis.resultRegion.left" )
+    private String left;
+	
+	@FieldDescriptor ( fieldPath="screenAnalysis.analyzedRegion.width" )
+    private String screenWidth;
+	
+	@FieldDescriptor ( fieldPath="screenAnalysis.analyzedRegion.height" )
+    private String screenHeight;
+	
+	
 
-	/**
+	public String getScreenWidth()
+    {
+        return screenWidth;
+    }
+
+    public void setScreenWidth( String screenWidth )
+    {
+        this.screenWidth = screenWidth;
+    }
+
+    public String getScreenHeight()
+    {
+        return screenHeight;
+    }
+
+    public void setScreenHeight( String screenHeight )
+    {
+        this.screenHeight = screenHeight;
+    }
+
+    /**
 	 * Gets the width.
 	 *
 	 * @return the width
@@ -127,14 +161,31 @@ public class ImageExecution extends AbstractBean
 		this.status = status;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		return "Imaging [width=" + width + ", height=" + height + ", grade=" + grade + ", status=" + status + "]";
-	}
+	public String getTop()
+    {
+        return top;
+    }
+
+    public void setTop( String top )
+    {
+        this.top = top;
+    }
+
+    public String getLeft()
+    {
+        return left;
+    }
+
+    public void setLeft( String left )
+    {
+        this.left = left;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "ImageExecution [width=" + width + ", height=" + height + ", grade=" + grade + ", status=" + status + ", top=" + top + ", left=" + left + ", screenWidth=" + screenWidth + ", screenHeight=" + screenHeight + "]";
+    }
 
 	
 	

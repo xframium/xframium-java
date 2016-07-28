@@ -419,8 +419,8 @@ public class PageManager
     public void addExecutionLog( String executionId, String deviceName, String group, String name, String type, long timestamp, long runLength, StepStatus status, String detail, Throwable t, int threshold, String description, boolean fromCache, String[] parameterArray )
     {
         List<Object> arrayList = new ArrayList<Object>( 10 );
-        arrayList.add( group );
         arrayList.add( name );
+        arrayList.add( group );
         
         if ( parameterArray != null )
         {
@@ -448,8 +448,6 @@ public class PageManager
      */
     public void setThrowable( Throwable t )
     {
-        if ( t != null )
-            t.fillInStackTrace();
     	localException.set( t );
     }
     

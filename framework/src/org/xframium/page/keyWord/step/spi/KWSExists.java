@@ -50,7 +50,7 @@ public class KWSExists extends AbstractKeyWordStep
 			throw new IllegalStateException( "There was no Page Object defined" );
 		
 		Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap );
-		
+
 		boolean returnValue = currentElement.isPresent();
 		
 		if ( getContext() != null )

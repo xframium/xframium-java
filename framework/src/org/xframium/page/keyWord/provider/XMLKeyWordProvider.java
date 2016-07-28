@@ -250,7 +250,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	                readElements( new FileInputStream( findFile( new File( imp.getFileName() ) ) ), imp.isIncludeTests(), imp.isIncludeFunctions() );
 	            else if ( imp.getFileName().toLowerCase().endsWith( ".bdd" ) )
 	            {
-	                Parser bddParser = new Parser( new XMLFormatter() );
+	                Parser bddParser = new Parser( new XMLFormatter( PageDataManager.instance().getDataProvider() ) );
 	                
 	                byte[] buffer = new byte[512];
 	                int bytesRead = 0;
@@ -380,8 +380,8 @@ public class XMLKeyWordProvider implements KeyWordProvider
 
 	    for ( Parameter p : pList )
 	    {
-	        
-	        KeyWordParameter kp = new KeyWordParameter( ParameterType.valueOf( p.getType() ), p.getValue() );
+	        ParameterType ptype = ParameterType.valueOf( p.getType() );
+	        KeyWordParameter kp = new KeyWordParameter( ptype, p.getValue(), p.getName(), p.getUsage() );
 	        
 	        if ( p.getToken() != null && !p.getToken().isEmpty() )
 	        {
@@ -391,15 +391,15 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	            }
 	        }
 	        
-	        if ( p.equals( ParameterType.FILE ) )
+	        if ( ParameterType.FILE.equals( ptype ))
 	        {
 	            File dataFile = new File( p.getValue() );
 	            if ( dataFile.isFile() )
 	            {
 	                try
 	                {
-    	                kp.setValue( readFile( new FileInputStream( dataFile ) ) );
-    	                kp.setFileName( dataFile.getAbsolutePath() );
+                            kp.setValue( readFile( new FileInputStream( dataFile ) ) );
+                            kp.setFileName( dataFile.getAbsolutePath() );
 	                }
 	                catch( FileNotFoundException e )
 	                {

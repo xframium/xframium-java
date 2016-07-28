@@ -52,7 +52,8 @@ public class KWSDumpState extends AbstractKeyWordStep
         File useFolder = new File( rootFolder, "artifacts" );
         useFolder.mkdirs();
         
-        
+        File screenFile = null;
+        File domFile = null;;
         
         if ( webDriver instanceof TakesScreenshot )
         {
@@ -60,15 +61,13 @@ public class KWSDumpState extends AbstractKeyWordStep
             try
             {
                 byte[] screenShot = ( ( TakesScreenshot ) webDriver ).getScreenshotAs( OutputType.BYTES );
-                File randomFile = File.createTempFile( "screenshot", ".png", useFolder );
-                randomFile.getParentFile().mkdirs();
-                os = new BufferedOutputStream( new FileOutputStream( randomFile ) );
+                
+                screenFile = File.createTempFile( "state", ".png", useFolder );
+                screenFile.getParentFile().mkdirs();
+                os = new BufferedOutputStream( new FileOutputStream( screenFile ) );
                 os.write( screenShot );
                 os.flush();
                 os.close();
-                String data = "<a hRef=\"../../artifacts/" + randomFile.getName() + "\" class=\"thumbnail\"><img class=\"img-rounded img-responsive\" src=\"../../artifacts/" + randomFile.getName() + "\" style=\"height: 200px;\"/></a>"; 
-
-                PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), data, "", startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, getThreshold(), getDescription(), false, null );
             }
             catch( Exception e )
             {
@@ -85,10 +84,10 @@ public class KWSDumpState extends AbstractKeyWordStep
         FileOutputStream outputStream = null;
         try
         {
-            File randomFile = File.createTempFile( "dom-", ".xml", useFolder );
-            File htmlFile = new File( randomFile.getParentFile(), randomFile.getName().replace( ".xml", ".html" ) );
+            File xmlFile = File.createTempFile( "dom-", ".xml", useFolder );
+            domFile = new File( xmlFile.getParentFile(), xmlFile.getName().replace( ".xml", ".html" ) );
             String pageSource = webDriver.getPageSource();
-            outputStream = new FileOutputStream( randomFile );
+            outputStream = new FileOutputStream( xmlFile );
             if ( ApplicationRegistry.instance().getAUT().isWeb() )
             	outputStream.write( XMLEscape.toXML( pageSource ).getBytes() );
             else
@@ -101,12 +100,10 @@ public class KWSDumpState extends AbstractKeyWordStep
             stringBuilder.append( "<html><head><link href=\"http://www.xframium.org/output/assets/css/prism.css\" rel=\"stylesheet\"><script src=\"http://www.xframium.org/output/assets/js/prism.js\"></script>" );
             stringBuilder.append( "</script></head><body><pre class\"line-numbers\"><code class=\"language-markup\">" + pageSource.replace( "<", "&lt;" ).replace( ">", "&gt;" ).replace( "\t", "  ") + "</code></pre></body></html>" );
 
-            outputStream = new FileOutputStream( htmlFile );
+            outputStream = new FileOutputStream( domFile );
             outputStream.write( stringBuilder.toString().getBytes() );
             outputStream.flush();
-            outputStream.close();
-            
-            PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), "<a target=\"_blank\" class=\"btn btn-primary\" hRef='../../artifacts/" + htmlFile.getName() + "' >Device State</a>", "", startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, getThreshold(), getDescription(), false, null );            
+            outputStream.close();                        
         }
         catch( Exception e )
         {
@@ -117,6 +114,10 @@ public class KWSDumpState extends AbstractKeyWordStep
             if ( outputStream != null )
                 try{ outputStream.close(); } catch( Exception e ) {}
         }
+        
+        String files = domFile.getName() + ( screenFile != null ? ( "," + screenFile.getName() ) : "" );
+        
+        PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), files, getName(), "KWSDumpState", startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, getThreshold(), getDescription(), false, null );
         
         return true;
 	}

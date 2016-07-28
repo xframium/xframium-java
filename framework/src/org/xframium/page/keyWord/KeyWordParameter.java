@@ -57,14 +57,33 @@ public class KeyWordParameter
     /** The value. */
     private String value;
 
+    /** The file name */
     private String fileName;
+
+    /** The name. */
+    private String name;
+
+    /** The usage. */
+    private String usage;
 
     /** The token list. */
     private List<KeyWordToken> tokenList = new ArrayList<KeyWordToken>( 10 );
 
-    public void setValue( String value )
+    /**
+     * Instantiates a new key word parameter.
+     *
+     * @param type
+     *            the type
+     * @param value
+     *            the value
+     */
+    public KeyWordParameter( ParameterType type, String value, String name, String usage )
     {
+        super();
+        this.type = type;
         this.value = value;
+        this.name = name;
+        this.usage = usage;
     }
 
     public String getFileName()
@@ -77,6 +96,26 @@ public class KeyWordParameter
         this.fileName = fileName;
     }
 
+    public String getValue()
+    {
+        return value;
+    }
+
+    public void setValue( String value )
+    {
+        this.value = value;
+    }
+    
+    public String getName()
+    {
+        return name;
+    }
+
+    public String getUsage()
+    {
+        return usage;
+    }
+    
     /**
      * Gets the token list.
      *
@@ -86,35 +125,10 @@ public class KeyWordParameter
     {
         return tokenList;
     }
-
-    /**
-     * Instantiates a new key word parameter.
-     *
-     * @param type
-     *            the type
-     * @param value
-     *            the value
-     */
-    public KeyWordParameter( ParameterType type, String value )
-    {
-        super();
-        this.type = type;
-        this.value = value;
-    }
     
     public void addToken( KeyWordToken token )
     {
         tokenList.add( token );
-    }
-
-    /**
-     * Gets the value.
-     *
-     * @return the value
-     */
-    public String getValue()
-    {
-        return value;
     }
 
     /**
