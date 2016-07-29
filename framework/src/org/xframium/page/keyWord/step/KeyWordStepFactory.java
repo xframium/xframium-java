@@ -57,6 +57,7 @@ import org.xframium.page.keyWord.step.spi.KWSGetCookies;
 import org.xframium.page.keyWord.step.spi.KWSLoop;
 import org.xframium.page.keyWord.step.spi.KWSMath;
 import org.xframium.page.keyWord.step.spi.KWSMouse;
+import org.xframium.page.keyWord.step.spi.KWSNavigate;
 import org.xframium.page.keyWord.step.spi.KWSOpenPage;
 import org.xframium.page.keyWord.step.spi.KWSPerfectoScript;
 import org.xframium.page.keyWord.step.spi.KWSReport;
@@ -154,6 +155,7 @@ public class KeyWordStepFactory
         addKeyWord( "STATE", KWSDumpState.class );
         addKeyWord( "ALERT", KWSAlert.class );
         addKeyWord( "SQL", KWSSQL.class );
+        addKeyWord( "NAVIGATE", KWSNavigate.class );
     }
 
     /**
