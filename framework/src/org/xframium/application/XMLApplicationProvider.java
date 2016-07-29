@@ -24,15 +24,20 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import org.openqa.selenium.Platform;
 import org.xframium.application.xsd.Application;
+import org.xframium.application.xsd.Capabilities;
 import org.xframium.application.xsd.DeviceCapability;
+import org.xframium.application.xsd.ObjectDeviceCapability;
 import org.xframium.application.xsd.ObjectFactory;
+import org.xframium.application.xsd.Options;
 import org.xframium.application.xsd.RegistryRoot;
 
 // TODO: Auto-generated Javadoc
@@ -136,7 +141,12 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
      */
     private void parseApplication( Application app )
     {
+		String driverName = "";
+		List<String> list = null;
+		String factoryName = null;
+		Map<String, List<String>> browserOptionMap = null;
         Map<String, Object> capabilities = new HashMap<String, Object>( 10 );
+        
         if ( app.getCapability() != null )
         {
             for ( DeviceCapability cap : app.getCapability() )
@@ -145,10 +155,6 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
                 {
                     case "BOOLEAN":
                         capabilities.put( cap.getName(), Boolean.parseBoolean( cap.getValue() ) );
-                        break;
-
-                    case "OBJECT":
-                        capabilities.put( cap.getName(), cap.getValue() );
                         break;
 
                     case "STRING":
@@ -162,6 +168,39 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
             }
         }
 
+      //Parse the Object Capability element for browser options
+  		if ( app.getObjectCapability() != null )
+  		{
+  		    for ( ObjectDeviceCapability cap : app.getObjectCapability() )
+  		    {
+  		    	browserOptionMap = new HashMap<String, List<String>>();
+  		    	
+  		    	if ( cap.getCapabilities() != null )
+  		    	{
+  		    		for ( Capabilities objCapabilities : cap.getCapabilities() ) 
+  		    		{
+  		    			factoryName = objCapabilities.getFactoryName();
+  		    			
+  		    			if ( objCapabilities.getOptions() != null )
+  		    			{
+  		    				for ( Options option : objCapabilities.getOptions() )
+  		    				{
+  		    					if (browserOptionMap.get(option.getName()) == null) {
+  		    						list = new ArrayList<String>();
+
+  		    					} else {
+  		    						list = browserOptionMap.get(option.getName());
+
+  		    					}
+  		    					list.add(option.getValue());
+  		    					browserOptionMap.put(option.getName(), list);
+  		    				}
+  		    			}
+  		    		}
+  		    	}
+  		    	capabilities.put(factoryName, browserOptionMap);
+  		    }
+  		}
         ApplicationRegistry.instance().addApplicationDescriptor( new ApplicationDescriptor( app.getName(), "", app.getAppPackage(), app.getBundleId(), app.getUrl(), app.getIosInstall(), app.getAndroidInstall(), capabilities ) );
     }
 

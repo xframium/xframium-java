@@ -25,15 +25,18 @@ package org.xframium.device.factory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.xframium.browser.capabilities.BrowserCapabilityManager;
 import org.xframium.device.SimpleDevice;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.cloud.action.CloudActionProvider;
-import org.xframium.device.cloud.xsd.Cloud;
 import org.xframium.device.interrupt.DeviceInterrupt;
 import org.xframium.device.interrupt.DeviceInterrupt.INTERRUPT_TYPE;
 import org.xframium.device.interrupt.DeviceInterruptFactory;
@@ -143,6 +146,37 @@ public abstract class AbstractDriverFactory implements DriverFactory
 			caps.setCapability( name, currentDevice.getCapabilities().get( name ) );
 		
 		
+	}
+	
+	/**
+	 * This method sets the browser capability to the Desired Capabilities
+	 * @param Object - current device Object value
+	 * @param DesiredCapabilities
+	 * @param String - name of the option
+	 * @return DesiredCapabilities
+	 */
+	protected DesiredCapabilities setCapabilities(Object value, DesiredCapabilities dc, String name) {
+		if (value instanceof Boolean)
+		{
+			dc.setCapability( name, value );
+		}
+		
+		else if (value instanceof String) 
+		{
+			dc.setCapability( name, value );
+		}
+		
+		else if (value instanceof Platform) 
+		{
+			dc.setCapability( name, value );
+		}
+		
+		else if (value instanceof Map) 
+		{
+			dc = BrowserCapabilityManager.instance().getBrowsercapabilityFactory(name)
+					.createBrowserOptions(dc, (Map<String,List<String>>)value);
+		}
+		return dc;
 	}
 
 }

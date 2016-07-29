@@ -27,7 +27,6 @@ import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
@@ -147,13 +146,15 @@ public class WEBDriverFactory extends AbstractDriverFactory
 				dc.setCapability( MODEL, currentDevice.getManufacturer() );
 			
 			for ( String name : currentDevice.getCapabilities().keySet() )
-				dc.setCapability( name, currentDevice.getCapabilities().get( name ) );
+			{
+				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
+			}				
 			
 			for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
-				dc.setCapability( name, currentDevice.getCapabilities().get( name ) );
+				dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
 			
 			if ( log.isInfoEnabled() )
-                log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
+                log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc) + "\r\nagainst " + hubUrl );
 			
 			if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
 			{
@@ -161,13 +162,8 @@ public class WEBDriverFactory extends AbstractDriverFactory
     	        logPrefs.enable(LogType.BROWSER, Level.ALL);
     	        dc.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
 			}
-			
 			webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
 			webDriver.setArtifactProducer( new SeleniumArtifactProducer() );
-
-			
-			
-			
 			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 
 			Capabilities caps = ( ( RemoteWebDriver ) webDriver.getWebDriver() ).getCapabilities();
@@ -238,10 +234,12 @@ public class WEBDriverFactory extends AbstractDriverFactory
 			}
 			
 			for ( String name : currentDevice.getCapabilities().keySet() )
-                dc.setCapability( name, currentDevice.getCapabilities().get( name ) );
-            
+			{
+				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
+			}
+			
             for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
-                dc.setCapability( name, ApplicationRegistry.instance().getAUT().getCapabilities().get( name ) );
+            	dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
 			
 			if ( log.isInfoEnabled() )
                 log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
