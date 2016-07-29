@@ -28,6 +28,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
+import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.XFramiumException;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
 import org.xframium.page.BY;
 import org.xframium.page.PageManager;
@@ -233,7 +235,7 @@ public abstract class AbstractElement implements Element
 		
 		String[] tokenPair = tokenPairValue.split( "=" );
 		if ( tokenPair.length != 2 )
-			throw new IllegalArgumentException( "You must specify a token in the format of name=value" );
+			throw new ScriptConfigurationException( "You must specify a token in the format of name=value" );
 		
 		tokenMap.put( tokenPair[ 0 ].trim(), tokenPair[ 1 ].trim() );
 		
@@ -350,7 +352,10 @@ public abstract class AbstractElement implements Element
 		}
 		catch( Exception e )
 		{
-			throw new IllegalStateException( e );
+		    if ( e instanceof XFramiumException )
+                throw e;
+            else
+                throw new ScriptConfigurationException( e.getMessage() );
 		}
 		finally
 		{
@@ -376,7 +381,10 @@ public abstract class AbstractElement implements Element
         }
         catch( Exception e )
         {
-            throw new IllegalStateException( e );
+            if ( e instanceof XFramiumException )
+                throw e;
+            else
+                throw new ScriptConfigurationException( e.getMessage() );
         }
         finally
         {
@@ -402,7 +410,10 @@ public abstract class AbstractElement implements Element
 		}
 		catch( Exception e )
 		{
-			throw new IllegalStateException( e );
+		    if ( e instanceof XFramiumException )
+                throw e;
+            else
+                throw new ScriptConfigurationException( e.getMessage() );
 		}
 		finally
 		{
@@ -428,7 +439,10 @@ public abstract class AbstractElement implements Element
 		}
 		catch( Exception e )
 		{
-			throw new IllegalStateException( e );
+		    if ( e instanceof XFramiumException )
+                throw e;
+            else
+                throw new ScriptConfigurationException( e.getMessage() );
 		}
 		finally
 		{
@@ -506,7 +520,10 @@ public abstract class AbstractElement implements Element
 		}
 		catch( Exception e )
 		{
-			throw new IllegalStateException( e );
+		    if ( e instanceof XFramiumException )
+                throw e;
+            else
+                throw new ScriptConfigurationException( e.getMessage() );
 		}
 		finally
 		{
@@ -533,7 +550,10 @@ public abstract class AbstractElement implements Element
 		}
 		catch( Exception e )
 		{
-			throw new IllegalStateException( e );
+		    if ( e instanceof XFramiumException )
+                throw e;
+            else
+                throw new ScriptConfigurationException( e.getMessage() );
 		}
 		finally
 		{
@@ -565,7 +585,10 @@ public abstract class AbstractElement implements Element
         }
         catch( Exception e )
         {
-            throw new IllegalStateException( e );
+            if ( e instanceof XFramiumException )
+                throw e;
+            else
+                throw new ScriptConfigurationException( e.getMessage() );
         }
         finally
         {
@@ -593,7 +616,10 @@ public abstract class AbstractElement implements Element
 		}
 		catch( Exception e )
 		{
-			throw new IllegalStateException( e );
+		    if ( e instanceof XFramiumException )
+		        throw e;
+		    else
+		        throw new ScriptConfigurationException( e.getMessage() );
 		}
 		finally
 		{			

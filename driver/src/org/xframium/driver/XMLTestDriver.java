@@ -20,9 +20,6 @@
  *******************************************************************************/
 package org.xframium.driver;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
