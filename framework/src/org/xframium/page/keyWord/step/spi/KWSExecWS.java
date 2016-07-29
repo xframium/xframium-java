@@ -20,18 +20,18 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
-import java.io.*;
-import java.net.*;
+//import java.io.*;
+//import java.net.*;
 import java.util.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
+// import javax.xml.parsers.DocumentBuilder;
+// import javax.xml.parsers.DocumentBuilderFactory;
+// import javax.xml.xpath.XPath;
+// import javax.xml.xpath.XPathConstants;
+// import javax.xml.xpath.XPathFactory;
+// import org.w3c.dom.Document;
+// import org.w3c.dom.Node;
+// import com.jayway.jsonpath.DocumentContext;
+// import com.jayway.jsonpath.JsonPath;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -40,6 +40,8 @@ import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+
+import org.xframium.utility.WebServiceClientUtil;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -76,8 +78,8 @@ public class KWSExecWS extends AbstractKeyWordStep
     // Class Data
     //
 
-    private XPathFactory xPathFactory = XPathFactory.newInstance();
-    private DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+    // private XPathFactory xPathFactory = XPathFactory.newInstance();
+    // private DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
     /* (non-Javadoc)
      * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
@@ -90,11 +92,11 @@ public class KWSExecWS extends AbstractKeyWordStep
             throw new IllegalStateException( "Page Object was not defined" );
         }
 
-        CallDetails callDetails = null;
-        ResponceDetails responceDetails = null;
+        WebServiceClientUtil.CallDetails callDetails = null;
+        WebServiceClientUtil.ResponceDetails responceDetails = null;
                         
         callDetails = loadCallDetails( getParameterList(), contextMap, dataMap );
-        if ( !callDetails.valid )
+        if ( !callDetails.isValid() )
         {
             throwCallDetailsException( callDetails );
         }
@@ -103,12 +105,32 @@ public class KWSExecWS extends AbstractKeyWordStep
 
         try
         {
-            Responce result = makeCall( callDetails );
-            
-            if ( getContext() != null )
+            Map<String, String> data = WebServiceClientUtil.callWebService( callDetails, responceDetails );
+
+            if (( getContext() != null ) &&
+                ( data.size() > 0 ))
             {
-                processResult( result, responceDetails, contextMap );
+                Iterator<String> attrs = data.keySet().iterator();
+                while( attrs.hasNext() )
+                {
+                    String attr = attrs.next();
+                    String value = data.get( attr );
+
+                    String context_name = getContext() + "_" + attr;
+
+                    if ( log.isDebugEnabled() )
+                        log.debug( "Setting Context Data to [" + value + "] for [" + context_name + "]" );
+
+                    contextMap.put( context_name, value );
+                }
             }
+                
+            // Responce result = makeCall( callDetails );
+            
+            // if ( getContext() != null )
+            // {
+            //     processResult( result, responceDetails, contextMap );
+            // }
         }
         catch( Throwable e )
         {
@@ -132,9 +154,9 @@ public class KWSExecWS extends AbstractKeyWordStep
     // Helpers
     //
 
-    private CallDetails loadCallDetails( List<KeyWordParameter> paramList, Map<String, Object> contextMap, Map<String, PageData> dataMap )
+    private WebServiceClientUtil.CallDetails loadCallDetails( List<KeyWordParameter> paramList, Map<String, Object> contextMap, Map<String, PageData> dataMap )
     {
-        CallDetails rtn = new CallDetails();
+        WebServiceClientUtil.CallDetails rtn = new WebServiceClientUtil.CallDetails();
 
         Iterator<KeyWordParameter> params = paramList.iterator();
         while( params.hasNext() )
@@ -151,89 +173,89 @@ public class KWSExecWS extends AbstractKeyWordStep
             {
                 case TOKEN_URL:
                 {
-                    rtn.url = param.getValue();
+                    rtn.setUrl( param.getValue() );
                     break;
                 }
 
                 case TOKEN_METHOD:
                 {
-                    rtn.method = param.getValue();
+                    rtn.setMethod( param.getValue() );
                     break;
                 }
 
                 case TOKEN_TYPE:
                 {
-                    rtn.type = param.getValue();
+                    rtn.setType( param.getValue() );
                     break;
                 }
 
                 case TOKEN_MEDIA_TYPE:
                 {
-                    rtn.media_type = param.getValue();
+                    rtn.setMediaType( param.getValue() );
                     break;
                 }
 
                 case TOKEN_UNAME:
                 {
-                    rtn.username = param.getValue();
+                    rtn.setUsername( param.getValue() );
                     break;
                 }
 
                 case TOKEN_PWD:
                 {
-                    rtn.password = param.getValue();
+                    rtn.setPassword( param.getValue() );
                     break;
                 }
 
                 case TOKEN_PAYLOAD:
                 {
-                    rtn.payload = (String) getParameterValue( param, contextMap, dataMap );
+                    rtn.setPayload( (String) getParameterValue( param, contextMap, dataMap ));
                     break;
                 }
 
                 default:
                 {
-                    CallParameter cparam = new CallParameter();
+                    WebServiceClientUtil.CallParameter cparam = new WebServiceClientUtil.CallParameter();
                     
-                    cparam.name = param.getName();
-                    cparam.value = param.getValue();
-                    rtn.parameters.add( cparam );
+                    cparam.setName( param.getName() );
+                    cparam.setValue( param.getValue() );
+                    rtn.getParameters().add( cparam );
                     
                     break;
                 }
             }
         }
 
-        rtn.valid = (( rtn.url != null ) &&
-                     ( rtn.method != null ) &&
-                     ( rtn.type != null ) &&
-                     (( !rtn.method.equalsIgnoreCase( HTTP_POST )) ||
-                      (( rtn.method.equalsIgnoreCase( HTTP_POST )) && ( rtn.payload != null ) && ( rtn.media_type != null ))));
+        rtn.setValid((( rtn.getUrl() != null ) &&
+                      ( rtn.getMethod() != null ) &&
+                      ( rtn.getType() != null ) &&
+                      (( !rtn.getMethod().equalsIgnoreCase( HTTP_POST )) ||
+                       (( rtn.getMethod().equalsIgnoreCase( HTTP_POST )) && ( rtn.getPayload() != null ) && ( rtn.getMediaType() != null )))));
         
         return rtn;
     }
 
-    private void throwCallDetailsException( CallDetails callDetails )
+    private void throwCallDetailsException( WebServiceClientUtil.CallDetails callDetails )
     {
         String errorMsg = null;
         
-        if ( callDetails.url == null )
+        if ( callDetails.getUrl() == null )
             errorMsg = "URL token is missing";
-        else if ( callDetails.method == null )
+        else if ( callDetails.getMethod() == null )
             errorMsg = "Method token is missing";
-        else if ( callDetails.type == null )
+        else if ( callDetails.getType() == null )
             errorMsg = "Call type token is missing";
-        else if (( callDetails.method.equalsIgnoreCase( HTTP_POST ) ) &&
-                 (( callDetails.payload == null ) ||
-                  ( callDetails.media_type == null )))
+        else if (( callDetails.getMethod().equalsIgnoreCase( HTTP_POST ) ) &&
+                 (( callDetails.getPayload() == null ) ||
+                  ( callDetails.getMediaType() == null )))
             errorMsg = "Payload or media type token is missing for a call of type post";                          
 
         throw new IllegalStateException( errorMsg );
     }
 
-    private ResponceDetails loadResponceDetails( List<KeyWordParameter> paramList )
+    private WebServiceClientUtil.ResponceDetails loadResponceDetails( List<KeyWordParameter> paramList )
     {
-        ResponceDetails rtn = new ResponceDetails();
+        WebServiceClientUtil.ResponceDetails rtn = new WebServiceClientUtil.ResponceDetails();
 
         Iterator<KeyWordParameter> params = paramList.iterator();
         while( params.hasNext() )
@@ -248,244 +270,244 @@ public class KWSExecWS extends AbstractKeyWordStep
 
             if ( TOKEN_TYPE.equalsIgnoreCase( param.getName() ))
             {
-                rtn.type = param.getValue();
+                rtn.setType( param.getValue() );
             }
             else
             {
-                ResponceVariable var = new ResponceVariable();
+                WebServiceClientUtil.ResponceVariable var = new WebServiceClientUtil.ResponceVariable();
 
-                var.name = param.getName();
-                var.path = param.getValue();
+                var.setName( param.getName() );
+                var.setPath( param.getValue() );
 
-                rtn.parameters.add( var );
+                rtn.getParameters().add( var );
             }
         }
         
         return rtn;
     }
 
-    private Responce makeCall( CallDetails callDetails )
-        throws Exception
-    {
-        Responce rtn = new Responce();
+    // private Responce makeCall( CallDetails callDetails )
+    //     throws Exception
+    // {
+    //     Responce rtn = new Responce();
 
-        String targetURL = buildURL( callDetails );
+    //     String targetURL = buildURL( callDetails );
 
-        HttpURLConnection con = null;
+    //     HttpURLConnection con = null;
 
-        try
-        {
-            URL obj = new URL( targetURL );
+    //     try
+    //     {
+    //         URL obj = new URL( targetURL );
             
-            con = (HttpURLConnection) obj.openConnection();
-            con.setRequestMethod( callDetails.method );
-            con.setRequestProperty("User-Agent", "Java Program");
+    //         con = (HttpURLConnection) obj.openConnection();
+    //         con.setRequestMethod( callDetails.method );
+    //         con.setRequestProperty("User-Agent", "Java Program");
 
-            setBasicAuthIfRequested( con, callDetails );
+    //         setBasicAuthIfRequested( con, callDetails );
 
-            if (( HTTP_GET.equalsIgnoreCase( callDetails.method )) ||
-                ( HTTP_DELETE.equalsIgnoreCase( callDetails.method )))
-            {
-                int responseCode = con.getResponseCode();
+    //         if (( HTTP_GET.equalsIgnoreCase( callDetails.method )) ||
+    //             ( HTTP_DELETE.equalsIgnoreCase( callDetails.method )))
+    //         {
+    //             int responseCode = con.getResponseCode();
                 
-                if (responseCode == HttpURLConnection.HTTP_OK ) // success
-                { 
-                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                    String inputLine;
-                    StringBuffer response = new StringBuffer();
+    //             if (responseCode == HttpURLConnection.HTTP_OK ) // success
+    //             { 
+    //                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+    //                 String inputLine;
+    //                 StringBuffer response = new StringBuffer();
                     
-                    while ((inputLine = in.readLine()) != null)
-                    {
-                        response.append(inputLine);
-                    }
+    //                 while ((inputLine = in.readLine()) != null)
+    //                 {
+    //                     response.append(inputLine);
+    //                 }
                     
-                    in.close();
+    //                 in.close();
                     
-                    rtn.payload = response.toString();
-                }
-            }
-            else if (( HTTP_POST.equals( callDetails.method )) ||
-                     ( HTTP_PUT.equals( callDetails.method )))
-            {
-                con.setDoOutput(true);
-                con.setRequestProperty("Content-Type", callDetails.media_type);
+    //                 rtn.payload = response.toString();
+    //             }
+    //         }
+    //         else if (( HTTP_POST.equals( callDetails.method )) ||
+    //                  ( HTTP_PUT.equals( callDetails.method )))
+    //         {
+    //             con.setDoOutput(true);
+    //             con.setRequestProperty("Content-Type", callDetails.media_type);
                 
-                OutputStream os = con.getOutputStream();
-		os.write(callDetails.payload.getBytes());
-		os.flush();
+    //             OutputStream os = con.getOutputStream();
+    //     	os.write(callDetails.payload.getBytes());
+    //     	os.flush();
                 
-                int responseCode = con.getResponseCode();
+    //             int responseCode = con.getResponseCode();
 
-                if (responseCode == HttpURLConnection.HTTP_OK ) // success
-                { 
-                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                    String inputLine;
-                    StringBuffer response = new StringBuffer();
+    //             if (responseCode == HttpURLConnection.HTTP_OK ) // success
+    //             { 
+    //                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+    //                 String inputLine;
+    //                 StringBuffer response = new StringBuffer();
                     
-                    while ((inputLine = in.readLine()) != null)
-                    {
-                        response.append(inputLine).append("\n");
-                    }
+    //                 while ((inputLine = in.readLine()) != null)
+    //                 {
+    //                     response.append(inputLine).append("\n");
+    //                 }
                     
-                    in.close();
-                    os.close();
+    //                 in.close();
+    //                 os.close();
                     
-                    rtn.payload = response.toString();
-                }
-                else
-                {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-                    String inputLine;
-                    StringBuffer response = new StringBuffer();
+    //                 rtn.payload = response.toString();
+    //             }
+    //             else
+    //             {
+    //                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+    //                 String inputLine;
+    //                 StringBuffer response = new StringBuffer();
                     
-                    while ((inputLine = in.readLine()) != null)
-                    {
-                        response.append(inputLine).append("\n");
-                    }
+    //                 while ((inputLine = in.readLine()) != null)
+    //                 {
+    //                     response.append(inputLine).append("\n");
+    //                 }
                     
-                    in.close();
-                    os.close();
+    //                 in.close();
+    //                 os.close();
                     
-                    throw new IllegalStateException( response.toString() );
-                }
-            }
-        }        
-        finally
-        {
-            if( con != null)
-            {
-                con.disconnect(); 
-            }
-        }
+    //                 throw new IllegalStateException( response.toString() );
+    //             }
+    //         }
+    //     }        
+    //     finally
+    //     {
+    //         if( con != null)
+    //         {
+    //             con.disconnect(); 
+    //         }
+    //     }
 
-        return rtn;
-    }
+    //     return rtn;
+    // }
 
-    private static String buildURL( CallDetails callDetails )
-    {
-        StringBuilder rtn = new StringBuilder();
+    // private static String buildURL( CallDetails callDetails )
+    // {
+    //     StringBuilder rtn = new StringBuilder();
 
-        rtn.append( callDetails.url );
+    //     rtn.append( callDetails.url );
 
-        if ( callDetails.parameters.size() > 0 )
-        {
-            rtn.append( PATH_DIVIDER );
+    //     if ( callDetails.parameters.size() > 0 )
+    //     {
+    //         rtn.append( PATH_DIVIDER );
             
-            Iterator<CallParameter> params = callDetails.parameters.iterator();
-            while( params.hasNext() )
-            {
-                CallParameter param = params.next();
+    //         Iterator<CallParameter> params = callDetails.parameters.iterator();
+    //         while( params.hasNext() )
+    //         {
+    //             CallParameter param = params.next();
                 
-                rtn.append( param.name );
-                rtn.append( PATH_DIVIDER );
-                rtn.append( param.value );
-            }
-        }
+    //             rtn.append( param.name );
+    //             rtn.append( PATH_DIVIDER );
+    //             rtn.append( param.value );
+    //         }
+    //     }
 
-        return rtn.toString();
-    }
+    //     return rtn.toString();
+    // }
 
-    private void processResult( Responce result, ResponceDetails responceDetails, Map<String, Object> contextMap )
-        throws Exception
-    {
-        if ( CONTENT_XML.equalsIgnoreCase( responceDetails.type ))
-        {
-            //
-            // In this case, result.payload is an XML document and the paths in responceDetails.parameters are XPATH
-            // expressions
-            //
+    // private void processResult( Responce result, ResponceDetails responceDetails, Map<String, Object> contextMap )
+    //     throws Exception
+    // {
+    //     if ( CONTENT_XML.equalsIgnoreCase( responceDetails.type ))
+    //     {
+    //         //
+    //         // In this case, result.payload is an XML document and the paths in responceDetails.parameters are XPATH
+    //         // expressions
+    //         //
 
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document document = dBuilder.parse( new ByteArrayInputStream( result.payload.getBytes() ) );
-            XPath xPath = xPathFactory.newXPath();
+    //         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+    //         Document document = dBuilder.parse( new ByteArrayInputStream( result.payload.getBytes() ) );
+    //         XPath xPath = xPathFactory.newXPath();
 
-            Iterator<ResponceVariable> params = responceDetails.parameters.iterator();
-            while( params.hasNext() )
-            {
-                ResponceVariable param = params.next();
+    //         Iterator<ResponceVariable> params = responceDetails.parameters.iterator();
+    //         while( params.hasNext() )
+    //         {
+    //             ResponceVariable param = params.next();
 
-                Node node = (Node) xPath.evaluate( param.path, document, XPathConstants.NODE );
+    //             Node node = (Node) xPath.evaluate( param.path, document, XPathConstants.NODE );
 
-                String context_name = getContext() + "_" + param.name;
-                String value = node.getTextContent();
+    //             String context_name = getContext() + "_" + param.name;
+    //             String value = node.getTextContent();
 
-                if ( log.isDebugEnabled() )
-                    log.debug( "Setting Context Data to [" + value + "] for [" + context_name + "]" );
+    //             if ( log.isDebugEnabled() )
+    //                 log.debug( "Setting Context Data to [" + value + "] for [" + context_name + "]" );
 
-                contextMap.put( context_name, value );
-            }
-        }
-        else if ( CONTENT_JSON.equalsIgnoreCase( responceDetails.type ))
-        {
-            //
-            // In this case, result.payload is an JSON document and the paths in responceDetails.parameters are JASONPATH
-            // (https://github.com/jayway/JsonPath) expressions
-            //
+    //             contextMap.put( context_name, value );
+    //         }
+    //     }
+    //     else if ( CONTENT_JSON.equalsIgnoreCase( responceDetails.type ))
+    //     {
+    //         //
+    //         // In this case, result.payload is an JSON document and the paths in responceDetails.parameters are JASONPATH
+    //         // (https://github.com/jayway/JsonPath) expressions
+    //         //
 
-            DocumentContext ctx = JsonPath.parse( result.payload );
+    //         DocumentContext ctx = JsonPath.parse( result.payload );
 
-            Iterator<ResponceVariable> params = responceDetails.parameters.iterator();
-            while( params.hasNext() )
-            {
-                ResponceVariable param = params.next();
+    //         Iterator<ResponceVariable> params = responceDetails.parameters.iterator();
+    //         while( params.hasNext() )
+    //         {
+    //             ResponceVariable param = params.next();
 
-                String context_name = getContext() + "_" + param.name;
-                String value = ctx.read( param.path );
+    //             String context_name = getContext() + "_" + param.name;
+    //             String value = ctx.read( param.path );
 
-                if ( log.isDebugEnabled() )
-                    log.debug( "Setting Context Data to [" + value + "] for [" + context_name + "]" );
+    //             if ( log.isDebugEnabled() )
+    //                 log.debug( "Setting Context Data to [" + value + "] for [" + context_name + "]" );
 
-                contextMap.put( context_name, value );
-            }
-        }
-    }
+    //             contextMap.put( context_name, value );
+    //         }
+    //     }
+    // }
 
-    private void setBasicAuthIfRequested( HttpURLConnection con, CallDetails callDetails )
-    {
-        if (( callDetails.username != null ) &&
-            ( callDetails.password != null ))
-        {
-            String userpass = callDetails.username + ":" + callDetails.password;
-            String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
+    // private void setBasicAuthIfRequested( HttpURLConnection con, CallDetails callDetails )
+    // {
+    //     if (( callDetails.username != null ) &&
+    //         ( callDetails.password != null ))
+    //     {
+    //         String userpass = callDetails.username + ":" + callDetails.password;
+    //         String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
 
-            con.setRequestProperty ("Authorization", basicAuth);
-        }
-    }
+    //         con.setRequestProperty ("Authorization", basicAuth);
+    //     }
+    // }
 
-    private class CallDetails
-    {
-        public String url = null;
-        public String method = null;
-        public String media_type = null;
-        public String type = null;
-        public String username = null;
-        public String password = null;
-        public ArrayList<CallParameter> parameters = new ArrayList<CallParameter>();
-        public String payload = null;
+    // private class CallDetails
+    // {
+    //     public String url = null;
+    //     public String method = null;
+    //     public String media_type = null;
+    //     public String type = null;
+    //     public String username = null;
+    //     public String password = null;
+    //     public ArrayList<CallParameter> parameters = new ArrayList<CallParameter>();
+    //     public String payload = null;
 
-        public boolean valid = false;
-    }
+    //     public boolean valid = false;
+    // }
 
-    private class CallParameter
-    {
-        public String name = null;
-        public String value = null;
-    }
+    // private class CallParameter
+    // {
+    //     public String name = null;
+    //     public String value = null;
+    // }
 
-    private class Responce
-    {
-        String payload = null;
-    }
+    // private class Responce
+    // {
+    //     String payload = null;
+    // }
 
-    private class ResponceDetails
-    {
-        public String type = null;
-        public ArrayList<ResponceVariable> parameters = new ArrayList<ResponceVariable>();
-    }
+    // private class ResponceDetails
+    // {
+    //     public String type = null;
+    //     public ArrayList<ResponceVariable> parameters = new ArrayList<ResponceVariable>();
+    // }
 
-    private class ResponceVariable
-    {
-        public String name = null;
-        public String path = null;
-    }
+    // private class ResponceVariable
+    // {
+    //     public String name = null;
+    //     public String path = null;
+    // }
 }
