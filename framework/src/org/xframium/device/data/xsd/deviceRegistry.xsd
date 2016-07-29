@@ -50,7 +50,7 @@
 		</simpleContent>
 	</complexType>
 	
-	<!-- ObjectDeviceCapability is required whtne the Capability Class is Object  -->
+	<!-- ObjectDeviceCapability is required when the Capability Class is Object  -->
 	<complexType name="ObjectDeviceCapability">
 		<sequence>
 			<element name="capabilities" type="tns:Capabilities" minOccurs="0" maxOccurs="unbounded" />
