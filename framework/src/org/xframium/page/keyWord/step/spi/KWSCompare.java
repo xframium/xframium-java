@@ -39,8 +39,6 @@ public class KWSCompare extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
 	{
-		if ( pageObject == null )
-			throw new IllegalStateException( "Page Object was not defined" );
 
 		if ( getParameterList().size() == 2 )
 		{
