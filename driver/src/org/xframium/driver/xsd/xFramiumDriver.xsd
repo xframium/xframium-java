@@ -156,6 +156,7 @@
           <enumeration value="EXECUTION_RECORD_HTML" />
           <enumeration value="EXECUTION_RECORD_CSV" />
           <enumeration value="CONSOLE_LOG" />
+          <enumeration value="REPORTIUM" />
         </restriction>
       </simpleType>
     </attribute>
@@ -372,6 +373,7 @@
           <enumeration value="STATE" />
           <enumeration value="ALERT" />
           <enumeration value="SQL" />
+          <enumeration value="OPERATOR" />
         </restriction>
       </simpleType>
     </attribute>
