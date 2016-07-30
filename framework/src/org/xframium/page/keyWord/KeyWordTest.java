@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
 import org.xframium.exception.ObjectConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
@@ -268,7 +269,11 @@ public class KeyWordTest
 			        
 			        page = PageManager.instance().createPage( KeyWordDriver.instance().getPage( step.getPageName() ), webDriver );
 			        if ( page == null )
-			            throw new ObjectConfigurationException( step.getPageName(), null );
+			        {
+			            PageManager.instance().setThrowable( new ObjectConfigurationException( step.getPageName(), null ) );
+			            PageManager.instance().addExecutionLog( executionId, deviceName, step.getPageName(), step.getName(), "_" + step.getClass().getSimpleName(), startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE, PageManager.instance().getThrowable().getMessage(), PageManager.instance().getThrowable(), 0, "", false, new String[] { PageManager.instance().getThrowable().getMessage() } );
+			            return false;
+			        }
     				pageMap.put( step.getPageName(), page );
 			    }
 			}
@@ -280,13 +285,13 @@ public class KeyWordTest
 				if ( log.isWarnEnabled() )
 					log.warn( "***** Step [" + step.getName() + "] Failed" );
 				
-				PageManager.instance().addExecutionLog( executionId, deviceName, "", this.getName(), "Test", startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE, "", null, 0, "", false, new String[] { this.getName() } );
+				PageManager.instance().addExecutionLog( executionId, deviceName, "", this.getName(), "_Test", startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE, "", null, 0, "", false, new String[] { this.getName() } );
 				
 				if ( timed )
 					PageManager.instance().addExecutionTiming( executionId, deviceName, getName(), System.currentTimeMillis() - startTime, StepStatus.FAILURE, description, threshold );
 				
 				if ( PageManager.instance().getThrowable() == null )
-					PageManager.instance().setThrowable( new IllegalStateException( step.toError() ) );
+					PageManager.instance().setThrowable( new ScriptException( step.toError() ) );
 				
 				return false;
 

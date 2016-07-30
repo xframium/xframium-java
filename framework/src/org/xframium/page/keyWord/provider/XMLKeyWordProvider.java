@@ -96,8 +96,6 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	public XMLKeyWordProvider( String resourceName )
 	{
 		this.resourceName = resourceName;
-		this.fileName = new File(".");
-		rootFolder = fileName.getParentFile();
 	}
 
 	/*
