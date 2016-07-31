@@ -27,23 +27,26 @@ Refer to the [contributing guidelines](https://github.com/xframium/xframium-java
 xFramium development adheres to the [the Semantic Versioning guidelines](http://semver.org/) as closely as possible for all release information.  All release can be found via the [download and release notes](http://xframium.org/download.html#rn) section of the xframium.org website.
 
 ## Current Release
-1.0.2
+1.0.3
 
-Dionysus
-7/1/2016
 
- - Updated xFramium Launcher
- - Added ability to dump application state during a run
- - Updated to latest TestNG version of resolved POM issues
- - Added ability to interact with Alerts
- - New mobile responsive reporting engine
- - Added ability to generate historical reports for a run
- - Added source code formatting for state reports
- - Added SQL item lookup keyword for database checks. Allows for context storage and/or verification
- - Added cloud provider type specification
- - Added test description field and links to it on the report
- - Available devices can now be set to -1 indicating that the value should be populated from the cloud
+Hades
+8/1/2016
 
+ - Added the operator keyword for evaluating multiple parameter based conditions (see OPERATOR Keyword)
+ - Added the ability to specify the Driver Configuration via XML (see xFramium Schema)
+ - Added more logging and reporting capabilities and formatting changes including historical reports and natural language output (see an example here)
+ - Added BDD style definitions of test cases (see BDD)
+ - Added ability to define matrix style tests to support Excel and SQL based tests
+ - Added support for Perfectos upcoming cloud based Reporting Services (see Artifacts)
+ - Added multi cloud support to allow for execution across devices in multiple cloud instances (see devices)
+ - Added categorized failures. Each failure is placed in one of the following buckets
+ -     Configuration: Indicates a configuration error in the script such as mispelled page name, element name or incorrect page data definitions
+   - Cloud: Indicates a cloud/device specific issue such as unable to connect
+   - Script: Indicates a script failure such as cant locate XPATH
+   - Application: Indicates a failure in the application
+   -  Fail: Indicate a general failure
+ - Added multi cloud support to allow for execution across devices in multiple cloud instances (see devices)
 
 ## Copyright and License
 
