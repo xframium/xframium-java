@@ -29,6 +29,7 @@ xFramium development adheres to the [the Semantic Versioning guidelines](http://
 ## Current Release
 1.0.3
 
+
 Hades
 8/1/2016
 
@@ -40,13 +41,12 @@ Hades
  - Added support for Perfectos upcoming cloud based Reporting Services (see Artifacts)
  - Added multi cloud support to allow for execution across devices in multiple cloud instances (see devices)
  - Added categorized failures. Each failure is placed in one of the following buckets
- - Configuration: Indicates a configuration error in the script such as mispelled page name, element name or incorrect page data definitions
- - - Cloud: Indicates a cloud/device specific issue such as unable to connect
- - - Script: Indicates a script failure such as cant locate XPATH
- - - Application: Indicates a failure in the application
- - - Fail: Indicate a general failure
+ -     Configuration: Indicates a configuration error in the script such as mispelled page name, element name or incorrect page data definitions
+   - Cloud: Indicates a cloud/device specific issue such as unable to connect
+   - Script: Indicates a script failure such as cant locate XPATH
+   - Application: Indicates a failure in the application
+   -  Fail: Indicate a general failure
  - Added multi cloud support to allow for execution across devices in multiple cloud instances (see devices)
-
 
 ## Copyright and License
 
