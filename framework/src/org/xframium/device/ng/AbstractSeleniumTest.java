@@ -386,7 +386,7 @@ public abstract class AbstractSeleniumTest
             
             
             if( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
-                PerfectoMobile.instance().device().startDebug( connectedDevice.getExecutionId(), connectedDevice.getDeviceName() );
+                connectedDevice.getWebDriver().getCloud().getCloudActionProvider().enabledLogging( connectedDevice.getWebDriver() );
             
             TestContext ctx = new TestContext();
             ctx.currentMethod = currentMethod;
@@ -457,7 +457,8 @@ public abstract class AbstractSeleniumTest
         Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null );
 
         if( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
-            PerfectoMobile.instance().device().startDebug( map.get( DEFAULT ).getExecutionId(), map.get( DEFAULT ).getDeviceName() );
+            map.get( DEFAULT ).getWebDriver().getCloud().getCloudActionProvider().disableLogging( map.get( DEFAULT ).getWebDriver() );
+        
         
         while(( keys != null ) &&
               ( keys.hasNext() ))

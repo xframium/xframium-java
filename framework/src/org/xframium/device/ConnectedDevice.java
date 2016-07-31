@@ -101,7 +101,7 @@ public class ConnectedDevice
 	 *
 	 * @return the web driver
 	 */
-	public WebDriver getWebDriver()
+	public DeviceWebDriver getWebDriver()
 	{
 		return webDriver;
 	}

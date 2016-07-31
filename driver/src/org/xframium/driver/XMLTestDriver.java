@@ -27,6 +27,7 @@ import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.data.DataManager;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.page.PageManager;
 import org.xframium.page.keyWord.KeyWordDriver;
@@ -65,21 +66,24 @@ public class XMLTestDriver extends AbstractSeleniumTest
     			return;
     		}
     		
-    		if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) && getWebDriver() instanceof ReportiumProvider )
-            {
-    		    //
-    		    // Reportium Integration
-    		    //
-    		    String[] tags = new String[] { "xFramium" };
-    		    if ( test.getTags() != null && test.getTags().length > 0 )
-    		        tags = test.getTags();
-    
-    		    PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder().withProject(new Project(ApplicationRegistry.instance().getAUT().getName(), "1.0")).withContextTags( tags ).withWebDriver(getWebDriver() ).build();
-    		    ( (ReportiumProvider) getWebDriver() ).setReportiumClient( new ReportiumClientFactory().createPerfectoReportiumClient( perfectoExecutionContext ) );
-    		    
-                if ( ( (ReportiumProvider) getWebDriver() ).getReportiumClient() != null )
-                    ( (ReportiumProvider) getWebDriver() ).getReportiumClient().testStart( testName.getTestName(), new com.perfecto.reportium.test.TestContext() );
-            }
+    		if ( ( (DeviceWebDriver) getWebDriver() ).getCloud().getProvider().equals( "PERFECTO" ) )
+    		{
+        		if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) && getWebDriver() instanceof ReportiumProvider )
+                {
+        		    //
+        		    // Reportium Integration
+        		    //
+        		    String[] tags = new String[] { "xFramium" };
+        		    if ( test.getTags() != null && test.getTags().length > 0 )
+        		        tags = test.getTags();
+        
+        		    PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder().withProject(new Project(ApplicationRegistry.instance().getAUT().getName(), "1.0")).withContextTags( tags ).withWebDriver(getWebDriver() ).build();
+        		    ( (ReportiumProvider) getWebDriver() ).setReportiumClient( new ReportiumClientFactory().createPerfectoReportiumClient( perfectoExecutionContext ) );
+        		    
+                    if ( ( (ReportiumProvider) getWebDriver() ).getReportiumClient() != null )
+                        ( (ReportiumProvider) getWebDriver() ).getReportiumClient().testStart( testName.getTestName(), new com.perfecto.reportium.test.TestContext() );
+                }
+    		}
     		
     		if ( test.getDescription() != null && !test.getDescription().isEmpty() && getWebDriver() instanceof PropertyProvider )
     		    ( (PropertyProvider) getWebDriver() ).setProperty( "testDescription", test.getDescription() );

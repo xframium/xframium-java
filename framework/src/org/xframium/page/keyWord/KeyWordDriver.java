@@ -37,6 +37,7 @@ import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.keyWord.provider.KeyWordProvider;
+import org.xframium.page.listener.KeyWordListener;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -44,33 +45,35 @@ import org.xframium.page.keyWord.provider.KeyWordProvider;
  */
 public class KeyWordDriver
 {
-	
+
     /** The test list. */
     private List<String> testList = new ArrayList<String>( 20 );
-	
+
     /** The test map. */
     private Map<String, KeyWordTest> testMap = new HashMap<String, KeyWordTest>( 10 );
-	
+
     /** The inactive test map. */
     private Map<String, KeyWordTest> inactiveTestMap = new HashMap<String, KeyWordTest>( 10 );
-	
+
     /** The function map. */
     private Map<String, KeyWordTest> functionMap = new HashMap<String, KeyWordTest>( 10 );
-	
+
     /** The page map. */
     private Map<String, Class<Page>> pageMap = new HashMap<String, Class<Page>>( 10 );
 
     /** The context map. */
     private ThreadLocal<Map<String, Object>> contextMap = new ThreadLocal<Map<String, Object>>();
-	
+
     /** The tag map. */
-    private Map<String,List<KeyWordTest>> tagMap = new HashMap<String,List<KeyWordTest>>( 10 );
+    private Map<String, List<KeyWordTest>> tagMap = new HashMap<String, List<KeyWordTest>>( 10 );
 
     /** The singleton. */
     private static KeyWordDriver singleton = new KeyWordDriver();
 
     /** The configuration properties **/
     private Properties configProperties = new Properties();
+
+    private List<KeyWordListener> stepListenerList = new ArrayList<KeyWordListener>( 10 );
 
     /**
      * Instance.
@@ -114,9 +117,95 @@ public class KeyWordDriver
      */
     public void addPage( String pageName, Class pageClass )
     {
-        if (log.isDebugEnabled())
+        if ( log.isDebugEnabled() )
             log.debug( "Mapping Page [" + pageName + "] to [" + pageClass.getName() + "]" );
         pageMap.put( pageName, pageClass );
+    }
+
+    public void addStepListener( KeyWordListener stepListener )
+    {
+        for ( KeyWordListener s : stepListenerList )
+        {
+            if ( s.equals( stepListener ) )
+                return;
+        }
+
+        stepListenerList.add( stepListener );
+    }
+
+    public void removeStepListener( KeyWordListener stepListener )
+    {
+        stepListenerList.remove( stepListener );
+    }
+
+    public boolean notifyBeforeStep( WebDriver webDriver, KeyWordStep currentStep )
+    {
+        try
+        {
+            for ( KeyWordListener k : stepListenerList )
+            {
+                if ( !k.beforeStep( webDriver, currentStep ) )
+                    return false;
+            }
+
+            return true;
+        }
+        catch ( Exception e )
+        {
+            log.warn( "Before Step notification failed", e );
+            return true;
+        }
+    }
+
+    public void notifyAfterStep( WebDriver webDriver, KeyWordStep currentStep, StepStatus stepStatus )
+    {
+        try
+        {
+            for ( KeyWordListener k : stepListenerList )
+            {
+                k.afterStep( webDriver, currentStep, stepStatus );
+            }
+        }
+        catch ( Exception e )
+        {
+            log.warn( "After Step notification failed", e );
+
+        }
+
+    }
+
+    public boolean notifyBeforeTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+    {
+        try
+        {
+            for ( KeyWordListener k : stepListenerList )
+            {
+                if ( !k.beforeTest( webDriver, keyWordTest, contextMap, dataMap, pageMap ) )
+                    return false;
+            }
+
+            return true;
+        }
+        catch ( Exception e )
+        {
+            log.warn( "Before Test notification failed", e );
+            return true;
+        }
+    }
+
+    public void notifyAfterTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass )
+    {
+        try
+        {
+            for ( KeyWordListener k : stepListenerList )
+            {
+                k.afterTest( webDriver, keyWordTest, contextMap, dataMap, pageMap, stepPass );
+            }
+        }
+        catch ( Exception e )
+        {
+            log.warn( "After Test notification failed", e );
+        }
     }
 
     /**
@@ -127,13 +216,13 @@ public class KeyWordDriver
      */
     public void addTest( KeyWordTest test )
     {
-        if (test.isActive())
+        if ( test.isActive() )
         {
-            if (log.isInfoEnabled())
+            if ( log.isInfoEnabled() )
                 log.info( "Adding test [" + test.getName() + "]" );
             testList.add( test.getName() );
             testMap.put( test.getName(), test );
-			
+
             //
             // Add the Tagged tests
             //
@@ -145,7 +234,7 @@ public class KeyWordDriver
                     tagList = new ArrayList<KeyWordTest>( 10 );
                     tagMap.put( tag.toLowerCase(), tagList );
                 }
-			    
+
                 tagList.add( test );
             }
         }
@@ -161,9 +250,9 @@ public class KeyWordDriver
      */
     public void addFunction( KeyWordTest test )
     {
-        if (test.isActive())
+        if ( test.isActive() )
         {
-            if (log.isDebugEnabled())
+            if ( log.isDebugEnabled() )
                 log.debug( "Adding function [" + test.getName() + "]" );
             functionMap.put( test.getName(), test );
         }
@@ -194,66 +283,72 @@ public class KeyWordDriver
     /**
      * Execution function.
      *
-     * @param testName            the test name
-     * @param webDriver            the web driver
-     * @param dataMap            the data map
-     * @param pageMap the page map
+     * @param testName
+     *            the test name
+     * @param webDriver
+     *            the web driver
+     * @param dataMap
+     *            the data map
+     * @param pageMap
+     *            the page map
      * @return true, if successful
-     * @throws Exception             the exception
+     * @throws Exception
+     *             the exception
      */
-    public boolean executionFunction( String testName, WebDriver webDriver, Map<String, PageData> dataMap, Map<String,Page> pageMap ) throws Exception
+    public boolean executionFunction( String testName, WebDriver webDriver, Map<String, PageData> dataMap, Map<String, Page> pageMap ) throws Exception
     {
-        if (log.isDebugEnabled())
+        if ( log.isDebugEnabled() )
             log.debug( "Attempting to locate function/test [" + testName + "]" );
 
         KeyWordTest test = functionMap.get( testName );
 
-        if (test == null)
+        if ( test == null )
         {
             test = testMap.get( testName );
 
-            if (test == null)
+            if ( test == null )
             {
                 test = inactiveTestMap.get( testName );
 
-                if (test == null)
+                if ( test == null )
                     throw new IllegalArgumentException( "The function [" + testName + "] does not exist" );
             }
         }
-		
-        if (test.getDataProviders() != null)
+
+        if ( test.getDataProviders() != null )
         {
-            if (log.isInfoEnabled())
+            if ( log.isInfoEnabled() )
                 log.info( "Data Provider set as " + test.getDataProvidersAsString() );
 
-            for (String dataProvider : test.getDataProviders())
+            for ( String dataProvider : test.getDataProviders() )
             {
                 String dpMe = dataProvider;
                 if ( !dataMap.containsKey( dataProvider ) )
                 {
                     //
-                    // On a function call we only add the page data if it did not already exist
+                    // On a function call we only add the page data if it did
+                    // not already exist
                     //
-				    
+
                     PageData pageData = null;
                     if ( dataProvider.contains( "." ) )
                     {
                         String[] typeId = dataProvider.split( "\\." );
                         if ( typeId.length == 2 )
                         {
-                            pageData = PageDataManager.instance().getPageData( typeId[ 0 ], typeId [ 1 ] );
-                            dpMe = typeId[ 0 ];
+                            pageData = PageDataManager.instance().getPageData( typeId[0], typeId[1] );
+                            dpMe = typeId[0];
                         }
                         else
                             pageData = PageDataManager.instance().getPageData( dataProvider );
                     }
                     else
                         pageData = PageDataManager.instance().getPageData( dataProvider );
-                    
+
                     if ( pageData == null )
-                        throw new IllegalArgumentException( "Invalid page data value specified.  Ensure that [" + dataProvider + "] exists in your page data definition");
-                    
-                    if (log.isInfoEnabled())
+                        throw new IllegalArgumentException( "Invalid page data value specified.  Ensure that [" + dataProvider + "] exists in your page data definition" );
+
+                    if ( log.isInfoEnabled() )
                         log.info( "Adding " + dataProvider + " as " + pageData );
                     dataMap.put( dpMe, pageData );
                 }
@@ -263,36 +358,37 @@ public class KeyWordDriver
         return test.executeTest( webDriver, contextMap.get(), dataMap, pageMap );
     }
 
-	
     /**
      * Gets the test.
      *
-     * @param testName the test name
+     * @param testName
+     *            the test name
      * @return the test
      */
     public KeyWordTest getTest( String testName )
     {
         KeyWordTest test = testMap.get( testName );
 
-        if (test == null)
+        if ( test == null )
             test = inactiveTestMap.get( testName );
 
-        if (test == null)
+        if ( test == null )
             test = functionMap.get( testName );
-		
+
         return test;
     }
-	
+
     /**
      * Gets the tagged tests.
      *
-     * @param tagNames the tag names
+     * @param tagNames
+     *            the tag names
      * @return the tagged tests
      */
-    public Collection<KeyWordTest> getTaggedTests( String[] tagNames ) 
+    public Collection<KeyWordTest> getTaggedTests( String[] tagNames )
     {
-        Map<String,KeyWordTest> testMap = new HashMap<String,KeyWordTest>( 10 );
-	    
+        Map<String, KeyWordTest> testMap = new HashMap<String, KeyWordTest>( 10 );
+
         for ( String tagName : tagNames )
         {
             if ( log.isInfoEnabled() )
@@ -304,25 +400,26 @@ public class KeyWordDriver
                 testMap.put( t.getName(), t );
             }
         }
-	    
+
         return testMap.values();
     }
-    
+
     /**
      * Gets the tagged tests.
      *
-     * @param tagNames the tag names
+     * @param tagNames
+     *            the tag names
      * @return the tagged tests
      */
-    public Collection<KeyWordTest> getNamedTests( String[] testNames ) 
+    public Collection<KeyWordTest> getNamedTests( String[] testNames )
     {
-        Map<String,KeyWordTest> testMap = new HashMap<String,KeyWordTest>( 10 );
-        
+        Map<String, KeyWordTest> testMap = new HashMap<String, KeyWordTest>( 10 );
+
         for ( String tagName : testNames )
         {
             if ( log.isInfoEnabled() )
                 log.info( "Adding Tests by NAME [" + tagName.toLowerCase() + "]" );
-            
+
             for ( KeyWordTest t : this.testMap.values() )
             {
                 if ( tagName.contains( "*" ) )
@@ -343,14 +440,13 @@ public class KeyWordDriver
                     if ( tagName.toLowerCase().equals( t.getName().toLowerCase() ) )
                         testMap.put( t.getName(), t );
                 }
-                
-                
+
                 if ( log.isDebugEnabled() )
                     log.debug( "Adding Test [" + t.getName() + "]" );
                 testMap.put( t.getName(), t );
             }
         }
-        
+
         return testMap.values();
     }
 
@@ -370,13 +466,13 @@ public class KeyWordDriver
         boolean testStarted = false;
         long startTime = System.currentTimeMillis();
         PageManager.instance().getPageCache().clear();
-	    
-        if (log.isDebugEnabled())
+
+        if ( log.isDebugEnabled() )
             log.debug( "Attempting to locate test [" + testName + "]" );
 
         KeyWordTest test = testMap.get( testName );
 
-        if (test == null)
+        if ( test == null )
             throw new TestConfigurationException( testName );
 
         Map<String, PageData> dataMap = new HashMap<String, PageData>( 10 );
@@ -384,12 +480,12 @@ public class KeyWordDriver
 
         try
         {
-            if (test.getDataProviders() != null)
+            if ( test.getDataProviders() != null )
             {
-                if (log.isInfoEnabled())
+                if ( log.isInfoEnabled() )
                     log.info( "Data Provider set as " + test.getDataProvidersAsString() );
 
-                for (String dataProvider : test.getDataProviders())
+                for ( String dataProvider : test.getDataProviders() )
                 {
                     String dpMe = dataProvider;
                     PageData pageData = null;
@@ -398,22 +494,22 @@ public class KeyWordDriver
                         String[] typeId = dataProvider.split( "\\." );
                         if ( typeId.length == 2 )
                         {
-                            dpMe = typeId[ 0 ];
-                            pageData = PageDataManager.instance().getPageData( typeId[ 0 ], typeId [ 1 ] );
+                            dpMe = typeId[0];
+                            pageData = PageDataManager.instance().getPageData( typeId[0], typeId[1] );
                         }
                         else
                             pageData = PageDataManager.instance().getPageData( dataProvider );
                     }
                     else
                         pageData = PageDataManager.instance().getPageData( dataProvider );
-					
+
                     if ( pageData == null )
                     {
                         log.fatal( "Invalid page data value specified.  Ensure that [" + dataProvider + "] exists in your page data definition" );
                         throw new DataConfigurationException( dataProvider, null );
                     }
-					
-                    if (log.isInfoEnabled())
+
+                    if ( log.isInfoEnabled() )
                         log.info( "Adding " + dataProvider + " as " + pageData );
                     dataMap.put( dpMe, pageData );
                 }
@@ -422,10 +518,10 @@ public class KeyWordDriver
             //
             // If there was a looped driver, then add that
             //
-            if (test.getDataDriver() != null && !test.getDataDriver().isEmpty())
+            if ( test.getDataDriver() != null && !test.getDataDriver().isEmpty() )
             {
                 String[] testInfo = testName.split( "!" );
-                if (testInfo.length != 2)
+                if ( testInfo.length != 2 )
                     throw new IllegalArgumentException( "Could not extract data record from " + testName );
 
                 dataMap.put( test.getDataDriver(), PageDataManager.instance().getPageData( test.getDataDriver(), testInfo[1] ) );
@@ -442,19 +538,19 @@ public class KeyWordDriver
             return returnValue;
 
         }
-        catch (Throwable e)
+        catch ( Throwable e )
         {
             if ( !testStarted )
                 PageManager.instance().addExecutionLog( null, null, "", testName, testName, startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE, e.getMessage(), e, 0, e.getMessage(), false, new String[] { e.getMessage() } );
             if ( PageManager.instance().getThrowable() == null )
                 PageManager.instance().setThrowable( e );
-			
+
             log.error( "Error executing Test " + testName, PageManager.instance().getThrowable() );
             return false;
         }
         finally
         {
-            for (String key : dataMap.keySet())
+            for ( String key : dataMap.keySet() )
             {
                 PageDataManager.instance().putPageData( dataMap.get( key ) );
             }
@@ -480,16 +576,16 @@ public class KeyWordDriver
      */
     public String[] getTestNames( String useNames )
     {
-        if (useNames == null || useNames.isEmpty())
+        if ( useNames == null || useNames.isEmpty() )
             return getTestNames();
 
         List<String> useList = new ArrayList<String>( 5 );
 
         String[] nameArray = useNames.split( "," );
 
-        for (String name : nameArray)
+        for ( String name : nameArray )
         {
-            if (testMap.containsKey( name ))
+            if ( testMap.containsKey( name ) )
                 useList.add( name );
         }
 

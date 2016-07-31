@@ -53,235 +53,107 @@ import org.xframium.spi.Device;
 public class WEBDriverFactory extends AbstractDriverFactory
 {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.perfectoMobile.device.factory.AbstractDriverFactory#_createDriver(com
-	 * .perfectoMobile.device.Device)
-	 */
-	@Override
-	protected DeviceWebDriver _createDriver( Device currentDevice )
-	{
-		String os = currentDevice.getOs();
-		if ( os != null )
-		{
-			os = os.toUpperCase();
-			switch ( os )
-			{
-				case "IOS":
-				case "ANDROID":
-					return _createMobileDriver( currentDevice );
-					
-				case "WINDOWS":
-				case "MAC":
-				case "UNIX":
-				case "WIN8":
-				case "WIN8_1":
-				case "XP":
-					return _createDesktopDriver( currentDevice );
-					
-				default:
-					return _createMobileDriver( currentDevice );	
-			}
-		}
-		else
-			return _createMobileDriver( currentDevice );
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.perfectoMobile.device.factory.AbstractDriverFactory#_createDriver(com
+     * .perfectoMobile.device.Device)
+     */
+    @Override
+    protected DeviceWebDriver _createDriver( Device currentDevice )
+    {
+        DeviceWebDriver webDriver = null;
+        try
+        {
+            DesiredCapabilities dc = null;
+            if ( currentDevice.getBrowserName() != null && !currentDevice.getBrowserName().isEmpty() )
+                dc = new DesiredCapabilities( currentDevice.getBrowserName(), "", Platform.ANY );
+            else
+                dc = new DesiredCapabilities( "", "", Platform.ANY );
 
-	}
+            CloudDescriptor useCloud = CloudRegistry.instance().getCloud();
 
-	/**
-	 * _create desktop driver.
-	 *
-	 * @param currentDevice the current device
-	 * @return the device web driver
-	 */
-	private DeviceWebDriver _createDesktopDriver( Device currentDevice )
-	{
-		DeviceWebDriver webDriver = null;
-		try
-		{
-			DesiredCapabilities dc = new DesiredCapabilities();
-
-			CloudDescriptor useCloud = CloudRegistry.instance().getCloud();
-
-			if (useCloud.getGridInstance() != null && !useCloud.getGridInstance().isEmpty())
-			{
-				useCloud = CloudRegistry.instance().getCloud( useCloud.getGridInstance() );
-				if (useCloud == null)
-				{
-					useCloud = CloudRegistry.instance().getCloud();
-					log.warn( "A separate grid instance was specified but it does not exist in your cloud registry [" + useCloud.getGridInstance() + "] - using the Cloud instance" );
-				}
-			}
-			
-			if ( currentDevice.getCloud() != null )
-			{
-			    useCloud = CloudRegistry.instance().getCloud( currentDevice.getCloud() );
-                if (useCloud == null)
+            if ( currentDevice.getCloud() != null )
+            {
+                useCloud = CloudRegistry.instance().getCloud( currentDevice.getCloud() );
+                if ( useCloud == null )
                 {
                     useCloud = CloudRegistry.instance().getCloud();
                     log.warn( "A separate grid instance was specified but it does not exist in your cloud registry [" + currentDevice.getCloud() + "] - using the default Cloud instance" );
                 }
-			}
-
-			URL hubUrl = new URL( "http://" + useCloud.getHostName() + "/wd/hub" );
-			dc.setPlatform( Platform.ANY );
-			dc.setCapability( PLATFORM_NAME, currentDevice.getOs() );
-			if ( currentDevice.getOsVersion() != null && !currentDevice.getOsVersion().isEmpty() )
-				dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
-			dc.setCapability( BROWSER_NAME, currentDevice.getBrowserName() );
-			if ( currentDevice.getBrowserVersion() != null && !currentDevice.getBrowserVersion().isEmpty() )
-				dc.setCapability( BROWSER_VERSION, currentDevice.getBrowserVersion() );
-
-			if (useCloud.getUserName() != null && !useCloud.getUserName().isEmpty())
-				dc.setCapability( USER_NAME, useCloud.getUserName() );
-
-			if (useCloud.getPassword() != null && !useCloud.getPassword().isEmpty())
-				dc.setCapability( PASSWORD, useCloud.getPassword() );
-
-			if (currentDevice.getManufacturer() != null && !currentDevice.getManufacturer().isEmpty())
-				dc.setCapability( MANUFACTURER, currentDevice.getManufacturer() );
-			
-			if (currentDevice.getModel() != null && !currentDevice.getModel().isEmpty())
-				dc.setCapability( MODEL, currentDevice.getManufacturer() );
-			
-			for ( String name : currentDevice.getCapabilities().keySet() )
-				dc.setCapability( name, currentDevice.getCapabilities().get( name ) );
-			
-			for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
-				dc.setCapability( name, currentDevice.getCapabilities().get( name ) );
-			
-			if ( log.isInfoEnabled() )
-                log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
-			
-			if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
-			{
-    			LoggingPreferences logPrefs = new LoggingPreferences();
-    	        logPrefs.enable(LogType.BROWSER, Level.ALL);
-    	        dc.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
-			}
-			
-			webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
-			webDriver.setArtifactProducer( new SeleniumArtifactProducer() );
-
-			
-			
-			
-			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
-
-			Capabilities caps = ( ( RemoteWebDriver ) webDriver.getWebDriver() ).getCapabilities();
-			webDriver.setExecutionId( ( ( RemoteWebDriver ) webDriver.getWebDriver() ).getSessionId().toString() );
-			webDriver.setDeviceName( ( ( RemoteWebDriver ) webDriver.getWebDriver() ).getSessionId().toString() );
-
-			if (ApplicationRegistry.instance().getAUT().getUrl() != null)
-				webDriver.get( ApplicationRegistry.instance().getAUT().getUrl() );
-
-			return webDriver;
-		}
-		catch (Exception e)
-		{
-			log.fatal( "Could not connect to Cloud instance for " + currentDevice, e );
-			if (webDriver != null)
-			{
-				try
-				{
-					webDriver.close();
-				}
-				catch (Exception e2)
-				{
-				}
-				try
-				{
-					webDriver.quit();
-				}
-				catch (Exception e2)
-				{
-				}
-			}
-			return null;
-		}
-	}
-
-	/**
-	 * _create mobile driver.
-	 *
-	 * @param currentDevice the current device
-	 * @return the device web driver
-	 */
-	private DeviceWebDriver _createMobileDriver( Device currentDevice )
-	{
-		DeviceWebDriver webDriver = null;
-		try
-		{
-			DesiredCapabilities dc = null;
-			if (currentDevice.getBrowserName() != null && !currentDevice.getBrowserName().isEmpty())
-				dc = new DesiredCapabilities( currentDevice.getBrowserName(), "", Platform.ANY );
-			else
-				dc = new DesiredCapabilities( "", "", Platform.ANY );
-
-			URL hubUrl = new URL( CloudRegistry.instance().getCloud().getCloudUrl() );
-
-			if (currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty())
-			{
-				dc.setCapability( ID, currentDevice.getDeviceName() );
-				dc.setCapability( USER_NAME, CloudRegistry.instance().getCloud().getUserName() );
-				dc.setCapability( PASSWORD, CloudRegistry.instance().getCloud().getPassword() );
-			}
-			else
-			{
-				dc.setCapability( PLATFORM_NAME, currentDevice.getOs() );
-				dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
-				dc.setCapability( MODEL, currentDevice.getModel() );
-				dc.setCapability( USER_NAME, CloudRegistry.instance().getCloud().getUserName() );
-				dc.setCapability( PASSWORD, CloudRegistry.instance().getCloud().getPassword() );
-			}
-			
-			for ( String name : currentDevice.getCapabilities().keySet() )
-                dc.setCapability( name, currentDevice.getCapabilities().get( name ) );
+            }
             
+            URL hubUrl = new URL( useCloud.getCloudUrl() );
+
+            if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )
+            {
+                dc.setCapability( ID, currentDevice.getDeviceName() );
+                dc.setCapability( USER_NAME, CloudRegistry.instance().getCloud().getUserName() );
+                dc.setCapability( PASSWORD, CloudRegistry.instance().getCloud().getPassword() );
+            }
+            else
+            {
+                dc.setCapability( PLATFORM_NAME, currentDevice.getOs() );
+                dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
+                dc.setCapability( MODEL, currentDevice.getModel() );
+                dc.setCapability( USER_NAME, CloudRegistry.instance().getCloud().getUserName() );
+                dc.setCapability( PASSWORD, CloudRegistry.instance().getCloud().getPassword() );
+            }
+
+            if ( currentDevice.getBrowserName() != null && !currentDevice.getBrowserName().isEmpty() )
+                dc.setCapability( BROWSER_NAME, currentDevice.getBrowserName() );
+            if ( currentDevice.getBrowserVersion() != null && !currentDevice.getBrowserVersion().isEmpty() )
+                dc.setCapability( BROWSER_VERSION, currentDevice.getBrowserVersion() );
+
+            for ( String name : currentDevice.getCapabilities().keySet() )
+                dc.setCapability( name, currentDevice.getCapabilities().get( name ) );
+
             for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
                 dc.setCapability( name, ApplicationRegistry.instance().getAUT().getCapabilities().get( name ) );
-			
-			if ( log.isInfoEnabled() )
+
+            if ( log.isInfoEnabled() )
                 log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 
-			webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
-			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
+            webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
+            webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 
-			Capabilities caps = ( ( RemoteWebDriver ) webDriver.getWebDriver() ).getCapabilities();
-			webDriver.setExecutionId( caps.getCapability( "executionId" ) + "" );
-			webDriver.setReportKey( caps.getCapability( "reportKey" ) + "" );
-			webDriver.setDeviceName( caps.getCapability( "deviceName" ) + "" );
-			webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ) + "" );
-			webDriver.setArtifactProducer( new PerfectoArtifactProducer() );
+            Capabilities caps = ((RemoteWebDriver) webDriver.getWebDriver()).getCapabilities();
+            webDriver.setExecutionId( caps.getCapability( "executionId" ) + "" );
+            webDriver.setReportKey( caps.getCapability( "reportKey" ) + "" );
+            webDriver.setDeviceName( caps.getCapability( "deviceName" ) + "" );
+            webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ) + "" );
+            
+            webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );
+            webDriver.setCloud( useCloud );
 
-			if (ApplicationRegistry.instance().getAUT().getUrl() != null)
-				webDriver.get( ApplicationRegistry.instance().getAUT().getUrl() );
+            if ( ApplicationRegistry.instance().getAUT().getUrl() != null )
+                webDriver.get( ApplicationRegistry.instance().getAUT().getUrl() );
 
-			return webDriver;
-		}
-		catch (Exception e)
-		{
-			log.fatal( "Could not connect to Cloud instance for " + currentDevice, e );
-			if (webDriver != null)
-			{
-				try
-				{
-					webDriver.close();
-				}
-				catch (Exception e2)
-				{
-				}
-				try
-				{
-					webDriver.quit();
-				}
-				catch (Exception e2)
-				{
-				}
-			}
-			return null;
-		}
-	}
+            return webDriver;
+        }
+        catch ( Exception e )
+        {
+            log.fatal( "Could not connect to Cloud instance for " + currentDevice, e );
+            if ( webDriver != null )
+            {
+                try
+                {
+                    webDriver.close();
+                }
+                catch ( Exception e2 )
+                {
+                }
+                try
+                {
+                    webDriver.quit();
+                }
+                catch ( Exception e2 )
+                {
+                }
+            }
+            return null;
+        }
+
+    }
 }
