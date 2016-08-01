@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;

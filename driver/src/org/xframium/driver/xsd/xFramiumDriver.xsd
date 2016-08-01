@@ -191,6 +191,7 @@
           <simpleType>
             <restriction base="string">
               <enumeration value="BOOLEAN" />
+              <enumeration value="OBJECT" />
               <enumeration value="PLATFORM" />
               <enumeration value="STRING" />
             </restriction>
@@ -376,7 +377,6 @@
           <enumeration value="STATE" />
           <enumeration value="ALERT" />
           <enumeration value="SQL" />
-          <enumeration value="NAVIGATE" />
           <enumeration value="OPERATOR" />
         </restriction>
       </simpleType>
@@ -450,7 +450,7 @@
     <attribute name="name" type="string" use="optional" />
   </complexType>
 
-<complexType name="xObjectDeviceCapability">
+	<complexType name="xObjectDeviceCapability">
 		<sequence>
 			<element name="capabilities" type="tns:xCapabilities" minOccurs="0" maxOccurs="unbounded" />
 		</sequence>
@@ -477,5 +477,4 @@
 			</extension>
 		</simpleContent>
 	</complexType>
-
 </schema>

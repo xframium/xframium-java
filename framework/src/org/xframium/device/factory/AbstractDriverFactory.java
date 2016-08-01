@@ -37,6 +37,7 @@ import org.xframium.device.SimpleDevice;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.cloud.action.CloudActionProvider;
+import org.xframium.device.cloud.xsd.Cloud;
 import org.xframium.device.interrupt.DeviceInterrupt;
 import org.xframium.device.interrupt.DeviceInterrupt.INTERRUPT_TYPE;
 import org.xframium.device.interrupt.DeviceInterruptFactory;
@@ -160,7 +161,7 @@ public abstract class AbstractDriverFactory implements DriverFactory
             caps.setCapability( name, currentDevice.getCapabilities().get( name ) );
 
     }
-    
+
 	/**
 	 * This method sets the browser capability to the Desired Capabilities
 	 * @param Object - current device Object value
