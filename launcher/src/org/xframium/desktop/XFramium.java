@@ -223,7 +223,7 @@ public class XFramium extends JFrame implements RunListener, ActionListener
     }
 
     @Override
-    public void afterRun( Device currentDevice, String runKey, boolean successful )
+    public void afterRun(Device currentDevice, String runKey, boolean successful, int stepsPassed, int stepsFailed, int stepsIgnored, long startTime, long stopTime, int scriptFailures, int configFailures, int applicationFailures, int cloudFailures)
     {
         for ( int i = 0; i < activeModel.getSize(); i++ )
         {
@@ -432,5 +432,12 @@ public class XFramium extends JFrame implements RunListener, ActionListener
                 }
             }
         }
+    }
+
+    @Override
+    public void skipRun( Device currentDevice, String runKey )
+    {
+        // TODO Auto-generated method stub
+        
     }
 }

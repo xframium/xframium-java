@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="http://xframium.org/xsl/xs3p.xsl"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.xframium.org/testRegistry" xmlns:tns="http://www.xframium.org/testRegistry" elementFormDefault="qualified">
   <annotation>
     <documentation xml:lang="en">
@@ -114,6 +115,7 @@
           <enumeration value="STATE" />
           <enumeration value="ALERT" />
           <enumeration value="SQL" />
+          <enumeration value="OPERATOR" />
         </restriction>
       </simpleType>
     </attribute>

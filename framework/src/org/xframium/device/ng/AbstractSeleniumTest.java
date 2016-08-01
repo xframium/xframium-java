@@ -42,7 +42,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
-import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactTime;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.ConnectedDevice;
@@ -54,10 +53,6 @@ import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunDetails;
-import org.xframium.spi.driver.ReportiumProvider;
-import com.perfecto.reportium.client.ReportiumClientFactory;
-import com.perfecto.reportium.model.PerfectoExecutionContext;
-import com.perfecto.reportium.model.Project;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -391,7 +386,7 @@ public abstract class AbstractSeleniumTest
             
             
             if( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
-                PerfectoMobile.instance().device().startDebug( connectedDevice.getExecutionId(), connectedDevice.getDeviceName() );
+                connectedDevice.getWebDriver().getCloud().getCloudActionProvider().enabledLogging( connectedDevice.getWebDriver() );
             
             TestContext ctx = new TestContext();
             ctx.currentMethod = currentMethod;
@@ -462,7 +457,8 @@ public abstract class AbstractSeleniumTest
         Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null );
 
         if( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
-            PerfectoMobile.instance().device().startDebug( map.get( DEFAULT ).getExecutionId(), map.get( DEFAULT ).getDeviceName() );
+            map.get( DEFAULT ).getWebDriver().getCloud().getCloudActionProvider().disableLogging( map.get( DEFAULT ).getWebDriver() );
+        
         
         while(( keys != null ) &&
               ( keys.hasNext() ))

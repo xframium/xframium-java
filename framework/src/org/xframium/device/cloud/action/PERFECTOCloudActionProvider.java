@@ -1,6 +1,8 @@
 package org.xframium.device.cloud.action;
 
 import org.xframium.device.SimpleDevice;
+import org.xframium.device.artifact.ArtifactProducer;
+import org.xframium.device.artifact.api.PerfectoArtifactProducer;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
@@ -37,5 +39,25 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         {
             return false;
         }
+    }
+    
+    @Override
+    public ArtifactProducer getArtifactProducer()
+    {
+        return new PerfectoArtifactProducer();
+    }
+    
+    @Override
+    public void disableLogging( DeviceWebDriver webDriver )
+    {
+        PerfectoMobile.instance().device().startDebug( webDriver.getExecutionId(), webDriver.getDeviceName() );
+        
+    }
+    
+    @Override
+    public void enabledLogging( DeviceWebDriver webDriver )
+    {
+        PerfectoMobile.instance().device().stopDebug( webDriver.getExecutionId(), webDriver.getDeviceName() );
+        
     }
 }

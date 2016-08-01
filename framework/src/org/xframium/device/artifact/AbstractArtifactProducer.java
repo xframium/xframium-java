@@ -276,12 +276,15 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_XML ) )
         	stringBuffer.append( "<a target=_blank hRef=\"EXECUTION_REPORT_XML.xml\" class=\"list-group-item\">Perfecto Execution Report (XML)</a>" );
         
+        if ( ( (DeviceWebDriver) webDriver ).getCloud().getProvider().equals( "PERFECTO" ) )
+        {
         if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
         {
             if ( ( (ReportiumProvider) webDriver ).getReportiumClient() != null )
             {
                 stringBuffer.append( "<a target=_blank hRef=\"" + ( (ReportiumProvider) webDriver ).getReportiumClient().getReportUrl() + "\" class=\"list-group-item\">Perfecto Reportium Report</a>" );
             }
+        }
         }
             
         

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="http://xframium.org/xsl/xs3p.xsl"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.xframium.org/xFramiumDriver" xmlns:tns="http://www.xframium.org/xFramiumDriver" elementFormDefault="qualified">
   <annotation>
     <documentation xml:lang="en">
@@ -9,6 +10,7 @@
   <element name="xFramium" type="tns:xFramiumRoot" />
 
   <complexType name="xFramiumRoot">
+  
     <sequence>
       <element name="cloud" type="tns:xCloud" minOccurs="1" maxOccurs="1" />
       <element name="application" type="tns:xApplication" minOccurs="1" maxOccurs="1" />
@@ -158,6 +160,7 @@
           <enumeration value="EXECUTION_RECORD_HTML" />
           <enumeration value="EXECUTION_RECORD_CSV" />
           <enumeration value="CONSOLE_LOG" />
+          <enumeration value="REPORTIUM" />
         </restriction>
       </simpleType>
     </attribute>
@@ -374,6 +377,7 @@
           <enumeration value="ALERT" />
           <enumeration value="SQL" />
           <enumeration value="NAVIGATE" />
+          <enumeration value="OPERATOR" />
         </restriction>
       </simpleType>
     </attribute>

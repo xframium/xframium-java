@@ -27,6 +27,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
@@ -51,6 +52,9 @@ public class OpenApplicationAction extends AbstractDefaultAction implements Devi
 		String applicationName = (String) parameterList.get( 0 );
 
 		ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
+		
+		if ( appDesc == null )
+		    throw new ScriptConfigurationException( "The Application " + applicationName + " does not exist" );
 	
 		if ( appDesc.isWeb() )
 		{

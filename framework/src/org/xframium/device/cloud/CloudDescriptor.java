@@ -25,6 +25,7 @@ package org.xframium.device.cloud;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import org.xframium.device.cloud.action.CloudActionProvider;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -92,6 +93,19 @@ public class CloudDescriptor
     {
         return provider;
     }
+	
+	public CloudActionProvider getCloudActionProvider()
+    {
+        try
+        {
+            CloudActionProvider actionProvider = (CloudActionProvider) Class.forName( CloudActionProvider.class.getPackage().getName() + "." + this.getProvider() + "CloudActionProvider" ).newInstance();
+            return actionProvider;
+        }
+        catch ( Exception e )
+        {
+            return null;
+        }
+    }
 
     /**
 	 * Gets the cloud url.
@@ -106,7 +120,12 @@ public class CloudDescriptor
 		    if ( provider != null && provider.equals( "PERFECTO" ) )
 		        return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/wd/hub";
 		    else
-		        return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/wd/hub";
+		    {
+		        if ( getUserName() == null || getUserName().isEmpty() )
+		            return "http://" + getHostName() + "/wd/hub";
+		        else
+		            return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/wd/hub";
+		    }
 		    
 		}
 		catch (UnsupportedEncodingException e)

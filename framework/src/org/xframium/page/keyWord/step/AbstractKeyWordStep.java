@@ -32,6 +32,7 @@ import org.openqa.selenium.WebDriver;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.content.ContentManager;
 import org.xframium.device.data.DataManager;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
@@ -42,6 +43,7 @@ import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
+import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordToken;
@@ -599,14 +601,30 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             try
             {
                 WebDriver altWebDriver = getAltWebDriver();
-                if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
+                
+                //
+                // Listener integrations for individual steps
+                //
+                if ( !KeyWordDriver.instance().notifyBeforeStep( altWebDriver != null ? altWebDriver : webDriver, this ) )
                 {
-                    if ( ( (ReportiumProvider) webDriver ).getReportiumClient() != null )
+                    log.warn( "Test Step was skipped due to a failed step notification listener" );
+                    return true;
+                }
+                
+                if ( ( (DeviceWebDriver) webDriver ).getCloud().getProvider().equals( "PERFECTO" ) )
+                {
+                    if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
                     {
-                        ( (ReportiumProvider) webDriver ).getReportiumClient().testStep( getPageName() + "." + getName() + " (" + getClass().getSimpleName() + ")" );
+                        if ( ( (ReportiumProvider) webDriver ).getReportiumClient() != null )
+                        {
+                            ( (ReportiumProvider) webDriver ).getReportiumClient().testStep( getPageName() + "." + getName() + " (" + getClass().getSimpleName() + ")" );
+                        }
                     }
                 }
                 returnValue = _executeStep( pageObject, ((altWebDriver != null) ? altWebDriver : webDriver), contextMap, dataMap, pageMap );
+                
+                KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE );
+                
             }
             catch ( KWSLoopBreak lb )
             {
@@ -616,7 +634,15 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             {
                 stepException = e;
                 returnValue = false;
-
+                try
+                {
+                    WebDriver altWebDriver = getAltWebDriver();
+                    KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE );
+                }
+                catch( Exception e2 )
+                {
+                    
+                }
                 log.info( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed " );
             }
 

@@ -1,6 +1,9 @@
 package org.xframium.device.cloud.action;
 
 import org.openqa.selenium.Dimension;
+import org.xframium.device.artifact.ArtifactProducer;
+import org.xframium.device.artifact.api.PerfectoArtifactProducer;
+import org.xframium.device.artifact.api.SeleniumArtifactProducer;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.spi.Device;
 import eu.bitwalker.useragentutils.UserAgent;
@@ -30,4 +33,26 @@ public class SELENIUMCloudActionProvider extends AbstractCloudActionProvider
         
         return true;
     }
+    
+    @Override
+    public ArtifactProducer getArtifactProducer()
+    {
+        return new SeleniumArtifactProducer();
+    }
+    
+    @Override
+    public void disableLogging( DeviceWebDriver webDriver )
+    {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void enabledLogging( DeviceWebDriver webDriver )
+    {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    
 }

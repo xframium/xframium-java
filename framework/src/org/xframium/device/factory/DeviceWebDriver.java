@@ -64,6 +64,7 @@ import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.Artifact;
 import org.xframium.device.artifact.ArtifactProducer;
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.interrupt.DeviceInterrupt;
 import org.xframium.device.interrupt.DeviceInterruptThread;
 import org.xframium.spi.Device;
@@ -105,7 +106,18 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
     /** The current device. */
     private Device currentDevice;
     private Device populatedDevice;
+    private CloudDescriptor cloud;
     
+    public CloudDescriptor getCloud()
+    {
+        return cloud;
+    }
+
+    public void setCloud( CloudDescriptor cloud )
+    {
+        this.cloud = cloud;
+    }
+
     private ReportiumClient reportiumClient;
 
     public ReportiumClient getReportiumClient()
