@@ -107,10 +107,10 @@ public class WEBDriverFactory extends AbstractDriverFactory
                 dc.setCapability( BROWSER_VERSION, currentDevice.getBrowserVersion() );
 
             for ( String name : currentDevice.getCapabilities().keySet() )
-                dc.setCapability( name, currentDevice.getCapabilities().get( name ) );
-
+				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
+			
             for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
-                dc.setCapability( name, ApplicationRegistry.instance().getAUT().getCapabilities().get( name ) );
+            	dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
 
             if ( log.isInfoEnabled() )
                 log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );

@@ -161,5 +161,37 @@ public abstract class AbstractDriverFactory implements DriverFactory
             caps.setCapability( name, currentDevice.getCapabilities().get( name ) );
 
     }
+    
+    /**
+	 * This method sets the browser capability to the Desired Capabilities
+	 * @param Object - current device Object value
+	 * @param DesiredCapabilities
+	 * @param String - name of the option
+	 * @return DesiredCapabilities
+	 */
+	protected DesiredCapabilities setCapabilities(Object value, DesiredCapabilities dc, String name) {
+		if (value instanceof Boolean)
+		{
+			dc.setCapability( name, value );
+		}
+		
+		else if (value instanceof String) 
+		{
+			dc.setCapability( name, value );
+		}
+		
+		else if (value instanceof Platform) 
+		{
+			dc.setCapability( name, value );
+		}
+		
+		else if (value instanceof Map) 
+		{
+			dc = BrowserCapabilityManager.instance().getBrowsercapabilityFactory(name)
+					.createBrowserOptions(dc, (Map<String,List<String>>)value);
+			System.out.println("value:"+value);
+		}
+		return dc;
+	}
 
 }
