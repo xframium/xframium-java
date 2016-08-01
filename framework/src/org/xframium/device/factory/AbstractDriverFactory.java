@@ -161,4 +161,5 @@ public abstract class AbstractDriverFactory implements DriverFactory
             caps.setCapability( name, currentDevice.getCapabilities().get( name ) );
 
     }
+
 }
