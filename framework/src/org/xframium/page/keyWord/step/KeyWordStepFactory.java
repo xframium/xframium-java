@@ -157,7 +157,6 @@ public class KeyWordStepFactory
         addKeyWord( "ALERT", KWSAlert.class );
         addKeyWord( "SQL", KWSSQL.class );
         addKeyWord( "OPERATOR", KWSOperator.class );
-        addKeyWord( "NAVIGATE", KWSNavigate.class );
     }
 
     /**
