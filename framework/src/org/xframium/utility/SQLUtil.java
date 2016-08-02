@@ -35,6 +35,12 @@ public class SQLUtil
     //
     // Class Data
     //
+	public static enum columnPicker
+	{
+		INDEX,
+		RAW_COLUMN_NAME,
+		COLUMN_NAME
+	}
 
     private static final Map[] EMPTY_MAP_ARRAY = new Map[0];
     
@@ -157,6 +163,66 @@ public class SQLUtil
         }
     }
 
+    
+    /**
+     * This method establishes the DB connection, executes the SQL statement and returns a map  with key to the map is either index/column name 
+     * @param username
+     * @param password
+     * @param url
+     * @param driver
+     * @param query
+     * @param params
+     * @param by
+     * @return Map
+     * @throws Exception
+     */
+    public static Map[] getRowBy( String username,
+                              String password,
+                              String url,
+                              String driver,
+                              String query,
+                              String[] params,String by )
+        throws Exception
+    {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            conn = getConnection( username,
+                                  password,
+                                  url,
+                                  driver );
+
+            pstmt = conn.prepareStatement( query );
+
+            if ( params != null )
+            {
+                int offset = 1;
+                for( String param : params )
+                {
+                    pstmt.setString( offset++, param );
+                }
+            }
+
+            rs = pstmt.executeQuery();
+
+            return consumeBy( rs,by);
+        }
+        finally
+        {
+            try { rs.close(); }
+            catch( Throwable e ) {}
+
+            try { pstmt.close(); }
+            catch( Throwable e ) {}
+            
+            try { conn.close(); }
+            catch( Throwable e ) {}
+        }
+    }
+
     //
     // Helpers
     //
@@ -215,6 +281,45 @@ public class SQLUtil
         return toOutArray( results, colCount );
     }
 
+        /**
+     * This method converts result set to an array of Map. Key to the map is either index of column (or) Raw column name (or) alias column name
+     * @param rs - ResultSet
+     * @return Map[]
+     * @throws Exception
+     */
+    
+    private static Map[] consumeBy( ResultSet rs, String Type )
+            throws Exception
+        {
+            ResultSetMetaData rsmd = rs.getMetaData();
+            ArrayList results = new ArrayList();
+            int colCount = rsmd.getColumnCount();
+            
+          
+            
+            while( rs.next() )
+            {
+                Map row = new HashMap();
+
+                for( int i = 1; i <= colCount; ++i )
+                {
+                    Object val = rs.getObject( i );                    
+                    if(columnPicker.INDEX.equals(Type))
+                        row.put( i, val );
+                    else if(columnPicker.COLUMN_NAME.equals(Type))
+                    	row.put( rsmd.getColumnLabel( i ), val );
+                    else if(columnPicker.RAW_COLUMN_NAME.equals(Type))
+                    	row.put( rsmd.getColumnName( i ), val );
+                }
+
+                results.add( row );
+            }
+
+            return toOutArray2( results );
+         }
+
+    
+    
     /**
      * This method converts result set to an array of Map
      * @param rs - ResultSet
