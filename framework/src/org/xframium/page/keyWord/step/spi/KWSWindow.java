@@ -40,167 +40,170 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 public class KWSWindow extends AbstractKeyWordStep
 {
 
-    /**
-     * The Enum SwitchType.
-     */
-    private enum SwitchType
-    {
-        
-        /** The by wintitle. */
-        BY_WINTITLE, 
- /** The by winurl. */
- BY_WINURL, 
- /** The by frame. */
- BY_FRAME, 
- /** The by parentframe. */
- BY_PARENTFRAME, 
- /** The by default. */
- BY_DEFAULT, 
- /** The by winclose. */
- BY_WINCLOSE, 
- 
- BY_ELEMENT,
- /** The by alert. */
- BY_ALERT;
-    }
+	/**
+	 * The Enum SwitchType.
+	 */
+	private enum SwitchType
+	{
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com
-     * .perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map,
-     * java.util.Map)
-     */
-    @Override
-    public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap ) throws Exception
-    {
-        if ( log.isDebugEnabled() )
-            log.debug( "Execution Function " + getName() );
+		/** The by wintitle. */
+		BY_WINTITLE, 
+		/** The by winurl. */
+		BY_WINURL, 
+		/** The by frame. */
+		BY_FRAME, 
+		/** The by parentframe. */
+		BY_PARENTFRAME, 
+		/** The by default. */
+		BY_DEFAULT, 
+		/** The by winclose. */
+		BY_WINCLOSE, 
 
-        if ( getParameterList().size() < 1 )
-            throw new IllegalArgumentException( "First Parameter Switchtype should be provided with values BY_WINTITLE| BY_WINURL|BY_FRAME|BY_PARENTFRAME|BY_DEFAULT" );
+		BY_ELEMENT,
+		/** The by alert. */
+		BY_ALERT,
+		BY_MAXIMIZE;
+	}
 
-        try
-        {
-            // Verify if the parameter-1 values are correct
-            String switchType = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
-            String switchExpValue = "";
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com
+	 * .perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map,
+	 * java.util.Map)
+	 */
+	@Override
+	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap ) throws Exception
+	{
+		if ( log.isDebugEnabled() )
+			log.debug( "Execution Function " + getName() );
 
-            switch ( SwitchType.valueOf( switchType ) )
-            {
-                case BY_WINTITLE:
-                    if ( getParameterList().size() < 2 )
-                        throw new IllegalArgumentException( "Please provide the title for the window as a parameter" );
-                    switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-                    return verifySwitchWindow( webDriver, switchType, switchExpValue );
-                case BY_WINURL:
-                    if ( getParameterList().size() < 2 )
-                        throw new IllegalArgumentException( "Please provide the URL for the window as a parameter" );
-                    switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-                    return verifySwitchWindow( webDriver, switchType, switchExpValue );
-                case BY_FRAME:
-                    if ( getParameterList().size() < 2 )
-                        throw new IllegalArgumentException( "Please provide the Frame id for the Frame as a parameter" );
-                    switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-                    webDriver.switchTo().frame( switchExpValue );
-                    break;
-                    
-                    
-                case BY_PARENTFRAME:
-                    webDriver.switchTo().parentFrame();
-                    break;
-                case BY_DEFAULT:
-                    webDriver.switchTo().defaultContent();
-                    break;
-                case BY_WINCLOSE:
-                    webDriver.close();
-                    break;
-                    
-                case BY_ELEMENT:
-                	Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap );
-                	if ( currentElement == null )
-                	{
-                		log.warn( "Attempting to switch to frame identified by " + getName() + " that does not exist" );
-                		return false;
-                	}
-                	
-                	WebElement nativeElement = (WebElement) currentElement.getNative();
-                	if ( nativeElement instanceof MorelandWebElement )
-                	    nativeElement = ( (MorelandWebElement) nativeElement ).getWebElement();
-                	webDriver.switchTo().frame( nativeElement ); 
-                	break;
-                	
-                case BY_ALERT:
-                    WebDriverWait alertWait = new WebDriverWait( webDriver, 5 );
-                    alertWait.until( ExpectedConditions.alertIsPresent() );
-                    Alert alert = webDriver.switchTo().alert();
-                    alert.accept();
-                    break;
-                default:
-                    throw new IllegalArgumentException( "Parameter switchtype should be BY_WINTITLE| BY_WINURL|BY_FRAME|BY_PARENTFRAME|BY_DEFAULT|BY_ALERT" );
-            }
+		if ( getParameterList().size() < 1 )
+			throw new IllegalArgumentException( "First Parameter Switchtype should be provided with values BY_WINTITLE| BY_WINURL|BY_FRAME|BY_PARENTFRAME|BY_DEFAULT" );
 
-        }
-        catch ( Exception e )
-        {
-            log.error( "Error executing function for validation [" + getName() + "] on page [" + getPageName() + "]", e );
-            return false;
-        }
+		try
+		{
+			// Verify if the parameter-1 values are correct
+			String switchType = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+			String switchExpValue = "";
 
-        return true;
-    }
+			switch ( SwitchType.valueOf( switchType ) )
+			{
+			case BY_WINTITLE:
+				if ( getParameterList().size() < 2 )
+					throw new IllegalArgumentException( "Please provide the title for the window as a parameter" );
+				switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+				return verifySwitchWindow( webDriver, switchType, switchExpValue );
+			case BY_WINURL:
+				if ( getParameterList().size() < 2 )
+					throw new IllegalArgumentException( "Please provide the URL for the window as a parameter" );
+				switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+				return verifySwitchWindow( webDriver, switchType, switchExpValue );
+			case BY_FRAME:
+				if ( getParameterList().size() < 2 )
+					throw new IllegalArgumentException( "Please provide the Frame id for the Frame as a parameter" );
+				switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+				webDriver.switchTo().frame( switchExpValue );
+				break;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
-     */
-    public boolean isRecordable()
-    {
-        return false;
-    }
 
-    /**
-     * Verify switch window.
-     *
-     * @param webDriver the web driver
-     * @param byTitleOrUrl the by title or url
-     * @param winExpValue the win exp value
-     * @return true, if successful
-     */
-    private boolean verifySwitchWindow( WebDriver webDriver, String byTitleOrUrl, String winExpValue )
-    {
+			case BY_PARENTFRAME:
+				webDriver.switchTo().parentFrame();
+				break;
+			case BY_DEFAULT:
+				webDriver.switchTo().defaultContent();
+				break;
+			case BY_WINCLOSE:
+				webDriver.close();
+				break;
 
-        boolean bSwitchWindow = false;
-        String winActValue = "";
-        Set<String> availableWindows = webDriver.getWindowHandles();
-        
-        if ( !availableWindows.isEmpty() )
-        {
-            for ( String windowId : availableWindows )
-            {
-                if ( byTitleOrUrl.equalsIgnoreCase( "BY_WINTITLE" ) )
-                {
-                    winActValue = webDriver.switchTo().window( windowId ).getTitle().trim().toLowerCase();
-                }
-                else
-                {
-                    winActValue = webDriver.switchTo().window( windowId ).getCurrentUrl().trim().toLowerCase();
-                }
-                    
-                winExpValue = winExpValue.trim().toLowerCase();
-                
-                if ( winActValue.contains( winExpValue ) )
-                {
-                    bSwitchWindow = true;
-                    break;
-                }
-            }
-        }
+			case BY_ELEMENT:
+				Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap );
+				if ( currentElement == null )
+				{
+					log.warn( "Attempting to switch to frame identified by " + getName() + " that does not exist" );
+					return false;
+				}
 
-        return bSwitchWindow;
-    }
+				WebElement nativeElement = (WebElement) currentElement.getNative();
+				if ( nativeElement instanceof MorelandWebElement )
+					nativeElement = ( (MorelandWebElement) nativeElement ).getWebElement();
+				webDriver.switchTo().frame( nativeElement ); 
+				break;                	
+			case BY_ALERT:
+				WebDriverWait alertWait = new WebDriverWait( webDriver, 5 );
+				alertWait.until( ExpectedConditions.alertIsPresent() );
+				Alert alert = webDriver.switchTo().alert();
+				alert.accept();
+				break;
+			case BY_MAXIMIZE:
+				webDriver.manage().window().maximize();
+				break;
+			default:
+				throw new IllegalArgumentException( "Parameter switchtype should be BY_WINTITLE| BY_WINURL|BY_FRAME|BY_PARENTFRAME|BY_DEFAULT|BY_ALERT|BY_ELEMENT|BY_MAXIMIZE" );
+			}
+
+		}
+		catch ( Exception e )
+		{
+			log.error( "Error executing function for validation [" + getName() + "] on page [" + getPageName() + "]", e );
+			return false;
+		}
+
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
+	 */
+	public boolean isRecordable()
+	{
+		return false;
+	}
+
+	/**
+	 * Verify switch window.
+	 *
+	 * @param webDriver the web driver
+	 * @param byTitleOrUrl the by title or url
+	 * @param winExpValue the win exp value
+	 * @return true, if successful
+	 */
+	private boolean verifySwitchWindow( WebDriver webDriver, String byTitleOrUrl, String winExpValue )
+	{
+
+		boolean bSwitchWindow = false;
+		String winActValue = "";
+		Set<String> availableWindows = webDriver.getWindowHandles();
+
+		if ( !availableWindows.isEmpty() )
+		{
+			for ( String windowId : availableWindows )
+			{
+				if ( byTitleOrUrl.equalsIgnoreCase( "BY_WINTITLE" ) )
+				{
+					winActValue = webDriver.switchTo().window( windowId ).getTitle().trim().toLowerCase();
+				}
+				else
+				{
+					winActValue = webDriver.switchTo().window( windowId ).getCurrentUrl().trim().toLowerCase();
+				}
+
+				winExpValue = winExpValue.trim().toLowerCase();
+
+				if ( winActValue.contains( winExpValue ) )
+				{
+					bSwitchWindow = true;
+					break;
+				}
+			}
+		}
+
+		return bSwitchWindow;
+	}
 
 }
