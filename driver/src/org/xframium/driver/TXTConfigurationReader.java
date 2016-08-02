@@ -2,6 +2,7 @@ package org.xframium.driver;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,6 +21,7 @@ import org.xframium.content.ContentManager;
 import org.xframium.content.provider.ExcelContentProvider;
 import org.xframium.content.provider.SQLContentProvider;
 import org.xframium.content.provider.XMLContentProvider;
+import org.xframium.debugger.DebugManager;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CSVCloudProvider;
@@ -229,6 +231,19 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                     artifactList.add( ArtifactType.valueOf( type ) );
                     if ( type.equals( "FAILURE_SOURCE" ) )
                     	artifactList.add( ArtifactType.FAILURE_SOURCE_HTML );
+                    
+                    if ( type.equals( "DEBUGGER" ) )
+                    {
+                        try
+                        {
+                            DebugManager.instance().startUp( InetAddress.getLocalHost().getHostAddress(), 8870 );
+                            KeyWordDriver.instance().addStepListener( DebugManager.instance() );
+                        }
+                        catch( Exception e )
+                        {
+                            e.printStackTrace();
+                        }
+                    }
                     
                     if ( ArtifactType.valueOf( type ).equals( ArtifactType.CONSOLE_LOG ) )
                     {

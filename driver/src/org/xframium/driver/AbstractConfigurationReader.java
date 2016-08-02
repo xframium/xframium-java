@@ -8,6 +8,7 @@ import org.openqa.selenium.WebDriver;
 import org.testng.TestNG;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactType;
+import org.xframium.debugger.DebugManager;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
@@ -134,7 +135,9 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                 }
             }
             
-            
+            if( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )
+                DebugManager.instance().shutDown();
+
         }
         catch( Exception e )
         {

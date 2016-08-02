@@ -119,7 +119,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
             webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 
             Capabilities caps = ((RemoteWebDriver) webDriver.getWebDriver()).getCapabilities();
-            webDriver.setExecutionId( caps.getCapability( "executionId" ) + "" );
+            webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
             webDriver.setReportKey( caps.getCapability( "reportKey" ) + "" );
             webDriver.setDeviceName( caps.getCapability( "deviceName" ) + "" );
             webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ) + "" );

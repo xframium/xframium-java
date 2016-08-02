@@ -11,4 +11,5 @@ public interface CloudActionProvider
     public ArtifactProducer getArtifactProducer();
     public void enabledLogging( DeviceWebDriver webDriver );
     public void disableLogging( DeviceWebDriver webDriver );
+    public String getExecutionId( DeviceWebDriver webDriver );
 }

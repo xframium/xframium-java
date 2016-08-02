@@ -71,6 +71,8 @@ public enum ArtifactType
     
     EXECUTION_DEFINITION( ArtifactTime.AFTER_TEST),
     
+    DEBUGGER( ArtifactTime.NOOP ),
+    
     REPORTIUM( ArtifactTime.NOOP );
     
     /** The time. */

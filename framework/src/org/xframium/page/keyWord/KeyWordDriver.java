@@ -464,6 +464,7 @@ public class KeyWordDriver
     public boolean executeTest( String testName, WebDriver webDriver ) throws Exception
     {
         boolean testStarted = false;
+        boolean returnValue = false;
         long startTime = System.currentTimeMillis();
         PageManager.instance().getPageCache().clear();
 
@@ -532,7 +533,14 @@ public class KeyWordDriver
             //
             contextMap.set( new HashMap<String, Object>( 10 ) );
             testStarted = true;
-            boolean returnValue = test.executeTest( webDriver, contextMap.get(), dataMap, pageMap );
+            
+            if ( !KeyWordDriver.instance().notifyBeforeTest( webDriver, test, contextMap.get(), dataMap, pageMap ) )
+            {
+                log.warn( "Test was skipped due to a failed test notification listener" );
+                return false;
+            }
+            
+            returnValue = test.executeTest( webDriver, contextMap.get(), dataMap, pageMap );
             contextMap.set( null );
 
             return returnValue;
@@ -550,6 +558,9 @@ public class KeyWordDriver
         }
         finally
         {
+            if ( testStarted )
+                KeyWordDriver.instance().notifyAfterTest( webDriver, test, contextMap.get(), dataMap, pageMap, returnValue );
+            
             for ( String key : dataMap.keySet() )
             {
                 PageDataManager.instance().putPageData( dataMap.get( key ) );
