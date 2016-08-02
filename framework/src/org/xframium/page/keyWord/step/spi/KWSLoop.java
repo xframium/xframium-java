@@ -20,6 +20,8 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
+
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
@@ -30,7 +32,9 @@ import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+import org.xframium.page.keyWord.step.spi.KWSLoopBreak;
 
 
 
@@ -38,13 +42,23 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 /**
  * The Class KWSLoop.
  */
-public class KWSLoop extends AbstractKeyWordStep
+public class KWSLoop extends AbstractKeyWordStep implements KeyWordStep
 {
 	/** The Constant DATA_START. */
 	private static final String DATA_START = "data{";
 	
 	/** The Constant DATA_STOP. */
 	private static final String DATA_STOP = "}";
+	
+	/** The Constant RECORDSET_START. */
+	private static final String RECORDSET_START = "recordset{";
+	
+	/** The Constant RECORDSET_STOP. */
+	private static final String RECORDSET_STOP = "}";
+	
+	//private static final String CONTEXT_CURRENT_REC ="_CONTEXT.CURRENT_REC";
+	//private static final String CONTEXT_RECORDSET="_CONTEXT_RECORDSET";
+	//private static final String CONTEXT_PREFIX="_CONTEXT.";
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
@@ -78,7 +92,7 @@ public class KWSLoop extends AbstractKeyWordStep
 			
 			for ( int i=0; i<loopCount; i++ )
 			{
-			    contextMap.put( Element.LOOP_INDEX, i+1 );
+			    contextMap.put( Element.LOOP_INDEX, i );
 				if ( log.isDebugEnabled() )
 					log.debug( "Execution Function " + functionName + " - Iteration " + i + " of " + loopCount );
 				try
@@ -96,6 +110,51 @@ public class KWSLoop extends AbstractKeyWordStep
 			}
 			
 			return true;
+		}
+		//db_handle
+		else if(useValue.startsWith( RECORDSET_START ))
+		{
+			int startIndex=useValue.indexOf(RECORDSET_START);
+			int endIndex=useValue.indexOf(RECORDSET_STOP);
+			String recordset=useValue.substring(startIndex+RECORDSET_START.length(), endIndex);
+			String recordsetName=recordset.split("\\.", 2)[0];
+			
+			 List<Map> dRecords = (List<Map>) contextMap.get(recordset);
+	           for(int i=0;i<dRecords.size();i++)
+	           {
+	        	   contextMap.put( Element.LOOP_INDEX, i );    	   
+
+	        	   Map contextDetails=(Map) dRecords.get(i);
+	        	   contextMap.put(recordsetName+".CURRENT_REC",contextDetails);
+	         	   Iterator keys = contextDetails.keySet().iterator();      
+	    		 
+	    		   while( keys.hasNext() )
+	               {   
+	            	
+	    			   Object key = keys.next();
+	            	   if ( key instanceof Integer )
+	         		   {
+	         			   continue;
+	         		   }
+	            	   contextMap.put(recordsetName+ "." + key,contextDetails.get(key));
+	            	}
+	    		   if ( log.isDebugEnabled() )
+						log.debug( "Execution Function " + functionName + " - with data " + contextDetails );
+	    		   System.out.println( "Execution Function " + functionName + " - with data " + contextDetails );
+	    		   	try
+					{
+						if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap ) )
+						{
+							return false;
+						}
+					}
+					catch( KWSLoopBreak lb )
+					{
+						return true;
+					}
+	        	   
+	           }
+
 		}
 		else
 		{
@@ -177,7 +236,7 @@ public class KWSLoop extends AbstractKeyWordStep
 						log.debug( "Execution Function " + functionName + " - Iteration " + i + " of " + elementArray.length );
 					
 					contextMap.put( Element.CONTEXT_ELEMENT, elementArray[ i ] );
-					contextMap.put( Element.CONTEXT_INDEX, i+1 );
+					contextMap.put( Element.CONTEXT_INDEX, i );
 					
 					try
 					{
@@ -193,7 +252,6 @@ public class KWSLoop extends AbstractKeyWordStep
 				}
 			}
 		}
-		
 		return true;
 	}
 	
