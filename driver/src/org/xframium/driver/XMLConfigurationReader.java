@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,6 +31,7 @@ import org.xframium.content.ContentManager;
 import org.xframium.content.provider.ExcelContentProvider;
 import org.xframium.content.provider.SQLContentProvider;
 import org.xframium.content.provider.XMLContentProvider;
+import org.xframium.debugger.DebugManager;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.SimpleDevice;
@@ -304,6 +306,19 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             artifactList.add( ArtifactType.valueOf( artifact.getType() ) );
             if ( artifact.getType().equals( "FAILURE_SOURCE" ) )
             	artifactList.add( ArtifactType.FAILURE_SOURCE_HTML );
+            else if ( artifact.getType().equals( "DEBUGGER" ) )
+            {
+                try
+                {
+                    DebugManager.instance().startUp( InetAddress.getLocalHost().getHostAddress(), 8870 );
+                    KeyWordDriver.instance().addStepListener( DebugManager.instance() );
+                }
+                catch( Exception e )
+                {
+                    e.printStackTrace();
+                }
+            }
+                
         }
         
         DataManager.instance().setAutomaticDownloads( artifactList.toArray( new ArtifactType[0] ) );

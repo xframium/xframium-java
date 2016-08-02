@@ -1,8 +1,8 @@
 package org.xframium.device.cloud.action;
 
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.device.artifact.ArtifactProducer;
-import org.xframium.device.artifact.api.PerfectoArtifactProducer;
 import org.xframium.device.artifact.api.SeleniumArtifactProducer;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.spi.Device;
@@ -32,6 +32,12 @@ public class SELENIUMCloudActionProvider extends AbstractCloudActionProvider
             device.setResolution( null );
         
         return true;
+    }
+    
+    @Override
+    public String getExecutionId( DeviceWebDriver webDriver )
+    {
+        return ( (RemoteWebDriver) webDriver.getNativeDriver() ).getSessionId().toString();
     }
     
     @Override

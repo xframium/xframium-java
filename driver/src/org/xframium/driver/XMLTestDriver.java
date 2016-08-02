@@ -66,6 +66,8 @@ public class XMLTestDriver extends AbstractSeleniumTest
     			return;
     		}
     		
+    		
+    		
     		if ( ( (DeviceWebDriver) getWebDriver() ).getCloud().getProvider().equals( "PERFECTO" ) )
     		{
         		if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) && getWebDriver() instanceof ReportiumProvider )

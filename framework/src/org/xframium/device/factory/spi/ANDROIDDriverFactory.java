@@ -103,7 +103,7 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 			
 			Capabilities caps = ( (AndroidDriver) webDriver.getWebDriver() ).getCapabilities();
-			webDriver.setExecutionId( caps.getCapability( "executionId" ).toString() );
+			webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
 			webDriver.setReportKey( caps.getCapability( "reportKey" ).toString() );
 			webDriver.setDeviceName( caps.getCapability( "deviceName" ).toString() );
 			webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );

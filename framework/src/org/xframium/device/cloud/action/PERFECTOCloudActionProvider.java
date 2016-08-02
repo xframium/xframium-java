@@ -42,6 +42,12 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
     }
     
     @Override
+    public String getExecutionId( DeviceWebDriver webDriver )
+    {
+        return webDriver.getCapabilities().getCapability( "executionId" ) + "";
+    }
+    
+    @Override
     public ArtifactProducer getArtifactProducer()
     {
         return new PerfectoArtifactProducer();
