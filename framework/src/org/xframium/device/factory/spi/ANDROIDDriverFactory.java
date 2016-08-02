@@ -87,10 +87,10 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 			dc.setCapability( PASSWORD, CloudRegistry.instance().getCloud().getPassword() );
 			
 			for ( String name : currentDevice.getCapabilities().keySet() )
-				dc.setCapability( name, currentDevice.getCapabilities().get( name ) );
+				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
 			
 			for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
-				dc.setCapability( name, ApplicationRegistry.instance().getAUT().getCapabilities().get( name ) );
+				dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
 			
 			dc.setCapability( AUTOMATION_NAME, "Appium" );
 			

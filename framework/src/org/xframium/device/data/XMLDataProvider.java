@@ -27,6 +27,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
@@ -35,8 +40,11 @@ import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Platform;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.SimpleDevice;
+import org.xframium.device.data.xsd.Capabilities;
 import org.xframium.device.data.xsd.DeviceCapability;
+import org.xframium.device.data.xsd.ObjectDeviceCapability;
 import org.xframium.device.data.xsd.ObjectFactory;
+import org.xframium.device.data.xsd.Options;
 import org.xframium.device.data.xsd.RegistryRoot;
 import org.xframium.spi.Device;
 
@@ -144,6 +152,10 @@ public class XMLDataProvider implements DataProvider
 	private void parseDevice( org.xframium.device.data.xsd.Device device )
 	{
 		String driverName = "";
+		List<String> list = null;
+		String factoryName = null;
+		Map<String, List<String>> browserOptionMap = null;
+		
 		switch( driverType )
 		{
 			case APPIUM:
@@ -165,6 +177,8 @@ public class XMLDataProvider implements DataProvider
 		}
 		
 		SimpleDevice currentDevice = new SimpleDevice(device.getName(), device.getManufacturer(), device.getModel(), device.getOs(), device.getOsVersion(), device.getBrowserName(), device.getBrowserVersion(), device.getAvailableDevices().intValue(), driverName, device.isActive(), device.getId() );
+		
+		
 		if ( device.getCloud() != null && !device.getCloud().isEmpty() )
 		    currentDevice.setCloud( device.getCloud() );
 		if ( device.getCapability() != null )
@@ -176,10 +190,6 @@ public class XMLDataProvider implements DataProvider
 		            case "BOOLEAN":
 		                currentDevice.addCapability( cap.getName(), Boolean.parseBoolean( cap.getValue() ) );
 		                break;
-		                
-		            case "OBJECT":
-		                currentDevice.addCapability( cap.getName(), cap.getValue() );
-                        break;
                         
 		            case "STRING":
 		                currentDevice.addCapability( cap.getName(), cap.getValue() );
@@ -191,6 +201,41 @@ public class XMLDataProvider implements DataProvider
 		        }
 		    }
 		}
+		
+		//Parse the Object Capability element for browser options
+		if ( device.getObjectCapability() != null )
+		{
+		    for ( ObjectDeviceCapability cap : device.getObjectCapability() )
+		    {
+		    	browserOptionMap = new HashMap<String, List<String>>();
+		    	
+		    	if ( cap.getCapabilities() != null )
+		    	{
+		    		for ( Capabilities capabilities : cap.getCapabilities() ) 
+		    		{
+		    			factoryName = capabilities.getFactoryName();
+		    			
+		    			if ( capabilities.getOptions() != null )
+		    			{
+		    				for ( Options option : capabilities.getOptions() )
+		    				{
+		    					if (browserOptionMap.get(option.getName()) == null) {
+		    						list = new ArrayList<String>();
+
+		    					} else {
+		    						list = browserOptionMap.get(option.getName());
+
+		    					}
+		    					list.add(option.getValue());
+		    					browserOptionMap.put(option.getName(), list);
+		    				}
+		    			}
+		    		}
+		    	}
+		    	currentDevice.addCapability(factoryName, browserOptionMap);
+		    }
+		}
+		
 
 		if ( currentDevice.isActive() )
 		{				
