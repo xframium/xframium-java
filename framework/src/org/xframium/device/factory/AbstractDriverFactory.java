@@ -189,7 +189,6 @@ public abstract class AbstractDriverFactory implements DriverFactory
 		{
 			dc = BrowserCapabilityManager.instance().getBrowsercapabilityFactory(name)
 					.createBrowserOptions(dc, (Map<String,List<String>>)value);
-			System.out.println("value:"+value);
 		}
 		return dc;
 	}
