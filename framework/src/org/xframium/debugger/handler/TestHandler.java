@@ -10,6 +10,7 @@ import org.xframium.debugger.TestContainer;
 import org.xframium.device.factory.DeviceWebDriver;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import com.xframium.serialization.SerializationManager;
 
 @SuppressWarnings ( "restriction")
 public class TestHandler implements HttpHandler
@@ -20,8 +21,10 @@ public class TestHandler implements HttpHandler
         Map<String, String> parameterMap = queryToMap( t.getRequestURI().getQuery() );
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append( "<html><body>" );
+        stringBuilder.append( "<html><body><ul>" );
 
+        
+        
         TestContainer tC = DebugManager.instance().getActiveTests().get( parameterMap.get( "executionId" ) );
         
         if ( tC == null )
@@ -36,6 +39,9 @@ public class TestHandler implements HttpHandler
                 stringBuilder.append( "<li>" ).append( sC.getStep().getName() ).append( "</li>" );
             }
         }
+        
+        ;
+        stringBuilder.append( "</ul><script>" ).append(  new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ), tC, 0 ) ) ).append(  "</script>" );
         
         t.sendResponseHeaders( 200, stringBuilder.length() );
         OutputStream os = t.getResponseBody();

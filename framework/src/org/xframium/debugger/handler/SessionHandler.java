@@ -29,6 +29,8 @@ public class SessionHandler implements HttpHandler
             stringBuilder.append( "<li><a href=\"/testCase?executionId=" ).append( ( (DeviceWebDriver) tC.getWebDriver() ).getExecutionId() ).append( "\">" ).append( tC.getKeyWordTest().getName() ).append(  "<i>(" ).append( ( (DeviceWebDriver )tC.getWebDriver() ).getDevice().getEnvironment() ).append( ")</i></li>" );
         }
         
+        
+        
         stringBuilder.append( "</body></html>" );
 
         t.sendResponseHeaders( 200, stringBuilder.length() );

@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xframium.debugger.TestContainer;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
@@ -72,6 +73,8 @@ import org.xframium.page.keyWord.step.spi.KWSVisible;
 import org.xframium.page.keyWord.step.spi.KWSWait;
 import org.xframium.page.keyWord.step.spi.KWSWaitFor;
 import org.xframium.page.keyWord.step.spi.KWSWindow;
+import com.xframium.serialization.SerializationManager;
+import com.xframium.serialization.json.ReflectionSerializer;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -173,6 +176,7 @@ public class KeyWordStepFactory
             log.warn( "Overwriting Keyword [" + keyWord + "] of type [" + stepMap.get( keyWord ).getClass().getSimpleName() + "] with [" + kwImpl.getClass().getSimpleName() );
 
         stepMap.put( keyWord.toUpperCase(), kwImpl );
+        SerializationManager.instance().getDefaultAdapter().addCustomMapping( kwImpl, new ReflectionSerializer() );
     }
 
     /**

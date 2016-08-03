@@ -605,7 +605,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 //
                 // Listener integrations for individual steps
                 //
-                if ( !KeyWordDriver.instance().notifyBeforeStep( altWebDriver != null ? altWebDriver : webDriver, this ) )
+                if ( !KeyWordDriver.instance().notifyBeforeStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap ) )
                 {
                     log.warn( "Test Step was skipped due to a failed step notification listener" );
                     return true;
@@ -623,7 +623,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 }
                 returnValue = _executeStep( pageObject, ((altWebDriver != null) ? altWebDriver : webDriver), contextMap, dataMap, pageMap );
                 
-                KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE );
+                KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE );
                 
             }
             catch ( KWSLoopBreak lb )
@@ -637,7 +637,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 try
                 {
                     WebDriver altWebDriver = getAltWebDriver();
-                    KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE );
+                    KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE );
                 }
                 catch( Exception e2 )
                 {

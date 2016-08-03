@@ -14,8 +14,12 @@ import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.keyWord.spi.KeyWordPageImpl;
+import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.page.listener.KeyWordListener;
 import com.sun.net.httpserver.HttpServer;
+import com.xframium.serialization.SerializationManager;
+import com.xframium.serialization.json.ReflectionSerializer;
 
 @SuppressWarnings ( "restriction")
 public class DebugManager implements KeyWordListener
@@ -30,7 +34,13 @@ public class DebugManager implements KeyWordListener
 
     private DebugManager()
     {
-
+        SerializationManager.instance().setDefaultAdapter( SerializationManager.JSON_SERIALIZATION );
+        SerializationManager.instance().getDefaultAdapter().addCustomMapping( TestContainer.class, new ReflectionSerializer() );
+        SerializationManager.instance().getDefaultAdapter().addCustomMapping( StepContainer.class, new ReflectionSerializer() );
+        SerializationManager.instance().getDefaultAdapter().addCustomMapping( KeyWordStep.class, new ReflectionSerializer() );
+        SerializationManager.instance().getDefaultAdapter().addCustomMapping( AbstractKeyWordStep.class, new ReflectionSerializer() );
+        SerializationManager.instance().getDefaultAdapter().addCustomMapping( KeyWordTest.class, new ReflectionSerializer() );
+        SerializationManager.instance().getDefaultAdapter().addCustomMapping( KeyWordPageImpl.class, new ReflectionSerializer() );
     }
 
     public static DebugManager instance()
@@ -49,19 +59,19 @@ public class DebugManager implements KeyWordListener
     }
 
     @Override
-    public boolean beforeStep( WebDriver webDriver, KeyWordStep currentStep )
+    public boolean beforeStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
     {
         String executionId = ((DeviceWebDriver) webDriver).getExecutionId();
         TestContainer testContainer = activeTests.get( executionId );
 
         if ( testContainer != null )
-            testContainer.addStep( new StepContainer( webDriver, currentStep ) );
+            testContainer.addStep( new StepContainer( webDriver, currentStep, contextMap, pageObject ) );
 
         return true;
     }
 
     @Override
-    public void afterStep( WebDriver webDriver, KeyWordStep currentStep, StepStatus stepStatus )
+    public void afterStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, StepStatus stepStatus )
     {
         String executionId = ((DeviceWebDriver) webDriver).getExecutionId();
         TestContainer testContainer = activeTests.get( executionId );

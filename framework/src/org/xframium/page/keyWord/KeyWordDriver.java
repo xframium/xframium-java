@@ -138,13 +138,13 @@ public class KeyWordDriver
         stepListenerList.remove( stepListener );
     }
 
-    public boolean notifyBeforeStep( WebDriver webDriver, KeyWordStep currentStep )
+    public boolean notifyBeforeStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
     {
         try
         {
             for ( KeyWordListener k : stepListenerList )
             {
-                if ( !k.beforeStep( webDriver, currentStep ) )
+                if ( !k.beforeStep( webDriver, currentStep, pageObject, contextMap, dataMap, pageMap ) )
                     return false;
             }
 
@@ -157,13 +157,13 @@ public class KeyWordDriver
         }
     }
 
-    public void notifyAfterStep( WebDriver webDriver, KeyWordStep currentStep, StepStatus stepStatus )
+    public void notifyAfterStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, StepStatus stepStatus )
     {
         try
         {
             for ( KeyWordListener k : stepListenerList )
             {
-                k.afterStep( webDriver, currentStep, stepStatus );
+                k.afterStep( webDriver, currentStep, pageObject, contextMap, dataMap, pageMap, stepStatus );
             }
         }
         catch ( Exception e )
