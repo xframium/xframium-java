@@ -116,6 +116,7 @@
           <enumeration value="ALERT" />
           <enumeration value="SQL" />
           <enumeration value="OPERATOR" />
+          <enumeration value="NAVIGATE" />
         </restriction>
       </simpleType>
     </attribute>
