@@ -128,7 +128,9 @@ public class WEBDriverFactory extends AbstractDriverFactory
             webDriver.setCloud( useCloud );
 
             if ( ApplicationRegistry.instance().getAUT().getUrl() != null )
+            {
                 webDriver.get( ApplicationRegistry.instance().getAUT().getUrl() );
+            }
 
             return webDriver;
         }
