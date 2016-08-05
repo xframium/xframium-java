@@ -1046,7 +1046,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      *            the data map
      * @return the parameter value
      */
-    protected Object getParameterValue( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap )
+    public Object getParameterValue( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap )
     {
         String returnValue;
         switch ( param.getType() )
@@ -1118,7 +1118,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      *            the data map
      * @return the parameter value
      */
-    protected String getTokenValue( KeyWordToken token, Map<String, Object> contextMap, Map<String, PageData> dataMap )
+    public String getTokenValue( KeyWordToken token, Map<String, Object> contextMap, Map<String, PageData> dataMap )
     {
         switch ( token.getType() )
         {

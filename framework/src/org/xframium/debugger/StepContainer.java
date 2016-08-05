@@ -1,10 +1,12 @@
 package org.xframium.debugger;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.StepStatus;
+import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.KeyWordStep;
 
 public class StepContainer
@@ -15,8 +17,13 @@ public class StepContainer
     private Map<String, Object> contextMap;
     private Page pageObject;
     private String stepType;
+    private List<String> parameterList;
+    private List<String[]> tokenList;
+    private boolean selected;
+    private Element pageElement;
+    private String fullElement;
     
-    public StepContainer( WebDriver webDriver, KeyWordStep step, Map<String, Object> contextMap, Page pageObject )
+    public StepContainer( WebDriver webDriver, KeyWordStep step, Map<String, Object> contextMap, Page pageObject, List<String> parameterList, List<String[]> tokenList )
     {
         this.webDriver = webDriver;
         this.step = step;
@@ -27,8 +34,78 @@ public class StepContainer
             this.contextMap = contextMap;
         this.pageObject = pageObject;
         this.stepType = step.getClass().getSimpleName();
+        this.parameterList = parameterList;
+        this.tokenList = tokenList;
+        
+        this.pageElement = this.pageObject.getElement( step.getPageName(), step.getName() );
+        
+        if ( this.pageElement != null )
+        {
+            Map<String,String> tokenMap = new HashMap<String,String>( 20 );
+
+            for ( String[] tokens : tokenList )
+                tokenMap.put( tokens[ 0 ], tokens[ 1 ] );
+
+            if ( tokenMap != null && !tokenMap.isEmpty() )
+            {
+                fullElement = pageElement.getKey();
+                for ( String tokenName : tokenMap.keySet() )
+                {
+                    if ( tokenMap.get( tokenName ) != null)
+                        fullElement = fullElement.replace( "{" + tokenName + "}", tokenMap.get( tokenName ) );
+                }
+            }
+        }
+        
+        
     }
     
+    
+    
+    public Element getPageElement()
+    {
+        return pageElement;
+    }
+
+
+
+    public void setPageElement( Element pageElement )
+    {
+        this.pageElement = pageElement;
+    }
+
+
+
+    public List<String[]> getTokenList()
+    {
+        return tokenList;
+    }
+
+    public void setTokenList( List<String[]> tokenList )
+    {
+        this.tokenList = tokenList;
+    }
+
+    public List<String> getParameterList()
+    {
+        return parameterList;
+    }
+
+    public void setParameterList( List<String> parameterList )
+    {
+        this.parameterList = parameterList;
+    }
+
+    public boolean isSelected()
+    {
+        return selected;
+    }
+
+    public void setSelected( boolean selected )
+    {
+        this.selected = selected;
+    }
+
     public String getStepType()
     {
         return stepType;

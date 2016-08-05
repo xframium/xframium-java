@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import org.openqa.selenium.WebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
@@ -17,7 +19,44 @@ public class TestContainer
     private Map<String, PageData> dataMap;
     private Map<String, Page> pageMap;
     private Boolean stepPass;
+    private int stepsSent = 0;
     
+    private Lock tLock = new ReentrantLock();
+    private boolean stepAhead = false;
+    
+    
+    public boolean isStepAhead()
+    {
+        return stepAhead;
+    }
+
+    public void pause()
+    {
+        waitFor( true );
+    }
+    
+    public void resume()
+    {
+        tLock.unlock();
+    }
+
+    public void stepAhead()
+    {
+        tLock.unlock();
+        stepAhead = true;
+    }
+    
+    public void waitFor( boolean acquire )
+    {
+        while ( tLock.tryLock() == false )
+        {
+            try { Thread.sleep( 1000 ); } catch( Exception e ) {}
+        }
+        
+        if ( !acquire )
+            tLock.unlock();
+    }
+
     private List<StepContainer> stepList = new ArrayList<StepContainer>( 50 );
     
     public TestContainer( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
@@ -29,6 +68,16 @@ public class TestContainer
         this.pageMap = pageMap;
     }
     
+    public int getStepsSent()
+    {
+        return stepsSent;
+    }
+
+    public void setStepsSent( int stepsSent )
+    {
+        this.stepsSent = stepsSent;
+    }
+
     public void addStep( StepContainer stepContainer )
     {
         stepList.add( stepContainer );

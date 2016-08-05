@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html ng-app="xDebugger">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
+<script src="http://xframium.org/js/selection-model.min.js"></script>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<style>
+.fill {
+	min-height: 100%;
+	height: 100%;
+}
+
+.scrollable {
+	overflow: auto;
+}
+
+html, body {
+	height: 100%;
+}
+
+li.selected {
+	font-weight: bold;
+}
+</style>
+</head>
+<body ng-controller="xFramiumDebugger">
+    <div class="container fill">
+        <table class="table" style="width: 100%; height: 100%">
+            <tr>
+                <td colSpan="3" height="1%">
+                    <h4>
+                        {{test.name}}
+                        <div class="pull-right">
+                            <img src="http://xframium.org/images/camera.png" width="32" height="32" title="Take Snapshot" />
+                            <a target="_blank" ng-attr-href="/extract?executionId={{executionId}}"><img src="http://xframium.org/images/export.png" width="32" height="32" title="Extract Source" /><a>
+                            <a target="_blank" ng-attr-href="/extractXml?executionId={{executionId}}"><img src="http://xframium.org/images/asXml.png" width="32" height="32" title="Extract Source as XML" /></a>
+                            <img ng-click="pause()" src="http://xframium.org/images/pause.png" width="32" height="32" title="Pause Execution" /> 
+                            <img src="http://xframium.org/images/video.png" width="32" height="32" title="Connect to Device" /> 
+                            <img ng-click="resume()" src="http://xframium.org/images/play.png" width="32" height="32" title="Continue Execution" /> 
+                            <img ng-click="ahead()" src="http://xframium.org/images/continue.png" width="32" height="32" title="Step Ahead" />
+                        </div>
+                    </h4>
+                </td>
+            </tr>
+            <tr>
+                <td width="30%" height="50%">
+                    <div class="panel panel-default scrollable" id="stepList">
+                        <div class="panel-heading">
+                            <div class="panel-title">Steps</div>
+                        </div>
+                        <div class="panel-body">
+                            <ol class="list-group">
+                                <li selection-model ng-click="selectStep($index)" style="display: list-item; list-style: decimal inside; padding-top: 2px; padding-bottom: 2px" ng-repeat="step in stepList"
+                                    ng-attr-class="list-group-item list-group-item-{{step.status == 'SUCCESS' || step.status == 'null' ? 'success' : step.step.sFailure == 'ERROR' ? 'danger' : 'warning'}}">{{step.stepType}}</li>
+                            </ol>
+                        </div>
+                    </div>
+                </td>
+                <td width="70%" height="100%">
+                    <div class="panel panel-default scrollable" id="stepList">
+                        <div class="panel-heading">
+                            <div class="panel-title">Step Detail</div>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped table-condensed">
+                                <caption>{{selectedStep.step.pageName}}.{{selectedStep.step.name}}</caption>
+                                <tr>
+                                    <th width="25%">Property</th>
+                                    <th width="75%">Value</th>
+                                </tr>
+                                <tr ng-repeat="(key, value) in selectedStep.step" ng-if="key != 'tokenList' && key != 'description' && key != 'log' && key != 'stepList' && key != 'parameterList' && value != 'null'">
+                                    <td>{{key}}</td>
+                                    <td>{{value}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div ng-if="selectedStep.pageElement != null && selectedStep.pageElement != 'null'" class="panel panel-default scrollable">
+                        <div class="panel-heading">
+                            <div class="panel-title">Page Element Detail</div>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped table-condensed">
+                                <tr>
+                                    <th width="25%">Property</th>
+                                    <th width="75%">Value</th>
+                                </tr>
+                                <tr ng-repeat="(key, value) in selectedStep.pageElement track by $index" ng-if="key != 'log' && key != 'webDriver' && key != 'parameterList' && value != 'null'">
+                                    <td>{{key}}</td>
+                                    <td>{{value}}</td>
+                                </tr>
+                                <tr ng-if="selectedStep.fullElement != null && selectedStep.fullElement != 'null'">
+                                    <td>Tokenized Element</td>
+                                    <td class="success">{{selectedStep.fullElement}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div ng-if="selectedStep.parameterList.length > 0" class="panel panel-default scrollable">
+                        <div class="panel-heading">
+                            <div class="panel-title">Step Parameters</div>
+                        </div>
+                        <div class="panel-body">
+                            <ol class="list-group">
+                                <li selection-model style="display: list-item; list-style: decimal inside; padding-top: 2px; padding-bottom: 2px" ng-repeat="p in selectedStep.parameterList" ng-attr-class="list-group-item list-group-item-info">{{p}}</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div ng-if="selectedStep.tokenList.length > 0" class="panel panel-default scrollable">
+                        <div class="panel-heading">
+                            <div class="panel-title">Step Tokens</div>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped table-condensed">
+                                <tr>
+                                    <th width="25%">Token Name</th>
+                                    <th width="75%">Value</th>
+                                </tr>
+                                <tr ng-repeat="p in selectedStep.tokenList">
+                                    <td>{{p[0]}}</td>
+                                    <td>{{p[1]}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-default scrollable">
+                        <div class="panel-heading">
+                            <div class="panel-title">Context Variables</div>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped table-condensed">
+                                <tr>
+                                    <th width="25%">Name</th>
+                                    <th width="75%">Value</th>
+                                </tr>
+                                <tr ng-repeat="(key, value) in selectedStep.contextMap">
+                                    <td>{{key}}</td>
+                                    <td>{{value}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+<script>
+	var xDebugger = angular.module('xDebugger', [ 'selectionModel' ]);
+	
+	
+	xDebugger.controller('xFramiumDebugger', function XFramiumController(
+			$scope, $interval, $http, $location, xFramiumService) {
+
+		
+		$scope.selectStep = function(stepIndex) {
+			$scope.selectedStep = $scope.stepList[stepIndex];
+		}
+
+		$scope.selectVariable = function(stepIndex) {
+			$scope.selectedVariable = $scope.selectedVariables[stepIndex];
+		}
+		
+		$scope.executionId = '_EXE_ID_';
+
+		$scope.selectedStep;
+		$scope.selectedVariable;
+
+		$scope.test = {};
+
+		$scope.stepList = [];
+
+		$scope.pause =  function() {
+			xFramiumService.pause( $scope.executionId );
+		};
+		
+		$scope.resume =  function() {
+			xFramiumService.resume( $scope.executionId );
+		};
+		
+		$scope.extract =  function() {
+			xFramiumService.extract( $scope.executionId );
+		};
+		
+		$scope.extractXml =  function() {
+			xFramiumService.extractXml( $scope.executionId );
+		};
+		
+		$scope.ahead =  function() {
+			xFramiumService.ahead( $scope.executionId );
+		};
+		
+		$scope.intervalPromise = $interval( function() {
+			$scope.refreshData();
+		}, 1000 );
+
+		$scope.refreshData = function() {
+			xFramiumService.getNewSteps( $scope.executionId ).then( function(returnValue)
+			{
+				if ( returnValue == undefined )
+    			{
+    				$interval.cancel( $scope.intervalPromise );
+    				return;
+    			}
+    			
+    			for ( var i=0; i<returnValue.pageData.length; i++ )
+    			{
+    				$scope.stepList.push( returnValue.pageData[ i ] );
+    			}
+			});
+		}
+		
+		$scope.refreshAllData = function() {
+			xFramiumService.getSteps( $scope.executionId ).then( function(returnValue)
+			{
+    			if ( returnValue == undefined )
+    			{
+    				$interval.cancel( $scope.intervalPromise );
+    				return;
+    			}
+    			
+    			console.log(returnValue.pageData.keyWordTest);
+    			console.log(returnValue.pageData.stepList);
+    			$scope.test = returnValue.pageData.keyWordTest;
+    			$scope.stepList = returnValue.pageData.stepList;
+			});
+		}
+
+		$scope.refreshAllData();
+
+	});
+
+	xDebugger.service("xFramiumService", function($http, $location) {
+		return ({
+			getSteps : getSteps,
+			getNewSteps : getNewSteps,
+			pause : pause,
+			resume : resume,
+			ahead : ahead,
+			extract : extract,
+			extractXml : extractXml
+		});
+
+		function getSteps( useId ) {
+			
+			var request = $http({
+				method : "get",
+				url : "testCase",
+				params : {
+					executionId : useId,
+					ajax : "true"
+				}
+			});
+
+			return request.then(handleSuccess, handleError);
+		};
+		
+		function pause( useId ) {
+			
+			var request = $http({
+				method : "get",
+				url : "pause",
+				params : {
+					executionId : useId,
+				}
+			});
+
+			return request.then(handleSuccess, handleError);
+		};
+		
+		function extract( useId ) {
+			
+			var request = $http({
+				method : "get",
+				url : "extract",
+				params : {
+					executionId : useId,
+				}
+			});
+
+			return request.then(handleSuccess, handleError);
+		};
+		
+		function extractXml( useId ) {
+			
+			var request = $http({
+				method : "get",
+				url : "extractXml",
+				params : {
+					executionId : useId,
+				}
+			});
+
+			return request.then(handleSuccess, handleError);
+		};
+		
+		function resume( useId ) {
+			
+			var request = $http({
+				method : "get",
+				url : "resume",
+				params : {
+					executionId : useId,
+				}
+			});
+
+			return request.then(handleSuccess, handleError);
+		};
+		
+		function ahead( useId ) {
+			
+			var request = $http({
+				method : "get",
+				url : "stepAhead",
+				params : {
+					executionId : useId,
+				}
+			});
+
+			return request.then(handleSuccess, handleError);
+		};
+		
+		function getNewSteps( useId ) {
+			
+			var request = $http({
+				method : "get",
+				url : "testCase",
+				params : {
+					executionId : useId,
+					ajax : "true",
+					newSteps : "true"
+				}
+			});
+
+			return request.then(handleSuccess, handleError);
+		}
+
+		function handleError(response) 
+		{
+			return null;
+		}
+
+		function handleSuccess(response) 
+		{
+			if ( response == undefined )
+				return null;
+			return response.data;
+		}
+
+	});
+</script>
+</html>
