@@ -3,8 +3,26 @@
 	<model>
       <page name="Search" />
    </model>
+
+   <test name="TC-001">
+      <step name="SEARCH" type="EXISTS" page="Search" />
+      <step name="SEARCH" type="SET" page="Search">
+         <parameter type="STATIC" value="xFramium" />
+      </step>
+      <step name="SEARCH_BUTTON" type="CLICK" page="Search" />
+      <step name="RESULTS" type="WAIT_FOR" page="Search" />
+      <step name="RESULTS" type="EXISTS" page="Search" context="resultCount" />
+      <!-- LOOP OVER THE RESULTS -->
+      <step name="LOOP_OVER_RESULTS" type="LOOP" page="Search">
+         <parameter type="CONTEXT" value="resultCount" />
+         <parameter type="STATIC" value="checkResult" />
+      </step>
+
+      <step name="GET" type="WAIT_FOR" page="Home" />
+      <step name="GET" type="CLICK" page="Home" />
+   </test>
    
-   <test name="forceFail" dataProvider="searchCriteria" dataDriver="perfectoResults" active="false">
+  <!-- <test name="forceFail" dataProvider="searchCriteria" dataDriver="perfectoResults" active="false">
       <step name="SEARCH" page="Search" type="WAIT_FOR" />
       <step name="RESULTS" page="Search" type="EXISTS" />
    </test>
@@ -70,7 +88,7 @@
       
       <step name="WAIT" type="WAIT" />
       
-      <!--  <step name="WAIT" type="WAIT" />
+      &lt;!&ndash;  <step name="WAIT" type="WAIT" />
       
       <step type="FORK" page="Search" name="choosePath">
           <parameter type="static" value="SEARCH2" />
@@ -84,7 +102,7 @@
       <step type="LOOP" page="Search" name="checkResults">
           <parameter type="static" value="RESULTS" />
           <parameter type="static" value="viewResult" />
-      </step>  -->
+      </step>  &ndash;&gt;
    </test>
    
    <test name="searchTwo" dataDriver="searchCriteria" active="false">
@@ -99,20 +117,20 @@
       
       <step name="WAIT" type="WAIT" />
       
-      <!-- <step type="FORK" page="Search" name="choosePath">
+      &lt;!&ndash; <step type="FORK" page="Search" name="choosePath">
           <parameter type="static" value="SEARCH2" />
           <parameter type="static" value="SEARCH3" />
           <parameter type="static" value="SEARCH" />
           <step name="RESULTS" page="Search" type="EXISTS" />
           <step name="RESULTS" page="Search" type="EXISTS" />
           <step name="viewResult" page="Search" type="CALL" />
-      </step> -->
+      </step> &ndash;&gt;
       
       <step type="LOOP" page="Search" name="checkResults">
           <parameter type="STATIC" value="RESULTS" />
           <parameter type="STATIC" value="viewResult" />
       </step>
-   </test>
+   </test>-->
    
    <function name="checkText">
       <step name="TOKEN_RESULT" page="Search" type="EXISTS" >
