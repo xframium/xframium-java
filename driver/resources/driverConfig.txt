@@ -2,15 +2,15 @@
 # Cloud Registry
 #
 cloudRegistry.provider=XML
-cloudRegistry.fileName=C:/Projects/git/morelandLabs/customerProjects/xmlDriven/cloudRegistry.xml
-cloudRegistry.cloudUnderTest=partners
+cloudRegistry.fileName=cloudRegistry.xml
+cloudRegistry.cloudUnderTest=demo
 
 #
 # Application Registry
 #
 applicationRegistry.provider=XML
-applicationRegistry.fileName=C:/Projects/git/morelandLabs/customerProjects/xmlDriven/applicationRegistry.xml
-applicationRegistry.applicationUnderTest=default
+applicationRegistry.fileName=applicationRegistry.xml
+applicationRegistry.applicationUnderTest=Google
 
 #
 # Artifact Production
@@ -24,20 +24,20 @@ artifactProducer.automated=EXECUTION_REPORT_HTML,FAILURE_SOURCE,CONSOLE_LOG,WCAG
 #
 # Page Object Configuration
 #
-pageManagement.siteName=MLM
+pageManagement.siteName=Google
 pageManagement.provider=XML
-pageManagement.fileName=C:/Projects/git/morelandLabs/customerProjects/xmlDriven/ford/pageElements.xml
+pageManagement.fileName=TestApp/pageElements.xml
 pageManagement.pageData.provider=XML
-pageManagement.pageData.fileName=C:/Projects/git/morelandLabs/customerProjects/xmlDriven/ford/pageData.xml
+pageManagement.pageData.fileName=TestApp/pageData.xml
 
 #
 # Device Management
 #
 #deviceManagement.provider=RESERVED - NAMED - AVAILABLE  CSV XML EXCEL
 deviceManagement.provider=NAMED
-deviceManagement.driverType=APPIUM
-#deviceManagement.fileName=C:/Projects/git/morelandLabs/customerProjects/xmlDriven/deviceRegistry.xml
-deviceManagement.deviceList=30EDD233,632E9899
+deviceManagement.driverType=WEB
+#deviceManagement.fileName=deviceRegistry.xml
+deviceManagement.deviceList=2A56E99775698D2F1BABD7C1F9D57CA06AF0C7F6
 #deviceManagement.deviceList=78CD9AB49AB11C2B45292E3AC8E1E5FD2295C10D
 
 #
@@ -49,7 +49,7 @@ driver.frameworkType=XML
 #driver.deviceInterrupts=CALL,NOOP
 #driver.tagNames=config
 #driver.testNames=VersionTest
-driver.configName=C:/Projects/git/morelandLabs/customerProjects/xmlDriven/ford/tests.xml
+driver.configName=TestApp/tests.xml
 
 #
 # Third Party Package Integrations
@@ -59,7 +59,7 @@ driver.configName=C:/Projects/git/morelandLabs/customerProjects/xmlDriven/ford/t
 #
 # Optional Imaging Implementation
 #
-integrations.imaging.initialization=com.perfectoMobile.imaging.ImagingInitializer
-integrations.imaging.opencv.libraryLocation=c:/projects/tools/opencv_java248.dll
-integrations.imaging.opencv.templateMatch.algorithms=1,3,5
-integrations.imaging.cacheLocation=c:/projects/tools
+#integrations.imaging.initialization=com.perfectoMobile.imaging.ImagingInitializer
+#integrations.imaging.opencv.libraryLocation=c:/projects/tools/opencv_java248.dll
+#integrations.imaging.opencv.templateMatch.algorithms=1,3,5
+#integrations.imaging.cacheLocation=c:/projects/tools
