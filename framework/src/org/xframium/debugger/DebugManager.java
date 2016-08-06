@@ -1,10 +1,13 @@
 package org.xframium.debugger;
 
+import java.awt.Desktop;
 import java.net.InetSocketAddress;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
@@ -27,6 +30,7 @@ import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.spi.KeyWordPageImpl;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.page.listener.KeyWordListener;
+
 import com.sun.net.httpserver.HttpServer;
 import com.xframium.serialization.SerializationManager;
 import com.xframium.serialization.json.ReflectionSerializer;
@@ -69,6 +73,13 @@ public class DebugManager implements KeyWordListener
     public Map<String, TestContainer> getCompletedTests()
     {
         return completedTests;
+    }
+    public Map<String,Object> getTests()
+    {
+    	Map<String,Object> testMap = new HashMap<String,Object>(10);
+    	testMap.put( "active", activeTests );
+    	testMap.put( "complete", completedTests );
+    	return testMap;
     }
 
     @Override
@@ -153,6 +164,15 @@ public class DebugManager implements KeyWordListener
             httpServer.createContext( "/extract", new ExtractHandler() );
             httpServer.createContext( "/extractXml", new ExtractXMLHandler() );
             httpServer.start();
+
+            try
+            {
+                Desktop.getDesktop().browse( new URI( "http://" + ipAddress + ":" + portNumber + "/sessions") );
+            }
+            catch( Exception e )
+            {
+                e.printStackTrace();
+            }
         }
         catch ( Exception e )
         {

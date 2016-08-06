@@ -23,6 +23,7 @@ public class TestHandler implements HttpHandler
         Map<String, String> parameterMap = queryToMap( t.getRequestURI().getQuery() );
         StringBuilder stringBuilder = new StringBuilder();
 
+
         TestContainer tC = DebugManager.instance().getActiveTests().get( parameterMap.get( "executionId" ) );
 
         if ( tC == null )

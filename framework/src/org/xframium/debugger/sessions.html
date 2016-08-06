@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html ng-app="xDebugger">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
+<script src="http://xframium.org/js/selection-model.min.js"></script>
+<meta charset="ISO-8859-1">
+<title>xFramium Debugger Console</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<style>
+.fill {
+	min-height: 100%;
+	height: 100%;
+}
+
+.scrollable {
+	overflow: auto;
+}
+
+html, body {
+	height: 100%;
+}
+
+li.selected {
+	font-weight: bold;
+}
+</style>
+</head>
+<body ng-controller="xFramiumDebugger">
+	<div class="container fill">
+		<table class="table">
+			<tr>
+				<td>
+					<div class="panel panel-default scrollable" id="stepList">
+						<div class="panel-heading">
+							<div class="panel-title">Active Tests</div>
+						</div>
+						<div class="panel-body">
+							<table class="table table-striped table-condensed">
+								<tr>
+									<th>Name</th>
+									<th>Session</th>
+									<th width="10%">Steps</th>
+									<th width="10%">Steps Run</th>
+									<th width="15%">Last Step</th>
+									<th></th>
+								</tr>
+								<tr ng-repeat="(key, value) in active" >
+									<td><a ng-attr-href="/testCase?executionId={{key}}">{{value.keyWordTest.name}}</a></td>
+									<td>{{key}}</td>
+									<td>{{value.keyWordTest.stepList.length}}</td>
+									<td>{{value.stepList.length}}</td>
+									<td>{{value.stepList[value.stepList.length-1].stepType}}</td>
+									<td><img ng-click="pause(key)" src="http://xframium.org/images/pause.png" width="24" height="24" title="Pause Execution" /> 
+                            		<img src="http://xframium.org/images/video.png" width="24" height="24" title="Connect to Device" /> 
+                            		<img ng-click="resume(key)" src="http://xframium.org/images/play.png" width="24" height="24" title="Continue Execution" /> </td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="panel panel-default scrollable" id="stepList">
+						<div class="panel-heading">
+							<div class="panel-title">Completed Tests</div>
+						</div>
+						<div class="panel-body">
+							<table class="table table-striped table-condensed">
+								<tr>
+									<th>Name</th>
+									<th>Session</th>
+									<th width="10%">Steps</th>
+									<th width="10%">Steps Run</th>
+									<th width="15%">Last Step</th>
+								</tr>
+								<tr ng-repeat="(key, value) in completed" >
+									<td><a ng-attr-href="/testCase?executionId={{key}}">{{value.keyWordTest.name}}</a></td>
+									<td>{{key}}</td>
+									<td>{{value.keyWordTest.stepList.length}}</td>
+									<td>{{value.stepList.length}}</td>
+									<td>{{value.stepList[value.stepList.length-1].stepType}}</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</body>
+<script>
+	var xDebugger = angular.module('xDebugger', [ 'selectionModel' ]);
+
+	xDebugger.controller('xFramiumDebugger', function XFramiumController(
+			$scope, $interval, $http, $location, xFramiumService) {
+
+
+		$scope.active = [];
+
+		$scope.completed = [];
+
+		$scope.pause = function(useId) {
+			xFramiumService.pause(useId);
+		};
+
+		$scope.resume = function(useId) {
+			xFramiumService.resume(useId);
+		};
+
+		$scope.connect = function() {
+			xFramiumService.extract($scope.executionId);
+		};
+
+
+		$scope.intervalPromise = $interval(function() {
+			$scope.refreshData();
+		}, 1000);
+
+
+		$scope.refreshData = function() {
+			xFramiumService.getTests().then(
+					function(returnValue) {
+						if (returnValue == undefined) {
+							$interval.cancel($scope.intervalPromise);
+							return;
+						}
+
+						console.log(returnValue.pageData);
+						
+						$scope.active = returnValue.pageData.active;
+						$scope.completed = returnValue.pageData.complete;
+						
+					});
+		}
+
+		$scope.refreshData();
+
+	});
+
+	xDebugger.service("xFramiumService", function($http, $location) {
+		return ({
+			pause : pause,
+			resume : resume,
+			connect : connect,
+			getTests : getTests
+		});
+
+		function getTests() {
+
+			var request = $http({
+				method : "get",
+				url : "sessions",
+				params : {
+					ajax : "true"
+				}
+			});
+
+			return request.then(handleSuccess, handleError);
+		}
+		;
+
+		function pause(useId) {
+
+			var request = $http({
+				method : "get",
+				url : "pause",
+				params : {
+					executionId : useId,
+				}
+			});
+
+			return request.then(handleSuccess, handleError);
+		}
+		;
+
+		function connect(useId) {
+
+			var request = $http({
+				method : "get",
+				url : "connect",
+				params : {
+					executionId : useId,
+				}
+			});
+
+			return request.then(handleSuccess, handleError);
+		};
+
+		
+		function resume(useId) {
+
+			var request = $http({
+				method : "get",
+				url : "resume",
+				params : {
+					executionId : useId,
+				}
+			});
+
+			return request.then(handleSuccess, handleError);
+		}
+		;
+
+		function handleError(response) {
+			return null;
+		}
+
+		function handleSuccess(response) {
+			if (response == undefined)
+				return null;
+			return response.data;
+		}
+
+	});
+</script>
+</html>

@@ -154,8 +154,6 @@ public class RESTInvocationHandler implements InvocationHandler
 		
 		URL currentUrl = new URL( urlBuilder.toString() );
 		
-		System.out.println( currentUrl );
-		
 		if ( log.isDebugEnabled() )
 			log.debug( "Submitting REST call as " + urlBuilder.toString() );
 		
