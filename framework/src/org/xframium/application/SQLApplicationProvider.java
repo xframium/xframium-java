@@ -36,11 +36,11 @@ public class SQLApplicationProvider extends AbstractApplicationProvider
 
     private static final String DEF_QUERY =
         "SELECT NAME, APP_PACKAGE, BUNDLE_ID, URL, IOS_INSTALL, ANDROID_INSTALL \n" +
-        "FROM PERFECTO_APPLICATIONS";
+        "FROM APPLICATIONS";
 
     private static final String DEF_CAP_QUERY =
         "SELECT APP_NAME, NAME, CLASS, VALUE \n" +
-        "FROM PERFECTO_APP_DEV_CAPABILITIES";
+        "FROM APP_DEV_CAPABILITIES";
 
     //
     // instance data

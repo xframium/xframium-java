@@ -133,8 +133,8 @@ public class ElementFactory
     	
     	String implementationName = this.getClass().getPackage().getName() + "." + implName + "Element";
     	
-    	if ( log.isDebugEnabled() )
-    		log.debug( "Creating Element by [" + by + " as [" + keyName + "] as [" + implementationName + "]" );
+    	if ( log.isInfoEnabled() )
+    		log.info( "Creating Element by [" + by + " as [" + keyName + "] as [" + implementationName + "]" );
     	
     	Element currentElement = null;
     	

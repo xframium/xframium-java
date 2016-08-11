@@ -36,7 +36,7 @@ li.selected {
                     <h4>
                         {{test.name}}
                         <div class="pull-right">
-                            <img src="http://xframium.org/images/camera.png" width="32" height="32" title="Take Snapshot" />
+                            <img ng-click="takeSnapshot()" src="http://xframium.org/images/camera.png" width="32" height="32" title="Take Snapshot" />
                             <a target="_blank" ng-attr-href="/extract?executionId={{executionId}}"><img src="http://xframium.org/images/export.png" width="32" height="32" title="Extract Source" /><a>
                             <a target="_blank" ng-attr-href="/extractXml?executionId={{executionId}}"><img src="http://xframium.org/images/asXml.png" width="32" height="32" title="Extract Source as XML" /></a>
                             <img ng-click="pause()" src="http://xframium.org/images/pause.png" width="32" height="32" title="Pause Execution" /> 
@@ -58,6 +58,14 @@ li.selected {
                                 <li selection-model ng-click="selectStep($index)" style="display: list-item; list-style: decimal inside; padding-top: 2px; padding-bottom: 2px" ng-repeat="step in stepList"
                                     ng-attr-class="list-group-item list-group-item-{{step.status == 'SUCCESS' || step.status == 'null' ? 'success' : step.step.sFailure == 'ERROR' ? 'danger' : 'warning'}}">{{step.stepType}}</li>
                             </ol>
+                        </div>
+                    </div>
+                    <div class="panel panel-default scrollable" id="stepList">
+                        <div class="panel-heading">
+                            <div class="panel-title">Screenshot</div>
+                        </div>
+                        <div class="panel-body">
+                            <img src="{{snapshot}}" width="100%" />
                         </div>
                     </div>
                 </td>
@@ -145,6 +153,33 @@ li.selected {
                             </table>
                         </div>
                     </div>
+                    <div class="panel panel-default scrollable">
+                        <div class="panel-heading">
+                            <div class="panel-title">Page Data</div>
+                        </div>
+                        <div class="panel-body">
+                            
+                            <table class="table table-striped table-condensed" ng-repeat="(key, value) in pageData">
+                                <caption>Record Type: {{key}}</caption>
+                                <tr>
+                                    <th width="25%">Name</th>
+                                    <th width="75%">Value</th>
+                                </tr>
+                                <tr>
+                                    <td>recordName</td>
+                                    <td>{{value.recordName}}</td>
+                                </tr>
+                                <tr>
+                                    <td>active</td>
+                                    <td>{{value.active}}</td>
+                                </tr>
+                                <tr ng-repeat="(key2, value2) in value.recordMap track by $index">
+                                    <td>{{key2}}</td>
+                                    <td>{{value2}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 </td>
             </tr>
         </table>
@@ -172,8 +207,10 @@ li.selected {
 		$scope.selectedVariable;
 
 		$scope.test = {};
+		$scope.snapshot = {};
 
 		$scope.stepList = [];
+		$scope.pageData = [];
 
 		$scope.pause =  function() {
 			xFramiumService.pause( $scope.executionId );
@@ -215,6 +252,20 @@ li.selected {
 			});
 		}
 		
+		$scope.takeSnapshot = function() {
+			xFramiumService.snapshot( $scope.executionId ).then( function(returnValue)
+			{
+				if ( returnValue == undefined )
+    			{
+    				$interval.cancel( $scope.intervalPromise );
+    				return;
+    			}
+    			
+				$scope.snapshot = 'data:image/png;base64,' + returnValue;
+
+			});
+		}
+		
 		$scope.refreshAllData = function() {
 			xFramiumService.getSteps( $scope.executionId ).then( function(returnValue)
 			{
@@ -224,10 +275,10 @@ li.selected {
     				return;
     			}
     			
-    			console.log(returnValue.pageData.keyWordTest);
-    			console.log(returnValue.pageData.stepList);
     			$scope.test = returnValue.pageData.keyWordTest;
     			$scope.stepList = returnValue.pageData.stepList;
+    			console.log(returnValue.pageData);
+    			$scope.pageData = returnValue.pageData.dataMap;
 			});
 		}
 
@@ -243,6 +294,7 @@ li.selected {
 			resume : resume,
 			ahead : ahead,
 			extract : extract,
+			snapshot : snapshot,
 			extractXml : extractXml
 		});
 
@@ -254,6 +306,19 @@ li.selected {
 				params : {
 					executionId : useId,
 					ajax : "true"
+				}
+			});
+
+			return request.then(handleSuccess, handleError);
+		};
+		
+		function snapshot( useId ) {
+			
+			var request = $http({
+				method : "get",
+				url : "snapshot",
+				params : {
+					executionId : useId,
 				}
 			});
 
