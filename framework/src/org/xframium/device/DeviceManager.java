@@ -872,6 +872,13 @@ public class DeviceManager implements ArtifactListener
         analyticsMap.put( currentDevice.getKey(), new DeviceAnalytics( currentDevice.getKey() ) );
         deviceList.add( currentDevice );
     }
+    
+    public void registerInactiveDevice( Device currentDevice )
+    {
+        if (log.isInfoEnabled())
+            log.info( "Registering Device " + currentDevice );
+        deviceMap.put( currentDevice.getKey(), currentDevice );
+    }
 
 	/**
 	 * Checks if is caching enabled.

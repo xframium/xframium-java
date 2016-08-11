@@ -63,6 +63,7 @@ public class KWSDumpState extends AbstractKeyWordStep
                 byte[] screenShot = ( ( TakesScreenshot ) webDriver ).getScreenshotAs( OutputType.BYTES );
                 
                 screenFile = File.createTempFile( "state", ".png", useFolder );
+                contextMap.put( "_SCREENSHOT", screenFile.getAbsolutePath() );
                 screenFile.getParentFile().mkdirs();
                 os = new BufferedOutputStream( new FileOutputStream( screenFile ) );
                 os.write( screenShot );
@@ -86,6 +87,10 @@ public class KWSDumpState extends AbstractKeyWordStep
         {
             File xmlFile = File.createTempFile( "dom-", ".xml", useFolder );
             domFile = new File( xmlFile.getParentFile(), xmlFile.getName().replace( ".xml", ".html" ) );
+            
+            contextMap.put( "_DOM_XML", xmlFile.getAbsolutePath() );
+            contextMap.put( "_DOM_HTML", domFile.getAbsolutePath() );
+            
             String pageSource = webDriver.getPageSource();
             outputStream = new FileOutputStream( xmlFile );
             if ( ApplicationRegistry.instance().getAUT().isWeb() )

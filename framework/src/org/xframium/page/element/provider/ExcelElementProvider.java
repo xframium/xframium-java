@@ -178,7 +178,6 @@ public class ExcelElementProvider extends AbstractElementProvider
 	
 				for (int i = 1; i <= sheet.getLastRowNum(); i++)
 				{
-				    System.out.println( i );
 					XSSFRow currentRow = sheet.getRow( i );
 	
 					if ( getCellValue( currentRow.getCell( 0 ) ) == null || getCellValue( currentRow.getCell( 0 ) ).isEmpty() )

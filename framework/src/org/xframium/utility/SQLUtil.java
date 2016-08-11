@@ -100,7 +100,7 @@ public class SQLUtil
     }
 
     /**
-     * This method establishes the DB connection, executes the SQL statement and returns a map
+     * This method establishes the DB connection, executes a query and returns results in a map
      * @param username
      * @param password
      * @param url
@@ -155,6 +155,64 @@ public class SQLUtil
             try { conn.close(); }
             catch( Throwable e ) {}
         }
+    }
+
+    /**
+     * This method establishes the DB connection, executes the SQL statement and returns the modified row count
+     * @param username
+     * @param password
+     * @param url
+     * @param driver
+     * @param statement
+     * @param params
+     * @return Map
+     * @throws Exception
+     */
+    public static int execute( String username,
+                                 String password,
+                                 String url,
+                                 String driver,
+                                 String statement,
+                                 String[] params )
+        throws Exception
+    {
+        int rtn = 0;
+        
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try
+        {
+            conn = getConnection( username,
+                                  password,
+                                  url,
+                                  driver );
+
+            pstmt = conn.prepareStatement( statement );
+
+            if ( params != null )
+            {
+                int offset = 1;
+                for( String param : params )
+                {
+                    pstmt.setString( offset++, param );
+                }
+            }
+
+            rtn = pstmt.executeUpdate();
+
+            conn.commit();
+        }
+        finally
+        {
+            try { pstmt.close(); }
+            catch( Throwable e ) {}
+            
+            try { conn.close(); }
+            catch( Throwable e ) {}
+        }
+
+        return rtn;
     }
 
     //

@@ -162,12 +162,6 @@ public class RunDetails implements RunListener
         }
 
     }
-
-    public static void main( String[] args )
-    {
-        System.out.println( Base64.encodeBase64String( "ageary@morelandlabs.com".getBytes() ) );
-    }
-
     public synchronized void writeHTMLIndex( File rootFolder, boolean complete )
     {
         Collections.sort( detailsList, new RunComparator() );

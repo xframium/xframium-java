@@ -67,8 +67,8 @@ public interface KeyWordStep
 	}
 
 	public void setTagNames( String tagNames );
-	
-	
+	public Object getParameterValue( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap );
+	public String getTokenValue( KeyWordToken token, Map<String, Object> contextMap, Map<String, PageData> dataMap );
 	
 	/**
 	 * Gets the link id.
@@ -83,6 +83,9 @@ public interface KeyWordStep
 	 * @param os the new os
 	 */
 	public void setOs( String os );
+	public List<KeyWordParameter> getParameterList();
+	
+	public List<KeyWordToken> getTokenList();
 	
 	/**
 	 * Gets the link id.

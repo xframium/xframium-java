@@ -26,6 +26,7 @@ package org.xframium.device.factory.spi;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.ContextAware;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.xframium.application.ApplicationRegistry;
@@ -107,6 +108,7 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 			webDriver.setReportKey( caps.getCapability( "reportKey" ).toString() );
 			webDriver.setDeviceName( caps.getCapability( "deviceName" ).toString() );
 			webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
+			webDriver.context( "NATIVE_APP" );
 			
 			if( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAndroidIdentifier().isEmpty() )
             {
