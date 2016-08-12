@@ -81,7 +81,7 @@ public class MatrixTest
     
     public KeyWordTest createTest()
     {
-        KeyWordTest kTest = new KeyWordTest( name, active, dataProvider, dataDriver, timed, linkId, os, threshold, description, tagNames );
+        KeyWordTest kTest = new KeyWordTest( name, active, dataProvider, dataDriver, timed, linkId, os, threshold, description, tagNames, null );
         
         int currentPosition = 0;
         

@@ -73,6 +73,9 @@ public class KeyWordTest
     /** The test tags. */
     private String[] testTags;
 
+    /** The contnet keys */
+    private String[] contentKeys;
+
     /** The step list. */
     private List<KeyWordStep> stepList = new ArrayList<KeyWordStep>( 10 );
 
@@ -99,8 +102,10 @@ public class KeyWordTest
      *            the description
      * @param testTags
      *            the test tags
+     * @param contentKeys
+     *            the content keys
      */
-    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags )
+    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags ) //, String contentKeys )
     {
         this.name = name;
         this.active = active;
@@ -117,6 +122,11 @@ public class KeyWordTest
             this.testTags = testTags.split( "," );
         else
             this.testTags = new String[] { "" };
+
+        if ( contentKeys != null )
+            this.contentKeys = contentKeys.split( "," );
+        else
+            this.contentKeys = new String[] { "" };
     }
 
     /**
@@ -128,7 +138,7 @@ public class KeyWordTest
      */
     public KeyWordTest copyTest( String testName )
     {
-        KeyWordTest newTest = new KeyWordTest( testName, active, null, dataDriver, timed, linkId, os, threshold, description, null );
+        KeyWordTest newTest = new KeyWordTest( testName, active, null, dataDriver, timed, linkId, os, threshold, description, null, null );
         newTest.dataProviders = dataProviders;
         newTest.stepList = stepList;
         newTest.testTags = testTags;
@@ -382,6 +392,16 @@ public class KeyWordTest
             return new String[] { "" };
         else
             return testTags;
+    }
+
+    /**
+     * Gets the content keys.
+     *
+     * @return the content keys
+     */
+    public String[] getContentKeys()
+    {
+        return contentKeys;
     }
 
 }

@@ -321,7 +321,7 @@ public class SQLKeyWordProvider
 
     private KeyWordTest parseTest( Test xTest, String typeName )
     {
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), "", xTest.getTagNames() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), "", xTest.getTagNames(), null );
 		
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
 

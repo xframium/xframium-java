@@ -25,6 +25,7 @@ import org.testng.SkipException;
 import org.testng.annotations.Test;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactType;
+import org.xframium.content.ContentManager;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
@@ -42,86 +43,97 @@ import com.perfecto.reportium.test.result.TestResultFactory;
 
 public class XMLTestDriver extends AbstractSeleniumTest
 {
-	@Test( dataProvider = "deviceManager")
-	public void testDriver( TestName testName ) throws Throwable
-	{
-		String deviceOs = getDevice().getOs();
-		boolean returnValue = false;
+    @Test( dataProvider = "deviceManager")
+    public void testDriver( TestName testName ) throws Throwable
+    {
+        String deviceOs = getDevice().getOs();
+        boolean returnValue = false;
 
-		try
-		{
-    		KeyWordTest test = KeyWordDriver.instance().getTest( testName.getTestName().split( "\\." )[ 0 ] );
-    		if ( test == null )
-    			throw new IllegalArgumentException( "The Test Name " + testName + " does not exist" );
-    		
-    		if ( test.getOs() != null && deviceOs != null )
-    		{
-    			if ( !deviceOs.toUpperCase().equals(  test.getOs().toUpperCase() ) )
-    				throw new SkipException( "This test is not designed to work on a device with [" + deviceOs + "]  It needs [" + test.getOs() + "]" );
-    		}
-    		
-    		if ( DeviceManager.instance().isDryRun() )
-    		{
-    			log.info( "This would have executed " +  testName.getTestName() );
-    			return;
-    		}
-    		
-    		
-    		
-    		if ( ( (DeviceWebDriver) getWebDriver() ).getCloud().getProvider().equals( "PERFECTO" ) )
-    		{
-        		if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) && getWebDriver() instanceof ReportiumProvider )
+        KeyWordTest test = KeyWordDriver.instance().getTest( testName.getTestName().split( "\\." )[ 0 ] );
+        if ( test == null )
+            throw new IllegalArgumentException( "The Test Name " + testName + " does not exist" );
+
+        for( String contentKey : test.getContentKeys() )
+        {
+            if (( contentKey != null ) &&
+                ( contentKey.length() > 0 ))
+            {
+                ContentManager.instance().setCurrentContentKey( contentKey );
+            }
+            else
+            {
+                ContentManager.instance().setCurrentContentKey( null );
+            }
+            
+            try
+            {	
+                if ( test.getOs() != null && deviceOs != null )
                 {
-        		    //
-        		    // Reportium Integration
-        		    //
-        		    String[] tags = new String[] { "xFramium" };
-        		    if ( test.getTags() != null && test.getTags().length > 0 )
-        		        tags = test.getTags();
+                    if ( !deviceOs.toUpperCase().equals(  test.getOs().toUpperCase() ) )
+                        throw new SkipException( "This test is not designed to work on a device with [" + deviceOs + "]  It needs [" + test.getOs() + "]" );
+                }
+    		
+                if ( DeviceManager.instance().isDryRun() )
+                {
+                    log.info( "This would have executed " +  testName.getTestName() );
+                    return;
+                }
+    		
+                if ( ( (DeviceWebDriver) getWebDriver() ).getCloud().getProvider().equals( "PERFECTO" ) )
+                {
+                    if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) && getWebDriver() instanceof ReportiumProvider )
+                    {
+                        //
+                        // Reportium Integration
+                        //
+                        String[] tags = new String[] { "xFramium" };
+                        if ( test.getTags() != null && test.getTags().length > 0 )
+                            tags = test.getTags();
         
-        		    PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder().withProject(new Project(ApplicationRegistry.instance().getAUT().getName(), "1.0")).withContextTags( tags ).withWebDriver(getWebDriver() ).build();
-        		    ( (ReportiumProvider) getWebDriver() ).setReportiumClient( new ReportiumClientFactory().createPerfectoReportiumClient( perfectoExecutionContext ) );
+                        PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder().withProject(new Project(ApplicationRegistry.instance().getAUT().getName(), "1.0")).withContextTags( tags ).withWebDriver(getWebDriver() ).build();
+                        ( (ReportiumProvider) getWebDriver() ).setReportiumClient( new ReportiumClientFactory().createPerfectoReportiumClient( perfectoExecutionContext ) );
         		    
-                    if ( ( (ReportiumProvider) getWebDriver() ).getReportiumClient() != null )
-                        ( (ReportiumProvider) getWebDriver() ).getReportiumClient().testStart( testName.getTestName(), new com.perfecto.reportium.test.TestContext() );
-                }
-    		}
-    		
-    		if ( test.getDescription() != null && !test.getDescription().isEmpty() && getWebDriver() instanceof PropertyProvider )
-    		    ( (PropertyProvider) getWebDriver() ).setProperty( "testDescription", test.getDescription() );
-    		
-    		returnValue = KeyWordDriver.instance().executeTest( testName.getTestName().split( "\\." )[ 0 ], getWebDriver() );
-		}
-		finally
-		{
-    		if ( returnValue )
-    		{
-    		    if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
-                {
-                    if ( ( (ReportiumProvider) getWebDriver() ).getReportiumClient() != null )
-                    {
-                        if ( returnValue )
-                            ( (ReportiumProvider) getWebDriver() ).getReportiumClient().testStop( TestResultFactory.createSuccess() );
+                        if ( ( (ReportiumProvider) getWebDriver() ).getReportiumClient() != null )
+                            ( (ReportiumProvider) getWebDriver() ).getReportiumClient().testStart( testName.getTestName(), new com.perfecto.reportium.test.TestContext() );
                     }
                 }
-    			return;
-    		}
-    		else
-    		{
-    		    if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
+    		
+                if ( test.getDescription() != null && !test.getDescription().isEmpty() && getWebDriver() instanceof PropertyProvider )
+                    ( (PropertyProvider) getWebDriver() ).setProperty( "testDescription", test.getDescription() );
+    		
+                returnValue = KeyWordDriver.instance().executeTest( testName.getTestName().split( "\\." )[ 0 ], getWebDriver() );
+            }
+            finally
+            {
+                if ( returnValue )
                 {
-                    if ( ( (ReportiumProvider) getWebDriver() ).getReportiumClient() != null )
+                    if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
                     {
-                        ( (ReportiumProvider) getWebDriver() ).getReportiumClient().testStop( TestResultFactory.createFailure( PageManager.instance().getThrowable() != null ? PageManager.instance().getThrowable().getMessage() : "Test returned false", PageManager.instance().getThrowable() ) );
+                        if ( ( (ReportiumProvider) getWebDriver() ).getReportiumClient() != null )
+                        {
+                            if ( returnValue )
+                                ( (ReportiumProvider) getWebDriver() ).getReportiumClient().testStop( TestResultFactory.createSuccess() );
+                        }
+                    }
+                    return;
+                }
+                else
+                {
+                    if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
+                    {
+                        if ( ( (ReportiumProvider) getWebDriver() ).getReportiumClient() != null )
+                        {
+                            ( (ReportiumProvider) getWebDriver() ).getReportiumClient().testStop( TestResultFactory.createFailure( PageManager.instance().getThrowable() != null ? PageManager.instance().getThrowable().getMessage() : "Test returned false", PageManager.instance().getThrowable() ) );
+                        }
                     }
                 }
-    		}
-		}
+            }
 		
-		if ( PageManager.instance().getThrowable() != null )
-			throw PageManager.instance().getThrowable();
+            if ( PageManager.instance().getThrowable() != null )
+                throw PageManager.instance().getThrowable();
 
-		Assert.assertTrue( returnValue );
-	} 
+            Assert.assertTrue( returnValue );
+        }
+    } 
 
 }
