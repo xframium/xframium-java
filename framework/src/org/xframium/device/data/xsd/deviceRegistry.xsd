@@ -67,6 +67,7 @@
 			<simpleType>
 				<restriction base="string">
 					<enumeration value="ChromeOptions" />
+					<enumeration value="FirefoxProfile"/>
 				</restriction>
 			</simpleType>
 		</attribute>
@@ -76,6 +77,7 @@
 		<simpleContent>
 			<extension base="string">
 				<attribute name="name" type="string" use="required" />
+				<attribute name="key" type="string" use="optional" />
 			</extension>
 		</simpleContent>
 	</complexType>
