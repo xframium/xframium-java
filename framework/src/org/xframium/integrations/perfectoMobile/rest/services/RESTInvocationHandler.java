@@ -33,6 +33,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xframium.device.DeviceManager;
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.NameOverride;
 import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.Operation;
@@ -68,12 +70,25 @@ public class RESTInvocationHandler implements InvocationHandler
 	 */
 	public Object invoke( Object proxy, Method method, Object[] args ) throws Throwable
 	{
+	    CloudDescriptor currentCloud = DeviceManager.instance().getCurrentCloud();
+        if ( currentCloud != null && !currentCloud.getProvider().equals( "PERFECTO" ) )
+            return null;
+	    
 		StringBuilder urlBuilder = new StringBuilder();
 		
-		urlBuilder.append( PerfectoMobile.instance().getBaseUrl() );
 		
-		if ( !PerfectoMobile.instance().getBaseUrl().endsWith( SLASH ) )
-			urlBuilder.append( SLASH );
+		//
+		// If the factory specified a cloud descriptor then use that URL
+		//
+		if ( currentCloud != null )
+    		urlBuilder.append( "https://" + currentCloud.getHostName() ).append( SLASH );
+		else
+		{
+		    urlBuilder.append( PerfectoMobile.instance().getBaseUrl() );
+            
+            if ( !PerfectoMobile.instance().getBaseUrl().endsWith( SLASH ) )
+                urlBuilder.append( SLASH );
+		}
 		
 		urlBuilder.append( "services/" );
 		
@@ -130,8 +145,20 @@ public class RESTInvocationHandler implements InvocationHandler
 			throw new IllegalArgumentException( "Operation was NOT found" );
 		
 		urlBuilder.append( "?operation=" ).append( op.operationName() );
-		urlBuilder.append( "&user=" ).append( PerfectoMobile.instance().getUserName() );
-		urlBuilder.append( "&password=" ).append( PerfectoMobile.instance().getPassword() );
+		
+	      //
+        // If the factory specified a cloud descriptor then use those credentials
+        //
+		if ( currentCloud != null )
+		{
+		    urlBuilder.append( "&user=" ).append( currentCloud.getUserName() );
+	        urlBuilder.append( "&password=" ).append( currentCloud.getPassword() );
+		}
+		else
+		{
+    		urlBuilder.append( "&user=" ).append( PerfectoMobile.instance().getUserName() );
+    		urlBuilder.append( "&password=" ).append( PerfectoMobile.instance().getPassword() );
+		}
 		
 		PerfectoCommand command = actualMethod.getAnnotation( PerfectoCommand.class );
 		if ( command != null )

@@ -42,6 +42,7 @@ import org.openqa.selenium.WebDriver;
 import org.xframium.artifact.ArtifactListener;
 import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactType;
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.comparator.WeightedDeviceComparator;
 import org.xframium.device.data.DataProvider.DriverType;
 import org.xframium.device.data.NamedDataProvider;
@@ -64,6 +65,8 @@ public class DeviceManager implements ArtifactListener
 	
     /** The execution id. */
     private ThreadLocal<String> executionId = new ThreadLocal<String>();
+    
+    private ThreadLocal<CloudDescriptor> currentCloud = new ThreadLocal<CloudDescriptor>();
 	
     /** Stores an instance to a log handler */
     private ThreadLocal<StringBuffer> logHandler = new ThreadLocal<StringBuffer>();
@@ -114,6 +117,16 @@ public class DeviceManager implements ArtifactListener
         return driverType;
     }
 
+    public CloudDescriptor getCurrentCloud()
+    {
+        return currentCloud.get();
+    }
+    
+    public void setCurrentCloud( CloudDescriptor currentCloud )
+    {
+        this.currentCloud.set( currentCloud );
+    }
+    
 
     public void setSelectedDevice( Device selectedDevice )
     {
