@@ -169,6 +169,7 @@ public abstract class AbstractDriverFactory implements DriverFactory
 	 * @param String - name of the option
 	 * @return DesiredCapabilities
 	 */
+	@SuppressWarnings("unchecked")
 	protected DesiredCapabilities setCapabilities(Object value, DesiredCapabilities dc, String name) {
 		if (value instanceof Boolean)
 		{
@@ -188,7 +189,7 @@ public abstract class AbstractDriverFactory implements DriverFactory
 		else if (value instanceof Map) 
 		{
 			dc = BrowserCapabilityManager.instance().getBrowsercapabilityFactory(name)
-					.createBrowserOptions(dc, (Map<String,List<String>>)value);
+					.createBrowserOptions(dc, (Map<String,Object>)value);
 		}
 		return dc;
 	}

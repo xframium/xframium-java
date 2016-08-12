@@ -149,13 +149,15 @@ public class XMLDataProvider implements DataProvider
 	 *
 	 * @param deviceNode the device node
 	 */
+	@SuppressWarnings("unchecked")
 	private void parseDevice( org.xframium.device.data.xsd.Device device )
 	{
 		String driverName = "";
-		List<String> list = null;
+		List<Object> list = null;
 		String factoryName = null;
-		Map<String, List<String>> browserOptionMap = null;
-		
+		Map<String,String> keyOptions = null;
+		Map<String, Object> browserOptionMap = null;
+
 		switch( driverType )
 		{
 			case APPIUM:
@@ -203,37 +205,36 @@ public class XMLDataProvider implements DataProvider
 		}
 		
 		//Parse the Object Capability element for browser options
-		if ( device.getObjectCapability() != null )
-		{
-		    for ( ObjectDeviceCapability cap : device.getObjectCapability() )
-		    {
-		    	browserOptionMap = new HashMap<String, List<String>>();
-		    	
-		    	if ( cap.getCapabilities() != null )
-		    	{
-		    		for ( Capabilities capabilities : cap.getCapabilities() ) 
-		    		{
-		    			factoryName = capabilities.getFactoryName();
-		    			
-		    			if ( capabilities.getOptions() != null )
-		    			{
-		    				for ( Options option : capabilities.getOptions() )
-		    				{
-		    					if (browserOptionMap.get(option.getName()) == null) {
-		    						list = new ArrayList<String>();
+		if (device.getObjectCapability() != null) {
+			for (ObjectDeviceCapability cap : device.getObjectCapability()) {
+				browserOptionMap = new HashMap<String, Object>();
+				keyOptions = new HashMap<String, String>();
 
-		    					} else {
-		    						list = browserOptionMap.get(option.getName());
+				if (cap.getCapabilities() != null) {
+					for (Capabilities capabilities : cap.getCapabilities()) {
+						factoryName = capabilities.getFactoryName();
 
-		    					}
-		    					list.add(option.getValue());
-		    					browserOptionMap.put(option.getName(), list);
-		    				}
-		    			}
-		    		}
-		    	}
-		    	currentDevice.addCapability(factoryName, browserOptionMap);
-		    }
+						if (capabilities.getOptions() != null) {
+							for (Options option : capabilities.getOptions()) {
+								if (option.getKey() == null) {
+									if (browserOptionMap.get(option.getName()) == null) {
+										list = new ArrayList<Object>();
+									} else {
+										list = (List<Object>) browserOptionMap.get(option.getName());
+									}
+									browserOptionMap.put(option.getName(), list);
+									list.add(option.getValue());
+									currentDevice.addCapability(factoryName, browserOptionMap);
+								    } else {
+									keyOptions.put(option.getKey(), option.getValue());
+									browserOptionMap.put(option.getName(), keyOptions);
+									currentDevice.addCapability(factoryName, browserOptionMap);
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 		
 

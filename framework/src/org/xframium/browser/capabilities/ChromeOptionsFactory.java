@@ -23,7 +23,7 @@ public class ChromeOptionsFactory extends AbstractBrowserCapability{
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected DesiredCapabilities _createBrowserOptions(DesiredCapabilities dc, Map <String,List<String>> options) {
+	protected DesiredCapabilities _createBrowserOptions(DesiredCapabilities dc, Map <String,Object> options) {
 		
 		if ( log.isDebugEnabled() )
 			log.debug( "Creating chromeBrowserOptions " );
