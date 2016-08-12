@@ -40,11 +40,11 @@ public class SQLDataProvider implements DataProvider
 
     private static final String DEF_QUERY =
         "SELECT NAME, ID, MANUFACTURER, MODEL, OS, OS_VERSION, BROWSER_NAME, BROWSER_VERSION, ACTIVE, AVAILABLE \n" +
-        "FROM PERFECTO_DEVICES";
+        "FROM DEVICES";
 
     private static final String DEF_CAP_QUERY =
         "SELECT DEVICE_NAME, NAME, CLASS, VALUE \n" +
-        "FROM PERFECTO_DEVICE_CAPABILITIES";
+        "FROM DEVICE_CAPABILITIES";
     
     //
     // instance data
