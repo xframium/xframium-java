@@ -114,9 +114,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     private static final String[] OPT_DATA = new String[] { "pageManagement.pageData.query" };
     private static final String[] OPT_CONTENT = new String[] { "pageManagement.content.query" };
     private static final String[] OPT_DEVICE = new String[] { "deviceManagement.device.query", "deviceManagement.capability.query" };
-    private static final String[] OPT_DRIVER = new String[] { "driver.suite", "driver.suiteQuery", "driver.pageQuery", "driver.importQuery",  "driver.testQuery",
-                                                              "driver.stepQuery", "driver.substepQuery", "driver.paramQuery", "driver.tokenQuery",
-                                                              "driver.functionQuery" };
+    private static final String[] OPT_DRIVER = new String[] { "driver.suiteName", "driver.modelQuery", "driver.testSuiteQuery", "driver.testCaseQuery" };
     private XFramiumRoot xRoot;
     private Map<String,String> configProperties = new HashMap<String,String>( 10 );
     
@@ -730,16 +728,11 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                                                                             configProperties.get( JDBC[1] ),
                                                                             configProperties.get( JDBC[2] ),
                                                                             configProperties.get( JDBC[3] ),
-                                                                            xRoot.getSuite().getFileName(),
+                                                                            configProperties.get( OPT_DRIVER[0] ),
+                                                                            xRoot.getModel().getSiteName(),
                                                                             configProperties.get( OPT_DRIVER[1] ),
                                                                             configProperties.get( OPT_DRIVER[2] ),
-                                                                            configProperties.get( OPT_DRIVER[3] ),
-                                                                            configProperties.get( OPT_DRIVER[4] ),
-                                                                            configProperties.get( OPT_DRIVER[5] ),
-                                                                            configProperties.get( OPT_DRIVER[6] ),
-                                                                            configProperties.get( OPT_DRIVER[7] ),
-                                                                            configProperties.get( OPT_DRIVER[8] ),
-                                                                            configProperties.get( OPT_DRIVER[9] )
+                                                                            configProperties.get( OPT_DRIVER[3] )
                                                                             ));
                                                    
                 break;
@@ -858,7 +851,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      */
     private KeyWordTest parseTest( XTest xTest, String typeName )
     { 
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), null );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys() );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
 
@@ -1025,6 +1018,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         switch ( xRoot.getSuite().getProvider() )
         {
             case "XML":
+            case "SQL":
             case "EXCEL": 
             case "LOCAL":
             case "LOCAL-SQL":

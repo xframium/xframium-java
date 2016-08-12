@@ -19,18 +19,20 @@ public class MatrixTest
     private boolean active;
     private String os;
     private String type;
+    private String contentKeys;
 
     public MatrixTest( String testDefinition )
     {
         this.testDefinition = testDefinition;
         testArray = testDefinition.split( "," );
-
+        stepArray = new MatrixStepArray();
         parseTest();
     }
     
     public MatrixTest( String[] testDefinition )
     {
         testArray = testDefinition;
+        stepArray = new MatrixStepArray();
         parseTest();
     }
     
@@ -61,6 +63,14 @@ public class MatrixTest
         parseTest();
     }
     
+    public void addStep( String[] stepDef )
+    {
+        if ( stepDef != null )
+        {
+            stepArray.addStep( stepDef );
+        }
+    }
+    
     public void setStepDefinition( String stepDefinition )
     {
         if ( stepDefinition != null )
@@ -81,7 +91,7 @@ public class MatrixTest
     
     public KeyWordTest createTest()
     {
-        KeyWordTest kTest = new KeyWordTest( name, active, dataProvider, dataDriver, timed, linkId, os, threshold, description, tagNames, null );
+        KeyWordTest kTest = new KeyWordTest( name, active, dataProvider, dataDriver, timed, linkId, os, threshold, description, tagNames, contentKeys );
         
         int currentPosition = 0;
         
@@ -89,7 +99,7 @@ public class MatrixTest
         {
             MatrixStep currentStep = stepArray.getStepList().get( currentPosition++ );
             KeyWordStep kStep = currentStep.createStep();
-            if ( currentStep.getLevel() != null )
+            if ( currentStep.getLevel() != null && !currentStep.getLevel().isEmpty() )
                 addSteps( kStep, currentPosition );
             
             kTest.addStep( kStep );
@@ -136,7 +146,11 @@ public class MatrixTest
         if ( currentValue == null || currentValue.trim().isEmpty() )
             return defaultValue;
         else
+        {
+            if ( currentValue.equals( "1" ) )
+                return true;
             return Boolean.parseBoolean( currentValue );
+        }
     }
 
     private int parseInt( String currentValue, int defaultValue )
@@ -196,6 +210,10 @@ public class MatrixTest
 
                 case 11:
                     os = parseString( testArray[i], null );
+                    break;
+
+                case 12:
+                    contentKeys = parseString( testArray[i], null );
                     break;
 
             }

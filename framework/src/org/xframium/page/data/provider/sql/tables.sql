@@ -1,15 +1,15 @@
-drop table PERFECTO_PAGE_DATA_TYPE;
-drop table PERFECTO_PAGE_DATA;
-drop table PERFECTO_PAGE_DATA_ATTRS;
+drop table PAGE_DATA_TYPE;
+drop table PAGE_DATA;
+drop table PAGE_DATA_ATTRS;
 
-create table PERFECTO_PAGE_DATA_TYPE
+create table PAGE_DATA_TYPE
 (
         NAME VARCHAR(50) NOT NULL,
         LOCK_RECORDS VARCHAR(1),
         CONSTRAINT CHK_LOCK_RECORDS CHECK (LOCK_RECORDS IN ( 'Y', 'N' ))
 );
 
-create table PERFECTO_PAGE_DATA 
+create table PAGE_DATA 
 (
         TYPE_NAME VARCHAR(50) NOT NULL,
         NAME VARCHAR(50) NOT NULL,
@@ -17,7 +17,7 @@ create table PERFECTO_PAGE_DATA
         CONSTRAINT CHK_ACTIVE_2 CHECK (ACTIVE IN ( 'Y', 'N' ))
 );
 
-create table PERFECTO_PAGE_DATA_ATTRS
+create table PAGE_DATA_ATTRS
 (
         TYPE_NAME VARCHAR(50) NOT NULL,
         RECORD_NAME VARCHAR(50) NOT NULL,

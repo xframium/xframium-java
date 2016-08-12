@@ -15,6 +15,11 @@ public class MatrixStepArray
         parseDefinition();
     }
     
+    public MatrixStepArray()
+    {
+        
+    }
+    
     public MatrixStepArray( String[] stepDefintiion )
     {
         for ( String currentStep : stepDefintiion )
@@ -40,6 +45,13 @@ public class MatrixStepArray
         }
     }
     
+    public void addStep( String[] stepDef )
+    {
+        MatrixStep x = new MatrixStep( stepDef );
+        if ( x.getName() != null && !x.getName().trim().isEmpty() )
+            stepList.add( x );
+    }
+    
     private List<MatrixStep> stepList = new ArrayList<MatrixStep>( 10 );
     
     
@@ -56,11 +68,9 @@ public class MatrixStepArray
             String currentLine;
             while ( (currentLine = numberReader.readLine() ) != null )
             {
-
                 MatrixStep x = new MatrixStep( currentLine );
                 if ( x.getName() != null && !x.getName().trim().isEmpty() )
                     stepList.add( x );
-                
             }
         }
         catch( Exception e )

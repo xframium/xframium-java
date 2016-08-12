@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
@@ -17,6 +16,7 @@ import org.xframium.debugger.handler.ExtractXMLHandler;
 import org.xframium.debugger.handler.PauseHandler;
 import org.xframium.debugger.handler.ResumeHandler;
 import org.xframium.debugger.handler.SessionHandler;
+import org.xframium.debugger.handler.SnapshotHandler;
 import org.xframium.debugger.handler.TestHandler;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.Page;
@@ -30,7 +30,6 @@ import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.spi.KeyWordPageImpl;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.page.listener.KeyWordListener;
-
 import com.sun.net.httpserver.HttpServer;
 import com.xframium.serialization.SerializationManager;
 import com.xframium.serialization.json.ReflectionSerializer;
@@ -55,6 +54,8 @@ public class DebugManager implements KeyWordListener
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( AbstractKeyWordStep.class, new ReflectionSerializer() );
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( KeyWordTest.class, new ReflectionSerializer() );
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( KeyWordPageImpl.class, new ReflectionSerializer() );
+        SerializationManager.instance().getDefaultAdapter().addCustomMapping( Page.class, new ReflectionSerializer() );
+        SerializationManager.instance().getDefaultAdapter().addCustomMapping( PageData.class, new ReflectionSerializer() );
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( KeyWordParameter.class, new ReflectionSerializer() );
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( KeyWordToken.class, new ReflectionSerializer() );
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( SeleniumElement.class, new ReflectionSerializer() );
@@ -163,6 +164,8 @@ public class DebugManager implements KeyWordListener
             httpServer.createContext( "/stepAhead", new AheadHandler() );
             httpServer.createContext( "/extract", new ExtractHandler() );
             httpServer.createContext( "/extractXml", new ExtractXMLHandler() );
+            httpServer.createContext( "/extractXml", new ExtractXMLHandler() );
+            httpServer.createContext( "/snapshot", new SnapshotHandler() );
             httpServer.start();
 
             try

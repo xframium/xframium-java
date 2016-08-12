@@ -105,7 +105,7 @@ public class KeyWordTest
      * @param contentKeys
      *            the content keys
      */
-    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags ) //, String contentKeys )
+    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys )
     {
         this.name = name;
         this.active = active;
@@ -124,7 +124,7 @@ public class KeyWordTest
             this.testTags = new String[] { "" };
 
         if ( contentKeys != null )
-            this.contentKeys = contentKeys.split( "," );
+            this.contentKeys = contentKeys.split( "|" );
         else
             this.contentKeys = new String[] { "" };
     }
@@ -142,6 +142,7 @@ public class KeyWordTest
         newTest.dataProviders = dataProviders;
         newTest.stepList = stepList;
         newTest.testTags = testTags;
+        newTest.contentKeys = contentKeys;
         return newTest;
     }
 

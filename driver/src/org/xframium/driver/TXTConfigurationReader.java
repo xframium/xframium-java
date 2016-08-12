@@ -78,9 +78,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     private static final String[] DEVICE = new String[] { "deviceManagement.provider", "deviceManagement.driverType" };
     private static final String[] OPT_DEVICE = new String[] { "deviceManagement.device.query", "deviceManagement.capability.query" };
     private static final String[] DRIVER = new String[] { "driver.frameworkType", "driver.configName" };
-    private static final String[] OPT_DRIVER = new String[] { "driver.suite", "driver.suiteQuery", "driver.pageQuery", "driver.importQuery",  "driver.testQuery",
-                                                              "driver.stepQuery", "driver.substepQuery", "driver.paramQuery", "driver.tokenQuery",
-                                                              "driver.functionQuery" };
+    private static final String[] OPT_DRIVER = new String[] { "driver.suiteName", "driver.modelQuery", "driver.testSuiteQuery", "driver.testCaseQuery" };
     private static final String[] JDBC = new String[] { "jdbc.username", "jdbc.password", "jdbc.url", "jdbc.driverClassName" };
     
     private Properties configProperties;
@@ -546,15 +544,10 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                                                                             configProperties.getProperty( JDBC[2] ),
                                                                             configProperties.getProperty( JDBC[3] ),
                                                                             configProperties.getProperty( OPT_DRIVER[0] ),
+                                                                            configProperties.getProperty( PAGE[0] ),
                                                                             configProperties.getProperty( OPT_DRIVER[1] ),
                                                                             configProperties.getProperty( OPT_DRIVER[2] ),
-                                                                            configProperties.getProperty( OPT_DRIVER[3] ),
-                                                                            configProperties.getProperty( OPT_DRIVER[4] ),
-                                                                            configProperties.getProperty( OPT_DRIVER[5] ),
-                                                                            configProperties.getProperty( OPT_DRIVER[6] ),
-                                                                            configProperties.getProperty( OPT_DRIVER[7] ),
-                                                                            configProperties.getProperty( OPT_DRIVER[8] ),
-                                                                            configProperties.getProperty( OPT_DRIVER[9] )
+                                                                            configProperties.getProperty( OPT_DRIVER[3] )
                                                                             ));
                 keywordsloaded = true;
                                                    
