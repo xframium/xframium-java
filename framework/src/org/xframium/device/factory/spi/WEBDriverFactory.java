@@ -84,6 +84,8 @@ public class WEBDriverFactory extends AbstractDriverFactory
                 }
             }
             
+            DeviceManager.instance().setCurrentCloud( useCloud );
+            
             URL hubUrl = new URL( useCloud.getCloudUrl() );
 
             if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )

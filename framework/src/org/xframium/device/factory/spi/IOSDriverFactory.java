@@ -69,6 +69,8 @@ public class IOSDriverFactory extends AbstractDriverFactory
                     log.warn( "A separate grid instance was specified but it does not exist in your cloud registry [" + currentDevice.getCloud() + "] - using the default Cloud instance" );
                 }
             }
+            
+            DeviceManager.instance().setCurrentCloud( useCloud );
 			
 			URL hubUrl = new URL( CloudRegistry.instance().getCloud().getCloudUrl() );
 	

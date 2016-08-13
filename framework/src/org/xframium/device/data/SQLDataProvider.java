@@ -39,7 +39,7 @@ public class SQLDataProvider implements DataProvider
     //
 
     private static final String DEF_QUERY =
-        "SELECT NAME, ID, MANUFACTURER, MODEL, OS, OS_VERSION, BROWSER_NAME, BROWSER_VERSION, ACTIVE, AVAILABLE \n" +
+        "SELECT NAME, DEVICE_ID, MANUFACTURER, MODEL, OS, OS_VERSION, BROWSER_NAME, BROWSER_VERSION, ACTIVE, AVAILABLE, CLOUD \n" +
         "FROM DEVICES";
 
     private static final String DEF_CAP_QUERY =
@@ -101,6 +101,19 @@ public class SQLDataProvider implements DataProvider
         this.capabilityQuery = (( capabilityQuery != null ) ? capabilityQuery : DEF_CAP_QUERY );
     }
 
+    private String parseString( String currentValue, String defaultValue, boolean emptyCheck )
+    {
+        if ( currentValue == null )
+            return defaultValue;
+        else
+        {
+            if ( emptyCheck && currentValue.trim().isEmpty() )
+                return defaultValue;
+            else
+                return currentValue;
+        }
+    }
+    
     public void readData()
     {
         try
@@ -111,16 +124,17 @@ public class SQLDataProvider implements DataProvider
 
             for( int i = 0; i < deviceData.length; ++i )
             {
-                String name = (String) deviceData[i][0];
-                String id = (String) deviceData[i][1];
-                String manuf = (String) deviceData[i][2];
-                String model = (String) deviceData[i][3];
-                String os = (String) deviceData[i][4];
-                String os_ver = (String) deviceData[i][5];
-                String browser = (String) deviceData[i][6];
-                String browser_ver = (String) deviceData[i][7];
-                String active = (String) deviceData[i][8];
+                String name = parseString( (String) deviceData[i][0], null, true );
+                String id = parseString( (String) deviceData[i][1], null, true );
+                String manuf = parseString( (String) deviceData[i][2], null, true );
+                String model = parseString( (String) deviceData[i][3], null, true );
+                String os = parseString( (String) deviceData[i][4], null, true );
+                String os_ver = parseString( (String) deviceData[i][5], null, true );
+                String browser = parseString( (String) deviceData[i][6], null, true );
+                String browser_ver = parseString( (String) deviceData[i][7], null, true );
+                String active = parseString( (String) deviceData[i][8], null, true );
                 Number available = (Number) deviceData[i][9];
+                String cloud = parseString( (String) deviceData[i][10], null, true );
                 
                 String driverName = "";
 		switch( driverType )
@@ -143,17 +157,20 @@ public class SQLDataProvider implements DataProvider
                         break;
 		}
 		
-		Device currentDevice = new SimpleDevice( name,
+		SimpleDevice currentDevice = new SimpleDevice( name,
                                                          manuf,
                                                          model,
                                                          os,
                                                          os_ver,
                                                          browser,
-                                                         null,
+                                                         browser_ver,
                                                          available.intValue(),
                                                          driverName,
                                                          "Y".equals( active ),
                                                          id );
+		
+		if ( cloud != null && !cloud.isEmpty() )
+            currentDevice.setCloud( cloud );
 
                 devicesByName.put( name, currentDevice );
 
