@@ -76,7 +76,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
                 if ( DeviceManager.instance().isDryRun() )
                 {
                     log.info( "This would have executed " +  testName.getTestName() );
-                    return;
+                    continue;
                 }
     		
                 if ( ( (DeviceWebDriver) getWebDriver() ).getCloud().getProvider().equals( "PERFECTO" ) )
@@ -115,7 +115,8 @@ public class XMLTestDriver extends AbstractSeleniumTest
                                 ( (ReportiumProvider) getWebDriver() ).getReportiumClient().testStop( TestResultFactory.createSuccess() );
                         }
                     }
-                    return;
+
+                    continue;
                 }
                 else
                 {

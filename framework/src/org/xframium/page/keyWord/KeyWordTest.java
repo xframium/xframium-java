@@ -124,7 +124,7 @@ public class KeyWordTest
             this.testTags = new String[] { "" };
 
         if ( contentKeys != null )
-            this.contentKeys = contentKeys.split( "|" );
+            this.contentKeys = contentKeys.split( "\\|" );
         else
             this.contentKeys = new String[] { "" };
     }
