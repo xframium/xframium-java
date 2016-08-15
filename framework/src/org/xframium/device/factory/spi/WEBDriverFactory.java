@@ -23,28 +23,21 @@
  */
 package org.xframium.device.factory.spi;
 
+import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
-import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.logging.LoggingPreferences;
-import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.application.ApplicationRegistry;
-import org.xframium.artifact.ArtifactType;
 import org.xframium.device.DeviceManager;
-import org.xframium.device.artifact.api.PerfectoArtifactProducer;
-import org.xframium.device.artifact.api.SeleniumArtifactProducer;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
-import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.AbstractDriverFactory;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.spi.Device;
+import com.xframium.serialization.SerializationManager;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -121,6 +114,11 @@ public class WEBDriverFactory extends AbstractDriverFactory
             webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 
             Capabilities caps = ((RemoteWebDriver) webDriver.getWebDriver()).getCapabilities();
+            
+//            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//            SerializationManager.instance().writeData( SerializationManager.instance().getAdapter( SerializationManager.XML_SERIALIZATION ), caps, outputStream, 0 );
+//            System.out.println( new String( outputStream.toByteArray() ) );
+            
             webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
             webDriver.setReportKey( caps.getCapability( "reportKey" ) + "" );
             webDriver.setDeviceName( caps.getCapability( "deviceName" ) + "" );

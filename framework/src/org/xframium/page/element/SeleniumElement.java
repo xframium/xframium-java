@@ -432,10 +432,12 @@ public class SeleniumElement extends AbstractElement
      */
     private WebElement getElement()
     {
+        getKey();
+        
         if ( locatedElement != null )
         {
-            if ( log.isInfoEnabled() )
-                log.info( Thread.currentThread().getName() + ": Element " + getKey() + " Read from cache" );
+            if ( log.isDebugEnabled() )
+                log.debug( Thread.currentThread().getName() + ": Element " + getKey() + " Read from cache" );
             return locatedElement;
         }
 
@@ -453,7 +455,7 @@ public class SeleniumElement extends AbstractElement
             if ( useBy != null )
             {
                 if ( log.isInfoEnabled() )
-                    log.info( Thread.currentThread().getName() + ": Locating element by [" + getBy() + "] using [" + getKey() + "]" + (fromContext != null ? (" from [" + fromContext.getNative() + "]") : "") );
+                    log.info( Thread.currentThread().getName() + ": Locating element by [" + getBy() + "] using [" + getKey() + "]" );
 
                 WebElement webElement = null;
 
@@ -486,7 +488,7 @@ public class SeleniumElement extends AbstractElement
         }
         catch ( NoSuchElementException e )
         {
-            throw new ObjectIdentificationException( getBy(), useBy() );
+             throw new ObjectIdentificationException( getBy(), useBy() );
         }
         finally
         {

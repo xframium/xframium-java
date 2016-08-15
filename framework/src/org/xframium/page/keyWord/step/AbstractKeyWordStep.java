@@ -481,13 +481,22 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     log.debug( Thread.currentThread().getName() + ": CONTEXT element found as " + currentElement );
 
                 ElementDescriptor elementDescriptor = new ElementDescriptor( PageManager.instance().getSiteName(), getPageName(), elementName );
-                Element myElement = PageManager.instance().getElementProvider().getElement( elementDescriptor );
+                Element myElement = PageManager.instance().getElementProvider().getElement( elementDescriptor ).cloneElement();
 
                 if ( myElement == null )
                 {
                     log.error( Thread.currentThread().getName() + ": **** COULD NOT LOCATE ELEMENT [" + elementDescriptor.toString() + "]  Make sure your Page Name and Element Name are spelled correctly and that they have been defined" );
                     return null;
                 }
+                
+                myElement.setDriver( webDriver );
+
+                for ( KeyWordToken token : tokenList )
+                {
+                    myElement.addToken( token.getName(), getTokenValue( token, contextMap, dataMap ) );
+                }
+
+                myElement.setCacheNative( true );
 
                 myElement.setDriver( webDriver );
                 myElement.setContext( currentElement );

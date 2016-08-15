@@ -38,23 +38,29 @@ public class StepContainer
         this.tokenList = tokenList;
         
         this.pageElement = this.pageObject.getElement( step.getPageName(), step.getName() );
-        
-        if ( this.pageElement != null )
+        try
         {
-            Map<String,String> tokenMap = new HashMap<String,String>( 20 );
-
-            for ( String[] tokens : tokenList )
-                tokenMap.put( tokens[ 0 ], tokens[ 1 ] );
-
-            if ( tokenMap != null && !tokenMap.isEmpty() )
+            if ( this.pageElement != null )
             {
-                fullElement = pageElement.getKey();
-                for ( String tokenName : tokenMap.keySet() )
+                Map<String,String> tokenMap = new HashMap<String,String>( 20 );
+    
+                for ( String[] tokens : tokenList )
+                    tokenMap.put( tokens[ 0 ], tokens[ 1 ] );
+    
+                if ( tokenMap != null && !tokenMap.isEmpty() )
                 {
-                    if ( tokenMap.get( tokenName ) != null)
-                        fullElement = fullElement.replace( "{" + tokenName + "}", tokenMap.get( tokenName ) );
+                    fullElement = pageElement.getKey();
+                    for ( String tokenName : tokenMap.keySet() )
+                    {
+                        if ( tokenMap.get( tokenName ) != null)
+                            fullElement = fullElement.replace( "{" + tokenName + "}", tokenMap.get( tokenName ) );
+                    }
                 }
             }
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace();
         }
         
         
