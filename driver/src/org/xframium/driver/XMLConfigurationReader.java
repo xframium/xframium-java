@@ -851,7 +851,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      */
     private KeyWordTest parseTest( XTest xTest, String typeName )
     { 
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys() );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
 

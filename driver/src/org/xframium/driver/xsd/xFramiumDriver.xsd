@@ -315,6 +315,7 @@
     <attribute name="threshold" type="integer" use="optional" default="0" />
     <attribute name="active" type="boolean" use="optional" default="true" />
     <attribute name="os" type="string" use="optional" />
+    <attribute name="contentKeys" type="string" use="optional" />
   </complexType>
 
   <complexType name="xDescription">
