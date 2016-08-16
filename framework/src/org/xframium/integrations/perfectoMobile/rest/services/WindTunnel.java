@@ -141,7 +141,7 @@ public interface WindTunnel extends PerfectoService
 	 * @return the execution
 	 */
 	@Operation( operationName="command" )
-	@PerfectoCommand( commandName="status", subCommandName = "event" )
+	@PerfectoCommand( commandName="vnetwork", subCommandName = "start" )
 	public Execution startNetworkVirtualization( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="latency" ) int latency, @Parameter( name="packetLoss" ) int packetLoss, @Parameter( name="packetCorruption" ) int packetCorruption, @Parameter( name="packetReordering" ) int packetReordering, @Parameter( name="packetDuplication" ) int packetDuplication, @Parameter( name="delayJitter" ) int delayJitter, @Parameter( name="correlation" ) int correlation  );
 	
 	/**
@@ -152,7 +152,7 @@ public interface WindTunnel extends PerfectoService
 	 * @return the execution
 	 */
 	@Operation( operationName="command" )
-	@PerfectoCommand( commandName="status", subCommandName = "event" )
+	@PerfectoCommand( commandName="vnetwork", subCommandName = "stop" )
 	public Execution stopNetworkVirtualization( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId );
 	
 	/**

@@ -607,6 +607,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
             Exception stepException = null;
             boolean returnValue = false;
+            boolean caughtException = false;
             try
             {
                 WebDriver altWebDriver = getAltWebDriver();
@@ -641,6 +642,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             }
             catch ( Exception e )
             {
+                caughtException = true;
                 stepException = e;
                 returnValue = false;
                 try

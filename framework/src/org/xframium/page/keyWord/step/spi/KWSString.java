@@ -20,6 +20,8 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.page.Page;
@@ -32,7 +34,7 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSString extends AbstractKeyWordStep
 {
-
+    
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
@@ -47,7 +49,7 @@ public class KWSString extends AbstractKeyWordStep
             originalValue = getElement( pageObject, contextMap, webDriver, dataMap ).getValue();
             operationName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
         }
-	    else if ( getParameterList().size() == 2 )
+	    else if ( getParameterList().size() > 2 )
 	    {
 	        originalValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
 	        operationName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
@@ -63,6 +65,12 @@ public class KWSString extends AbstractKeyWordStep
 		        
 		    case "lower":
 		        newValue = originalValue.toLowerCase();
+		        break;
+		        
+		    case "decimal":
+		        DecimalFormat decimalFormat = new DecimalFormat( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" );
+		        decimalFormat.setRoundingMode( RoundingMode.DOWN );
+		        newValue = decimalFormat.format( Double.parseDouble( originalValue ) );
 		        break;
 		        
 		    case "upper":

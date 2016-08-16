@@ -432,8 +432,6 @@ public class SeleniumElement extends AbstractElement
      */
     private WebElement getElement()
     {
-        getKey();
-        
         if ( locatedElement != null )
         {
             if ( log.isDebugEnabled() )
@@ -455,7 +453,7 @@ public class SeleniumElement extends AbstractElement
             if ( useBy != null )
             {
                 if ( log.isInfoEnabled() )
-                    log.info( Thread.currentThread().getName() + ": Locating element by [" + getBy() + "] using [" + getKey() + "]" );
+                    log.info( Thread.currentThread().getName() + ": Locating element by [" + getBy() + "] using [" + getKey() + "]" + (fromContext != null ? (" from [" + fromContext.getNative() + "]") : "") );
 
                 WebElement webElement = null;
 
@@ -488,7 +486,7 @@ public class SeleniumElement extends AbstractElement
         }
         catch ( NoSuchElementException e )
         {
-             throw new ObjectIdentificationException( getBy(), useBy() );
+            throw new ObjectIdentificationException( getBy(), useBy() );
         }
         finally
         {
