@@ -169,6 +169,10 @@ public interface KeyWordStep
 	 *            the new inverse
 	 */
 	public void setInverse( boolean inverse );
+	
+	public boolean isStartAt();
+	
+	public void setStartAt( boolean startAt );
 
 	/**
 	 * Gets the page name.

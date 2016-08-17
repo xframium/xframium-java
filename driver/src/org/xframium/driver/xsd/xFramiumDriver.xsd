@@ -390,6 +390,7 @@
     <attribute name="threshold" type="integer" use="optional" default="0" />
     <attribute name="timed" type="boolean" use="optional" default="false" />
     <attribute name="inverse" type="boolean" use="optional" default="false" />
+    <attribute name="startAt" type="boolean" use="optional" default="false" />
     <attribute name="wait" type="integer" use="optional" default="0" />
     <attribute name="failureMode" use="optional" default="ERROR">
       <simpleType>

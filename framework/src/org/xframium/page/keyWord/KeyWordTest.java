@@ -173,9 +173,17 @@ public class KeyWordTest
         {
             if ( log.isDebugEnabled() )
                 log.debug( "Adding Step [" + step.getName() + "] to [" + name + "]" );
+            
+            if ( step.isStartAt() )
+            {
+                log.warn( "Clearing steps out of " + getName() + " as the startAt flag was set" );
+                stepList.clear();
+            }
+            
             stepList.add( step );
         }
     }
+    
 
     /**
      * Get step at offset.

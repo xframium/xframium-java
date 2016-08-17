@@ -72,6 +72,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
     /** The timed. */
     private boolean timed;
+    
+    private boolean startAt;
 
     /** The s failure. */
     private StepFailure sFailure;
@@ -123,6 +125,22 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         }
     }
     
+    
+    
+    public boolean isStartAt()
+    {
+        return startAt;
+    }
+
+
+
+    public void setStartAt( boolean startAt )
+    {
+        this.startAt = startAt;
+    }
+
+
+
     /*
      * (non-Javadoc)
      * 
@@ -509,7 +527,12 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             {
                 if ( log.isInfoEnabled() )
                     log.info( Thread.currentThread().getName() + ": Cloning Element " + useName + " on page " + pageName );
-                Element clonedElement = pageObject.getElement( pageName, useName ).cloneElement();
+                
+                Element originalElement = pageObject.getElement( pageName, useName );
+                if ( originalElement == null )
+                    throw new ObjectConfigurationException( pageName, useName );
+                
+                Element clonedElement = originalElement.cloneElement();
                 clonedElement.setDriver( webDriver );
 
                 for ( KeyWordToken token : tokenList )
