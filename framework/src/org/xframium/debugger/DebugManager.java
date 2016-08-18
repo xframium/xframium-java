@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.xframium.debugger.handler.AheadHandler;
 import org.xframium.debugger.handler.ExtractHandler;
@@ -33,6 +34,7 @@ import org.xframium.page.listener.KeyWordListener;
 import com.sun.net.httpserver.HttpServer;
 import com.xframium.serialization.SerializationManager;
 import com.xframium.serialization.json.ReflectionSerializer;
+import com.xframium.serialization.xml.MapSerializer;
 
 @SuppressWarnings ( "restriction")
 public class DebugManager implements KeyWordListener
@@ -59,6 +61,7 @@ public class DebugManager implements KeyWordListener
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( KeyWordParameter.class, new ReflectionSerializer() );
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( KeyWordToken.class, new ReflectionSerializer() );
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( SeleniumElement.class, new ReflectionSerializer() );
+        SerializationManager.instance().getDefaultAdapter().addCustomMapping( Capabilities.class, new MapSerializer() );
     }
 
     public static DebugManager instance()

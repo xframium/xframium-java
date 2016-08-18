@@ -34,6 +34,7 @@ public class MatrixStep
     private int threshold = 0;
     private int wait = 0;
     private String linkId;
+    private boolean startAt;
     
 
     public MatrixStep( String stepDefinition )
@@ -51,7 +52,7 @@ public class MatrixStep
     
     public KeyWordStep createStep()
     {
-        KeyWordStep kStep = KeyWordStepFactory.instance().createStep( name, pageName, active, type, linkId, timed, failureMode, inverse, os, poi, threshold, "", wait, context, validationDetail, device, vType, tagNames );
+        KeyWordStep kStep = KeyWordStepFactory.instance().createStep( name, pageName, active, type, linkId, timed, failureMode, inverse, os, poi, threshold, "", wait, context, validationDetail, device, vType, tagNames, startAt );
         if ( parameterArray != null )
         {
             List<KeyWordParameter> parameterList = parameterArray.getParameters();

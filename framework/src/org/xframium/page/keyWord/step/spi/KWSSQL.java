@@ -73,7 +73,7 @@ public class KWSSQL extends AbstractKeyWordStep
         {
             param1 = (( getParameterList().size() == 0 ) ? null : getParameterList().get( 0 ) );
             query = (( param1 != null ) ? param1.getValue() : null );
-            query_params = loadQueryParams( param1 );
+            query_params = loadQueryParams( param1, contextMap, dataMap );
         }
 
         try
@@ -171,7 +171,7 @@ public class KWSSQL extends AbstractKeyWordStep
     // Helpers
     //
 
-    private String[] loadQueryParams( KeyWordParameter param )
+    private String[] loadQueryParams( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap )
     {
         ArrayList<String> rtn = new ArrayList<String>();
 
@@ -180,7 +180,7 @@ public class KWSSQL extends AbstractKeyWordStep
         {
             KeyWordToken token = tokens.next();
 
-            rtn.add( token.getValue() );
+            rtn.add( getTokenValue( token, contextMap, dataMap ));
         }
 
         return rtn.toArray( EMPTY );

@@ -434,8 +434,8 @@ public class SeleniumElement extends AbstractElement
     {
         if ( locatedElement != null )
         {
-            if ( log.isInfoEnabled() )
-                log.info( Thread.currentThread().getName() + ": Element " + getKey() + " Read from cache" );
+            if ( log.isDebugEnabled() )
+                log.debug( Thread.currentThread().getName() + ": Element " + getKey() + " Read from cache" );
             return locatedElement;
         }
 

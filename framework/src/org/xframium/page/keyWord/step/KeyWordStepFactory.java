@@ -220,7 +220,7 @@ public class KeyWordStepFactory
      * @return the key word step
      */
     public KeyWordStep createStep( String name, String pageName, boolean active, String type, String linkId, boolean timed, StepFailure sFailure, boolean inverse, String os, String poi, int threshold, String description, long waitTime, String context,
-            String validation, String device, ValidationType validationType, String tagNames )
+            String validation, String device, ValidationType validationType, String tagNames, boolean startAt )
     {
 
         Class kwImpl = stepMap.get( type.toUpperCase() );
@@ -250,6 +250,7 @@ public class KeyWordStepFactory
             returnValue.setContext( context );
             returnValue.setDevice( device );
             returnValue.setTagNames( tagNames );
+            returnValue.setStartAt( startAt );
 
             return returnValue;
         }

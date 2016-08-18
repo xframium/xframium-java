@@ -84,7 +84,11 @@ public interface DeviceAction
 		CALL,
 		
 		/** send a text to this device */
-		SEND_TEXT;
+		SEND_TEXT,
+		
+		START_V_NET,
+		
+		STOP_V_NET;
 	}
 	
 	/**

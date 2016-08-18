@@ -72,6 +72,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
     /** The timed. */
     private boolean timed;
+    
+    private boolean startAt;
 
     /** The s failure. */
     private StepFailure sFailure;
@@ -123,6 +125,22 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         }
     }
     
+    
+    
+    public boolean isStartAt()
+    {
+        return startAt;
+    }
+
+
+
+    public void setStartAt( boolean startAt )
+    {
+        this.startAt = startAt;
+    }
+
+
+
     /*
      * (non-Javadoc)
      * 
@@ -481,13 +499,22 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     log.debug( Thread.currentThread().getName() + ": CONTEXT element found as " + currentElement );
 
                 ElementDescriptor elementDescriptor = new ElementDescriptor( PageManager.instance().getSiteName(), getPageName(), elementName );
-                Element myElement = PageManager.instance().getElementProvider().getElement( elementDescriptor );
+                Element myElement = PageManager.instance().getElementProvider().getElement( elementDescriptor ).cloneElement();
 
                 if ( myElement == null )
                 {
                     log.error( Thread.currentThread().getName() + ": **** COULD NOT LOCATE ELEMENT [" + elementDescriptor.toString() + "]  Make sure your Page Name and Element Name are spelled correctly and that they have been defined" );
                     return null;
                 }
+                
+                myElement.setDriver( webDriver );
+
+                for ( KeyWordToken token : tokenList )
+                {
+                    myElement.addToken( token.getName(), getTokenValue( token, contextMap, dataMap ) );
+                }
+
+                myElement.setCacheNative( true );
 
                 myElement.setDriver( webDriver );
                 myElement.setContext( currentElement );
@@ -500,7 +527,12 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             {
                 if ( log.isInfoEnabled() )
                     log.info( Thread.currentThread().getName() + ": Cloning Element " + useName + " on page " + pageName );
-                Element clonedElement = pageObject.getElement( pageName, useName ).cloneElement();
+                
+                Element originalElement = pageObject.getElement( pageName, useName );
+                if ( originalElement == null )
+                    throw new ObjectConfigurationException( pageName, useName );
+                
+                Element clonedElement = originalElement.cloneElement();
                 clonedElement.setDriver( webDriver );
 
                 for ( KeyWordToken token : tokenList )
@@ -598,6 +630,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
             Exception stepException = null;
             boolean returnValue = false;
+            boolean caughtException = false;
             try
             {
                 WebDriver altWebDriver = getAltWebDriver();
@@ -632,6 +665,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             }
             catch ( Exception e )
             {
+                caughtException = true;
                 stepException = e;
                 returnValue = false;
                 try

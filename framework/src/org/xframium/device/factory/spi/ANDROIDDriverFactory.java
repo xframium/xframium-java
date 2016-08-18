@@ -72,6 +72,8 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
                     log.warn( "A separate grid instance was specified but it does not exist in your cloud registry [" + currentDevice.getCloud() + "] - using the default Cloud instance" );
                 }
             }
+            
+            DeviceManager.instance().setCurrentCloud( useCloud );
 
 			if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )
 			{

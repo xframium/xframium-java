@@ -98,6 +98,20 @@ public class SQLApplicationProvider extends AbstractApplicationProvider
     /* (non-Javadoc)
      * @see com.perfectoMobile.device.application.ApplicationProvider#readData()
      */
+    
+    private String parseString( String currentValue, String defaultValue, boolean emptyCheck )
+    {
+        if ( currentValue == null )
+            return defaultValue;
+        else
+        {
+            if ( emptyCheck && currentValue.trim().isEmpty() )
+                return defaultValue;
+            else
+                return currentValue;
+        }
+    }
+    
     public void readData()
     {
         ApplicationRegistry.instance().clear();
@@ -110,12 +124,12 @@ public class SQLApplicationProvider extends AbstractApplicationProvider
 
             for( int i = 0; i < data.length; ++i )
             {
-                String name = (String) data[i][0];
-                String pkg = (String) data[i][1];
-                String bndl = (String) data[i][2];
-                String url = (String) data[i][3];
-                String ios_inst = (String) data[i][4];
-                String and_inst = (String) data[i][5];
+                String name = parseString( (String) data[i][0], null, true );
+                String pkg = parseString( (String) data[i][1], null, true );
+                String bndl = parseString( (String) data[i][2], null, true );
+                String url = parseString( (String) data[i][3], null, true );
+                String ios_inst = parseString( (String) data[i][4], null, true );
+                String and_inst = parseString( (String) data[i][5], null, true );
 
                 HashMap<String,Object> capabilities = new HashMap<String,Object>( 0 );
 

@@ -51,6 +51,14 @@ li.selected {
                 <td width="30%" height="50%">
                     <div class="panel panel-default scrollable" id="stepList">
                         <div class="panel-heading">
+                            <div class="panel-title">Screenshot</div>
+                        </div>
+                        <div class="panel-body">
+                            <img src="{{snapshot}}" width="100%" />
+                        </div>
+                    </div>
+                    <div class="panel panel-default scrollable" id="stepList">
+                        <div class="panel-heading">
                             <div class="panel-title">Steps</div>
                         </div>
                         <div class="panel-body">
@@ -58,14 +66,6 @@ li.selected {
                                 <li selection-model ng-click="selectStep($index)" style="display: list-item; list-style: decimal inside; padding-top: 2px; padding-bottom: 2px" ng-repeat="step in stepList"
                                     ng-attr-class="list-group-item list-group-item-{{step.status == 'SUCCESS' || step.status == 'null' ? 'success' : step.step.sFailure == 'ERROR' ? 'danger' : 'warning'}}">{{step.stepType}}</li>
                             </ol>
-                        </div>
-                    </div>
-                    <div class="panel panel-default scrollable" id="stepList">
-                        <div class="panel-heading">
-                            <div class="panel-title">Screenshot</div>
-                        </div>
-                        <div class="panel-body">
-                            <img src="{{snapshot}}" width="100%" />
                         </div>
                     </div>
                 </td>
@@ -248,12 +248,31 @@ li.selected {
     			for ( var i=0; i<returnValue.pageData.length; i++ )
     			{
     				$scope.stepList.push( returnValue.pageData[ i ] );
+    				if ( returnValue.pageData[ i ].stepType == 'KWSDumpState' &&  returnValue.pageData[ i ].contextMap[ '_SCREENSHOT' ] != null )
+    				{
+    					$scope.getSnapshot( returnValue.pageData[ i ].contextMap[ '_SCREENSHOT' ] );
+    				}
+    				
     			}
 			});
 		}
 		
 		$scope.takeSnapshot = function() {
 			xFramiumService.snapshot( $scope.executionId ).then( function(returnValue)
+			{
+				if ( returnValue == undefined )
+    			{
+    				$interval.cancel( $scope.intervalPromise );
+    				return;
+    			}
+    			
+				$scope.snapshot = 'data:image/png;base64,' + returnValue;
+
+			});
+		}
+		
+		$scope.getSnapshot = function( fileName ) {
+			xFramiumService.getSnapshot( $scope.executionId, fileName ).then( function(returnValue)
 			{
 				if ( returnValue == undefined )
     			{
@@ -295,6 +314,7 @@ li.selected {
 			ahead : ahead,
 			extract : extract,
 			snapshot : snapshot,
+			getSnapshot : getSnapshot,
 			extractXml : extractXml
 		});
 
@@ -312,7 +332,21 @@ li.selected {
 			return request.then(handleSuccess, handleError);
 		};
 		
-		function snapshot( useId ) {
+		function getSnapshot( useId, useFile ) {
+			
+			var request = $http({
+				method : "get",
+				url : "snapshot",
+				params : {
+					executionId : useId,
+					fileName : useFile
+				}
+			});
+
+			return request.then(handleSuccess, handleError);
+		};
+		
+		function snapshot( useId, useFile ) {
 			
 			var request = $http({
 				method : "get",

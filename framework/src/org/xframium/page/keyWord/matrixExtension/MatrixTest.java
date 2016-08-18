@@ -19,6 +19,7 @@ public class MatrixTest
     private boolean active;
     private String os;
     private String type;
+    private String contentKeys;
 
     public MatrixTest( String testDefinition )
     {
@@ -90,7 +91,7 @@ public class MatrixTest
     
     public KeyWordTest createTest()
     {
-        KeyWordTest kTest = new KeyWordTest( name, active, dataProvider, dataDriver, timed, linkId, os, threshold, description, tagNames );
+        KeyWordTest kTest = new KeyWordTest( name, active, dataProvider, dataDriver, timed, linkId, os, threshold, description, tagNames, contentKeys );
         
         int currentPosition = 0;
         
@@ -209,6 +210,10 @@ public class MatrixTest
 
                 case 11:
                     os = parseString( testArray[i], null );
+                    break;
+
+                case 12:
+                    contentKeys = parseString( testArray[i], null );
                     break;
 
             }
