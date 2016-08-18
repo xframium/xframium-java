@@ -28,6 +28,10 @@ import org.apache.commons.logging.LogFactory;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.SimpleDevice;
 import org.xframium.device.data.DataProvider;
+import org.xframium.device.data.DataProvider.DriverType;
+import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
+import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
+import org.xframium.spi.Device;
 import com.perfectomobile.selenium.util.EclipseConnector;
 
 // TODO: Auto-generated Javadoc
@@ -42,6 +46,7 @@ public class PerfectoMobilePluginProvider implements DataProvider
 
     /** The driver type. */
     private DriverType driverType;
+    private String deviceId;
 
     /**
      * Instantiates a new perfecto mobile data provider.
@@ -51,9 +56,10 @@ public class PerfectoMobilePluginProvider implements DataProvider
      * @param driverType
      *            the driver type
      */
-    public PerfectoMobilePluginProvider( DriverType driverType )
+    public PerfectoMobilePluginProvider( String deviceId, DriverType driverType )
     {
         this.driverType = driverType;
+        this.deviceId = deviceId;
     }
 
     /*
@@ -67,11 +73,11 @@ public class PerfectoMobilePluginProvider implements DataProvider
         {
             EclipseConnector connector = new EclipseConnector();
             String eclipseHost = connector.getHost();
-            if ( eclipseHost == null )
+            if ( eclipseHost != null )
             {
                 String executionId = connector.getExecutionId();
                 
-                SimpleDevice device = new SimpleDevice( "Plugin Device", driverType.name() );
+                SimpleDevice device = (SimpleDevice)lookupDeviceById( deviceId, driverType );
                 device.addCapability( EclipseConnector.ECLIPSE_EXECUTION_ID, executionId );
                 DeviceManager.instance().registerDevice( device );
                 
@@ -81,5 +87,44 @@ public class PerfectoMobilePluginProvider implements DataProvider
         {
             log.fatal( "Could not connect to local device" );
         }
+    }
+    
+    private Device lookupDeviceById( String device, DriverType driverType )
+    {
+        
+        Handset handset = PerfectoMobile.instance().devices().getDevice( device );
+            
+        String driverName = "";
+        switch( driverType )
+        {
+            case APPIUM:
+                if ( handset.getOs().equals( "iOS" ) )
+                    driverName = "IOS";
+                else if ( handset.getOs().equals( "Android" ) )
+                    driverName = "ANDROID";
+                else
+                    throw new IllegalArgumentException( "Appium is not supported on the following OS " + handset.getOs() );
+                break;
+                    
+            case PERFECTO:
+                driverName = "PERFECTO";
+                break;
+                    
+            case WEB:
+                driverName = "WEB";
+                break;
+        }
+            
+        return new SimpleDevice( device,
+                                 handset.getManufacturer(),
+                                 handset.getModel(),
+                                 handset.getOs(),
+                                 handset.getOsVersion(),
+                                 null,
+                                 null,
+                                 1,
+                                 driverName,
+                                 true,
+                                 device );
     }
 }
