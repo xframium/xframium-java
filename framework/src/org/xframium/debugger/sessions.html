@@ -30,6 +30,7 @@ li.selected {
 </head>
 <body ng-controller="xFramiumDebugger">
 	<div class="container fill">
+		
 		<table class="table">
 			<tr>
 				<td>
@@ -53,9 +54,12 @@ li.selected {
 									<td>{{value.keyWordTest.stepList.length}}</td>
 									<td>{{value.stepList.length}}</td>
 									<td>{{value.stepList[value.stepList.length-1].stepType}}</td>
-									<td><img ng-click="pause(key)" src="http://xframium.org/images/pause.png" width="24" height="24" title="Pause Execution" /> 
-                            		<img src="http://xframium.org/images/video.png" width="24" height="24" title="Connect to Device" /> 
-                            		<img ng-click="resume(key)" src="http://xframium.org/images/play.png" width="24" height="24" title="Continue Execution" /> </td>
+									<td>
+										<div class="btn-group" role="group" aria-label="Flow Control">
+			                        		<button type="button" class="btn btn-success" ng-click="resume(key)">Play</button>
+			                        		<button type="button" class="btn btn-danger" ng-click="pause(key)">Pause</button>
+			                        	</div>
+									</td>
 								</tr>
 							</table>
 						</div>
