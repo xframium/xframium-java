@@ -21,7 +21,7 @@ public class TestContainer
     private Boolean stepPass;
     private int stepsSent = 0;
     
-    private Lock tLock = new ReentrantLock();
+    private ReentrantLock tLock = new ReentrantLock();
     private boolean stepAhead = false;
     
     
@@ -33,16 +33,17 @@ public class TestContainer
     public void pause()
     {
         waitFor( true );
+        
     }
     
     public void resume()
     {
+    	stepAhead=false;
         tLock.unlock();
     }
 
     public void stepAhead()
     {
-        tLock.unlock();
         stepAhead = true;
     }
     
@@ -50,11 +51,19 @@ public class TestContainer
     {
         while ( tLock.tryLock() == false )
         {
+        	if ( stepAhead == true )
+        	{
+        		stepAhead = false;
+        		return;
+        	}
             try { Thread.sleep( 1000 ); } catch( Exception e ) {}
         }
         
+        
         if ( !acquire )
+        {
             tLock.unlock();
+        }
     }
 
     private List<StepContainer> stepList = new ArrayList<StepContainer>( 50 );

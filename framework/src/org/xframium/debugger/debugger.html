@@ -205,7 +205,7 @@ li.selected {
 
 		$scope.selectedStep;
 		$scope.selectedVariable;
-
+        $scope.dump=false;
 		$scope.test = {};
 		$scope.snapshot = {};
 
@@ -228,7 +228,9 @@ li.selected {
 			xFramiumService.extractXml( $scope.executionId );
 		};
 		
-		$scope.ahead =  function() {
+		$scope.ahead =  function() 
+		{
+			$scope.dump=true;
 			xFramiumService.ahead( $scope.executionId );
 		};
 		
@@ -248,9 +250,19 @@ li.selected {
     			for ( var i=0; i<returnValue.pageData.length; i++ )
     			{
     				$scope.stepList.push( returnValue.pageData[ i ] );
+
     				if ( returnValue.pageData[ i ].stepType == 'KWSDumpState' &&  returnValue.pageData[ i ].contextMap[ '_SCREENSHOT' ] != null )
     				{
     					$scope.getSnapshot( returnValue.pageData[ i ].contextMap[ '_SCREENSHOT' ] );
+    				}
+    				else
+    				{
+    					if ( $scope.dump==true )
+    					{
+    						$scope.dump=false;
+    						$scope.takeSnapshot();
+    						$scope.selectedStep=returnValue.pageData[ i ];
+    					}
     				}
     				
     			}
@@ -296,7 +308,6 @@ li.selected {
     			
     			$scope.test = returnValue.pageData.keyWordTest;
     			$scope.stepList = returnValue.pageData.stepList;
-    			console.log(returnValue.pageData);
     			$scope.pageData = returnValue.pageData.dataMap;
 			});
 		}

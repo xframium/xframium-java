@@ -108,10 +108,8 @@ public class DebugManager implements KeyWordListener
             testContainer.addStep( new StepContainer( webDriver, currentStep, contextMap, pageObject, parameterList, tokenList ) );
             
             
-            if ( testContainer.isStepAhead() )
-                testContainer.pause();
-            
-            testContainer.waitFor( false );
+            if ( !testContainer.isStepAhead() )
+            	testContainer.waitFor( false );
         }
 
         return true;
