@@ -476,7 +476,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         switch ( xRoot.getDevices().getProvider() )
         {
             case "PERFECTO_PLUGIN":
-                DataManager.instance().readData( new PerfectoMobilePluginProvider( configProperties.get( "deviceManagement.deviceList" ) + "", DriverType.valueOf( xRoot.getDriver().getType() ) ) );
+                DataManager.instance().readData( new PerfectoMobilePluginProvider( configProperties.get( "deviceManagement.deviceList" ) + "", DriverType.valueOf( xRoot.getDriver().getType() ), configProperties.get( "deviceManagement.pluginType" ) ) );
                 break;
             
             case "RESERVED":
