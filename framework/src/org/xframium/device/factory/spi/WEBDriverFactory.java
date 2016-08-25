@@ -114,10 +114,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
             webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 
             Capabilities caps = ((RemoteWebDriver) webDriver.getWebDriver()).getCapabilities();
-            
-//            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//            SerializationManager.instance().writeData( SerializationManager.instance().getAdapter( SerializationManager.XML_SERIALIZATION ), caps, outputStream, 0 );
-//            System.out.println( new String( outputStream.toByteArray() ) );
+           
             
             webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
             webDriver.setReportKey( caps.getCapability( "reportKey" ) + "" );
@@ -127,7 +124,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
             webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );
             webDriver.setCloud( useCloud );
 
-            if ( ApplicationRegistry.instance().getAUT().getUrl() != null )
+            if ( ApplicationRegistry.instance().getAUT().getUrl() != null && !ApplicationRegistry.instance().getAUT().getUrl().isEmpty() )
             {
                 webDriver.get( ApplicationRegistry.instance().getAUT().getUrl() );
             }

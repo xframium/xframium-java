@@ -31,6 +31,7 @@
     <attribute name="provider" use="optional" default="LOCAL">
       <simpleType>
         <restriction base="string">
+          <enumeration value="PERFECTO_PLUGIN" />
           <enumeration value="RESERVED" />
           <enumeration value="AVAILABLE" />
           <enumeration value="NAMED" />
@@ -161,6 +162,7 @@
           <enumeration value="EXECUTION_RECORD_CSV" />
           <enumeration value="CONSOLE_LOG" />
           <enumeration value="REPORTIUM" />
+          <enumeration value="DEBUGGER" />
         </restriction>
       </simpleType>
     </attribute>
