@@ -45,123 +45,114 @@ li.selected {
             </div>
         </nav>
         <div class="jumbotron" id="loading" style="margin-top: 60px;">
-            <h4 style="text-align: center;">Waiting to connect to the xFramium debugger service...</h4>
-            <img style="text-align: center;" src="http://xframium.org/images/loading.svg" />
+            <div style="text-align: center;">
+                <h4>Waiting to connect to the xFramium debugger service...</h4>
+                <img src="http://xframium.org/images/loading.svg" />
+            </div>
         </div>
-        <table class="table" id="mainTable" style="display: none">
-            <tr>
-                <td>
-                    <div class="panel panel-default scrollable" id="stepList">
-                        <div class="panel-heading">
-                            <div class="panel-title">Active Tests</div>
-                        </div>
-                        <div class="panel-body">
-                            <table class="table table-striped table-condensed">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Session</th>
-                                    <th width="10%">Steps</th>
-                                    <th width="10%">Steps Run</th>
-                                    <th width="15%">Last Step</th>
-                                    <th></th>
-                                </tr>
-                                <tr ng-repeat="(key, value) in active">
-                                    <td><a ng-attr-href="/testCase?executionId={{key}}">{{value.keyWordTest.name}}</a></td>
-                                    <td>{{key}}</td>
-                                    <td>{{value.keyWordTest.stepList.length}}</td>
-                                    <td>{{value.stepList.length}}</td>
-                                    <td>{{value.stepList[value.stepList.length-1].stepType}}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-default" ng-click="resume(key)" style="margin-top: 2px; margin-bottom: 2px">Play</button>
-                                        <button type="button" class="btn btn-default" ng-click="pause(key)" style="margin-top: 2px; margin-bottom: 2px">Pause</button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="panel panel-default scrollable" id="stepList">
-                        <div class="panel-heading">
-                            <div class="panel-title">Completed Tests</div>
-                        </div>
-                        <div class="panel-body">
-                            <table class="table table-striped table-condensed">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Session</th>
-                                    <th width="10%">Steps</th>
-                                    <th width="10%">Steps Run</th>
-                                    <th width="15%">Last Step</th>
-                                </tr>
-                                <tr ng-repeat="(key, value) in completed">
-                                    <td><a ng-attr-href="/testCase?executionId={{key}}">{{value.keyWordTest.name}}</a></td>
-                                    <td>{{key}}</td>
-                                    <td>{{value.keyWordTest.stepList.length}}</td>
-                                    <td>{{value.stepList.length}}</td>
-                                    <td>{{value.stepList[value.stepList.length-1].stepType}}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </table>
+        <div id="mainTable" style="display: none; margin-top: 60px">
+            <table class="table table-striped table-hover" width="100%">
+                <caption>Active Tests</caption>
+                <tr>
+                    <th>Name</th>
+                    <th width="10%">Steps</th>
+                    <th width="10%">Steps Run</th>
+                    <th width="15%">Last Step</th>
+                    <th></th>
+                </tr>
+                <tr ng-repeat="(key, value) in active">
+                    <td><a ng-attr-href="/testCase?executionId={{key}}">{{value.keyWordTest.name}}</a></td>
+                    <td>{{value.keyWordTest.stepList.length}}</td>
+                    <td>{{value.stepList.length}}</td>
+                    <td>{{value.stepList[value.stepList.length-1].stepType}}</td>
+                    <td>
+                        <button type="button" class="btn btn-success btn-xs" ng-click="resume(key)" style="margin-top: 2px; margin-bottom: 2px">Play</button>
+                        <button type="button" class="btn btn-warning btn-xs" ng-click="pause(key)" style="margin-top: 2px; margin-bottom: 2px">Pause</button>
+                    </td>
+                </tr>
+            </table>
+            <br/>
+            <br/>
+            <table class="table table-striped table-hover" width="100%">
+                <caption>Completed Tests</caption>
+                <tr>
+                    <th>Name</th>
+                    <th width="10%">Steps</th>
+                    <th width="10%">Steps Run</th>
+                    <th width="15%">Last Step</th>
+                </tr>
+                <tr ng-repeat="(key, value) in completed">
+                    <td><a ng-attr-href="/testCase?executionId={{key}}">{{value.keyWordTest.name}}</a></td>
+                    <td>{{value.keyWordTest.stepList.length}}</td>
+                    <td>{{value.stepList.length}}</td>
+                    <td>{{value.stepList[value.stepList.length-1].stepType}}</td>
+                </tr>
+            </table>
+        </div>
+
     </div>
 </body>
 <script>
 	var xDebugger = angular.module('xDebugger', [ 'selectionModel' ]);
 
-	xDebugger.controller('xFramiumDebugger', function XFramiumController(
-			$scope, $interval, $http, $location, xFramiumService) {
+	xDebugger
+			.controller(
+					'xFramiumDebugger',
+					function XFramiumController($scope, $interval, $http,
+							$location, xFramiumService) {
 
-		$scope.active = [];
+						$scope.active = [];
 
-		$scope.completed = [];
+						$scope.completed = [];
 
-		$scope.pause = function(useId) {
-			xFramiumService.pause(useId);
-		};
+						$scope.pause = function(useId) {
+							xFramiumService.pause(useId);
+						};
 
-		$scope.resume = function(useId) {
-			xFramiumService.resume(useId);
-		};
+						$scope.resume = function(useId) {
+							xFramiumService.resume(useId);
+						};
 
-		$scope.connect = function() {
-			xFramiumService.extract($scope.executionId);
-		};
+						$scope.connect = function() {
+							xFramiumService.extract($scope.executionId);
+						};
 
-		$scope.intervalPromise = $interval(function() {
-			$scope.refreshData();
-		}, 1000);
+						$scope.intervalPromise = $interval(function() {
+							$scope.refreshData();
+						}, 1000);
 
-		$scope.refreshData = function() {
-			xFramiumService.getTests().then(function(returnValue) {
-				if (returnValue == undefined) {
-					$interval.cancel($scope.intervalPromise);
-					return;
-				}
+						$scope.refreshData = function() {
+							xFramiumService
+									.getTests()
+									.then(
+											function(returnValue) {
+												if (returnValue == undefined) {
+													$interval
+															.cancel($scope.intervalPromise);
+													return;
+												}
 
-				console.log(returnValue.pageData);
+												console
+														.log(returnValue.pageData);
 
-				$scope.active = returnValue.pageData.active;
-				$scope.completed = returnValue.pageData.complete;
-				
+												$scope.active = returnValue.pageData.active;
+												$scope.completed = returnValue.pageData.complete;
 
-				if ( Object.keys($scope.active ).length > 0 || Object.keys($scope.completed ).length > 0 )
-				{
-					document.getElementById( 'loading' ).style.display = 'none';
-					document.getElementById( 'mainTable' ).style.display = 'table';
-				}
+												if (Object.keys($scope.active).length > 0
+														|| Object
+																.keys($scope.completed).length > 0) {
+													document
+															.getElementById('loading').style.display = 'none';
+													document
+															.getElementById('mainTable').style.display = 'block';
+												}
 
-			});
-		}
+											});
+						}
 
-		$scope.refreshData();
+						$scope.refreshData();
 
-	});
+					});
 
 	xDebugger.service("xFramiumService", function($http, $location) {
 		return ({
