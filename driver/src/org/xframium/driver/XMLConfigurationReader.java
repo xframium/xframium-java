@@ -50,6 +50,7 @@ import org.xframium.device.data.SQLDataProvider;
 import org.xframium.device.data.XMLDataProvider;
 import org.xframium.device.data.perfectoMobile.AvailableHandsetValidator;
 import org.xframium.device.data.perfectoMobile.PerfectoMobileDataProvider;
+import org.xframium.device.data.perfectoMobile.PerfectoMobilePluginProvider;
 import org.xframium.device.data.perfectoMobile.ReservedHandsetValidator;
 import org.xframium.device.logging.ThreadedFileHandler;
 import org.xframium.device.ng.AbstractSeleniumTest;
@@ -474,6 +475,10 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     {
         switch ( xRoot.getDevices().getProvider() )
         {
+            case "PERFECTO_PLUGIN":
+                DataManager.instance().readData( new PerfectoMobilePluginProvider( configProperties.get( "deviceManagement.deviceList" ) + "", DriverType.valueOf( xRoot.getDriver().getType() ), configProperties.get( "deviceManagement.pluginType" ) ) );
+                break;
+            
             case "RESERVED":
                 DataManager.instance().readData( new PerfectoMobileDataProvider( new ReservedHandsetValidator(), DriverType.valueOf( xRoot.getDriver().getType() ) ) );
                 break;

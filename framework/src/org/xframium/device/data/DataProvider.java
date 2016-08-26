@@ -45,6 +45,18 @@ public interface DataProvider
 		APPIUM;
 	}
 	/**
+	 * The Enum PluginType.
+	 */
+	public enum PluginType
+	{
+
+		/** Eclipse Lab Plugin */
+		ECLIPSE,
+
+		/** Intellij Lab Plugin */
+		INTELLIJ;
+	}
+	/**
 	 * Read data.
 	 */
 	public void readData();

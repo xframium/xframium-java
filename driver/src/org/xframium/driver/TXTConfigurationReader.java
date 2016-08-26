@@ -38,6 +38,7 @@ import org.xframium.device.data.SQLDataProvider;
 import org.xframium.device.data.XMLDataProvider;
 import org.xframium.device.data.perfectoMobile.AvailableHandsetValidator;
 import org.xframium.device.data.perfectoMobile.PerfectoMobileDataProvider;
+import org.xframium.device.data.perfectoMobile.PerfectoMobilePluginProvider;
 import org.xframium.device.data.perfectoMobile.ReservedHandsetValidator;
 import org.xframium.device.logging.ThreadedFileHandler;
 import org.xframium.device.ng.AbstractSeleniumTest;
@@ -392,6 +393,10 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     {
         switch ( (configProperties.getProperty( DEVICE[0] )).toUpperCase() )
         {
+            case "PERFECTO_PLUGIN":
+                DataManager.instance().readData( new PerfectoMobilePluginProvider( configProperties.get( "deviceManagement.deviceList" ) + "", DriverType.valueOf( configProperties.getProperty( DEVICE[1] ) ), configProperties.getProperty( "deviceManagement.pluginType" ) ) );
+                break;
+            
             case "RESERVED":
                 validateProperties( configProperties, DEVICE );
                 DataManager.instance().readData( new PerfectoMobileDataProvider( new ReservedHandsetValidator(), DriverType.valueOf( configProperties.getProperty( DEVICE[1] ) ) ) );
