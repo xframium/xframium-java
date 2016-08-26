@@ -394,7 +394,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
         switch ( (configProperties.getProperty( DEVICE[0] )).toUpperCase() )
         {
             case "PERFECTO_PLUGIN":
-                DataManager.instance().readData( new PerfectoMobilePluginProvider( configProperties.get( "deviceManagement.deviceList" ) + "", DriverType.valueOf( configProperties.getProperty( DEVICE[1] ) ) ) );
+                DataManager.instance().readData( new PerfectoMobilePluginProvider( configProperties.get( "deviceManagement.deviceList" ) + "", DriverType.valueOf( configProperties.getProperty( DEVICE[1] ) ), configProperties.getProperty( "deviceManagement.pluginType" ) ) );
                 break;
             
             case "RESERVED":

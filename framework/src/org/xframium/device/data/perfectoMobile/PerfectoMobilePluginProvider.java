@@ -23,16 +23,20 @@
  */
 package org.xframium.device.data.perfectoMobile;
 
+import com.perfectomobile.intellij.connector.ConnectorConfiguration;
+import com.perfectomobile.intellij.connector.impl.client.ClientSideLocalFileSystemConnector;
+import com.perfectomobile.intellij.connector.impl.client.ProcessOutputLogAdapter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.SimpleDevice;
 import org.xframium.device.data.DataProvider;
-import org.xframium.device.data.DataProvider.DriverType;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
 import org.xframium.spi.Device;
 import com.perfectomobile.selenium.util.EclipseConnector;
+
+import java.io.IOException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -47,6 +51,7 @@ public class PerfectoMobilePluginProvider implements DataProvider
     /** The driver type. */
     private DriverType driverType;
     private String deviceId;
+    private String pluginType;
 
     /**
      * Instantiates a new perfecto mobile data provider.
@@ -56,10 +61,11 @@ public class PerfectoMobilePluginProvider implements DataProvider
      * @param driverType
      *            the driver type
      */
-    public PerfectoMobilePluginProvider( String deviceId, DriverType driverType )
+    public PerfectoMobilePluginProvider( String deviceId, DriverType driverType, String pluginType )
     {
         this.driverType = driverType;
         this.deviceId = deviceId;
+        this.pluginType = pluginType;
     }
 
     /*
@@ -71,17 +77,38 @@ public class PerfectoMobilePluginProvider implements DataProvider
     {
         try
         {
-            EclipseConnector connector = new EclipseConnector();
-            String eclipseHost = connector.getHost();
-            if ( eclipseHost != null )
+            SimpleDevice device = (SimpleDevice)lookupDeviceById( deviceId, driverType );
+            String executionId = null;
+            if ( PluginType.INTELLIJ.toString().equals( pluginType ) )
             {
-                String executionId = connector.getExecutionId();
-                
-                SimpleDevice device = (SimpleDevice)lookupDeviceById( deviceId, driverType );
-                device.addCapability( EclipseConnector.ECLIPSE_EXECUTION_ID, executionId );
-                DeviceManager.instance().registerDevice( device );
-                
+                ClientSideLocalFileSystemConnector intellijConnector = new ClientSideLocalFileSystemConnector( new ProcessOutputLogAdapter( System.err, System.out, System.out, System.out ) );
+                ConnectorConfiguration connectorConfiguration = intellijConnector.getConnectorConfiguration();
+                if ( connectorConfiguration != null && connectorConfiguration.getHost() != null )
+                {
+                    executionId = connectorConfiguration.getExecutionId();
+                }
             }
+            else
+            {
+                EclipseConnector connector = null;
+                try
+                {
+                    connector = new EclipseConnector();
+                    if ( connector.getHost() != null )
+                    {
+                        executionId = connector.getExecutionId();
+                    }
+                } catch ( IOException e )
+                {
+                    log.error( "Eclipse Connector Plugin socket not found" );
+                }
+            }
+
+            if (executionId != null)
+            {
+                device.addCapability( EclipseConnector.ECLIPSE_EXECUTION_ID, executionId );
+            }
+            DeviceManager.instance().registerDevice( device );
         }
         catch ( Exception e )
         {
