@@ -31,6 +31,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.OutputType;
@@ -50,6 +51,8 @@ import org.xframium.device.artifact.Artifact;
 import org.xframium.device.artifact.ArtifactProducer;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunDetails;
@@ -91,6 +94,8 @@ public abstract class AbstractSeleniumTest
         private String testContext;
 
         private String rawName;
+
+        private String contentKey;
 
         public String getRawName()
         {
@@ -144,6 +149,28 @@ public abstract class AbstractSeleniumTest
             this.personaName = personaName;
             formatTestName();
         }
+
+        /**
+         * Gets the content key.
+         *
+         * @return the content key
+         */
+        public String getContentKey()
+        {
+            return contentKey;
+        }
+
+        /**
+         * Sets the content key.
+         *
+         * @param contentKey
+         *            the new content key
+         */
+        public void setContentKey( String contentKey )
+        {
+            this.contentKey = contentKey;
+            formatTestName();
+        }        
 
         public String getTestContext()
         {
@@ -201,6 +228,9 @@ public abstract class AbstractSeleniumTest
 
             if ( personaName != null && !personaName.isEmpty() )
                 useTest = useTest + "." + personaName;
+
+            if ( contentKey != null && !contentKey.isEmpty() )
+                useTest = useTest + "." + contentKey;
 
             if ( testContext != null && !testContext.isEmpty() )
                 useTest = useTest + "[" + testContext + "]";
@@ -263,57 +293,62 @@ public abstract class AbstractSeleniumTest
 
     public Object[][] getDeviceData( List<Device> deviceList )
     {
-        int testCount = 0;
         boolean hasPersonas = false;
-
-        if ( DataManager.instance().getTests() != null && DataManager.instance().getTests().length > 0 )
-            testCount = deviceList.size() * DataManager.instance().getTests().length;
-        else
-            testCount = deviceList.size();
 
         if ( DataManager.instance().getPersonas() != null && DataManager.instance().getPersonas().length > 0 )
         {
             hasPersonas = true;
-            testCount = testCount * DataManager.instance().getPersonas().length;
         }
 
-        Object[][] newArray = new Object[testCount][1];
+        Object[][] newArray = null;
+        ArrayList testList = new ArrayList();
 
-        int currentPosition = 0;
-
-        while ( currentPosition < testCount )
+        if ( DataManager.instance().getTests() != null && DataManager.instance().getTests().length > 0 )
         {
-            if ( DataManager.instance().getTests() != null && DataManager.instance().getTests().length > 0 )
+            for ( int i = 0; i < DataManager.instance().getTests().length; i++ )
             {
-                for ( int i = 0; i < DataManager.instance().getTests().length; i++ )
+                String testName = DataManager.instance().getTests()[i];
+                KeyWordTest theTest = KeyWordDriver.instance().getTest( testName );
+
+                if ( theTest != null )
                 {
-                    if ( hasPersonas )
+                    if (( theTest.getContentKeys() == null ) ||
+                        ( theTest.getContentKeys().length == 0 ))
                     {
-                        for ( int j = 0; j < DataManager.instance().getPersonas().length; j++ )
-                        {
-                            TestName testName = new TestName( DataManager.instance().getTests()[i] );
-                            testName.setPersonaName( DataManager.instance().getPersonas()[j] );
-                            newArray[currentPosition++][0] = testName;
-                        }
+                        addTestNames( testList, hasPersonas, DataManager.instance().getTests()[i], null );             
                     }
                     else
-                        newArray[currentPosition++][0] = new TestName( DataManager.instance().getTests()[i] );
+                    {
+                        for( int k = 0; k < theTest.getContentKeys().length; ++k )
+                        {
+                            addTestNames( testList, hasPersonas, DataManager.instance().getTests()[i], theTest.getContentKeys()[k] );  
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            if ( hasPersonas )
+            {
+                for ( int j = 0; j < DataManager.instance().getPersonas().length; j++ )
+                {
+                    TestName testName = new TestName();
+                    testName.setPersonaName( DataManager.instance().getPersonas()[j] );
+                    testList.add( testName );
                 }
             }
             else
             {
-                if ( hasPersonas )
-                {
-                    for ( int j = 0; j < DataManager.instance().getPersonas().length; j++ )
-                    {
-                        TestName testName = new TestName();
-                        testName.setPersonaName( DataManager.instance().getPersonas()[j] );
-                        newArray[currentPosition++][0] = testName;
-                    }
-                }
-                else
-                    newArray[currentPosition++][0] = new TestName();
+                testList.add( new TestName() );
             }
+        }
+
+        newArray = new Object[testList.size()][1];
+
+        for( int i = 0; i < testList.size(); ++i )
+        {
+            newArray[i][0] = testList.get(i);
         }
 
         return newArray;
@@ -664,5 +699,25 @@ public abstract class AbstractSeleniumTest
         threadDevices.set( null );
 
         return map;
+    }
+
+    private void addTestNames( List testList, boolean hasPersonas, String testNameStr, String contentKey )
+    {
+        if ( hasPersonas )
+        {
+            for ( int j = 0; j < DataManager.instance().getPersonas().length; j++ )
+            {
+                TestName testName = new TestName( testNameStr );
+                testName.setPersonaName( DataManager.instance().getPersonas()[j] );
+                testName.setContentKey( contentKey );
+                testList.add( testName );
+            }
+        }
+        else
+        {
+            TestName testName = new TestName( testNameStr );
+            testName.setContentKey( contentKey );
+            testList.add( testName );
+        }
     }
 }

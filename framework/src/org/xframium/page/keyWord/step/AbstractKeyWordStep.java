@@ -654,6 +654,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         }
                     }
                 }
+                
                 returnValue = _executeStep( pageObject, ((altWebDriver != null) ? altWebDriver : webDriver), contextMap, dataMap, pageMap );
                 
                 KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE );
