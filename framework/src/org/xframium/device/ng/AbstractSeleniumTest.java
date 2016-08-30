@@ -380,8 +380,15 @@ public abstract class AbstractSeleniumTest
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Device acquired for " + currentMethod.getName() );
 
-            if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
-                connectedDevice.getWebDriver().getCloud().getCloudActionProvider().enabledLogging( connectedDevice.getWebDriver() );
+            try
+            {
+                if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
+                    connectedDevice.getWebDriver().getCloud().getCloudActionProvider().enabledLogging( connectedDevice.getWebDriver() );
+            }
+            catch( Exception e )
+            {
+                e.printStackTrace();
+            }
 
             TestContext ctx = new TestContext();
             ctx.currentMethod = currentMethod;
@@ -450,8 +457,15 @@ public abstract class AbstractSeleniumTest
         threadContext.set( null );
         Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null);
 
-        if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
-            map.get( DEFAULT ).getWebDriver().getCloud().getCloudActionProvider().disableLogging( map.get( DEFAULT ).getWebDriver() );
+        try
+        {
+            if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
+                map.get( DEFAULT ).getWebDriver().getCloud().getCloudActionProvider().disableLogging( map.get( DEFAULT ).getWebDriver() );
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace();
+        }
 
         while ( (keys != null) && (keys.hasNext()) )
         {

@@ -148,6 +148,18 @@ public class DebugManager implements KeyWordListener
         completedTests.put( executionId, activeTests.remove( executionId ) );
     }
 
+    public void launchBrowser( String ipAddress, int portNumber )
+    {
+        try
+        {
+            Desktop.getDesktop().browse( new URI( "http://" + ipAddress + ":" + portNumber + "/sessions") );
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace();
+        }
+    }
+    
     public void startUp( String ipAddress, int portNumber )
     {
         try
@@ -168,15 +180,7 @@ public class DebugManager implements KeyWordListener
             httpServer.createContext( "/extractXml", new ExtractXMLHandler() );
             httpServer.createContext( "/snapshot", new SnapshotHandler() );
             httpServer.start();
-
-            try
-            {
-                Desktop.getDesktop().browse( new URI( "http://" + ipAddress + ":" + portNumber + "/sessions") );
-            }
-            catch( Exception e )
-            {
-                e.printStackTrace();
-            }
+            
         }
         catch ( Exception e )
         {
