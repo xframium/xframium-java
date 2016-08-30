@@ -84,6 +84,7 @@ public abstract class AbstractSeleniumTest
 
         /** The test name. */
         private String testName;
+        private String baseTestName;
 
         /** The full name. */
         private String fullName;
@@ -199,6 +200,7 @@ public abstract class AbstractSeleniumTest
         public TestName( String testName )
         {
             this.testName = testName;
+            baseTestName = testName;
             formatTestName();
 
         }
@@ -224,7 +226,7 @@ public abstract class AbstractSeleniumTest
         {
             if ( testName == null )
                 return;
-            String useTest = testName;
+            String useTest = baseTestName;
 
             if ( personaName != null && !personaName.isEmpty() )
                 useTest = useTest + "." + personaName;
