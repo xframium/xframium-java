@@ -82,6 +82,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <failOnError>false</failOnError>
+        </configuration>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -90,6 +93,13 @@
             </goals>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+	        <groupId>org.apache.httpcomponents</groupId>
+	        <artifactId>httpclient</artifactId>
+	        <version>4.5.2</version>
+	      </dependency>
+	    </dependencies>
       </plugin>
     </plugins>
   </build>
@@ -163,6 +173,11 @@
       <groupId>com.jayway.jsonpath</groupId>
       <artifactId>json-path</artifactId>
       <version>2.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.perfectomobile</groupId>
+      <artifactId>intellij-connector</artifactId>
+      <version>9.0.0.0</version>
     </dependency>
     <dependency>
       <groupId>com.perfecto.reporting-sdk</groupId>
