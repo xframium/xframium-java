@@ -261,7 +261,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                 }
             }
 
-            if ( System.getProperty( "X_DEBUGGER" ).equals( "true" ) && !debuggerEnabled )
+            if ( System.getProperty( "X_DEBUGGER" ) != null && System.getProperty( "X_DEBUGGER" ).equals( "true" ) && !debuggerEnabled )
             {
                 try
                 {
