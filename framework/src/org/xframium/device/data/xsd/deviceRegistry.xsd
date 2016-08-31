@@ -32,6 +32,15 @@
 		<attribute name="active" type="boolean" use="optional" default="true" />
 		<attribute name="availableDevices" type="integer" use="optional" default="1" />
         <attribute name="cloud" type="string" use="optional" />
+        <attribute name="driverType" use="optional">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="APPIUM" />
+					<enumeration value="WEB" />
+					<enumeration value="PERFECTO" />
+				</restriction>
+			</simpleType>
+		</attribute>
 	</complexType>
 
 	<complexType name="DeviceCapability">

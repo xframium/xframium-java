@@ -660,6 +660,11 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             {
                 AbstractSeleniumTest.registerSecondaryDeviceOnName( name, deviceId );
             }
+            
+            public void registerInactiveWebDriver(String name) 
+            {
+				AbstractSeleniumTest.registerInactiveDeviceOnName( name );
+			}
 
         } );
         

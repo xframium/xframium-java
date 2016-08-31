@@ -793,6 +793,79 @@ public class DeviceManager implements ArtifactListener
     }
 	
     /**
+     * This will cycle through the available devices, by weight, to locate a
+     * device that has not run this method yet.
+     *
+     * @param deviceName name of the device which has to be connected
+     * @return The next available device or null if no device are available
+     */
+    public ConnectedDevice getInactiveDevice( String deviceName )
+    {
+        ConnectedDevice rtn = null;
+        
+        Device currentDevice = deviceMap.get(deviceName);
+        DeviceWebDriver webDriver = null;
+        
+        try
+        {
+        	managerLock.lock();
+            
+        	if (currentDevice.getLock().tryAcquire())
+            {
+        		
+        		if ( log.isDebugEnabled() )
+            		log.debug( "Attempting to create WebDriver instance for " + currentDevice );
+        		
+                //
+                // Notify any listeners about this device acquisition and allow them to cancel it
+                //
+/*                if ( !notifyValidateDevice( currentDevice, runKey ) )
+                {
+                    if (log.isDebugEnabled())
+                        log.debug( Thread.currentThread().getName() + ": A registered RUN LISTENER cancelled this device request - Releasing Semaphore for " + currentDevice );
+
+                    releaseDevice( currentDevice );
+                }
+                else 
+                {*/
+	            	webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice );
+	
+	            	if ( webDriver != null )
+	            	{
+	
+	            		if ( log.isDebugEnabled() )
+	            			log.debug( "WebDriver Created - Creating Connected Device for " + currentDevice );
+	
+	            		DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
+	            		rtn = new ConnectedDevice( webDriver, currentDevice, null );
+	            	}
+//                }
+            }
+        }
+        catch( Exception e )
+        {
+        	log.error( "Error creating factory instance", e );
+        	try { webDriver.close(); } catch( Exception e2 ) {}
+        	try { webDriver.quit(); } catch( Exception e2 ) {}
+        	
+        	if (log.isDebugEnabled())
+                log.debug( Thread.currentThread().getName() + ": Releasing unused Device Semaphore for " + currentDevice );
+            releaseDevice( currentDevice );
+        }
+        finally
+        {
+            if (log.isDebugEnabled())
+                log.debug( Thread.currentThread().getName() + ": Releasing Device Manager Lock" );
+            managerLock.unlock();
+            
+            /*if (log.isDebugEnabled())
+                log.debug( Thread.currentThread().getName() + ": Releasing unused Device Semaphore for " + currentDevice );
+            releaseDevice( currentDevice );*/
+        }
+        return rtn;
+    }
+    
+    /**
      * Release device.
      *
      * @param currentDevice the current device
@@ -845,11 +918,15 @@ public class DeviceManager implements ArtifactListener
 			
             if (log.isInfoEnabled())
                 log.info( Thread.currentThread().getName() + ": Adding run [" + runKey + "] to device " + currentDevice );
-            analyticsMap.get( currentDevice.getKey() ).addRun( runKey );
+            
+            if ( analyticsMap.get( currentDevice.getKey() ) != null )
+            {
+            	analyticsMap.get( currentDevice.getKey() ).addRun( runKey );
+            	activeRuns.remove( currentDevice.getKey() + "." + runKey );
+            	notifyAfterRun( currentDevice, runKey, success );
+            }
 			
-            activeRuns.remove( currentDevice.getKey() + "." + runKey );
-			
-            notifyAfterRun( currentDevice, runKey, success );
+            
             Collections.sort( deviceList, deviceComparator );
         }
         finally
@@ -891,6 +968,7 @@ public class DeviceManager implements ArtifactListener
         if (log.isInfoEnabled())
             log.info( "Registering Device " + currentDevice );
         deviceMap.put( currentDevice.getKey(), currentDevice );
+//        analyticsMap.put( currentDevice.getKey(), new DeviceAnalytics( currentDevice.getKey() ) );
     }
 
 	/**

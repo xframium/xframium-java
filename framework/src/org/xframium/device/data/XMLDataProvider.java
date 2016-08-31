@@ -157,8 +157,12 @@ public class XMLDataProvider implements DataProvider
 		String factoryName = null;
 		Map<String, Object> keyOptions = null;
 		Map<String, Object> browserOptionMap = null;
+		DriverType tempDriverType = driverType;
+		
+		if ( device.getDriverType() != null && !device.getDriverType().isEmpty() )
+			tempDriverType = DriverType.valueOf(device.getDriverType());
 
-		switch( driverType )
+		switch( tempDriverType )
 		{
 			case APPIUM:
 				if ( device.getOs().toUpperCase().equals( "IOS" ) )
@@ -259,6 +263,12 @@ public class XMLDataProvider implements DataProvider
 
 			DeviceManager.instance().registerDevice( currentDevice );
 		}
-		
+		else
+		{				
+			if (log.isDebugEnabled())
+				log.debug( "Extracted inactive device: " + currentDevice );
+
+			DeviceManager.instance().registerInactiveDevice( currentDevice );
+		}
 	}
 }

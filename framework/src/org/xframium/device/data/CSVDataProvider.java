@@ -157,6 +157,13 @@ public class CSVDataProvider implements DataProvider
 	
 					DeviceManager.instance().registerDevice( currentDevice );
 				}
+				else
+				{				
+					if (log.isDebugEnabled())
+						log.debug( "Extracted inactive device: " + currentDevice );
+
+					DeviceManager.instance().registerInactiveDevice( currentDevice );
+				}
 			}
 
 		}
