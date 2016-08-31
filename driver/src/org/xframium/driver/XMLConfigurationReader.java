@@ -300,6 +300,8 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         List<ArtifactType> artifactList = new ArrayList<ArtifactType>( 10 );
         artifactList.add( ArtifactType.EXECUTION_DEFINITION );
         
+        
+        boolean debuggerEnabled = false;
         for( XArtifact artifact : xRoot.getDriver().getArtifact() )
         {
             artifactList.add( ArtifactType.valueOf( artifact.getType() ) );
@@ -309,6 +311,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             {
                 try
                 {
+                    debuggerEnabled = true;
                     DebugManager.instance().startUp( InetAddress.getLocalHost().getHostAddress(), 8870 );
                     KeyWordDriver.instance().addStepListener( DebugManager.instance() );
                 }
@@ -318,6 +321,21 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 }
             }
                 
+        }
+        
+        if ( System.getProperty( "X_DEBUGGER" ) != null && System.getProperty( "X_DEBUGGER" ).equals( "true" ) && !debuggerEnabled )
+        {
+            try
+            {
+                debuggerEnabled = true;
+                artifactList.add( ArtifactType.DEBUGGER );
+                DebugManager.instance().startUp( InetAddress.getLocalHost().getHostAddress(), 8870 );
+                KeyWordDriver.instance().addStepListener( DebugManager.instance() );
+            }
+            catch( Exception e )
+            {
+                e.printStackTrace();
+            }
         }
         
         DataManager.instance().setAutomaticDownloads( artifactList.toArray( new ArtifactType[0] ) );
