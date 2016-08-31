@@ -25,6 +25,7 @@ import org.openqa.selenium.WebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
+import org.xframium.page.element.Element.SetMethod;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 
 // TODO: Auto-generated Javadoc
@@ -40,29 +41,28 @@ public class KWSSet extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
 	{
-	    if ( pageObject == null )
-            throw new IllegalStateException( "There was no Page Object defined" );
-		
+		if ( pageObject == null )
+			throw new IllegalStateException( "There was no Page Object defined" );
+
 		if ( getParameterList().size() < 1 )
 			throw new IllegalArgumentException( "You must provide 1 parameter to setValue" );
-		
+
 		String newValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
-		
-		if ( getName().toLowerCase().equals( "_context" ) && getContext() != null && !getContext().isEmpty() )
-		{
-		    if ( log.isInfoEnabled() )
-	            log.info( "Attempting to set the context value " + getContext() + " to [" + newValue + "]" );
-		    
-		    contextMap.put( getContext(), newValue );
-		}
-		else
-		{
-    		Element elt = getElement( pageObject, contextMap, webDriver, dataMap );		
-            elt.setValue( newValue );
-		}
-                    
+		String option = null;
+		if (getParameterList().size() > 1 ){
+			option = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+		}		
+		if ( log.isInfoEnabled() )
+			log.info( "Attmepting to set " + getName() + " to [" + newValue + "]" );
+
+		Element elt = getElement( pageObject, contextMap, webDriver, dataMap );
+		if(option == null){
+			elt.setValue( newValue);
+		}else {
+			elt.setValue( newValue,SetMethod.valueOf(option.toUpperCase()));
+		}		
 		return true;
-	}
+      }	
 	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()

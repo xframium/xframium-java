@@ -22,6 +22,8 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.DeviceManager;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 import org.xframium.page.data.PageData;
@@ -47,27 +49,43 @@ public class KWSAddDevice extends AbstractKeyWordStep
 
         Object name = null;
         Object deviceId = null;
-                
-        if ( getParameterList().size() == 2 )
-        {
-            name = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
-            if ( !( name instanceof String ) )
+        Object deviceName = null;
+        
+        if ( getParameterList().size() == 1 ) {
+        	deviceName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
+        	
+        	if ( !( deviceName instanceof String ) )
                 throw new IllegalStateException( "Device name must be of type String" );
-
-            deviceId = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap );
-            if ( !( deviceId instanceof String ) )
-                throw new IllegalStateException( "Device id must be of type String" );
+        	
+        	if ( DeviceManager.instance().getDevice(deviceName.toString()) == null )
+        		throw new ScriptConfigurationException( "Device Name should be configured in DeviceRegistry with inactive status" );
+        		
+        	if ( PageManager.instance().getAlternateWebDriverSource() != null )
+            {
+                PageManager.instance().getAlternateWebDriverSource().registerInactiveWebDriver( (String) deviceName );
+            }
         }
-        else
+        else if ( getParameterList().size() == 2 )
         {
-            throw new IllegalStateException( "add device requires two string properties (name, deviceId)" );
-        }
+        	name = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
+	        
+        	if ( !( name instanceof String ) )
+        		throw new IllegalStateException( "Device name must be of type String" );
+	
+        	deviceId = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap );
+	        
+        	if ( !( deviceId instanceof String ) )
+	        	throw new IllegalStateException( "Device id must be of type String" );
 
-        if ( PageManager.instance().getAlternateWebDriverSource() != null )
-        {
-            PageManager.instance().getAlternateWebDriverSource().registerAltWebDriver( (String) name, (String) deviceId );
+	        if ( PageManager.instance().getAlternateWebDriverSource() != null )
+	        {
+	            PageManager.instance().getAlternateWebDriverSource().registerAltWebDriver( (String) name, (String) deviceId );
+	        }
         }
-		
+	    else
+	    {
+	    	throw new IllegalStateException( "add device requires either the device name from DeviceRegistry.xml or two string properties (name, deviceId)" );
+	    }
         return true;
     }
 	

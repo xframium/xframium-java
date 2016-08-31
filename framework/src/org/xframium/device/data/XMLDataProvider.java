@@ -155,10 +155,14 @@ public class XMLDataProvider implements DataProvider
 		String driverName = "";
 		List<Object> list = null;
 		String factoryName = null;
-		Map<String,String> keyOptions = null;
+		Map<String, Object> keyOptions = null;
 		Map<String, Object> browserOptionMap = null;
+		DriverType tempDriverType = driverType;
+		
+		if ( device.getDriverType() != null && !device.getDriverType().isEmpty() )
+			tempDriverType = DriverType.valueOf(device.getDriverType());
 
-		switch( driverType )
+		switch( tempDriverType )
 		{
 			case APPIUM:
 				if ( device.getOs().toUpperCase().equals( "IOS" ) )
@@ -206,30 +210,44 @@ public class XMLDataProvider implements DataProvider
 		
 		//Parse the Object Capability element for browser options
 		if (device.getObjectCapability() != null) {
+			
 			for (ObjectDeviceCapability cap : device.getObjectCapability()) {
+				
 				browserOptionMap = new HashMap<String, Object>();
-				keyOptions = new HashMap<String, String>();
 
 				if (cap.getCapabilities() != null) {
+					
 					for (Capabilities capabilities : cap.getCapabilities()) {
+						
 						factoryName = capabilities.getFactoryName();
 
 						if (capabilities.getOptions() != null) {
+							
 							for (Options option : capabilities.getOptions()) {
+							
 								if (option.getKey() == null) {
+								
 									if (browserOptionMap.get(option.getName()) == null) {
 										list = new ArrayList<Object>();
+									
 									} else {
 										list = (List<Object>) browserOptionMap.get(option.getName());
 									}
 									browserOptionMap.put(option.getName(), list);
 									list.add(option.getValue());
-									currentDevice.addCapability(factoryName, browserOptionMap);
-								    } else {
+								    
+								} else {
+									
+									if (browserOptionMap.get(option.getName()) == null) {
+										keyOptions = new HashMap<String, Object>();
+									
+									} else {
+										keyOptions = (HashMap<String, Object>) browserOptionMap.get(option.getName());
+									}
 									keyOptions.put(option.getKey(), option.getValue());
 									browserOptionMap.put(option.getName(), keyOptions);
-									currentDevice.addCapability(factoryName, browserOptionMap);
 								}
+								currentDevice.addCapability(factoryName, browserOptionMap);
 							}
 						}
 					}
@@ -245,6 +263,12 @@ public class XMLDataProvider implements DataProvider
 
 			DeviceManager.instance().registerDevice( currentDevice );
 		}
-		
+		else
+		{				
+			if (log.isDebugEnabled())
+				log.debug( "Extracted inactive device: " + currentDevice );
+
+			DeviceManager.instance().registerInactiveDevice( currentDevice );
+		}
 	}
 }

@@ -733,52 +733,86 @@ public class SeleniumElement extends AbstractElement
     @Override
     protected void _setValue( String currentValue, SetMethod setMethod )
     {
-        WebElement webElement = getElement();
+		WebElement webElement = getElement();
 
-        if ( webElement.getTagName().equalsIgnoreCase( "select" ) )
-        {
-            if ( log.isInfoEnabled() )
-                log.info( Thread.currentThread().getName() + ": Selecting element value from [" + getKey() + "] as " + currentValue );
+		if ( webElement.getTagName().equalsIgnoreCase( "select" ) )
+		{
+			switch ( setMethod ){
+			case DEFAULT:
+				if ( log.isInfoEnabled() )
+					log.info( Thread.currentThread().getName() + ": Selecting element value from [" + getKey() + "] as " + currentValue );
+               System.out.println("line 744:"+currentValue);
+ 			  System.out.println("setMethod 744:"+setMethod);
 
-            Select selectElement = new Select( webElement );
-            if ( selectElement.isMultiple() )
-                selectElement.deselectAll();
-            try
-            {
-                selectElement.selectByVisibleText( currentValue );
-            }
-            catch ( Exception e )
-            {
-                selectElement.selectByValue( currentValue );
-            }
-        }
-        else
-        {
-            switch ( setMethod )
-            {
-                case DEFAULT:
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue );
+				Select selectElement = new Select( webElement );
+				if ( selectElement.isMultiple() )
+					selectElement.deselectAll();
+				try
+				{
+					selectElement.selectByVisibleText( currentValue );
+				}
+				catch ( Exception e )
+				{
+					selectElement.selectByValue( currentValue );
+				}
 
-                    MorelandWebElement x = (MorelandWebElement) webElement;
-                    if ( x.getWebElement() instanceof IOSElement )
-                        ((IOSElement) x.getWebElement()).setValue( currentValue );
-                    else
-                    {
-                        webElement.clear();
-                        webElement.sendKeys( currentValue );
-                    }
-                    break;
+				break;
 
-                case SINGLE:
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue + " using individual send keys" );
+			case MULTISELECT:
+				if ( log.isInfoEnabled() )
+					log.info( Thread.currentThread().getName() + ": Selecting element value from [" + getKey() + "] as " + currentValue );
+				 System.out.println("line 762:"+currentValue);
+				  System.out.println("setMethod 762:"+setMethod);
+				Select multipleselect = new Select( webElement );
+				String multiSelectTokens[]=currentValue.split(",");
+				for(String tokens:multiSelectTokens){
+				if ( multipleselect.isMultiple() ){
+					try
+					{
+						multipleselect.selectByVisibleText( tokens);
+					}
+					catch ( Exception e )
+					{
+						multipleselect.selectByValue( tokens );
+					}
+				}
+			}
+			default:
+				break;
+		   }
+		}		
+		else
+		{
+			switch ( setMethod )
+			{
+			case DEFAULT:
+				if ( log.isInfoEnabled() )
+					log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue );
+				 System.out.println("line 786:"+currentValue);
+				  System.out.println("setMethod 786:"+setMethod);
 
-                    webElement.sendKeys( currentValue );
+				MorelandWebElement x = (MorelandWebElement) webElement;
+				if ( x.getWebElement() instanceof IOSElement )
+					((IOSElement) x.getWebElement()).setValue( currentValue );
+				else
+				{
+					webElement.clear();
+					webElement.sendKeys( currentValue );
+				}
+				break;
 
-            }
-        }
+			case SINGLE:
+				if ( log.isInfoEnabled() )
+					log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue + " using individual send keys" );
+				 System.out.println("line 800:"+currentValue);
+				  System.out.println("setMethod 800:"+setMethod);
 
+				webElement.sendKeys( currentValue );
+			default:
+				break;
+
+			}
+		}
     }
 
     /*

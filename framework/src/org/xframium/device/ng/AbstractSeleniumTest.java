@@ -476,6 +476,24 @@ public abstract class AbstractSeleniumTest
             }
         }
     }
+    
+    public static void registerInactiveDeviceOnName( String name )
+    {
+        TestContext ctx = threadContext.get();
+
+        if ( ctx != null )
+        {
+            if (log.isInfoEnabled())
+                log.info( "Attempting to acquire Inactive device for " + ctx.currentMethod.getName() );
+
+            ConnectedDevice connectedDevice = DeviceManager.instance().getInactiveDevice( name );
+
+            if (connectedDevice != null)
+            {
+                putConnectedDevice( name, connectedDevice );
+            }
+        }
+    }
 
     /**
      * After method.

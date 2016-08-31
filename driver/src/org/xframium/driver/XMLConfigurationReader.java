@@ -837,6 +837,11 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             {
                 AbstractSeleniumTest.registerSecondaryDeviceOnName( name, deviceId );
             }
+            
+            public void registerInactiveWebDriver(String name) 
+            {
+				AbstractSeleniumTest.registerInactiveDeviceOnName( name );
+			}
 
         } );
         
