@@ -24,6 +24,7 @@ import java.util.Map;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.security.UserAndPassword;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -35,7 +36,8 @@ public class KWSAlert extends AbstractKeyWordStep
     {
         ACCEPT,
         DISMISS,
-        SEND_KEYS;
+        SEND_KEYS,
+        AUTHENTICATE;
     }
     
 	/* (non-Javadoc)
@@ -67,6 +69,10 @@ public class KWSAlert extends AbstractKeyWordStep
     		        currentAlert.sendKeys( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
     		        currentAlert.accept();
     		        break;
+    		        
+    		    case AUTHENTICATE:
+    		        currentAlert.authenticateUsing( new UserAndPassword(  getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "",  getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" ) );
+                    break;
     		        
     		    default:
     		        log.warn( "Unhandled Alert Type: " + getName() );

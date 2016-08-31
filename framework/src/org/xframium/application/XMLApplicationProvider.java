@@ -144,7 +144,8 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
 		String driverName = "";
 		List<String> list = null;
 		String factoryName = null;
-		Map<String, List<String>> browserOptionMap = null;
+		Map<String, Object> keyOptions = null;
+		Map<String, Object> browserOptionMap = null;
         Map<String, Object> capabilities = new HashMap<String, Object>( 10 );
         
         if ( app.getCapability() != null )
@@ -173,7 +174,7 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
   		{
   		    for ( ObjectDeviceCapability cap : app.getObjectCapability() )
   		    {
-  		    	browserOptionMap = new HashMap<String, List<String>>();
+  		    	browserOptionMap = new HashMap<String, Object>();
   		    	
   		    	if ( cap.getCapabilities() != null )
   		    	{
@@ -185,15 +186,29 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
   		    			{
   		    				for ( Options option : objCapabilities.getOptions() )
   		    				{
-  		    					if (browserOptionMap.get(option.getName()) == null) {
-  		    						list = new ArrayList<String>();
-
-  		    					} else {
-  		    						list = browserOptionMap.get(option.getName());
-
-  		    					}
-  		    					list.add(option.getValue());
-  		    					browserOptionMap.put(option.getName(), list);
+  		    					if (option.getKey() == null) {
+  		    						
+	  		    					if (browserOptionMap.get(option.getName()) == null) {
+	  		    						list = new ArrayList<String>();
+	
+	  		    					} else {
+	  		    						list = (List<String>) browserOptionMap.get(option.getName());
+	
+	  		    					}
+	  		    					list.add(option.getValue());
+	  		    					browserOptionMap.put(option.getName(), list);
+	  		    					
+	  		    				} else {
+									
+									if (browserOptionMap.get(option.getName()) == null) {
+										keyOptions = new HashMap<String, Object>();
+									
+									} else {
+										keyOptions = (HashMap<String, Object>) browserOptionMap.get(option.getName());
+									}
+									keyOptions.put(option.getKey(), option.getValue());
+									browserOptionMap.put(option.getName(), keyOptions);
+								}
   		    				}
   		    			}
   		    		}

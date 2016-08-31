@@ -48,11 +48,18 @@ public class KWSSet extends AbstractKeyWordStep
 		
 		String newValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
 		
-		if ( log.isInfoEnabled() )
-			log.info( "Attmepting to set " + getName() + " to [" + newValue + "]" );
-		
-		Element elt = getElement( pageObject, contextMap, webDriver, dataMap );
-        elt.setValue( newValue );
+		if ( getName().toLowerCase().equals( "_context" ) && getContext() != null && !getContext().isEmpty() )
+		{
+		    if ( log.isInfoEnabled() )
+	            log.info( "Attempting to set the context value " + getContext() + " to [" + newValue + "]" );
+		    
+		    contextMap.put( getContext(), newValue );
+		}
+		else
+		{
+    		Element elt = getElement( pageObject, contextMap, webDriver, dataMap );		
+            elt.setValue( newValue );
+		}
                     
 		return true;
 	}

@@ -2,6 +2,7 @@ package org.xframium.driver;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.net.InetAddress;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
@@ -118,6 +119,9 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         
         try
         {
+            if( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )
+                DebugManager.instance().launchBrowser( InetAddress.getLocalHost().getHostAddress(), 8870 );
+            
             _executeTest();
             
             if( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_HTML ) )

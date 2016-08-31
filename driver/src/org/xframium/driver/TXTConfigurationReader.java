@@ -38,6 +38,7 @@ import org.xframium.device.data.SQLDataProvider;
 import org.xframium.device.data.XMLDataProvider;
 import org.xframium.device.data.perfectoMobile.AvailableHandsetValidator;
 import org.xframium.device.data.perfectoMobile.PerfectoMobileDataProvider;
+import org.xframium.device.data.perfectoMobile.PerfectoMobilePluginProvider;
 import org.xframium.device.data.perfectoMobile.ReservedHandsetValidator;
 import org.xframium.device.logging.ThreadedFileHandler;
 import org.xframium.device.ng.AbstractSeleniumTest;
@@ -222,6 +223,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             String[] auto = automated.split( "," );
             List<ArtifactType> artifactList = new ArrayList<ArtifactType>( 10 );
             artifactList.add( ArtifactType.EXECUTION_DEFINITION );
+            boolean debuggerEnabled = false;
             for ( String type : auto )
             {
                 try
@@ -234,6 +236,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                     {
                         try
                         {
+                            debuggerEnabled = true;
                             DebugManager.instance().startUp( InetAddress.getLocalHost().getHostAddress(), 8870 );
                             KeyWordDriver.instance().addStepListener( DebugManager.instance() );
                         }
@@ -258,6 +261,21 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                 }
             }
 
+            if ( System.getProperty( "X_DEBUGGER" ) != null && System.getProperty( "X_DEBUGGER" ).equals( "true" ) && !debuggerEnabled )
+            {
+                try
+                {
+                    debuggerEnabled = true;
+                    artifactList.add( ArtifactType.DEBUGGER );
+                    DebugManager.instance().startUp( InetAddress.getLocalHost().getHostAddress(), 8870 );
+                    KeyWordDriver.instance().addStepListener( DebugManager.instance() );
+                }
+                catch( Exception e )
+                {
+                    e.printStackTrace();
+                }
+            }
+            
             DataManager.instance().setAutomaticDownloads( artifactList.toArray( new ArtifactType[0] ) );
 
         }
@@ -392,6 +410,10 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     {
         switch ( (configProperties.getProperty( DEVICE[0] )).toUpperCase() )
         {
+            case "PERFECTO_PLUGIN":
+                DataManager.instance().readData( new PerfectoMobilePluginProvider( configProperties.get( "deviceManagement.deviceList" ) + "", DriverType.valueOf( configProperties.getProperty( DEVICE[1] ) ), configProperties.getProperty( "deviceManagement.pluginType" ) ) );
+                break;
+            
             case "RESERVED":
                 validateProperties( configProperties, DEVICE );
                 DataManager.instance().readData( new PerfectoMobileDataProvider( new ReservedHandsetValidator(), DriverType.valueOf( configProperties.getProperty( DEVICE[1] ) ) ) );

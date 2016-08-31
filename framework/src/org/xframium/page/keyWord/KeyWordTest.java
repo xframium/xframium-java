@@ -73,7 +73,7 @@ public class KeyWordTest
     /** The test tags. */
     private String[] testTags;
 
-    /** The contnet keys */
+    /** The content keys */
     private String[] contentKeys;
 
     /** The step list. */

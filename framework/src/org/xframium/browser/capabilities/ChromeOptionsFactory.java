@@ -60,7 +60,27 @@ public class ChromeOptionsFactory extends AbstractBrowserCapability{
 			}
 			
 			else if(name.equalsIgnoreCase("experimentaloption")) {
-				chromeOptions.setExperimentalOption("excludeSwitches", options.get(name));				
+//				chromeOptions.setExperimentalOption("excludeSwitches", options.get(name));
+				Map<String, Object> optionsMap = (Map<String, Object>) options.get(name);
+
+				for (String preferenceKey : optionsMap.keySet()) {
+					
+					if (preferenceKey.equalsIgnoreCase("excludeSwitches")) {
+						List<Object> exSwitchList = new ArrayList<Object>();
+						exSwitchList.add(optionsMap.get(preferenceKey));
+						chromeOptions.setExperimentalOption(preferenceKey, exSwitchList);
+					}
+					else 
+					{
+						Object preferenceValue = optionsMap.get(preferenceKey);
+						chromeOptions.setExperimentalOption(preferenceKey, preferenceValue);
+					}
+				}
+			}
+			
+			else if(name.equalsIgnoreCase("prefs")) {
+				Map<String, Object> optionsMap = (Map<String, Object>) options.get(name);
+				chromeOptions.setExperimentalOption(name, optionsMap);
 			}
 		}
 		dc.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
