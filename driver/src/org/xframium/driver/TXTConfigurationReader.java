@@ -223,6 +223,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             String[] auto = automated.split( "," );
             List<ArtifactType> artifactList = new ArrayList<ArtifactType>( 10 );
             artifactList.add( ArtifactType.EXECUTION_DEFINITION );
+            boolean debuggerEnabled = false;
             for ( String type : auto )
             {
                 try
@@ -235,6 +236,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                     {
                         try
                         {
+                            debuggerEnabled = true;
                             DebugManager.instance().startUp( InetAddress.getLocalHost().getHostAddress(), 8870 );
                             KeyWordDriver.instance().addStepListener( DebugManager.instance() );
                         }
@@ -259,6 +261,21 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                 }
             }
 
+            if ( System.getProperty( "X_DEBUGGER" ) != null && System.getProperty( "X_DEBUGGER" ).equals( "true" ) && !debuggerEnabled )
+            {
+                try
+                {
+                    debuggerEnabled = true;
+                    artifactList.add( ArtifactType.DEBUGGER );
+                    DebugManager.instance().startUp( InetAddress.getLocalHost().getHostAddress(), 8870 );
+                    KeyWordDriver.instance().addStepListener( DebugManager.instance() );
+                }
+                catch( Exception e )
+                {
+                    e.printStackTrace();
+                }
+            }
+            
             DataManager.instance().setAutomaticDownloads( artifactList.toArray( new ArtifactType[0] ) );
 
         }
@@ -643,6 +660,11 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             {
                 AbstractSeleniumTest.registerSecondaryDeviceOnName( name, deviceId );
             }
+            
+            public void registerInactiveWebDriver(String name) 
+            {
+				AbstractSeleniumTest.registerInactiveDeviceOnName( name );
+			}
 
         } );
         

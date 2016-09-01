@@ -39,7 +39,8 @@ public class KWSAlert extends AbstractKeyWordStep
         ACCEPT,
         DISMISS,
         SEND_KEYS,
-		AUTHORIZE;
+		AUTHORIZE,
+        AUTHENTICATE;
     }
     
 	/* (non-Javadoc)
@@ -77,10 +78,12 @@ public class KWSAlert extends AbstractKeyWordStep
 				case AUTHORIZE:
 					String user = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
 					String password = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-					//webDriver.switchTo().activeElement().sendKeys(user);
 					currentAlert.authenticateUsing(new UserAndPassword(user, password));
-					//currentAlert.accept();
 					break;
+    		        
+    		    case AUTHENTICATE:
+    		        currentAlert.authenticateUsing( new UserAndPassword(  getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "",  getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" ) );
+                    break;
     		        
     		    default:
     		        log.warn( "Unhandled Alert Type: " + getName() );

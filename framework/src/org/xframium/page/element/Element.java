@@ -47,7 +47,8 @@ public interface Element
     public enum SetMethod
     {
         DEFAULT,
-        SINGLE;
+        SINGLE,
+    	MULTISELECT;
     }
 	
 	/**
@@ -197,7 +198,7 @@ public interface Element
 	 *
 	 * @param currentValue the new value
 	 */
-	public void setValue( String currentValue  );
+	public void setValue( String currentValue );
 	
 	public void setValue( String currentValue, SetMethod setMethod );
 	

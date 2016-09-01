@@ -181,6 +181,13 @@ public class SQLDataProvider implements DataProvider
                     
                     DeviceManager.instance().registerDevice( currentDevice );
 		}
+		else
+		{				
+			if (log.isDebugEnabled())
+				log.debug( "Extracted inactive device: " + currentDevice );
+
+			DeviceManager.instance().registerInactiveDevice( currentDevice );
+		}
             }
 
             for( int i = 0; i < capabilityData.length; ++i )
