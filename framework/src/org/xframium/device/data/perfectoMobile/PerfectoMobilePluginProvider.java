@@ -90,7 +90,7 @@ public class PerfectoMobilePluginProvider implements DataProvider
             }
             else
             {
-                EclipseConnector connector = null;
+                EclipseConnector connector;
                 try
                 {
                     connector = new EclipseConnector();

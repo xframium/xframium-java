@@ -24,6 +24,9 @@ import java.util.Map;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.security.UserAndPassword;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -35,7 +38,8 @@ public class KWSAlert extends AbstractKeyWordStep
     {
         ACCEPT,
         DISMISS,
-        SEND_KEYS;
+        SEND_KEYS,
+		AUTHORIZE;
     }
     
 	/* (non-Javadoc)
@@ -48,6 +52,8 @@ public class KWSAlert extends AbstractKeyWordStep
 			throw new IllegalStateException( "Page Object was not defined" );
 		try
 		{
+			WebDriverWait alertWait = new WebDriverWait( webDriver, 5 );
+			alertWait.until( ExpectedConditions.alertIsPresent() );
     		Alert currentAlert = webDriver.switchTo().alert();
     		
     		if ( getContext() != null && !getContext().isEmpty() )
@@ -67,6 +73,14 @@ public class KWSAlert extends AbstractKeyWordStep
     		        currentAlert.sendKeys( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
     		        currentAlert.accept();
     		        break;
+
+				case AUTHORIZE:
+					String user = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+					String password = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+					//webDriver.switchTo().activeElement().sendKeys(user);
+					currentAlert.authenticateUsing(new UserAndPassword(user, password));
+					//currentAlert.accept();
+					break;
     		        
     		    default:
     		        log.warn( "Unhandled Alert Type: " + getName() );
