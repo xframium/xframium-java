@@ -22,7 +22,6 @@ package org.xframium.spi;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -35,15 +34,16 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.config.RequestConfig.Builder;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.xframium.Initializable;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.cloud.CloudRegistry;
@@ -377,7 +377,23 @@ public class RunDetails implements RunListener
         try
         {
             HttpClient httpclient = HttpClients.createDefault();
+            
+            int CONNECTION_TIMEOUT_MS = 3000; // Timeout in millis.
+            
+            Builder requestBuilder = RequestConfig.custom()
+                    .setConnectionRequestTimeout(CONNECTION_TIMEOUT_MS)
+                    .setConnectTimeout(CONNECTION_TIMEOUT_MS)
+                    .setSocketTimeout(CONNECTION_TIMEOUT_MS);
+            
+            if ( CloudRegistry.instance().getCloud().getProxyHost() != null && !CloudRegistry.instance().getCloud().getProxyHost().isEmpty() )
+            {
+                requestBuilder.setProxy( new HttpHost( CloudRegistry.instance().getCloud().getProxyHost(), Integer.parseInt( CloudRegistry.instance().getCloud().getProxyPort() ) ) );
+            }
+            
+            RequestConfig requestConfig = requestBuilder.build();
+            
             HttpPost httppost = new HttpPost( "http://www.google-analytics.com/collect" );
+            httppost.setConfig( requestConfig );
 
             List<NameValuePair> params = new ArrayList<NameValuePair>( 2 );
             params.add( new BasicNameValuePair( "v", "1" ) );

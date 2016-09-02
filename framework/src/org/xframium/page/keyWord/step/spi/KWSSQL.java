@@ -91,6 +91,8 @@ public class KWSSQL extends AbstractKeyWordStep
                                                    query,
                                                    query_params );
                 Map results = resultsArr[0];
+                
+                // Simulaste data provider
 
                 //
                 // The Map returned is keyed by the selected column alias AND
