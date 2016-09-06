@@ -391,6 +391,7 @@
           <enumeration value="SQL" />
           <enumeration value="OPERATOR" />
           <enumeration value="NAVIGATE" />
+          <enumeration value="VISUAL" />
         </restriction>
       </simpleType>
     </attribute>

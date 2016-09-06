@@ -20,8 +20,6 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
-import java.util.Map;
-import java.util.Set;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -33,6 +31,9 @@ import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+
+import java.util.Map;
+import java.util.Set;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -65,7 +66,7 @@ public class KWSWindow extends AbstractKeyWordStep
 		/** The by alert. */
 		BY_ALERT,
 		BY_AUTH_ALERT,
-		BY_MAXIMIZE;
+		BY_MAXIMIZE, BY_WINDOW;
 	}
 
 	/*
@@ -110,17 +111,27 @@ public class KWSWindow extends AbstractKeyWordStep
 				webDriver.switchTo().frame( switchExpValue );
 				break;
 			case BY_NUMBER:
-				if ( getParameterList().size() < 2 )
-					throw new IllegalArgumentException( "Please provide the Frame id for the Frame as a parameter" );
-				switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-				webDriver.switchTo().frame( switchExpValue );
+				int frameNumber;
+				try
+				{
+					if ( getParameterList().size() < 2 )
+                        throw new Exception();
+					frameNumber = Integer.parseInt(getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "");
+				}
+				catch (IllegalArgumentException e)
+				{
+					throw new IllegalArgumentException( "Please provide the Frame number for the Frame as a parameter" );
+				}
+				webDriver.switchTo().frame( frameNumber );
 				break;
-
 			case BY_PARENTFRAME:
 				webDriver.switchTo().parentFrame();
 				break;
 			case BY_DEFAULT:
 				webDriver.switchTo().defaultContent();
+				break;
+			case BY_WINDOW:
+				webDriver.switchTo().window(webDriver.getWindowHandle());
 				break;
 			case BY_WINCLOSE:
 				webDriver.close();

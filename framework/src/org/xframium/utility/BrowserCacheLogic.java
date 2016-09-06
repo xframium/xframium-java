@@ -20,11 +20,13 @@
  *******************************************************************************/
 package org.xframium.utility;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.RemoteExecuteMethod;
 import org.openqa.selenium.remote.RemoteWebDriver;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class BrowserCacheLogic
 {
@@ -84,7 +86,7 @@ public class BrowserCacheLogic
             // swipe to expose safari and click once exposed
             //
 
-            boolean found = false;
+            /*boolean found = false;
             int count = 0;
 
             while(( !found ) && ( count < 10 ))
@@ -94,34 +96,44 @@ public class BrowserCacheLogic
                 if ( !found )
                 {
                     params.clear();
-                    params.put("start", "50%,75%");
-                    params.put("end", "50%,25%");
+                    params.put("start", "47%,55%");
+                    params.put("end", "49%,52%");
                     driver.executeScript("mobile:touch:swipe", params);
 
                     ++count;
                 }
-            }
-        
+            }*/
+            driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+            driver.findElementByXPath("//UIASearchBar").sendKeys("Clear History");
+            driver.findElementByXPath("//*[@label=\"Clear History and Website Data\"]").click();
+            /*switchToContext(driver, "VISUAL");
+            params.clear();
+            params.put("label", "Safari");
+            params.put("threshold", "100");
+            params.put("scrolling", "scroll");
+            driver.executeScript("mobile:button-text:click", params);
+*/
+
             //
             // swipe to bottom
             //
         
-            params.clear();
+            /*params.clear();
             params.put("start", "50%,90%");
             params.put("end", "50%,10%");
             for (int i=0;i<3;i++){
                 driver.executeScript("mobile:touch:swipe", params);
-            }
+            }*/
 
             //
             // clear Cache
             //
-        
+            switchToContext(driver, "NATIVE_APP");
             params.clear();
-            params.put("value", "//*[starts-with(text(),'Clear History')]");
-            params.put("framework", "perfectoMobile");
+            params.put("value", "//*[@value=\"Clear History and Website Data\"]");
+            params.put("framework", "appium-1.3.4");
             driver.executeScript("mobile:application.element:click", params);
-            params.put("value", "//*[(@class='UIAButton' or @class='UIATableCell') and starts-with(@label,'Clear') and @isvisible='true']");
+            params.put("value", "//*[@label=\"Clear History and Data\"]");
             driver.executeScript("mobile:application.element:click", params);
         
             //
@@ -150,6 +162,7 @@ public class BrowserCacheLogic
         finally
         {
             switchToContext(driver, currentContext);
+            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
         }
     }
 
@@ -162,8 +175,6 @@ public class BrowserCacheLogic
         throws Exception
     {
         HashMap<String, Object> params = new HashMap();
-     
-
         String currentContext = getCurrentContextHandle( driver );
 
         try
@@ -200,8 +211,11 @@ public class BrowserCacheLogic
                 //
 
                 params.clear();
-                params.put("value", "//*[starts-with(@resource-id,'menu_button')]");
-                params.put("framework", "perfectoMobile");
+                driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
+
+                params.put("value", "//*[@resource-id=\"com.android.chrome:id/menu_button\"]");
+                params.put("framework", "appium-1.3.4");
                 driver.executeScript("mobile:application.element:click", params);
 
                 //
@@ -213,8 +227,8 @@ public class BrowserCacheLogic
                 //
 
                 params.clear();
-                params.put("value", "//*[starts-with(text(),'History')]");
-                params.put("framework", "perfectoMobile");
+                params.put("value", "//*[@content-desc='History']");
+                params.put("framework", "appium-1.3.4");
                 driver.executeScript("mobile:application.element:click", params);
 
                 //
@@ -224,22 +238,31 @@ public class BrowserCacheLogic
                 // id: clear-browsing-data
                 // cssSelector: #clear-browsing-data
                 //
-
                 params.clear();
-                params.put("value", "//*[starts-with(text(),'Clear browsing')]");
-                params.put("framework", "perfectoMobile");
-                driver.executeScript("mobile:application.element:click", params);
+                params.put("label", "CLEAR BROWSING");
+                params.put("timeout", "10");
+                params.put("threshold", "100");
+                params.put("ignorecase", "case");
+                params.put("screen.top", "80%");
+                params.put("screen.height", "20%");
+                params.put("screen.left", "0%");
+                params.put("screen.width", "100%");
+                driver.executeScript("mobile:button-text:click", params);
+                //driver.findElementById("clear-browsing-data");//params.put("value", "//*[@id=\"clear-browsing-data\"]");
+                //params.put("framework", "appium-1.3.4");
+                //driver.executeScript("mobile:application.element:click", params);*/
 
                 //
                 // do it!
                 //
                 // text: Clear
                 //
-
+                switchToContext(driver, "WEBVIEW");
                 params.clear();
-                params.put("value", "//*[starts-with(text(),'Clear')]");
-                params.put("framework", "perfectoMobile");
+                params.put("value", "//*[@resource-id=\"com.android.chrome:id/button_preference\"]");
+                params.put("framework", "appium-1.3.4");
                 driver.executeScript("mobile:application.element:click", params);
+
 
                 //
                 // Close Chrome
@@ -247,8 +270,11 @@ public class BrowserCacheLogic
         
                 params.clear();
                 params.put("name", "Chrome");
-        
-                driver.executeScript("mobile:application:close", params);
+
+                try {
+                    driver.executeScript("mobile:application:close", params);
+                } catch (Exception e) {}
+                driver.executeScript("mobile:application:open", params);
             }
             else
             {
@@ -258,6 +284,7 @@ public class BrowserCacheLogic
         finally
         {
             switchToContext(driver, currentContext);
+            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
         }
     }
 
