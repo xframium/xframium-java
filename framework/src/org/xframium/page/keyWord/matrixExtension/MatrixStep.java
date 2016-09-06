@@ -52,7 +52,7 @@ public class MatrixStep
     
     public KeyWordStep createStep()
     {
-        KeyWordStep kStep = KeyWordStepFactory.instance().createStep( name, pageName, active, type, linkId, timed, failureMode, inverse, os, poi, threshold, "", wait, context, validationDetail, device, vType, tagNames, startAt );
+        KeyWordStep kStep = KeyWordStepFactory.instance().createStep( name, pageName, active, type, linkId, timed, failureMode, inverse, os, poi, threshold, "", wait, context, validationDetail, device, vType, tagNames, startAt, false );
         if ( parameterArray != null )
         {
             List<KeyWordParameter> parameterList = parameterArray.getParameters();
