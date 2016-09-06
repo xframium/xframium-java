@@ -173,6 +173,10 @@ public interface KeyWordStep
 	public boolean isStartAt();
 	
 	public void setStartAt( boolean startAt );
+	
+	public boolean isBreakpoint();
+    
+    public void setBreakpoint( boolean breakpoint );
 
 	/**
 	 * Gets the page name.
