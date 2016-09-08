@@ -41,7 +41,7 @@ public class KWSVisual extends AbstractKeyWordStep
 	enum VisualType {
 		SET,
 		BUTTON,
-		FIND;
+		FIND
 	}
 
 	/* (non-Javadoc)
@@ -84,7 +84,10 @@ public class KWSVisual extends AbstractKeyWordStep
 		try
 		{
 			log.info( "Running command: " + command + ", with parameters: " + params);
-			return ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript(command, params) + "" != "false";
+			String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript(command, params) + "";
+
+			log.info( "Command Result: " + result);
+			return !"false".equals(result);
 		}
 		catch (Exception e)
 		{

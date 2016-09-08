@@ -81,59 +81,72 @@ public class BrowserCacheLogic
             params.clear();
             params.put("location", "60%,1%");
             driver.executeScript("mobile:touch:tap", params);
+            params.clear();
+            params.put("start", "10%,10%");
+            params.put("end", "10%,40%");
+            driver.executeScript("mobile:touch:swipe", params);
 
+            if ( osVer[0] > 8 )
+            {
+                driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+                driver.findElementByXPath("//UIASearchBar").sendKeys("Clear History");
+                driver.findElementByXPath("//*[@label=\"Clear History and Website Data\"]").click();
+            }
             //
             // swipe to expose safari and click once exposed
             //
 
-            /*boolean found = false;
-            int count = 0;
-
-            while(( !found ) && ( count < 10 ))
+            else
             {
-                found = clickIfPresent( driver, "//cell[@name='Safari']" );
+                boolean found = false;
+                int count = 0;
 
-                if ( !found )
+                while(( !found ) && ( count < 10 ))
                 {
-                    params.clear();
-                    params.put("start", "47%,55%");
-                    params.put("end", "49%,52%");
-                    driver.executeScript("mobile:touch:swipe", params);
+                    found = clickIfPresent( driver, "//cell[@name='Safari']" );
 
-                    ++count;
+                    if ( !found )
+                    {
+                        params.clear();
+                        params.put("start", "27%,55%");
+                        params.put("end", "29%,52%");
+                        driver.executeScript("mobile:touch:swipe", params);
+
+                        ++count;
+                    }
                 }
-            }*/
-            driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-            driver.findElementByXPath("//UIASearchBar").sendKeys("Clear History");
-            driver.findElementByXPath("//*[@label=\"Clear History and Website Data\"]").click();
-            /*switchToContext(driver, "VISUAL");
-            params.clear();
-            params.put("label", "Safari");
-            params.put("threshold", "100");
-            params.put("scrolling", "scroll");
-            driver.executeScript("mobile:button-text:click", params);
-*/
 
-            //
-            // swipe to bottom
-            //
-        
-            /*params.clear();
-            params.put("start", "50%,90%");
-            params.put("end", "50%,10%");
-            for (int i=0;i<3;i++){
-                driver.executeScript("mobile:touch:swipe", params);
-            }*/
+
+                /*switchToContext(driver, "VISUAL");
+                params.clear();
+                params.put("label", "Safari");
+                params.put("threshold", "100");
+                params.put("scrolling", "scroll");
+                driver.executeScript("mobile:button-text:click", params);
+    */
+
+                //
+                // swipe to bottom
+                //
+
+                params.clear();
+                params.put("start", "50%,90%");
+                params.put("end", "50%,10%");
+                for (int i=0;i<3;i++){
+                    driver.executeScript("mobile:touch:swipe", params);
+                }
+            }
 
             //
             // clear Cache
             //
             switchToContext(driver, "NATIVE_APP");
+            clickIfPresent( driver, "//*[@label=\"Cancel\"]" );
             params.clear();
             params.put("value", "//*[@value=\"Clear History and Website Data\"]");
             params.put("framework", "appium-1.3.4");
             driver.executeScript("mobile:application.element:click", params);
-            params.put("value", "//*[@label=\"Clear History and Data\"]");
+            params.put("value", "//UIAButton[contains(@label,\"Clear\")]");
             driver.executeScript("mobile:application.element:click", params);
         
             //
