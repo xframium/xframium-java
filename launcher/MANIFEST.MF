@@ -4,6 +4,6 @@ Created-By: 1.8.0_71-b15 (Oracle Corporation)
 Built-By: Moreland Labs, Ltd.
 Permissions: all-permissions
 Implementation-Title: xFramium
-Implementation-Version: Cronos (1.0.1)
+Implementation-Version: Janus (1.0.4)
 Implementation-Vendor: Moreland Labs, Ltd.
 

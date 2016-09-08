@@ -29,7 +29,7 @@ li.selected {
 }
 </style>
 </head>
-<body ng-controller="xFramiumDebugger">
+<body ng-controller="xFramiumDebugger" data-ng-init="takeSnapshot()">
 	<div class="container fill">
 		<nav class="navbar navbar-default navbar-fixed-top">
 			<div class="navbar-header">
@@ -40,13 +40,13 @@ li.selected {
 			</div>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a hRef="#" ng-click="resume()">Play</a></li>
-					<li><a hRef="#" ng-click="pause()">Pause</a></li>
-					<li><a hRef="#" ng-click="ahead()" style="margin-right: 40px">Step Ahead</a></li>
-					<li><a hRef="#" ng-click="takeSnapshot()" >Take Snapshot</a></li>
-		            <li><a target="_blank" ng-attr-href="/extract?executionId={{executionId}}" >View Source</a></li>
-		            <li><a target="_blank" ng-attr-href="/extractXml?executionId={{executionId}}" >Extract Source</a></li>
-		            <li><a target="_blank" href="#" style="margin-right: 20px">Connect to Device</a></li>
+					<li><a hRef="#" ng-click="resume()">Play&nbsp;<span class="glyphicon glyphicon-play" aria-hidden="true"></span></a></li>
+					<li><a hRef="#" ng-click="pause()">Pause&nbsp;<span class="glyphicon glyphicon-pause" aria-hidden="true"></span></a></li>
+					<li><a hRef="#" ng-click="ahead()" style="margin-right: 40px">Step Ahead&nbsp;<span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span></a></li>
+					<li><a hRef="#" ng-click="takeSnapshot()" >Take Snapshot&nbsp;<span class="glyphicon glyphicon-camera" aria-hidden="true"></span></a></li>
+		            <li><a target="_blank" ng-attr-href="/extract?executionId={{executionId}}" >View Source&nbsp;<span class="glyphicon glyphicon-save-file" aria-hidden="true"></span></a></li>
+		            <li><a target="_blank" ng-attr-href="/extractXml?executionId={{executionId}}" >Extract Source&nbsp;<span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span></a></li>
+		            <li><a target="_blank" href="#" style="margin-right: 20px">Connect to Device&nbsp;<span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span></a></li>
 				</ul>
 			</div>
 
@@ -483,5 +483,6 @@ li.selected {
 		}
 
 	});
+	
 </script>
 </html>

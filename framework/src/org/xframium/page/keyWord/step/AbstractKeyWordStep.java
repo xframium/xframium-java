@@ -74,6 +74,24 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     private boolean timed;
     
     private boolean startAt;
+    
+    private boolean breakpoint;
+
+    @Override
+    public boolean isBreakpoint()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+
+
+    @Override
+    public void setBreakpoint( boolean breakpoint )
+    {
+        // TODO Auto-generated method stub
+        
+    }
 
     /** The s failure. */
     private StepFailure sFailure;

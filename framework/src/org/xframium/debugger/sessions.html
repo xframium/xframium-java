@@ -105,6 +105,25 @@ li.selected {
 
 						$scope.completed = [];
 
+						$scope.pauseAll = function() 
+						{
+							for( var key in $scope.active )
+							{
+								if ( !p.hasOwnProperty( key ) )
+									xFramiumService.pause(key);
+							}
+							
+						};
+						
+						$scope.resumeAll = function() 
+						{
+							for( var key in $scope.active )
+							{
+								if ( !p.hasOwnProperty( key ) )
+									xFramiumService.resume(key);
+							}
+						};
+						
 						$scope.pause = function(useId) {
 							xFramiumService.pause(useId);
 						};
