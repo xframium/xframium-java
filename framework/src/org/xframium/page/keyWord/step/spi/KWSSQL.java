@@ -39,6 +39,13 @@ import org.xframium.utility.SQLUtil;
  */
 public class KWSSQL extends AbstractKeyWordStep
 {
+    public KWSSQL()
+    {
+        kwName = "Execute SQL";
+        kwDescription = "Allows the script to execute a SQL statement and process the results";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-sql";
+    }
+    
     private static final String[] JDBC = new String[] { "jdbc.username", "jdbc.password", "jdbc.url", "jdbc.driverClassName" };
     private static final String[] EMPTY = new String[0];
 

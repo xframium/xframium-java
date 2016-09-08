@@ -312,6 +312,8 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	{
         KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys() );
 		
+        System.out.println( test.getName() );
+        
 		KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
 
 		for (KeyWordStep step : steps)
@@ -352,6 +354,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
                                                                                  (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint() );
 		    
+		    System.out.println( step.getName() );
 		    parseParameters( xStep.getParameter(), testName, xStep.getName(), typeName, step );
 		    parseTokens( xStep.getToken(), testName, xStep.getName(), typeName, step );
 		    

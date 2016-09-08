@@ -32,6 +32,13 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 public class KWSAlert extends AbstractKeyWordStep
 {
     
+    public KWSAlert()
+    {
+        kwName = "Alert Interaction";
+        kwDescription = "Allows the script to interact with web based alerts";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-alert";
+    }
+    
     private enum ALERT_TYPE
     {
         ACCEPT,

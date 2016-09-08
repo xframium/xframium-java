@@ -35,7 +35,12 @@ import org.xframium.spi.driver.CachingDriver;
  */
 public class KWSCache extends AbstractKeyWordStep
 {
-
+    public KWSCache()
+    {
+        kwName = "Intelligent Caching";
+        kwDescription = "Allows the script enable or disable the intelligent caching subsystem";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-cache";
+    }
 	/*
 	 * (non-Javadoc)
 	 * 

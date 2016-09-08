@@ -30,7 +30,12 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 
 public class KWSNavigate extends  AbstractKeyWordStep {
 
-
+    public KWSNavigate()
+    {
+        kwName = "Web Navigation";
+        kwDescription = "Allows the script to click forward, back and refresh on a web based application";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-navigate";
+    }
 
 	/**
 	 * The Enum NavgationType.

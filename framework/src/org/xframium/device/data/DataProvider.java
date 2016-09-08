@@ -42,7 +42,9 @@ public interface DataProvider
 		PERFECTO,
 		
 		/** The appium. */
-		APPIUM;
+		APPIUM,
+		
+		WINDOWS;
 	}
 	/**
 	 * The Enum PluginType.

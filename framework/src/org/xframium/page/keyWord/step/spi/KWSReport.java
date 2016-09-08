@@ -36,7 +36,12 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSReport extends AbstractKeyWordStep
 {
-
+    public KWSReport()
+    {
+        kwName = "Report Item";
+        kwDescription = "Alolows the script to add a parameter value to the output report";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-report";
+    }
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -77,6 +77,9 @@ public interface DriverFactory
 	/** The Constant APPLICATION_PACKAGE. */
 	public static final String APPLICATION_NAME = "appName";
 	
+	/** The Constant APPLICATION_PACKAGE. */
+    public static final String APPLICATION = "app";
+	
 	/** The Constant BUNDLE_ID. */
 	public static final String BUNDLE_ID = "bundleId";
 	

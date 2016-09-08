@@ -35,6 +35,13 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSOperator extends AbstractKeyWordStep
 {
+    public KWSOperator()
+    {
+        kwName = "Parameter Comparison";
+        kwDescription = "Allows the script to use or, and and exclusive or operators to compare multiple sets of values";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-operator";
+    }
+    
     private enum OPERATOR
     {
         AND,
