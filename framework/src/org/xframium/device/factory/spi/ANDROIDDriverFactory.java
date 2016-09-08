@@ -59,7 +59,6 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 		try
 		{
 			DesiredCapabilities dc = new DesiredCapabilities( "", "", Platform.ANY );
-			URL hubUrl = new URL( CloudRegistry.instance().getCloud().getCloudUrl() );
 			
 			CloudDescriptor useCloud = CloudRegistry.instance().getCloud();
             
@@ -74,6 +73,7 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
             }
             
             DeviceManager.instance().setCurrentCloud( useCloud );
+            URL hubUrl = new URL( useCloud.getCloudUrl() );
 
 			if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )
 			{
@@ -86,8 +86,8 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 				dc.setCapability( MODEL, currentDevice.getModel() );
 			}
 			
-			dc.setCapability( USER_NAME, CloudRegistry.instance().getCloud().getUserName() );
-			dc.setCapability( PASSWORD, CloudRegistry.instance().getCloud().getPassword() );
+			dc.setCapability( USER_NAME, useCloud.getUserName() );
+			dc.setCapability( PASSWORD, useCloud.getPassword() );
 			
 			for ( String name : currentDevice.getCapabilities().keySet() )
 				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
@@ -117,7 +117,7 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 			    if ( ( (AndroidDriver) webDriver.getNativeDriver() ).isAppInstalled( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() ) )
                 {
                     log.warn( "Attempting to start " + ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
-                    CloudActionProvider actionProvider = (CloudActionProvider) Class.forName( CloudActionProvider.class.getPackage().getName() + "." + CloudRegistry.instance().getCloud().getProvider() + "CloudActionProvider" ).newInstance();
+                    CloudActionProvider actionProvider = (CloudActionProvider) Class.forName( CloudActionProvider.class.getPackage().getName() + "." + useCloud.getProvider() + "CloudActionProvider" ).newInstance();
                     actionProvider.startApp( caps.getCapability( "executionId" ) + "", caps.getCapability( "deviceName" ) + "", ApplicationRegistry.instance().getAUT().getName(), ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
                 }
                 else

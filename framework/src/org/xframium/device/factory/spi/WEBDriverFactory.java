@@ -84,16 +84,16 @@ public class WEBDriverFactory extends AbstractDriverFactory
             if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )
             {
                 dc.setCapability( ID, currentDevice.getDeviceName() );
-                dc.setCapability( USER_NAME, CloudRegistry.instance().getCloud().getUserName() );
-                dc.setCapability( PASSWORD, CloudRegistry.instance().getCloud().getPassword() );
+                dc.setCapability( USER_NAME, useCloud.getUserName() );
+                dc.setCapability( PASSWORD, useCloud.getPassword() );
             }
             else
             {
                 dc.setCapability( PLATFORM_NAME, currentDevice.getOs() );
                 dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
                 dc.setCapability( MODEL, currentDevice.getModel() );
-                dc.setCapability( USER_NAME, CloudRegistry.instance().getCloud().getUserName() );
-                dc.setCapability( PASSWORD, CloudRegistry.instance().getCloud().getPassword() );
+                dc.setCapability( USER_NAME, useCloud.getUserName() );
+                dc.setCapability( PASSWORD, useCloud.getPassword() );
             }
 
             if ( currentDevice.getBrowserName() != null && !currentDevice.getBrowserName().isEmpty() )
