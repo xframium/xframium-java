@@ -20,6 +20,8 @@
  *******************************************************************************/
 package org.xframium.page.element.provider;
 
+import java.util.List;
+import java.util.Map;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.element.Element;
 
@@ -39,4 +41,6 @@ public interface ElementProvider
 	Element getElement( ElementDescriptor elementDescriptor );
 	
 	boolean isInitialized();
+	
+	public Map<String,List<Element>> getElementTree();
 }

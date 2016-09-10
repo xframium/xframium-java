@@ -20,6 +20,10 @@
  *******************************************************************************/
 package org.xframium.page.element.provider;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.xml.xpath.XPathFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,6 +36,7 @@ import org.xframium.page.element.Element;
  */
 public abstract class AbstractElementProvider implements ElementProvider 
 {
+    protected Map<String,List<Element>> elementTree = new HashMap<String,List<Element>>( 20 );
 	private static XPathFactory xPathFactory = XPathFactory.newInstance();
 	/** The log. */
 	protected Log log = LogFactory.getLog(ElementProvider.class);
@@ -58,6 +63,11 @@ public abstract class AbstractElementProvider implements ElementProvider
     {
         this.initialized = initialized;
     }
+    
+    public Map<String,List<Element>> getElementTree()
+    {
+        return elementTree;
+    }
 
     /**
 	 * _get element.
@@ -69,6 +79,15 @@ public abstract class AbstractElementProvider implements ElementProvider
 	
 	protected boolean validateElement( ElementDescriptor elementDescriptor, Element currentElement ) throws Exception
 	{
+	    List<Element> elementList = elementTree.get( elementDescriptor.getPageName() );
+	    if ( elementList == null )
+	    {
+	        elementList = new ArrayList<Element>( 10 );
+	        elementTree.put( elementDescriptor.getPageName(), elementList );
+	    }
+	    elementList.add( currentElement );
+	    
+	    
 	    try
 	    {
     	    switch ( currentElement.getBy() )
