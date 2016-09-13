@@ -85,13 +85,6 @@ public class KeyWordDriver
         return singleton;
     }
 
-    /**
-     * Instantiates a new key word driver.
-     */
-    private KeyWordDriver()
-    {
-
-    }
 
     /**
      * Load tests.
