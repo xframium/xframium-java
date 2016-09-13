@@ -120,6 +120,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     private Map<String,String> configProperties = new HashMap<String,String>( 10 );
     
     private Map<String,Element> elementMap = new HashMap<String,Element>(20);
+    private Map<String,List<Element>> elementListMap = new HashMap<String,List<Element>>(20);
     
     private static XPathFactory xPathFactory = XPathFactory.newInstance();
     
@@ -394,7 +395,16 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                         {
                             if ( currentElement.getBy() == BY.XPATH )
                                 xPathFactory.newXPath().compile( currentElement.getKey().replace( "{", "" ).replace( "}", "" ) );
+                            
                             elementMap.put(elementDescriptor.toString(), currentElement );
+
+                            List<Element> eltList = elementListMap.get( elementDescriptor.toString() );
+                            if ( eltList == null )
+                            {
+                                eltList = new ArrayList<Element>();
+                                elementListMap.put( elementDescriptor.toString(), eltList );
+                            }
+                            eltList.add( currentElement );
                         }
                         catch( Exception e )
                         {
@@ -1063,6 +1073,12 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     public Element getElement( ElementDescriptor elementDescriptor )
     {
         return elementMap.get(  elementDescriptor.toString() );
+    }
+
+    @Override
+    public Map<String,List<Element>> getElementTree()
+    {
+        return elementListMap;
     }
 
 }
