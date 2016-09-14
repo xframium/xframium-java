@@ -24,19 +24,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.xframium.application.ApplicationDescriptor;
-import org.xframium.application.ApplicationRegistry;
 import org.xframium.page.Page;
-import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.matrixExtension.MatrixTest;
@@ -109,14 +104,15 @@ public class ExcelKeyWordProvider implements KeyWordProvider
 	 * 
 	 * @see com.perfectoMobile.page.keyWord.provider.KeyWordProvider#readData()
 	 */
-	public void readData()
+	public SuiteContainer readData()
 	{
+	    SuiteContainer sC = new SuiteContainer();
 		if (fileName == null)
 		{
 			if (log.isInfoEnabled())
 				log.info( "Reading from CLASSPATH as XMLElementProvider.elementFile" );
 			
-			readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
+			readElements( sC, getClass().getClassLoader().getResourceAsStream( resourceName ) );
 		}
 		else
 		{
@@ -124,7 +120,7 @@ public class ExcelKeyWordProvider implements KeyWordProvider
 			{
 				if (log.isInfoEnabled())
 					log.info( "Reading from FILE SYSTEM as [" + fileName + "]" );
-				readElements( new FileInputStream( fileName ) );
+				readElements( sC, new FileInputStream( fileName ) );
 			}
 			catch (Exception e)
 			{
@@ -132,9 +128,10 @@ public class ExcelKeyWordProvider implements KeyWordProvider
 				System.exit( -1 );
 			}
 		}
+		return sC;
 	}
 
-	private void readElements( InputStream inputStream )
+	private void readElements( SuiteContainer sC, InputStream inputStream )
     {
         List<MatrixTest> testList = new ArrayList<MatrixTest>( 10 );
         XSSFWorkbook workbook = null;
@@ -166,7 +163,7 @@ public class ExcelKeyWordProvider implements KeyWordProvider
                     if (log.isDebugEnabled())
                         log.debug( "Creating page as " + useClass.getSimpleName() + " for " + pageName );
         
-                    KeyWordDriver.instance().addPage( pageName, useClass );
+                    sC.addPageModel( pageName, useClass );
                 }
                 catch( Exception e )
                 {
@@ -216,10 +213,15 @@ public class ExcelKeyWordProvider implements KeyWordProvider
             
             for ( MatrixTest currentTest : testList )
             {
-                if ( currentTest.getType().equals( "function" ) )
-                    KeyWordDriver.instance().addFunction( currentTest.createTest() );
+                if ( currentTest.getType().toLowerCase().equals( "function" ) )
+                    sC.addFunction( currentTest.createTest() );
                 else
-                    KeyWordDriver.instance().addTest( currentTest.createTest() );
+                {
+                    if ( currentTest.isActive() )
+                        sC.addActiveTest( currentTest.createTest() );
+                    else
+                        sC.addInactiveTest( currentTest.createTest() );
+                }
             }
         }
         catch (Exception e)
