@@ -93,10 +93,9 @@ public class KeyWordDriver
      * @param keyWordProvider
      *            the key word provider
      */
-    public void loadTests( KeyWordProvider keyWordProvider )
+    public void loadTests( SuiteContainer sC )
     {
-        SuiteContainer sC = keyWordProvider.readData();
-        
+
         for ( KeyWordTest t : sC.getActiveTestList() )
         {
             addTest( t );

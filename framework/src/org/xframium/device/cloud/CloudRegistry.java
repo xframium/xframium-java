@@ -65,8 +65,6 @@ public class CloudRegistry
 	/** The cloud map. */
 	private Map<String,CloudDescriptor> cloudMap = new HashMap<String,CloudDescriptor>( 20 );
 	
-	/** The cloud provider. */
-	private CloudProvider cloudProvider;
 	
 	/** The cut. */
 	private CloudDescriptor cut = null;
@@ -94,16 +92,7 @@ public class CloudRegistry
 		cloudMap.put( cloudDescriptor.getName(), cloudDescriptor );
 		
 	}
-	
-	/**
-	 * Sets the cloud provider.
-	 *
-	 * @param cloudProvider the new cloud provider
-	 */
-	public void setCloudProvider( CloudProvider cloudProvider )
-	{
-		this.cloudProvider = cloudProvider;
-	}
+
 	
 	
 	/**
