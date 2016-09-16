@@ -61,7 +61,6 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
     public XMLApplicationProvider( File fileName )
     {
         this.fileName = fileName;
-        readData();
     }
 
     /**
@@ -73,7 +72,6 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
     public XMLApplicationProvider( String resourceName )
     {
         this.resourceName = resourceName;
-        readData();
     }
 
     /*
@@ -81,14 +79,13 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
      * 
      * @see com.perfectoMobile.device.application.ApplicationProvider#readData()
      */
-    public void readData()
+    public List<ApplicationDescriptor> readData()
     {
-        ApplicationRegistry.instance().clear();
         if ( fileName == null )
         {
             if ( log.isInfoEnabled() )
                 log.info( "Reading from CLASSPATH as " + resourceName );
-            readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
+            return readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
         }
         else
         {
@@ -96,13 +93,15 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
             {
                 if ( log.isInfoEnabled() )
                     log.info( "Reading from FILE SYSTEM as [" + fileName + "]" );
-                readElements( new FileInputStream( fileName ) );
+                return readElements( new FileInputStream( fileName ) );
             }
             catch ( FileNotFoundException e )
             {
                 log.fatal( "Could not read from " + fileName, e );
             }
         }
+        
+        return null;
     }
 
     /**
@@ -111,7 +110,7 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
      * @param inputStream
      *            the input stream
      */
-    private void readElements( InputStream inputStream )
+    private List<ApplicationDescriptor> readElements( InputStream inputStream )
     {
 
         try
@@ -123,14 +122,20 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
 
             RegistryRoot rRoot = (RegistryRoot) rootElement.getValue();
 
+            List<ApplicationDescriptor> appList = new ArrayList<ApplicationDescriptor>( 10 );
             for ( Application app : rRoot.getApplication() )
-                parseApplication( app );
+                appList.add( parseApplication( app ) );
+            
+            return appList;
 
         }
         catch ( Exception e )
         {
-            log.fatal( "Error reading CSV Element File", e );
+            log.fatal( "Error reading XML Element File", e );
+            return null;
         }
+        
+        
     }
 
     /**
@@ -139,7 +144,7 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
      * @param appNode
      *            the app node
      */
-    private void parseApplication( Application app )
+    private ApplicationDescriptor parseApplication( Application app )
     {
 		String driverName = "";
 		List<String> list = null;
@@ -216,7 +221,8 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
   		    	capabilities.put(factoryName, browserOptionMap);
   		    }
   		}
-        ApplicationRegistry.instance().addApplicationDescriptor( new ApplicationDescriptor( app.getName(), "", app.getAppPackage(), app.getBundleId(), app.getUrl(), app.getIosInstall(), app.getAndroidInstall(), capabilities ) );
+  		
+  		return new ApplicationDescriptor( app.getName(), "", app.getAppPackage(), app.getBundleId(), app.getUrl(), app.getIosInstall(), app.getAndroidInstall(), capabilities );
     }
 
 }

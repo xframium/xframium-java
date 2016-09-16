@@ -28,6 +28,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.device.DeviceManager;
@@ -82,24 +84,25 @@ public class CSVDataProvider implements DataProvider
 	 * 
 	 * @see com.perfectoMobile.device.data.DataProvider#readData()
 	 */
-	public void readData()
+	public List<Device> readData()
 	{
 		if (fileName == null)
 		{
 			if (log.isInfoEnabled())
 				log.info( "Reading Device Data from Resource " + resourceName );
 
-			readData( getClass().getClassLoader().getResourceAsStream( resourceName ) );
+			return readData( getClass().getClassLoader().getResourceAsStream( resourceName ) );
 		}
 		else
 		{
 			try
 			{
-				readData( new FileInputStream( fileName ) );
+				return readData( new FileInputStream( fileName ) );
 			}
 			catch (Exception e)
 			{
 				log.fatal( "Could mot read from " + fileName, e );
+				return null;
 			}
 		}
 	}
@@ -109,8 +112,9 @@ public class CSVDataProvider implements DataProvider
 	 *
 	 * @param inputStream the input stream
 	 */
-	private void readData( InputStream inputStream )
+	private List<Device> readData( InputStream inputStream )
 	{
+	    List<Device> deviceList = new ArrayList<Device>( 10 );
 		BufferedReader fileReader = null;
 
 		try
@@ -150,26 +154,15 @@ public class CSVDataProvider implements DataProvider
 				
 				Device currentDevice = new SimpleDevice( lineData[0], lineData[1], lineData[2], lineData[3], lineData[4], lineData[5], lineData[6], Integer.parseInt( lineData[7] ), driverName, Boolean.parseBoolean( lineData[8] ), null );
 
-				if ( currentDevice.isActive() )
-				{				
-					if (log.isDebugEnabled())
-						log.debug( "Extracted: " + currentDevice );
-	
-					DeviceManager.instance().registerDevice( currentDevice );
-				}
-				else
-				{				
-					if (log.isDebugEnabled())
-						log.debug( "Extracted inactive device: " + currentDevice );
-
-					DeviceManager.instance().registerInactiveDevice( currentDevice );
-				}
+				deviceList.add( currentDevice );
 			}
+			return deviceList;
 
 		}
 		catch (Exception e)
 		{
 			log.fatal( "Error reading device data", e );
+			return null;
 		}
 		finally
 		{

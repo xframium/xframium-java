@@ -37,6 +37,7 @@ import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.keyWord.provider.KeyWordProvider;
+import org.xframium.page.keyWord.provider.SuiteContainer;
 import org.xframium.page.listener.KeyWordListener;
 
 // TODO: Auto-generated Javadoc
@@ -92,9 +93,25 @@ public class KeyWordDriver
      * @param keyWordProvider
      *            the key word provider
      */
-    public void loadTests( KeyWordProvider keyWordProvider )
+    public void loadTests( SuiteContainer sC )
     {
-        keyWordProvider.readData();
+
+        for ( KeyWordTest t : sC.getActiveTestList() )
+        {
+            addTest( t );
+        }
+        
+        for ( KeyWordTest t : sC.getInactiveTestList() )
+        {
+            addTest( t );
+        }
+        
+        for ( KeyWordTest t : sC.getFunctionList() )
+        {
+            addFunction( t );
+        }
+        
+        
     }
 
     /** The log. */

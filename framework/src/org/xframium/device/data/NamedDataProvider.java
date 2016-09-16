@@ -23,6 +23,8 @@
  */
 package org.xframium.device.data;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.device.DeviceManager;
@@ -62,12 +64,15 @@ public class NamedDataProvider implements DataProvider
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.device.data.DataProvider#readData()
 	 */
-    public void readData()
+    public List<Device> readData()
     {
+        List<Device> deviceList = new ArrayList<Device>( 10 );
         for ( String device : namedResources )
         {
-            DeviceManager.instance().registerDevice( lookupDeviceById( device, driverType ));
+            deviceList.add( lookupDeviceById( device, driverType ));
         }
+        
+        return deviceList;
     }
 
     public static Device lookupDeviceById( String device, DriverType driverType )

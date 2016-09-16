@@ -103,14 +103,15 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 * 
 	 * @see com.perfectoMobile.page.keyWord.provider.KeyWordProvider#readData()
 	 */
-	public void readData()
+	public SuiteContainer readData( )
 	{
+	    SuiteContainer sC = new SuiteContainer();
 		if (fileName == null)
 		{
 			if (log.isInfoEnabled())
 				log.info( "Reading from CLASSPATH as XMLElementProvider.elementFile" );
 			
-			readElements( getClass().getClassLoader().getResourceAsStream( resourceName ), true, true );
+			readElements( sC, getClass().getClassLoader().getResourceAsStream( resourceName ), true, true );
 		}
 		else
 		{
@@ -118,7 +119,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 			{
 				if (log.isInfoEnabled())
 					log.info( "Reading from FILE SYSTEM as [" + fileName + "]" );
-				readElements( new FileInputStream( fileName ), true, true );
+				readElements( sC, new FileInputStream( fileName ), true, true );
 			}
 			catch (Exception e)
 			{
@@ -126,6 +127,8 @@ public class XMLKeyWordProvider implements KeyWordProvider
 				System.exit( -1 );
 			}
 		}
+		
+		return sC;
 	}
 
 	/**
@@ -135,7 +138,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 * @param readTests the read tests
 	 * @param readFunctions the read functions
 	 */
-	private void readElements( InputStream inputStream, boolean readTests, boolean readFunctions )
+	private void readElements( SuiteContainer sC, InputStream inputStream, boolean readTests, boolean readFunctions )
 	{
 
 		try
@@ -146,14 +149,14 @@ public class XMLKeyWordProvider implements KeyWordProvider
             
             RegistryRoot rRoot = (RegistryRoot)rootElement.getValue();
 
-			parseModel( rRoot.getModel() );
-			parseImports(  rRoot.getImport() );
+			parseModel( rRoot.getModel(), sC );
+			parseImports( rRoot.getImport(), sC );
 			
 			if ( readTests )
 			{
 			    for( Test test : rRoot.getTest() )
 			    {
-			        if (KeyWordDriver.instance().getTest( test.getName() ) != null)
+			        if ( sC.testExists( test.getName() ) )
                     {
                         log.warn( "The test [" + test.getName() + "] is already defined and will not be added again" );
                         continue;
@@ -175,7 +178,10 @@ public class XMLKeyWordProvider implements KeyWordProvider
                         if (pageData == null)
                         {
                             log.warn( "Specified Data Driver [" + currentTest.getDataDriver() + "] could not be located. Make sure it exists and it was populated prior to initializing your keyword factory" );
-                            KeyWordDriver.instance().addTest( currentTest );
+                            if ( currentTest.isActive() )
+                                sC.addActiveTest( currentTest );
+                            else
+                                sC.addInactiveTest( currentTest );
                         }
                         else
                         {
@@ -183,12 +189,20 @@ public class XMLKeyWordProvider implements KeyWordProvider
 
                             for (PageData record : pageData)
                             {
-                                KeyWordDriver.instance().addTest( currentTest.copyTest( testName + "!" + record.getName() ) );
+                                if ( currentTest.isActive() )
+                                    sC.addActiveTest( currentTest.copyTest( testName + "!" + record.getName() ) );
+                                else
+                                    sC.addInactiveTest( currentTest.copyTest( testName + "!" + record.getName() ) );
                             }
                         }
                     }
                     else
-                        KeyWordDriver.instance().addTest( currentTest );
+                    {
+                        if ( currentTest.isActive() )
+                            sC.addActiveTest( currentTest );
+                        else
+                            sC.addInactiveTest( currentTest );
+                    }
 			        
 			    }
 			}
@@ -197,11 +211,12 @@ public class XMLKeyWordProvider implements KeyWordProvider
 			{
 			    for( Test test : rRoot.getFunction() )
                 {
-                    if (KeyWordDriver.instance().getTest( test.getName() ) != null)
+                    if ( sC.testExists( test.getName() ) )
                     {
                         log.warn( "The function [" + test.getName() + "] is already defined and will not be added again" );
                         continue;
                     }
+                    sC.addFunction( parseTest( test, "function" ) );
                     
                     KeyWordDriver.instance().addFunction( parseTest( test, "function" ) );
                 }
@@ -236,7 +251,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 *
 	 * @param importList the import list
 	 */
-	private void parseImports( List<Import> importList )
+	private void parseImports( List<Import> importList, SuiteContainer sC )
 	{
 	    for ( Import imp : importList )
 	    {
@@ -245,7 +260,13 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	            if (log.isInfoEnabled())
                     log.info( "Attempting to import file [" + Paths.get(".").toAbsolutePath().normalize().toString() + imp.getFileName() + "]" );
 	            if ( imp.getFileName().toLowerCase().endsWith( ".xml" ) )
-	                readElements( new FileInputStream( findFile( new File( imp.getFileName() ) ) ), imp.isIncludeTests(), imp.isIncludeFunctions() );
+	            {
+	                InputStream inputStream = ClassLoader.getSystemResourceAsStream( imp.getFileName() );
+	                if ( inputStream == null )
+	                    readElements( sC, new FileInputStream( findFile( new File( imp.getFileName() ) ) ), imp.isIncludeTests(), imp.isIncludeFunctions() );
+	                else
+	                    readElements( sC, inputStream, imp.isIncludeTests(), imp.isIncludeFunctions() );
+	            }
 	            else if ( imp.getFileName().toLowerCase().endsWith( ".bdd" ) )
 	            {
 	                Parser bddParser = new Parser( new XMLFormatter( PageDataManager.instance().getDataProvider() ) );
@@ -279,7 +300,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 *
 	 * @param model the model
 	 */
-	private void parseModel( Model model )
+	private void parseModel( Model model, SuiteContainer sC )
 	{
 	    for ( org.xframium.page.keyWord.provider.xsd.Page page : model.getPage() )
 	    {
@@ -292,7 +313,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
     	        if (log.isDebugEnabled())
                     log.debug( "Creating page as " + useClass.getSimpleName() + " for " + page.getName() );
     
-                KeyWordDriver.instance().addPage( page.getName(), useClass );
+                sC.addPageModel( page.getName(), useClass );
 	        }
 	        catch( Exception e )
 	        {
@@ -312,7 +333,6 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	{
         KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys() );
 		
-        System.out.println( test.getName() );
         
 		KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
 
@@ -354,7 +374,6 @@ public class XMLKeyWordProvider implements KeyWordProvider
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
                                                                                  (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint() );
 		    
-		    System.out.println( step.getName() );
 		    parseParameters( xStep.getParameter(), testName, xStep.getName(), typeName, step );
 		    parseTokens( xStep.getToken(), testName, xStep.getName(), typeName, step );
 		    

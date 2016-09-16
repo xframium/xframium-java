@@ -20,7 +20,9 @@
  *******************************************************************************/
 package org.xframium.application;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import org.openqa.selenium.Platform;
 import org.xframium.utility.SQLUtil;
 
@@ -77,8 +79,6 @@ public class SQLApplicationProvider extends AbstractApplicationProvider
         this.driver = driver;
         this.query = DEF_QUERY;
         this.capQuery = DEF_CAP_QUERY;
-        
-        readData();
     }
 	
     /**
@@ -91,8 +91,6 @@ public class SQLApplicationProvider extends AbstractApplicationProvider
         this( username, password, url, driver );
         this.query = (( query != null ) ? query : DEF_QUERY );;
         this.capQuery = (( capQuery != null ) ? capQuery : DEF_CAP_QUERY );
-        
-        readData();
     }
 	
     /* (non-Javadoc)
@@ -112,12 +110,12 @@ public class SQLApplicationProvider extends AbstractApplicationProvider
         }
     }
     
-    public void readData()
+    public List<ApplicationDescriptor> readData()
     {
-        ApplicationRegistry.instance().clear();
         HashMap capabilitiesByName = new HashMap();
         
-
+        List<ApplicationDescriptor> appList = new ArrayList<ApplicationDescriptor>( 10 );
+        
         try
         {
             Object[][] data = SQLUtil.getResults( username, password, url, driver, query, null );
@@ -135,7 +133,7 @@ public class SQLApplicationProvider extends AbstractApplicationProvider
 
                 capabilitiesByName.put( name, capabilities );
 
-                ApplicationRegistry.instance().addApplicationDescriptor( new ApplicationDescriptor( name,
+                appList.add( new ApplicationDescriptor( name,
                                                                                                     name,
                                                                                                     pkg,
                                                                                                     bndl,
@@ -160,11 +158,14 @@ public class SQLApplicationProvider extends AbstractApplicationProvider
                 {
                     capabilities.put( name, getValue( clazz, value ));
                 }
-            }       
+            }    
+            return appList;
+            
         }
         catch ( Throwable e )
         {
             e.printStackTrace();
+            return null;
         }
     }
 

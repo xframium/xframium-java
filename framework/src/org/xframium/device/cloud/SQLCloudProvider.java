@@ -20,6 +20,8 @@
  *******************************************************************************/
 package org.xframium.device.cloud;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.xframium.utility.SQLUtil;
 
 /**
@@ -66,8 +68,6 @@ public class SQLCloudProvider extends AbstractCloudProvider
         this.url = url;
         this.driver = driver;
         this.query = DEF_QUERY;
-
-        readData();
     }
 
     /**
@@ -83,8 +83,6 @@ public class SQLCloudProvider extends AbstractCloudProvider
         this( username, password, url, driver );
 
         this.query = ((query != null) ? query : DEF_QUERY);
-
-        readData();
     }
 
     /*
@@ -92,9 +90,9 @@ public class SQLCloudProvider extends AbstractCloudProvider
      * 
      * @see com.perfectoMobile.device.application.ApplicationProvider#readData()
      */
-    public void readData()
+    public List<CloudDescriptor> readData()
     {
-        CloudRegistry.instance().clear();
+        List<CloudDescriptor> cList = new ArrayList<CloudDescriptor>( 10 );
 
         try
         {
@@ -102,8 +100,7 @@ public class SQLCloudProvider extends AbstractCloudProvider
 
             for ( int i = 0; i < data.length; ++i )
             {
-                CloudRegistry.instance()
-                        .addCloudDescriptor( new CloudDescriptor( parseString( (String) data[i][0], null, true ), // name
+                cList.add( new CloudDescriptor( parseString( (String) data[i][0], null, true ), // name
                                 parseString( (String) data[i][1], null, true ), // user
                                                                                 // nemr
                                 parseString( (String) data[i][2], null, true ), // password
@@ -117,10 +114,13 @@ public class SQLCloudProvider extends AbstractCloudProvider
                                 parseString( (String) data[i][7], null, true ), parseString( (String) data[i][8], null, true ) ) ); // grid
                 // instance
             }
+            
+            return cList;
         }
         catch ( Exception e )
         {
             log.fatal( "Error reading Excel Element File", e );
+            return null;
         }
     }
 

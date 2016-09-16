@@ -30,5 +30,5 @@ public interface KeyWordProvider
 	/**
 	 * Read data.
 	 */
-	public void readData();
+	public SuiteContainer readData();
 }
