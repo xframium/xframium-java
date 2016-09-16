@@ -35,6 +35,7 @@ public class KWSNavigate extends  AbstractKeyWordStep {
         kwName = "Web Navigation";
         kwDescription = "Allows the script to click forward, back and refresh on a web based application";
         kwHelp = "https://www.xframium.org/keyword.html#kw-navigate";
+        orMapping = false;
     }
 
 	/**

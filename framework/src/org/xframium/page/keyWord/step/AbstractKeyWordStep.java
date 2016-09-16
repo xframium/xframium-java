@@ -81,6 +81,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     private boolean startAt;
     
     private boolean breakpoint;
+    
+    protected boolean orMapping = true;
 
     @Override
     public boolean isBreakpoint()

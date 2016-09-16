@@ -45,6 +45,7 @@ public class KWSDumpState extends AbstractKeyWordStep
         kwName = "Platform Checkpoint";
         kwDescription = "Allows the script to get a platform checkpoint containing a snapshot image and platform state";
         kwHelp = "https://www.xframium.org/keyword.html#kw-state";
+        orMapping = false;
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

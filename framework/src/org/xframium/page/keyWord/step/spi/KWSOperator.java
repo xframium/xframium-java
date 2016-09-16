@@ -40,6 +40,7 @@ public class KWSOperator extends AbstractKeyWordStep
         kwName = "Parameter Comparison";
         kwDescription = "Allows the script to use or, and and exclusive or operators to compare multiple sets of values";
         kwHelp = "https://www.xframium.org/keyword.html#kw-operator";
+        orMapping = false;
     }
     
     private enum OPERATOR

@@ -59,6 +59,7 @@ public class KWSBreak extends AbstractKeyWordStep
         kwName = "Break";
         kwDescription = "Allows the script to break out of a running loop";
         kwHelp = "https://www.xframium.org/keyword.html#kw-break";
+        orMapping = false;
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

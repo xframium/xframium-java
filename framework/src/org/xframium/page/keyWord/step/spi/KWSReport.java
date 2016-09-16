@@ -41,6 +41,7 @@ public class KWSReport extends AbstractKeyWordStep
         kwName = "Report Item";
         kwDescription = "Alolows the script to add a parameter value to the output report";
         kwHelp = "https://www.xframium.org/keyword.html#kw-report";
+        orMapping = false;
     }
 	/*
 	 * (non-Javadoc)
