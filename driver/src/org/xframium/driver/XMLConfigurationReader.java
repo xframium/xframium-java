@@ -78,6 +78,7 @@ import org.xframium.page.PageManager;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.data.provider.ExcelPageDataProvider;
+import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.data.provider.SQLPageDataProvider;
 import org.xframium.page.data.provider.XMLPageDataProvider;
 import org.xframium.page.element.Element;
@@ -105,7 +106,6 @@ import org.xframium.page.keyWord.provider.SuiteContainer;
 import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import org.xframium.spi.Device;
-import org.xframium.spi.RunDetails;
 import org.xframium.utility.SeleniumSessionManager;
 import gherkin.parser.Parser;
 
@@ -137,16 +137,17 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         return pageInitialized;
     }
     
+    
+    
     @Override
-    protected boolean readFile( File configFile )
+    public boolean readFile( InputStream inputStream )
     {
         try
         {
             
-            configFolder = configFile.getParentFile();
             JAXBContext jc = JAXBContext.newInstance( ObjectFactory.class );
             Unmarshaller u = jc.createUnmarshaller();
-            JAXBElement<?> rootElement = (JAXBElement<?>) u.unmarshal( new FileInputStream( configFile ) );
+            JAXBElement<?> rootElement = (JAXBElement<?>) u.unmarshal( inputStream );
 
             xRoot = (XFramiumRoot) rootElement.getValue();
             
@@ -162,9 +163,25 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             return false;
         }
     }
+    
+    @Override
+    public boolean readFile( File configFile )
+    {
+        try
+        {
+            configFolder = configFile.getParentFile();
+            return readFile( new FileInputStream( configFile ) );
+        }
+        catch ( Exception e )
+        {
+            log.fatal( "Error reading configuration File", e );
+            return false;
+        }
+       
+    }
 
     @Override
-    protected CloudContainer configureCloud()
+    public CloudContainer configureCloud()
     {
         CloudContainer cC = new CloudContainer();
         switch ( xRoot.getCloud().getProvider() )
@@ -349,7 +366,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     }
 
     @Override
-    protected boolean configurePageManagement( SuiteContainer sC )
+    public ElementProvider configurePageManagement( SuiteContainer sC )
     {
         sC.setSiteName( xRoot.getModel().getSiteName() );
 
@@ -357,20 +374,17 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         {
             case "XML":
 
-                sC.setElementProvider( new XMLElementProvider( findFile( configFolder, new File( xRoot.getModel().getFileName() ) ) ) );
-                break;
+                return new XMLElementProvider( findFile( configFolder, new File( xRoot.getModel().getFileName() ) ) );
 
             case "SQL":
-                sC.setElementProvider(  new SQLElementProvider( configProperties.get( JDBC[0] ),
+                return new SQLElementProvider( configProperties.get( JDBC[0] ),
                                                                                    configProperties.get( JDBC[1] ),
                                                                                    configProperties.get( JDBC[2] ),
                                                                                    configProperties.get( JDBC[3] ),
-                                                                                   configProperties.get( OPT_PAGE[0] )));
-                break;
+                                                                                   configProperties.get( OPT_PAGE[0] ));
 
             case "CSV":
-                sC.setElementProvider(  new CSVElementProvider( findFile( configFolder, new File( xRoot.getModel().getFileName() ) ) ) );
-                break;
+                return new CSVElementProvider( findFile( configFolder, new File( xRoot.getModel().getFileName() ) ) );
 
             case "EXCEL":
                 String[] fileNames = xRoot.getModel().getFileName().split( "," );
@@ -379,8 +393,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 for ( int i = 0; i < fileNames.length; i++ )
                     files[i] = findFile( configFolder, new File( fileNames[i] ) );
 
-                sC.setElementProvider( new ExcelElementProvider( files, xRoot.getModel().getSiteName() ) );
-                break;
+                return new ExcelElementProvider( files, xRoot.getModel().getSiteName() );
                 
             case "LOCAL":
                 ElementDescriptor elementDescriptor = null;
@@ -423,36 +436,28 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 
                 pageInitialized = elementsRead;
 
-                sC.setElementProvider( this );
-                
-                break;
+               return this;
         }
 
-        
-        if ( sC.getElementProvider() == null )
-            return false;
-        
-        return sC.getElementProvider().isInitialized();
+        return null;
     }
     
     @Override
-    protected boolean configureData( SuiteContainer sC )
+    public PageDataProvider configureData()
     {
         if ( xRoot.getData() == null )
-            return true;
+            return null;
         switch ( xRoot.getData().getProvider() )
         {
             case "XML":
-                sC.setDataProvider( new XMLPageDataProvider( findFile( configFolder, new File( xRoot.getData().getFileName() ) ) ) );
-                break;
+                return new XMLPageDataProvider( findFile( configFolder, new File( xRoot.getData().getFileName() ) ) );
 
             case "SQL":
-                sC.setDataProvider( new SQLPageDataProvider( configProperties.get( JDBC[0] ),
+                return new SQLPageDataProvider( configProperties.get( JDBC[0] ),
                                                              configProperties.get( JDBC[1] ),
                                                              configProperties.get( JDBC[2] ),
                                                              configProperties.get( JDBC[3] ),
-                                                             configProperties.get( OPT_DATA[0] )));
-                break;
+                                                             configProperties.get( OPT_DATA[0] ));
 
             case "EXCEL":
                 String[] fileNames = xRoot.getData().getFileName().split( "," );
@@ -461,11 +466,10 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 for ( int i = 0; i < fileNames.length; i++ )
                     files[i] = findFile( configFolder, new File( fileNames[i] ) );
                 
-                sC.setDataProvider( new ExcelPageDataProvider( files, configProperties.get( "pageManagement.pageData.tabNames" ) ) );
-                break;
+                return new ExcelPageDataProvider( files, configProperties.get( "pageManagement.pageData.tabNames" ) );
 
         }
-        return true;
+        return null;
     }
 
     @Override
@@ -504,7 +508,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     }
 
     @Override
-    protected DeviceContainer configureDevice()
+    public DeviceContainer configureDevice()
     {
         DeviceContainer dC = new DeviceContainer();
         List<Device> deviceList = null;
@@ -653,7 +657,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     }
 
     @Override
-    protected SuiteContainer configureTestCases()
+    public SuiteContainer configureTestCases( PageDataProvider pdp, boolean parseDataIterators )
     {
         SuiteContainer sC = null;
         switch ( xRoot.getSuite().getProvider() )
@@ -703,9 +707,9 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     {
                         KeyWordTest currentTest = parseTest( test, "test" );
                         
-                        if (currentTest.getDataDriver() != null && !currentTest.getDataDriver().isEmpty())
+                        if ( currentTest.getDataDriver() != null && !currentTest.getDataDriver().isEmpty() && parseDataIterators )
                         {
-                            PageData[] pageData = PageDataManager.instance().getRecords( currentTest.getDataDriver() );
+                            PageData[] pageData = pdp.getRecords( currentTest.getDataDriver() );
                             if (pageData == null)
                             {
                                 log.warn( "Specified Data Driver [" + currentTest.getDataDriver() + "] could not be located. Make sure it exists and it was populated prior to initializing your keyword factory" );
@@ -752,12 +756,12 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 
             
             case "XML":
-                sC = new XMLKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ) ).readData();
+                sC = new XMLKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ) ).readData( true );
 
                 break;
                 
             case "EXCEL":
-                sC =  new ExcelKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ) ).readData();
+                sC =  new ExcelKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ) ).readData( true );
 
                 break;
 
@@ -773,12 +777,14 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                                                                             configProperties.get( OPT_DRIVER[1] ),
                                                                             configProperties.get( OPT_DRIVER[2] ),
                                                                             configProperties.get( OPT_DRIVER[3] )
-                                                                            ).readData() ;
+                                                                            ).readData( true ) ;
                                                    
                 break;
             }
         }
         
+        if ( sC != null )
+            sC.setDataProvider( pdp );
         return sC;
     }
     
@@ -996,7 +1002,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 {
                     try
                     {
-                        kp.setValue( readFile( new FileInputStream( dataFile ) ) );
+                        kp.setValue( readIFile( new FileInputStream( dataFile ) ) );
                         kp.setFileName( dataFile.getAbsolutePath() );
                     }
                     catch( FileNotFoundException e )
@@ -1011,7 +1017,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     {
                         try
                         {
-                            kp.setValue( readFile( new FileInputStream( dataFile ) ) );
+                            kp.setValue( readIFile( new FileInputStream( dataFile ) ) );
                             kp.setFileName( dataFile.getAbsolutePath() );
                         }
                         catch( FileNotFoundException e )
@@ -1026,7 +1032,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         }
     }
     
-    private String readFile( InputStream inputStream )
+    private String readIFile( InputStream inputStream )
     {
         
         try

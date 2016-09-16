@@ -96,5 +96,10 @@ public class KWSAddDevice extends AbstractKeyWordStep
     {
         return false;
     }
+    
+    public KWSAddDevice()
+    {
+        orMapping = false;
+    }
 
 }

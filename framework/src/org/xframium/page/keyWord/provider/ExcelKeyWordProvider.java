@@ -104,7 +104,7 @@ public class ExcelKeyWordProvider implements KeyWordProvider
 	 * 
 	 * @see com.perfectoMobile.page.keyWord.provider.KeyWordProvider#readData()
 	 */
-	public SuiteContainer readData()
+	public SuiteContainer readData( boolean parseDataIterators )
 	{
 	    SuiteContainer sC = new SuiteContainer();
 		if (fileName == null)
@@ -112,7 +112,7 @@ public class ExcelKeyWordProvider implements KeyWordProvider
 			if (log.isInfoEnabled())
 				log.info( "Reading from CLASSPATH as XMLElementProvider.elementFile" );
 			
-			readElements( sC, getClass().getClassLoader().getResourceAsStream( resourceName ) );
+			readElements( sC, getClass().getClassLoader().getResourceAsStream( resourceName ), parseDataIterators );
 		}
 		else
 		{
@@ -120,7 +120,7 @@ public class ExcelKeyWordProvider implements KeyWordProvider
 			{
 				if (log.isInfoEnabled())
 					log.info( "Reading from FILE SYSTEM as [" + fileName + "]" );
-				readElements( sC, new FileInputStream( fileName ) );
+				readElements( sC, new FileInputStream( fileName ), parseDataIterators );
 			}
 			catch (Exception e)
 			{
@@ -131,7 +131,7 @@ public class ExcelKeyWordProvider implements KeyWordProvider
 		return sC;
 	}
 
-	private void readElements( SuiteContainer sC, InputStream inputStream )
+	private void readElements( SuiteContainer sC, InputStream inputStream, boolean parseDataIterators )
     {
         List<MatrixTest> testList = new ArrayList<MatrixTest>( 10 );
         XSSFWorkbook workbook = null;

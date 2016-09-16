@@ -2,6 +2,7 @@ package org.xframium.driver;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.InputStream;
 import java.net.InetAddress;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,6 +27,8 @@ import org.xframium.integrations.rest.bean.factory.BeanManager;
 import org.xframium.integrations.rest.bean.factory.XMLBeanFactory;
 import org.xframium.page.PageManager;
 import org.xframium.page.data.PageDataManager;
+import org.xframium.page.data.provider.PageDataProvider;
+import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.provider.SuiteContainer;
 import org.xframium.spi.Device;
@@ -38,16 +41,17 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     protected boolean dryRun = false;
     protected boolean displayResults = true;
     
-    protected abstract boolean readFile( File configFile );
-    protected abstract CloudContainer configureCloud();
+    public abstract boolean readFile( InputStream inputStream );
+    public abstract boolean readFile( File configFile );
+    public abstract CloudContainer configureCloud();
     protected abstract ApplicationContainer configureApplication();
     protected abstract boolean configureThirdParty();
-    protected abstract SuiteContainer configureTestCases();
+    public abstract SuiteContainer configureTestCases( PageDataProvider pdp, boolean parseDataIterators);
     protected abstract boolean configureArtifacts();
-    protected abstract boolean configurePageManagement( SuiteContainer sC );
-    protected abstract boolean configureData( SuiteContainer sC );
+    public abstract ElementProvider configurePageManagement( SuiteContainer sC );
+    public abstract PageDataProvider configureData();
     protected abstract boolean configureContent();
-    protected abstract DeviceContainer configureDevice();
+    public abstract DeviceContainer configureDevice();
     protected abstract boolean configurePropertyAdapters();
     protected abstract boolean configureDriver();
     protected abstract boolean _executeTest() throws Exception;
@@ -138,8 +142,13 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             log.info( "Property Adapter:  Configuring Property Adapters" );
             if ( !configurePropertyAdapters() ) return;
             
+            log.info( "Data: Configuring Data Driven Testing" );
+            PageDataProvider pdp = configureData();
+            
+            PageDataManager.instance().setPageDataProvider( pdp );
+            
             log.info( "Data: Configuring Test Cases" );
-            SuiteContainer sC = configureTestCases();
+            SuiteContainer sC = configureTestCases( pdp, true );
             
             if ( sC == null ) 
                 return;
@@ -152,15 +161,13 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             
             log.info( "Page: Configuring Object Repository" );
-            if ( !configurePageManagement( sC ) ) return;
-            log.info( "Extracted " + sC.getElementProvider().getElementTree().size() + " pages" );
+            ElementProvider eP = configurePageManagement( sC );
+            if ( eP == null ) return;
+            log.info( "Extracted " + eP.getElementTree().size() + " pages" );
             PageManager.instance().setSiteName( sC.getSiteName() );
-            PageManager.instance().setElementProvider( sC.getElementProvider() );
+            PageManager.instance().setElementProvider( eP );
             
-            log.info( "Data: Configuring Data Driven Testing" );
-            if ( !configureData( sC ) ) return;
             
-            PageDataManager.instance().setPageDataProvider( sC.getDataProvider() );
             
             log.info( "Driver: Configuring Driver" );
             if ( !configureDriver() ) return;

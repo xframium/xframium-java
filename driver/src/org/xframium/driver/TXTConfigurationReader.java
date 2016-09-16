@@ -2,6 +2,7 @@ package org.xframium.driver;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,9 +49,11 @@ import org.xframium.gesture.device.action.DeviceActionManager;
 import org.xframium.gesture.device.action.spi.perfecto.PerfectoDeviceActionFactory;
 import org.xframium.page.PageManager;
 import org.xframium.page.data.provider.ExcelPageDataProvider;
+import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.data.provider.SQLPageDataProvider;
 import org.xframium.page.data.provider.XMLPageDataProvider;
 import org.xframium.page.element.provider.CSVElementProvider;
+import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.element.provider.ExcelElementProvider;
 import org.xframium.page.element.provider.SQLElementProvider;
 import org.xframium.page.element.provider.XMLElementProvider;
@@ -60,9 +63,7 @@ import org.xframium.page.keyWord.provider.ExcelKeyWordProvider;
 import org.xframium.page.keyWord.provider.SQLKeyWordProvider;
 import org.xframium.page.keyWord.provider.SuiteContainer;
 import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
-import org.xframium.spi.CSVRunListener;
 import org.xframium.spi.Device;
-import org.xframium.spi.RunDetails;
 import org.xframium.utility.SeleniumSessionManager;
 
 public class TXTConfigurationReader extends AbstractConfigurationReader
@@ -87,14 +88,11 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     private Properties configProperties;
     
     @Override
-    protected boolean readFile( File configFile )
+    public boolean readFile( File configFile )
     {
-        configProperties = new Properties();
         try
         {
-            DeviceActionManager.instance().setDeviceActionFactory( new PerfectoDeviceActionFactory() );
-            configProperties.load( new FileInputStream( configFile ) );
-            return true;
+            return readFile( new FileInputStream( configFile ) );
         }
         catch( Exception e )
         {
@@ -102,9 +100,26 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             return false;
         }
     }
+    
+    @Override
+    public boolean readFile( InputStream inputStream )
+    {
+        configProperties = new Properties();
+        try
+        {
+            DeviceActionManager.instance().setDeviceActionFactory( new PerfectoDeviceActionFactory() );
+            configProperties.load( inputStream );
+            return true;
+        }
+        catch( Exception e )
+        {
+            log.error( "Error reading configruation file", e );
+            return false;
+        }
+    }
 
     @Override
-    protected CloudContainer configureCloud()
+    public CloudContainer configureCloud()
     {
         CloudContainer cC = new CloudContainer();
         switch ( (configProperties.getProperty( CLOUD[0] )).toUpperCase() )
@@ -286,7 +301,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     }
 
     @Override
-    protected boolean configurePageManagement( SuiteContainer sC )
+    public ElementProvider configurePageManagement( SuiteContainer sC )
     {
         sC.setSiteName( configProperties.getProperty( PAGE[0] ) );
 
@@ -295,21 +310,19 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             case "XML":
                 validateProperties( configProperties, PAGE );
                 
-                sC.setElementProvider( new XMLElementProvider( findFile( configFolder, new File( configProperties.getProperty( PAGE[2] ) ) ) ) );
-                break;
+                return new XMLElementProvider( findFile( configFolder, new File( configProperties.getProperty( PAGE[2] ) ) ) );
 
             case "SQL":
-                sC.setElementProvider( new SQLElementProvider( configProperties.getProperty( JDBC[0] ),
+                return new SQLElementProvider( configProperties.getProperty( JDBC[0] ),
                                                                                    configProperties.getProperty( JDBC[1] ),
                                                                                    configProperties.getProperty( JDBC[2] ),
                                                                                    configProperties.getProperty( JDBC[3] ),
-                                                                                   configProperties.getProperty( OPT_PAGE[0] )));
-                break;
-
+                                                                                   configProperties.getProperty( OPT_PAGE[0] ));
+                
             case "CSV":
                 validateProperties( configProperties, PAGE );
-                sC.setElementProvider( new CSVElementProvider( findFile( configFolder, new File( configProperties.getProperty( PAGE[2] ) ) ) ) );
-                break;
+                return new CSVElementProvider( findFile( configFolder, new File( configProperties.getProperty( PAGE[2] ) ) ) );
+
 
             case "EXCEL":
                 validateProperties( configProperties, PAGE );
@@ -319,18 +332,14 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                 for ( int i = 0; i < fileNames.length; i++ )
                     files[i] = findFile( configFolder, new File( fileNames[i] ) );
 
-                sC.setElementProvider( new ExcelElementProvider( files, configProperties.getProperty( PAGE[0] ) ) );
-                break;
+                return new ExcelElementProvider( files, configProperties.getProperty( PAGE[0] ) );
         }
 
-        if ( sC.getElementProvider() == null )
-            return false;
-        
-        return sC.getElementProvider().isInitialized();
+        return null;
     }
     
     @Override
-    protected boolean configureData( SuiteContainer sC )
+    public PageDataProvider configureData()
     {
         String data = configProperties.getProperty( DATA[0] );
 
@@ -340,16 +349,14 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             {
                 case "XML":
                     validateProperties( configProperties, DATA );
-                    sC.setDataProvider( new XMLPageDataProvider( findFile( configFolder, new File( configProperties.getProperty( DATA[1] ) ) ) ) );
-                    break;
+                    return new XMLPageDataProvider( findFile( configFolder, new File( configProperties.getProperty( DATA[1] ) ) ) );
 
                 case "SQL":
-                    sC.setDataProvider( new SQLPageDataProvider( configProperties.getProperty( JDBC[0] ),
+                    return new SQLPageDataProvider( configProperties.getProperty( JDBC[0] ),
                                                                  configProperties.getProperty( JDBC[1] ),
                                                                  configProperties.getProperty( JDBC[2] ),
                                                                  configProperties.getProperty( JDBC[3] ),
-                                                                 configProperties.getProperty( OPT_DATA[0] )));
-                    break;
+                                                                 configProperties.getProperty( OPT_DATA[0] ));
 
                 case "EXCEL":
                     validateProperties( configProperties, DATA );
@@ -360,13 +367,12 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                         files[i] = findFile( configFolder, new File( fileNames[i] ) );
                     
                     validateProperties( configProperties, new String[] { "pageManagement.pageData.tabNames" } );
-                    sC.setDataProvider( new ExcelPageDataProvider( files, configProperties.getProperty( "pageManagement.pageData.tabNames" ) ) );
-                    break;
+                    return new ExcelPageDataProvider( files, configProperties.getProperty( "pageManagement.pageData.tabNames" ) ) ;
 
             }
         }
         
-        return true;
+        return null;
     }
     
     @Override
@@ -409,7 +415,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     }
 
     @Override
-    protected DeviceContainer configureDevice()
+    public DeviceContainer configureDevice()
     {
         DeviceContainer dC = new DeviceContainer();
         List<Device> deviceList = null;
@@ -524,20 +530,20 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     }
 
     @Override
-    protected SuiteContainer configureTestCases()
+    public SuiteContainer configureTestCases( PageDataProvider pdp, boolean parseDataIterators )
     {
         SuiteContainer sC = null;
         switch ( configProperties.getProperty( DRIVER[0] ).toUpperCase() )
         {
             case "XML":
             {
-                sC = new XMLKeyWordProvider( findFile( configFolder, new File( configProperties.getProperty( DRIVER[1] ) ) ) ).readData();
+                sC = new XMLKeyWordProvider( findFile( configFolder, new File( configProperties.getProperty( DRIVER[1] ) ) ) ).readData( true );
                 break;
             }
             
             case "EXCEL":
             {
-                sC = new ExcelKeyWordProvider( findFile( configFolder, new File( configProperties.getProperty( DRIVER[1] ) ) ) ).readData();
+                sC = new ExcelKeyWordProvider( findFile( configFolder, new File( configProperties.getProperty( DRIVER[1] ) ) ) ).readData( true );
 
                 break;
             }
@@ -554,12 +560,13 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                                                                             configProperties.getProperty( OPT_DRIVER[1] ),
                                                                             configProperties.getProperty( OPT_DRIVER[2] ),
                                                                             configProperties.getProperty( OPT_DRIVER[3] )
-                                                                            ).readData();
+                                                                            ).readData( true );
                                                    
                 break;
             }
         }
-        
+        if ( sC != null )
+            sC.setDataProvider( pdp );
         return sC;
     }
     

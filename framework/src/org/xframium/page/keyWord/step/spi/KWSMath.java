@@ -38,6 +38,7 @@ public class KWSMath extends AbstractKeyWordStep
         kwName = "Math";
         kwDescription = "Allows the script to perform some basic math operations";
         kwHelp = "https://www.xframium.org/keyword.html#kw-math";
+        orMapping = false;
     }
     /**
      * Format string.

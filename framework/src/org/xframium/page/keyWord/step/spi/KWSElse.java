@@ -33,6 +33,7 @@ public class KWSElse extends AbstractKeyWordStep
         kwName = "Else Condition";
         kwDescription = "Can be added to any statement to execute on failure";
         kwHelp = "https://www.xframium.org/keyword.html#kw-else";
+        orMapping = false;
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

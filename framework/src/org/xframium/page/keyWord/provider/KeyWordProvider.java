@@ -30,5 +30,5 @@ public interface KeyWordProvider
 	/**
 	 * Read data.
 	 */
-	public SuiteContainer readData();
+	public SuiteContainer readData( boolean parseDataIterators );
 }
