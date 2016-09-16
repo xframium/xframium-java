@@ -35,7 +35,6 @@ import org.apache.commons.logging.LogFactory;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
-import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
@@ -103,7 +102,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 * 
 	 * @see com.perfectoMobile.page.keyWord.provider.KeyWordProvider#readData()
 	 */
-	public SuiteContainer readData( )
+	public SuiteContainer readData( boolean parseDataIterators )
 	{
 	    SuiteContainer sC = new SuiteContainer();
 		if (fileName == null)
@@ -111,7 +110,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 			if (log.isInfoEnabled())
 				log.info( "Reading from CLASSPATH as XMLElementProvider.elementFile" );
 			
-			readElements( sC, getClass().getClassLoader().getResourceAsStream( resourceName ), true, true );
+			readElements( sC, getClass().getClassLoader().getResourceAsStream( resourceName ), true, true, parseDataIterators );
 		}
 		else
 		{
@@ -119,7 +118,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 			{
 				if (log.isInfoEnabled())
 					log.info( "Reading from FILE SYSTEM as [" + fileName + "]" );
-				readElements( sC, new FileInputStream( fileName ), true, true );
+				readElements( sC, new FileInputStream( fileName ), true, true, parseDataIterators );
 			}
 			catch (Exception e)
 			{
@@ -138,7 +137,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 * @param readTests the read tests
 	 * @param readFunctions the read functions
 	 */
-	private void readElements( SuiteContainer sC, InputStream inputStream, boolean readTests, boolean readFunctions )
+	private void readElements( SuiteContainer sC, InputStream inputStream, boolean readTests, boolean readFunctions, boolean parseDataIterators )
 	{
 
 		try
@@ -150,7 +149,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
             RegistryRoot rRoot = (RegistryRoot)rootElement.getValue();
 
 			parseModel( rRoot.getModel(), sC );
-			parseImports( rRoot.getImport(), sC );
+			parseImports( rRoot.getImport(), sC,parseDataIterators );
 			
 			if ( readTests )
 			{
@@ -164,7 +163,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 			        
 			        KeyWordTest currentTest = parseTest( test, "test" );
 			        
-			        if (currentTest.getDataDriver() != null && !currentTest.getDataDriver().isEmpty())
+			        if (currentTest.getDataDriver() != null && !currentTest.getDataDriver().isEmpty() && parseDataIterators)
                     {
 			            PageData[] pageData = null;
 			            try
@@ -217,8 +216,6 @@ public class XMLKeyWordProvider implements KeyWordProvider
                         continue;
                     }
                     sC.addFunction( parseTest( test, "function" ) );
-                    
-                    KeyWordDriver.instance().addFunction( parseTest( test, "function" ) );
                 }
 			}
 
@@ -251,7 +248,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 *
 	 * @param importList the import list
 	 */
-	private void parseImports( List<Import> importList, SuiteContainer sC )
+	private void parseImports( List<Import> importList, SuiteContainer sC, boolean parseDataIterators )
 	{
 	    for ( Import imp : importList )
 	    {
@@ -263,9 +260,9 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	            {
 	                InputStream inputStream = ClassLoader.getSystemResourceAsStream( imp.getFileName() );
 	                if ( inputStream == null )
-	                    readElements( sC, new FileInputStream( findFile( new File( imp.getFileName() ) ) ), imp.isIncludeTests(), imp.isIncludeFunctions() );
+	                    readElements( sC, new FileInputStream( findFile( new File( imp.getFileName() ) ) ), imp.isIncludeTests(), imp.isIncludeFunctions(), parseDataIterators );
 	                else
-	                    readElements( sC, inputStream, imp.isIncludeTests(), imp.isIncludeFunctions() );
+	                    readElements( sC, inputStream, imp.isIncludeTests(), imp.isIncludeFunctions(), parseDataIterators );
 	            }
 	            else if ( imp.getFileName().toLowerCase().endsWith( ".bdd" ) )
 	            {
@@ -363,7 +360,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 		for ( Step xStep : xSteps )
 		{
 		    
-		    if ( xStep.getPage() != null && KeyWordDriver.instance().getPage( xStep.getPage() ) == null )
+		    if ( xStep.getPage() != null )
 		    {
 		        log.fatal( "The page [" + xStep.getPage() + "] defined the step " + xStep.getName() + " in " + testName + " was not specified in the Model" );
 		    }

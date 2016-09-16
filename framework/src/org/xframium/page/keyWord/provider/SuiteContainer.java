@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.xframium.page.data.provider.PageDataProvider;
+import org.xframium.page.element.Element;
 import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.keyWord.KeyWordTest;
 
@@ -40,14 +41,14 @@ public class SuiteContainer
         return modelMap;
     }
     
-    public ElementProvider getElementProvider()
-    {
-        return elementProvider;
-    }
-    
     public void setElementProvider( ElementProvider elementProvider )
     {
-        this.elementProvider = elementProvider;
+        oR = elementProvider.getElementTree();
+    }
+    
+    public Map<String,List<Element>> getElementTree()
+    {
+        return oR;
     }
     
     public PageDataProvider getDataProvider()
@@ -60,12 +61,13 @@ public class SuiteContainer
         this.dataProvider = dataProvider;
     }
 
+    private Map<String,List<Element>> oR;
     private List<KeyWordTest> activeTestList = new ArrayList<KeyWordTest>(10);
     private List<KeyWordTest> testList = new ArrayList<KeyWordTest>(10);
     private List<KeyWordTest> inactiveTestList = new ArrayList<KeyWordTest>(10);
     private List<KeyWordTest> functionList = new ArrayList<KeyWordTest>(10);
-    private ElementProvider elementProvider;
     private PageDataProvider dataProvider;
+    
     private String siteName;
     
     public String getSiteName()

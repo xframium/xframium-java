@@ -123,7 +123,7 @@ public class SQLKeyWordProvider implements KeyWordProvider
      * 
      * @see com.perfectoMobile.page.keyWord.provider.KeyWordProvider#readData()
      */
-    public SuiteContainer readData()
+    public SuiteContainer readData( boolean parseDataIterators )
     {
         SuiteContainer sC = new SuiteContainer();
         try
