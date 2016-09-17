@@ -67,7 +67,7 @@ import org.xframium.page.keyWord.step.spi.KWSReport;
 import org.xframium.page.keyWord.step.spi.KWSReturn;
 import org.xframium.page.keyWord.step.spi.KWSSQL;
 import org.xframium.page.keyWord.step.spi.KWSSet;
-//import org.xframium.page.keyWord.step.spi.KWSSetContentKey;
+import org.xframium.page.keyWord.step.spi.KWSSetContentKey;
 import org.xframium.page.keyWord.step.spi.KWSString;
 import org.xframium.page.keyWord.step.spi.KWSSync;
 import org.xframium.page.keyWord.step.spi.KWSValue;
@@ -188,7 +188,7 @@ public class KeyWordStepFactory
         addKeyWord( "SQL", KWSSQL.class );
         addKeyWord( "OPERATOR", KWSOperator.class );
         addKeyWord( "NAVIGATE", KWSNavigate.class );
-        //addKeyWord( "SET_CONTENT_KEY", KWSSetContentKey.class );
+        addKeyWord( "SET_CONTENT_KEY", KWSSetContentKey.class );
     }
 
     /**
