@@ -32,7 +32,12 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSValue extends AbstractKeyWordStep
 {
-
+    public KWSValue()
+    {
+        kwName = "Get Value";
+        kwDescription = "Allows the script to extract a value for an element";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-get";
+    }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */

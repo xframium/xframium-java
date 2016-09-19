@@ -20,6 +20,8 @@
  *******************************************************************************/
 package org.xframium.application;
 
+import java.util.List;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Interface ApplicationProvider.
@@ -30,5 +32,5 @@ public interface ApplicationProvider
 	/**
 	 * Read data.
 	 */
-	public void readData();
+	public List<ApplicationDescriptor> readData();
 }

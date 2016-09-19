@@ -27,6 +27,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -58,7 +60,6 @@ public class ExcelCloudProvider extends AbstractCloudProvider
 	{
 		this.fileName = fileName;
 		this.tabName = tabName;
-		readData();
 	}
 
 	/**
@@ -71,7 +72,6 @@ public class ExcelCloudProvider extends AbstractCloudProvider
 	{
 		this.resourceName = resourceName;
 		this.tabName = tabName;
-		readData();
 	}
 
 	/*
@@ -79,14 +79,14 @@ public class ExcelCloudProvider extends AbstractCloudProvider
 	 * 
 	 * @see com.perfectoMobile.device.application.ApplicationProvider#readData()
 	 */
-	public void readData()
+	public List<CloudDescriptor> readData()
 	{
-	    CloudRegistry.instance().clear();
+
 		if (fileName == null)
 		{
 			if (log.isInfoEnabled())
 				log.info( "Reading from CLASSPATH as " + resourceName );
-			readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
+			return readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
 		}
 		else
 		{
@@ -94,11 +94,12 @@ public class ExcelCloudProvider extends AbstractCloudProvider
 			{
 				if (log.isInfoEnabled())
 					log.info( "Reading from FILE SYSTEM as [" + fileName + "]" );
-				readElements( new FileInputStream( fileName ) );
+				return readElements( new FileInputStream( fileName ) );
 			}
 			catch (FileNotFoundException e)
 			{
 				log.fatal( "Could not read from " + fileName, e );
+				return null;
 			}
 		}
 	}
@@ -133,8 +134,9 @@ public class ExcelCloudProvider extends AbstractCloudProvider
 	 *
 	 * @param inputStream the input stream
 	 */
-	private void readElements( InputStream inputStream )
+	private List<CloudDescriptor> readElements( InputStream inputStream )
 	{
+	    List<CloudDescriptor> cList = new ArrayList<CloudDescriptor>( 10 );
 		XSSFWorkbook workbook = null;
 
 		try
@@ -149,14 +151,17 @@ public class ExcelCloudProvider extends AbstractCloudProvider
 				if ( getCellValue( currentRow.getCell( 0 ) ) == null || getCellValue( currentRow.getCell( 0 ) ).isEmpty() )
 					break;
 				
-				CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( getCellValue( currentRow.getCell( 0 ) ), getCellValue( currentRow.getCell( 1 ) ), getCellValue( currentRow.getCell( 2 ) ), getCellValue( currentRow.getCell( 3 ) ), getCellValue( currentRow.getCell( 4  ) ), getCellValue( currentRow.getCell( 5  ) ), getCellValue( currentRow.getCell( 7 ) ), getCellValue( currentRow.getCell( 6 ) ), getCellValue( currentRow.getCell( 8 ) ) ) );
+				cList.add( new CloudDescriptor( getCellValue( currentRow.getCell( 0 ) ), getCellValue( currentRow.getCell( 1 ) ), getCellValue( currentRow.getCell( 2 ) ), getCellValue( currentRow.getCell( 3 ) ), getCellValue( currentRow.getCell( 4  ) ), getCellValue( currentRow.getCell( 5  ) ), getCellValue( currentRow.getCell( 7 ) ), getCellValue( currentRow.getCell( 6 ) ), getCellValue( currentRow.getCell( 8 ) ) ) );
 			}
+			
+			return cList;
 
 			
 		}
 		catch (Exception e)
 		{
 			log.fatal( "Error reading Excel Element File", e );
+			return null;
 		}
 		finally
 		{

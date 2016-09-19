@@ -21,21 +21,25 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
-import org.openqa.selenium.Cookie;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
+import org.xframium.content.ContentManager;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
-import org.xframium.spi.driver.NativeDriverProvider;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class KWSAddCookie.
+ * The Class KWSSetContentKey.
  */
-public class KWSAddCookie extends AbstractKeyWordStep
+public class KWSSetContentKey extends AbstractKeyWordStep
 {
-
+    public KWSSetContentKey()
+    {
+        kwName = "Set Content Key";
+        kwDescription = "Allows the script to change the content key in force for the current test iteration";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-setcontentkey";
+    }
     /* (non-Javadoc)
      * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
      */
@@ -47,31 +51,17 @@ public class KWSAddCookie extends AbstractKeyWordStep
             throw new IllegalStateException( "Page Object was not defined" );
         }
 
-        Object name = null;
-        Object value = null;
+        Object newKey = null;
                 
-        if ( getParameterList().size() == 2 )
+        if ( getParameterList().size() == 1 )
         {
-            name = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
-            value = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap );
-            if ( !( name instanceof String ) )
-                throw new IllegalStateException( "Cookie name must be of type String" );
-            if ( !( value instanceof String ) )
-                throw new IllegalStateException( "Cookie value must be of type String" );
-        }
-        else
-        {
-            throw new IllegalStateException( "Add cookie requires two string properties (name, value)" );
+            newKey = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
+            if ( !( newKey instanceof String ) )
+                throw new IllegalStateException( "Script value must be of type String" );
         }
 
-        Cookie cookie = new Cookie( (String)name, (String)value );
-        if ( webDriver instanceof RemoteWebDriver )
-            ((RemoteWebDriver) webDriver).manage().addCookie( cookie );
-        else if ( webDriver instanceof NativeDriverProvider && ( (NativeDriverProvider) webDriver).getNativeDriver() instanceof RemoteWebDriver )
-        {
-            ( (RemoteWebDriver) ( (NativeDriverProvider) webDriver).getNativeDriver() ).manage().addCookie( cookie );
-        }
-				
+        ContentManager.instance().setCurrentContentKey( (String) newKey );
+		
         return true;
     }
 	
@@ -81,11 +71,6 @@ public class KWSAddCookie extends AbstractKeyWordStep
     public boolean isRecordable()
     {
         return false;
-    }
-    
-    public KWSAddCookie()
-    {
-        orMapping = false;
     }
 
 }

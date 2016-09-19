@@ -26,7 +26,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -49,7 +51,6 @@ public class CSVApplicationProvider extends AbstractApplicationProvider
 	public CSVApplicationProvider( File fileName )
 	{
 		this.fileName = fileName;
-		readData();
 	}
 	
 	/**
@@ -60,20 +61,18 @@ public class CSVApplicationProvider extends AbstractApplicationProvider
 	public CSVApplicationProvider( String resourceName )
 	{
 		this.resourceName = resourceName;
-		readData();
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.device.application.ApplicationProvider#readData()
 	 */
-	public void readData()
+	public List<ApplicationDescriptor> readData()
 	{
-	    ApplicationRegistry.instance().clear();
 		if ( fileName == null )
 		{
 			if ( log.isInfoEnabled() )
 				log.info( "Reading from CLASSPATH as " + resourceName );
-			readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
+			return readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
 		}
 		else
 		{
@@ -81,11 +80,12 @@ public class CSVApplicationProvider extends AbstractApplicationProvider
 			{
 				if ( log.isInfoEnabled() )
 					log.info( "Reading from FILE SYSTEM as [" + fileName + "]" );
-				readElements( new FileInputStream( fileName ) );
+				return readElements( new FileInputStream( fileName ) );
 			}
 			catch( FileNotFoundException e )
 			{
 				log.fatal( "Could not read from " + fileName, e );
+				return null;
 			}
 		}
 	}
@@ -95,11 +95,11 @@ public class CSVApplicationProvider extends AbstractApplicationProvider
 	 *
 	 * @param inputStream the input stream
 	 */
-	private void readElements( InputStream inputStream )
+	private List<ApplicationDescriptor> readElements( InputStream inputStream )
 	{
 		BufferedReader fileReader = new BufferedReader( new InputStreamReader( inputStream ) );
 		String currentLine = null;
-		
+		List<ApplicationDescriptor> appList = new ArrayList<ApplicationDescriptor>( 10 );
 		try
 		{
 			while ( ( currentLine = fileReader.readLine() ) != null )
@@ -109,12 +109,15 @@ public class CSVApplicationProvider extends AbstractApplicationProvider
 				
 				String[] lineData = currentLine.split( "," );
 				
-				ApplicationRegistry.instance().addApplicationDescriptor( new ApplicationDescriptor( lineData[ 0 ], lineData[ 1 ], lineData[ 2 ], lineData[ 3 ], lineData[ 4 ], lineData[ 5 ], lineData[ 6 ], new HashMap<String,Object>( 0 ) ) );
+				appList.add( new ApplicationDescriptor( lineData[ 0 ], lineData[ 1 ], lineData[ 2 ], lineData[ 3 ], lineData[ 4 ], lineData[ 5 ], lineData[ 6 ], new HashMap<String,Object>( 0 ) ) );
 			}
+			
+			return appList;
 		}
 		catch( Exception e )
 		{
 			log.fatal( "Error reading CSV Element File", e );
+			return null;
 		}
 	}
 }

@@ -33,7 +33,13 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSMath extends AbstractKeyWordStep
 {
-    
+    public KWSMath()
+    {
+        kwName = "Math";
+        kwDescription = "Allows the script to perform some basic math operations";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-math";
+        orMapping = false;
+    }
     /**
      * Format string.
      *

@@ -26,6 +26,8 @@ package org.xframium.device.data.perfectoMobile;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.logging.Log;
@@ -38,6 +40,7 @@ import org.xframium.device.SimpleDevice;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataProvider;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
+import org.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -72,8 +75,9 @@ public class PerfectoMobileDataProvider implements DataProvider
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.device.data.DataProvider#readData()
 	 */
-	public void readData()
+	public List<Device> readData()
 	{
+	    List<Device> deviceList = new ArrayList<Device>( 10 );
 		try
 		{
 			URL deviceURL = new URL( "https://" + CloudRegistry.instance().getCloud().getHostName() + "/services/handsets?operation=list&user=" + CloudRegistry.instance().getCloud().getUserName() + "&password=" + CloudRegistry.instance().getCloud().getPassword() );
@@ -125,7 +129,7 @@ public class PerfectoMobileDataProvider implements DataProvider
 					}
 					
 					deviceFound = true;
-					DeviceManager.instance().registerDevice( new SimpleDevice( getValue( handSets.item(  i  ), "deviceId" ), getValue( handSets.item(  i  ), "manufacturer" ), getValue( handSets.item(  i  ), "model" ), getValue( handSets.item(  i  ), "os" ), getValue( handSets.item(  i  ), "osVersion" ), null, null, 1, driverName, true, getValue( handSets.item(  i  ), "deviceId" ) ) );
+					deviceList.add( new SimpleDevice( getValue( handSets.item(  i  ), "deviceId" ), getValue( handSets.item(  i  ), "manufacturer" ), getValue( handSets.item(  i  ), "model" ), getValue( handSets.item(  i  ), "os" ), getValue( handSets.item(  i  ), "osVersion" ), null, null, 1, driverName, true, getValue( handSets.item(  i  ), "deviceId" ) ) );
 				}
 				
 			}
@@ -134,13 +138,14 @@ public class PerfectoMobileDataProvider implements DataProvider
 				log.warn( pmValidator.getMessage() );
 			
 			inputStream.close();
-			
+			return deviceList;
 			
 			
 		}
 		catch( Exception e )
 		{
 			e.printStackTrace( );
+			return null;
 		}
 	}
 	

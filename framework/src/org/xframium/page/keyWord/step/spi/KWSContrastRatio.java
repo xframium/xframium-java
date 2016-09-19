@@ -60,7 +60,12 @@ import org.xframium.wcag.WCAGRecord.WCAGType;
  */
 public class KWSContrastRatio extends AbstractKeyWordStep
 {
-
+    public KWSContrastRatio()
+    {
+        kwName = "Luminosity validation";
+        kwDescription = "Allows thte script to analyze the named element using the WCAG 2.0 algorithm and validates its success against the WCAG 2.0 success criteria";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-checkcontrast";
+    }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */

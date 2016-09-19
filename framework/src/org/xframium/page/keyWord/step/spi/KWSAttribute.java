@@ -62,6 +62,14 @@ public class KWSAttribute extends AbstractKeyWordStep
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
+    
+    public KWSAttribute()
+    {
+        kwName = "Attribute Interaction";
+        kwDescription = "Allows the script to interact with individual attributes of the names element";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-attribute";
+    }
+    
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
 	{

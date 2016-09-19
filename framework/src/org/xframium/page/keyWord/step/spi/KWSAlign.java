@@ -34,6 +34,13 @@ public class KWSAlign extends AbstractKeyWordStep
         LEFT,RIGHT,TOP,BOTTOM;
     }
     
+    public KWSAlign()
+    {
+        kwName = "Control Alignment";
+        kwDescription = "Allows the script to validate the alignment of one or more elements with the top, bottom, let or right of another element";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-align";
+    }
+    
 
     
 	/* (non-Javadoc)

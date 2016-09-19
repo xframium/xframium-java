@@ -32,7 +32,13 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSWait extends AbstractKeyWordStep
 {
-
+    public KWSWait()
+    {
+        kwName = "Pause";
+        kwDescription = "Allows the script to pause execution for a pre-determined amount of time";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-wait";
+        orMapping = false;
+    }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */

@@ -29,7 +29,12 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 
 public class KWSFocus extends AbstractKeyWordStep
 {
-    
+    public KWSFocus()
+    {
+        kwName = "Has Focus";
+        kwDescription = "Allows the script check if the current element has focus";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-focus";
+    }
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
 	{
