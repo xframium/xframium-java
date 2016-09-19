@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.xframium.page.PageContainer;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.element.Element;
 import org.xframium.page.element.provider.ElementProvider;
@@ -46,7 +47,7 @@ public class SuiteContainer
         oR = elementProvider.getElementTree();
     }
     
-    public Map<String,List<Element>> getElementTree()
+    public Map<String,PageContainer> getElementTree()
     {
         return oR;
     }
@@ -61,7 +62,7 @@ public class SuiteContainer
         this.dataProvider = dataProvider;
     }
 
-    private Map<String,List<Element>> oR;
+    private Map<String,PageContainer> oR;
     private List<KeyWordTest> activeTestList = new ArrayList<KeyWordTest>(10);
     private List<KeyWordTest> testList = new ArrayList<KeyWordTest>(10);
     private List<KeyWordTest> inactiveTestList = new ArrayList<KeyWordTest>(10);

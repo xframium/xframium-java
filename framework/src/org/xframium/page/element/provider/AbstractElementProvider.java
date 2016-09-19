@@ -28,7 +28,9 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.page.ElementDescriptor;
+import org.xframium.page.PageContainer;
 import org.xframium.page.element.Element;
+import org.xframium.page.keyWord.KeyWordDriver;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -36,7 +38,7 @@ import org.xframium.page.element.Element;
  */
 public abstract class AbstractElementProvider implements ElementProvider 
 {
-    protected Map<String,List<Element>> elementTree = new HashMap<String,List<Element>>( 20 );
+    protected Map<String,PageContainer> elementTree = new HashMap<String,PageContainer>( 20 );
 	private static XPathFactory xPathFactory = XPathFactory.newInstance();
 	/** The log. */
 	protected Log log = LogFactory.getLog(ElementProvider.class);
@@ -64,7 +66,7 @@ public abstract class AbstractElementProvider implements ElementProvider
         this.initialized = initialized;
     }
     
-    public Map<String,List<Element>> getElementTree()
+    public Map<String,PageContainer> getElementTree()
     {
         return elementTree;
     }
@@ -79,13 +81,14 @@ public abstract class AbstractElementProvider implements ElementProvider
 	
 	protected boolean validateElement( ElementDescriptor elementDescriptor, Element currentElement ) throws Exception
 	{
-	    List<Element> elementList = elementTree.get( elementDescriptor.getPageName() );
+	    PageContainer elementList = elementTree.get( elementDescriptor.getPageName() );
 	    if ( elementList == null )
 	    {
-	        elementList = new ArrayList<Element>( 10 );
+	        Class className = KeyWordDriver.instance().getPage( elementDescriptor.getPageName() );
+	        elementList = new PageContainer( elementDescriptor.getPageName(), className != null ? className.getName() : "" );
 	        elementTree.put( elementDescriptor.getPageName(), elementList );
 	    }
-	    elementList.add( currentElement );
+	    elementList.getElementList().add( currentElement );
 	    
 	    
 	    try
