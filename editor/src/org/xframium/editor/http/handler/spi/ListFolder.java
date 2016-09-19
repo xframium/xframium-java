@@ -40,9 +40,12 @@ public class ListFolder extends XOLHandler {
     	    {
     	        File[] fileList = currentFile.getAbsoluteFile().listFiles();
     	        List<FileContainer> fullList = new ArrayList<FileContainer>( 20 );
-    	        for ( File file : fileList )
-    	            fullList.add( new FileContainer( file ) );
-    	        fileContainer.put( "folderList", fullList );
+    	        if ( fullList != null )
+    	        {
+        	        for ( File file : fileList )
+        	            fullList.add( new FileContainer( file ) );
+        	        fileContainer.put( "folderList", fullList );
+    	        }
     	    }
     	    
     	    fileContainer.put( "folderName", currentFile.getAbsolutePath() );

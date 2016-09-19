@@ -220,7 +220,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     }
 
     @Override
-    protected ApplicationContainer configureApplication()
+    public ApplicationContainer configureApplication()
     {
         ApplicationContainer appContainer = new ApplicationContainer();
         

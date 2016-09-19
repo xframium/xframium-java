@@ -157,7 +157,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     }
 
     @Override
-    protected ApplicationContainer configureApplication()
+    public ApplicationContainer configureApplication()
     {
         ApplicationContainer appContainer = new ApplicationContainer();
         File appFile = null;

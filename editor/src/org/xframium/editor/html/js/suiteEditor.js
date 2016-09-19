@@ -33,7 +33,6 @@ xEditor
 					$scope.currentFolderFiles = [];
 
 					$scope.toggle = function(scope) {
-						console.log( scope );
 						scope.toggle();
 					}
 
@@ -216,7 +215,6 @@ xEditor
 
 					$scope.regexValidated = 0;
 					$scope.validateRegex = function() {
-						console.log($scope.currentStep.validation);
 						try {
 							var re = new RegExp($scope.currentStep.validation);
 							$scope.regexValidated = 1;
@@ -386,11 +384,6 @@ xEditor
 					$scope.objectRepository = {};
 					$scope.objectMap = {};
 
-					$scope.openSuite = function() {
-						xFramiumService.openSuite().then(function(returnValue) {
-							console.log(returnValue.pageData);
-						});
-					}
 
 					$scope.openTest = function(test) {
 						$scope.currentStep = null;
@@ -398,7 +391,6 @@ xEditor
 							test.description = '';
 						$scope.currentTest = test;
 						$scope.currentContext = 'Test';
-						console.log($scope.currentTest);
 					}
 
 					$scope.openFunction = function(test) {
@@ -440,7 +432,6 @@ xEditor
 					}
 
 					$scope.tabChanged = function() {
-						console.log("changed");
 						$scope.selectionContext = '';
 					}
 
@@ -469,11 +460,9 @@ xEditor
 						
 						for ( var i=0; i<$scope.selectedPage.elementList.length; i++ )
 						{
-							if ( $scope.currentStep.name == scope.selectedPage.elementList[i].elementName )
-								$scope.currentElement = scope.selectedPage.elementList[i];
+							if ( $scope.currentStep.name == $scope.selectedPage.elementList[i].elementName )
+								$scope.currentElement = $scope.selectedPage.elementList[i];
 						}
-						
-						console.log( $scope.currentElement );
 
 					}
 
@@ -502,14 +491,11 @@ xEditor
 											$scope.functionList = returnValue.pageData.sC.functionList;
 											$scope.siteName = returnValue.pageData.sC.siteName;
 											$scope.modelMap = returnValue.pageData.sC.modelMap;
-											console.log($scope.siteName);
 										});
 					}
 					
 					$scope.getFiles = function( folderName, folderDelta )
 					{
-						console.log( folderName );
-						console.log( folderDelta );
 						xFramiumService
 						.getFiles( folderName, folderDelta )
 						.then(

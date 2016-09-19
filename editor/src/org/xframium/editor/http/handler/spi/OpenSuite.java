@@ -46,6 +46,7 @@ public class OpenSuite extends XOLHandler
     		returnMap.put( "cC", cR.configureCloud() );
     		ElementProvider eP = cR.configurePageManagement( sC );
     		returnMap.put( "pC", eP );
+    		returnMap.put( "aC", cR.configureApplication() );
     		try
     		{
     		    returnMap.put( "dC", cR.configureDevice() );
