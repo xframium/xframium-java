@@ -23,9 +23,14 @@ xEditor
 					$scope.currentElement;
 					$scope.siteName;
 					$scope.modelMap;
+					$scope.fileManager;
 					
 					$scope.selectedORPage;
 					$scope.selectedORElement;
+					
+					$scope.currentFolder;
+					$scope.currentFile;
+					$scope.currentFolderFiles = [];
 
 					$scope.toggle = function(scope) {
 						console.log( scope );
@@ -472,21 +477,59 @@ xEditor
 
 					}
 
-					$scope.openPageData = function(suiteName) {
+					$scope.openFolderBrowser = function(suiteName) {
+
+						$scope.modalInstance = $uibModal.open({
+							animation : true,
+							ariaLabelledBy : 'modal-title',
+							ariaDescribedBy : 'modal-body',
+							templateUrl : 'folderBrowser.html',
+							scope : $scope,
+							size : 'md',
+						});
+					}
+					
+					$scope.openSuite = function(suiteName) {
 
 						xFramiumService
-								.openSuite()
+								.openSuite( suiteName )
 								.then(
 										function(returnValue) {
 
 											$scope.testList = returnValue.pageData.sC.testList;
-											$scope.objectRepository = returnValue.pageData.pC.elementListMap;
+											$scope.objectRepository = returnValue.pageData.pC.elementTree;
 											$scope.objectMap = returnValue.pageData.pC.elementMap;
 											$scope.functionList = returnValue.pageData.sC.functionList;
 											$scope.siteName = returnValue.pageData.sC.siteName;
 											$scope.modelMap = returnValue.pageData.sC.modelMap;
 											console.log($scope.siteName);
 										});
+					}
+					
+					$scope.getFiles = function( folderName, folderDelta )
+					{
+						console.log( folderName );
+						console.log( folderDelta );
+						xFramiumService
+						.getFiles( folderName, folderDelta )
+						.then(
+								function(returnValue) {
+									
+									$scope.currentFile = returnValue.pageData.fileName;
+									
+									
+									if ( $scope.currentFile != null )
+									{
+										$scope.cancel();
+										$scope.openSuite( $scope.currentFile );
+									}
+									else
+									{
+										$scope.currentFolder = returnValue.pageData.folderName;
+										$scope.currentFolderFiles = returnValue.pageData.folderList;
+									}
+									
+								});
 					}
 
 					$scope.selectTest = function(stepIndex) {
@@ -523,6 +566,15 @@ xEditor
 								function(returnValue) {
 									$scope.supportedORTypes = returnValue.pageData;
 								});
+						
+						xFramiumService
+						.getFiles()
+						.then(
+								function(returnValue) {
+									$scope.currentFolder = returnValue.pageData.folderName;
+									$scope.currentFile = returnValue.pageData.fileName;
+									$scope.currentFolderFiles = returnValue.pageData.folderList;
+								});
 					}
 
 				});
@@ -532,9 +584,33 @@ xEditor.service("xFramiumService", function($http, $location) {
 		getSupportedSteps : getSupportedSteps,
 		openSuite : openSuite,
 		getSupportedORTypes : getSupportedORTypes,
-		openPageData : openPageData
+		openPageData : openPageData,
+		getFiles : getFiles
 	});
 
+	function getFiles( folderName, folderDelta ) {
+
+		var request = null;
+		if ( folderName != null )
+		{
+			request = $http({
+				method : "get",
+				url : "/folderList",
+				params : { "folderName" : folderName,
+					       "folderDelta" : folderDelta
+				}
+			});
+		}
+		else
+		{
+			request = $http({
+				method : "get",
+				url : "/folderList"
+			});
+		}
+		return request.then(handleSuccess, handleError);
+	};
+	
 	function getSupportedSteps(useId) {
 
 		var request = $http({
@@ -559,7 +635,8 @@ xEditor.service("xFramiumService", function($http, $location) {
 
 		var request = $http({
 			method : "get",
-			url : "/suite/open"
+			url : "/suite/open",
+			params : { "suiteName" : suiteName }
 		});
 
 		return request.then(handleSuccess, handleError);

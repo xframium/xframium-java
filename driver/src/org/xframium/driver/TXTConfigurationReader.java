@@ -90,6 +90,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     @Override
     public boolean readFile( File configFile )
     {
+        configFolder = configFile.getParentFile();
         try
         {
             return readFile( new FileInputStream( configFile ) );

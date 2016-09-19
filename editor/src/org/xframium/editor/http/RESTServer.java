@@ -6,7 +6,7 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.xframium.editor.http.handler.spi.AnalyzePageData;
+import org.xframium.editor.http.handler.spi.ListFolder;
 import org.xframium.editor.http.handler.spi.OpenEditor;
 import org.xframium.editor.http.handler.spi.OpenFile;
 import org.xframium.editor.http.handler.spi.OpenSuite;
@@ -51,11 +51,11 @@ public class RESTServer
             httpServer = HttpServer.create( new InetSocketAddress( ipAddress, portNumber ), 1000 );
             httpServer.createContext( "/steps/supported", new SupportedSteps() );
             httpServer.createContext( "/or/supported", new SupportedBYTypes() );
-            httpServer.createContext( "/pageData/open", new AnalyzePageData() );
             httpServer.createContext( "/suite/open", new OpenSuite() );
             httpServer.createContext( "/editor", new OpenEditor() );
             httpServer.createContext( "/js", new OpenFile() );
             httpServer.createContext( "/css", new OpenFile() );
+            httpServer.createContext( "/folderList", new ListFolder() );
             httpServer.start();
             
             Thread.sleep( 2000 );

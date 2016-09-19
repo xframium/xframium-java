@@ -22,7 +22,9 @@ public class OpenSuite extends XOLHandler
 	{	
 	    try
 	    {
-    		String fileName = "C:\\Projects\\Git\\morelandLabs\\customerProjects\\xmlDriven\\salesForce\\driverConfig.xml";
+	        Map<String,String> queryMap = queryToMap( httpExchange.getRequestURI().getQuery() );
+	        
+    		String fileName = queryMap.get( "suiteName" );
     		
     		
     		Map <String,Object> returnMap = new HashMap<String,Object>( 10 );
@@ -44,7 +46,15 @@ public class OpenSuite extends XOLHandler
     		returnMap.put( "cC", cR.configureCloud() );
     		ElementProvider eP = cR.configurePageManagement( sC );
     		returnMap.put( "pC", eP );
-    		returnMap.put( "dC", cR.configureDevice() );
+    		try
+    		{
+    		    returnMap.put( "dC", cR.configureDevice() );
+    		}
+    		catch( Exception e )
+    		{
+    		    e.printStackTrace();
+    		}
+    		        
     	
     		
     	    

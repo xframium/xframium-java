@@ -7,6 +7,7 @@ import org.xframium.driver.XMLConfigurationReader;
 import org.xframium.driver.container.ApplicationContainer;
 import org.xframium.driver.container.CloudContainer;
 import org.xframium.driver.container.DeviceContainer;
+import org.xframium.driver.container.FileContainer;
 import org.xframium.page.BY;
 import org.xframium.page.Page;
 import org.xframium.page.PageContainer;
@@ -71,6 +72,7 @@ public class Initializer
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( XMLConfigurationReader.class, new ReflectionSerializer() );
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( PageContainer.class, new ReflectionSerializer() );
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( BY.class, new ReflectionSerializer() );
+        SerializationManager.instance().getDefaultAdapter().addCustomMapping( FileContainer.class, new ReflectionSerializer() );
         
 	}
 	

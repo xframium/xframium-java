@@ -57,7 +57,7 @@ li.selected {
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a hRef="#" uib-dropdown-toggle ng-click="openObjectRepository()">Object Repository</a></li>
-                    <li><a hRef="#" uib-dropdown-toggle ng-click="openPageData()">File</a></li>
+                    <li><a hRef="#" uib-dropdown-toggle ng-click="openFolderBrowser()">File</a></li>
                     <li><a hRef="#">About</a></li>
                 </ul>
             </div>
@@ -618,10 +618,6 @@ li.selected {
                 </div>
     	</script>
         
-        <script type="text/ng-template" id="objectRepositoryItem.html">
-			
-		</script>
-        
         <script type="text/ng-template" id="objectRepository.html">
             <div class="panel panel-primary" style="margin-bottom: 0px;">
                     <div class="panel-heading">
@@ -721,6 +717,29 @@ li.selected {
 						</div>
 					</div>
 			</div>
+        </script>
+        
+        <script type="text/ng-template" id="folderBrowser.html">
+            <div class="panel panel-primary" style="margin-bottom: 0px;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Select your Driver Configuratino file<a href="#" ng-click="cancel()"><span class="pull-right glyphicon glyphicon-remove-sign" ></span></a></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>{{currentFolder}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+								<div class="list-group scrollable" style="max-height: 350px">
+									<a class="list-group-item" hRef="#" ng-click="getFiles(currentFolder, '..')"><span class="glyphicon glyphicon-level-up" style="margin-right: 5px" ></span>..</a>
+									<a class="list-group-item" hRef="#" ng-click="getFiles(currentFolder, f.leafName)" ng-repeat="f in currentFolderFiles"><span ng-if="f.file == true" style="margin-right: 5px" class="glyphicon glyphicon-open-file"></span><span ng-if="f.folder == true" class="glyphicon glyphicon-folder-open" style="margin-right: 5px" ></span>{{f.leafName}}<span ng-if="f.folder == true" class="badge">{{f.fileCount}}</span></a>
+								</div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
         </script>
 </body>
 

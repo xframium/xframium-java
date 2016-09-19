@@ -20,6 +20,9 @@ public abstract class XOLHandler implements HttpHandler
 	protected Map<String, String> queryToMap( String query )
     {
         Map<String, String> result = new HashMap<String, String>();
+        
+        if ( query == null )
+            return result;
         for ( String param : query.split( "&" ) )
         {
             String pair[] = param.split( "=" );
