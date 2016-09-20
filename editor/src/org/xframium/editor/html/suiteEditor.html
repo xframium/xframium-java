@@ -56,9 +56,9 @@ li.selected {
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
+                    <li><a hRef="#" uib-dropdown-toggle ng-click="openFolderBrowser()">Open Suite</a></li>
+                    <li><a hRef="#" uib-dropdown-toggle >Save Suite</a></li>
                     <li><a hRef="#" uib-dropdown-toggle ng-click="openObjectRepository()">Object Repository</a></li>
-                    <li><a hRef="#" uib-dropdown-toggle ng-click="openFolderBrowser()">File</a></li>
-                    <li><a hRef="#">About</a></li>
                 </ul>
             </div>
         </nav>
@@ -107,19 +107,19 @@ li.selected {
                         </ol>
                     </uib-tab> 
                 </uib-tabset>
-                <div ng-if="selectionContext=='Test'" class="panel panel-default scrollable">
+                <div ng-if="selectionContext=='Test'" class="panel panel-info scrollable">
                     <div class="panel-heading">
                         <h3 class="panel-title">{{selectedItem.name}}</h3>
                     </div>
                     <div class="panel-body">{{selectedItem.description}}</div>
                 </div>
-                <div ng-if="selectionContext=='Function'" class="panel panel-default scrollable">
+                <div ng-if="selectionContext=='Function'" class="panel panel-info scrollable">
                     <div class="panel-heading">
                         <h3 class="panel-title">{{selectedItem.name}}</h3>
                     </div>
                     <div class="panel-body">{{selectedItem.description}}</div>
                 </div>
-                <div ng-if="selectionContext=='Step'" class="panel panel-default scrollable">
+                <div ng-if="selectionContext=='Step'" class="panel panel-info scrollable">
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             {{selectedItem.kwName}}<a ng-href="{{selectedItem.kwHelp}}" target="_blank"><span class="pull-right glyphicon glyphicon-question-sign"></span></a>
@@ -132,7 +132,7 @@ li.selected {
                 </div>
             </div>
             <div class="col-md-5">
-                <div class="panel panel-primary" ng-if="currentContext == 'Test' || currentContext == 'Function'">
+                <div class="panel panel-info" ng-if="currentContext == 'Test' || currentContext == 'Function'">
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             {{currentTest.name}} Steps<a href="#" ng-click="open('lg')"><span class="pull-right glyphicon glyphicon-pencil"></span></a>
@@ -149,7 +149,7 @@ li.selected {
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="panel panel-success" style="margin-bottom: 0px;" ng-if="currentStep">
+                <div class="panel panel-info" style="margin-bottom: 0px;" ng-if="currentStep">
                     <div class="panel-heading">
                         <h3 class="panel-title">Configure this {{currentStep.kw}} step<a ng-href="{{currentStep.kwHelp}}" target="_blank"><span class="pull-right glyphicon glyphicon-question-sign" style="margin-right: 10px"></span></a></h3>
                     </div>
@@ -280,7 +280,7 @@ li.selected {
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-success" style="margin-bottom: 0px; margin-top: 5px" ng-if="currentStep">
+                <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px" ng-if="currentStep">
                     <div class="panel-heading">
                         <h3 class="panel-title">Parameters<a hRef="#" ng-click="addParameter()"><span class="pull-right glyphicon glyphicon-plus-sign"></span></a></span></h3>
                     </div>
@@ -307,7 +307,7 @@ li.selected {
                     </div>
                 </div>
                 
-                <div class="panel panel-success" style="margin-bottom: 0px; margin-top: 5px"  ng-if="currentStep && currentStep.orMapping == true">
+                <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px"  ng-if="currentStep && currentStep.orMapping == true">
                     <div class="panel-heading">
                         <h3 class="panel-title">Tokens<a hRef="#" ng-click="addToken()"><span class="pull-right glyphicon glyphicon-plus-sign"></span></a></span></h3>
                     </div>
@@ -364,8 +364,7 @@ li.selected {
 			<span ng-if="stepDef.waitTime > 0" class="glyphicon glyphicon-plus" style="margin-left: 25px; margin-right: 5px"></span><span ng-if="stepDef.waitTime > 0" class="text-muted text-warning">{{stepDef.waitTime}} ms</span>
 
 
-			<a href="#" ng-click="editStep(stepDef)"><span data-nodrag class="pull-right glyphicon glyphicon-pencil" style="margin-right: 10px" ></span></a>
-			<a href="#" ng-click="removeStep(this)"><span class="pull-right glyphicon glyphicon-remove text-danger" data-nodrag  style="margin-right: 10px"></span></a>
+			<a href="#" ng-click="removeStep(this)"><span class="pull-right glyphicon glyphicon-remove text-danger" data-nodrag  style="margin-right: 5px"></span></a>
 
 			<span ng-if="stepDef.sFailure == 'IGNORE' " class="label label-success pull-right" style="margin-right: 40px; padding-top: 6px">{{stepDef.kw}}</span>
             <span ng-if="stepDef.sFailure == 'LOG_IGNORE'" class="label label-warning pull-right" style="margin-right: 40px; padding-top: 6px">{{stepDef.kw}}</span>
@@ -631,6 +630,9 @@ li.selected {
                                 	id="basic-addon2"><a hRef="#" ng-click="addPage()"><span class="pull-right glyphicon glyphicon-plus-sign"></span></a></span>
 								</div>
 							</div>
+							<div class="col-md-6">
+								<span class="text-muted">The Object Repository stores and organizes your page elements</span>
+							</div>
 						</div>
                         <div class="row">
                             <div class="col-md-6">
@@ -646,7 +648,9 @@ li.selected {
 											<ol ui-tree-nodes ng-model="value" ng-class="{hidden: collapsed}">
 												<li ui-tree-node ng-repeat="e in value.elementList" >
 													<div data-nodrop-enabled ui-tree-handle class="tree-node tree-node-content" style="margin-top: 2px; margin-bottom: 2px">
-														<a href="#" ng-click="pageSelected( value ); elementSelected( e )"><span data-nodrag>{{e.elementName}}</span></a>
+														<span style="margin-left: 18px" ></span>
+														<span class="glyphicon glyphicon-indent-right text-info"></span>
+														<a href="#" ng-click="pageSelected( value ); elementSelected( e )"><span data-nodrag class="text-warning">{{e.elementName}}</span></a>
 													</div>
 												</li>
  											</ol>
@@ -655,7 +659,7 @@ li.selected {
 								</div>
 							</div>
 							<div class="col-md-6">
-								 <div class="panel panel-primary" ng-if="selectedORPage != null" style="margin-bottom: 0px;">
+								 <div class="panel panel-primary" ng-if="selectedORPage != null" style="margin-bottom: 15px;">
                     				<div class="panel-heading">
 
                         				<h3 class="panel-title">Page {{selectedORPage.pageName}}</h3>
@@ -684,11 +688,11 @@ li.selected {
 									</div>
 								</div>
 
-								<div class="panel panel-primary" ng-if="selectedORElement != null" style="margin-bottom: 0px;">
-                    				<div class="panel-heading">
-                        				<h3 class="panel-title">Element {{selectedORElement.elementName}}</h3>
+								<div class="panel panel-primary"  style="margin-bottom: 0px;">
+                    				<div class="panel-heading" ng-if="selectedORPage != null">
+                        				<h3 class="panel-title">Element<a hRef="#" ng-click="addElement()"><span class="pull-right glyphicon glyphicon-plus-sign" ></span></a></h3>
                     				</div>
-                    				<div class="panel-body">
+                    				<div class="panel-body" ng-if="selectedORElement != null">
 										<label>Name</label><br />
                                 		<div class="input-group">
                                     		<span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Page Name" aria-describedby="basic-addon3" ng-model="selectedORElement.elementName">

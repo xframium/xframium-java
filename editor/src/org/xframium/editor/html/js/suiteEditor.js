@@ -7,7 +7,8 @@ xEditor
 				function XFramiumController($scope, $interval, $http,
 						$location, $uibModal, xFramiumService) {
 
-					$scope.suiteName = "Google test suite";
+					$scope.suiteName;
+					$scope.applications;
 					$scope.selectionContext = "";
 					$scope.selectedStep;
 					$scope.selectedTest;
@@ -262,7 +263,15 @@ xEditor
 							}
 						
 						$scope.objectRepository[ newPage.pageName ] = newPage;
-						$scope.pageSelected( 'new page' );
+						$scope.pageSelected( newPage );
+					}
+					
+					$scope.addElement = function()
+					{
+						var newElement = {"pageName":$scope.selectedORPage.pageName,"elementName":"new element","elementKey":"","by":{"name":"XPATH","description":"XPath is a syntax for defining parts of an XML document. XPath uses path expressions to navigate XML documents and locate elements","id":"0"}}
+						
+						$scope.selectedORPage.elementList.push( newElement );
+						$scope.elementSelected( newElement );
 					}
 					
 					$scope.elementSelected = function( element )
@@ -491,6 +500,8 @@ xEditor
 											$scope.functionList = returnValue.pageData.sC.functionList;
 											$scope.siteName = returnValue.pageData.sC.siteName;
 											$scope.modelMap = returnValue.pageData.sC.modelMap;
+											$scope.suiteName = returnValue.pageData.aC.applicationName;
+											$scope.applications = returnValue.pageData.aC.appList;
 										});
 					}
 					
