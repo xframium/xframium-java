@@ -91,4 +91,6 @@ public interface PageData
 	 * Populate tree structure.
 	 */
 	public void populateTreeStructure();
+	
+	public Object get( String fieldName );
 }
