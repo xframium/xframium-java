@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html ng-app="xEditor">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
+<script src="./js/selection-model.min.js"></script>
+<script src="./js/ui-bootstrap-tpls-2.1.3.min.js"></script>
+<script src="./js/suiteEditor.js"></script>
+<script src="./js/angular-ui-tree.js"></script>
+<link href="./css/bootstrap-select.min.css" rel="stylesheet">
+<link href="./css/angular-ui-tree.css" rel="stylesheet">
+<meta charset="ISO-8859-1">
+
+<title>xFramium Online Editor</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<style>
+.fill {
+	min-height: 100%;
+	height: 100%;
+}
+
+.scrollable {
+	overflow: auto;
+}
+
+html, body {
+	height: 100%;
+}
+
+li.selected {
+	font-weight: bold;
+}
+
+.disabledStep {
+    text-decoration: line-through;
+    font-weight: 200;
+}
+
+.selectedStep {
+    color: #00b300;
+}
+
+</style>
+</head>
+<body ng-controller="xFramiumSuiteEditor" data-ng-init="initialize()">
+    <div class="container-fluid">
+        <nav class="navbar navbar-default">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">{{suiteName}}</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a hRef="#" uib-dropdown-toggle ng-click="openObjectRepository()">Object Repository</a></li>
+                    <li><a hRef="#" uib-dropdown-toggle ng-click="openFolderBrowser()">File</a></li>
+                    <li><a hRef="#">About</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="row">
+            <div class="col-md-3">
+                <uib-tabset active="active"> 
+                    <uib-tab index="0" heading="Tests" select="tabChanged()">
+                    <div class="input-group" style="margin-bottom: 3px">
+                            <span class="input-group-addon" id="basic-addon2"></span> <input type="text" class="form-control" placeholder="Test Filter" aria-describedby="basic-addon2" ng-model="filterTestsBy"><span class="input-group-addon"
+                                id="basic-addon2"><a hRef="#" ng-click="addTest()"><span class="pull-right glyphicon glyphicon-plus-sign"></span></a></span>
+                        </div>
+                        <ol class="list-group scrollable">
+                            <li selection-model ng-repeat="test in testList | filter:filterTestsBy | orderBy:test.name" ng-click="selectTest($index)" ng-dblclick="openTest(test)" class="list-group-item">
+                                <span ng-if="test.timed == true" class="glyphicon glyphicon-time"></span>
+                                <span ng-if="test.timed == false" style="margin-left: 18px"></span>
+                                {{test.name}}
+                                <a href="#" ng-click="openTest(test)">
+                                    <span class="pull-right glyphicon glyphicon-pencil"></span>
+                                </a>
+                            </li>
+                        </ol>
+                    </uib-tab> 
+                    <uib-tab index="1" heading="Functions" select="tabChanged()">
+                        <div class="input-group" style="margin-bottom: 3px">
+                            <span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Function Filter" aria-describedby="basic-addon3" ng-model="filterFunctionsBy"><span class="input-group-addon"
+                                id="basic-addon2"><a hRef="#" ng-click="addFunction()"><span class="pull-right glyphicon glyphicon-plus-sign"></span></a></span>
+                        </div>
+                        <ol class="list-group scrollable">
+                            <li selection-model ng-repeat="function in functionList | filter:filterFunctionsBy | orderBy:function.name" ng-click="selectFunction($index)" ng-dblclick="openFunction(function)" class="list-group-item">
+                                <span ng-if="function.timed == true" class="glyphicon glyphicon-time"></span>
+                                <span ng-if="function.timed == false" style="margin-left: 18px"></span>
+                                {{function.name}}
+                                <a href="#" ng-click="openFunction(function)">
+                                <span class="pull-right glyphicon glyphicon-pencil"></span>
+                                </a>
+                                </li>
+                        </ol>
+                    </uib-tab> 
+                    <uib-tab index="2" heading="Steps" select="tabChanged()">
+                        <div class="input-group" style="margin-bottom: 3px">
+                            <span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Step Filter" aria-describedby="basic-addon4" ng-model="filterStepsBy">
+                        </div>
+                        <ol class="list-group scrollable" style="max-height: 550px">
+                            <li selection-model ng-if="step.kwName!='N/A'" ng-repeat="step in supportedSteps | filter:filterStepsBy | orderBy:step.kwName" ng-click="selectStep( step )" ng-dblclick="addStep(step)" class="list-group-item list-group-item-default">{{step.kwName}}<span
+                                class="badge">{{step.kw}}</span></li>
+                        </ol>
+                    </uib-tab> 
+                </uib-tabset>
+                <div ng-if="selectionContext=='Test'" class="panel panel-default scrollable">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{selectedItem.name}}</h3>
+                    </div>
+                    <div class="panel-body">{{selectedItem.description}}</div>
+                </div>
+                <div ng-if="selectionContext=='Function'" class="panel panel-default scrollable">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{selectedItem.name}}</h3>
+                    </div>
+                    <div class="panel-body">{{selectedItem.description}}</div>
+                </div>
+                <div ng-if="selectionContext=='Step'" class="panel panel-default scrollable">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            {{selectedItem.kwName}}<a ng-href="{{selectedItem.kwHelp}}" target="_blank"><span class="pull-right glyphicon glyphicon-question-sign"></span></a>
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div style="margin-bottom: 10px">{{selectedItem.kwDescription}}</div>
+                        <button ng-if="currentTest" class="btn btn-success pull-right" type="button" ng-click="addStep(selectedItem)">Add</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="panel panel-primary" ng-if="currentContext == 'Test' || currentContext == 'Function'">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            {{currentTest.name}} Steps<a href="#" ng-click="open('lg')"><span class="pull-right glyphicon glyphicon-pencil"></span></a>
+                        </h3>
+                    </div>
+                    <div class="panel-body" >
+                        <span class="text-muted"><i>{{currentTest.description}}</i></span>
+                        <div ui-tree id="tree-root" class="scrollable" style="max-height: 700px">
+                            <ol ui-tree-nodes ng-model="currentTest.stepList">
+                                <li ui-tree-node ng-repeat="stepDef in currentTest.stepList" ng-include="'step.html'"></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-success" style="margin-bottom: 0px;" ng-if="currentStep">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Configure this {{currentStep.kw}} step<a ng-href="{{currentStep.kwHelp}}" target="_blank"><span class="pull-right glyphicon glyphicon-question-sign" style="margin-right: 10px"></span></a></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12 text-muted">
+                                {{currentStep.kwDescription}}
+                            </div>
+                        </div>
+                        <div class="row" ng-if="currentStep.orMapping == true">
+                        
+                            <div class="col-md-12">
+                                <label style="margin-top: 15px">Object Identifier</label><br />
+                                <div class="btn-group" uib-dropdown>
+                                    <button id="split-button" type="button" class="btn btn-default">{{currentStep.pageName}}</button>
+                                    <button type="button" class="btn btn-default" uib-dropdown-toggle>
+                                        <span class="caret"></span> <span class="sr-only"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                                        <li ng-repeat="(key, value) in objectRepository" role="menuitem"><a ng-click="stepPageSelected(key)">{{key}}</a></li>
+                                    </ul>
+                                </div>
+                                <span class="glyphicon glyphicon-arrow-right" style="margin-right: 5px; margin-left: 5px" ></span>
+                                <div class="btn-group" uib-dropdown>
+                                    <button id="split-button" type="button" class="btn btn-default">{{currentStep.name}}</button>
+                                    <button type="button" class="btn btn-default" uib-dropdown-toggle>
+                                        <span class="caret"></span> <span class="sr-only"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                                        <li ng-repeat="element in selectedPage.elementList" role="menuitem"><a ng-click="stepElementSelected(element)">{{element.elementName}}</a></li>
+                                    </ul>
+                                </div>
+                                
+                            </div>
+
+                            <div class="col-md-12" ng-if="currentElement != null" style="margin-top: 10px" >
+                                <span class="text-muted text-uppercase" style="margin-left: 15px">{{currentElement.by.name}}:</span>
+                                <span class="text-muted text-success">{{currentElement.elementKey}}</span>
+                                <a href="#" ng-click="openObjectRepository( currentStep.pageName, currentElement )"><span class="pull-right glyphicon glyphicon-pencil"></span></a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label style="margin-top: 15px">Failure Mode</label><br />
+                                <div class="btn-group" uib-dropdown>
+                                    <button ng-if="currentStep.sFailure != 'IGNORE' && currentStep.sFailure != 'LOG_IGNORE'" id="split-button" type="button" class="btn btn-default">Fail Test on Error</button>
+                                    <button ng-if="currentStep.sFailure == 'IGNORE'" id="split-button" type="button" class="btn btn-default">Ignore Error and Continue</button>
+                                    <button ng-if="currentStep.sFailure == 'LOG_IGNORE'" id="split-button" type="button" class="btn btn-default">Log Error and Continue</button>
+
+                                    <button type="button" class="btn btn-default" uib-dropdown-toggle>
+                                        <span class="caret"></span> <span class="sr-only"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                                        <li role="menuitem"><a ng-click="failureModeSelected( 'ERROR' )">Fail Test on Error</a></li>
+                                        <li role="menuitem"><a ng-click="failureModeSelected( 'IGNORE' )">Ignore Error and Continue</a></li>
+                                        <li role="menuitem"><a ng-click="failureModeSelected( 'LOG_IGNORE' )">Log Error and Continue</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label style="margin-top: 15px">Result Validation</label><br />
+                                
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon2"></span> 
+                                    <input type="text" class="form-control" placeholder="Optional Regular Expression for result validation" aria-describedby="basic-addon2" ng-model="currentStep.validation">
+                                    <span class="input-group-addon" id="basic-addon2">
+                                        <a hRef="#" ng-click="validateRegex()">
+                                            <span ng-if="regexValidated == 0" class="glyphicon glyphicon-check"></span>
+                                            <span ng-if="regexValidated == 1" class="text-success glyphicon glyphicon-ok"></span>
+                                            <span ng-if="regexValidated == 2" class="text-danger glyphicon glyphicon-remove"></span>
+                                        </a>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            
+                            <div class="col-md-6">
+                                <label style="margin-top: 15px">Point of Interest</label><br />
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Point of Interest" aria-describedby="basic-addon3" ng-model="currentStep.poi">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label style="margin-top: 15px">Tag Names</label><br />
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Comma-separated list of tags" aria-describedby="basic-addon3" ng-model="currentStep.tagNames">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label style="margin-top: 15px; margin-bottom: 12px">Active</label><br />
+                                <input type="checkbox" ng-model="currentStep.active">  <label style="margin-right: 20px">Active?</label> 
+                            </div>
+                            <div class="col-md-4">
+                                <label style="margin-top: 15px; margin-bottom: 12px">Inverse</label><br />
+                                <input type="checkbox" ng-model="currentStep.inverse">  <label style="margin-right: 20px">Inverted?</label> 
+                            </div>
+                            <div class="col-md-4">
+                                <label style="margin-top: 15px">Result Context</label><br />
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Variable Name" aria-describedby="basic-addon3" ng-model="currentStep.context">
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label style="margin-top: 15px">Wait After</label><br />
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Time in milliseconds" aria-describedby="basic-addon3" ng-model="currentStep.waitTime">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label style="margin-top: 15px; margin-bottom: 12px">Timing</label><br />
+                                <input type="checkbox" ng-model="currentStep.timed">  <label style="margin-right: 20px">Timed?</label> 
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label style="margin-top: 15px">Threshold</label><br />
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Maximum Step Time" aria-describedby="basic-addon3" ng-model="currentStep.threshold">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-success" style="margin-bottom: 0px; margin-top: 5px" ng-if="currentStep">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Parameters<a hRef="#" ng-click="addParameter()"><span class="pull-right glyphicon glyphicon-plus-sign"></span></a></span></h3>
+                    </div>
+                    <div class="panel-body" ng-if="currentStep.parameterList.length > 0">
+                        <table class="table table-condensed table-hover">
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Value</th>
+                                <th></th>
+                            </tr>
+                            <tr ng-repeat="p in currentStep.parameterList">
+                                <td>{{p.name}}</td>
+                                <td>{{p.type}}</td>
+                                <td>{{p.value}}</td>
+                                <td class="text-nowrap">
+                                    <a href="#" ng-click="editParameter(p)"><span class="pull-right glyphicon glyphicon-pencil text-default"  ></span></a>
+                                    <a href="#" ng-click="removeParameter(p)"><span class="pull-right glyphicon glyphicon-remove text-danger" style="margin-right: 10px"></span></a>
+                                    <span ng-if="p.tokenList.length > 0" class="pull-right glyphicon glyphicon-tag text-default" style="margin-right: 6px" ></span>
+                                    <span ng-if="p.tokenList.length == 0" class="pull-right text-default" style="margin-left: 24px" ></span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="panel panel-success" style="margin-bottom: 0px; margin-top: 5px"  ng-if="currentStep && currentStep.orMapping == true">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Tokens<a hRef="#" ng-click="addToken()"><span class="pull-right glyphicon glyphicon-plus-sign"></span></a></span></h3>
+                    </div>
+                    <div class="panel-body" ng-if="currentStep.tokenList.length > 0">
+                        <table class="table table-condensed table-hover">
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Value</th>
+                                <th></th>
+                            </tr>
+                            <tr ng-repeat="token in currentStep.tokenList">
+                                <td>{{token.name}}</td>
+                                <td>{{token.type}}</td>
+                                <td>{{token.value}}</td>
+                                <td class="text-nowrap">
+                                    <a href="#" ng-click="editToken(token)"><span class="pull-right glyphicon glyphicon-pencil text-default" data-nodrag ></span></a>
+                                    <a href="#" ng-click="removeToken(token)"><span class="pull-right glyphicon glyphicon-remove text-danger" data-nodrag style="margin-right: 10px"></span></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script type="text/ng-template" id="step.html">
+			<div ui-tree-handle class="tree-node tree-node-content" style="margin-top: 5px; margin-bottom: 5px">
+			<span ng-if="stepDef.timed == true" class="glyphicon glyphicon-time"></span>
+			<span ng-if="stepDef.timed == false" style="margin-left: 18px"></span>
+
+			<span ng-if="stepDef.tokenList.length > 0" class="glyphicon glyphicon-tags text-warning"></span>
+			<span ng-if="stepDef.tokenList.length < 1" style="margin-left: 18px"></span>
+
+			<span ng-if="stepDef.inverse == true" class="glyphicon glyphicon-random" style="margin-right: 6px"></span>
+			<span ng-if="stepDef.inverse == false" style="margin-left: 24px"></span>
+
+
+			<a ng-if="stepDef.stepList.length != 0" data-nodrag ng-click="toggle(this)"><span ng-if="stepDef.stepList.length != 0" class="glyphicon" ng-class=" {'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }"></span></a>
+			<span ng-if="stepDef.stepList.length == 0" style="margin-left: 18px" ></span>
+
+			<span ng-if="stepDef.active == true">
+				<a href="#" ng-dblclick="addStepToParent(stepDef)" ng-click="editStep(stepDef)"><span data-nodrag ng-attr-class="{{stepDef == currentStep && 'selectedStep' || ''}}">{{stepDef.pageName}}</span></a>
+				<span class="glyphicon glyphicon-arrow-right" style="margin-right: 5px; margin-left: 5px" ></span>
+				<a href="#" ng-dblclick="addStepToParent(stepDef)" ng-click="editStep(stepDef)"><span data-nodrag ng-attr-class="{{stepDef == currentStep && 'selectedStep' || ''}}">{{stepDef.name}}</span></a>
+			</span>
+
+			<span ng-if="stepDef.active != true">
+				<a href="#" ng-dblclick="addStepToParent(stepDef)" ng-click="editStep(stepDef)" class="disabledStep" ><span data-nodrag ng-attr-class="{{stepDef == currentStep && 'selectedStep' || ''}}">{{stepDef.pageName}}</span></a>
+				<span class="glyphicon glyphicon-arrow-right disabledStep" style="margin-right: 5px; margin-left: 5px" ></span>
+				<a href="#" ng-dblclick="addStepToParent(stepDef)" ng-click="editStep(stepDef)" class="disabledStep"><span data-nodrag ng-attr-class="{{stepDef == currentStep && 'selectedStep' || ''}}">{{stepDef.name}}</span></a>
+			</span>
+
+			<span ng-if="stepDef.waitTime > 0" class="glyphicon glyphicon-plus" style="margin-left: 25px; margin-right: 5px"></span><span ng-if="stepDef.waitTime > 0" class="text-muted text-warning">{{stepDef.waitTime}} ms</span>
+
+
+			<a href="#" ng-click="editStep(stepDef)"><span data-nodrag class="pull-right glyphicon glyphicon-pencil" style="margin-right: 10px" ></span></a>
+			<a href="#" ng-click="removeStep(this)"><span class="pull-right glyphicon glyphicon-remove text-danger" data-nodrag  style="margin-right: 10px"></span></a>
+
+			<span ng-if="stepDef.sFailure == 'IGNORE' " class="label label-success pull-right" style="margin-right: 40px; padding-top: 6px">{{stepDef.kw}}</span>
+            <span ng-if="stepDef.sFailure == 'LOG_IGNORE'" class="label label-warning pull-right" style="margin-right: 40px; padding-top: 6px">{{stepDef.kw}}</span>
+			<span ng-if="stepDef.sFailure != 'IGNORE' && stepDef.sFailure != 'LOG_IGNORE'" class="label label-danger pull-right" style="margin-right: 40px; padding-top: 6px">{{stepDef.kw}}</span>
+			</div>
+			<ol ui-tree-nodes="" ng-model="stepDef.stepList" ng-if="stepDef.stepList.length != 0"  ng-class="{hidden: collapsed}">
+                <li ui-tree-node ng-repeat="stepDef in stepDef.stepList" ng-include="'step.html'" ></li>
+            </ol>
+		</script>
+    
+        <script type="text/ng-template" id="tokenDetail.html">
+		<div class="panel panel-primary" style="margin-bottom: 0px;">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Token Definition<a href="#" ng-click="cancel()"><span class="pull-right glyphicon glyphicon-remove-sign"></span></a><a href="https://www.xframium.org/keyword.html#step-token" target="_blank"><span
+                        class="pull-right glyphicon glyphicon-question-sign" style="margin-right: 10px"></span></a>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12 text-muted" style="margin-bottom: 30px">
+                        Tokens allow you to add place holders inside of page elements and parameter values that can be replaced with a value at runtime. Specify the name of the token that was specified in the parameter and page element using the <i>{tokenName}</i>
+                        format and the value using one fo the value types
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Token Name</label><br />
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Token Name" aria-describedby="basic-addon3" ng-model="currentToken.name">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Token Type</label><br />
+                        <div class="btn-group" uib-dropdown>
+                            <button id="split-button" type="button" class="btn btn-default">{{currentToken.type}}</button>
+                            <button type="button" class="btn btn-default" uib-dropdown-toggle>
+                                <span class="caret"></span> <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                                <li role="menuitem"><a ng-click="tokenTypeSelected( currentToken, 'STATIC' )">Static Value</a></li>
+                                <li role="menuitem"><a ng-click="tokenTypeSelected( currentToken, 'DATA' )">Data Lookup</a></li>
+                                <li role="menuitem"><a ng-click="tokenTypeSelected( currentToken, 'CONTEXT' )">Context Variable</a></li>
+                                <li role="menuitem"><a ng-click="tokenTypeSelected( currentToken, 'CONTENT' )">Context Engine Lookup</a></li>
+                                <li role="menuitem"><a ng-click="tokenTypeSelected( currentToken, 'PROPERTY' )">System Property</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label style="margin-top: 15px">Token Value</label><br />
+                        <div class="input-group" ng-if="currentToken.type == 'STATIC'">
+                            <span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Token Value" aria-describedby="basic-addon3" ng-model="currentToken.value">
+                        </div>
+                        <div class="input-group" ng-if="currentToken.type == 'CONTEXT'">
+                            <span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Variable Name" aria-describedby="basic-addon3" ng-model="currentToken.value">
+                        </div>
+                        <div class="input-group" ng-if="currentToken.type == 'PROPERTY'">
+                            <span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Property Name" aria-describedby="basic-addon3" ng-model="currentToken.value">
+                        </div>
+                        <div class="input-group" ng-if="currentToken.type == 'CONTENT' || currentToken.type == 'DATA'">
+                            <span class="input-group-addon" id="basic-addon4">DATA</span> <input type="text" class="form-control" placeholder="Variable Name" aria-describedby="basic-addon3" ng-model="currentToken.value">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+					
+		</script>
+        
+        <script type="text/ng-template" id="parameterDetail.html">
+            <div class="panel panel-primary" style="margin-bottom: 0px;">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Parameter Definition<a href="#" ng-click="cancelParam()"><span class="pull-right glyphicon glyphicon-remove-sign"></span></a><a href="https://www.xframium.org/keyword.html#step-param" target="_blank"><span
+                        class="pull-right glyphicon glyphicon-question-sign" style="margin-right: 10px"></span></a>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12 text-muted" style="margin-bottom: 30px">Parameters are passed to step to further define their action (please refer to the documentation of an individual step to determine its need for parameters). When you
+                        are specifying a parameter you specify both a type and a value. The contents of the value are dictated by the type specified. Name and usage are optional parameters. Additionally, you can define replaceable tokens for parameters as
+                        needed.</div>
+                </div>
+                <div class="row">
+                    
+                    <div class="col-md-4">
+                        <label>Parameter Type</label><br />
+                        <div class="btn-group" uib-dropdown>
+                            <button id="split-button" type="button" class="btn btn-default">{{currentParameter.type}}</button>
+                            <button type="button" class="btn btn-default" uib-dropdown-toggle>
+                                <span class="caret"></span> <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                                <li role="menuitem"><a ng-click="tokenTypeSelected( currentParameter, 'STATIC' )">Static Value</a></li>
+                                <li role="menuitem"><a ng-click="tokenTypeSelected( currentParameter, 'DATA' )">Data Lookup</a></li>
+                                <li role="menuitem"><a ng-click="tokenTypeSelected( currentParameter, 'CONTEXT' )">Context Variable</a></li>
+                                <li role="menuitem"><a ng-click="tokenTypeSelected( currentParameter, 'CONTENT' )">Content Engine Lookup</a></li>
+                                <li role="menuitem"><a ng-click="tokenTypeSelected( currentParameter, 'PROPERTY' )">System Property</a></li>
+                                <li role="menuitem"><a ng-click="tokenTypeSelected( currentParameter, 'FILE' )">File Contents</a></li>
+                            </ul>
+                        </div>
+                    </div>
+					<div class="col-md-8">
+                        <label>Parameter Value</label><br />
+                        <div class="input-group" ng-if="currentParameter.type == 'STATIC'">
+                            <span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Token Value" aria-describedby="basic-addon3" ng-model="currentParameter.value">
+                        </div>
+                        <div class="input-group" ng-if="currentParameter.type == 'CONTEXT'">
+                            <span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Variable Name" aria-describedby="basic-addon3" ng-model="currentParameter.value">
+                        </div>
+                        <div class="input-group" ng-if="currentParameter.type == 'PROPERTY'">
+                            <span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Property Name" aria-describedby="basic-addon3" ng-model="currentParameter.value">
+                        </div>
+                        <div class="input-group" ng-if="currentParameter.type == 'FILE'">
+                            <span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="File Name" aria-describedby="basic-addon3" ng-model="currentParameter.value">
+                        </div>
+                        <div class="input-group" ng-if="currentParameter.type == 'CONTENT' || currentParameter.type == 'DATA'">
+                            <span class="input-group-addon" id="basic-addon4">DATA</span> <input type="text" class="form-control" placeholder="Variable Name" aria-describedby="basic-addon3" ng-model="currentParameter.value">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+					<div class="col-md-6">
+                        <label style="margin-top: 15px">Name</label><br />
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Optional Parameter Name" aria-describedby="basic-addon3" ng-model="currentParameter.name">
+                        </div>
+                    </div>
+                    
+					 <div class="col-md-6">
+                        <label style="margin-top: 15px">Usage</label><br />
+                        <div class="btn-group" uib-dropdown>
+                            <button ng-if="currentParameter.usage == 'INPUT' || currentParameter.usage == 'OUTPUT'" id="split-button" type="button" class="btn btn-default">{{currentParameter.usage}}</button>
+							<button ng-if="currentParameter.usage != 'INPUT' && currentParameter.usage != 'OUTPUT'" id="split-button" type="button" class="btn btn-default">N/A</button>
+                            <button type="button" class="btn btn-default" uib-dropdown-toggle>
+                                <span class="caret"></span> <span class="sr-only"></span>
+                            </button>
+                            <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+								<li role="menuitem"><a ng-click="usageSelected( currentParameter, '' )">N/A</a></li>
+                                <li role="menuitem"><a ng-click="usageSelected( currentParameter, 'INPUT' )">Input Parameter</a></li>
+                                <li role="menuitem"><a ng-click="usageSelected( currentParameter, 'OUTPUT' )">Output Parameter</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+				<div class="row">
+					<div class="col-md-12">
+            <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 25px">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Parameter Value Tokens<a hRef="#" ng-click="addTokenToParameter()"><span class="pull-right glyphicon glyphicon-plus-sign"></span></a></span>
+                    </h3>
+                </div>
+                <div class="panel-body" ng-if="currentParameter.tokenList.length > 0">
+                    <table class="table table-condensed table-hover">
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Value</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="token in currentParameter.tokenList">
+                            <td>{{token.name}}</td>
+                            <td>{{token.type}}</td>
+                            <td>{{token.value}}</td>
+                            <td class="text-nowrap"><a href="#" ng-click="editToken(token)"><span class="pull-right glyphicon glyphicon-pencil text-default" data-nodrag></span></a> <a href="#" ng-click="removeTokenFromParam(token)"><span
+                                    class="pull-right glyphicon glyphicon-remove text-danger" data-nodrag style="margin-right: 10px"></span></a></td>
+                        </tr>
+                    </table>
+                </div>
+				</div>
+            </div>
+        </div>
+				</div>
+            </div>
+        </div>
+                    
+        </script>
+        
+        <script type="text/ng-template" id="testDetail.html">
+			<div class="panel panel-primary" style="margin-bottom: 0px;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{currentTest.name}}<a href="#" ng-click="cancel()"><span class="pull-right glyphicon glyphicon-remove-sign" ></span></a></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>{{currentContext}} Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon2"></span> <input type="text" class="form-control" placeholder="Test Name" aria-describedby="basic-addon2" ng-model="currentTest.name">
+                                </div>
+                                <label ng-if="currentContext=='Test'" style="margin-top: 15px">Tags</label>
+                                <div class="input-group" ng-if="currentContext=='Test'">
+                                    <span class="input-group-addon" id="basic-addon1"></span> <input type="text" class="form-control" placeholder="A comma separated list of tags" aria-describedby="basic-addon1" ng-model="currentTest.tagNames">
+                                </div>
+                                <label style="margin-top: 15px">Description</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1"></span>
+                                    <textarea class="form-control" placeholder="Test case description" rows="8" ng-model="currentTest.description"></textarea>
+                                </div>
+                                <div class="input-group" style="margin-top: 15px">
+                                    <input type="checkbox" ng-model="currentTest.active"> <label style="margin-right: 20px">Active</label> <input type="checkbox" ng-model="currentTest.timed"> <label>Timed Test</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label style="margin-top: 15px" ng-if="currentContext=='Test'">Data Driver</label><br />
+                                <div class="btn-group" uib-dropdown ng-if="currentContext=='Test'">
+                                    <button id="split-button" type="button" class="btn btn-default">{{currentTest.dataDriver}}</button>
+                                    <button type="button" class="btn btn-default" uib-dropdown-toggle>
+                                        <span class="caret"></span> <span class="sr-only"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                                        <li role="menuitem"><a ng-click="dataDriverSelected('')">N/A</a></li>
+                                        <li ng-repeat="dp in dataProviders" role="menuitem"><a ng-click="dataDriverSelected(dp)">{{dp.name}}</a></li>
+                                    </ul>
+                                </div>
+                                <br  ng-if="currentContext=='Test'" /> <label style="margin-top: 15px" ng-if="currentContext=='Test'">Data Providers</label><br />
+                                <div class="btn-group" uib-dropdown style="margin-bottom: 15px" ng-if="currentContext=='Test'">
+                                    <button id="split-button" type="button" class="btn btn-default">Add Provider</button>
+                                    <button type="button" class="btn btn-default" uib-dropdown-toggle>
+                                        <span class="caret"></span> <span class="sr-only"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                                        <li ng-repeat="dp in dataProviders" role="menuitem"><a ng-click="addDataProvider(dp)">{{dp.name}}</a></li>
+                                    </ul>
+                                </div>
+                                <br  ng-if="currentContext=='Test'" /> <a ng-if="currentContext=='Test'" ng-repeat="dp in currentTest.dataProviders" ng-click="removeDPFromTest(dp)" style="margin-top: 3px; margin-right: 5px; MARGIN-LEFT: 5px">{{dp}}<span class="glyphicon glyphicon-remove"></span></a> <br /> 
+                                <label ng-if="currentContext=='Test'" style="margin-top: 15px" ng-if="currentContext=='Test'">Platform Filter</label><br />
+                                <div ng-if="currentContext=='Test'" class="btn-group" uib-dropdown ng-if="currentContext=='Test'">
+                                    <button id="split-button" type="button" class="btn btn-default">Add Platform Filter</button>
+                                    <button type="button" class="btn btn-default" uib-dropdown-toggle>
+                                        <span class="caret"></span> <span class="sr-only"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                                        <li role="menuitem"><a href="#">All Types</a></li>
+                                        <li role="menuitem"><a href="#">Android</a></li>
+                                        <li role="menuitem"><a href="#">IOS</a></li>
+                                    </ul>
+                                </div>
+                                <br /> <label style="margin-top: 15px">External Link ID</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1"></span> <input type="text" class="form-control" placeholder="External Link ID" aria-describedby="basic-addon1" value="{{currentTest.linkId}}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+    	</script>
+        
+        <script type="text/ng-template" id="objectRepository.html">
+            <div class="panel panel-primary" style="margin-bottom: 0px;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Object Repository<a href="#" ng-click="cancel()"><span class="pull-right glyphicon glyphicon-remove-sign" ></span></a></h3>
+                    </div>
+                    <div class="panel-body">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="input-group" style="margin-bottom: 3px">
+									<span class="input-group-addon" id="basic-addon2"></span> <input type="text" class="form-control" placeholder="Page Filter" aria-describedby="basic-addon2" ng-model="filterPagesBy" ><span class="input-group-addon"
+                                	id="basic-addon2"><a hRef="#" ng-click="addPage()"><span class="pull-right glyphicon glyphicon-plus-sign"></span></a></span>
+								</div>
+							</div>
+						</div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div ui-tree collapsed="true" id="tree-root" class="scrollable" style="max-height: 350px">
+                            		<ol ui-tree-nodes ng-model="objectRepository">
+                               	 		<li ui-tree-node ng-repeat="(key, value) in objectRepository" collapsed="true" ng-show="visible(key, filterPagesBy)">
+											<div ui-tree-handle class="tree-node tree-node-content">
+												<a ng-if="value.length != 0" data-nodrag ng-click="toggle(this)"><span ng-if="value.length != 0" class="glyphicon" ng-class=" {'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }"></span></a>
+												<span ng-if="value.length == 0" style="margin-left: 18px" ></span>
+												<span class="glyphicon glyphicon-list-alt text-success" ></span>
+												<a href="#" ng-click="pageSelected(value)"><span data-nodrag>{{value.pageName}}</span></a>
+											</div>
+											<ol ui-tree-nodes ng-model="value" ng-class="{hidden: collapsed}">
+												<li ui-tree-node ng-repeat="e in value.elementList" >
+													<div data-nodrop-enabled ui-tree-handle class="tree-node tree-node-content" style="margin-top: 2px; margin-bottom: 2px">
+														<a href="#" ng-click="pageSelected( value ); elementSelected( e )"><span data-nodrag>{{e.elementName}}</span></a>
+													</div>
+												</li>
+ 											</ol>
+										</li>
+									</ol>
+								</div>
+							</div>
+							<div class="col-md-6">
+								 <div class="panel panel-primary" ng-if="selectedORPage != null" style="margin-bottom: 0px;">
+                    				<div class="panel-heading">
+
+                        				<h3 class="panel-title">Page {{selectedORPage.pageName}}</h3>
+                    				</div>
+                    				<div class="panel-body">
+										<label>Page Name</label><br />
+                                		<div class="input-group">
+                                    		<span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Page Name" aria-describedby="basic-addon3" ng-model="selectedORPage.pageName">
+                                		</div>
+										<label style="margin-top: 15px">Page Implementation</label><br />
+                                		<div class="input-group">
+                                    		<span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Page Implementation" aria-describedby="basic-addon3" ng-model="selectedORPage.className">
+                                		</div>
+										<label style="margin-top: 15px">Element List</label><br />
+                                		<div class="input-group">
+                                    		<div class="btn-group" uib-dropdown>
+                                    			<button id="split-button" type="button" class="btn btn-default">{{selectedORElement.elementName}}</button>
+                                    			<button type="button" class="btn btn-default" uib-dropdown-toggle>
+                                        			<span class="caret"></span> <span class="sr-only"></span>
+                                    			</button>
+                                    			<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                                        			<li ng-repeat="element in selectedORPage.elementList" role="menuitem"><a ng-click="elementSelected( element )">{{element.elementName}}</a></li>
+                                    			</ul>
+                                			</div>
+                                		</div>
+									</div>
+								</div>
+
+								<div class="panel panel-primary" ng-if="selectedORElement != null" style="margin-bottom: 0px;">
+                    				<div class="panel-heading">
+                        				<h3 class="panel-title">Element {{selectedORElement.elementName}}</h3>
+                    				</div>
+                    				<div class="panel-body">
+										<label>Name</label><br />
+                                		<div class="input-group">
+                                    		<span class="input-group-addon" id="basic-addon4"></span> <input type="text" class="form-control" placeholder="Page Name" aria-describedby="basic-addon3" ng-model="selectedORElement.elementName">
+                                		</div>
+										<label style="margin-top: 15px">Type</label><br />
+                                		<div class="input-group" style="margin-bottom: 15px">
+                                    		<div class="input-group-btn" uib-dropdown>
+                                    			<button id="split-button" type="button" class="btn btn-default">{{selectedORElement.by.name}}</button>
+                                    			<button type="button" class="btn btn-default" uib-dropdown-toggle>
+                                        			<span class="caret"></span> <span class="sr-only"></span>
+                                    			</button>
+                                    			<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                                        			<li ng-repeat="t in supportedORTypes" role="menuitem"><a ng-click="byTypeSelected( t )">{{t.name}}</a></li>
+                                    			</ul>
+												
+                                			</div>
+											<input type="text" class="form-control" placeholder="Page Filter" aria-describedby="basic-addon2" ng-model="selectedORElement.elementKey" >
+											<span class="input-group-addon" id="basic-addon2"><a hRef="#" ng-click="addPage()"><span class="pull-right glyphicon glyphicon-check"></span></a></span>
+                                		</div>
+										
+										<span class="text-muted small" style="margin-left: 10px;" ><i>{{selectedORElement.by.description}}</i></span>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+			</div>
+        </script>
+        
+        <script type="text/ng-template" id="folderBrowser.html">
+            <div class="panel panel-primary" style="margin-bottom: 0px;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Select your Driver Configuratino file<a href="#" ng-click="cancel()"><span class="pull-right glyphicon glyphicon-remove-sign" ></span></a></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>{{currentFolder}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+								<div class="list-group scrollable" style="max-height: 350px">
+									<a class="list-group-item" hRef="#" ng-click="getFiles(currentFolder, '..')"><span class="glyphicon glyphicon-level-up" style="margin-right: 5px" ></span>..</a>
+									<a class="list-group-item" hRef="#" ng-click="getFiles(currentFolder, f.leafName)" ng-repeat="f in currentFolderFiles"><span ng-if="f.file == true" style="margin-right: 5px" class="glyphicon glyphicon-open-file"></span><span ng-if="f.folder == true" class="glyphicon glyphicon-folder-open" style="margin-right: 5px" ></span>{{f.leafName}}<span ng-if="f.folder == true" class="badge">{{f.fileCount}}</span></a>
+								</div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </script>
+</body>
+
+</html>

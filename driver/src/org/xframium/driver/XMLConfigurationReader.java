@@ -74,9 +74,9 @@ import org.xframium.driver.xsd.XToken;
 import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.Page;
+import org.xframium.page.PageContainer;
 import org.xframium.page.PageManager;
 import org.xframium.page.data.PageData;
-import org.xframium.page.data.PageDataManager;
 import org.xframium.page.data.provider.ExcelPageDataProvider;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.data.provider.SQLPageDataProvider;
@@ -123,7 +123,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     private Map<String,String> configProperties = new HashMap<String,String>( 10 );
     
     private Map<String,Element> elementMap = new HashMap<String,Element>(20);
-    private Map<String,List<Element>> elementListMap = new HashMap<String,List<Element>>(20);
+    private Map<String,PageContainer> elementTree = new HashMap<String,PageContainer>(20);
     
     private static XPathFactory xPathFactory = XPathFactory.newInstance();
     
@@ -220,7 +220,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     }
 
     @Override
-    protected ApplicationContainer configureApplication()
+    public ApplicationContainer configureApplication()
     {
         ApplicationContainer appContainer = new ApplicationContainer();
         
@@ -416,13 +416,14 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                             
                             elementMap.put(elementDescriptor.toString(), currentElement );
 
-                            List<Element> eltList = elementListMap.get( elementDescriptor.toString() );
+                            PageContainer eltList = elementTree.get( elementDescriptor.getPageName() );
                             if ( eltList == null )
                             {
-                                eltList = new ArrayList<Element>();
-                                elementListMap.put( elementDescriptor.toString(), eltList );
+                                Class className = KeyWordDriver.instance().getPage( elementDescriptor.getPageName() );
+                                eltList = new PageContainer( elementDescriptor.getPageName(), className != null ? className.getName() : "" );
+                                elementTree.put( elementDescriptor.getPageName(), eltList );
                             }
-                            eltList.add( currentElement );
+                            eltList.getElementList().add( currentElement );
                         }
                         catch( Exception e )
                         {
@@ -1110,9 +1111,9 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     }
 
     @Override
-    public Map<String,List<Element>> getElementTree()
+    public Map<String,PageContainer> getElementTree()
     {
-        return elementListMap;
+        return elementTree;
     }
 
 }
