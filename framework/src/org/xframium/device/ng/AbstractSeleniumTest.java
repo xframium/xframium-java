@@ -346,11 +346,13 @@ public abstract class AbstractSeleniumTest
             }
         }
 
-        newArray = new Object[testList.size()][1];
+        newArray = new Object[testList.size() * deviceList.size()][1];
 
         for( int i = 0; i < testList.size(); ++i )
         {
-            newArray[i][0] = testList.get(i);
+            for ( int j=0; j<deviceList.size(); j++ )
+                
+            newArray[i*deviceList.size() + j][0] = testList.get(i);
         }
 
         return newArray;
@@ -417,14 +419,17 @@ public abstract class AbstractSeleniumTest
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Device acquired for " + currentMethod.getName() );
 
-            try
+            if ( connectedDevice.getWebDriver().isConnected() )
             {
-                if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
-                    connectedDevice.getWebDriver().getCloud().getCloudActionProvider().enabledLogging( connectedDevice.getWebDriver() );
-            }
-            catch( Exception e )
-            {
-                e.printStackTrace();
+                try
+                {
+                    if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
+                        connectedDevice.getWebDriver().getCloud().getCloudActionProvider().enabledLogging( connectedDevice.getWebDriver() );
+                }
+                catch( Exception e )
+                {
+                    e.printStackTrace();
+                }
             }
 
             TestContext ctx = new TestContext();
@@ -512,14 +517,17 @@ public abstract class AbstractSeleniumTest
         threadContext.set( null );
         Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null);
 
-        try
+        if ( map.get( DEFAULT ).getWebDriver().isConnected() )
         {
-            if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
-                map.get( DEFAULT ).getWebDriver().getCloud().getCloudActionProvider().disableLogging( map.get( DEFAULT ).getWebDriver() );
-        }
-        catch( Exception e )
-        {
-            e.printStackTrace();
+            try
+            {
+                if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
+                    map.get( DEFAULT ).getWebDriver().getCloud().getCloudActionProvider().disableLogging( map.get( DEFAULT ).getWebDriver() );
+            }
+            catch( Exception e )
+            {
+                e.printStackTrace();
+            }
         }
 
         while ( (keys != null) && (keys.hasNext()) )
@@ -562,17 +570,12 @@ public abstract class AbstractSeleniumTest
 
                 File rootFolder = new File( DataManager.instance().getReportFolder(), RunDetails.instance().getRootFolder() );
                 rootFolder.mkdirs();
-                //
-                // If this test failed, run through the automatic downloads for
-                // a
-                // failed test
-                //
 
                 try
                 {
                     if ( !testResult.isSuccess() )
                     {
-                        if ( webDriver instanceof TakesScreenshot )
+                        if ( ( (DeviceWebDriver) webDriver ).isConnected() &&  webDriver instanceof TakesScreenshot )
                         {
                             OutputStream os = null;
                             try
@@ -686,12 +689,6 @@ public abstract class AbstractSeleniumTest
             if ( currentDevice != null )
                 DeviceManager.instance().releaseDevice( currentDevice );
         }
-
-    }
-
-    @AfterSuite
-    public void afterSuite()
-    {
 
     }
 
