@@ -93,6 +93,7 @@ public class WebServiceClientUtil
         private ArrayList<CallParameter> parameters = new ArrayList<CallParameter>();
         private String payload = null;
         private boolean valid = false;
+        private HashMap<String,String> headers = new HashMap<String,String>();
 
         public CallDetails()
         {}
@@ -200,6 +201,11 @@ public class WebServiceClientUtil
         public void setValid(boolean valid)
         {
             this.valid = valid;
+        }
+
+        public HashMap<String,String> getHeaders()
+        {
+            return headers;
         }
     }
 
@@ -351,6 +357,18 @@ public class WebServiceClientUtil
             con = (HttpURLConnection) obj.openConnection();
             con.setRequestMethod( callDetails.method );
             con.setRequestProperty("User-Agent", "Java Program");
+
+            if ( callDetails.headers.size() > 0 )
+            {
+                Iterator<String> names = callDetails.headers.keySet().iterator();
+                while( names.hasNext() )
+                {
+                    String name = names.next();
+                    String value = callDetails.headers.get( name );
+
+                    con.setRequestProperty( name, value );
+                }
+            }
 
             setBasicAuthIfRequested( con, callDetails );
 
