@@ -59,9 +59,10 @@ public class KWSMath extends AbstractKeyWordStep
 	{
 	    String compareToString = null;
 	    double currentValue = 0;
+	    boolean valueAdded = false;
 	    for ( int i=0; i<getParameterList().size(); i++ )
 	    {
-	        boolean valueAdded = false;
+	        
 
 	        String currentParameter = getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "";
 	        

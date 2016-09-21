@@ -62,7 +62,8 @@ public class PageDataManager
     public void setPageDataProvider( PageDataProvider dataProvider )
     {
     	this.dataProvider = dataProvider;
-    	dataProvider.readPageData();
+    	if ( dataProvider != null )
+    	    dataProvider.readPageData();
     }
     
     

@@ -36,7 +36,9 @@ import org.openqa.selenium.ContextAware;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -46,6 +48,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.factory.MorelandWebElement;
 import org.xframium.exception.ObjectIdentificationException;
 import org.xframium.gesture.GestureManager;
@@ -173,8 +177,33 @@ public class SeleniumElement extends AbstractElement
             if ( imageElement.getLocation() != null && imageElement.getSize() != null && imageElement.getSize().getWidth() > 0 && imageElement.getSize().getHeight() > 0 )
             {
                 String fileKey = "PRIVATE:" + getDeviceName() + ".png";
-                PerfectoMobile.instance().imaging().screenShot( getExecutionId(), getDeviceName(), fileKey, Screen.primary, ImageFormat.png, imageResolution );
-                byte[] imageData = PerfectoMobile.instance().repositories().download( RepositoryType.MEDIA, fileKey );
+                
+                byte[] imageData = null;
+                
+                if ( webDriver instanceof TakesScreenshot )
+                {
+                    try
+                    {
+                        imageData = ((TakesScreenshot) webDriver).getScreenshotAs( OutputType.BYTES );
+                    }
+                    catch ( Exception e )
+                    {
+                        log.error( "Error taking screenshot", e );
+                    }
+                    
+                }
+                else
+                {
+                    String cloudName = ( (DeviceWebDriver) webDriver ).getDevice().getCloud();
+                    if ( cloudName == null || cloudName.trim().isEmpty() )
+                        cloudName = CloudRegistry.instance().getCloud().getName();
+                    
+                    if ( CloudRegistry.instance().getCloud().getProvider().equals( "PERFECTO" ) )
+                    {
+                        PerfectoMobile.instance().imaging().screenShot( getExecutionId(), getDeviceName(), fileKey, Screen.primary, ImageFormat.png, imageResolution );
+                        imageData = PerfectoMobile.instance().repositories().download( RepositoryType.MEDIA, fileKey );
+                    }
+                }
                 if ( imageData != null && imageData.length > 0 )
                 {
                     try
