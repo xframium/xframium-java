@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+  <recordType name="callTest">
+    <record name="one" value="one" />
+  </recordType>
+  
+  <recordType name="dataLoop">
+    <record name="one" value="one" />
+    <record name="two" value="two" />
+    <record name="three" value="three" />
+  </recordType>
+</data>
+
+
