@@ -44,7 +44,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     public abstract boolean readFile( InputStream inputStream );
     public abstract boolean readFile( File configFile );
     public abstract CloudContainer configureCloud();
-    protected abstract ApplicationContainer configureApplication();
+    public abstract ApplicationContainer configureApplication();
     protected abstract boolean configureThirdParty();
     public abstract SuiteContainer configureTestCases( PageDataProvider pdp, boolean parseDataIterators);
     protected abstract boolean configureArtifacts();

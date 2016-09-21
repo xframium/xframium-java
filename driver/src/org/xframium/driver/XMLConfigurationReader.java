@@ -123,7 +123,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     private Map<String,String> configProperties = new HashMap<String,String>( 10 );
     
     private Map<String,Element> elementMap = new HashMap<String,Element>(20);
-    private Map<String,PageContainer> elementListMap = new HashMap<String,PageContainer>(20);
+    private Map<String,PageContainer> elementTree = new HashMap<String,PageContainer>(20);
     
     private static XPathFactory xPathFactory = XPathFactory.newInstance();
     
@@ -220,7 +220,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     }
 
     @Override
-    protected ApplicationContainer configureApplication()
+    public ApplicationContainer configureApplication()
     {
         ApplicationContainer appContainer = new ApplicationContainer();
         
@@ -416,12 +416,12 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                             
                             elementMap.put(elementDescriptor.toString(), currentElement );
 
-                            PageContainer eltList = elementListMap.get( elementDescriptor.getPageName() );
+                            PageContainer eltList = elementTree.get( elementDescriptor.getPageName() );
                             if ( eltList == null )
                             {
                                 Class className = KeyWordDriver.instance().getPage( elementDescriptor.getPageName() );
                                 eltList = new PageContainer( elementDescriptor.getPageName(), className != null ? className.getName() : "" );
-                                elementListMap.put( elementDescriptor.getPageName(), eltList );
+                                elementTree.put( elementDescriptor.getPageName(), eltList );
                             }
                             eltList.getElementList().add( currentElement );
                         }
@@ -1113,9 +1113,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     @Override
     public Map<String,PageContainer> getElementTree()
     {
-        
-        
-        return elementListMap;
+        return elementTree;
     }
 
 }

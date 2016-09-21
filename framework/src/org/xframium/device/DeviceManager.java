@@ -43,6 +43,7 @@ import org.xframium.artifact.ArtifactListener;
 import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.comparator.WeightedDeviceComparator;
 import org.xframium.device.data.DataProvider.DriverType;
 import org.xframium.device.data.NamedDataProvider;
@@ -53,6 +54,7 @@ import org.xframium.exception.XFramiumException;
 import org.xframium.page.ExecutionRecord;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunListener;
+import com.perfectomobile.httpclient.device.DeviceResult;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -84,6 +86,9 @@ public class DeviceManager implements ArtifactListener
     private List<WebDriver> holdList = new ArrayList<WebDriver>( 10 );
     
     private String[] tagNames;
+    
+    private Map <Device,Integer> failureMap = new HashMap<Device,Integer>( 10 );
+    
 
     public String[] getTagNames()
     {
@@ -580,146 +585,266 @@ public class DeviceManager implements ArtifactListener
      */
     public ConnectedDevice getDevice( Method currentMethod, String testContext, boolean attachDevice, String personaName )
     {
-		
-        for ( int i=0; i<retryCount; i++ )
+        String runKey = currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() + ( testContext != null ? ( "." + testContext ) : "" );
+        if ( personaName != null && !personaName.isEmpty() )
+            runKey = runKey + "." + personaName;
+        
+        
+        
+		boolean devicesRemain = true;
+
+        
+        while( devicesRemain )
         {
-            boolean deviceLocked = true;
-			
+            System.out.println( "Trying again " + Thread.currentThread().getName() );
+            if (log.isDebugEnabled())
+                log.debug( Thread.currentThread().getName() + ": Acquiring Device Manager Lock" );
+            managerLock.lock();
+            
             //
-            // If the lock is a local lock then we will not increment the retry counter.  If it failed 
+            // Validate that a device remains that is active and has NOT run the current test yet
             //
-            while( deviceLocked )
+            boolean deviceFound = false;
+            for ( Device currentDevice : deviceList )
             {
-                if (log.isDebugEnabled())
-                    log.debug( Thread.currentThread().getName() + ": Acquiring Device Manager Lock (Iteration #" + i + ")" );
-                managerLock.lock();
-		
-                try
+                int currentFailures = 0;
+                Integer deviceFailures = failureMap.get( currentDevice );
+                if ( deviceFailures != null )
+                    currentFailures = deviceFailures;
+                
+                boolean deviceRan = analyticsMap.get( currentDevice.getKey() ).hasRun( runKey ) || activeRuns.containsKey( currentDevice.getKey() + "." + runKey );
+
+                System.err.println( runKey );
+                System.err.println( currentFailures + " for " + currentDevice.getKey() );
+                
+                if ( !deviceRan && currentFailures < currentDevice.getAvailableDevices() * retryCount )
                 {
-                    String runKey = currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() + ( testContext != null ? ( "." + testContext ) : "" );
-                    if ( personaName != null && !personaName.isEmpty() )
-                        runKey = runKey + "." + personaName;
-					
-                    for (Device currentDevice : deviceList)
+                    deviceFound = true;
+                    break;
+                }
+            }
+            
+            if ( !deviceFound )
+            {
+                System.err.println( "NO DEVICE FOUND FOR " + runKey );
+                devicesRemain = false;
+                try { managerLock.unlock(); } catch( Exception e ) {}
+                break;
+            }
+             
+		
+            try
+            {
+				
+                for (Device currentDevice : deviceList)
+                {
+                    int currentFailures = 0;
+                    Integer deviceFailures = failureMap.get( currentDevice );
+                    if ( deviceFailures != null )
+                        currentFailures = deviceFailures;
+                    
+                    System.out.println( "Device " + currentDevice + " - " + currentFailures );
+                    //
+                    // Attempt to acquire a lock for the device
+                    //
+                    if (log.isDebugEnabled())
+                        log.debug( Thread.currentThread().getName() + ": Attempting to acquire semaphore for " + currentDevice );
+                    if ( currentDevice.getLock().tryAcquire())
                     {
-                        //
-                        // Attempt to acquire a lock for the device
-                        //
-                        if (log.isDebugEnabled())
-                            log.debug( Thread.currentThread().getName() + ": Attempting to acquire semaphore for " + currentDevice );
-                        if (currentDevice.getLock().tryAcquire())
+                        if ( currentFailures >= (currentDevice.getAvailableDevices() * retryCount) )
                         {
                             //
-                            // Now, make sure this test has not run on this device yet and that there are no active runs against it
+                            // This device has failed too many times
                             //
+                            System.err.println( "FAILED DEVICE" );
+                            continue;
+                            
+                        }
+                        
+                        //
+                        // Now, make sure this test has not run on this device yet and that there are no active runs against it
+                        //
+                        if (log.isDebugEnabled())
+                            log.debug( Thread.currentThread().getName() + ": Device Semaphore permitted for " + currentDevice );
+                        if (!analyticsMap.get( currentDevice.getKey() ).hasRun( runKey ) && !activeRuns.containsKey( currentDevice.getKey() + "." + runKey ) )
+                        {
                             if (log.isDebugEnabled())
-                                log.debug( Thread.currentThread().getName() + ": Device Semaphore permitted for " + currentDevice );
-                            if (!analyticsMap.get( currentDevice.getKey() ).hasRun( runKey ) && !activeRuns.containsKey( currentDevice.getKey() + "." + runKey ) )
+                                log.debug( Thread.currentThread().getName() + ": Selected " + currentDevice );
+	
+                            //
+                            // Notify any listeners about this device acquisition and allow them to cancel it
+                            //
+                            if ( !notifyValidateDevice( currentDevice, runKey ) )
                             {
                                 if (log.isDebugEnabled())
-                                    log.debug( Thread.currentThread().getName() + ": Selected " + currentDevice );
-		
-                                //
-                                // Notify any listeners about this device acquisition and allow them to cancel it
-                                //
-                                if ( !notifyValidateDevice( currentDevice, runKey ) )
-                                {
-                                    if (log.isDebugEnabled())
-                                        log.debug( Thread.currentThread().getName() + ": A registered RUN LISTENER cancelled this device request - Releasing Semaphore for " + currentDevice );
-		
-                                    releaseDevice( currentDevice );
-                                }
-                                else
-                                {
-									
-                                    //
-                                    // If we made it here then we are not locally locking the device
-                                    //
-                                    deviceLocked = false;
-									
-                                    if ( attachDevice && !dryRun )
-                                    {
-
-                                        //
-                                        // Create the WebDriver here if we are attaching this device
-                                        //
-                                        DeviceWebDriver webDriver = null;
-                                        try
-                                        {
-                                            if ( log.isDebugEnabled() )
-                                                log.debug( "Attempting to create WebDriver instance for " + currentDevice );
-											
-                                            if ( personaName != null && !personaName.isEmpty() )
-                                                currentDevice.addCapability("windTunnelPersona", personaName);
-											
-                                            webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice );
-											
-                                            if ( webDriver != null )
-                                            {
-                                                notifyBeforeRun( currentDevice, getRunKey( currentDevice, currentMethod, testContext, true, personaName ) );
-                                                
-                                                if ( log.isDebugEnabled() )
-                                                    log.debug( "WebDriver Created - Creating Connected Device for " + currentDevice );
-											
-                                                DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
-
-                                                activeRuns.put( currentDevice.getKey() + "." + runKey , true );
-												
-                                                return new ConnectedDevice( webDriver, currentDevice, personaName );
-                                            }
-                                        }
-                                        catch( Exception e )
-                                        {
-                                            log.error( "Error creating factory instance", e );
-                                            try { webDriver.close(); } catch( Exception e2 ) {}
-                                            try { webDriver.quit(); } catch( Exception e2 ) {}
-                                        }
-										
-                                        //
-                                        // If we are here, the driver failed
-                                        //
-                                        if (log.isDebugEnabled())
-                                            log.debug( Thread.currentThread().getName() + ": Releasing unused Device Semaphore for " + currentDevice );
-                                        releaseDevice( currentDevice );
-										
-                                    }
-                                    else
-                                    {
-                                        activeRuns.put( currentDevice.getKey() + "." + runKey , true );
-                                        return new ConnectedDevice( null, currentDevice, personaName );
-                                    }
-                                }
-									
-									
+                                    log.debug( Thread.currentThread().getName() + ": A registered RUN LISTENER cancelled this device request - Releasing Semaphore for " + currentDevice );
+	
+                                releaseDevice( currentDevice );
                             }
                             else
                             {
-                                if (log.isDebugEnabled())
-                                    log.debug( Thread.currentThread().getName() + ": Releasing unused Device Semaphore for " + currentDevice );
-                                releaseDevice( currentDevice );
+								
+                                //
+                                // If we made it here then we are not locally locking the device
+                                //
+
+                                if ( attachDevice && !dryRun )
+                                {
+
+                                    //
+                                    // Create the WebDriver here if we are attaching this device
+                                    //
+                                    DeviceWebDriver webDriver = null;
+                                    try
+                                    {
+                                        if ( log.isDebugEnabled() )
+                                            log.debug( "Attempting to create WebDriver instance for " + currentDevice );
+										
+                                        if ( personaName != null && !personaName.isEmpty() )
+                                            currentDevice.addCapability("windTunnelPersona", personaName);
+										
+                                        webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice );
+										
+                                        if ( webDriver != null )
+                                        {
+                                            notifyBeforeRun( currentDevice, getRunKey( currentDevice, currentMethod, testContext, true, personaName ) );
+                                            
+                                            if ( log.isDebugEnabled() )
+                                                log.debug( "WebDriver Created - Creating Connected Device for " + currentDevice );
+										
+                                            DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
+
+                                            activeRuns.put( currentDevice.getKey() + "." + runKey , true );
+											
+                                            return new ConnectedDevice( webDriver, currentDevice, personaName );
+                                        }
+                                        else
+                                        {
+                                            //
+                                            // We got a null web driver here
+                                            //
+                                            Integer failureCount = failureMap.get( currentDevice );
+                                            if ( failureCount == null )
+                                                failureMap.put( currentDevice, 1 );
+                                            else
+                                                failureMap.put( currentDevice, failureCount + 1 );
+                                        }
+                                    }
+                                    catch( Exception e )
+                                    {
+                                        log.error( "Error creating factory instance", e );
+                                        try { webDriver.close(); } catch( Exception e2 ) {}
+                                        try { webDriver.quit(); } catch( Exception e2 ) {}
+                                        Integer failureCount = failureMap.get( currentDevice );
+                                        if ( failureCount == null )
+                                            failureMap.put( currentDevice, 1 );
+                                        else
+                                            failureMap.put( currentDevice, failureCount + 1 );
+                                    }
+									
+                                    //
+                                    // If we are here, the driver failed
+                                    //
+                                    if (log.isDebugEnabled())
+                                        log.debug( Thread.currentThread().getName() + ": Releasing unused Device Semaphore for " + currentDevice );
+                                    releaseDevice( currentDevice );
+									
+                                }
+                                else
+                                {
+                                    activeRuns.put( currentDevice.getKey() + "." + runKey , true );
+                                    return new ConnectedDevice( null, currentDevice, personaName );
+                                }
                             }
+								
+								
+                        }
+                        else
+                        {
+                            if (log.isDebugEnabled())
+                                log.debug( Thread.currentThread().getName() + ": Releasing unused Device Semaphore for " + currentDevice );
+                            releaseDevice( currentDevice );
                         }
                     }
                 }
-                finally
+            }
+            finally
+            {
+                if (log.isDebugEnabled())
+                    log.debug( Thread.currentThread().getName() + ": Releasing Device Manager Lock" );
+                try { managerLock.unlock(); } catch( Exception e ) {}
+            }
+			
+            //
+            // Pause and wait to reload
+            //
+            try
+            {
+                Thread.sleep( 2500 );
+            }
+            catch( Exception e )
+            {}
+
+            
+            
+        }
+        
+        //
+        // There was an error getting a device here  
+        //
+        
+        try
+        {
+            if (log.isDebugEnabled())
+                log.debug( Thread.currentThread().getName() + ": Acquiring Device Manager Lock" );
+            managerLock.lock();
+            
+            for ( Device currentDevice : deviceList )
+            {
+                int currentFailures = 0;
+                Integer deviceFailures = failureMap.get( currentDevice );
+                if ( deviceFailures != null )
+                    currentFailures = deviceFailures;
+                
+                boolean deviceRan = analyticsMap.get( currentDevice.getKey() ).hasRun( runKey ) || activeRuns.containsKey( currentDevice.getKey() + "." + runKey );
+
+                if ( !deviceRan && currentFailures >= currentDevice.getAvailableDevices() * retryCount )
                 {
-                    if (log.isDebugEnabled())
-                        log.debug( Thread.currentThread().getName() + ": Releasing Device Manager Lock" );
-                    try { managerLock.unlock(); } catch( Exception e ) {}
+                    //
+                    // This was a device that had failed and will not be attempted again
+                    //
+                    notifyBeforeRun( currentDevice, getRunKey( currentDevice, currentMethod, testContext, true, personaName ) );
+                    
+                    if ( log.isDebugEnabled() )
+                        log.debug( "WebDriver Created - Creating Connected Device for " + currentDevice );
+                
+                    activeRuns.put( currentDevice.getKey() + "." + runKey , true );
+                    
+                    CloudDescriptor useCloud = CloudRegistry.instance().getCloud();
+                    
+                    if ( currentDevice.getCloud() != null )
+                    {
+                        useCloud = CloudRegistry.instance().getCloud( currentDevice.getCloud() );
+                        if (useCloud == null)
+                        {
+                            useCloud = CloudRegistry.instance().getCloud();
+                            log.warn( "A separate grid instance was specified but it does not exist in your cloud registry [" + currentDevice.getCloud() + "] - using the default Cloud instance" );
+                        }
+                    }
+                    DeviceWebDriver webDriver = new DeviceWebDriver( null, deviceRan, currentDevice );
+                    webDriver.setArtifactProducer( useCloud.getCloudActionProvider().getArtifactProducer() );
+                    
+                    return new ConnectedDevice( webDriver, currentDevice, personaName );
                 }
-				
-                //
-                // Pause and wait to reload
-                //
-                try
-                {
-                    Thread.sleep( 2500 );
-                }
-                catch( Exception e )
-                {}
             }
             
             
+        }
+        finally
+        {
+            if (log.isDebugEnabled())
+                log.debug( Thread.currentThread().getName() + ": Releasing Device Manager Lock" );
+            try { managerLock.unlock(); } catch( Exception e ) {}
         }
         
         return null;
@@ -772,6 +897,7 @@ public class DeviceManager implements ArtifactListener
                     DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
                     
                     activeRuns.put( currentDevice.getKey() + "." + runKey , true );
+                    
                     
                     rtn = new ConnectedDevice( webDriver, currentDevice, personaName );
                 }

@@ -252,6 +252,11 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
         this.cachingEnabled = cachingEnabled;
         this.currentDevice = currentDevice;
     }
+    
+    public boolean isConnected()
+    {
+        return webDriver != null;
+    }
 
     public void setDeviceInterrupts( List<DeviceInterrupt> interruptList )
     {

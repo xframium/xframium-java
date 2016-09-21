@@ -90,6 +90,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     @Override
     public boolean readFile( File configFile )
     {
+        configFolder = configFile.getParentFile();
         try
         {
             return readFile( new FileInputStream( configFile ) );
@@ -156,7 +157,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     }
 
     @Override
-    protected ApplicationContainer configureApplication()
+    public ApplicationContainer configureApplication()
     {
         ApplicationContainer appContainer = new ApplicationContainer();
         File appFile = null;

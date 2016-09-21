@@ -343,14 +343,9 @@ public class KeyWordDriver
                     PageData pageData = null;
                     if ( dataProvider.contains( "." ) )
                     {
-                        String[] typeId = dataProvider.split( "\\." );
-                        if ( typeId.length == 2 )
-                        {
-                            pageData = PageDataManager.instance().getPageData( typeId[0], typeId[1] );
-                            dpMe = typeId[0];
-                        }
-                        else
-                            pageData = PageDataManager.instance().getPageData( dataProvider );
+                        dpMe = dataProvider.substring( 0, dataProvider.indexOf( "." ) );
+                        String recordName = dataProvider.substring( dataProvider.indexOf( "." ) + 1 );
+                        pageData = PageDataManager.instance().getPageData( dpMe, recordName );
                     }
                     else
                         pageData = PageDataManager.instance().getPageData( dataProvider );
@@ -367,6 +362,7 @@ public class KeyWordDriver
 
         return test.executeTest( webDriver, contextMap.get(), dataMap, pageMap );
     }
+
 
     /**
      * Gets the test.
@@ -503,10 +499,11 @@ public class KeyWordDriver
                     if ( dataProvider.contains( "." ) )
                     {
                         String[] typeId = dataProvider.split( "\\." );
-                        if ( typeId.length == 2 )
+                        if ( typeId.length > 1  )
                         {
                             dpMe = typeId[0];
-                            pageData = PageDataManager.instance().getPageData( typeId[0], typeId[1] );
+                            String recordName = dataProvider.substring( dataProvider.indexOf( "." ) + 1 );
+                            pageData = PageDataManager.instance().getPageData( typeId[0], recordName );
                         }
                         else
                             pageData = PageDataManager.instance().getPageData( dataProvider );
