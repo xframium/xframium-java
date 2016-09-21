@@ -616,12 +616,26 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         log.info( Thread.currentThread().getName() + ": A Required OS of [" + os + "] was specified however the OS of the device could not be determined" );
                     return true;
                 }
-                if ( !os.equals( deviceOs.toUpperCase() ) )
+                
+                String[] osArray = os.split( "," );
+                boolean osFound = false;
+                for ( String localOs : osArray )
+                {
+                    if ( localOs.toUpperCase().trim().equals( deviceOs.toUpperCase() ) )
+                    {
+                        osFound = true;
+                        break;
+                    }
+                }
+                
+                if ( !osFound )
                 {
                     if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": A Required OS of [" + os + "] was specified however the OS of the device was [" + deviceOs.toUpperCase() + "]" );
+                        log.info( Thread.currentThread().getName() + ": A Required OS in [" + os + "] was specified however the OS of the device was [" + deviceOs.toUpperCase() + "]" );
                     return true;
                 }
+                
+                
             }
             
             //

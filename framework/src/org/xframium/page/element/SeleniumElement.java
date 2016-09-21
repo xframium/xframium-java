@@ -180,28 +180,27 @@ public class SeleniumElement extends AbstractElement
                 
                 byte[] imageData = null;
                 
-                if ( webDriver instanceof TakesScreenshot )
+                String cloudName = ( (DeviceWebDriver) webDriver ).getDevice().getCloud();
+                if ( cloudName == null || cloudName.trim().isEmpty() )
+                    cloudName = CloudRegistry.instance().getCloud().getName();
+                
+                if ( CloudRegistry.instance().getCloud( cloudName ).getProvider().equals( "PERFECTO" ) )
                 {
-                    try
-                    {
-                        imageData = ((TakesScreenshot) webDriver).getScreenshotAs( OutputType.BYTES );
-                    }
-                    catch ( Exception e )
-                    {
-                        log.error( "Error taking screenshot", e );
-                    }
-                    
+                    PerfectoMobile.instance().imaging().screenShot( getExecutionId(), getDeviceName(), fileKey, Screen.primary, ImageFormat.png, imageResolution );
+                    imageData = PerfectoMobile.instance().repositories().download( RepositoryType.MEDIA, fileKey );
                 }
                 else
                 {
-                    String cloudName = ( (DeviceWebDriver) webDriver ).getDevice().getCloud();
-                    if ( cloudName == null || cloudName.trim().isEmpty() )
-                        cloudName = CloudRegistry.instance().getCloud().getName();
-                    
-                    if ( CloudRegistry.instance().getCloud().getProvider().equals( "PERFECTO" ) )
+                    if ( webDriver instanceof TakesScreenshot )
                     {
-                        PerfectoMobile.instance().imaging().screenShot( getExecutionId(), getDeviceName(), fileKey, Screen.primary, ImageFormat.png, imageResolution );
-                        imageData = PerfectoMobile.instance().repositories().download( RepositoryType.MEDIA, fileKey );
+                        try
+                        {
+                            imageData = ((TakesScreenshot) webDriver).getScreenshotAs( OutputType.BYTES );
+                        }
+                        catch ( Exception e )
+                        {
+                            log.error( "Error taking screenshot", e );
+                        }
                     }
                 }
                 if ( imageData != null && imageData.length > 0 )
