@@ -10,7 +10,11 @@ import org.xframium.spi.Device;
 
 public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 {
-    @Override
+	/** The Constant PLATFORM_NAME. */
+	public static final String PLATFORM_NAME = "platformName"; 	
+
+	
+	@Override
     public boolean startApp( String executionId, String deviceId, String appName, String appIdentifier )
     {
         PerfectoMobile.instance().application().open( executionId, deviceId, appName, appIdentifier );
@@ -66,4 +70,24 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         PerfectoMobile.instance().device().stopDebug( webDriver.getExecutionId(), webDriver.getDeviceName() );
         
     }
+
+    @Override
+	public String getCloudPlatformName(Device device) {
+		// TODO Auto-generated method stub
+		return PLATFORM_NAME;
+	}
+	
+	@Override
+	public String getCloudBrowserName(String currBrowserName) {
+		if(currBrowserName.equalsIgnoreCase("Chrome")){
+			return "Chrome";
+		}else if (currBrowserName.equalsIgnoreCase("internet explorer")||currBrowserName.equalsIgnoreCase("internetexplorer")){
+			return "Internet explorer";
+		}else if(currBrowserName.equalsIgnoreCase("firefox")){
+			return "Firefox";
+		}else{
+			return currBrowserName;
+		}
+	}
+    
 }

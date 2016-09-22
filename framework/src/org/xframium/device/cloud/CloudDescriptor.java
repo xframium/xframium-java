@@ -134,6 +134,8 @@ public class CloudDescriptor
 		{
 		    if ( provider != null && provider.equals( "PERFECTO" ) )
 		        return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/wd/hub";
+		    else if ( provider != null && provider.equals( "SAUCELABS" ) )
+		    	return "http://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/wd/hub";
 		    else
 		    {
 		        if ( getUserName() == null || getUserName().isEmpty() )
