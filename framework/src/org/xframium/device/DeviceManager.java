@@ -596,7 +596,6 @@ public class DeviceManager implements ArtifactListener
         
         while( devicesRemain )
         {
-            System.out.println( "Trying again " + Thread.currentThread().getName() );
             if (log.isDebugEnabled())
                 log.debug( Thread.currentThread().getName() + ": Acquiring Device Manager Lock" );
             managerLock.lock();
@@ -613,9 +612,6 @@ public class DeviceManager implements ArtifactListener
                     currentFailures = deviceFailures;
                 
                 boolean deviceRan = analyticsMap.get( currentDevice.getKey() ).hasRun( runKey ) || activeRuns.containsKey( currentDevice.getKey() + "." + runKey );
-
-                System.err.println( runKey );
-                System.err.println( currentFailures + " for " + currentDevice.getKey() );
                 
                 if ( !deviceRan && currentFailures < currentDevice.getAvailableDevices() * retryCount )
                 {
@@ -626,7 +622,6 @@ public class DeviceManager implements ArtifactListener
             
             if ( !deviceFound )
             {
-                System.err.println( "NO DEVICE FOUND FOR " + runKey );
                 devicesRemain = false;
                 try { managerLock.unlock(); } catch( Exception e ) {}
                 break;
@@ -642,8 +637,6 @@ public class DeviceManager implements ArtifactListener
                     Integer deviceFailures = failureMap.get( currentDevice );
                     if ( deviceFailures != null )
                         currentFailures = deviceFailures;
-                    
-                    System.out.println( "Device " + currentDevice + " - " + currentFailures );
                     //
                     // Attempt to acquire a lock for the device
                     //
@@ -656,7 +649,6 @@ public class DeviceManager implements ArtifactListener
                             //
                             // This device has failed too many times
                             //
-                            System.err.println( "FAILED DEVICE" );
                             continue;
                             
                         }

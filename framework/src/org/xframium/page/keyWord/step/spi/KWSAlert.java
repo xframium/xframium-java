@@ -25,6 +25,7 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.security.UserAndPassword;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -55,7 +56,7 @@ public class KWSAlert extends AbstractKeyWordStep
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
 	{
 		if ( pageObject == null )
-			throw new IllegalStateException( "Page Object was not defined" );
+			throw new ScriptConfigurationException( "Page Object was not defined" );
 		try
 		{
     		Alert currentAlert = webDriver.switchTo().alert();

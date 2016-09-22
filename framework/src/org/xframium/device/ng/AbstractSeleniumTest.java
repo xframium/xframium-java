@@ -410,7 +410,7 @@ public abstract class AbstractSeleniumTest
     {
         try
         {
-            Thread.currentThread().setName( testArgs[0].toString() );
+            Thread.currentThread().setName( "Device Acquisition --> " + Thread.currentThread().getId() );
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Attempting to acquire device for " + currentMethod.getName() );
 
@@ -448,7 +448,7 @@ public abstract class AbstractSeleniumTest
                     testName.setTestName( currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() );
 
                 ((TestName) testArgs[0]).setFullName( testArgs[0].toString() );
-                Thread.currentThread().setName( testArgs[0].toString() );
+                Thread.currentThread().setName( testName.baseTestName + "-->" + connectedDevice.getDevice().toShortString() + " (" + Thread.currentThread().getId() + ")" );
             }
         }
         catch ( Exception e )
@@ -550,6 +550,7 @@ public abstract class AbstractSeleniumTest
                 RunDetails.instance().writeDefinitionIndex( DataManager.instance().getReportFolder() );
 
             DeviceManager.instance().clearAllArtifacts();
+            Thread.currentThread().setName( "Idle Thread (" + Thread.currentThread().getId() + ")" );
         }
         catch ( Exception e )
         {

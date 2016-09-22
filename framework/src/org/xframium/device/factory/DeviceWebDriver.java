@@ -225,6 +225,9 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
         {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            
+            System.err.println( pageSource );
+            
             cachedDocument = dBuilder.parse( new ByteArrayInputStream( pageSource.getBytes() ) );
             cachingEnabled = true;
         }
@@ -638,9 +641,9 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
      */
     public String getContext()
     {
-        if ( currentContext != null )
+        if ( currentContext != null || !contextSwitchSupported  )
             return currentContext;
-
+        
         currentContext = _getContext();
 
         return currentContext;

@@ -108,7 +108,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
             	dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
 
             if ( log.isInfoEnabled() )
-                log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
+                log.info( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 
             webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
             webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );

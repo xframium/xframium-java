@@ -44,7 +44,7 @@ public class KWSAddDevice extends AbstractKeyWordStep
     {
         if ( pageObject == null )
         {
-            throw new IllegalStateException( "Page Object was not defined" );
+            throw new ScriptConfigurationException( "Page Object was not defined" );
         }
 
         Object name = null;
@@ -55,7 +55,7 @@ public class KWSAddDevice extends AbstractKeyWordStep
         	deviceName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
         	
         	if ( !( deviceName instanceof String ) )
-                throw new IllegalStateException( "Device name must be of type String" );
+                throw new ScriptConfigurationException( "Device name must be of type String" );
         	
         	if ( DeviceManager.instance().getDevice(deviceName.toString()) == null )
         		throw new ScriptConfigurationException( "Device Name should be configured in DeviceRegistry with inactive status" );
@@ -70,12 +70,12 @@ public class KWSAddDevice extends AbstractKeyWordStep
         	name = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
 	        
         	if ( !( name instanceof String ) )
-        		throw new IllegalStateException( "Device name must be of type String" );
+        		throw new ScriptConfigurationException( "Device name must be of type String" );
 	
         	deviceId = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap );
 	        
         	if ( !( deviceId instanceof String ) )
-	        	throw new IllegalStateException( "Device id must be of type String" );
+	        	throw new ScriptConfigurationException( "Device id must be of type String" );
 
 	        if ( PageManager.instance().getAlternateWebDriverSource() != null )
 	        {
@@ -84,7 +84,7 @@ public class KWSAddDevice extends AbstractKeyWordStep
         }
 	    else
 	    {
-	    	throw new IllegalStateException( "add device requires either the device name from DeviceRegistry.xml or two string properties (name, deviceId)" );
+	    	throw new ScriptConfigurationException( "add device requires either the device name from DeviceRegistry.xml or two string properties (name, deviceId)" );
 	    }
         return true;
     }
