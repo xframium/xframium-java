@@ -12,4 +12,6 @@ public interface CloudActionProvider
     public void enabledLogging( DeviceWebDriver webDriver );
     public void disableLogging( DeviceWebDriver webDriver );
     public String getExecutionId( DeviceWebDriver webDriver );
+    public String getCloudPlatformName(Device device);
+    public String getCloudBrowserName(String currBrowserName);
 }

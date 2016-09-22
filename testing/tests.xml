@@ -52,10 +52,10 @@
     <step type="CALL" name="kw-checkcontrast" page="home"  os="Windows,MACOS"/>
     <step type="CALL" name="kw-dumpstate" page="home" />
     <step type="CALL" name="kw-else" page="home" />
-    <step type="CALL" name="kw-execjs" page="home" />
+    <step type="CALL" name="kw-execjs" page="home"  os="Windows,MACOS"/>
     <step type="CALL" name="kw-focus" page="home" active="false" />
     <step type="CALL" name="kw-loop" page="home" />
-    <step type="CALL" name="kw-mouse" page="home" />
+    <step type="CALL" name="kw-mouse" page="home"  os="Windows,MACOS"/>
     <step type="CALL" name="kw-navigate" page="home" />
     <step type="CALL" name="kw-operator" page="home" />
     <step type="CALL" name="kw-report" page="home" />

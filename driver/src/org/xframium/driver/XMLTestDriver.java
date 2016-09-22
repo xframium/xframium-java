@@ -31,6 +31,7 @@ import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.exception.DeviceAcquisitionException;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.PageManager;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordTest;
@@ -52,7 +53,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
 
         KeyWordTest test = KeyWordDriver.instance().getTest( testName.getTestName().split( "\\." )[ 0 ] );
         if ( test == null )
-            throw new IllegalArgumentException( "The Test Name " + testName + " does not exist" );
+            throw new ScriptConfigurationException( "The Test Name " + testName + " does not exist" );
 
         String contentKey = testName.getContentKey();
 

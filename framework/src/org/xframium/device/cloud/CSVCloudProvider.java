@@ -113,7 +113,7 @@ public class CSVCloudProvider extends AbstractCloudProvider
 				
 				String[] lineData = currentLine.split( "," );
 				
-				cList.add( new CloudDescriptor( lineData[ 0 ], lineData[ 1 ], lineData[ 2 ], lineData[ 3 ], lineData[ 4 ], lineData[ 5 ], lineData[ 7 ], lineData[ 6 ], lineData[ 8 ] ) );
+				cList.add( new CloudDescriptor( lineData[ 0 ], lineData[ 1 ], lineData[ 2 ], lineData[ 3 ], lineData[ 4 ], lineData[ 5 ], lineData[ 7 ], lineData[ 6 ], lineData[ 8 ], lineData[ 9 ], lineData[ 10 ] ) );
 				
 			}
 			return cList;

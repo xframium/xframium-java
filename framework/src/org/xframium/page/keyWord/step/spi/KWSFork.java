@@ -22,6 +22,7 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
@@ -51,12 +52,12 @@ public class KWSFork extends AbstractKeyWordStep
 	{
 			
 		if ( pageObject == null )
-			throw new IllegalStateException( "Page Object was not defined" );
+			throw new ScriptConfigurationException( "Page Object was not defined" );
 		if ( getParameterList().size() < 2 )
-			throw new IllegalArgumentException( "You must provide at least 2 elements to check for" );
+			throw new ScriptConfigurationException( "You must provide at least 2 elements to check for" );
 		
 		if ( getStepList().size() != getParameterList().size() )
-			throw new IllegalArgumentException( "Your sub step count must equal your parameter count for a proper fork" );
+			throw new ScriptConfigurationException( "Your sub step count must equal your parameter count for a proper fork" );
 		
 		if ( log.isInfoEnabled() )
 			log.info( "Creating fork against " + getParameterList().size() + " elements" );

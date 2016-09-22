@@ -22,7 +22,7 @@ package org.xframium.utility;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-
+import java.io.InputStreamReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -30,6 +30,7 @@ import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.PrettyXmlSerializer;
 import org.htmlcleaner.TagNode;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
 public class XMLEscape
 {
@@ -122,7 +123,12 @@ public class XMLEscape
         {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse( new ByteArrayInputStream( inputDocument.getBytes() ) );
+            
+            InputStreamReader streamReader = new InputStreamReader( new ByteArrayInputStream( inputDocument.getBytes() ), "UTF-8" );
+            InputSource inputSource = new InputSource( streamReader );
+            inputSource.setEncoding( "UTF-8" );
+
+            builder.parse( inputSource );
             
             return true;
         }

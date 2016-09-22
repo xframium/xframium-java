@@ -151,7 +151,7 @@ public class ExcelCloudProvider extends AbstractCloudProvider
 				if ( getCellValue( currentRow.getCell( 0 ) ) == null || getCellValue( currentRow.getCell( 0 ) ).isEmpty() )
 					break;
 				
-				cList.add( new CloudDescriptor( getCellValue( currentRow.getCell( 0 ) ), getCellValue( currentRow.getCell( 1 ) ), getCellValue( currentRow.getCell( 2 ) ), getCellValue( currentRow.getCell( 3 ) ), getCellValue( currentRow.getCell( 4  ) ), getCellValue( currentRow.getCell( 5  ) ), getCellValue( currentRow.getCell( 7 ) ), getCellValue( currentRow.getCell( 6 ) ), getCellValue( currentRow.getCell( 8 ) ) ) );
+				cList.add( new CloudDescriptor( getCellValue( currentRow.getCell( 0 ) ), getCellValue( currentRow.getCell( 1 ) ), getCellValue( currentRow.getCell( 2 ) ), getCellValue( currentRow.getCell( 3 ) ), getCellValue( currentRow.getCell( 4  ) ), getCellValue( currentRow.getCell( 5  ) ), getCellValue( currentRow.getCell( 7 ) ), getCellValue( currentRow.getCell( 6 ) ), getCellValue( currentRow.getCell( 8 ) ), getCellValue( currentRow.getCell( 9 ) ), getCellValue( currentRow.getCell( 10 ) ) ) );
 			}
 			
 			return cList;

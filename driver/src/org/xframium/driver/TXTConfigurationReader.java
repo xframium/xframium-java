@@ -42,6 +42,7 @@ import org.xframium.device.data.perfectoMobile.ReservedHandsetValidator;
 import org.xframium.device.logging.ThreadedFileHandler;
 import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.device.property.PropertyAdapter;
+import org.xframium.device.proxy.ProxyRegistry;
 import org.xframium.driver.container.ApplicationContainer;
 import org.xframium.driver.container.CloudContainer;
 import org.xframium.driver.container.DeviceContainer;
@@ -68,6 +69,7 @@ import org.xframium.utility.SeleniumSessionManager;
 
 public class TXTConfigurationReader extends AbstractConfigurationReader
 {
+	private static final String[] PROXY_SETTINGS = new String[] { "proxy.host", "proxy.port" };
     private static final String[] CLOUD = new String[] { "cloudRegistry.provider", "cloudRegistry.fileName", "cloudRegistry.cloudUnderTest" };
     private static final String[] OPT_CLOUD = new String[] { "cloudRegistry.query" };
     private static final String[] APP = new String[] { "applicationRegistry.provider", "applicationRegistry.fileName", "applicationRegistry.applicationUnderTest" };
@@ -729,6 +731,21 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
         return true;
     }
 
-    
+    /**
+     * configure proxy settings from driver config file
+     * @return
+     */
+    protected boolean configureProxy()
+    {
+    	if ( configProperties.getProperty(PROXY_SETTINGS[0]) != null 
+    			&& !configProperties.getProperty(PROXY_SETTINGS[0]).isEmpty() 
+    			&& Integer.parseInt( configProperties.getProperty(PROXY_SETTINGS[1]) ) > 0 )
+        {
+    		log.info( "Proxy configured as " + configProperties.getProperty(PROXY_SETTINGS[0]) + ":" + configProperties.getProperty(PROXY_SETTINGS[1]) );
+    		ProxyRegistry.instance().setProxyHost(configProperties.getProperty(PROXY_SETTINGS[0]));
+            ProxyRegistry.instance().setProxyPort(configProperties.getProperty(PROXY_SETTINGS[1]));
+        }
+        return true;
+    }    
 
 }

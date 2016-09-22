@@ -53,6 +53,7 @@ import org.xframium.device.data.perfectoMobile.ReservedHandsetValidator;
 import org.xframium.device.logging.ThreadedFileHandler;
 import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.device.property.PropertyAdapter;
+import org.xframium.device.proxy.ProxyRegistry;
 import org.xframium.driver.container.ApplicationContainer;
 import org.xframium.driver.container.CloudContainer;
 import org.xframium.driver.container.DeviceContainer;
@@ -114,6 +115,7 @@ import gherkin.parser.Parser;
 
 public class XMLConfigurationReader extends AbstractConfigurationReader implements ElementProvider
 {
+	private static final String[] PROXY_SETTINGS = new String[] { "proxy.host", "proxy.port" };
     private static final String[] JDBC = new String[] { "jdbc.username", "jdbc.password", "jdbc.url", "jdbc.driverClassName" };
     private static final String[] OPT_CLOUD = new String[] { "cloudRegistry.query" };
     private static final String[] OPT_APP = new String[] { "applicationRegistry.query", "applicationRegistry.capQuery" };
@@ -211,7 +213,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 break;
                 
             case "LOCAL":
-                CloudDescriptor cloud = new CloudDescriptor( xRoot.getCloud().getName(), xRoot.getCloud().getUserName(), xRoot.getCloud().getPassword(), xRoot.getCloud().getHostName(), xRoot.getCloud().getProxyHost(), xRoot.getCloud().getProxyPort().intValue() + "", "", xRoot.getCloud().getGrid(), xRoot.getCloud().getProviderType() );
+                CloudDescriptor cloud = new CloudDescriptor( xRoot.getCloud().getName(), xRoot.getCloud().getUserName(), xRoot.getCloud().getPassword(), xRoot.getCloud().getHostName(), xRoot.getCloud().getProxyHost(), xRoot.getCloud().getProxyPort().intValue() + "", "", xRoot.getCloud().getGrid(), xRoot.getCloud().getProviderType(), xRoot.getCloud().getGesture(), xRoot.getCloud().getDeviceAction() );
                 cC.setCloudList( new ArrayList<CloudDescriptor>( 10 ) );
                 cC.getCloudList().add( cloud );
                 break;
@@ -1182,6 +1184,24 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     public Map<String,PageContainer> getElementTree()
     {
         return elementTree;
+    }
+    
+    /**
+     * Configure the proxy settings from the driver config file
+     * @return
+     */
+    protected boolean configureProxy()
+    {
+
+    	if ( configProperties.get(PROXY_SETTINGS[0]) != null 
+    			&& !configProperties.get(PROXY_SETTINGS[0]).isEmpty() 
+    			&& Integer.parseInt( configProperties.get(PROXY_SETTINGS[1]) ) > 0 )
+        {
+            log.info( "Proxy configured as " + configProperties.get(PROXY_SETTINGS[0]) + ":" + configProperties.get(PROXY_SETTINGS[1]) );
+            ProxyRegistry.instance().setProxyHost(configProperties.get(PROXY_SETTINGS[0]));
+            ProxyRegistry.instance().setProxyPort(configProperties.get(PROXY_SETTINGS[1]));
+        }
+        return true;
     }
 
 }

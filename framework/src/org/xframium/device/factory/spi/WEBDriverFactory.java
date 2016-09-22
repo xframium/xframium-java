@@ -60,12 +60,15 @@ public class WEBDriverFactory extends AbstractDriverFactory
         try
         {
             DesiredCapabilities dc = null;
+            
+            CloudDescriptor useCloud = CloudRegistry.instance().getCloud();
+            
             if ( currentDevice.getBrowserName() != null && !currentDevice.getBrowserName().isEmpty() )
-                dc = new DesiredCapabilities( currentDevice.getBrowserName(), "", Platform.ANY );
+                dc = new DesiredCapabilities(  useCloud.getCloudActionProvider().getCloudBrowserName(currentDevice.getBrowserName()), "", Platform.ANY );
             else
                 dc = new DesiredCapabilities( "", "", Platform.ANY );
 
-            CloudDescriptor useCloud = CloudRegistry.instance().getCloud();
+            
 
             if ( currentDevice.getCloud() != null )
             {
@@ -89,18 +92,19 @@ public class WEBDriverFactory extends AbstractDriverFactory
             }
             else
             {
-                dc.setCapability( PLATFORM_NAME, currentDevice.getOs() );
-                dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
+                dc.setCapability( useCloud.getCloudActionProvider().getCloudPlatformName(currentDevice), currentDevice.getOs() );
+            	dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
+                
                 dc.setCapability( MODEL, currentDevice.getModel() );
                 dc.setCapability( USER_NAME, useCloud.getUserName() );
                 dc.setCapability( PASSWORD, useCloud.getPassword() );
             }
 
             if ( currentDevice.getBrowserName() != null && !currentDevice.getBrowserName().isEmpty() )
-                dc.setCapability( BROWSER_NAME, currentDevice.getBrowserName() );
+                dc.setCapability( BROWSER_NAME,  useCloud.getCloudActionProvider().getCloudBrowserName(currentDevice.getBrowserName()) );
             if ( currentDevice.getBrowserVersion() != null && !currentDevice.getBrowserVersion().isEmpty() )
                 dc.setCapability( BROWSER_VERSION, currentDevice.getBrowserVersion() );
-
+            	
             for ( String name : currentDevice.getCapabilities().keySet() )
 				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
 			

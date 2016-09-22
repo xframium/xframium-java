@@ -24,9 +24,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.ScreenOrientation;
+import org.xframium.device.DeviceManager;
+import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.gesture.Gesture.Direction;
 import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.gesture.factory.GestureFactory;
+import org.xframium.gesture.factory.spi.AppiumGestureFactory;
+import org.xframium.gesture.factory.spi.PerfectoGestureFactory;
+import org.xframium.gesture.factory.spi.SeleniumGestureFactory;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -79,9 +85,29 @@ public class GestureManager
 	 */
 	public Gesture createHideKeyboard()
 	{
-		return gestureFactory.createGesture( GestureType.HIDE_KEYBOARD, new Object[] { false } ); 
+		return modifyGestureFactory().createGesture( GestureType.HIDE_KEYBOARD, new Object[] { false } ); 
 	}
 	
+	private GestureFactory modifyGestureFactory() {
+		CloudDescriptor cloud = DeviceManager.instance().getCurrentCloud();
+		String providerType = cloud.getProvider();
+		GestureFactory altGestureFactory = null;
+		
+		if (providerType.equalsIgnoreCase("selenium")) {
+			altGestureFactory = new SeleniumGestureFactory();
+		
+		} else if (providerType.equalsIgnoreCase("appium")) {
+			altGestureFactory = new AppiumGestureFactory();
+		
+		} else if (providerType.equalsIgnoreCase("perfecto")) {
+			altGestureFactory = new PerfectoGestureFactory();
+		} else {
+			altGestureFactory = gestureFactory;
+		}
+		
+		return altGestureFactory;
+	}
+
 	/**
 	 * Creates the swipe.
 	 *
@@ -117,7 +143,7 @@ public class GestureManager
 	 */
 	public Gesture createRotate( ScreenOrientation sOrientation )
 	{
-		return gestureFactory.createGesture( GestureType.ROTATE, new Object[] { sOrientation } );
+		return modifyGestureFactory().createGesture( GestureType.ROTATE, new Object[] { sOrientation } );
 	}
 	
 	/**
@@ -129,7 +155,7 @@ public class GestureManager
 	 */
 	public Gesture createSwipe( Point startPosition, Point endPosition )
 	{
-		return gestureFactory.createGesture( GestureType.SWIPE, new Object[] { startPosition, endPosition } );
+		return modifyGestureFactory().createGesture( GestureType.SWIPE, new Object[] { startPosition, endPosition } );
 	}
 	
 	/**
@@ -157,7 +183,7 @@ public class GestureManager
 	
 	public Gesture createPress( Point pressPosition, long pressLength, int pressCount )
     {
-        return gestureFactory.createGesture( GestureType.PRESS, new Object[] { pressPosition, pressLength, pressCount } );
+        return modifyGestureFactory().createGesture( GestureType.PRESS, new Object[] { pressPosition, pressLength, pressCount } );
     }
 	
 	/**
@@ -167,9 +193,9 @@ public class GestureManager
 	 * @param metaState the meta state
 	 * @return the gesture
 	 */
-	public Gesture createKeyPress( int keyCode, int metaState )
+	public Gesture createKeyPress( String keyCode, int metaState )
 	{
-		return gestureFactory.createGesture( GestureType.KEYPRESS, new Object[] { keyCode, metaState } );
+		return modifyGestureFactory().createGesture( GestureType.KEYPRESS, new Object[] { keyCode, metaState } );
 	}
 	
 	/**
@@ -193,7 +219,7 @@ public class GestureManager
 	 */
 	public Gesture createZoom( Point startOne, Point startTwo, Point endOne, Point endTwo )
 	{
-		return gestureFactory.createGesture( GestureType.ZOOM, new Object[] { startOne, startTwo, endOne, endTwo } );
+		return modifyGestureFactory().createGesture( GestureType.ZOOM, new Object[] { startOne, startTwo, endOne, endTwo } );
 	}
 	
 	/**
@@ -217,7 +243,7 @@ public class GestureManager
 	 */
 	public Gesture createPinch( Point startOne, Point startTwo, Point endOne, Point endTwo )
 	{
-		return gestureFactory.createGesture( GestureType.PINCH, new Object[] { startOne, startTwo, endOne, endTwo } );
+		return modifyGestureFactory().createGesture( GestureType.PINCH, new Object[] { startOne, startTwo, endOne, endTwo } );
 	}
 	
 }

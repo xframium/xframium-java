@@ -24,6 +24,7 @@
 package org.xframium.device.factory;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -74,6 +75,7 @@ import org.xframium.spi.driver.DeviceProvider;
 import org.xframium.spi.driver.NativeDriverProvider;
 import org.xframium.spi.driver.ReportiumProvider;
 import org.xframium.utility.XMLEscape;
+import org.xml.sax.InputSource;
 import com.perfecto.reportium.client.ReportiumClient;
 import io.appium.java_client.AppiumDriver;
 
@@ -226,9 +228,11 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             
-            System.err.println( pageSource );
-            
-            cachedDocument = dBuilder.parse( new ByteArrayInputStream( pageSource.getBytes() ) );
+            InputStreamReader streamReader = new InputStreamReader( new ByteArrayInputStream( pageSource.getBytes() ), "UTF-8" );
+            InputSource inputSource = new InputSource( streamReader );
+            inputSource.setEncoding( "UTF-8" );
+
+            cachedDocument = dBuilder.parse( inputSource );
             cachingEnabled = true;
         }
         catch ( Exception e )
