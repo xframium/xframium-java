@@ -107,11 +107,5 @@ public class KWSOperator extends AbstractKeyWordStep
 	    }
 		return true;
 	}
-	
-	@Override
-	public boolean isRecordable()
-	{
-	    return false;
-	}
 
 }

@@ -100,17 +100,4 @@ public class KWSNavigate extends  AbstractKeyWordStep {
 		}
 		return  success;
 	}
-
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
-	 */
-	public boolean isRecordable()
-	{
-		return false;
-	}
-
-
-
-
-
 }

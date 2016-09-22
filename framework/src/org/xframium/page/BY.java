@@ -152,6 +152,6 @@ public enum BY
 	 */
 	public String toString()
 	{
-		return description;
+		return name;
 	}
 }

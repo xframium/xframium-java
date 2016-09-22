@@ -185,7 +185,6 @@ public class KWSCheckColor extends AbstractKeyWordStep
 		
 	}
 
-	
 	/**
 	 * Extract colors.
 	 *

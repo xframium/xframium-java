@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html ng-app="xTesting">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>xFramium Testing</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
+    <script src="http://xframium.org/js/selection-model.min.js"></script>
+    <script src="http://xframium.org/js/ui-bootstrap-tpls-2.1.3.min.js"></script>
+    <link href="http://xframium.org/css/bootstrap-select.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+</head>
+<body ng-controller="xFramiumTesting">
+    <div class="container-fluid">
+        <nav class="navbar navbar-default">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">xFramium Testing</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a hRef="#">Nav One</a></li>
+                    <li><a hRef="#">Nav Two</a></li>
+                    <li><a hRef="#">Nav Three</a></li>
+                </ul>
+            </div>
+         </nav>
+        <div class="row">
+            <div class="col-md-3">
+                <div >
+                    <pre id="singleModel">{{singleModel}}</pre>
+                    <button type="button" class="btn btn-primary" ng-model="singleModel" uib-btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">Toggle Value</button>
+                    <input type="text" id="focusId" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div id="elementList">
+                    <pre>Value One</pre>
+                    <pre>Value Two</pre>
+                    <pre>Value Three</pre>
+                </div>
+                <div id="colorCheck" class="bg-primary">&nbsp;&nbsp;&nbsp;Test Color</div>
+                <div id="colorContrastAA" style="color: #757575">Double AA</div>
+                <div id="colorContrast" style="color: #d2d2d2">Contrast Fail</div>
+                <div><a hRef="/testing2.html" id="testingTwo">Testing 2</a></div>
+                <div>
+                    <select id="selectBox">
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-primary" ng-click="showAlert()">Alert Button</button>
+                <button type="button" class="btn btn-primary" ng-click="showConfirm()">Confirm Button</button>
+                <pre id="confirmValue">{{confirmValue}}</pre>
+                <button type="button" class="btn btn-primary" ng-click="showPrompt()">Prompt Button</button>
+                <pre id="promptValue">{{promptValue}}</pre>
+            </div>
+            <div class="col-md-3">
+                <uib-accordion close-others="oneAtATime">
+                    <div uib-accordion-group class="panel-info" heading="Accordian Open" id="aOpen">
+                      <p>Here is a button to find</p>
+                      <button class="btn btn-danger" id="deleteButton">Delete</button>
+                    </div>
+                </uib-accordion>
+            </div>
+        </div>
+        
+    </div>
+</body>
+<script>
+var xTesting = angular.module('xTesting', [ 'ngAnimate', 'ngSanitize', 'ui.bootstrap' ]);
+
+xTesting.controller( 'xFramiumTesting', function XFramiumController($scope, $interval, $uibModal) {
+
+	  $scope.singleModel = 1;
+	  $scope.confirmValue;
+	  $scope.promptValue;
+	  
+	  $scope.showAlert = function()
+	  {
+		  alert( "Alert Message" );
+	  }
+	  
+	  $scope.showConfirm = function()
+	  {
+		  $scope.confirmValue = window.confirm( "Confirm Message" );
+	  }
+	  
+	  $scope.showPrompt = function()
+	  {
+		  $scope.promptValue = window.prompt( "Confirm Message" );
+	  }
+	  
+	});
+</script>
+</html>
