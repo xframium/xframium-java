@@ -158,7 +158,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	 * @param typeName the type name
 	 * @param lockRecords the lock records
 	 */
-	protected void addRecordType( String typeName, boolean lockRecords )
+	public void addRecordType( String typeName, boolean lockRecords )
 	{
 		Deque<PageData> dataList = recordMap.get( typeName );
 		
@@ -178,7 +178,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	 *
 	 * @param pageData the page data
 	 */
-	protected void addRecord( PageData pageData )
+	public void addRecord( PageData pageData )
 	{
 	    if ( !pageData.isActive() )
 	        return;

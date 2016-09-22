@@ -18,54 +18,66 @@
  *
  * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>
  *******************************************************************************/
-package org.xframium.page.data.provider;
+/*
+ * 
+ */
+package org.xframium.device.proxy;
 
-import org.xframium.page.data.PageData;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.server.SeleniumServer;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Interface PageDataProvider.
+ * The Class proxyRegistry.
  */
-public interface PageDataProvider
+public class ProxyRegistry
 {
 	
+	/** The singleton. */
+	private static ProxyRegistry singleton = new ProxyRegistry();
+
 	/**
-	 * Gets the record.
+	 * Instance.
 	 *
-	 * @param recordType the record type
-	 * @return the record
+	 * @return the proxy registry
 	 */
-	public PageData getRecord( String recordType );
-	
+	public static ProxyRegistry instance()
+	{
+		return singleton;
+	}
+
 	/**
-	 * Put record.
-	 *
-	 * @param pageData the page data
+	 * Instantiates a new proxy registry.
 	 */
-	public void putRecord( PageData pageData );
+	private ProxyRegistry()
+	{
+
+	}
 	
-	/**
-	 * Read page data.
-	 */
-	public void readPageData();
+	/** The log. */
+//	private Log log = LogFactory.getLog( ProxyRegistry.class );
 	
-	/**
-	 * Gets the records.
-	 *
-	 * @param recordType the record type
-	 * @return the records
-	 */
-	public PageData[] getRecords( String recordType );
-	
-	/**
-	 * Gets the record.
-	 *
-	 * @param recordType the record type
-	 * @param recordId the record id
-	 * @return the record
-	 */
-	public PageData getRecord( String recordType, String recordId );
-	
-	public void addRecordType( String typeName, boolean lockRecords );
-	public void addRecord( PageData pageData );
+	private String proxyHost;
+	private String proxyPort;
+
+	public String getProxyHost() {
+		return proxyHost;
+	}
+
+	public void setProxyHost(String proxyHost) {
+		this.proxyHost = proxyHost;
+	}
+
+	public String getProxyPort() {
+		return proxyPort;
+	}
+
+	public void setProxyPort(String proxyPort) {
+		this.proxyPort = proxyPort;
+	}
 }

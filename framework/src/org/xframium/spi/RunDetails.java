@@ -48,6 +48,7 @@ import org.xframium.Initializable;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
+import org.xframium.device.proxy.ProxyRegistry;
 import org.xframium.history.HistoryWriter;
 
 public class RunDetails implements RunListener
@@ -385,9 +386,14 @@ public class RunDetails implements RunListener
                     .setConnectTimeout(CONNECTION_TIMEOUT_MS)
                     .setSocketTimeout(CONNECTION_TIMEOUT_MS);
             
-            if ( CloudRegistry.instance().getCloud().getProxyHost() != null && !CloudRegistry.instance().getCloud().getProxyHost().isEmpty() )
+            /*if ( CloudRegistry.instance().getCloud().getProxyHost() != null && !CloudRegistry.instance().getCloud().getProxyHost().isEmpty() )
             {
                 requestBuilder.setProxy( new HttpHost( CloudRegistry.instance().getCloud().getProxyHost(), Integer.parseInt( CloudRegistry.instance().getCloud().getProxyPort() ) ) );
+            }*/
+            
+            if ( ProxyRegistry.instance().getProxyHost() != null && !ProxyRegistry.instance().getProxyHost().isEmpty() )
+            {
+                requestBuilder.setProxy( new HttpHost( ProxyRegistry.instance().getProxyHost(), Integer.parseInt( ProxyRegistry.instance().getProxyPort() ) ) );
             }
             
             RequestConfig requestConfig = requestBuilder.build();

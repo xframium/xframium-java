@@ -18,13 +18,17 @@
  *
  * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>
  *******************************************************************************/
-package org.xframium.gesture.factory.spi.appium;
+package org.xframium.gesture.factory.spi.selenium;
 
+import static io.appium.java_client.MobileCommand.PRESS_KEY_CODE;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.xframium.gesture.AbstractKeyPressGesture;
-import org.xframium.spi.driver.NativeDriverProvider;
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.android.AndroidDriver;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -39,33 +43,26 @@ public class KeyPressGesture extends AbstractKeyPressGesture
 	@Override
 	protected boolean _executeGesture( WebDriver webDriver )
 	{
-		AppiumDriver appiumDriver = null;
+		String[] keyCodes = getKeyCode().split("\\+");
+		String keyPressed = null;
+		List<CharSequence> charSequence = new ArrayList<CharSequence>();
 		
-		if ( webDriver instanceof AppiumDriver )
-			appiumDriver = (AppiumDriver) webDriver;
-		else if ( webDriver instanceof NativeDriverProvider )
-		{
-			NativeDriverProvider nativeProvider = (NativeDriverProvider) webDriver;
-			if ( nativeProvider.getNativeDriver() instanceof AppiumDriver )
-				appiumDriver = (AppiumDriver) nativeProvider.getNativeDriver();
-			else
-				throw new IllegalArgumentException( "Unsupported Driver Type " + webDriver );
-		}
-		
-		if ( appiumDriver == null )
-			return false;
-		
-		if ( appiumDriver instanceof AndroidDriver )
-			( (AndroidDriver) appiumDriver ).pressKeyCode( Integer.valueOf(getKeyCode()), getMetaState() );
-		else
-		{
-			log.error( "Key Press is not supported for " + appiumDriver.getClass().getName() );
-			return false;
-		}
+		for (String keyCode : keyCodes) {
 			
+			if (Keys.valueOf(keyCode) != null) {
+				charSequence.add(Keys.valueOf(keyCode));
+			
+			} else {
+				throw new IllegalArgumentException( "Unsupported KeyPressGesture Type " + keyCode );
+			}
+			
+		}
 		
-		
-		
+		if (charSequence.size() > 0) {
+			Iterable<CharSequence> iterable = charSequence;
+			keyPressed = Keys.chord(iterable);
+			new Actions( webDriver ).moveToElement( webElement ).sendKeys(keyPressed).perform();
+		}
 		return true;
 	}
 
