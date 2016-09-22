@@ -54,7 +54,7 @@ public class KWSString extends AbstractKeyWordStep
             originalValue = getElement( pageObject, contextMap, webDriver, dataMap ).getValue();
             operationName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
         }
-	    else if ( getParameterList().size() > 2 )
+	    else if ( getParameterList().size() >= 2 )
 	    {
 	        originalValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
 	        operationName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";

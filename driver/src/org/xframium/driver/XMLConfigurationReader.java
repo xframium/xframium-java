@@ -58,12 +58,15 @@ import org.xframium.driver.container.CloudContainer;
 import org.xframium.driver.container.DeviceContainer;
 import org.xframium.driver.xsd.ObjectFactory;
 import org.xframium.driver.xsd.XArtifact;
+import org.xframium.driver.xsd.XCapabilities;
 import org.xframium.driver.xsd.XDevice;
 import org.xframium.driver.xsd.XDeviceCapability;
 import org.xframium.driver.xsd.XElement;
 import org.xframium.driver.xsd.XFramiumRoot;
 import org.xframium.driver.xsd.XLibrary;
 import org.xframium.driver.xsd.XModel;
+import org.xframium.driver.xsd.XObjectDeviceCapability;
+import org.xframium.driver.xsd.XOptions;
 import org.xframium.driver.xsd.XPage;
 import org.xframium.driver.xsd.XParameter;
 import org.xframium.driver.xsd.XProperty;
@@ -607,6 +610,12 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         SimpleDevice currentDevice = new SimpleDevice(device.getName(), device.getManufacturer(), device.getModel(), device.getOs(), device.getOsVersion(), device.getBrowserName(), device.getBrowserVersion(), device.getAvailableDevices().intValue(), driverName, device.isActive(), device.getId() );
         if ( device.getCloud() != null && !device.getCloud().isEmpty() )
             currentDevice.setCloud( device.getCloud() );
+        
+        List<Object> list = null;
+        String factoryName = null;
+        Map<String, Object> keyOptions = null;
+        Map<String, Object> browserOptionMap = null;
+        
         if ( device.getCapability() != null )
         {
             for ( XDeviceCapability cap : device.getCapability() )
@@ -615,10 +624,6 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 {
                     case "BOOLEAN":
                         currentDevice.addCapability( cap.getName(), Boolean.parseBoolean( cap.getValue() ) );
-                        break;
-                        
-                    case "OBJECT":
-                        currentDevice.addCapability( cap.getName(), cap.getValue() );
                         break;
                         
                     case "STRING":
@@ -630,6 +635,69 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                         break;
                 }
             }
+            
+            // Parse the Object Capability element for browser options
+            if ( device.getObjectCapability() != null )
+            {
+
+                for ( XObjectDeviceCapability cap : device.getObjectCapability() )
+                {
+
+                    browserOptionMap = new HashMap<String, Object>();
+
+                    if ( cap.getCapabilities() != null )
+                    {
+
+                        for ( XCapabilities capabilities : cap.getCapabilities() )
+                        {
+
+                            factoryName = capabilities.getFactoryName();
+
+                            if ( capabilities.getOptions() != null )
+                            {
+
+                                for ( XOptions option : capabilities.getOptions() )
+                                {
+
+                                    if ( option.getKey() == null )
+                                    {
+
+                                        if ( browserOptionMap.get( option.getName() ) == null )
+                                        {
+                                            list = new ArrayList<Object>();
+
+                                        }
+                                        else
+                                        {
+                                            list = (List<Object>) browserOptionMap.get( option.getName() );
+                                        }
+                                        browserOptionMap.put( option.getName(), list );
+                                        list.add( option.getValue() );
+
+                                    }
+                                    else
+                                    {
+
+                                        if ( browserOptionMap.get( option.getName() ) == null )
+                                        {
+                                            keyOptions = new HashMap<String, Object>();
+
+                                        }
+                                        else
+                                        {
+                                            keyOptions = (HashMap<String, Object>) browserOptionMap.get( option.getName() );
+                                        }
+                                        keyOptions.put( option.getKey(), option.getValue() );
+                                        browserOptionMap.put( option.getName(), keyOptions );
+                                    }
+                                    currentDevice.addCapability( factoryName, browserOptionMap );
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
         }
 
         return currentDevice;

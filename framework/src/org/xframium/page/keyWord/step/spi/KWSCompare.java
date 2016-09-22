@@ -56,13 +56,6 @@ public class KWSCompare extends AbstractKeyWordStep
 		
 		return true;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
-	 */
-	public boolean isRecordable()
-	{
-		return false;
-	}
+
 
 }

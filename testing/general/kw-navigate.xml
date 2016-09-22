@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+  <model>
+    
+    <page name="home" />
+    <page name="page two" />
+
+  </model>
+
+
+
+
+  <function name="kw-navigate" active="true">
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+    
+    <step type="CLICK" name="toggleButton" page="home" />
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="0" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+
+    <step type="NAVIGATE" name="refresh screen" page="home" >
+      <parameter type="STATIC" value="REFRESH" />
+    </step>
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+    
+    <step type="CLICK" name="testingTwo" page="home" />
+    <step type="EXISTS" name="screenTwo" page="page two" />
+    
+    <step type="NAVIGATE" name="refresh screen" page="home" >
+      <parameter type="STATIC" value="BACK" />
+    </step>
+    <step type="EXISTS" name="testingTwo" page="home" />
+    <step type="NAVIGATE" name="refresh screen" page="home" >
+      <parameter type="STATIC" value="FORWARD" />
+    </step>
+    <step type="EXISTS" name="screenTwo" page="page two" />
+    <step type="NAVIGATE" name="refresh screen" page="home" >
+      <parameter type="STATIC" value="BACK" />
+    </step>
+    <step type="NAVIGATE" name="refresh screen" page="home" >
+      <parameter type="STATIC" value="REFRESH" />
+    </step>
+  </function>
+
+</suite>
