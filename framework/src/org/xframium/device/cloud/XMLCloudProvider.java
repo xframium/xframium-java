@@ -132,7 +132,7 @@ public class XMLCloudProvider extends AbstractCloudProvider
 	 */
 	private CloudDescriptor parseApplication( Cloud cloud )
 	{
-	    return new CloudDescriptor( cloud.getName(), cloud.getUserName(), cloud.getPassword(), cloud.getHostName(), cloud.getProxyHost(), cloud.getProxyPort() + "", "", cloud.getGrid(), cloud.getProviderType() );
+	    return new CloudDescriptor( cloud.getName(), cloud.getUserName(), cloud.getPassword(), cloud.getHostName(), cloud.getProxyHost(), cloud.getProxyPort() + "", "", cloud.getGrid(), cloud.getProviderType(), cloud.getGesture(), cloud.getDeviceAction() );
 	}
 
 	

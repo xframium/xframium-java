@@ -140,7 +140,7 @@ public class KWSGesture extends AbstractKeyWordStep
 				break;
 				
 			case KEYPRESS:
-				GestureManager.instance().createKeyPress( Integer.parseInt( ( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) ) ), Integer.parseInt( ( (String) getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) ) ) ).executeGesture( webDriver, webElement );
+				GestureManager.instance().createKeyPress( ( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) ), Integer.parseInt( ( (String) getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) ) ) ).executeGesture( webDriver, webElement );
 				break;
 				
 			case HIDE_KEYBOARD:

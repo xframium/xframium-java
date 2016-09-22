@@ -15,6 +15,7 @@ import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
+import org.xframium.device.proxy.ProxyRegistry;
 import org.xframium.driver.container.ApplicationContainer;
 import org.xframium.driver.container.CloudContainer;
 import org.xframium.driver.container.DeviceContainer;
@@ -44,6 +45,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     public abstract boolean readFile( InputStream inputStream );
     public abstract boolean readFile( File configFile );
     public abstract CloudContainer configureCloud();
+    protected abstract boolean configureProxy();
     public abstract ApplicationContainer configureApplication();
     protected abstract boolean configureThirdParty();
     public abstract SuiteContainer configureTestCases( PageDataProvider pdp, boolean parseDataIterators);
@@ -65,7 +67,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             throw new IllegalArgumentException( "Could not read " + configFile );
         
         
-
+        configureProxy();
         try
         {
             
@@ -96,13 +98,25 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             log.info( "Cloud: configured as " + CloudRegistry.instance().getCloud().getName() + " at " + CloudRegistry.instance().getCloud().getHostName() );
             
-            if ( CloudRegistry.instance().getCloud().getProxyHost() != null && !CloudRegistry.instance().getCloud().getProxyHost().isEmpty() && Integer.parseInt( CloudRegistry.instance().getCloud().getProxyPort() ) > 0 )
+            if ( ProxyRegistry.instance().getProxyHost() != null && !ProxyRegistry.instance().getProxyHost().isEmpty() 
+            		&& Integer.parseInt( ProxyRegistry.instance().getProxyPort() ) > 0 )
             {
-                log.info( "Cloud: Proxy configured as " + CloudRegistry.instance().getCloud().getProxyHost() + ":" + CloudRegistry.instance().getCloud().getProxyPort() );
-                System.setProperty( "http.proxyHost", CloudRegistry.instance().getCloud().getProxyHost() );
-                System.setProperty( "https.proxyHost", CloudRegistry.instance().getCloud().getProxyHost() );
-                System.setProperty( "http.proxyPort", CloudRegistry.instance().getCloud().getProxyPort() );
-                System.setProperty( "https.proxyPort", CloudRegistry.instance().getCloud().getProxyPort() );
+                log.info( "Cloud: Proxy configured as " + ProxyRegistry.instance().getProxyHost() + ":" + ProxyRegistry.instance().getProxyPort() );
+                System.setProperty( "http.proxyHost", ProxyRegistry.instance().getProxyHost() );
+                System.setProperty( "https.proxyHost", ProxyRegistry.instance().getProxyHost() );
+                System.setProperty( "http.proxyPort", ProxyRegistry.instance().getProxyPort() );
+                System.setProperty( "https.proxyPort", ProxyRegistry.instance().getProxyPort() );
+            
+            }
+            else if ( CloudRegistry.instance().getCloud().getProxyHost() != null && !CloudRegistry.instance().getCloud().getProxyHost().isEmpty() && Integer.parseInt( CloudRegistry.instance().getCloud().getProxyPort() ) > 0 )
+            {
+            	ProxyRegistry.instance().setProxyHost(CloudRegistry.instance().getCloud().getProxyHost());
+            	ProxyRegistry.instance().setProxyPort(CloudRegistry.instance().getCloud().getProxyPort());
+            	log.info( "Cloud: Proxy configured as " + ProxyRegistry.instance().getProxyHost() + ":" + ProxyRegistry.instance().getProxyPort() );
+                System.setProperty( "http.proxyHost", ProxyRegistry.instance().getProxyHost() );
+                System.setProperty( "https.proxyHost", ProxyRegistry.instance().getProxyHost() );
+                System.setProperty( "http.proxyPort", ProxyRegistry.instance().getProxyPort() );
+                System.setProperty( "https.proxyPort", ProxyRegistry.instance().getProxyPort() );
             }
             
             BeanManager.instance().setBeanFactory( new XMLBeanFactory() );

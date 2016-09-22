@@ -50,18 +50,18 @@ import io.appium.java_client.ios.IOSDriver;
 public class ANDROIDDriverFactory extends AbstractDriverFactory
 {
 	
-    /* (non-Javadoc)
-     * @see com.perfectoMobile.device.factory.AbstractDriverFactory#_createDriver(com.perfectoMobile.device.Device)
-     */
-    @Override
-    protected DeviceWebDriver _createDriver( Device currentDevice )
-    {
-        DeviceWebDriver webDriver = null;
-        try
-        {
-            DesiredCapabilities dc = new DesiredCapabilities( "", "", Platform.ANY );
+	/* (non-Javadoc)
+	 * @see com.perfectoMobile.device.factory.AbstractDriverFactory#_createDriver(com.perfectoMobile.device.Device)
+	 */
+	@Override
+	protected DeviceWebDriver _createDriver( Device currentDevice )
+	{
+		DeviceWebDriver webDriver = null;
+		try
+		{
+			DesiredCapabilities dc = new DesiredCapabilities( "", "", Platform.ANY );
 			
-            CloudDescriptor useCloud = CloudRegistry.instance().getCloud();
+			CloudDescriptor useCloud = CloudRegistry.instance().getCloud();
             
             if ( currentDevice.getCloud() != null )
             {
@@ -76,28 +76,29 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
             DeviceManager.instance().setCurrentCloud( useCloud );
             URL hubUrl = new URL( useCloud.getCloudUrl() );
 
-            if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )
-            {
-                dc.setCapability( ID, currentDevice.getDeviceName() );
-            }
-            else
-            {
-                dc.setCapability( PLATFORM_NAME, currentDevice.getOs() );
-                dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
-                dc.setCapability( MODEL, currentDevice.getModel() );
-            }
+			if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )
+			{
+				dc.setCapability( ID, currentDevice.getDeviceName() );
+			}
+			else
+			{					
+				//dc.setCapability( PLATFORM_NAME, currentDevice.getOs() );
+				dc.setCapability( useCloud.getCloudActionProvider().getCloudPlatformName(currentDevice), currentDevice.getOs() );
+				dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
+				dc.setCapability( MODEL, currentDevice.getModel() );
+			}
 			
-            dc.setCapability( USER_NAME, useCloud.getUserName() );
-            dc.setCapability( PASSWORD, useCloud.getPassword() );
+			dc.setCapability( USER_NAME, useCloud.getUserName() );
+			dc.setCapability( PASSWORD, useCloud.getPassword() );
 			
-            for ( String name : currentDevice.getCapabilities().keySet() )
-                dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
+			for ( String name : currentDevice.getCapabilities().keySet() )
+				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
 			
-            for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
-                dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
+			for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
+				dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
 			
-            dc.setCapability( AUTOMATION_NAME, "Appium" );
-
+			dc.setCapability( AUTOMATION_NAME, "Appium" );
+			
             if (( ContentManager.instance().getCurrentContentKey() != null ) &&
                 ( ContentManager.instance().getContentValue( Device.LOCALE ) != null ))
             {
@@ -106,23 +107,23 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
                 dc.setCapability( Device.LOCALE, localeToConfigure );
             }		
 			
-            if ( log.isInfoEnabled() )
-                log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
+			if ( log.isInfoEnabled() )
+				log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 			
-            webDriver = new DeviceWebDriver( new AndroidDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
+			webDriver = new DeviceWebDriver( new AndroidDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
 	
-            webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
+			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 			
-            Capabilities caps = ( (AndroidDriver) webDriver.getWebDriver() ).getCapabilities();
-            webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
-            webDriver.setReportKey( caps.getCapability( "reportKey" ).toString() );
-            webDriver.setDeviceName( caps.getCapability( "deviceName" ).toString() );
-            webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
-            webDriver.context( "NATIVE_APP" );
+			Capabilities caps = ( (AndroidDriver) webDriver.getWebDriver() ).getCapabilities();
+			webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
+			webDriver.setReportKey( caps.getCapability( "reportKey" ).toString() );
+			webDriver.setDeviceName( caps.getCapability( "deviceName" ).toString() );
+			webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
+			webDriver.context( "NATIVE_APP" );
 			
-            if( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAndroidIdentifier().isEmpty() )
+			if( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAndroidIdentifier().isEmpty() )
             {
-                if ( ( (AndroidDriver) webDriver.getNativeDriver() ).isAppInstalled( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() ) )
+			    if ( ( (AndroidDriver) webDriver.getNativeDriver() ).isAppInstalled( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() ) )
                 {
                     log.warn( "Attempting to start " + ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
                     CloudActionProvider actionProvider = (CloudActionProvider) Class.forName( CloudActionProvider.class.getPackage().getName() + "." + useCloud.getProvider() + "CloudActionProvider" ).newInstance();
@@ -134,22 +135,22 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
                 }
             }
 			
-            String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
-            webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );
-            webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );
-            webDriver.setCloud( useCloud );
-            return webDriver;
-        }
+			String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
+			webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );
+			webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );
+			webDriver.setCloud( useCloud );
+			return webDriver;
+		}
 	
-        catch( Exception e )
-        {
-            log.fatal( "Could not connect to Cloud instance for " + currentDevice, e );
-            if ( webDriver != null )
-            {
-                try { webDriver.close(); } catch( Exception e2 ) {}
-                try { webDriver.quit(); } catch( Exception e2 ) {}
-            }
-            return null;
-        }
-    }
+		catch( Exception e )
+		{
+		    log.fatal( "Could not connect to Cloud instance for " + currentDevice, e );
+			if ( webDriver != null )
+			{
+				try { webDriver.close(); } catch( Exception e2 ) {}
+				try { webDriver.quit(); } catch( Exception e2 ) {}
+			}
+			return null;
+		}
+	}
 }

@@ -8,16 +8,16 @@ import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.spi.Device;
 import eu.bitwalker.useragentutils.UserAgent;
 
-public class SELENIUMCloudActionProvider extends AbstractCloudActionProvider
+public class SAUCELABSCloudActionProvider extends AbstractCloudActionProvider
 {
+	
 	/** The Constant PLATFORM_NAME. */
-	public static final String PLATFORM_NAME = "platformName";
-	
-	
-	@Override
+	public static final String PLATFORM_NAME_DESKTOP = "platform";
+	public static final String PLATFORM_NAME_MOBILE  = "platformName";
+
+    @Override
     public boolean startApp( String executionId, String deviceId, String appName, String appIdentifier )
     {
-        
         return true;
     }
     
@@ -63,14 +63,17 @@ public class SELENIUMCloudActionProvider extends AbstractCloudActionProvider
         // TODO Auto-generated method stub
         
     }
-    
-    @Override
+	
+	@Override
 	public String getCloudPlatformName(Device device) {
 		// TODO Auto-generated method stub
-		return PLATFORM_NAME;
+		if(device.getOs().equalsIgnoreCase("IOS") || device.getOs().equalsIgnoreCase("Android")){
+			return PLATFORM_NAME_MOBILE;
+		}
+		return PLATFORM_NAME_DESKTOP;
 	}
 
-	
+	    
 	@Override
 	public String getCloudBrowserName(String currBrowserName) {		
 		
@@ -84,7 +87,4 @@ public class SELENIUMCloudActionProvider extends AbstractCloudActionProvider
 			return currBrowserName;
 		}
 	}
-    
-	
-    
 }

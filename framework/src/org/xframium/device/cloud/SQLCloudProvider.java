@@ -111,7 +111,11 @@ public class SQLCloudProvider extends AbstractCloudProvider
                                 parseString( (String) data[i][5], null, true ), // proxy
                                                                                 // post
                                 parseString( (String) data[i][6], null, true ), // description
-                                parseString( (String) data[i][7], null, true ), parseString( (String) data[i][8], null, true ) ) ); // grid
+                                parseString( (String) data[i][7], null, true ), 
+                                parseString( (String) data[i][8], null, true ), //grid
+                				parseString( (String) data[i][9], null, true ) ,
+                				parseString( (String) data[i][10], null, true ) )
+                		);
                 // instance
             }
             

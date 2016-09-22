@@ -28,7 +28,7 @@ public abstract class AbstractKeyPressGesture extends AbstractGesture
 {
 	
 	/** The key code. */
-	private int keyCode;
+	private String keyCode;
 	
 	/** The meta state. */
 	private int metaState;
@@ -38,7 +38,7 @@ public abstract class AbstractKeyPressGesture extends AbstractGesture
 	 */
 	public void setParameters( Object[] parameterArray )
 	{
-		setKeyCode( (int) parameterArray[ 0 ] );
+		setKeyCode( (String) parameterArray[ 0 ] );
 		setMetaState( (int) parameterArray[ 1 ] );
 	}
 
@@ -65,7 +65,7 @@ public abstract class AbstractKeyPressGesture extends AbstractGesture
 	 *
 	 * @return the key code
 	 */
-	public int getKeyCode()
+	public String getKeyCode()
 	{
 		return keyCode;
 	}
@@ -75,7 +75,7 @@ public abstract class AbstractKeyPressGesture extends AbstractGesture
 	 *
 	 * @param keyCode the new key code
 	 */
-	public void setKeyCode( int keyCode )
+	public void setKeyCode( String keyCode )
 	{
 		this.keyCode = keyCode;
 	}	
