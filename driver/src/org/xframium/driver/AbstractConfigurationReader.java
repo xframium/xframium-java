@@ -68,24 +68,6 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
 
         try
         {
-            
-            log.info( "Device: Configuring Device Acquisition Engine " );
-            DeviceContainer dC = configureDevice();
-            log.info( "Device: Extract " + dC.getActiveDevices().size() + " active devices and " + dC.getInactiveDevices().size() + " inactive devices" );
-            
-            if ( dC.getActiveDevices().isEmpty() ) 
-                return;
-            
-            for ( Device d : dC.getActiveDevices() )
-                DeviceManager.instance().registerDevice( d );
-            
-            for ( Device d : dC.getInactiveDevices() )
-                DeviceManager.instance().registerInactiveDevice( d );
-            
-            
-            DeviceActionManager.instance().setDeviceActionFactory( new PerfectoDeviceActionFactory() );
-            GestureManager.instance().setGestureFactory( new PerfectoGestureFactory() );
-            
             log.info( "Cloud: Configuring Cloud Registry" );
             CloudContainer cC = configureCloud();
             log.info( "Cloud: Extracted " + cC.getCloudList().size() + " cloud entries" );
@@ -109,6 +91,23 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             PerfectoMobile.instance().setUserName( CloudRegistry.instance().getCloud().getUserName() );
             PerfectoMobile.instance().setPassword( CloudRegistry.instance().getCloud().getPassword() );
             PerfectoMobile.instance().setBaseUrl( "https://" + CloudRegistry.instance().getCloud().getHostName() );
+
+            log.info( "Device: Configuring Device Acquisition Engine " );
+            DeviceContainer dC = configureDevice();
+            log.info( "Device: Extract " + dC.getActiveDevices().size() + " active devices and " + dC.getInactiveDevices().size() + " inactive devices" );
+            
+            if ( dC.getActiveDevices().isEmpty() ) 
+                return;
+            
+            for ( Device d : dC.getActiveDevices() )
+                DeviceManager.instance().registerDevice( d );
+            
+            for ( Device d : dC.getInactiveDevices() )
+                DeviceManager.instance().registerInactiveDevice( d );
+            
+            
+            DeviceActionManager.instance().setDeviceActionFactory( new PerfectoDeviceActionFactory() );
+            GestureManager.instance().setGestureFactory( new PerfectoGestureFactory() );
             
             log.info( "Application: Configuring Application Registry" );
             ApplicationContainer appContainer = configureApplication();
