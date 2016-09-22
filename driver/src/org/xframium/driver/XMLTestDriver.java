@@ -30,6 +30,7 @@ import org.xframium.device.DeviceManager;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.ng.AbstractSeleniumTest;
+import org.xframium.exception.DeviceAcquisitionException;
 import org.xframium.page.PageManager;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordTest;
@@ -67,6 +68,13 @@ public class XMLTestDriver extends AbstractSeleniumTest
             
         try
         {	
+            if ( !( (DeviceWebDriver) getWebDriver() ).isConnected() )
+            {
+                PageManager.instance().setThrowable( new DeviceAcquisitionException( getDevice() ) );
+                throw PageManager.instance().getThrowable();
+            }
+                
+            
             if ( test.getOs() != null && deviceOs != null )
             {
                 if ( !deviceOs.toUpperCase().equals(  test.getOs().toUpperCase() ) )
@@ -105,26 +113,29 @@ public class XMLTestDriver extends AbstractSeleniumTest
         }
         finally
         {
-            if ( returnValue )
+            if ( getWebDriver() != null )
             {
-                if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
+                if ( returnValue )
                 {
-                    if ( ( (ReportiumProvider) getWebDriver() ).getReportiumClient() != null )
+                    if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
                     {
-                        if ( returnValue )
-                            ( (ReportiumProvider) getWebDriver() ).getReportiumClient().testStop( TestResultFactory.createSuccess() );
+                        if ( ( (ReportiumProvider) getWebDriver() ).getReportiumClient() != null )
+                        {
+                            if ( returnValue )
+                                ( (ReportiumProvider) getWebDriver() ).getReportiumClient().testStop( TestResultFactory.createSuccess() );
+                        }
                     }
+    
+                    return;
                 }
-
-                return;
-            }
-            else
-            {
-                if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
+                else
                 {
-                    if ( ( (ReportiumProvider) getWebDriver() ).getReportiumClient() != null )
+                    if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
                     {
-                        ( (ReportiumProvider) getWebDriver() ).getReportiumClient().testStop( TestResultFactory.createFailure( PageManager.instance().getThrowable() != null ? PageManager.instance().getThrowable().getMessage() : "Test returned false", PageManager.instance().getThrowable() ) );
+                        if ( ( (ReportiumProvider) getWebDriver() ).getReportiumClient() != null )
+                        {
+                            ( (ReportiumProvider) getWebDriver() ).getReportiumClient().testStop( TestResultFactory.createFailure( PageManager.instance().getThrowable() != null ? PageManager.instance().getThrowable().getMessage() : "Test returned false", PageManager.instance().getThrowable() ) );
+                        }
                     }
                 }
             }

@@ -196,9 +196,6 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
     public String getPageSource()
     {
 
-        if ( !ApplicationRegistry.instance().getAUT().isWeb() )
-            context( "NATIVE_APP" );
-
         String pageSource = webDriver.getPageSource();
 
         if ( pageSource != null )
@@ -254,6 +251,11 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
         this.webDriver = webDriver;
         this.cachingEnabled = cachingEnabled;
         this.currentDevice = currentDevice;
+    }
+    
+    public boolean isConnected()
+    {
+        return webDriver != null;
     }
 
     public void setDeviceInterrupts( List<DeviceInterrupt> interruptList )

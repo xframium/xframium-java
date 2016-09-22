@@ -95,13 +95,13 @@ public class XMLDataProvider implements DataProvider
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.device.data.DataProvider#readData()
 	 */
-	public void readData()
+	public List<Device> readData()
 	{
 		if ( fileName == null )
 		{
 			if ( log.isInfoEnabled() )
 				log.info( "Reading from CLASSPATH as " + resourceName );
-			readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
+			return readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
 		}
 		else
 		{
@@ -109,11 +109,12 @@ public class XMLDataProvider implements DataProvider
 			{
 				if ( log.isInfoEnabled() )
 					log.info( "Reading from FILE SYSTEM as [" + fileName + "]" );
-				readElements( new FileInputStream( fileName ) );
+				return readElements( new FileInputStream( fileName ) );
 			}
 			catch( FileNotFoundException e )
 			{
 				log.fatal( "Could not read from " + fileName, e );
+				return null;
 			}
 		}
 	}
@@ -123,8 +124,9 @@ public class XMLDataProvider implements DataProvider
 	 *
 	 * @param inputStream the input stream
 	 */
-	private void readElements( InputStream inputStream )
+	private List<Device> readElements( InputStream inputStream )
 	{
+	    List<Device> deviceList = new ArrayList<Device>( 10 );
 		try
 		{
 		
@@ -135,12 +137,15 @@ public class XMLDataProvider implements DataProvider
             RegistryRoot rRoot = (RegistryRoot)rootElement.getValue();
 		
 			for ( org.xframium.device.data.xsd.Device device : rRoot.getDevice() )
-				parseDevice( device );
+				deviceList.add( parseDevice( device ) );
+			
+			return deviceList;
 			
 		}
 		catch( Exception e )
 		{
 			log.fatal( "Error reading XML Element File", e );
+			return null;
 		}
 	}
 	
@@ -150,7 +155,7 @@ public class XMLDataProvider implements DataProvider
 	 * @param deviceNode the device node
 	 */
 	@SuppressWarnings("unchecked")
-	private void parseDevice( org.xframium.device.data.xsd.Device device )
+	private Device parseDevice( org.xframium.device.data.xsd.Device device )
 	{
 		String driverName = "";
 		List<Object> list = null;
@@ -255,20 +260,6 @@ public class XMLDataProvider implements DataProvider
 			}
 		}
 		
-
-		if ( currentDevice.isActive() )
-		{				
-			if (log.isDebugEnabled())
-				log.debug( "Extracted: " + currentDevice );
-
-			DeviceManager.instance().registerDevice( currentDevice );
-		}
-		else
-		{				
-			if (log.isDebugEnabled())
-				log.debug( "Extracted inactive device: " + currentDevice );
-
-			DeviceManager.instance().registerInactiveDevice( currentDevice );
-		}
+		return currentDevice;
 	}
 }

@@ -23,6 +23,7 @@ package org.xframium.page.data.provider;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
@@ -98,7 +99,32 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	 */
 	public PageData getRecord( String recordType, String recordId )
 	{
-		return idMap.get( recordType + "." + recordId );
+	    if ( recordId.contains( "." ) )
+	    {
+            String[] fieldArray = recordId.split( "\\." );
+            
+            List<PageData> dataList = (List<PageData>) recordMap.get( recordType );
+            
+            for ( PageData p : dataList )
+            {
+                if ( p.getName().equals( fieldArray[ 0 ] ) )
+                {
+                    String newName = recordId.substring( recordId.indexOf( "." ) + 1 );
+                    
+                    if ( newName.trim().isEmpty() )
+                        return p;
+                    else
+                        return (PageData) p.get( newName );
+                }
+            }
+            
+            return null;
+	        	        
+	    }
+	    else
+	    {
+	        return idMap.get( recordType + "." + recordId );
+	    }
 	}
 	
 	/* (non-Javadoc)
@@ -132,7 +158,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	 * @param typeName the type name
 	 * @param lockRecords the lock records
 	 */
-	protected void addRecordType( String typeName, boolean lockRecords )
+	public void addRecordType( String typeName, boolean lockRecords )
 	{
 		Deque<PageData> dataList = recordMap.get( typeName );
 		
@@ -152,7 +178,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	 *
 	 * @param pageData the page data
 	 */
-	protected void addRecord( PageData pageData )
+	public void addRecord( PageData pageData )
 	{
 	    if ( !pageData.isActive() )
 	        return;

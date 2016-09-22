@@ -168,26 +168,23 @@ public class XMLElementProvider extends AbstractElementProvider
 		
 		boolean elementsRead = true;
 		
-		if ( PageManager.instance().getSiteName().equals( site.getName() ) )
-		{
-		    for ( Page page : site.getPage() )
-		    {
-		        for ( org.xframium.page.element.provider.xsd.Element ele : page.getElement() )
-		        {
-		            ElementDescriptor elementDescriptor = new ElementDescriptor( site.getName(), page.getName(), ele.getName() );
-		            Element currentElement = ElementFactory.instance().createElement( BY.valueOf( ele.getDescriptor() ), ele.getValue(), ele.getName(), page.getName(), ele.getContextName() );
-		            
-		            if (log.isDebugEnabled())
-		                log.debug( "Adding XML Element using [" + elementDescriptor.toString() + "] as [" + currentElement + "]" );
-		            
-		            elementsRead = elementsRead & validateElement( elementDescriptor, currentElement );
-		            
-		            elementMap.put(elementDescriptor.toString(), currentElement );
-		        }
-		    }
-		    
-		    setInitialized( elementsRead );
-		}
+	    for ( Page page : site.getPage() )
+	    {
+	        for ( org.xframium.page.element.provider.xsd.Element ele : page.getElement() )
+	        {
+	            ElementDescriptor elementDescriptor = new ElementDescriptor( site.getName(), page.getName(), ele.getName() );
+	            Element currentElement = ElementFactory.instance().createElement( BY.valueOf( ele.getDescriptor() ), ele.getValue(), ele.getName(), page.getName(), ele.getContextName() );
+	            
+	            if (log.isDebugEnabled())
+	                log.debug( "Adding XML Element using [" + elementDescriptor.toString() + "] as [" + currentElement + "]" );
+	            
+	            elementsRead = elementsRead & validateElement( elementDescriptor, currentElement );
+	            
+	            elementMap.put(elementDescriptor.toString(), currentElement );
+	        }
+	    }
+	    
+	    setInitialized( elementsRead );
 	}
 	
 	/* (non-Javadoc)

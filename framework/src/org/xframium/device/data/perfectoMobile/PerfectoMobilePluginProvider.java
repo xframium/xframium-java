@@ -37,6 +37,8 @@ import org.xframium.spi.Device;
 import com.perfectomobile.selenium.util.EclipseConnector;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -73,8 +75,9 @@ public class PerfectoMobilePluginProvider implements DataProvider
      * 
      * @see com.perfectoMobile.device.data.DataProvider#readData()
      */
-    public void readData()
+    public List<Device> readData()
     {
+        List<Device> deviceList = new ArrayList<Device>( 10 );
         try
         {
             SimpleDevice device = (SimpleDevice)lookupDeviceById( deviceId, driverType );
@@ -108,11 +111,13 @@ public class PerfectoMobilePluginProvider implements DataProvider
             {
                 device.addCapability( EclipseConnector.ECLIPSE_EXECUTION_ID, executionId );
             }
-            DeviceManager.instance().registerDevice( device );
+            deviceList.add( device );
+            return deviceList;
         }
         catch ( Exception e )
         {
             log.fatal( "Could not connect to local device" );
+            return null;
         }
     }
     

@@ -33,7 +33,13 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSMath extends AbstractKeyWordStep
 {
-    
+    public KWSMath()
+    {
+        kwName = "Math";
+        kwDescription = "Allows the script to perform some basic math operations";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-math";
+        orMapping = false;
+    }
     /**
      * Format string.
      *
@@ -53,9 +59,10 @@ public class KWSMath extends AbstractKeyWordStep
 	{
 	    String compareToString = null;
 	    double currentValue = 0;
+	    boolean valueAdded = false;
 	    for ( int i=0; i<getParameterList().size(); i++ )
 	    {
-	        boolean valueAdded = false;
+	        
 
 	        String currentParameter = getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "";
 	        

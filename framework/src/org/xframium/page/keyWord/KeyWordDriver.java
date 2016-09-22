@@ -37,6 +37,7 @@ import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.keyWord.provider.KeyWordProvider;
+import org.xframium.page.keyWord.provider.SuiteContainer;
 import org.xframium.page.listener.KeyWordListener;
 
 // TODO: Auto-generated Javadoc
@@ -85,13 +86,6 @@ public class KeyWordDriver
         return singleton;
     }
 
-    /**
-     * Instantiates a new key word driver.
-     */
-    private KeyWordDriver()
-    {
-
-    }
 
     /**
      * Load tests.
@@ -99,9 +93,25 @@ public class KeyWordDriver
      * @param keyWordProvider
      *            the key word provider
      */
-    public void loadTests( KeyWordProvider keyWordProvider )
+    public void loadTests( SuiteContainer sC )
     {
-        keyWordProvider.readData();
+
+        for ( KeyWordTest t : sC.getActiveTestList() )
+        {
+            addTest( t );
+        }
+        
+        for ( KeyWordTest t : sC.getInactiveTestList() )
+        {
+            addTest( t );
+        }
+        
+        for ( KeyWordTest t : sC.getFunctionList() )
+        {
+            addFunction( t );
+        }
+        
+        
     }
 
     /** The log. */
@@ -333,14 +343,9 @@ public class KeyWordDriver
                     PageData pageData = null;
                     if ( dataProvider.contains( "." ) )
                     {
-                        String[] typeId = dataProvider.split( "\\." );
-                        if ( typeId.length == 2 )
-                        {
-                            pageData = PageDataManager.instance().getPageData( typeId[0], typeId[1] );
-                            dpMe = typeId[0];
-                        }
-                        else
-                            pageData = PageDataManager.instance().getPageData( dataProvider );
+                        dpMe = dataProvider.substring( 0, dataProvider.indexOf( "." ) );
+                        String recordName = dataProvider.substring( dataProvider.indexOf( "." ) + 1 );
+                        pageData = PageDataManager.instance().getPageData( dpMe, recordName );
                     }
                     else
                         pageData = PageDataManager.instance().getPageData( dataProvider );
@@ -357,6 +362,7 @@ public class KeyWordDriver
 
         return test.executeTest( webDriver, contextMap.get(), dataMap, pageMap );
     }
+
 
     /**
      * Gets the test.
@@ -493,10 +499,11 @@ public class KeyWordDriver
                     if ( dataProvider.contains( "." ) )
                     {
                         String[] typeId = dataProvider.split( "\\." );
-                        if ( typeId.length == 2 )
+                        if ( typeId.length > 1  )
                         {
                             dpMe = typeId[0];
-                            pageData = PageDataManager.instance().getPageData( typeId[0], typeId[1] );
+                            String recordName = dataProvider.substring( dataProvider.indexOf( "." ) + 1 );
+                            pageData = PageDataManager.instance().getPageData( typeId[0], recordName );
                         }
                         else
                             pageData = PageDataManager.instance().getPageData( dataProvider );

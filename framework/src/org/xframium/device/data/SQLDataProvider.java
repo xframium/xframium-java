@@ -20,7 +20,9 @@
  *******************************************************************************/
 package org.xframium.device.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Platform;
@@ -38,33 +40,29 @@ public class SQLDataProvider implements DataProvider
     // class data
     //
 
-    private static final String DEF_QUERY =
-        "SELECT NAME, DEVICE_ID, MANUFACTURER, MODEL, OS, OS_VERSION, BROWSER_NAME, BROWSER_VERSION, ACTIVE, AVAILABLE, CLOUD \n" +
-        "FROM DEVICES";
+    private static final String DEF_QUERY = "SELECT NAME, DEVICE_ID, MANUFACTURER, MODEL, OS, OS_VERSION, BROWSER_NAME, BROWSER_VERSION, ACTIVE, AVAILABLE, CLOUD \n" + "FROM DEVICES";
 
-    private static final String DEF_CAP_QUERY =
-        "SELECT DEVICE_NAME, NAME, CLASS, VALUE \n" +
-        "FROM DEVICE_CAPABILITIES";
-    
+    private static final String DEF_CAP_QUERY = "SELECT DEVICE_NAME, NAME, CLASS, VALUE \n" + "FROM DEVICE_CAPABILITIES";
+
     //
     // instance data
     //
-	
+
     /** The log. */
     private Log log = LogFactory.getLog( SQLDataProvider.class );
-    
-        /** The username. */
+
+    /** The username. */
     private String username;
-	
+
     /** The password. */
     private String password;
-	
+
     /** The JDBC URL. */
     private String url;
-	
+
     /** The driver class name. */
     private String driver;
-	
+
     /** The device query. */
     private String deviceQuery;
 
@@ -89,16 +87,16 @@ public class SQLDataProvider implements DataProvider
         this.capabilityQuery = DEF_CAP_QUERY;
     }
 
-	/**
-	 * Instantiates a new SQL data provider.
-	 *
-	 */
+    /**
+     * Instantiates a new SQL data provider.
+     *
+     */
     public SQLDataProvider( String username, String password, String url, String driver, String deviceQuery, String capabilityQuery, DriverType driverType )
     {
         this( username, password, url, driver, driverType );
-        
-        this.deviceQuery = (( deviceQuery != null ) ? deviceQuery : DEF_QUERY );
-        this.capabilityQuery = (( capabilityQuery != null ) ? capabilityQuery : DEF_CAP_QUERY );
+
+        this.deviceQuery = ((deviceQuery != null) ? deviceQuery : DEF_QUERY);
+        this.capabilityQuery = ((capabilityQuery != null) ? capabilityQuery : DEF_CAP_QUERY);
     }
 
     private String parseString( String currentValue, String defaultValue, boolean emptyCheck )
@@ -113,16 +111,17 @@ public class SQLDataProvider implements DataProvider
                 return currentValue;
         }
     }
-    
-    public void readData()
+
+    public List<Device> readData()
     {
+        List<Device> deviceList = new ArrayList<Device>( 10 );
         try
         {
             Object[][] deviceData = SQLUtil.getResults( username, password, url, driver, deviceQuery, null );
             Object[][] capabilityData = SQLUtil.getResults( username, password, url, driver, capabilityQuery, null );
             HashMap devicesByName = new HashMap();
 
-            for( int i = 0; i < deviceData.length; ++i )
+            for ( int i = 0; i < deviceData.length; ++i )
             {
                 String name = parseString( (String) deviceData[i][0], null, true );
                 String id = parseString( (String) deviceData[i][1], null, true );
@@ -135,10 +134,10 @@ public class SQLDataProvider implements DataProvider
                 String active = parseString( (String) deviceData[i][8], null, true );
                 Number available = (Number) deviceData[i][9];
                 String cloud = parseString( (String) deviceData[i][10], null, true );
-                
+
                 String driverName = "";
-		switch( driverType )
-		{
+                switch ( driverType )
+                {
                     case APPIUM:
                         if ( os.toUpperCase().equals( "IOS" ) )
                             driverName = "IOS";
@@ -147,50 +146,26 @@ public class SQLDataProvider implements DataProvider
                         else
                             log.warn( "Appium is not supported on the following OS " + os.toUpperCase() + " - this device will be ignored" );
                         break;
-				
+
                     case PERFECTO:
                         driverName = "PERFECTO";
                         break;
-			
+
                     case WEB:
                         driverName = "WEB";
                         break;
-		}
-		
-		SimpleDevice currentDevice = new SimpleDevice( name,
-                                                         manuf,
-                                                         model,
-                                                         os,
-                                                         os_ver,
-                                                         browser,
-                                                         browser_ver,
-                                                         available.intValue(),
-                                                         driverName,
-                                                         "Y".equals( active ),
-                                                         id );
-		
-		if ( cloud != null && !cloud.isEmpty() )
-            currentDevice.setCloud( cloud );
+                }
+
+                SimpleDevice currentDevice = new SimpleDevice( name, manuf, model, os, os_ver, browser, browser_ver, available.intValue(), driverName, "Y".equals( active ), id );
+
+                if ( cloud != null && !cloud.isEmpty() )
+                    currentDevice.setCloud( cloud );
 
                 devicesByName.put( name, currentDevice );
-
-		if ( currentDevice.isActive() )
-		{				
-                    if (log.isDebugEnabled())
-                        log.debug( "Extracted: " + currentDevice );
-                    
-                    DeviceManager.instance().registerDevice( currentDevice );
-		}
-		else
-		{				
-			if (log.isDebugEnabled())
-				log.debug( "Extracted inactive device: " + currentDevice );
-
-			DeviceManager.instance().registerInactiveDevice( currentDevice );
-		}
+                deviceList.add( currentDevice );
             }
 
-            for( int i = 0; i < capabilityData.length; ++i )
+            for ( int i = 0; i < capabilityData.length; ++i )
             {
                 String dev_name = (String) capabilityData[i][0];
                 String name = (String) capabilityData[i][1];
@@ -201,20 +176,20 @@ public class SQLDataProvider implements DataProvider
 
                 if ( currentDevice != null )
                 {
-                    switch( type )
+                    switch ( type )
                     {
                         case "BOOLEAN":
                             currentDevice.addCapability( name, Boolean.parseBoolean( value ) );
                             break;
-		                
+
                         case "OBJECT":
                             currentDevice.addCapability( name, value );
                             break;
-                        
+
                         case "STRING":
                             currentDevice.addCapability( name, value );
                             break;
-                        
+
                         case "PLATFORM":
                             currentDevice.addCapability( name, Platform.valueOf( value.toUpperCase() ) );
                             break;
@@ -222,11 +197,13 @@ public class SQLDataProvider implements DataProvider
                 }
             }
         }
-        catch (Exception e)
+        catch ( Exception e )
         {
             log.fatal( "Error reading device data frim DB: ", e );
         }
+        
+        return deviceList;
 
     }
-	
+
 }

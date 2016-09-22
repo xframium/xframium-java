@@ -39,7 +39,12 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSWindow extends AbstractKeyWordStep
 {
-
+    public KWSWindow()
+    {
+        kwName = "HTML Window Operation";
+        kwDescription = "Allows the script to work with web windows";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-window";
+    }
 	/**
 	 * The Enum SwitchType.
 	 */

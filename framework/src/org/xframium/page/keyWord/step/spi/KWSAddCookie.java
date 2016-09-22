@@ -82,5 +82,10 @@ public class KWSAddCookie extends AbstractKeyWordStep
     {
         return false;
     }
+    
+    public KWSAddCookie()
+    {
+        orMapping = false;
+    }
 
 }

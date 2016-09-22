@@ -34,6 +34,13 @@ public class KWSAlign extends AbstractKeyWordStep
         LEFT,RIGHT,TOP,BOTTOM;
     }
     
+    public KWSAlign()
+    {
+        kwName = "Control Alignment";
+        kwDescription = "Allows the script to validate the alignment of one or more elements with the top, bottom, let or right of another element";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-align";
+    }
+    
 
     
 	/* (non-Javadoc)
@@ -69,7 +76,7 @@ public class KWSAlign extends AbstractKeyWordStep
 		    switch ( align )
 		    {
 		        case BOTTOM:
-		            actualDeviation = Math.abs( baseElement.getAt().getY() + baseElement.getSize().getHeight() - compareElement.getAt().getY() + compareElement.getSize().getHeight() );
+		            actualDeviation = Math.abs( (baseElement.getAt().getY() + baseElement.getSize().getHeight()) - (compareElement.getAt().getY() + compareElement.getSize().getHeight()) );
 		            if ( actualDeviation > deviation )
 		                throw new IllegalStateException( "Alignment to the bottom of [" + getName() + "] of the element [" + elementName + "] was off by " + actualDeviation );
                     break;

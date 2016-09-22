@@ -88,6 +88,39 @@ public class DefaultPageData implements PageData
 		return typeName;
 	}
 	
+	@Override
+	public Object get( String fieldName )
+	{
+	    if ( fieldName.contains( "." ) )
+	    {
+	        String[] fieldArray = fieldName.split( "\\." );
+	        
+	        List<PageData> dataList = (List<PageData>) recordMap.get( fieldArray[ 0 ] );
+	        
+	        for ( PageData p : dataList )
+	        {
+	            if ( p.getName().equals( fieldArray[ 1 ] ) )
+	            {
+	                String newName = fieldName.substring( fieldName.indexOf( "." ) + 1 );
+	                newName = newName.substring( newName.indexOf( "." ) + 1 );
+	                
+	                if ( newName.trim().isEmpty() )
+	                    return p;
+	                else
+	                    return p.get( newName );
+	            }
+	        }
+	        
+	        return null;
+	    }
+	    
+	    List<PageData> dataList = getPageData( fieldName );
+	    if ( dataList.size() > 0 )
+	        return dataList.get( 0 );
+	    else
+	        return null;
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.data.PageData#populateTreeStructure()
 	 */
@@ -104,10 +137,14 @@ public class DefaultPageData implements PageData
 	                //
 	                String useKey = keyName.substring( 0, keyName.length() - DEF.length() );
 	                
+	                
 	                String lookupValue = (String) recordMap.get( keyName );
+	                
 	                Matcher selectorMatcher = SELECTOR.matcher( lookupValue );
+	                boolean matchFound = false;
 	                while( selectorMatcher.find() )
 	                {
+	                    matchFound = true;
 	                    String recordType = selectorMatcher.group( 1 );
 	                    
 	                    Map<String,String> criteriaMap = new HashMap<String,String>( 5 );
@@ -136,6 +173,17 @@ public class DefaultPageData implements PageData
 	                        if ( addData )
 	                            addPageData( useKey, pageData );
 	                    }
+	                }
+	                
+	                if ( !matchFound )
+	                {
+	                    PageData[] dataArray = PageDataManager.instance().getRecords( lookupValue.replace( "|", "" ).trim() );
+	                    if ( dataArray != null )
+	                    {
+	                        for ( PageData pageData : dataArray )
+	                            addPageData( useKey, pageData );
+	                    }
+	                            
 	                }
 	            }
 	        }

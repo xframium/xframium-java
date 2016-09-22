@@ -26,7 +26,10 @@ import java.util.ArrayList;
 
 import org.openqa.selenium.WebDriver;
 import org.xframium.page.Page;
+import org.xframium.page.data.DefaultPageData;
 import org.xframium.page.data.PageData;
+import org.xframium.page.data.PageDataManager;
+import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordParameter;
@@ -39,6 +42,14 @@ import org.xframium.utility.SQLUtil;
  */
 public class KWSSQL extends AbstractKeyWordStep
 {
+    public KWSSQL()
+    {
+        kwName = "Execute SQL";
+        kwDescription = "Allows the script to execute a SQL statement and process the results";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-sql";
+        orMapping = false;
+    }
+    
     private static final String[] JDBC = new String[] { "jdbc.username", "jdbc.password", "jdbc.url", "jdbc.driverClassName" };
     private static final String[] EMPTY = new String[0];
 
@@ -92,7 +103,29 @@ public class KWSSQL extends AbstractKeyWordStep
                                                    query_params );
                 Map results = resultsArr[0];
                 
-                // Simulaste data provider
+                if (resultsArr.length > 1)
+                {
+	                DefaultPageData pageData = null;
+	                Map resultMap = null;
+	                String mapKey = null;
+	                String mapValue = null;
+	                PageDataProvider dp = PageDataManager.instance().getDataProvider();
+	                dp.addRecordType(getContext(), false);
+	                
+	                for (int i=1; i<resultsArr.length; i++) {
+	                	resultMap = resultsArr[i];
+		                pageData = new DefaultPageData(getContext(), String.valueOf(i), true);
+		                dp.addRecord(pageData);
+		                
+		                Iterator keySet = resultMap.keySet().iterator();
+		                
+		                while (keySet.hasNext()) {
+		                	mapKey = String.valueOf(keySet.next());
+		                	mapValue = String.valueOf(resultMap.get(mapKey));
+		                	pageData.addValue( mapKey, mapValue );
+		                }
+	                }
+                }
 
                 //
                 // The Map returned is keyed by the selected column alias AND

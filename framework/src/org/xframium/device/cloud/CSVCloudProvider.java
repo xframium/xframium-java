@@ -29,6 +29,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -51,7 +53,6 @@ public class CSVCloudProvider extends AbstractCloudProvider
 	public CSVCloudProvider( File fileName )
 	{
 		this.fileName = fileName;
-		readData();
 	}
 	
 	/**
@@ -62,20 +63,19 @@ public class CSVCloudProvider extends AbstractCloudProvider
 	public CSVCloudProvider( String resourceName )
 	{
 		this.resourceName = resourceName;
-		readData();
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.device.application.ApplicationProvider#readData()
 	 */
-	public void readData()
+	public List<CloudDescriptor> readData()
 	{
-	    CloudRegistry.instance().clear();
+	    List<CloudDescriptor> cList = new ArrayList<CloudDescriptor>( 10 );
 		if ( fileName == null )
 		{
 			if ( log.isInfoEnabled() )
 				log.info( "Reading from CLASSPATH as " + resourceName );
-			readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
+			return readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
 		}
 		else
 		{
@@ -83,11 +83,12 @@ public class CSVCloudProvider extends AbstractCloudProvider
 			{
 				if ( log.isInfoEnabled() )
 					log.info( "Reading from FILE SYSTEM as [" + fileName + "]" );
-				readElements( new FileInputStream( fileName ) );
+				return readElements( new FileInputStream( fileName ) );
 			}
 			catch( FileNotFoundException e )
 			{
 				log.fatal( "Could not read from " + fileName, e );
+				return null;
 			}
 		}
 	}
@@ -97,10 +98,11 @@ public class CSVCloudProvider extends AbstractCloudProvider
 	 *
 	 * @param inputStream the input stream
 	 */
-	private void readElements( InputStream inputStream )
+	private List<CloudDescriptor> readElements( InputStream inputStream )
 	{
 		BufferedReader fileReader = new BufferedReader( new InputStreamReader( inputStream ) );
 		String currentLine = null;
+		List<CloudDescriptor> cList = new ArrayList<CloudDescriptor>( 10 );
 		
 		try
 		{
@@ -111,12 +113,15 @@ public class CSVCloudProvider extends AbstractCloudProvider
 				
 				String[] lineData = currentLine.split( "," );
 				
-				CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( lineData[ 0 ], lineData[ 1 ], lineData[ 2 ], lineData[ 3 ], lineData[ 4 ], lineData[ 5 ], lineData[ 7 ], lineData[ 6 ], lineData[ 8 ] ) );
+				cList.add( new CloudDescriptor( lineData[ 0 ], lineData[ 1 ], lineData[ 2 ], lineData[ 3 ], lineData[ 4 ], lineData[ 5 ], lineData[ 7 ], lineData[ 6 ], lineData[ 8 ], lineData[ 9 ], lineData[ 10 ] ) );
+				
 			}
+			return cList;
 		}
 		catch( Exception e )
 		{
 			log.fatal( "Error reading CSV Element File", e );
+			return null;
 		}
 	}
 }

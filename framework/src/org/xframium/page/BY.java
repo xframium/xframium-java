@@ -20,6 +20,9 @@
  *******************************************************************************/
 package org.xframium.page;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Enum BY.
@@ -28,37 +31,37 @@ public enum BY
 {
 	
 	/** The xpath. */
-	XPATH( 0, "XPath" ),
+	XPATH( 0, "XPATH", "XPath is a syntax for defining parts of an XML document. XPath uses path expressions to navigate XML documents and locate elements" ),
 	
 	/** The class. */
-	CLASS( 1, "Class Name" ),
+	CLASS( 1, "CLASS", "The class attribute specifies one or more classnames for an element. The class attribute is mostly used to point to a class in a style sheet. However, it can also be used by a JavaScript (via the HTML DOM) to make changes to HTML elements with a specified class" ),
 	
 	/** The css. */
-	CSS( 2, "CSS" ),
+	CSS( 2, "CSS", "CSS Selectors are patterns that match against elements in a tree, and as such form one of several technologies that can be used to select nodes in an XML document" ),
 	
 	/** The id. */
-	ID( 3, "ID" ),
+	ID( 3, "ID", "The id attribute specifies a unique id for an HTML element (the value must be unique within the HTML document) there can be used to locate an element" ),
 	
 	/** The link text. */
-	LINK_TEXT( 4, "Link Text" ),
+	LINK_TEXT( 4, "LINK_TEXT", "Used to locate an item using the text associated with an HTML link (anchor tag)" ),
 	
 	/** The name. */
-	NAME( 5, "Name" ),
+	NAME( 5, "NAME", "The name attribute specifies a name for an HTML element (the value is not gauranteed to be unique within the HTML document) there can be used to locate an element" ),
 	
 	/** The tag name. */
-	TAG_NAME( 6, "Tag Name" ),
+	TAG_NAME( 6, "TAG_NAME", "Used to search the tree using a tags name" ),
 	
 	/** The v text. */
-	V_TEXT( 7, "Visual Text", "VISUAL" ),
+	V_TEXT( 7, "V_TEXT", "Uses OCR (Optical Character Recognition) to convert images to text and locate the specified string", "VISUAL" ),
 	
 	/** The v image. */
-	V_IMAGE( 8, "Visual Image", "VISUAL" ),
+	V_IMAGE( 8, "V_IMAGE", "Uses image identification techniques to locate the specified image on the screen", "VISUAL" ),
 	
 	/** The html. */
-	HTML( 9, "HTML Properties" ),
+	HTML( 9, "HTML", "Uses the UFT WebElement format to locate elements in a tree" ),
 	
 	/** The html. */
-    PROP( 10, "Simplified Properties" );
+    PROP( 10, "PROP", "A simple proeprty based locator working only on attributes of a tag" );
 	
 	/** The id. */
 	private int id;
@@ -69,15 +72,17 @@ public enum BY
 	/** The required context. */
 	private String requiredContext;
 	
+	private String name;
+	
 	/**
 	 * Instantiates a new by.
 	 *
 	 * @param id the id
 	 * @param description the description
 	 */
-	BY( int id, String description )
+	BY( int id, String name, String description )
 	{
-		this( id, description, null );
+		this( id, name, description, null );
 	}
 	
 	/**
@@ -87,11 +92,29 @@ public enum BY
 	 * @param description the description
 	 * @param requiredContext the required context
 	 */
-	BY( int id, String description, String requiredContext )
+	BY( int id, String name, String description, String requiredContext )
 	{
 		this.id = id;
 		this.description = description;
 		this.requiredContext = requiredContext;
+		this.name = name;
+	}
+	
+	public List<BY> getSupported()
+	{
+	    List<BY> byList = new ArrayList<BY>( 10 );
+	    byList.add( XPATH );
+	    byList.add( CLASS );
+	    byList.add( CSS );
+	    byList.add( ID );
+	    byList.add( LINK_TEXT );
+	    byList.add( NAME );
+	    byList.add( TAG_NAME );
+	    byList.add( V_TEXT );
+	    byList.add( V_IMAGE );
+	    byList.add( HTML );
+	    byList.add( PROP );
+	    return byList;
 	}
 	
 	/**
@@ -129,6 +152,6 @@ public enum BY
 	 */
 	public String toString()
 	{
-		return description;
+		return name;
 	}
 }

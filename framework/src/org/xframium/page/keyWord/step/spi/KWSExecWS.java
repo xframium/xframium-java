@@ -41,7 +41,14 @@ public class KWSExecWS extends AbstractKeyWordStep
     //
     // Constants
     //
-
+    public KWSExecWS()
+    {
+        kwName = "Invoke WebService";
+        kwDescription = "Allows the script to call an existing WebService and analyze the results";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-execws";
+        orMapping = false;
+    }
+    
     private static final String HTTP_GET = "GET";
     private static final String HTTP_DELETE = "DELETE";
     private static final String HTTP_POST = "POST";
@@ -54,6 +61,7 @@ public class KWSExecWS extends AbstractKeyWordStep
     private static final String TOKEN_MEDIA_TYPE = "media-type";
     private static final String TOKEN_UNAME = "username";
     private static final String TOKEN_PWD = "password";
+    private static final String TOKEN_HEADERS = "headers";
     
     private static final String CONTENT_XML = "xml";
     private static final String CONTENT_JSON = "json";
@@ -189,6 +197,17 @@ public class KWSExecWS extends AbstractKeyWordStep
                 case TOKEN_PAYLOAD:
                 {
                     rtn.setPayload( (String) getParameterValue( param, contextMap, dataMap ));
+                    break;
+                }
+
+                case TOKEN_HEADERS:
+                {
+                    Iterator<KeyWordToken> tokens = param.getTokenList().iterator();
+                    while( tokens.hasNext() )
+                    {
+                        KeyWordToken token = tokens.next();
+                        rtn.getHeaders().put( token.getName(), token.getValue() );
+                    }
                     break;
                 }
 

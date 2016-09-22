@@ -34,7 +34,12 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSSet extends AbstractKeyWordStep
 {
-
+    public KWSSet()
+    {
+        kwName = "Set Value";
+        kwDescription = "Allows the script to type or select a value";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-set";
+    }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */

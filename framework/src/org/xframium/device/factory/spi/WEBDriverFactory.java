@@ -119,7 +119,6 @@ public class WEBDriverFactory extends AbstractDriverFactory
 
             Capabilities caps = ((RemoteWebDriver) webDriver.getWebDriver()).getCapabilities();
            
-            
             webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
             webDriver.setReportKey( caps.getCapability( "reportKey" ) + "" );
             webDriver.setDeviceName( caps.getCapability( "deviceName" ) + "" );

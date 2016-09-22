@@ -65,4 +65,7 @@ public interface PageDataProvider
 	 * @return the record
 	 */
 	public PageData getRecord( String recordType, String recordId );
+	
+	public void addRecordType( String typeName, boolean lockRecords );
+	public void addRecord( PageData pageData );
 }

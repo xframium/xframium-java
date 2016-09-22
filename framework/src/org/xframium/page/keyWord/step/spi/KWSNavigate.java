@@ -30,7 +30,13 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 
 public class KWSNavigate extends  AbstractKeyWordStep {
 
-
+    public KWSNavigate()
+    {
+        kwName = "Web Navigation";
+        kwDescription = "Allows the script to click forward, back and refresh on a web based application";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-navigate";
+        orMapping = false;
+    }
 
 	/**
 	 * The Enum NavgationType.
@@ -94,17 +100,4 @@ public class KWSNavigate extends  AbstractKeyWordStep {
 		}
 		return  success;
 	}
-
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
-	 */
-	public boolean isRecordable()
-	{
-		return false;
-	}
-
-
-
-
-
 }

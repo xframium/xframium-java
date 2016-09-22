@@ -57,7 +57,12 @@ import org.xframium.spi.driver.ReportiumProvider;
  */
 public abstract class AbstractKeyWordStep implements KeyWordStep
 {
-
+    public AbstractKeyWordStep()
+    {
+        kwImpl = getClass().getName();
+        kw = KeyWordStepFactory.instance().getKW( getClass() );
+    }
+    
     /** The name. */
     private String name;
 
@@ -76,6 +81,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     private boolean startAt;
     
     private boolean breakpoint;
+    
+    protected boolean orMapping = true;
 
     @Override
     public boolean isBreakpoint()
@@ -133,6 +140,12 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     private String device;
     
     private String[] tagNames;
+    
+    protected String kwName = "N/A";
+    protected String kwDescription;
+    protected String kwHelp;
+    protected String kwImpl;
+    protected String kw;
 
     @Override
     public void setTagNames( String tagNames )
@@ -142,8 +155,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             this.tagNames = tagNames.split( "," );
         }
     }
-    
-    
     
     public boolean isStartAt()
     {
@@ -605,12 +616,26 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         log.info( Thread.currentThread().getName() + ": A Required OS of [" + os + "] was specified however the OS of the device could not be determined" );
                     return true;
                 }
-                if ( !os.equals( deviceOs.toUpperCase() ) )
+                
+                String[] osArray = os.split( "," );
+                boolean osFound = false;
+                for ( String localOs : osArray )
+                {
+                    if ( localOs.toUpperCase().trim().equals( deviceOs.toUpperCase() ) )
+                    {
+                        osFound = true;
+                        break;
+                    }
+                }
+                
+                if ( !osFound )
                 {
                     if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": A Required OS of [" + os + "] was specified however the OS of the device was [" + deviceOs.toUpperCase() + "]" );
+                        log.info( Thread.currentThread().getName() + ": A Required OS in [" + os + "] was specified however the OS of the device was [" + deviceOs.toUpperCase() + "]" );
                     return true;
                 }
+                
+                
             }
             
             //
