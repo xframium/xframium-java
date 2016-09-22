@@ -69,7 +69,10 @@ public class KWSWindow extends AbstractKeyWordStep
 		BY_ELEMENT,
 		/** The by alert. */
 		BY_ALERT,
-		BY_MAXIMIZE;
+		BY_MAXIMIZE,
+		GET_TITLE,
+		GET_URL,
+		;
 	}
 
 	/*
@@ -147,6 +150,47 @@ public class KWSWindow extends AbstractKeyWordStep
 			case BY_MAXIMIZE:
 				webDriver.manage().window().maximize();
 				break;
+			case GET_TITLE:
+			    String pageTitle = webDriver.getTitle();
+			    if ( getParameterList().size() > 1 )
+			    {
+			        String compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+			        if ( !compareTo.equals( pageTitle ) )
+			        {
+			            throw new ScriptException( "Expected Title of [" + compareTo + "] but received [" + pageTitle + "]" );
+			        }
+			    }
+			    
+			    if ( !validateData( pageTitle ) )
+		            throw new ScriptException( "GET_TITLE Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + pageTitle + "]" );
+			    
+			    if ( getContext() != null && !getContext().trim().isEmpty() ) 
+			        contextMap.put( getContext(), pageTitle );
+
+			    break;
+			    
+			case GET_URL:
+                String currentUrl = webDriver.getTitle();
+                if ( getParameterList().size() > 1 )
+                {
+                    String compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+                    if ( !compareTo.equals( currentUrl ) )
+                    {
+                        throw new ScriptException( "Expected Title of [" + compareTo + "] but received [" + currentUrl + "]" );
+                    }
+                }
+                
+                if ( !validateData( currentUrl ) )
+                    throw new ScriptException( "GET_URL Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + currentUrl + "]" );
+                
+                if ( getContext() != null && !getContext().trim().isEmpty() ) 
+                    contextMap.put( getContext(), currentUrl );
+                
+                
+                
+			    break;
+			    
+		
 			default:
 				throw new ScriptConfigurationException( "Parameter switchtype should be BY_WINTITLE| BY_WINURL|BY_FRAME|BY_PARENTFRAME|BY_DEFAULT|BY_ALERT|BY_ELEMENT|BY_MAXIMIZE" );
 			}
