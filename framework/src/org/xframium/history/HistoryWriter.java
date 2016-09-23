@@ -285,17 +285,21 @@ public class HistoryWriter
                 if  (suiteName == null )
                 	suiteName = hRoot.getName();
 
-                for ( TestCase tc : hRoot.testCase )
+                if (( hRoot != null ) &&
+                    ( hRoot.testCase != null ))
                 {
-                    testMap.put( tc.getName(), tc );
-
-                    for ( Environment env : tc.environment )
+                    for ( TestCase tc : hRoot.testCase )
                     {
-                        environmentMap.put( env.getName(), env );
+                        testMap.put( tc.getName(), tc );
+                        
+                        for ( Environment env : tc.environment )
+                        {
+                            environmentMap.put( env.getName(), env );
+                        }
                     }
+                    
+                    executionList.addAll( hRoot.getSuite() );
                 }
-                
-                executionList.addAll( hRoot.getSuite() );
             }
 
         }
