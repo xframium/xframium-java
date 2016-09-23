@@ -28,6 +28,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xframium.device.factory.MorelandWebElement;
+import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
@@ -67,7 +69,10 @@ public class KWSWindow extends AbstractKeyWordStep
 		BY_ELEMENT,
 		/** The by alert. */
 		BY_ALERT,
-		BY_MAXIMIZE;
+		BY_MAXIMIZE,
+		GET_TITLE,
+		GET_URL,
+		;
 	}
 
 	/*
@@ -85,7 +90,7 @@ public class KWSWindow extends AbstractKeyWordStep
 			log.debug( "Execution Function " + getName() );
 
 		if ( getParameterList().size() < 1 )
-			throw new IllegalArgumentException( "First Parameter Switchtype should be provided with values BY_WINTITLE| BY_WINURL|BY_FRAME|BY_PARENTFRAME|BY_DEFAULT" );
+			throw new ScriptConfigurationException( "First Parameter Switchtype should be provided with values BY_WINTITLE| BY_WINURL|BY_FRAME|BY_PARENTFRAME|BY_DEFAULT" );
 
 		try
 		{
@@ -97,17 +102,17 @@ public class KWSWindow extends AbstractKeyWordStep
 			{
 			case BY_WINTITLE:
 				if ( getParameterList().size() < 2 )
-					throw new IllegalArgumentException( "Please provide the title for the window as a parameter" );
+					throw new ScriptConfigurationException( "Please provide the title for the window as a parameter" );
 				switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
 				return verifySwitchWindow( webDriver, switchType, switchExpValue );
 			case BY_WINURL:
 				if ( getParameterList().size() < 2 )
-					throw new IllegalArgumentException( "Please provide the URL for the window as a parameter" );
+					throw new ScriptConfigurationException( "Please provide the URL for the window as a parameter" );
 				switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
 				return verifySwitchWindow( webDriver, switchType, switchExpValue );
 			case BY_FRAME:
 				if ( getParameterList().size() < 2 )
-					throw new IllegalArgumentException( "Please provide the Frame id for the Frame as a parameter" );
+					throw new ScriptConfigurationException( "Please provide the Frame id for the Frame as a parameter" );
 				switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
 				webDriver.switchTo().frame( switchExpValue );
 				break;
@@ -145,15 +150,56 @@ public class KWSWindow extends AbstractKeyWordStep
 			case BY_MAXIMIZE:
 				webDriver.manage().window().maximize();
 				break;
+			case GET_TITLE:
+			    String pageTitle = webDriver.getTitle();
+			    if ( getParameterList().size() > 1 )
+			    {
+			        String compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+			        if ( !compareTo.equals( pageTitle ) )
+			        {
+			            throw new ScriptException( "Expected Title of [" + compareTo + "] but received [" + pageTitle + "]" );
+			        }
+			    }
+			    
+			    if ( !validateData( pageTitle ) )
+		            throw new ScriptException( "GET_TITLE Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + pageTitle + "]" );
+			    
+			    if ( getContext() != null && !getContext().trim().isEmpty() ) 
+			        contextMap.put( getContext(), pageTitle );
+
+			    break;
+			    
+			case GET_URL:
+                String currentUrl = webDriver.getTitle();
+                if ( getParameterList().size() > 1 )
+                {
+                    String compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+                    if ( !compareTo.equals( currentUrl ) )
+                    {
+                        throw new ScriptException( "Expected Title of [" + compareTo + "] but received [" + currentUrl + "]" );
+                    }
+                }
+                
+                if ( !validateData( currentUrl ) )
+                    throw new ScriptException( "GET_URL Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + currentUrl + "]" );
+                
+                if ( getContext() != null && !getContext().trim().isEmpty() ) 
+                    contextMap.put( getContext(), currentUrl );
+                
+                
+                
+			    break;
+			    
+		
 			default:
-				throw new IllegalArgumentException( "Parameter switchtype should be BY_WINTITLE| BY_WINURL|BY_FRAME|BY_PARENTFRAME|BY_DEFAULT|BY_ALERT|BY_ELEMENT|BY_MAXIMIZE" );
+				throw new ScriptConfigurationException( "Parameter switchtype should be BY_WINTITLE| BY_WINURL|BY_FRAME|BY_PARENTFRAME|BY_DEFAULT|BY_ALERT|BY_ELEMENT|BY_MAXIMIZE" );
 			}
 
 		}
 		catch ( Exception e )
 		{
 			log.error( "Error executing function for validation [" + getName() + "] on page [" + getPageName() + "]", e );
-			return false;
+			throw new ScriptException(  "Error executing function for validation [" + getName() + "] on page [" + getPageName() + "]" );
 		}
 
 		return true;

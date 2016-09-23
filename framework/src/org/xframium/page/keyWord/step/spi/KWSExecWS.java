@@ -20,16 +20,16 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
-import java.util.*;
-
-import org.openqa.selenium.JavascriptExecutor;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
-
 import org.xframium.utility.WebServiceClientUtil;
 
 // TODO: Auto-generated Javadoc
@@ -81,10 +81,6 @@ public class KWSExecWS extends AbstractKeyWordStep
     @Override
     public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
     {
-        if ( pageObject == null )
-        {
-            throw new IllegalStateException( "Page Object was not defined" );
-        }
 
         WebServiceClientUtil.CallDetails callDetails = null;
         WebServiceClientUtil.ResponceDetails responceDetails = null;
@@ -123,7 +119,7 @@ public class KWSExecWS extends AbstractKeyWordStep
         {
             e.printStackTrace();
             
-            throw new IllegalStateException( "KWSExecWS failed with:", e );
+            throw new ScriptException( "KWSExecWS failed with: "  + e.getMessage() );
         }
     
         return true;

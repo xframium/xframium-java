@@ -26,6 +26,8 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactType;
+import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
@@ -92,10 +94,10 @@ public class KWSCheckColor extends AbstractKeyWordStep
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
 	{
 		if ( pageObject == null )
-			throw new IllegalStateException( "Page Object was not defined" );
+			throw new ScriptConfigurationException( "Page Object was not defined" );
 
 		if (getParameterList().size() < 2 )
-			throw new IllegalArgumentException( "Verify Color must have 3 parameters - Resolution, location(x, y) and color" );
+			throw new ScriptConfigurationException( "Verify Color must have 3 parameters - Resolution, location(x, y) and color" );
 		
 		long fileKey = System.currentTimeMillis();
 		Resolution resolution = Resolution.valueOf( ( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" ).toLowerCase() );
@@ -149,7 +151,7 @@ public class KWSCheckColor extends AbstractKeyWordStep
 				
 				ArtifactManager.instance().notifyArtifactListeners( ArtifactType.WCAG_REPORT, new WCAGRecord( getPageName(), getName(), WCAGType.ColorVerification, System.currentTimeMillis(), System.currentTimeMillis() - fileKey, false, imagePath, colorCode, Integer.toHexString( elementColor ), stringBuilder.toString() ) );
 				
-				throw new IllegalArgumentException( stringBuilder.toString() );
+				throw new ScriptException( stringBuilder.toString() );
 			}
 			else
 			    ArtifactManager.instance().notifyArtifactListeners( ArtifactType.WCAG_REPORT, new WCAGRecord( getPageName(), getName(), WCAGType.ColorVerification, System.currentTimeMillis(), System.currentTimeMillis() - fileKey, true, imagePath, colorCode, Integer.toHexString( elementColor ), "OK" ) );

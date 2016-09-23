@@ -21,9 +21,9 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.xframium.content.ContentManager;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -48,7 +48,7 @@ public class KWSSetContentKey extends AbstractKeyWordStep
     {
         if ( pageObject == null )
         {
-            throw new IllegalStateException( "Page Object was not defined" );
+            throw new ScriptConfigurationException( "Page Object was not defined" );
         }
 
         Object newKey = null;
@@ -57,7 +57,7 @@ public class KWSSetContentKey extends AbstractKeyWordStep
         {
             newKey = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
             if ( !( newKey instanceof String ) )
-                throw new IllegalStateException( "Script value must be of type String" );
+                throw new ScriptConfigurationException( "Script value must be of type String" );
         }
 
         ContentManager.instance().setCurrentContentKey( (String) newKey );
