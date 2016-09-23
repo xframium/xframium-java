@@ -39,6 +39,7 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xframium.Initializable;
@@ -135,8 +136,6 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         int recordCount = 0;
         
         stringBuffer.append( "<body><div class=\"container\">" );
-        
-        
         
         stringBuffer.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium  " + Initializable.VERSION + "</h6><h3 class=\"dashhead-title\">" + testName + "</h3><h6>" + device.getEnvironment() + " on " + currentCloud.getHostName() + " (" + currentCloud.getProvider() + ")</h6>" );
 
