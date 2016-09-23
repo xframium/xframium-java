@@ -170,7 +170,7 @@ public class KWSWindow extends AbstractKeyWordStep
 			    break;
 			    
 			case GET_URL:
-                String currentUrl = webDriver.getTitle();
+                String currentUrl = webDriver.getCurrentUrl();
                 if ( getParameterList().size() > 1 )
                 {
                     String compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
@@ -185,9 +185,7 @@ public class KWSWindow extends AbstractKeyWordStep
                 
                 if ( getContext() != null && !getContext().trim().isEmpty() ) 
                     contextMap.put( getContext(), currentUrl );
-                
-                
-                
+
 			    break;
 			    
 		
@@ -205,16 +203,6 @@ public class KWSWindow extends AbstractKeyWordStep
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
-	 */
-	public boolean isRecordable()
-	{
-		return false;
-	}
 
 	/**
 	 * Verify switch window.

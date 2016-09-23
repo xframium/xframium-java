@@ -122,7 +122,8 @@ public class WEBDriverFactory extends AbstractDriverFactory
             webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
             webDriver.setReportKey( caps.getCapability( "reportKey" ) + "" );
             webDriver.setDeviceName( caps.getCapability( "deviceName" ) + "" );
-            webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ) + "" );
+            if ( useCloud.getProvider().equals( "PERFECTO" ) )
+                webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
             
             webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );
             webDriver.setCloud( useCloud );

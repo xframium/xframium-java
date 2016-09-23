@@ -20,6 +20,8 @@
  *******************************************************************************/
 package org.xframium.driver;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
@@ -27,12 +29,16 @@ import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.content.ContentManager;
 import org.xframium.device.DeviceManager;
+import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.exception.DeviceAcquisitionException;
 import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.integrations.sauceLabs.rest.SauceREST;
 import org.xframium.page.PageManager;
+import org.xframium.page.StepStatus;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.spi.PropertyProvider;
@@ -71,7 +77,11 @@ public class XMLTestDriver extends AbstractSeleniumTest
         {	
             if ( !( (DeviceWebDriver) getWebDriver() ).isConnected() )
             {
+                
                 PageManager.instance().setThrowable( new DeviceAcquisitionException( getDevice() ) );
+                PageManager.instance().addExecutionLog( getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), "_ACQUIRE", System.currentTimeMillis() - 5000, 5000, StepStatus.FAILURE,
+                        PageManager.instance().getThrowable().getMessage(), PageManager.instance().getThrowable(), 0, "", false, new String[] { PageManager.instance().getThrowable().getMessage() } );
+                
                 throw PageManager.instance().getThrowable();
             }
                 
@@ -88,6 +98,29 @@ public class XMLTestDriver extends AbstractSeleniumTest
                 return;
             }
     		
+            if( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) )
+            {
+                CloudDescriptor currentCloud = CloudRegistry.instance().getCloud();
+                if ( getDevice().getCloud() != null && !getDevice().getCloud().isEmpty() )
+                    currentCloud = CloudRegistry.instance().getCloud( getDevice().getCloud() );
+                
+                if ( currentCloud.getProvider().equals( "SAUCELABS" ) )
+                {
+                    SauceREST sR = new SauceREST( currentCloud.getUserName(), currentCloud.getPassword() );
+                    Map<String,Object> jobInfo = new HashMap<String,Object>( 10 );
+                    jobInfo.put( "name", testName.getTestName() );
+                    
+                    String[] tags = new String[] { "xFramium" };
+                    if ( test.getTags() != null && test.getTags().length > 0 )
+                        tags = test.getTags();
+                    
+                    jobInfo.put( "tags", tags );
+                    
+                    sR.updateJobInfo( ( (DeviceWebDriver) getWebDriver() ).getExecutionId(), jobInfo );
+                    
+                }
+            }
+            
             if ( ( (DeviceWebDriver) getWebDriver() ).getCloud().getProvider().equals( "PERFECTO" ) )
             {
                 if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) && getWebDriver() instanceof ReportiumProvider )
@@ -118,6 +151,19 @@ public class XMLTestDriver extends AbstractSeleniumTest
             {
                 if ( returnValue )
                 {
+                    if( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) )
+                    {
+                        CloudDescriptor currentCloud = CloudRegistry.instance().getCloud();
+                        if ( getDevice().getCloud() != null && !getDevice().getCloud().isEmpty() )
+                            currentCloud = CloudRegistry.instance().getCloud( getDevice().getCloud() );
+                        
+                        if ( currentCloud.getProvider().equals( "SAUCELABS" ) )
+                        {
+                            SauceREST sR = new SauceREST( currentCloud.getUserName(), currentCloud.getPassword() );
+                            sR.jobPassed( ( (DeviceWebDriver) getWebDriver() ).getExecutionId() );
+                        }
+                    }
+                    
                     if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
                     {
                         if ( ( (ReportiumProvider) getWebDriver() ).getReportiumClient() != null )
@@ -131,6 +177,19 @@ public class XMLTestDriver extends AbstractSeleniumTest
                 }
                 else
                 {
+                    if( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) )
+                    {
+                        CloudDescriptor currentCloud = CloudRegistry.instance().getCloud();
+                        if ( getDevice().getCloud() != null && !getDevice().getCloud().isEmpty() )
+                            currentCloud = CloudRegistry.instance().getCloud( getDevice().getCloud() );
+                        
+                        if ( currentCloud.getProvider().equals( "SAUCELABS" ) )
+                        {
+                            SauceREST sR = new SauceREST( currentCloud.getUserName(), currentCloud.getPassword() );
+                            sR.jobFailed( ( (DeviceWebDriver) getWebDriver() ).getExecutionId() );
+                        }
+                    }
+                    
                     if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
                     {
                         if ( ( (ReportiumProvider) getWebDriver() ).getReportiumClient() != null )

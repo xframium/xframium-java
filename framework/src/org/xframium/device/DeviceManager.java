@@ -1,5 +1,5 @@
 /*******************************************************************************
- * xFramium
+v * xFramium
  *
  * Copyright 2016 by Moreland Labs, Ltd. (http://www.morelandlabs.com)
  *
@@ -825,6 +825,9 @@ public class DeviceManager implements ArtifactListener
                     }
                     DeviceWebDriver webDriver = new DeviceWebDriver( null, deviceRan, currentDevice );
                     webDriver.setArtifactProducer( useCloud.getCloudActionProvider().getArtifactProducer() );
+                    
+                    
+                    
                     
                     return new ConnectedDevice( webDriver, currentDevice, personaName );
                 }

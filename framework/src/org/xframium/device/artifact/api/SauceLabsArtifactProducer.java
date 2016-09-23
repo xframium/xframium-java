@@ -42,14 +42,18 @@ import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.AbstractArtifactProducer;
 import org.xframium.device.artifact.Artifact;
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.device.data.DataManager;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
+import org.xframium.integrations.sauceLabs.rest.SauceREST;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class PerfectoArtifactProducer.
  */
-public class PerfectoArtifactProducer extends AbstractArtifactProducer
+public class SauceLabsArtifactProducer extends AbstractArtifactProducer
 {
     
 	/** The Constant REPORT_KEY. */
@@ -68,7 +72,7 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 	/**
 	 * Instantiates a new perfecto artifact producer.
 	 */
-	public PerfectoArtifactProducer()
+	public SauceLabsArtifactProducer()
 	{
 		// TODO Auto-generated constructor stub
 	}
@@ -78,7 +82,7 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 	 *
 	 * @param reportFormat the report format
 	 */
-	public PerfectoArtifactProducer( String reportFormat )
+	public SauceLabsArtifactProducer( String reportFormat )
 	{
 	}
 
@@ -160,50 +164,28 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
     			case DEVICE_LOG:
     				try
     				{
-    				    ByteArrayInputStream inputStream = new ByteArrayInputStream( generateExecutionReport( "download", parameterMap, "xml", rootFolder, aType ).getArtifactData() );
-    				    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-    		            dbFactory.setNamespaceAware( true );
-    		            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-    		            Document xmlDocument = dBuilder.parse( inputStream );
-    		            
-    		            NodeList nodeList = getNodes( xmlDocument, "//dataItem[@type='log']/attachment" );
-    		            if ( nodeList != null && nodeList.getLength() > 0 )
-    		            {
-    		                byte[] zipFile = PerfectoMobile.instance().reports().download( parameterMap.get( REPORT_KEY ), nodeList.item( 0 ).getTextContent(), false );
-    		                ZipInputStream zipStream = new ZipInputStream( new ByteArrayInputStream( zipFile ) );
-    		                ZipEntry entry = zipStream.getNextEntry();
-    		                
-    		                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    		                byte[] bytesIn = new byte[ 512 ];
-    		                int bytesRead = 0;
-    		                while ( ( bytesRead = zipStream.read( bytesIn ) ) != -1 )
-    		                {
-    		                    outputStream.write( bytesIn, 0, bytesRead );
-    		                }
-    		                
-    		                zipStream.close();
-    		                
-    		                return new Artifact( rootFolder + "deviceLog.txt", outputStream.toByteArray() );
-    		                
-    		            }
-    				    
-    		            return new Artifact( rootFolder + "deviceLog.txt", "Could not read file".getBytes() );
-    					
+    				    if( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) )
+                        {
+                            CloudDescriptor currentCloud = CloudRegistry.instance().getCloud();
+                            if ( connectedDevice.getDevice().getCloud() != null && !connectedDevice.getDevice().getCloud().isEmpty() )
+                                currentCloud = CloudRegistry.instance().getCloud( connectedDevice.getDevice().getCloud() );
+                            
+                            if ( currentCloud.getProvider().equals( "SAUCELABS" ) )
+                            {
+                                SauceREST sR = new SauceREST( currentCloud.getUserName(), currentCloud.getPassword() );
+                                return new Artifact( rootFolder + "deviceLog.txt", sR.downloadLog( connectedDevice.getExecutionId() ) );
+                            }
+                        }
+    				    else
+    				    {
+    				        return null;
+    				    }
     				}
     				catch( Exception e )
     				{
     					log.error( "Error download device log data", e );
     				}
     				return null;
-    				
-    			case EXECUTION_REPORT_CSV:
-    			    return generateExecutionReport( "download", parameterMap, "csv", rootFolder, aType );
-    				
-    			case EXECUTION_REPORT_HTML:
-    			    return generateExecutionReport( "download", parameterMap, "html", rootFolder, aType );
-    			
-    			case EXECUTION_REPORT_XML:
-    			    return generateExecutionReport( "download", parameterMap, "xml", rootFolder, aType );
     				
     			case EXECUTION_RECORD_CSV:
     			    return generateCSVRecord( connectedDevice.getPopulatedDevice(), testName, rootFolder );
@@ -233,16 +215,14 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 	 */
 	public byte[] getUrl( URL currentUrl )
 	{
-		if (log.isInfoEnabled())
-			log.info( "Executing " + currentUrl.toString() );
+		if (log.isDebugEnabled())
+			log.debug( "Executing " + currentUrl.toString() );
 		InputStream inputStream = null;
 		try
 		{
 			ByteArrayOutputStream resultBuilder = new ByteArrayOutputStream();
 
 			HttpURLConnection y = ( HttpURLConnection ) currentUrl.openConnection();
-			y.setReadTimeout( 30000 );
-
 
 			inputStream = y.getInputStream();
 			byte[] buffer = new byte[1024];

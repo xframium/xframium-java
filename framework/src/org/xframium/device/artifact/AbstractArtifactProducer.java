@@ -46,8 +46,11 @@ import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
+import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.integrations.sauceLabs.rest.SauceREST;
 import org.xframium.page.ExecutionRecord;
 import org.xframium.page.StepStatus;
 import org.xframium.spi.Device;
@@ -115,6 +118,12 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
 	
 	protected Artifact generateHTMLRecord( Device device, String testName, String rootFolder, WebDriver webDriver )
 	{
+	    CloudDescriptor currentCloud = CloudRegistry.instance().getCloud();
+        if ( device.getCloud() != null && !device.getCloud().isEmpty() )
+            currentCloud = CloudRegistry.instance().getCloud( device.getCloud() );
+        String cloudProvider = currentCloud.getProvider();
+	    
+	    
 	    StringBuffer stringBuffer = new StringBuffer();
         stringBuffer = new StringBuffer();
         stringBuffer.append( "<html>" );
@@ -127,7 +136,9 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         
         stringBuffer.append( "<body><div class=\"container\">" );
         
-        stringBuffer.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium  " + Initializable.VERSION + "</h6><h3 class=\"dashhead-title\">" + testName + "</h3><h6>" + device.getEnvironment() + "</h6>" );
+        
+        
+        stringBuffer.append( "<div class=\"col-sm-12 content\"><div class=\"dashhead\"><span class=\"pull-right text-muted\">" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( " at " ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "</span><h6 class=\"dashhead-subtitle\">xFramium  " + Initializable.VERSION + "</h6><h3 class=\"dashhead-title\">" + testName + "</h3><h6>" + device.getEnvironment() + " on " + currentCloud.getHostName() + " (" + currentCloud.getProvider() + ")</h6>" );
 
         if ( webDriver instanceof PropertyProvider )
         {
@@ -261,24 +272,36 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         stringBuffer.append( "<div class=\"list-group\">" );
 
         String wtUrl = ( (DeviceWebDriver) webDriver ).getWindTunnelReport();
-        if ( wtUrl != null && !wtUrl.isEmpty() )
+        if ( cloudProvider.equals( "PERFECTO" ) && wtUrl != null && !wtUrl.isEmpty() )
             stringBuffer.append( "<a target=_blank hRef=\"" + UriEncoder.encode( wtUrl ).replace( "%3F", "?" ) + "\" class=\"list-group-item\">Perfecto Single Test Report</a>" );
         
-        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_CSV ) )
+        
+        if( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) )
+        {
+            if ( cloudProvider.equals( "SAUCELABS" )   )
+            {
+                stringBuffer.append( "<a target=_blank hRef=\"" );
+                stringBuffer.append( "https://saucelabs.com/beta/tests/" ).append( ( (DeviceWebDriver) webDriver).getExecutionId() ).append( "/commands#0" );
+                stringBuffer.append( "\" class=\"list-group-item\">SauceLabs Execution Report</a>" );
+            }
+        }
+        
+        
+        if ( cloudProvider.equals( "PERFECTO" ) && DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_CSV ) )
             stringBuffer.append( "<a target=_blank hRef=\"EXECUTION_REPORT_CSV.csv\" class=\"list-group-item\">Perfecto Execution Report (CSV)</a>" );
         
-        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT ) || DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_PDF ) )
+        if ( cloudProvider.equals( "PERFECTO" ) && DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT ) || DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_PDF ) )
         	stringBuffer.append( "<a target=_blank hRef=\"EXECUTION_REPORT_PDF.pdf\" class=\"list-group-item\">Perfecto Execution Report (PDF)</a>" );
         
-        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_HTML ) )
+        if ( cloudProvider.equals( "PERFECTO" ) && DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_HTML ) )
         	stringBuffer.append( "<a target=_blank hRef=\"EXECUTION_REPORT_HTML.html\" class=\"list-group-item\">Perfecto Execution Report (HTML)</a>" );
         
-        if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_XML ) )
+        if ( cloudProvider.equals( "PERFECTO" ) && DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_REPORT_XML ) )
         	stringBuffer.append( "<a target=_blank hRef=\"EXECUTION_REPORT_XML.xml\" class=\"list-group-item\">Perfecto Execution Report (XML)</a>" );
         
         if ( ((DeviceWebDriver) webDriver).isConnected() )
         {
-            if ( ((DeviceWebDriver) webDriver).getCloud().getProvider().equals( "PERFECTO" ) )
+            if ( cloudProvider.equals( "PERFECTO" ) )
             {
                 if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
                 {

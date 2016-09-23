@@ -118,7 +118,8 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 			webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
 			webDriver.setReportKey( caps.getCapability( "reportKey" ).toString() );
 			webDriver.setDeviceName( caps.getCapability( "deviceName" ).toString() );
-			webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
+			if ( useCloud.getProvider().equals( "PERFECTO" ) )
+			    webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
 			webDriver.context( "NATIVE_APP" );
 			
 			if( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAndroidIdentifier().isEmpty() )

@@ -118,7 +118,8 @@ public class IOSDriverFactory extends AbstractDriverFactory
 			webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
 			webDriver.setReportKey( caps.getCapability( "reportKey" ).toString() );
 			webDriver.setDeviceName( caps.getCapability( "deviceName" ).toString() );
-			webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
+			if ( useCloud.getProvider().equals( "PERFECTO" ) )
+                webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
 			webDriver.context( "NATIVE_APP" );
 			
 			
