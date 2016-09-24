@@ -35,7 +35,9 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSAddDevice extends AbstractKeyWordStep
 {
-
+    
+    
+    
     /* (non-Javadoc)
      * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
      */
@@ -99,6 +101,9 @@ public class KWSAddDevice extends AbstractKeyWordStep
     
     public KWSAddDevice()
     {
+        kwName = "Add device";
+        kwDescription = "Allows thte script to add a additional device to the same script to validate device/device actions";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-adddevice";
         orMapping = false;
     }
 

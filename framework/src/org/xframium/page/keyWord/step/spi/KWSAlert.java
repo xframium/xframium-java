@@ -20,12 +20,15 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.security.UserAndPassword;
 import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -41,12 +44,33 @@ public class KWSAlert extends AbstractKeyWordStep
         orMapping = false;
     }
     
-    private enum ALERT_TYPE
+    public enum ALERT_TYPE
     {
-        ACCEPT,
-        DISMISS,
-        SEND_KEYS,
-        AUTHENTICATE;
+        ACCEPT( 1, "ACCEPT", "Accept"),
+        DISMISS( 2, "DISMISS", "Dismiss"),
+        SEND_KEYS (3, "SEND_KEYS", "Send Keys"),
+        AUTHENTICATE( 4, "AUTHENTICATE", "Authenticate");
+        
+        private ALERT_TYPE( int id, String name, String description )
+        {
+            this.id = id;
+            this.name= name;
+            this.description = description;
+        }
+        
+        private int id;
+        private String name;
+        private String description;
+        
+        public List<ALERT_TYPE> getSupported()
+        {
+            List<ALERT_TYPE> alertList = new ArrayList<ALERT_TYPE>( 10 );
+            alertList.add( ACCEPT );
+            alertList.add( DISMISS );
+            alertList.add( SEND_KEYS );
+            return alertList;
+        }
+        
     }
     
 	/* (non-Javadoc)
