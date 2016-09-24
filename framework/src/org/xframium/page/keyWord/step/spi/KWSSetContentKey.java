@@ -60,6 +60,9 @@ public class KWSSetContentKey extends AbstractKeyWordStep
                 throw new ScriptConfigurationException( "Script value must be of type String" );
         }
 
+        if ( log.isDebugEnabled() )
+            log.debug( "Setting Content key to: " + newKey );
+
         ContentManager.instance().setCurrentContentKey( (String) newKey );
 		
         return true;

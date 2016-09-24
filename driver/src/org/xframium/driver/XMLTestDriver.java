@@ -27,7 +27,6 @@ import org.testng.SkipException;
 import org.testng.annotations.Test;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactType;
-import org.xframium.content.ContentManager;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
@@ -60,18 +59,6 @@ public class XMLTestDriver extends AbstractSeleniumTest
         KeyWordTest test = KeyWordDriver.instance().getTest( testName.getTestName().split( "\\." )[ 0 ] );
         if ( test == null )
             throw new ScriptConfigurationException( "The Test Name " + testName + " does not exist" );
-
-        String contentKey = testName.getContentKey();
-
-        if (( contentKey != null ) &&
-            ( contentKey.length() > 0 ))
-        {
-            ContentManager.instance().setCurrentContentKey( contentKey );
-        }
-        else
-        {
-            ContentManager.instance().setCurrentContentKey( null );
-        }
             
         try
         {	
