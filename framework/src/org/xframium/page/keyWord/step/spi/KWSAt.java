@@ -25,6 +25,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
@@ -41,7 +42,7 @@ public class KWSAt extends AbstractKeyWordStep
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
 	{
 		if ( pageObject == null )
-			throw new IllegalStateException( "There was no Page Object defined" );
+			throw new ScriptConfigurationException( "There was no Page Object defined" );
 		
 		Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap ).cloneElement();
 		currentElement.setCacheNative( true );

@@ -22,6 +22,7 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordParameter;
@@ -96,11 +97,11 @@ public class KWSMath extends AbstractKeyWordStep
 	        double compareTo = Double.parseDouble( formatString( compareToString ) );
 	        
 	        if ( compareTo != currentValue )
-                throw new IllegalStateException( "GET Expected [" + compareTo + "] but found [" + currentValue + "]" );
+                throw new ScriptException( "GET Expected [" + compareTo + "] but found [" + currentValue + "]" );
 	    }
 		
 		if ( !validateData( currentValue + "" ) )
-            throw new IllegalStateException( "MATH Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + currentValue + "]" );
+            throw new ScriptException( "MATH Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + currentValue + "]" );
         
         if ( getContext() != null )
         {

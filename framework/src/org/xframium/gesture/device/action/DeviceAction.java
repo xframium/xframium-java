@@ -20,6 +20,7 @@
  *******************************************************************************/
 package org.xframium.gesture.device.action;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.openqa.selenium.WebDriver;
 
@@ -37,58 +38,93 @@ public interface DeviceAction
 	{
 		
 		/** The hide keyboard. */
-		HIDE_KEYBOARD,
+		HIDE_KEYBOARD(1, "HIDE_KEYBOARD", "Hide the keyboard"),
 		
 		/** The back. */
-		BACK,
+		BACK(2, "BACK", "LEGACY Click Back Button"),
 		
 		/** The url. */
-		URL,
+		URL(3, "URL", "Open a URL"),
 		
 		/** The install. */
-		INSTALL,
+		INSTALL( 4, "INSTALL", "Install a native application"),
 		
 		/** The uninstall. */
-		UNINSTALL,
+		UNINSTALL( 5, "UNINSTALL", "Remove a native application"),
 		
 		/** The reset apps. */
-		RESET_APPS,
+		RESET_APPS( 6, "RESET_APPS", "Reset applications"),
 		
 		/** The open app. */
-		OPEN_APP,
+		OPEN_APP( 7, "OPEN_APP", "Launch an application"),
 		
 		/** The close app. */
-		CLOSE_APP,
+		CLOSE_APP( 8, "CLOSE_APP", "Close an application"),
 		
 		/** The reboot. */
-		REBOOT,
+		REBOOT( 9, "REBOOT", "Reboot the device"),
 		
 		/** The recover. */
-		RECOVER,
+		RECOVER( 10, "RECOVER", "Recover the connection"),
 		
 		/** The clean. */
-		CLEAN,
+		CLEAN( 11, "CLEAN", "Clean the device"),
 		
 		/**  switch the context. */
-		CONTEXT,
+		CONTEXT( 12, "CONTEXT", "Switch the driver context"),
 		
 		/** The dump state. */
-		DUMP_STATE,
+		DUMP_STATE( 13, "DUMP_STATE", "LEGACY dump state"),
 		
 		/** The dump state. */
-        SEND_KEYS,
+        SEND_KEYS( 14, "SEND_KEYS", "Send keyword strokes"),
 		
 		/** The location. */
-		LOCATION,
+		LOCATION( 15, "LOCATION", "Change the device location"),
 		/** Call this device */
-		CALL,
+		CALL( 16, "CALL", "Call the device"),
 		
 		/** send a text to this device */
-		SEND_TEXT,
+		SEND_TEXT( 17, "SEND_TEXT", "Send SMS Message"),
 		
-		START_V_NET,
+		START_V_NET(18, "START_V_NET", "Start network virtualization"),
 		
-		STOP_V_NET;
+		STOP_V_NET(19, "STOP_V_NET", "Stop Network Virtualization");
+	    
+	    public List<ActionType> getSupportedActions()
+	    {
+	        List<ActionType> supportedList = new ArrayList<ActionType>( 10 );
+	        supportedList.add( ActionType.HIDE_KEYBOARD );
+	        supportedList.add( ActionType.URL );
+	        supportedList.add( ActionType.INSTALL );
+	        supportedList.add( ActionType.UNINSTALL );
+	        supportedList.add( ActionType.RESET_APPS );
+	        supportedList.add( ActionType.OPEN_APP );
+	        supportedList.add( ActionType.CLOSE_APP );
+	        supportedList.add( ActionType.REBOOT );
+	        supportedList.add( ActionType.RECOVER );
+	        supportedList.add( ActionType.CLEAN );
+	        supportedList.add( ActionType.CONTEXT );
+	        supportedList.add( ActionType.SEND_KEYS );
+	        supportedList.add( ActionType.LOCATION );
+	        supportedList.add( ActionType.CALL );
+	        supportedList.add( ActionType.SEND_TEXT );
+	        supportedList.add( ActionType.START_V_NET );
+	        supportedList.add( ActionType.STOP_V_NET );
+	        return supportedList;
+	    }
+	    
+	    private ActionType( int id, String name, String description )
+	    {
+	        this.id = id;
+	        this.name= name;
+	        this.description = description;
+	    }
+	    
+	    private int id;
+	    private String name;
+	    private String description;
+	    
 	}
 	
 	/**

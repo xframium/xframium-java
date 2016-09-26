@@ -233,14 +233,16 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 	 */
 	public byte[] getUrl( URL currentUrl )
 	{
-		if (log.isDebugEnabled())
-			log.debug( "Executing " + currentUrl.toString() );
+		if (log.isInfoEnabled())
+			log.info( "Executing " + currentUrl.toString() );
 		InputStream inputStream = null;
 		try
 		{
 			ByteArrayOutputStream resultBuilder = new ByteArrayOutputStream();
 
 			HttpURLConnection y = ( HttpURLConnection ) currentUrl.openConnection();
+			y.setReadTimeout( 30000 );
+
 
 			inputStream = y.getInputStream();
 			byte[] buffer = new byte[1024];

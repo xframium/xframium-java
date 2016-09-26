@@ -22,6 +22,8 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -74,7 +76,7 @@ public class KWSAttribute extends AbstractKeyWordStep
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
 	{
 		if ( pageObject == null )
-			throw new IllegalStateException( "Page Object was not defined" );
+			throw new ScriptConfigurationException( "Page Object was not defined" );
 		
 		String attributeValue = null;
 		Object compareTo = null;
@@ -98,11 +100,11 @@ public class KWSAttribute extends AbstractKeyWordStep
             
 			compareTo = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
 			if ( !attributeValue.equals( compareTo ) )
-				throw new IllegalStateException( "ATTRIBUTE Expected [" + compareTo + "] but found [" + attributeValue + "]" );
+				throw new ScriptException( "ATTRIBUTE Expected [" + compareTo + "] but found [" + attributeValue + "]" );
 		}
 		
 		if ( !validateData( attributeValue + "" ) )
-			throw new IllegalStateException( "GET Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + attributeValue + "]" );
+			throw new ScriptException( "GET Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + attributeValue + "]" );
 		
 		if ( getContext() != null )
 		{

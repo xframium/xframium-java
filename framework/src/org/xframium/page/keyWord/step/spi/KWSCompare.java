@@ -22,6 +22,7 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -51,7 +52,7 @@ public class KWSCompare extends AbstractKeyWordStep
 			Object compareFrom = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
 			Object compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap );
 			if ( !compareFrom.equals( compareTo ) )
-				throw new IllegalStateException( "COMPARE Expected [" + compareFrom + "] but found [" + compareTo + "]" );
+				throw new ScriptException( "COMPARE Expected [" + compareFrom + "] but found [" + compareTo + "]" );
 		}
 		
 		return true;

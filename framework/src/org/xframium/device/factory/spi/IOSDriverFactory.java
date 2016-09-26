@@ -105,7 +105,8 @@ public class IOSDriverFactory extends AbstractDriverFactory
 
                 dc.setCapability( Device.LOCALE, localeToConfigure );
             }
-			
+            
+
 			if ( log.isInfoEnabled() )
 			    log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 			
@@ -117,7 +118,8 @@ public class IOSDriverFactory extends AbstractDriverFactory
 			webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
 			webDriver.setReportKey( caps.getCapability( "reportKey" ).toString() );
 			webDriver.setDeviceName( caps.getCapability( "deviceName" ).toString() );
-			webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
+			if ( useCloud.getProvider().equals( "PERFECTO" ) )
+                webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
 			webDriver.context( "NATIVE_APP" );
 			
 			

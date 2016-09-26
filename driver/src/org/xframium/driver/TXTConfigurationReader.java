@@ -596,60 +596,55 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
         if ( interruptString != null && !interruptString.isEmpty() )
             DeviceManager.instance().setDeviceInterrupts( interruptString );
 
-        boolean keywordsloaded = false;
-
         KeyWordDriver.instance().setConfigProperties( configProperties );
 
-        if ( keywordsloaded )
+        List<String> testArray = new ArrayList<String>( 10 );
+
+        //
+        // Extract any named tests
+        //
+        String testNames = configProperties.getProperty( "driver.testNames" );
+        if ( testNames != null && !testNames.isEmpty() )
         {
-            List<String> testArray = new ArrayList<String>( 10 );
-
-            //
-            // Extract any named tests
-            //
-            String testNames = configProperties.getProperty( "driver.testNames" );
-            if ( testNames != null && !testNames.isEmpty() )
+            Collection<KeyWordTest> testList = KeyWordDriver.instance().getNamedTests( testNames.split( "," ) );
+                
+            if ( testList.isEmpty() )
             {
-                Collection<KeyWordTest> testList = KeyWordDriver.instance().getNamedTests( testNames.split( "," ) );
-                
-                if ( testList.isEmpty() )
-                {
-                    System.err.println( "No tests contained the names(s) [" + testNames + "]" );
-                }
-                
-                testArray.addAll( Arrays.asList( testNames ) );
+                System.err.println( "No tests contained the names(s) [" + testNames + "]" );
             }
-            
-            //
-            // Extract any tagged tests
-            //
-            String tagNames = configProperties.getProperty( "driver.tagNames" );
-            if ( tagNames != null && !tagNames.isEmpty() )
-            {
-                DeviceManager.instance().setTagNames( tagNames.split( "," ) );
-                Collection<KeyWordTest> testList = KeyWordDriver.instance().getTaggedTests( tagNames.split( "," ) );
                 
-                if ( testList.isEmpty() )
-                {
-                    System.err.println( "No tests contained the tag(s) [" + tagNames + "]" );
-                }
-                
-                for ( KeyWordTest t : testList )
-                    testArray.add( t.getName() );
-                
-                if ( testArray.isEmpty() )
-                {
-                    System.err.println( "No tests were specified" );
-                    System.exit( -1 );
-                }
-            }
-
-            
-            if ( testArray.size() == 0 )
-                DataManager.instance().setTests( KeyWordDriver.instance().getTestNames() );
-            else
-                DataManager.instance().setTests( testArray.toArray( new String[0] ) );
+            testArray.addAll( Arrays.asList( testNames ) );
         }
+            
+        //
+        // Extract any tagged tests
+        //
+        String tagNames = configProperties.getProperty( "driver.tagNames" );
+        if ( tagNames != null && !tagNames.isEmpty() )
+        {
+            DeviceManager.instance().setTagNames( tagNames.split( "," ) );
+            Collection<KeyWordTest> testList = KeyWordDriver.instance().getTaggedTests( tagNames.split( "," ) );
+                
+            if ( testList.isEmpty() )
+            {
+                System.err.println( "No tests contained the tag(s) [" + tagNames + "]" );
+            }
+                
+            for ( KeyWordTest t : testList )
+                testArray.add( t.getName() );
+                
+            if ( testArray.isEmpty() )
+            {
+                System.err.println( "No tests were specified" );
+                System.exit( -1 );
+            }
+        }
+
+            
+        if ( testArray.size() == 0 )
+            DataManager.instance().setTests( KeyWordDriver.instance().getTestNames() );
+        else
+            DataManager.instance().setTests( testArray.toArray( new String[0] ) );
 
         String validateConfiguration = configProperties.getProperty( "driver.validateConfiguration" );
         if ( validateConfiguration != null )

@@ -22,6 +22,7 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -51,7 +52,7 @@ public class KWSClick extends AbstractKeyWordStep
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
 	{
 	    if ( pageObject == null )
-            throw new IllegalStateException( "There was no Page Object defined" );
+            throw new ScriptConfigurationException( "There was no Page Object defined" );
 		
 		getElement( pageObject, contextMap, webDriver, dataMap ).click();
 		

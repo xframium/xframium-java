@@ -42,9 +42,9 @@ public class KWSDevice extends AbstractKeyWordStep
 {
     public KWSDevice()
     {
-        kwName = "Add device";
-        kwDescription = "Allows thte script to add a additional device to the same script to validate device/device actions";
-        kwHelp = "https://www.xframium.org/keyword.html#kw-adddevice";
+        kwName = "Device Action";
+        kwDescription = "Allows the script to perform device specific actions";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-device";
         orMapping = false;
     }
 	/*

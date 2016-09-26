@@ -20,20 +20,21 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
-import java.util.Map;
-import java.util.Iterator;
 import java.util.ArrayList;
-
+import java.util.Iterator;
+import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.DefaultPageData;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.data.provider.PageDataProvider;
-import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordToken;
+import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.utility.SQLUtil;
 
 // TODO: Auto-generated Javadoc
@@ -62,7 +63,7 @@ public class KWSSQL extends AbstractKeyWordStep
         boolean rtn = true;
         
         if ( pageObject == null )
-            throw new IllegalStateException( "Page Object was not defined" );
+            throw new ScriptConfigurationException( "Page Object was not defined" );
 
         //
         // OK, this step needs at least one parameter and the first is the query to execute.  If there are
@@ -78,7 +79,7 @@ public class KWSSQL extends AbstractKeyWordStep
         
         if ( paramCount < 1 )
         {
-            throw new IllegalStateException( "SQL requires at least one parameter" );
+            throw new ScriptConfigurationException( "SQL requires at least one parameter" );
         }
         else
         {
@@ -188,7 +189,7 @@ public class KWSSQL extends AbstractKeyWordStep
         }
         catch( Throwable e )
         {
-            throw new IllegalStateException( "SQL execution failed with: ", e );
+            throw new ScriptException( "SQL execution failed with: " + e.getMessage() );
         }
 		
         return rtn;

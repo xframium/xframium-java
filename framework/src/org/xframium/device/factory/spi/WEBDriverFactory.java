@@ -112,7 +112,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
             	dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
 
             if ( log.isInfoEnabled() )
-                log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
+                log.info( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 
             webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
             webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
@@ -122,7 +122,8 @@ public class WEBDriverFactory extends AbstractDriverFactory
             webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
             webDriver.setReportKey( caps.getCapability( "reportKey" ) + "" );
             webDriver.setDeviceName( caps.getCapability( "deviceName" ) + "" );
-            webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ) + "" );
+            if ( useCloud.getProvider().equals( "PERFECTO" ) )
+                webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
             
             webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );
             webDriver.setCloud( useCloud );

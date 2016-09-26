@@ -23,6 +23,8 @@ package org.xframium.page.keyWord.step.spi;
 import java.lang.reflect.Method;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -44,9 +46,9 @@ public class KWSReturn extends AbstractKeyWordStep
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
 	{
 		if ( pageObject == null )
-			throw new IllegalStateException( "Page Object was not defined" );
+			throw new ScriptConfigurationException( "Page Object was not defined" );
 		if ( getParameterList().size() < 1 )
-			throw new IllegalArgumentException( "You must provide a parameter 1 parameter to a step in which the type is Validation" );
+			throw new ScriptConfigurationException( "You must provide a parameter 1 parameter to a step in which the type is Validation" );
 		
 		Object compare = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
 		
@@ -85,7 +87,7 @@ public class KWSReturn extends AbstractKeyWordStep
 		catch( Exception e )
 		{
 			log.error( "Error executing function for validation [" + getName() + "] on page [" + getPageName() + "]", e );
-			return false;
+			throw new ScriptException( "Error executing function for validation [" + getName() + "] on page [" + getPageName() + "]" );
 		}
 	}
 

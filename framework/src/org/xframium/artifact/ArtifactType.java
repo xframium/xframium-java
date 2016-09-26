@@ -73,6 +73,8 @@ public enum ArtifactType
     
     DEBUGGER( ArtifactTime.NOOP ),
     
+    SAUCE_LABS( ArtifactTime.NOOP ),
+    
     REPORTIUM( ArtifactTime.NOOP );
     
     /** The time. */

@@ -45,6 +45,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.xframium.artifact.ArtifactTime;
 import org.xframium.artifact.ArtifactType;
+import org.xframium.content.ContentManager;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.Artifact;
@@ -410,11 +411,25 @@ public abstract class AbstractSeleniumTest
     {
         try
         {
-            Thread.currentThread().setName( testArgs[0].toString() );
+            TestName testName = ((TestName) testArgs[0]);
+
+            String contentKey = testName.getContentKey();
+
+            if (( contentKey != null ) &&
+                ( contentKey.length() > 0 ))
+            {
+                ContentManager.instance().setCurrentContentKey( contentKey );
+            }
+            else
+            {
+                ContentManager.instance().setCurrentContentKey( null );
+            }
+            
+            Thread.currentThread().setName( "Device Acquisition --> " + Thread.currentThread().getId() );
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Attempting to acquire device for " + currentMethod.getName() );
 
-            ConnectedDevice connectedDevice = DeviceManager.instance().getDevice( currentMethod, ((TestName) testArgs[0]).getTestName(), true, ((TestName) testArgs[0]).getPersonaName() );
+            ConnectedDevice connectedDevice = DeviceManager.instance().getDevice( currentMethod, testName.getTestName(), true, testName.getPersonaName() );
 
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Device acquired for " + currentMethod.getName() );
@@ -443,12 +458,11 @@ public abstract class AbstractSeleniumTest
 
                 putConnectedDevice( DEFAULT, connectedDevice );
 
-                TestName testName = ((TestName) testArgs[0]);
                 if ( testName.getTestName() == null || testName.getTestName().isEmpty() )
                     testName.setTestName( currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() );
 
                 ((TestName) testArgs[0]).setFullName( testArgs[0].toString() );
-                Thread.currentThread().setName( testArgs[0].toString() );
+                Thread.currentThread().setName( testName.baseTestName + "-->" + connectedDevice.getDevice().toShortString() + " (" + Thread.currentThread().getId() + ")" );
             }
         }
         catch ( Exception e )
@@ -550,6 +564,7 @@ public abstract class AbstractSeleniumTest
                 RunDetails.instance().writeDefinitionIndex( DataManager.instance().getReportFolder() );
 
             DeviceManager.instance().clearAllArtifacts();
+            Thread.currentThread().setName( "Idle Thread (" + Thread.currentThread().getId() + ")" );
         }
         catch ( Exception e )
         {

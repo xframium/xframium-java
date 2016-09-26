@@ -21,9 +21,12 @@
 package org.xframium.page.element;
 
 import java.awt.Image;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
+import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
 import org.xframium.page.BY;
 
@@ -58,31 +61,57 @@ public interface Element
     {
         
         /** The clickable. */
-        CLICKABLE,
+        CLICKABLE( 1, "CLICKABLE", "Clickable"),
         
         /** The selectable. */
-        SELECTABLE,
+        SELECTABLE( 2, "SELECTABLE", "Selectable"),
         
         /** The invisible. */
-        INVISIBLE,
+        INVISIBLE( 3, "INVISIBLE", "Invisible"),
         
         /** The present. */
-        PRESENT,
+        PRESENT( 4, "PRESENT", "Present"),
         
         /** The text present. */
-        TEXT_PRESENT,
+        TEXT_PRESENT( 5, "TEXT_PRESENT", "Text Present"),
         
         /** The text value present. */
-        TEXT_VALUE_PRESENT,
+        TEXT_VALUE_PRESENT( 6, "TEXT_VALUE_PRESENT", "Text Value Present"),
         
         /** The title contains. */
-        TITLE_CONTAINS,
+        TITLE_CONTAINS( 7, "TITLE_CONTAINS", "Title Contains"),
         
         /** The title is. */
-        TITLE_IS,
+        TITLE_IS( 8, "TITLE_IS", "Title Equals"),
         
         /** The visible. */
-        VISIBLE;
+        VISIBLE( 9, "VISIBLE", "Visible");
+	    
+	    private WAIT_FOR( int id, String name, String description )
+        {
+            this.id = id;
+            this.name= name;
+            this.description = description;
+        }
+        
+        private int id;
+        private String name;
+        private String description;
+        
+        public List<WAIT_FOR> getSupported()
+        {
+            List<WAIT_FOR> wList = new ArrayList<WAIT_FOR>( 10 );
+            wList.add( WAIT_FOR.CLICKABLE );
+            wList.add( WAIT_FOR.SELECTABLE );
+            wList.add( WAIT_FOR.INVISIBLE );
+            wList.add( WAIT_FOR.PRESENT );
+            wList.add( WAIT_FOR.TEXT_PRESENT );
+            wList.add( WAIT_FOR.TEXT_VALUE_PRESENT );
+            wList.add( WAIT_FOR.TITLE_CONTAINS );
+            wList.add( WAIT_FOR.TITLE_IS );
+            wList.add( WAIT_FOR.VISIBLE );
+            return wList;
+        }
     }
 	
 	public BY getBy();
