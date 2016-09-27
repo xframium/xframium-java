@@ -29,6 +29,10 @@ import java.util.concurrent.Semaphore;
  */
 public interface Device
 {
+    /**
+     * The name of the device capability that allows configuration of locale.
+     **/
+    public static final String LOCALE = "locale";
 	
 	/**
 	 * Adds the capability.

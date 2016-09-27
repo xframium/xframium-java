@@ -22,15 +22,62 @@ package org.xframium.page.keyWord.step;
 
 import com.xframium.serialization.SerializationManager;
 import com.xframium.serialization.json.ReflectionSerializer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
 import org.xframium.page.keyWord.step.spi.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.xframium.page.keyWord.step.spi.KWSAddCookie;
+import org.xframium.page.keyWord.step.spi.KWSAddDevice;
+import org.xframium.page.keyWord.step.spi.KWSAlert;
+import org.xframium.page.keyWord.step.spi.KWSAlign;
+import org.xframium.page.keyWord.step.spi.KWSAt;
+import org.xframium.page.keyWord.step.spi.KWSAttribute;
+import org.xframium.page.keyWord.step.spi.KWSBreak;
+import org.xframium.page.keyWord.step.spi.KWSCache;
+import org.xframium.page.keyWord.step.spi.KWSCall;
+import org.xframium.page.keyWord.step.spi.KWSCheckColor;
+import org.xframium.page.keyWord.step.spi.KWSClick;
+import org.xframium.page.keyWord.step.spi.KWSCompare;
+import org.xframium.page.keyWord.step.spi.KWSContrastRatio;
+import org.xframium.page.keyWord.step.spi.KWSDeleteCookie;
+import org.xframium.page.keyWord.step.spi.KWSDeleteCookies;
+import org.xframium.page.keyWord.step.spi.KWSDevice;
+import org.xframium.page.keyWord.step.spi.KWSDumpState;
+import org.xframium.page.keyWord.step.spi.KWSElse;
+import org.xframium.page.keyWord.step.spi.KWSExecJS;
+import org.xframium.page.keyWord.step.spi.KWSExecWS;
+import org.xframium.page.keyWord.step.spi.KWSExists;
+import org.xframium.page.keyWord.step.spi.KWSFocus;
+import org.xframium.page.keyWord.step.spi.KWSFork;
+import org.xframium.page.keyWord.step.spi.KWSFunction;
+import org.xframium.page.keyWord.step.spi.KWSGesture;
+import org.xframium.page.keyWord.step.spi.KWSGetCookie;
+import org.xframium.page.keyWord.step.spi.KWSGetCookies;
+import org.xframium.page.keyWord.step.spi.KWSLoop;
+import org.xframium.page.keyWord.step.spi.KWSMath;
+import org.xframium.page.keyWord.step.spi.KWSMouse;
+import org.xframium.page.keyWord.step.spi.KWSNavigate;
+import org.xframium.page.keyWord.step.spi.KWSOpenPage;
+import org.xframium.page.keyWord.step.spi.KWSOperator;
+import org.xframium.page.keyWord.step.spi.KWSPerfectoScript;
+import org.xframium.page.keyWord.step.spi.KWSReport;
+import org.xframium.page.keyWord.step.spi.KWSReturn;
+import org.xframium.page.keyWord.step.spi.KWSSQL;
+import org.xframium.page.keyWord.step.spi.KWSSet;
+import org.xframium.page.keyWord.step.spi.KWSSetContentKey;
+import org.xframium.page.keyWord.step.spi.KWSString;
+import org.xframium.page.keyWord.step.spi.KWSSync;
+import org.xframium.page.keyWord.step.spi.KWSValue;
+import org.xframium.page.keyWord.step.spi.KWSVisible;
+import org.xframium.page.keyWord.step.spi.KWSWait;
+import org.xframium.page.keyWord.step.spi.KWSWaitFor;
+import org.xframium.page.keyWord.step.spi.KWSWindow;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -54,16 +101,42 @@ public class KeyWordStepFactory
 
     /** The step map. */
     private Map<String, Class> stepMap = new HashMap<String, Class>( 20 );
+    private Map<Class, String> classMap = new HashMap<Class, String>( 20 );
 
     /** The log. */
     private Log log = LogFactory.getLog( KeyWordStepFactory.class );
 
+    public String getKW( Class currentClass )
+    {
+        return classMap.get( currentClass );
+    }
+    
     /**
      * Instantiates a new key word step factory.
      */
     private KeyWordStepFactory()
     {
         initializeDefaults();
+    }
+    
+    public List<KeyWordStep> getSupportedKeywords()
+    {
+        List<KeyWordStep> supportedKeywords = new ArrayList<KeyWordStep>( 20 );
+        
+        for ( Class keyword : stepMap.values() )
+        {
+            try
+            {
+                supportedKeywords.add( (KeyWordStep) keyword.newInstance() );
+            }
+            catch( Exception e )
+            {
+                
+            }
+        }
+        
+        return supportedKeywords;
+        
     }
 
     /**
@@ -78,7 +151,6 @@ public class KeyWordStepFactory
         addKeyWord( "GESTURE", KWSGesture.class );
         addKeyWord( "RETURN", KWSReturn.class );
         addKeyWord( "SET", KWSSet.class );
-        addKeyWord( "VALUE", KWSValue.class );
         addKeyWord( "GET", KWSValue.class );
         addKeyWord( "WAIT", KWSWait.class );
         addKeyWord( "WAIT_FOR", KWSWaitFor.class );
@@ -118,6 +190,7 @@ public class KeyWordStepFactory
         addKeyWord( "OPERATOR", KWSOperator.class );
         addKeyWord( "NAVIGATE", KWSNavigate.class );
         addKeyWord( "VISUAL", KWSVisual.class );
+        addKeyWord( "SET_CONTENT_KEY", KWSSetContentKey.class );
     }
 
     /**
@@ -134,6 +207,7 @@ public class KeyWordStepFactory
             log.warn( "Overwriting Keyword [" + keyWord + "] of type [" + stepMap.get( keyWord ).getClass().getSimpleName() + "] with [" + kwImpl.getClass().getSimpleName() );
 
         stepMap.put( keyWord.toUpperCase(), kwImpl );
+        classMap.put( kwImpl, keyWord );
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( kwImpl, new ReflectionSerializer() );
     }
 

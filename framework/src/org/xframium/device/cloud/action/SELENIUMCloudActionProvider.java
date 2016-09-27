@@ -10,7 +10,11 @@ import eu.bitwalker.useragentutils.UserAgent;
 
 public class SELENIUMCloudActionProvider extends AbstractCloudActionProvider
 {
-    @Override
+	/** The Constant PLATFORM_NAME. */
+	public static final String PLATFORM_NAME = "platformName";
+	
+	
+	@Override
     public boolean startApp( String executionId, String deviceId, String appName, String appIdentifier )
     {
         
@@ -60,5 +64,27 @@ public class SELENIUMCloudActionProvider extends AbstractCloudActionProvider
         
     }
     
+    @Override
+	public String getCloudPlatformName(Device device) {
+		// TODO Auto-generated method stub
+		return PLATFORM_NAME;
+	}
+
+	
+	@Override
+	public String getCloudBrowserName(String currBrowserName) {		
+		
+		if(currBrowserName.equalsIgnoreCase("Chrome")){
+			return "chrome";
+		}else if (currBrowserName.equalsIgnoreCase("internet explorer")||currBrowserName.equalsIgnoreCase("internetexplorer")){
+			return "internet explorer";
+		}else if(currBrowserName.equalsIgnoreCase("firefox")){
+			return "firefox";
+		}else{
+			return currBrowserName;
+		}
+	}
+    
+	
     
 }

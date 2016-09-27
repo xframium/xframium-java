@@ -20,6 +20,8 @@
  *******************************************************************************/
 package org.xframium.gesture;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -37,25 +39,50 @@ public interface Gesture
 	{
 		
 		/** The swipe. */
-		SWIPE,
+		SWIPE(1, "SWIPE", "Swipe your finger"),
 		
 		/** The press. */
-		PRESS,
+		PRESS(2, "PRESS", "Tap on the screen"),
 		
 		/** The zoom. */
-		ZOOM,
+		ZOOM(3, "ZOOM", "Two finger zoom in"),
 		
 		/** The pinch. */
-		PINCH,
+		PINCH(4, "PINCH", "Two finger zoom out"),
 		
 		/** The rotate. */
-		ROTATE,
+		ROTATE(5, "ROTATE", "Rotate the device"),
 		
 		/** The keypress. */
-		KEYPRESS,
+		KEYPRESS(6, "KEYPRESS", "Send a key press"),
 		
 		/** The keypress. */
-		HIDE_KEYBOARD;
+		HIDE_KEYBOARD(7, "HIDE_KEYBOARD", "Hide the keyboard");
+	    
+	    private GestureType( int id, String name, String description )
+	    {
+	        this.id = id;
+	        this.name= name;
+	        this.description = description;
+	    }
+	    
+	    private int id;
+	    private String name;
+	    private String description;
+	    
+	    public List<GestureType> getSupportedGestures()
+	    {
+	        List<GestureType> gestureList = new ArrayList<GestureType>( 10 );
+	        gestureList.add( GestureType.SWIPE );
+	        gestureList.add( GestureType.PRESS );
+	        gestureList.add( GestureType.ZOOM );
+	        gestureList.add( GestureType.PINCH );
+	        gestureList.add( GestureType.ROTATE );
+	        gestureList.add( GestureType.KEYPRESS );
+	        gestureList.add( GestureType.HIDE_KEYBOARD );
+	        return gestureList;
+	    }
+	    
 	}
 	
 	/**

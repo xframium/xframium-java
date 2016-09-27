@@ -22,6 +22,7 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordParameter;
@@ -33,7 +34,13 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSMath extends AbstractKeyWordStep
 {
-    
+    public KWSMath()
+    {
+        kwName = "Math";
+        kwDescription = "Allows the script to perform some basic math operations";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-math";
+        orMapping = false;
+    }
     /**
      * Format string.
      *
@@ -53,9 +60,10 @@ public class KWSMath extends AbstractKeyWordStep
 	{
 	    String compareToString = null;
 	    double currentValue = 0;
+	    boolean valueAdded = false;
 	    for ( int i=0; i<getParameterList().size(); i++ )
 	    {
-	        boolean valueAdded = false;
+	        
 
 	        String currentParameter = getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "";
 	        
@@ -89,11 +97,11 @@ public class KWSMath extends AbstractKeyWordStep
 	        double compareTo = Double.parseDouble( formatString( compareToString ) );
 	        
 	        if ( compareTo != currentValue )
-                throw new IllegalStateException( "GET Expected [" + compareTo + "] but found [" + currentValue + "]" );
+                throw new ScriptException( "GET Expected [" + compareTo + "] but found [" + currentValue + "]" );
 	    }
 		
 		if ( !validateData( currentValue + "" ) )
-            throw new IllegalStateException( "MATH Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + currentValue + "]" );
+            throw new ScriptException( "MATH Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + currentValue + "]" );
         
         if ( getContext() != null )
         {

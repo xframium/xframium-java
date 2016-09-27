@@ -40,6 +40,14 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSLoop extends AbstractKeyWordStep
 {
+    public KWSLoop()
+    {
+        kwName = "Loop";
+        kwDescription = "Allows the script to loop over data, elements or values and call a function";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-loop";
+        orMapping = true;
+    }
+    
 	/** The Constant DATA_START. */
 	private static final String DATA_START = "data{";
 	

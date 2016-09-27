@@ -25,6 +25,19 @@ package org.xframium.device.factory;
 
 import com.perfecto.reportium.client.ReportiumClient;
 import io.appium.java_client.AppiumDriver;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.*;
@@ -55,14 +68,7 @@ import org.xframium.spi.driver.DeviceProvider;
 import org.xframium.spi.driver.NativeDriverProvider;
 import org.xframium.spi.driver.ReportiumProvider;
 import org.xframium.utility.XMLEscape;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
-import java.io.ByteArrayInputStream;
-import java.util.*;
+import org.xml.sax.InputSource;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -183,9 +189,6 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
     public String getPageSource()
     {
 
-        if ( !ApplicationRegistry.instance().getAUT().isWeb() )
-            context( "NATIVE_APP" );
-
         String pageSource = webDriver.getPageSource();
 
         if ( pageSource != null )
@@ -215,7 +218,12 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
         {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            cachedDocument = dBuilder.parse( new ByteArrayInputStream( pageSource.getBytes() ) );
+            
+            InputStreamReader streamReader = new InputStreamReader( new ByteArrayInputStream( pageSource.getBytes() ), "UTF-8" );
+            InputSource inputSource = new InputSource( streamReader );
+            inputSource.setEncoding( "UTF-8" );
+
+            cachedDocument = dBuilder.parse( inputSource );
             cachingEnabled = true;
         }
         catch ( Exception e )
@@ -241,6 +249,11 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
         this.webDriver = webDriver;
         this.cachingEnabled = cachingEnabled;
         this.currentDevice = currentDevice;
+    }
+    
+    public boolean isConnected()
+    {
+        return webDriver != null;
     }
 
     public void setDeviceInterrupts( List<DeviceInterrupt> interruptList )
@@ -623,9 +636,9 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
      */
     public String getContext()
     {
-        if ( currentContext != null )
+        if ( currentContext != null || !contextSwitchSupported  )
             return currentContext;
-
+        
         currentContext = _getContext();
 
         return currentContext;

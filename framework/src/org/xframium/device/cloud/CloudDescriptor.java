@@ -60,6 +60,9 @@ public class CloudDescriptor
 	
 	private String provider;
 	
+	private String gesture;
+	
+	private String deviceAction;
 	
 	/**
 	 * Instantiates a new cloud descriptor.
@@ -73,7 +76,7 @@ public class CloudDescriptor
 	 * @param description the description
 	 * @param gridInstance the grid instance
 	 */
-	public CloudDescriptor( String name, String userName, String password, String hostName, String proxyHost, String proxyPort, String description, String gridInstance, String provider )
+	public CloudDescriptor( String name, String userName, String password, String hostName, String proxyHost, String proxyPort, String description, String gridInstance, String provider, String gesture, String deviceAction )
 	{
 		this.name = name;
 		this.userName = userName;
@@ -87,8 +90,20 @@ public class CloudDescriptor
 		    this.provider = "PERFECTO";
 		else
 		    this.provider = provider.toUpperCase();
+		this.gesture = gesture;
+		this.deviceAction = deviceAction;		
 	}
 	
+	public String getGesture() 
+	{
+		return gesture;
+	}
+
+	public String getDeviceAction() 
+	{
+		return deviceAction;
+	}
+
 	public String getProvider()
     {
         return provider;
@@ -119,6 +134,8 @@ public class CloudDescriptor
 		{
 		    if ( provider != null && provider.equals( "PERFECTO" ) )
 		        return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/wd/hub";
+		    else if ( provider != null && provider.equals( "SAUCELABS" ) )
+		    	return "http://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/wd/hub";
 		    else
 		    {
 		        if ( getUserName() == null || getUserName().isEmpty() )

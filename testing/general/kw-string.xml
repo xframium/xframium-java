@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+  <model>
+    
+    <page name="home" />
+
+  </model>
+
+
+
+
+  <function name="kw-string" active="true">
+    
+    <step type="STRING" name="colorCheck" page="home" context="trimmedValue">
+      <parameter type="STATIC" value="trim" />
+    </step>
+    
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="Test Color" />
+      <parameter type="CONTEXT" value="trimmedValue" />
+    </step>
+    
+    <step type="STRING" name="colorCheck" page="home" context="upperValue">
+      <parameter type="CONTEXT" value="trimmedValue" />
+      <parameter type="STATIC" value="upper" />
+    </step>
+    
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="TEST COLOR" />
+      <parameter type="CONTEXT" value="upperValue" />
+    </step>
+    
+    <step type="STRING" name="colorCheck" page="home" context="lowerValue">
+      <parameter type="CONTEXT" value="upperValue" />
+      <parameter type="STATIC" value="lower" />
+    </step>
+    
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="test color" />
+      <parameter type="CONTEXT" value="lowerValue" />
+    </step>
+    
+    <step type="STRING" name="colorCheck" page="home" context="decimalValue">
+      <parameter type="STATIC" value="123.9999999" />
+      <parameter type="STATIC" value="decimal" />
+      <parameter type="STATIC" value="#.##" />
+    </step>
+    
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="123.99" />
+      <parameter type="CONTEXT" value="decimalValue" />
+    </step>
+
+  </function>
+
+</suite>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+
+  <import fileName="general/kw-exists.xml" />
+  <import fileName="general/kw-alert.xml" />
+  <import fileName="general/kw-align.xml" />
+  <import fileName="general/kw-attribute.xml" />
+  <import fileName="general/kw-cache.xml" />
+  <import fileName="general/kw-call.xml" />
+  <import fileName="general/kw-compare.xml" />
+  <import fileName="general/kw-checkcolor.xml" />
+  <import fileName="general/kw-click.xml" />
+  <import fileName="general/kw-checkcontrast.xml" />
+  <import fileName="general/kw-dumpstate.xml" />
+  <import fileName="general/kw-else.xml" />
+  <import fileName="general/kw-execjs.xml" />
+  <import fileName="general/kw-focus.xml" />
+  <import fileName="general/kw-loop.xml" />
+  <import fileName="general/kw-math.xml" />
+  <import fileName="general/kw-mouse.xml" />
+  <import fileName="general/kw-navigate.xml" />
+  <import fileName="general/kw-operator.xml" />
+  <import fileName="general/kw-report.xml" />
+  <import fileName="general/kw-set.xml" />
+  <import fileName="general/kw-string.xml" />
+  <import fileName="general/kw-get.xml" />
+  <import fileName="general/kw-visible.xml" />
+  <import fileName="general/kw-wait.xml" />
+  <import fileName="general/kw-waitfor.xml" />
+
+  <model>
+    
+    <page name="home" />
+
+  </model>
+
+
+
+
+  <test name="xFramium General KeyWord Test" active="true" dataProvider="callTest">
+    <description>Tests the general keywords that apply to both Web and Native applications across web and mobile devices</description>
+
+    <step type="CALL" name="kw-exists" page="home" />
+    <step type="CALL" name="kw-alert" page="home" os="Windows,MACOS"/>
+    <step type="CALL" name="kw-align" page="home" />
+    <step type="CALL" name="kw-attribute" page="home" />
+    <step type="CALL" name="kw-cache" page="home" />
+    <step type="CALL" name="kw-call" page="home" />
+    <step type="CALL" name="kw-checkcolor" page="home"  os="Windows,MACOS"/>
+    <step type="CALL" name="kw-click" page="home" />
+    <step type="CALL" name="kw-compare" page="home" />
+    <step type="CALL" name="kw-checkcontrast" page="home"  os="Windows,MACOS"/>
+    <step type="CALL" name="kw-dumpstate" page="home" />
+    <step type="CALL" name="kw-else" page="home" />
+    <step type="CALL" name="kw-execjs" page="home"  os="Windows,MACOS"/>
+    <step type="CALL" name="kw-focus" page="home" active="false" />
+    <step type="CALL" name="kw-loop" page="home" />
+    <step type="CALL" name="kw-mouse" page="home"  os="Windows,MACOS"/>
+    <step type="CALL" name="kw-navigate" page="home" />
+    <step type="CALL" name="kw-operator" page="home" />
+    <step type="CALL" name="kw-report" page="home" />
+    <step type="CALL" name="kw-set" page="home" />
+    <step type="CALL" name="kw-string" page="home" />
+    <step type="CALL" name="kw-get" page="home" />
+    <step type="CALL" name="kw-visible" page="home" />
+    <step type="CALL" name="kw-wait" page="home" />
+    <step type="CALL" name="kw-waitfor" page="home" />
+  </test>
+  
+  <test name="xFramium dev" active="false" dataProvider="callTest">
+    <description>Tests the general keywords that apply to both Web and Native applications across web and mobile devices</description>
+
+    <step type="CALL" name="kw-waitfor" page="home" />
+
+  </test>
+
+
+  
+
+</suite>

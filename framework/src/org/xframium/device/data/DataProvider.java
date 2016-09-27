@@ -23,6 +23,9 @@
  */
 package org.xframium.device.data;
 
+import java.util.List;
+import org.xframium.spi.Device;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Interface DataProvider.
@@ -42,7 +45,9 @@ public interface DataProvider
 		PERFECTO,
 		
 		/** The appium. */
-		APPIUM;
+		APPIUM,
+		
+		WINDOWS;
 	}
 	/**
 	 * The Enum PluginType.
@@ -59,5 +64,5 @@ public interface DataProvider
 	/**
 	 * Read data.
 	 */
-	public void readData();
+	public List<Device> readData();
 }

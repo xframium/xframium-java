@@ -60,12 +60,15 @@ public class WEBDriverFactory extends AbstractDriverFactory
         try
         {
             DesiredCapabilities dc = null;
+            
+            CloudDescriptor useCloud = CloudRegistry.instance().getCloud();
+            
             if ( currentDevice.getBrowserName() != null && !currentDevice.getBrowserName().isEmpty() )
-                dc = new DesiredCapabilities( currentDevice.getBrowserName(), "", Platform.ANY );
+                dc = new DesiredCapabilities(  useCloud.getCloudActionProvider().getCloudBrowserName(currentDevice.getBrowserName()), "", Platform.ANY );
             else
                 dc = new DesiredCapabilities( "", "", Platform.ANY );
 
-            CloudDescriptor useCloud = CloudRegistry.instance().getCloud();
+            
 
             if ( currentDevice.getCloud() != null )
             {
@@ -84,23 +87,24 @@ public class WEBDriverFactory extends AbstractDriverFactory
             if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )
             {
                 dc.setCapability( ID, currentDevice.getDeviceName() );
-                dc.setCapability( USER_NAME, CloudRegistry.instance().getCloud().getUserName() );
-                dc.setCapability( PASSWORD, CloudRegistry.instance().getCloud().getPassword() );
+                dc.setCapability( USER_NAME, useCloud.getUserName() );
+                dc.setCapability( PASSWORD, useCloud.getPassword() );
             }
             else
             {
-                dc.setCapability( PLATFORM_NAME, currentDevice.getOs() );
-                dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
+                dc.setCapability( useCloud.getCloudActionProvider().getCloudPlatformName(currentDevice), currentDevice.getOs() );
+            	dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
+                
                 dc.setCapability( MODEL, currentDevice.getModel() );
-                dc.setCapability( USER_NAME, CloudRegistry.instance().getCloud().getUserName() );
-                dc.setCapability( PASSWORD, CloudRegistry.instance().getCloud().getPassword() );
+                dc.setCapability( USER_NAME, useCloud.getUserName() );
+                dc.setCapability( PASSWORD, useCloud.getPassword() );
             }
 
             if ( currentDevice.getBrowserName() != null && !currentDevice.getBrowserName().isEmpty() )
-                dc.setCapability( BROWSER_NAME, currentDevice.getBrowserName() );
+                dc.setCapability( BROWSER_NAME,  useCloud.getCloudActionProvider().getCloudBrowserName(currentDevice.getBrowserName()) );
             if ( currentDevice.getBrowserVersion() != null && !currentDevice.getBrowserVersion().isEmpty() )
                 dc.setCapability( BROWSER_VERSION, currentDevice.getBrowserVersion() );
-
+            	
             for ( String name : currentDevice.getCapabilities().keySet() )
 				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
 			
@@ -108,18 +112,18 @@ public class WEBDriverFactory extends AbstractDriverFactory
             	dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
 
             if ( log.isInfoEnabled() )
-                log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
+                log.info( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 
             webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
             webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 
             Capabilities caps = ((RemoteWebDriver) webDriver.getWebDriver()).getCapabilities();
            
-            
             webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
             webDriver.setReportKey( caps.getCapability( "reportKey" ) + "" );
             webDriver.setDeviceName( caps.getCapability( "deviceName" ) + "" );
-            webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ) + "" );
+            if ( useCloud.getProvider().equals( "PERFECTO" ) )
+                webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
             
             webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );
             webDriver.setCloud( useCloud );

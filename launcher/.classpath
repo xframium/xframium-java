@@ -69,10 +69,10 @@
 	<classpathentry kind="lib" path="lib/stax-api-1.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/testng-6.9.10.jar"/>
 	<classpathentry kind="lib" path="lib/UserAgentUtils-1.20.jar"/>
-	<classpathentry kind="lib" path="lib/xframium-driver-1.0.4-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/xframium-java-1.0.4-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/json-20160212.jar"/>
 	<classpathentry kind="lib" path="lib/xframium-serialization-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/xmlgraphics-commons-2.1.jar"/>
+	<classpathentry kind="lib" path="lib/xframium-driver-1.0.4.jar"/>
+	<classpathentry kind="lib" path="lib/xframium-java-1.0.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

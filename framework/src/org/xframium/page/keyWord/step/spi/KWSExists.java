@@ -39,7 +39,12 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSExists extends AbstractKeyWordStep
 {
-
+    public KWSExists()
+    {
+        kwName = "Present";
+        kwDescription = "Allows the script validate that the named element is present in the tree";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-exists";
+    }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */

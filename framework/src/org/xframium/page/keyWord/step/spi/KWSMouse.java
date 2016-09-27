@@ -32,7 +32,12 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSMouse extends AbstractKeyWordStep
 {
-
+    public KWSMouse()
+    {
+        kwName = "Mouse Action";
+        kwDescription = "Allows the script to move the pointer to a specific locations and press/release it";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-mouse";
+    }
     
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

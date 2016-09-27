@@ -22,6 +22,7 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -32,7 +33,13 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSCompare extends AbstractKeyWordStep
 {
-
+    public KWSCompare()
+    {
+        kwName = "Compare";
+        kwDescription = "Allows the script to compare to parameter values";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-compare";
+        orMapping = false;
+    }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
@@ -45,18 +52,11 @@ public class KWSCompare extends AbstractKeyWordStep
 			Object compareFrom = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
 			Object compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap );
 			if ( !compareFrom.equals( compareTo ) )
-				throw new IllegalStateException( "COMPARE Expected [" + compareFrom + "] but found [" + compareTo + "]" );
+				throw new ScriptException( "COMPARE Expected [" + compareFrom + "] but found [" + compareTo + "]" );
 		}
 		
 		return true;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
-	 */
-	public boolean isRecordable()
-	{
-		return false;
-	}
+
 
 }

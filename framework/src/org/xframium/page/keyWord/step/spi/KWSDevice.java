@@ -40,7 +40,13 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSDevice extends AbstractKeyWordStep
 {
-
+    public KWSDevice()
+    {
+        kwName = "Device Action";
+        kwDescription = "Allows the script to perform device specific actions";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-device";
+        orMapping = false;
+    }
 	/*
 	 * (non-Javadoc)
 	 * 

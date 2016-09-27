@@ -65,8 +65,6 @@ public class CloudRegistry
 	/** The cloud map. */
 	private Map<String,CloudDescriptor> cloudMap = new HashMap<String,CloudDescriptor>( 20 );
 	
-	/** The cloud provider. */
-	private CloudProvider cloudProvider;
 	
 	/** The cut. */
 	private CloudDescriptor cut = null;
@@ -94,16 +92,7 @@ public class CloudRegistry
 		cloudMap.put( cloudDescriptor.getName(), cloudDescriptor );
 		
 	}
-	
-	/**
-	 * Sets the cloud provider.
-	 *
-	 * @param cloudProvider the new cloud provider
-	 */
-	public void setCloudProvider( CloudProvider cloudProvider )
-	{
-		this.cloudProvider = cloudProvider;
-	}
+
 	
 	
 	/**
@@ -139,7 +128,7 @@ public class CloudRegistry
     		    _server = new SeleniumServer();
     		    _server.boot();
     		    _server.start();
-    		    CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( "EMBEDDED", "", "", "127.0.0.1:4444", "", "0", "", null, "SELENIUM" ) );
+    		    CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( "EMBEDDED", "", "", "127.0.0.1:4444", "", "0", "", null, "SELENIUM", "SELENIUM", "SELENIUM" ) );
     		    embeddedGrid=true;
 		    }
 		    catch( Exception e )

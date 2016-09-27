@@ -22,6 +22,7 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
@@ -34,7 +35,12 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSSet extends AbstractKeyWordStep
 {
-
+    public KWSSet()
+    {
+        kwName = "Set Value";
+        kwDescription = "Allows the script to type or select a value";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-set";
+    }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
@@ -42,10 +48,10 @@ public class KWSSet extends AbstractKeyWordStep
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
 	{
 		if ( pageObject == null )
-			throw new IllegalStateException( "There was no Page Object defined" );
+			throw new ScriptConfigurationException( "There was no Page Object defined" );
 
 		if ( getParameterList().size() < 1 )
-			throw new IllegalArgumentException( "You must provide 1 parameter to setValue" );
+			throw new ScriptConfigurationException( "You must provide 1 parameter to setValue" );
 
 		String newValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
 		String option = null;

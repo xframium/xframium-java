@@ -28,13 +28,18 @@ import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.spi.driver.NativeDriverProvider;
 
+
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class KWSDeleteCookie.
  */
 public class KWSDeleteCookie extends AbstractKeyWordStep
 {
-
+public KWSDeleteCookie()
+{
+    orMapping = false;
+}
     /* (non-Javadoc)
      * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
      */

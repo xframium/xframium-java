@@ -45,6 +45,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.xframium.artifact.ArtifactTime;
 import org.xframium.artifact.ArtifactType;
+import org.xframium.content.ContentManager;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.Artifact;
@@ -346,11 +347,13 @@ public abstract class AbstractSeleniumTest
             }
         }
 
-        newArray = new Object[testList.size()][1];
+        newArray = new Object[testList.size() * deviceList.size()][1];
 
         for( int i = 0; i < testList.size(); ++i )
         {
-            newArray[i][0] = testList.get(i);
+            for ( int j=0; j<deviceList.size(); j++ )
+                
+            newArray[i*deviceList.size() + j][0] = testList.get(i);
         }
 
         return newArray;
@@ -408,23 +411,40 @@ public abstract class AbstractSeleniumTest
     {
         try
         {
-            Thread.currentThread().setName( testArgs[0].toString() );
+            TestName testName = ((TestName) testArgs[0]);
+
+            String contentKey = testName.getContentKey();
+
+            if (( contentKey != null ) &&
+                ( contentKey.length() > 0 ))
+            {
+                ContentManager.instance().setCurrentContentKey( contentKey );
+            }
+            else
+            {
+                ContentManager.instance().setCurrentContentKey( null );
+            }
+            
+            Thread.currentThread().setName( "Device Acquisition --> " + Thread.currentThread().getId() );
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Attempting to acquire device for " + currentMethod.getName() );
 
-            ConnectedDevice connectedDevice = DeviceManager.instance().getDevice( currentMethod, ((TestName) testArgs[0]).getTestName(), true, ((TestName) testArgs[0]).getPersonaName() );
+            ConnectedDevice connectedDevice = DeviceManager.instance().getDevice( currentMethod, testName.getTestName(), true, testName.getPersonaName() );
 
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Device acquired for " + currentMethod.getName() );
 
-            try
+            if ( connectedDevice.getWebDriver().isConnected() )
             {
-                if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
-                    connectedDevice.getWebDriver().getCloud().getCloudActionProvider().enabledLogging( connectedDevice.getWebDriver() );
-            }
-            catch( Exception e )
-            {
-                e.printStackTrace();
+                try
+                {
+                    if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
+                        connectedDevice.getWebDriver().getCloud().getCloudActionProvider().enabledLogging( connectedDevice.getWebDriver() );
+                }
+                catch( Exception e )
+                {
+                    e.printStackTrace();
+                }
             }
 
             TestContext ctx = new TestContext();
@@ -438,12 +458,11 @@ public abstract class AbstractSeleniumTest
 
                 putConnectedDevice( DEFAULT, connectedDevice );
 
-                TestName testName = ((TestName) testArgs[0]);
                 if ( testName.getTestName() == null || testName.getTestName().isEmpty() )
                     testName.setTestName( currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() );
 
                 ((TestName) testArgs[0]).setFullName( testArgs[0].toString() );
-                Thread.currentThread().setName( testArgs[0].toString() );
+                Thread.currentThread().setName( testName.baseTestName + "-->" + connectedDevice.getDevice().toShortString() + " (" + Thread.currentThread().getId() + ")" );
             }
         }
         catch ( Exception e )
@@ -512,14 +531,17 @@ public abstract class AbstractSeleniumTest
         threadContext.set( null );
         Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null);
 
-        try
+        if ( map.get( DEFAULT ).getWebDriver().isConnected() )
         {
-            if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
-                map.get( DEFAULT ).getWebDriver().getCloud().getCloudActionProvider().disableLogging( map.get( DEFAULT ).getWebDriver() );
-        }
-        catch( Exception e )
-        {
-            e.printStackTrace();
+            try
+            {
+                if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
+                    map.get( DEFAULT ).getWebDriver().getCloud().getCloudActionProvider().disableLogging( map.get( DEFAULT ).getWebDriver() );
+            }
+            catch( Exception e )
+            {
+                e.printStackTrace();
+            }
         }
 
         while ( (keys != null) && (keys.hasNext()) )
@@ -542,6 +564,7 @@ public abstract class AbstractSeleniumTest
                 RunDetails.instance().writeDefinitionIndex( DataManager.instance().getReportFolder() );
 
             DeviceManager.instance().clearAllArtifacts();
+            Thread.currentThread().setName( "Idle Thread (" + Thread.currentThread().getId() + ")" );
         }
         catch ( Exception e )
         {
@@ -562,17 +585,12 @@ public abstract class AbstractSeleniumTest
 
                 File rootFolder = new File( DataManager.instance().getReportFolder(), RunDetails.instance().getRootFolder() );
                 rootFolder.mkdirs();
-                //
-                // If this test failed, run through the automatic downloads for
-                // a
-                // failed test
-                //
 
                 try
                 {
                     if ( !testResult.isSuccess() )
                     {
-                        if ( webDriver instanceof TakesScreenshot )
+                        if ( ( (DeviceWebDriver) webDriver ).isConnected() &&  webDriver instanceof TakesScreenshot )
                         {
                             OutputStream os = null;
                             try
@@ -686,12 +704,6 @@ public abstract class AbstractSeleniumTest
             if ( currentDevice != null )
                 DeviceManager.instance().releaseDevice( currentDevice );
         }
-
-    }
-
-    @AfterSuite
-    public void afterSuite()
-    {
 
     }
 

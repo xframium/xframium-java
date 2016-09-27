@@ -34,7 +34,12 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSString extends AbstractKeyWordStep
 {
-    
+    public KWSString()
+    {
+        kwName = "String Operations";
+        kwDescription = "Allows the script to perform some basic string and formatting operations";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-string";
+    }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
@@ -49,7 +54,7 @@ public class KWSString extends AbstractKeyWordStep
             originalValue = getElement( pageObject, contextMap, webDriver, dataMap ).getValue();
             operationName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
         }
-	    else if ( getParameterList().size() > 2 )
+	    else if ( getParameterList().size() >= 2 )
 	    {
 	        originalValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
 	        operationName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";

@@ -20,6 +20,8 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
@@ -27,6 +29,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.security.UserAndPassword;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -34,13 +38,42 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 public class KWSAlert extends AbstractKeyWordStep
 {
     
-    private enum ALERT_TYPE
+    public KWSAlert()
     {
-        ACCEPT,
-        DISMISS,
-        SEND_KEYS,
-		AUTHORIZE,
-        AUTHENTICATE;
+        kwName = "Alert Interaction";
+        kwDescription = "Allows the script to interact with web based alerts";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-alert";
+        orMapping = false;
+    }
+    
+    public enum ALERT_TYPE
+    {
+        ACCEPT( 1, "ACCEPT", "Accept"),
+        DISMISS( 2, "DISMISS", "Dismiss"),
+        SEND_KEYS (3, "SEND_KEYS", "Send Keys"),
+        AUTHENTICATE( 4, "AUTHENTICATE", "Authenticate");
+
+
+		private ALERT_TYPE( int id, String name, String description )
+        {
+            this.id = id;
+            this.name= name;
+            this.description = description;
+        }
+        
+        private int id;
+        private String name;
+        private String description;
+        
+        public List<ALERT_TYPE> getSupported()
+        {
+            List<ALERT_TYPE> alertList = new ArrayList<ALERT_TYPE>( 10 );
+            alertList.add( ACCEPT );
+            alertList.add( DISMISS );
+            alertList.add( SEND_KEYS );
+            return alertList;
+        }
+        
     }
     
 	/* (non-Javadoc)
@@ -50,7 +83,7 @@ public class KWSAlert extends AbstractKeyWordStep
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
 	{
 		if ( pageObject == null )
-			throw new IllegalStateException( "Page Object was not defined" );
+			throw new ScriptConfigurationException( "Page Object was not defined" );
 		try
 		{
 			WebDriverWait alertWait = new WebDriverWait( webDriver, 5 );
@@ -75,12 +108,6 @@ public class KWSAlert extends AbstractKeyWordStep
     		        currentAlert.accept();
     		        break;
 
-				case AUTHORIZE:
-					String user = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
-					String password = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-					currentAlert.authenticateUsing(new UserAndPassword(user, password));
-					break;
-    		        
     		    case AUTHENTICATE:
     		        currentAlert.authenticateUsing( new UserAndPassword(  getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "",  getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" ) );
                     break;
@@ -98,5 +125,7 @@ public class KWSAlert extends AbstractKeyWordStep
 		
 		return true;
 	}
+	
+	
 
 }

@@ -39,7 +39,13 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSGesture extends AbstractKeyWordStep
 {
-	
+	public KWSGesture()
+    {
+	    kwName = "Perform Gesture";
+        kwDescription = "Allows the script to perform a gesture on a touch-enabled device";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-gesture";
+        orMapping = false;
+    }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
@@ -134,7 +140,7 @@ public class KWSGesture extends AbstractKeyWordStep
 				break;
 				
 			case KEYPRESS:
-				GestureManager.instance().createKeyPress( Integer.parseInt( ( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) ) ), Integer.parseInt( ( (String) getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) ) ) ).executeGesture( webDriver, webElement );
+				GestureManager.instance().createKeyPress( ( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) ), Integer.parseInt( ( (String) getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) ) ) ).executeGesture( webDriver, webElement );
 				break;
 				
 			case HIDE_KEYBOARD:

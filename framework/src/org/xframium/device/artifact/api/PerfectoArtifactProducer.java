@@ -125,95 +125,103 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 	protected Artifact _getArtifact( WebDriver webDriver, ArtifactType aType, Map<String, String> parameterMap, ConnectedDevice connectedDevice, String testName, boolean success )
 	{
 	    String rootFolder = testName + System.getProperty( "file.separator" ) + connectedDevice.getDevice().getKey() + System.getProperty( "file.separator" );
-		switch (aType)
-		{
-			case EXECUTION_DEFINITION:
-				StringBuilder defBuilder = new StringBuilder();
-				defBuilder.append( "DATE=" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "\r\n");
-				defBuilder.append( "TIME=" ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "\r\n");
-				defBuilder.append( "TEST_CASE=" ).append( testName ).append( "\r\n");
-				defBuilder.append( "DEVICE=" ).append( connectedDevice.getDevice().getKey() ).append( "\r\n");
-				defBuilder.append( "SUCCESS=" ).append( success ).append( "\r\n");
-				defBuilder.append( "MANUFACTURER=" ).append( connectedDevice.getDevice().getManufacturer() ).append( "\r\n");
-				defBuilder.append( "MODEL=" ).append( connectedDevice.getDevice().getModel() ).append( "\r\n");
-				return new Artifact( rootFolder + "executionDefinition.properties", defBuilder.toString().getBytes() );
-				
-			case EXECUTION_REPORT:
-			case EXECUTION_REPORT_PDF:
-			    return generateExecutionReport( "download", parameterMap, "pdf", rootFolder, aType );
-
-			case FAILURE_SOURCE:
-			    return new Artifact( rootFolder + "failureDOM.xml", webDriver.getPageSource().getBytes());
-			
-			case FAILURE_SOURCE_HTML:
-				return new Artifact( rootFolder + "failureDOM.html", ( "<html><head><link href=\"http://www.xframium.org/output/assets/css/prism.css\" rel=\"stylesheet\"><script src=\"http://www.xframium.org/output/assets/js/prism.js\"></script><body><pre class\"line-numbers\"><code class=\"language-markup\">" + webDriver.getPageSource().replace( "<", "&lt;" ).replace( ">", "&gt;" ).replace( "\t", "  ") + "</code></pre></body></html>" ).getBytes());
-
-			case CONSOLE_LOG:
-			    Artifact consoleArtifact = new Artifact( rootFolder + "console.txt", DeviceManager.instance().getLog().getBytes() );
-			    DeviceManager.instance().clearLog();
-			    return consoleArtifact;
-				
-			case DEVICE_LOG:
-				try
-				{
-				    ByteArrayInputStream inputStream = new ByteArrayInputStream( generateExecutionReport( "download", parameterMap, "xml", rootFolder, aType ).getArtifactData() );
-				    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		            dbFactory.setNamespaceAware( true );
-		            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		            Document xmlDocument = dBuilder.parse( inputStream );
-		            
-		            NodeList nodeList = getNodes( xmlDocument, "//dataItem[@type='log']/attachment" );
-		            if ( nodeList != null && nodeList.getLength() > 0 )
-		            {
-		                byte[] zipFile = PerfectoMobile.instance().reports().download( parameterMap.get( REPORT_KEY ), nodeList.item( 0 ).getTextContent(), false );
-		                ZipInputStream zipStream = new ZipInputStream( new ByteArrayInputStream( zipFile ) );
-		                ZipEntry entry = zipStream.getNextEntry();
-		                
-		                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		                byte[] bytesIn = new byte[ 512 ];
-		                int bytesRead = 0;
-		                while ( ( bytesRead = zipStream.read( bytesIn ) ) != -1 )
-		                {
-		                    outputStream.write( bytesIn, 0, bytesRead );
-		                }
-		                
-		                zipStream.close();
-		                
-		                return new Artifact( rootFolder + "deviceLog.txt", outputStream.toByteArray() );
-		                
-		            }
-				    
-		            return new Artifact( rootFolder + "deviceLog.txt", "Could not read file".getBytes() );
-					
-				}
-				catch( Exception e )
-				{
-					log.error( "Error download device log data", e );
-				}
-				return null;
-				
-			case EXECUTION_REPORT_CSV:
-			    return generateExecutionReport( "download", parameterMap, "csv", rootFolder, aType );
-				
-			case EXECUTION_REPORT_HTML:
-			    return generateExecutionReport( "download", parameterMap, "html", rootFolder, aType );
-			
-			case EXECUTION_REPORT_XML:
-			    return generateExecutionReport( "download", parameterMap, "xml", rootFolder, aType );
-				
-			case EXECUTION_RECORD_CSV:
-			    return generateCSVRecord( connectedDevice.getPopulatedDevice(), testName, rootFolder );
-			    
-			case EXECUTION_RECORD_HTML:
-                return generateHTMLRecord( connectedDevice.getPopulatedDevice(), testName, rootFolder, webDriver );
-				
-			case WCAG_REPORT:
-			    return generateWCAG( connectedDevice.getPopulatedDevice(), testName, rootFolder );
-			default:
-				return null;
-
-		}
-
+	    
+	    try
+	    {
+	    
+    		switch (aType)
+    		{
+    			case EXECUTION_DEFINITION:
+    				StringBuilder defBuilder = new StringBuilder();
+    				defBuilder.append( "DATE=" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "\r\n");
+    				defBuilder.append( "TIME=" ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "\r\n");
+    				defBuilder.append( "TEST_CASE=" ).append( testName ).append( "\r\n");
+    				defBuilder.append( "DEVICE=" ).append( connectedDevice.getDevice().getKey() ).append( "\r\n");
+    				defBuilder.append( "SUCCESS=" ).append( success ).append( "\r\n");
+    				defBuilder.append( "MANUFACTURER=" ).append( connectedDevice.getDevice().getManufacturer() ).append( "\r\n");
+    				defBuilder.append( "MODEL=" ).append( connectedDevice.getDevice().getModel() ).append( "\r\n");
+    				return new Artifact( rootFolder + "executionDefinition.properties", defBuilder.toString().getBytes() );
+    				
+    			case EXECUTION_REPORT:
+    			case EXECUTION_REPORT_PDF:
+    			    return generateExecutionReport( "download", parameterMap, "pdf", rootFolder, aType );
+    
+    			case FAILURE_SOURCE:
+    			    return new Artifact( rootFolder + "failureDOM.xml", webDriver.getPageSource().getBytes());
+    			
+    			case FAILURE_SOURCE_HTML:
+    				return new Artifact( rootFolder + "failureDOM.html", ( "<html><head><link href=\"http://www.xframium.org/output/assets/css/prism.css\" rel=\"stylesheet\"><script src=\"http://www.xframium.org/output/assets/js/prism.js\"></script><body><pre class\"line-numbers\"><code class=\"language-markup\">" + webDriver.getPageSource().replace( "<", "&lt;" ).replace( ">", "&gt;" ).replace( "\t", "  ") + "</code></pre></body></html>" ).getBytes());
+    
+    			case CONSOLE_LOG:
+    			    Artifact consoleArtifact = new Artifact( rootFolder + "console.txt", DeviceManager.instance().getLog().getBytes() );
+    			    DeviceManager.instance().clearLog();
+    			    return consoleArtifact;
+    				
+    			case DEVICE_LOG:
+    				try
+    				{
+    				    ByteArrayInputStream inputStream = new ByteArrayInputStream( generateExecutionReport( "download", parameterMap, "xml", rootFolder, aType ).getArtifactData() );
+    				    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+    		            dbFactory.setNamespaceAware( true );
+    		            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+    		            Document xmlDocument = dBuilder.parse( inputStream );
+    		            
+    		            NodeList nodeList = getNodes( xmlDocument, "//dataItem[@type='log']/attachment" );
+    		            if ( nodeList != null && nodeList.getLength() > 0 )
+    		            {
+    		                byte[] zipFile = PerfectoMobile.instance().reports().download( parameterMap.get( REPORT_KEY ), nodeList.item( 0 ).getTextContent(), false );
+    		                ZipInputStream zipStream = new ZipInputStream( new ByteArrayInputStream( zipFile ) );
+    		                ZipEntry entry = zipStream.getNextEntry();
+    		                
+    		                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    		                byte[] bytesIn = new byte[ 512 ];
+    		                int bytesRead = 0;
+    		                while ( ( bytesRead = zipStream.read( bytesIn ) ) != -1 )
+    		                {
+    		                    outputStream.write( bytesIn, 0, bytesRead );
+    		                }
+    		                
+    		                zipStream.close();
+    		                
+    		                return new Artifact( rootFolder + "deviceLog.txt", outputStream.toByteArray() );
+    		                
+    		            }
+    				    
+    		            return new Artifact( rootFolder + "deviceLog.txt", "Could not read file".getBytes() );
+    					
+    				}
+    				catch( Exception e )
+    				{
+    					log.error( "Error download device log data", e );
+    				}
+    				return null;
+    				
+    			case EXECUTION_REPORT_CSV:
+    			    return generateExecutionReport( "download", parameterMap, "csv", rootFolder, aType );
+    				
+    			case EXECUTION_REPORT_HTML:
+    			    return generateExecutionReport( "download", parameterMap, "html", rootFolder, aType );
+    			
+    			case EXECUTION_REPORT_XML:
+    			    return generateExecutionReport( "download", parameterMap, "xml", rootFolder, aType );
+    				
+    			case EXECUTION_RECORD_CSV:
+    			    return generateCSVRecord( connectedDevice.getPopulatedDevice(), testName, rootFolder );
+    			    
+    			case EXECUTION_RECORD_HTML:
+                    return generateHTMLRecord( connectedDevice.getPopulatedDevice(), testName, rootFolder, webDriver );
+    				
+    			case WCAG_REPORT:
+    			    return generateWCAG( connectedDevice.getPopulatedDevice(), testName, rootFolder );
+    			default:
+    				return null;
+    
+    		}
+	    }
+	    catch( Exception e )
+	    {
+	        return new Artifact( rootFolder + "generationFailure.txt", e.getMessage().getBytes() );
+	    }
 		
 	}
 
@@ -225,14 +233,16 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 	 */
 	public byte[] getUrl( URL currentUrl )
 	{
-		if (log.isDebugEnabled())
-			log.debug( "Executing " + currentUrl.toString() );
+		if (log.isInfoEnabled())
+			log.info( "Executing " + currentUrl.toString() );
 		InputStream inputStream = null;
 		try
 		{
 			ByteArrayOutputStream resultBuilder = new ByteArrayOutputStream();
 
 			HttpURLConnection y = ( HttpURLConnection ) currentUrl.openConnection();
+			y.setReadTimeout( 30000 );
+
 
 			inputStream = y.getInputStream();
 			byte[] buffer = new byte[1024];

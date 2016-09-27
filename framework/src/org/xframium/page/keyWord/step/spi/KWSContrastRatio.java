@@ -25,6 +25,8 @@ import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactType;
+import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
@@ -60,7 +62,12 @@ import org.xframium.wcag.WCAGRecord.WCAGType;
  */
 public class KWSContrastRatio extends AbstractKeyWordStep
 {
-
+    public KWSContrastRatio()
+    {
+        kwName = "Luminosity validation";
+        kwDescription = "Allows thte script to analyze the named element using the WCAG 2.0 algorithm and validates its success against the WCAG 2.0 success criteria";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-checkcontrast";
+    }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
@@ -68,10 +75,10 @@ public class KWSContrastRatio extends AbstractKeyWordStep
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
 	{
 		if ( pageObject == null )
-			throw new IllegalStateException( "Page Object was not defined" );
+			throw new ScriptConfigurationException( "Page Object was not defined" );
 
 		if (getParameterList().size() < 2 )
-			throw new IllegalArgumentException( "Verify Color must have 3 parameters" );
+			throw new ScriptConfigurationException( "Verify Color must have 3 parameters" );
 		
 		long fileKey = System.currentTimeMillis();
 		Resolution resolution = Resolution.valueOf( ( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" ).toLowerCase() );
@@ -116,7 +123,7 @@ public class KWSContrastRatio extends AbstractKeyWordStep
 		    String contrastMessage = "The contrast for [" + getName() + "] should be between [#" + Integer.toHexString( minColor ) + "] and [" + Integer.toHexString( maxColor ) + "] was [" + contrastRatio + "] and fell outside of the expected range";
 		    ArtifactManager.instance().notifyArtifactListeners( ArtifactType.WCAG_REPORT, new WCAGRecord( getPageName(), getName(), WCAGType.ContrastVerification, System.currentTimeMillis(), System.currentTimeMillis() - fileKey, false, imagePath, minContrast + "-" + maxContrast, contrastRatio + "", contrastMessage ) );
 		    
-			throw new IllegalArgumentException( contrastMessage );
+			throw new ScriptException( contrastMessage );
 		}
 		else
 		    ArtifactManager.instance().notifyArtifactListeners( ArtifactType.WCAG_REPORT, new WCAGRecord( getPageName(), getName(), WCAGType.ContrastVerification, System.currentTimeMillis(), System.currentTimeMillis() - fileKey, true, imagePath, minContrast + "-" + maxContrast, contrastRatio + "", "OK" ) );
