@@ -214,7 +214,7 @@ public class BrowserCacheLogic
                     driver.executeScript("mobile:application:close", params);
                 } catch (Exception e) {}
                 driver.executeScript("mobile:application:open", params);
-                sleep(1000);
+                sleep(5000);
 
                 //
                 // select chrome menu
