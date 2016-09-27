@@ -20,6 +20,8 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step;
 
+import com.xframium.serialization.SerializationManager;
+import com.xframium.serialization.json.ReflectionSerializer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
+import org.xframium.page.keyWord.step.spi.*;
 import org.xframium.page.keyWord.step.spi.KWSAddCookie;
 import org.xframium.page.keyWord.step.spi.KWSAddDevice;
 import org.xframium.page.keyWord.step.spi.KWSAlert;
@@ -75,8 +78,6 @@ import org.xframium.page.keyWord.step.spi.KWSVisible;
 import org.xframium.page.keyWord.step.spi.KWSWait;
 import org.xframium.page.keyWord.step.spi.KWSWaitFor;
 import org.xframium.page.keyWord.step.spi.KWSWindow;
-import com.xframium.serialization.SerializationManager;
-import com.xframium.serialization.json.ReflectionSerializer;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -188,6 +189,7 @@ public class KeyWordStepFactory
         addKeyWord( "SQL", KWSSQL.class );
         addKeyWord( "OPERATOR", KWSOperator.class );
         addKeyWord( "NAVIGATE", KWSNavigate.class );
+        addKeyWord( "VISUAL", KWSVisual.class );
         addKeyWord( "SET_CONTENT_KEY", KWSSetContentKey.class );
     }
 
