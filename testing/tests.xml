@@ -41,7 +41,7 @@
     <description>Tests the general keywords that apply to both Web and Native applications across web and mobile devices</description>
 
     <step type="CALL" name="kw-exists" page="home" />
-    <step type="CALL" name="kw-alert" page="home" os="Windows,MACOS"/>
+    <step type="CALL" name="kw-alert" page="home" os="Windows,MACOS" active="true"/>
     <step type="CALL" name="kw-align" page="home" />
     <step type="CALL" name="kw-attribute" page="home" />
     <step type="CALL" name="kw-cache" page="home" />
