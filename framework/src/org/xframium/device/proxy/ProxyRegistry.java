@@ -64,6 +64,15 @@ public class ProxyRegistry
 	
 	private String proxyHost;
 	private String proxyPort;
+	private String ignoreHost;
+
+	public String getIgnoreHost() {
+		return ignoreHost;
+	}
+
+	public void setIgnoreHost(String ignoreHost) {
+		this.ignoreHost = ignoreHost;
+	}
 
 	public String getProxyHost() {
 		return proxyHost;

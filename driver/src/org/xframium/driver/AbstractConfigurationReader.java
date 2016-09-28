@@ -88,7 +88,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                 System.setProperty( "https.proxyHost", ProxyRegistry.instance().getProxyHost() );
                 System.setProperty( "http.proxyPort", ProxyRegistry.instance().getProxyPort() );
                 System.setProperty( "https.proxyPort", ProxyRegistry.instance().getProxyPort() );
-            
+                
             }
             else if ( CloudRegistry.instance().getCloud().getProxyHost() != null && !CloudRegistry.instance().getCloud().getProxyHost().isEmpty() && Integer.parseInt( CloudRegistry.instance().getCloud().getProxyPort() ) > 0 )
             {
@@ -99,6 +99,11 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                 System.setProperty( "https.proxyHost", ProxyRegistry.instance().getProxyHost() );
                 System.setProperty( "http.proxyPort", ProxyRegistry.instance().getProxyPort() );
                 System.setProperty( "https.proxyPort", ProxyRegistry.instance().getProxyPort() );
+            }
+            
+            if ( ProxyRegistry.instance().getIgnoreHost() != null && !ProxyRegistry.instance().getIgnoreHost().isEmpty() ) {
+            	System.setProperty( "http.nonProxyHosts", ProxyRegistry.instance().getIgnoreHost() );
+            	System.setProperty( "https.nonProxyHosts", ProxyRegistry.instance().getIgnoreHost() );
             }
             
             BeanManager.instance().setBeanFactory( new XMLBeanFactory() );

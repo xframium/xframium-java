@@ -48,6 +48,7 @@ import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.sauceLabs.rest.SauceREST;
+import org.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -95,13 +96,17 @@ public class SauceLabsArtifactProducer extends AbstractArtifactProducer
 		return null;
 	}
 	
-	private Artifact generateExecutionReport( String operation, Map<String,String> parameterMap, String reportFormat, String rootFolder, ArtifactType aType)
+	/*private Artifact generateExecutionReport( Device device, String operation, Map<String,String> parameterMap, String reportFormat, String rootFolder, ArtifactType aType)
 	{
 	    try
         {
+	    	CloudDescriptor currentCloud = CloudRegistry.instance().getCloud();
+	        if ( device.getCloud() != null && !device.getCloud().isEmpty() )
+	            currentCloud = CloudRegistry.instance().getCloud( device.getCloud() );
+	        
             StringBuilder urlBuilder = new StringBuilder();
-            urlBuilder.append( "https://" ).append( CloudRegistry.instance().getCloud().getHostName() ).append( "/services/reports/" ).append( parameterMap.get( REPORT_KEY ) );
-            urlBuilder.append( "?operation=" ).append( operation ).append( "&user=" ).append( CloudRegistry.instance().getCloud().getUserName() ).append( "&password=" ).append( CloudRegistry.instance().getCloud().getPassword() );
+            urlBuilder.append( "https://" ).append( currentCloud.getHostName() ).append( "/services/reports/" ).append( parameterMap.get( REPORT_KEY ) );
+            urlBuilder.append( "?operation=" ).append( operation ).append( "&user=" ).append( currentCloud.getUserName() ).append( "&password=" ).append( currentCloud.getPassword() );
             String format = parameterMap.get( FORMAT );
             if (format == null)
             {
@@ -120,7 +125,7 @@ public class SauceLabsArtifactProducer extends AbstractArtifactProducer
             log.error( "Error download artifact data", e );
             return null;
         }
-	}
+	}*/
 
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.device.artifact.AbstractArtifactProducer#_getArtifact(org.openqa.selenium.WebDriver, com.perfectoMobile.device.artifact.ArtifactProducer.ArtifactType, java.util.Map, com.perfectoMobile.device.ConnectedDevice)
@@ -146,9 +151,9 @@ public class SauceLabsArtifactProducer extends AbstractArtifactProducer
     				defBuilder.append( "MODEL=" ).append( connectedDevice.getDevice().getModel() ).append( "\r\n");
     				return new Artifact( rootFolder + "executionDefinition.properties", defBuilder.toString().getBytes() );
     				
-    			case EXECUTION_REPORT:
+    			/*case EXECUTION_REPORT:
     			case EXECUTION_REPORT_PDF:
-    			    return generateExecutionReport( "download", parameterMap, "pdf", rootFolder, aType );
+    			    return generateExecutionReport( connectedDevice.getPopulatedDevice(), "download", parameterMap, "pdf", rootFolder, aType );*/
     
     			case FAILURE_SOURCE:
     			    return new Artifact( rootFolder + "failureDOM.xml", webDriver.getPageSource().getBytes());

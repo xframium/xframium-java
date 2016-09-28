@@ -67,7 +67,7 @@ import java.util.logging.Level;
 
 public class XMLConfigurationReader extends AbstractConfigurationReader implements ElementProvider
 {
-	private static final String[] PROXY_SETTINGS = new String[] { "proxy.host", "proxy.port" };
+	private static final String[] PROXY_SETTINGS = new String[] { "proxy.host", "proxy.port", "proxy.ignoreHost" };
     private static final String[] JDBC = new String[] { "jdbc.username", "jdbc.password", "jdbc.url", "jdbc.driverClassName" };
     private static final String[] OPT_CLOUD = new String[] { "cloudRegistry.query" };
     private static final String[] OPT_APP = new String[] { "applicationRegistry.query", "applicationRegistry.capQuery" };
@@ -1144,14 +1144,14 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      */
     protected boolean configureProxy()
     {
-
-    	if ( configProperties.get(PROXY_SETTINGS[0]) != null 
-    			&& !configProperties.get(PROXY_SETTINGS[0]).isEmpty() 
-    			&& Integer.parseInt( configProperties.get(PROXY_SETTINGS[1]) ) > 0 )
+    	if ( xRoot.getProxy().getProxyHost() != null 
+    			&& !xRoot.getProxy().getProxyHost().isEmpty() 
+    			&& Integer.parseInt( xRoot.getProxy().getProxyPort() ) > 0 )
         {
-            log.info( "Proxy configured as " + configProperties.get(PROXY_SETTINGS[0]) + ":" + configProperties.get(PROXY_SETTINGS[1]) );
-            ProxyRegistry.instance().setProxyHost(configProperties.get(PROXY_SETTINGS[0]));
-            ProxyRegistry.instance().setProxyPort(configProperties.get(PROXY_SETTINGS[1]));
+            log.info( "Proxy configured as " + xRoot.getProxy().getProxyHost() + ":" + xRoot.getProxy().getProxyPort() );
+            ProxyRegistry.instance().setProxyHost(xRoot.getProxy().getProxyHost());
+            ProxyRegistry.instance().setProxyPort(xRoot.getProxy().getProxyPort());
+            ProxyRegistry.instance().setIgnoreHost(xRoot.getProxy().getProxyIgnoreHost());
         }
         return true;
     }
