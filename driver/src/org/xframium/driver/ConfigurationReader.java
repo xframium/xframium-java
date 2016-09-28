@@ -1,13 +1,14 @@
 package org.xframium.driver;
 
-import java.io.File;
-import java.io.InputStream;
 import org.xframium.driver.container.ApplicationContainer;
 import org.xframium.driver.container.CloudContainer;
 import org.xframium.driver.container.DeviceContainer;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.keyWord.provider.SuiteContainer;
+
+import java.io.File;
+import java.io.InputStream;
 
 public interface ConfigurationReader
 {

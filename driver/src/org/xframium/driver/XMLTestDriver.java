@@ -20,6 +20,11 @@
  *******************************************************************************/
 package org.xframium.driver;
 
+import com.perfecto.reportium.client.ReportiumClientFactory;
+import com.perfecto.reportium.model.PerfectoExecutionContext;
+import com.perfecto.reportium.model.Project;
+import com.perfecto.reportium.test.result.TestResultFactory;
+import org.apache.commons.lang3.ArrayUtils;
 import java.util.HashMap;
 import java.util.Map;
 import org.testng.Assert;
@@ -42,10 +47,6 @@ import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.spi.PropertyProvider;
 import org.xframium.spi.driver.ReportiumProvider;
-import com.perfecto.reportium.client.ReportiumClientFactory;
-import com.perfecto.reportium.model.PerfectoExecutionContext;
-import com.perfecto.reportium.model.Project;
-import com.perfecto.reportium.test.result.TestResultFactory;
 
 
 public class XMLTestDriver extends AbstractSeleniumTest
@@ -115,10 +116,12 @@ public class XMLTestDriver extends AbstractSeleniumTest
                     //
                     // Reportium Integration
                     //
-                    String[] tags = new String[] { "xFramium" };
+                    String[] tags = new String[] { "xFramium", CloudRegistry.instance().getCloud().getUserName(), ApplicationRegistry.instance().getAUT().getName(), PageManager.instance().getSiteName() };
                     if ( test.getTags() != null && test.getTags().length > 0 )
-                        tags = test.getTags();
-        
+                    {
+                        for ( String tag : test.getTags() )
+                            ArrayUtils.add( tags, tag );
+                    }
                     PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder().withProject(new Project(ApplicationRegistry.instance().getAUT().getName(), "1.0")).withContextTags( tags ).withWebDriver(getWebDriver() ).build();
                     ( (ReportiumProvider) getWebDriver() ).setReportiumClient( new ReportiumClientFactory().createPerfectoReportiumClient( perfectoExecutionContext ) );
         		    
