@@ -30,6 +30,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.xframium.exception.ScriptConfigurationException;
+
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
@@ -494,6 +496,10 @@ public class WebServiceClientUtil
                 ResponceVariable param = params.next();
 
                 Node node = (Node) xPath.evaluate( param.path, document, XPathConstants.NODE );
+                
+                if (node == null){
+                	throw new ScriptConfigurationException("No result found. Check xpath expression " + param.path);
+                }
 
                 String value = node.getTextContent();
 

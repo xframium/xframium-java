@@ -63,13 +63,6 @@ public class WEBDriverFactory extends AbstractDriverFactory
             
             CloudDescriptor useCloud = CloudRegistry.instance().getCloud();
             
-            if ( currentDevice.getBrowserName() != null && !currentDevice.getBrowserName().isEmpty() )
-                dc = new DesiredCapabilities(  useCloud.getCloudActionProvider().getCloudBrowserName(currentDevice.getBrowserName()), "", Platform.ANY );
-            else
-                dc = new DesiredCapabilities( "", "", Platform.ANY );
-
-            
-
             if ( currentDevice.getCloud() != null )
             {
                 useCloud = CloudRegistry.instance().getCloud( currentDevice.getCloud() );
@@ -79,6 +72,12 @@ public class WEBDriverFactory extends AbstractDriverFactory
                     log.warn( "A separate grid instance was specified but it does not exist in your cloud registry [" + currentDevice.getCloud() + "] - using the default Cloud instance" );
                 }
             }
+            
+            if ( currentDevice.getBrowserName() != null && !currentDevice.getBrowserName().isEmpty() )
+                dc = new DesiredCapabilities(  useCloud.getCloudActionProvider().getCloudBrowserName(currentDevice.getBrowserName()), "", Platform.ANY );
+            else
+                dc = new DesiredCapabilities( "", "", Platform.ANY );
+            
             
             DeviceManager.instance().setCurrentCloud( useCloud );
             
