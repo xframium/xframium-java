@@ -69,7 +69,7 @@ import org.xframium.utility.SeleniumSessionManager;
 
 public class TXTConfigurationReader extends AbstractConfigurationReader
 {
-	private static final String[] PROXY_SETTINGS = new String[] { "proxy.host", "proxy.port" };
+	private static final String[] PROXY_SETTINGS = new String[] { "proxy.host", "proxy.port", "proxy.ignoreHost" };
     private static final String[] CLOUD = new String[] { "cloudRegistry.provider", "cloudRegistry.fileName", "cloudRegistry.cloudUnderTest" };
     private static final String[] OPT_CLOUD = new String[] { "cloudRegistry.query" };
     private static final String[] APP = new String[] { "applicationRegistry.provider", "applicationRegistry.fileName", "applicationRegistry.applicationUnderTest" };
@@ -739,6 +739,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     		log.info( "Proxy configured as " + configProperties.getProperty(PROXY_SETTINGS[0]) + ":" + configProperties.getProperty(PROXY_SETTINGS[1]) );
     		ProxyRegistry.instance().setProxyHost(configProperties.getProperty(PROXY_SETTINGS[0]));
             ProxyRegistry.instance().setProxyPort(configProperties.getProperty(PROXY_SETTINGS[1]));
+            ProxyRegistry.instance().setIgnoreHost(configProperties.getProperty(PROXY_SETTINGS[2]));
         }
         return true;
     }    

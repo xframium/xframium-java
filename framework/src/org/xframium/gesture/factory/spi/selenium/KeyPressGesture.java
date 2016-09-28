@@ -50,7 +50,7 @@ public class KeyPressGesture extends AbstractKeyPressGesture
 		for (String keyCode : keyCodes) {
 			
 			if (Keys.valueOf(keyCode) != null) {
-				charSequence.add(Keys.valueOf(keyCode));
+				charSequence.add(Keys.valueOf(keyCode.toUpperCase()));
 			
 			} else {
 				throw new IllegalArgumentException( "Unsupported KeyPressGesture Type " + keyCode );

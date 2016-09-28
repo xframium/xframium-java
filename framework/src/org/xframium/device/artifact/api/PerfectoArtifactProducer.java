@@ -42,8 +42,10 @@ import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.AbstractArtifactProducer;
 import org.xframium.device.artifact.Artifact;
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
+import org.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -91,13 +93,17 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 		return null;
 	}
 	
-	private Artifact generateExecutionReport( String operation, Map<String,String> parameterMap, String reportFormat, String rootFolder, ArtifactType aType)
+	private Artifact generateExecutionReport( Device device, String operation, Map<String,String> parameterMap, String reportFormat, String rootFolder, ArtifactType aType)
 	{
 	    try
         {
+	    	CloudDescriptor currentCloud = CloudRegistry.instance().getCloud();
+	        if ( device.getCloud() != null && !device.getCloud().isEmpty() )
+	            currentCloud = CloudRegistry.instance().getCloud( device.getCloud() );
+	        
             StringBuilder urlBuilder = new StringBuilder();
-            urlBuilder.append( "https://" ).append( CloudRegistry.instance().getCloud().getHostName() ).append( "/services/reports/" ).append( parameterMap.get( REPORT_KEY ) );
-            urlBuilder.append( "?operation=" ).append( operation ).append( "&user=" ).append( CloudRegistry.instance().getCloud().getUserName() ).append( "&password=" ).append( CloudRegistry.instance().getCloud().getPassword() );
+            urlBuilder.append( "https://" ).append( currentCloud.getHostName() ).append( "/services/reports/" ).append( parameterMap.get( REPORT_KEY ) );
+            urlBuilder.append( "?operation=" ).append( operation ).append( "&user=" ).append( currentCloud.getUserName() ).append( "&password=" ).append( currentCloud.getPassword() );
             String format = parameterMap.get( FORMAT );
             if (format == null)
             {
@@ -144,7 +150,7 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
     				
     			case EXECUTION_REPORT:
     			case EXECUTION_REPORT_PDF:
-    			    return generateExecutionReport( "download", parameterMap, "pdf", rootFolder, aType );
+    			    return generateExecutionReport( connectedDevice.getPopulatedDevice(), "download", parameterMap, "pdf", rootFolder, aType );
     
     			case FAILURE_SOURCE:
     			    return new Artifact( rootFolder + "failureDOM.xml", webDriver.getPageSource().getBytes());
@@ -160,7 +166,7 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
     			case DEVICE_LOG:
     				try
     				{
-    				    ByteArrayInputStream inputStream = new ByteArrayInputStream( generateExecutionReport( "download", parameterMap, "xml", rootFolder, aType ).getArtifactData() );
+    				    ByteArrayInputStream inputStream = new ByteArrayInputStream( generateExecutionReport( connectedDevice.getPopulatedDevice(), "download", parameterMap, "xml", rootFolder, aType ).getArtifactData() );
     				    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     		            dbFactory.setNamespaceAware( true );
     		            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -197,13 +203,13 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
     				return null;
     				
     			case EXECUTION_REPORT_CSV:
-    			    return generateExecutionReport( "download", parameterMap, "csv", rootFolder, aType );
+    			    return generateExecutionReport( connectedDevice.getPopulatedDevice(), "download", parameterMap, "csv", rootFolder, aType );
     				
     			case EXECUTION_REPORT_HTML:
-    			    return generateExecutionReport( "download", parameterMap, "html", rootFolder, aType );
+    			    return generateExecutionReport( connectedDevice.getPopulatedDevice(), "download", parameterMap, "html", rootFolder, aType );
     			
     			case EXECUTION_REPORT_XML:
-    			    return generateExecutionReport( "download", parameterMap, "xml", rootFolder, aType );
+    			    return generateExecutionReport( connectedDevice.getPopulatedDevice(), "download", parameterMap, "xml", rootFolder, aType );
     				
     			case EXECUTION_RECORD_CSV:
     			    return generateCSVRecord( connectedDevice.getPopulatedDevice(), testName, rootFolder );

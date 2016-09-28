@@ -16,16 +16,17 @@ import javax.xml.bind.annotation.XmlValue;
 
 
 /**
- * <p>Java class for xOptions complex type.
+ * <p>Java class for xProxy complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="xOptions">
+ * &lt;complexType name="xProxy">
  *   &lt;simpleContent>
  *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="key" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="proxyHost" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="proxyPort" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="proxyIgnoreHost" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/extension>
  *   &lt;/simpleContent>
  * &lt;/complexType>
@@ -34,17 +35,19 @@ import javax.xml.bind.annotation.XmlValue;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "xOptions", propOrder = {
+@XmlType(name = "xProxy", propOrder = {
     "value"
 })
-public class XOptions {
+public class XProxy {
 
     @XmlValue
     protected String value;
-    @XmlAttribute(name = "name", required = true)
-    protected String name;
-    @XmlAttribute(name = "key")
-    protected String key;
+    @XmlAttribute(name = "proxyHost")
+    protected String proxyHost;
+    @XmlAttribute(name = "proxyPort")
+    protected String proxyPort;
+    @XmlAttribute(name = "proxyIgnoreHost")
+    protected String proxyIgnoreHost;
 
     /**
      * Gets the value of the value property.
@@ -71,51 +74,75 @@ public class XOptions {
     }
 
     /**
-     * Gets the value of the name property.
+     * Gets the value of the proxyHost property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getName() {
-        return name;
+    public String getProxyHost() {
+        return proxyHost;
     }
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the proxyHost property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setName(String value) {
-        this.name = value;
+    public void setProxyHost(String value) {
+        this.proxyHost = value;
     }
 
     /**
-     * Gets the value of the key property.
+     * Gets the value of the proxyPort property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getKey() {
-        return key;
+    public String getProxyPort() {
+        return proxyPort;
     }
 
     /**
-     * Sets the value of the key property.
+     * Sets the value of the proxyPort property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setKey(String value) {
-        this.key = value;
+    public void setProxyPort(String value) {
+        this.proxyPort = value;
+    }
+
+    /**
+     * Gets the value of the proxyIgnoreHost property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getProxyIgnoreHost() {
+        return proxyIgnoreHost;
+    }
+
+    /**
+     * Sets the value of the proxyIgnoreHost property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setProxyIgnoreHost(String value) {
+        this.proxyIgnoreHost = value;
     }
 
 }
