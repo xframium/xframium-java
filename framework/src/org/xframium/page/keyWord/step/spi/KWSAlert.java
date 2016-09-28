@@ -27,6 +27,8 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.security.UserAndPassword;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.page.Page;
@@ -50,8 +52,9 @@ public class KWSAlert extends AbstractKeyWordStep
         DISMISS( 2, "DISMISS", "Dismiss"),
         SEND_KEYS (3, "SEND_KEYS", "Send Keys"),
         AUTHENTICATE( 4, "AUTHENTICATE", "Authenticate");
-        
-        private ALERT_TYPE( int id, String name, String description )
+
+
+		private ALERT_TYPE( int id, String name, String description )
         {
             this.id = id;
             this.name= name;
@@ -83,6 +86,8 @@ public class KWSAlert extends AbstractKeyWordStep
 			throw new ScriptConfigurationException( "Page Object was not defined" );
 		try
 		{
+			WebDriverWait alertWait = new WebDriverWait( webDriver, 5 );
+			alertWait.until( ExpectedConditions.alertIsPresent() );
     		Alert currentAlert = webDriver.switchTo().alert();
     		
     		if ( getContext() != null && !getContext().isEmpty() )
@@ -102,7 +107,7 @@ public class KWSAlert extends AbstractKeyWordStep
     		        currentAlert.sendKeys( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
     		        currentAlert.accept();
     		        break;
-    		        
+
     		    case AUTHENTICATE:
     		        currentAlert.authenticateUsing( new UserAndPassword(  getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "",  getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" ) );
                     break;

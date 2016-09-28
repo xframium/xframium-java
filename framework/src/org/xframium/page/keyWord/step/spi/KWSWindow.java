@@ -20,11 +20,10 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
-import java.util.Map;
-import java.util.Set;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.security.UserAndPassword;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xframium.device.factory.MorelandWebElement;
@@ -34,6 +33,9 @@ import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+
+import java.util.Map;
+import java.util.Set;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -58,7 +60,8 @@ public class KWSWindow extends AbstractKeyWordStep
 		/** The by winurl. */
 		BY_WINURL, 
 		/** The by frame. */
-		BY_FRAME, 
+		BY_FRAME,
+		BY_NUMBER,
 		/** The by parentframe. */
 		BY_PARENTFRAME, 
 		/** The by default. */
@@ -69,7 +72,9 @@ public class KWSWindow extends AbstractKeyWordStep
 		BY_ELEMENT,
 		/** The by alert. */
 		BY_ALERT,
+		BY_AUTH_ALERT,
 		BY_MAXIMIZE,
+		BY_WINDOW,
 		GET_TITLE,
 		GET_URL,
 		;
@@ -116,13 +121,28 @@ public class KWSWindow extends AbstractKeyWordStep
 				switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
 				webDriver.switchTo().frame( switchExpValue );
 				break;
-
-
+			case BY_NUMBER:
+				int frameNumber;
+				try
+				{
+					if ( getParameterList().size() < 2 )
+                        throw new Exception();
+					frameNumber = Integer.parseInt(getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "");
+				}
+				catch (IllegalArgumentException e)
+				{
+					throw new IllegalArgumentException( "Please provide the Frame number for the Frame as a parameter" );
+				}
+				webDriver.switchTo().frame( frameNumber );
+				break;
 			case BY_PARENTFRAME:
 				webDriver.switchTo().parentFrame();
 				break;
 			case BY_DEFAULT:
 				webDriver.switchTo().defaultContent();
+				break;
+			case BY_WINDOW:
+				webDriver.switchTo().window(webDriver.getWindowHandle());
 				break;
 			case BY_WINCLOSE:
 				webDriver.close();
@@ -146,6 +166,15 @@ public class KWSWindow extends AbstractKeyWordStep
 				alertWait.until( ExpectedConditions.alertIsPresent() );
 				Alert alert = webDriver.switchTo().alert();
 				alert.accept();
+				break;
+			case BY_AUTH_ALERT:
+				alertWait = new WebDriverWait( webDriver, 5 );
+				alertWait.until( ExpectedConditions.alertIsPresent() );
+				alert = webDriver.switchTo().alert();
+				String user = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+				String password = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "";
+				alert.authenticateUsing(new UserAndPassword(user, password));
+				//alert.accept();
 				break;
 			case BY_MAXIMIZE:
 				webDriver.manage().window().maximize();
