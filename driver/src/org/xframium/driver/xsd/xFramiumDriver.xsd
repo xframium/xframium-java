@@ -20,9 +20,20 @@
       <element name="suite" type="tns:xSuite" minOccurs="1" maxOccurs="1" />
       <element name="content" type="tns:xContent" minOccurs="0" maxOccurs="1" />
       <element name="data" type="tns:xData" minOccurs="0" maxOccurs="1" />
+      <element name="proxy" type="tns:xProxy" minOccurs="0" maxOccurs="1" />
     </sequence>
   </complexType>
 
+  <complexType name="xProxy">
+  	<simpleContent>
+		<extension base="string">
+    		<attribute name="proxyHost" type="string" use="optional" />
+    		<attribute name="proxyPort" type="string" use="optional" />
+    		<attribute name="proxyIgnoreHost" type="string" use="optional" />
+    	</extension>
+    </simpleContent>
+  </complexType>
+  
   <complexType name="xDevices">
     <sequence>
       <element name="device" type="tns:xDevice" minOccurs="0" maxOccurs="unbounded" />
