@@ -231,12 +231,6 @@ public interface Element
 	
 	public void setValue( String currentValue, SetMethod setMethod );
 	
-	
-	/**
-	 * Click.
-	 */
-	public void click();
-	
 	/**
 	 * Sets the driver.
 	 *
@@ -369,4 +363,10 @@ public interface Element
 	
 	public void setCacheNative( boolean cacheNative );
 	public boolean isCacheNative();
+	/**
+	 * Click.
+	 */
+	public void click();
+	
+	public void click (int clicks, int waitTime);
 }

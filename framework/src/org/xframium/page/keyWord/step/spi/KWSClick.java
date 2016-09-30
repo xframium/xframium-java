@@ -39,26 +39,41 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSClick extends AbstractKeyWordStep
 {
-    public KWSClick()
-    {
-        kwName = "Click";
-        kwDescription = "Allows the script to click on the center of the named element";
-        kwHelp = "https://www.xframium.org/keyword.html#kw-click";
-    }
+	public KWSClick()
+	{
+		kwName = "Click";
+		kwDescription = "Allows the script to click on the center of the named element";
+		kwHelp = "https://www.xframium.org/keyword.html#kw-click";
+	}
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
 	{
-	    if ( pageObject == null )
-            throw new ScriptConfigurationException( "There was no Page Object defined" );
+
+		if ( pageObject == null )
+			throw new ScriptConfigurationException( "There was no Page Object defined");
 		
-		getElement( pageObject, contextMap, webDriver, dataMap ).click();
-		
+		if(getParameterList().size() == 0){
+			getElement( pageObject, contextMap, webDriver, dataMap ).click();
+		} 
+		else if(getParameterList().size() == 1)
+		{	
+			String clicks = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+			int intClicks = Integer.parseInt(clicks);
+			getElement( pageObject, contextMap, webDriver, dataMap ).click(intClicks,250);
+		}
+		else {	
+			String clicks = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+			String waitTime = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+			int intClicks = Integer.parseInt(clicks);
+			int intwaitTime =Integer.parseInt(waitTime);			
+			getElement( pageObject, contextMap, webDriver, dataMap ).click(intClicks,intwaitTime);
+		}	
 		return true;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
 	 */
