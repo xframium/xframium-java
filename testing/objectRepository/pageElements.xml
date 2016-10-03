@@ -20,6 +20,9 @@
       <element name="selectBox" descriptor="ID" value="selectBox" />
       <element name="aOpen" descriptor="XPATH" value="//div[@id='aOpen']//a" />
       <element name="deleteButton" descriptor="ID" value="deleteButton" />
+      
+      <element name="_testingTwo" descriptor="ID" value="_testingTwo" />
+      <element name="testingTwoFrame" descriptor="ID" value="testingTwoFrame" />
     </page>
     
     <page name="page two">
