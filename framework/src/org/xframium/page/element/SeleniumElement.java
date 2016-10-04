@@ -385,6 +385,26 @@ public class SeleniumElement extends AbstractElement
 
         return false;
     }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.perfectoMobile.page.element.AbstractElement#_mouseDoubleClick()
+     */
+    public boolean _mouseDoubleClick()
+    {
+        WebElement webElement = getElement();
+        if ( webElement != null && webElement.getSize().getHeight() > 0 && webElement.getSize().getWidth() > 0 )
+        {
+            if ( webDriver instanceof HasInputDevices )
+            {
+                new Actions( webDriver ).doubleClick( webElement ).build().perform();
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /*
      * (non-Javadoc)

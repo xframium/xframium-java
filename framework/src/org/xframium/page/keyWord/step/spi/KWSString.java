@@ -24,6 +24,8 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -48,6 +50,7 @@ public class KWSString extends AbstractKeyWordStep
 	{
 	    String originalValue = null;
 	    String operationName = null;
+	    String expectedValue = null;
 	    
 	    if ( getParameterList().size() == 1 )
         {
@@ -58,6 +61,8 @@ public class KWSString extends AbstractKeyWordStep
 	    {
 	        originalValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
 	        operationName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+	        expectedValue = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "";
+
 	    }
 
 		String newValue = null;
@@ -80,6 +85,17 @@ public class KWSString extends AbstractKeyWordStep
 		        
 		    case "upper":
 		        newValue = originalValue.toUpperCase();
+		        break;
+		        
+		    case "contains":
+		    	if(expectedValue==null){
+		    		throw new ScriptConfigurationException( "STRING Expected format is: [" + expectedValue + "]");
+		    	}
+		        if(!originalValue.contains(expectedValue)&& !(expectedValue==null)&& !(expectedValue.equals(null))){		        	
+		    		throw new ScriptException( "STRING Expected [" + expectedValue + "]and original[" + originalValue + "] format is not matching ");
+		        }else{
+		        	newValue = expectedValue;
+		        }
 		        break;
 		}
 		

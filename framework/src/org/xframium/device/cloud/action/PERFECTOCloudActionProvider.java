@@ -82,7 +82,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 		if(currBrowserName.equalsIgnoreCase("Chrome")){
 			return "Chrome";
 		}else if (currBrowserName.equalsIgnoreCase("internet explorer")||currBrowserName.equalsIgnoreCase("internetexplorer")){
-			return "Internet explorer";
+			return "Internet Explorer";
 		}else if(currBrowserName.equalsIgnoreCase("firefox")){
 			return "Firefox";
 		}else{
