@@ -9,6 +9,16 @@
     <record name="two" value="two" />
     <record name="three" value="three" />
   </recordType>
+  
+  <recordType name="parentData">
+    <record name="one" value="one" childRecord="|childRecords:[name='childOne']" />
+    <record name="two" value="two" childRecord="|childRecords:[name='childTwo']" />
+  </recordType>
+  
+  <recordType name="childRecords">
+    <record name="childOne" value="childOne" loopData="|dataLoop|" />
+    <record name="childTwo" value="childTwo" loopData="|dataLoop:[value='two']|" />
+  </recordType>
 </data>
 
 
