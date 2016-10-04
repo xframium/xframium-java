@@ -97,136 +97,128 @@ public class KWSWindow extends AbstractKeyWordStep
 		if ( getParameterList().size() < 1 )
 			throw new ScriptConfigurationException( "First Parameter Switchtype should be provided with values BY_WINTITLE| BY_WINURL|BY_FRAME|BY_PARENTFRAME|BY_DEFAULT" );
 
-		try
+
+		// Verify if the parameter-1 values are correct
+		String switchType = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+		String switchExpValue = "";
+
+		switch ( SwitchType.valueOf( switchType ) )
 		{
-			// Verify if the parameter-1 values are correct
-			String switchType = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
-			String switchExpValue = "";
-
-			switch ( SwitchType.valueOf( switchType ) )
+		case BY_WINTITLE:
+			if ( getParameterList().size() < 2 )
+				throw new ScriptConfigurationException( "Please provide the title for the window as a parameter" );
+			switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+			return verifySwitchWindow( webDriver, switchType, switchExpValue );
+		case BY_WINURL:
+			if ( getParameterList().size() < 2 )
+				throw new ScriptConfigurationException( "Please provide the URL for the window as a parameter" );
+			switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+			return verifySwitchWindow( webDriver, switchType, switchExpValue );
+		case BY_FRAME:
+			if ( getParameterList().size() < 2 )
+				throw new ScriptConfigurationException( "Please provide the Frame id for the Frame as a parameter" );
+			switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+			webDriver.switchTo().frame( switchExpValue );
+			break;
+		case BY_NUMBER:
+			int frameNumber;
+			try
 			{
-			case BY_WINTITLE:
 				if ( getParameterList().size() < 2 )
-					throw new ScriptConfigurationException( "Please provide the title for the window as a parameter" );
-				switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-				return verifySwitchWindow( webDriver, switchType, switchExpValue );
-			case BY_WINURL:
-				if ( getParameterList().size() < 2 )
-					throw new ScriptConfigurationException( "Please provide the URL for the window as a parameter" );
-				switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-				return verifySwitchWindow( webDriver, switchType, switchExpValue );
-			case BY_FRAME:
-				if ( getParameterList().size() < 2 )
-					throw new ScriptConfigurationException( "Please provide the Frame id for the Frame as a parameter" );
-				switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-				webDriver.switchTo().frame( switchExpValue );
-				break;
-			case BY_NUMBER:
-				int frameNumber;
-				try
-				{
-					if ( getParameterList().size() < 2 )
-                        throw new Exception();
-					frameNumber = Integer.parseInt(getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "");
-				}
-				catch (IllegalArgumentException e)
-				{
-					throw new IllegalArgumentException( "Please provide the Frame number for the Frame as a parameter" );
-				}
-				webDriver.switchTo().frame( frameNumber );
-				break;
-			case BY_PARENTFRAME:
-				webDriver.switchTo().parentFrame();
-				break;
-			case BY_DEFAULT:
-				webDriver.switchTo().defaultContent();
-				break;
-			case BY_WINDOW:
-				webDriver.switchTo().window(webDriver.getWindowHandle());
-				break;
-			case BY_WINCLOSE:
-				webDriver.close();
-				break;
+                    throw new Exception();
+				frameNumber = Integer.parseInt(getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "");
+			}
+			catch (IllegalArgumentException e)
+			{
+				throw new IllegalArgumentException( "Please provide the Frame number for the Frame as a parameter" );
+			}
+			webDriver.switchTo().frame( frameNumber );
+			break;
+		case BY_PARENTFRAME:
+			webDriver.switchTo().parentFrame();
+			break;
+		case BY_DEFAULT:
+			webDriver.switchTo().defaultContent();
+			break;
+		case BY_WINDOW:
+			webDriver.switchTo().window(webDriver.getWindowHandle());
+			break;
+		case BY_WINCLOSE:
+			webDriver.close();
+			break;
 
-			case BY_ELEMENT:
-				Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap );
-				if ( currentElement == null )
-				{
-					log.warn( "Attempting to switch to frame identified by " + getName() + " that does not exist" );
-					return false;
-				}
-
-				WebElement nativeElement = (WebElement) currentElement.getNative();
-				if ( nativeElement instanceof MorelandWebElement )
-					nativeElement = ( (MorelandWebElement) nativeElement ).getWebElement();
-				webDriver.switchTo().frame( nativeElement ); 
-				break;                	
-			case BY_ALERT:
-				WebDriverWait alertWait = new WebDriverWait( webDriver, 5 );
-				alertWait.until( ExpectedConditions.alertIsPresent() );
-				Alert alert = webDriver.switchTo().alert();
-				alert.accept();
-				break;
-			case BY_AUTH_ALERT:
-				alertWait = new WebDriverWait( webDriver, 5 );
-				alertWait.until( ExpectedConditions.alertIsPresent() );
-				alert = webDriver.switchTo().alert();
-				String user = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-				String password = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "";
-				alert.authenticateUsing(new UserAndPassword(user, password));
-				//alert.accept();
-				break;
-			case BY_MAXIMIZE:
-				webDriver.manage().window().maximize();
-				break;
-			case GET_TITLE:
-			    String pageTitle = webDriver.getTitle();
-			    if ( getParameterList().size() > 1 )
-			    {
-			        String compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-			        if ( !compareTo.equals( pageTitle ) )
-			        {
-			            throw new ScriptException( "Expected Title of [" + compareTo + "] but received [" + pageTitle + "]" );
-			        }
-			    }
-			    
-			    if ( !validateData( pageTitle ) )
-		            throw new ScriptException( "GET_TITLE Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + pageTitle + "]" );
-			    
-			    if ( getContext() != null && !getContext().trim().isEmpty() ) 
-			        contextMap.put( getContext(), pageTitle );
-
-			    break;
-			    
-			case GET_URL:
-                String currentUrl = webDriver.getCurrentUrl();
-                if ( getParameterList().size() > 1 )
-                {
-                    String compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-                    if ( !compareTo.equals( currentUrl ) )
-                    {
-                        throw new ScriptException( "Expected Title of [" + compareTo + "] but received [" + currentUrl + "]" );
-                    }
-                }
-                
-                if ( !validateData( currentUrl ) )
-                    throw new ScriptException( "GET_URL Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + currentUrl + "]" );
-                
-                if ( getContext() != null && !getContext().trim().isEmpty() ) 
-                    contextMap.put( getContext(), currentUrl );
-
-			    break;
-			    
-		
-			default:
-				throw new ScriptConfigurationException( "Parameter switchtype should be BY_WINTITLE| BY_WINURL|BY_FRAME|BY_PARENTFRAME|BY_DEFAULT|BY_ALERT|BY_ELEMENT|BY_MAXIMIZE" );
+		case BY_ELEMENT:
+			Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap );
+			if ( currentElement == null )
+			{
+				log.warn( "Attempting to switch to frame identified by " + getName() + " that does not exist" );
+				return false;
 			}
 
-		}
-		catch ( Exception e )
-		{
-			log.error( "Error executing function for validation [" + getName() + "] on page [" + getPageName() + "]", e );
-			throw new ScriptException(  "Error executing function for validation [" + getName() + "] on page [" + getPageName() + "]" );
+			WebElement nativeElement = (WebElement) currentElement.getNative();
+			if ( nativeElement instanceof MorelandWebElement )
+				nativeElement = ( (MorelandWebElement) nativeElement ).getWebElement();
+			webDriver.switchTo().frame( nativeElement ); 
+			break;                	
+		case BY_ALERT:
+			WebDriverWait alertWait = new WebDriverWait( webDriver, 5 );
+			alertWait.until( ExpectedConditions.alertIsPresent() );
+			Alert alert = webDriver.switchTo().alert();
+			alert.accept();
+			break;
+		case BY_AUTH_ALERT:
+			alertWait = new WebDriverWait( webDriver, 5 );
+			alertWait.until( ExpectedConditions.alertIsPresent() );
+			alert = webDriver.switchTo().alert();
+			String user = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+			String password = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "";
+			alert.authenticateUsing(new UserAndPassword(user, password));
+			//alert.accept();
+			break;
+		case BY_MAXIMIZE:
+			webDriver.manage().window().maximize();
+			break;
+		case GET_TITLE:
+		    String pageTitle = webDriver.getTitle();
+		    if ( getParameterList().size() > 1 )
+		    {
+		        String compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+		        if ( !compareTo.equals( pageTitle ) )
+		        {
+		            throw new ScriptException( "Expected Title of [" + compareTo + "] but received [" + pageTitle + "]" );
+		        }
+		    }
+		    
+		    if ( !validateData( pageTitle ) )
+	            throw new ScriptException( "GET_TITLE Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + pageTitle + "]" );
+		    
+		    if ( getContext() != null && !getContext().trim().isEmpty() ) 
+		        contextMap.put( getContext(), pageTitle );
+
+		    break;
+		    
+		case GET_URL:
+            String currentUrl = webDriver.getCurrentUrl();
+            if ( getParameterList().size() > 1 )
+            {
+                String compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+                if ( !compareTo.equals( currentUrl ) )
+                {
+                    throw new ScriptException( "Expected Title of [" + compareTo + "] but received [" + currentUrl + "]" );
+                }
+            }
+            
+            if ( !validateData( currentUrl ) )
+                throw new ScriptException( "GET_URL Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + currentUrl + "]" );
+            
+            if ( getContext() != null && !getContext().trim().isEmpty() ) 
+                contextMap.put( getContext(), currentUrl );
+
+		    break;
+		    
+	
+		default:
+			throw new ScriptConfigurationException( "Parameter switchtype should be BY_WINTITLE| BY_WINURL|BY_FRAME|BY_PARENTFRAME|BY_DEFAULT|BY_ALERT|BY_ELEMENT|BY_MAXIMIZE" );
 		}
 
 		return true;

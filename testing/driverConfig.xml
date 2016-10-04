@@ -1,21 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xFramium xmlns="http://www.xframium.org/xFramiumDriver" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/xFramiumDriver http://www.xframium.org/xsd/xFramiumDriver.xsd">
-  <cloud provider="LOCAL" providerType="PERFECTO" name="partners" userName="ageary@morelandlabs.com" password="Spike123!" hostName="partners.perfectomobile.com" proxyHost="" grid="EMBEDDED" />
+  <cloud provider="XML" fileName="cloudRegistry.xml" name="saucelabs" />
 
   <application provider="LOCAL" name="Google Search Test" appPackage="" bundleId="" url="http://xframium.org/testing.html" iosInstall="" androidInstall="" />
 
   <devices provider="LOCAL">
     <device name="Firefox Local" manufacturer="Mozilla" model="Firefox" active="true" availableDevices="1" os="Windows" browserName="firefox" osVersion="8.1" browserVersion="46" cloud="EMBEDDED" />
-    <device name="Chrome Local" manufacturer="Google" model="Chrome" active="true" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" cloud="EMBEDDED" >
+    <device name="Chrome Local" manufacturer="Google" model="Chrome" active="false" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" cloud="EMBEDDED" >
       <objectCapability name="chrometest">
         <capabilities factoryName="ChromeOptions">
           <options name="arguments">--disable-extensions</options>
         </capabilities>
       </objectCapability>
     </device>
-    <device name="Chrome" manufacturer="Google" model="Chrome" active="true" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" />
+    <device name="Chrome SauceLabs" manufacturer="Google" model="Chrome" active="false" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" browserVersion="53" cloud="saucelabs" >
+      <objectCapability name="chrometest">
+        <capabilities factoryName="ChromeOptions">
+          <options name="arguments">--disable-extensions</options>
+        </capabilities>
+      </objectCapability>
+    </device>
+    <device name="Chrome Perfecto" manufacturer="Google" model="Chrome" active="false" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" browserVersion="53" cloud="perfecto">
+      <objectCapability name="chrometest">
+        <capabilities factoryName="ChromeOptions">
+          <options name="arguments">--disable-extensions</options>
+        </capabilities>
+      </objectCapability>
+    </device>
+    
     <device name="IE Local" manufacturer="Microsoft" model="IE" active="false" availableDevices="1" os="Windows" browserName="internet explorer" osVersion="8.1" cloud="EMBEDDED" />
-    <device name="Samsung S5" manufacturer="Samsung" model="Galaxy S5" os="Android" active="false" availableDevices="1" />
+    <device name="Samsung S5 Perfecto" manufacturer="Samsung" model="Galaxy S5" os="Android" active="false" availableDevices="1"  cloud="perfecto" browserName="Chrome" />
+    <device name="Samsung S5 SauceLabs" manufacturer="Samsung" model="Galaxy S5" os="Android" osVersion="4.4" active="false" availableDevices="1" cloud="saucelabs" browserName="Browser" >
+      <capability name="deviceName">Google Nexus 7 HD Emulator</capability>
+      <capability name="appiumVersion">1.5.3</capability>
+      <capability name="platform">ANDROID</capability>
+    </device>
     <device name="Samsung S8" manufacturer="Samsung" model="Galaxy S8" os="Android" active="false" availableDevices="1" />
   </devices>
   <driver type="WEB" outputFolder="test-output" displayResults="true">
@@ -32,6 +51,7 @@
 
   <data fileName="pageData/pageData.xml" />
 </xFramium>
+
 
 
 

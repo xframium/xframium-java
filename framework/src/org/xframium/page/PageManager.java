@@ -119,6 +119,11 @@ public class PageManager
     {
         outputFormatter.put( name, formatter );
     }
+    
+    public String getFormattedMessage( String name )
+    {
+    	return outputFormatter.getProperty( name );
+    }
 
     public void setTagNames( String tagNames )
     {

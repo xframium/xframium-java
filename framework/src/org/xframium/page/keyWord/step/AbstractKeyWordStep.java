@@ -61,6 +61,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     {
         kwImpl = getClass().getName();
         kw = KeyWordStepFactory.instance().getKW( getClass() );
+        natualLanguage = PageManager.instance().getFormattedMessage( getClass().getSimpleName() );
     }
     
     /** The name. */
@@ -146,6 +147,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     protected String kwHelp;
     protected String kwImpl;
     protected String kw;
+    protected String natualLanguage;
 
     @Override
     public void setTagNames( String tagNames )
