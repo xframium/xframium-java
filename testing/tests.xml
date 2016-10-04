@@ -27,6 +27,7 @@
   <import fileName="general/kw-visible.xml" />
   <import fileName="general/kw-wait.xml" />
   <import fileName="general/kw-waitfor.xml" />
+  <import fileName="general/kw-window.xml" />
 
   <model>
     
@@ -41,7 +42,7 @@
     <description>Tests the general keywords that apply to both Web and Native applications across web and mobile devices</description>
 
     <step type="CALL" name="kw-exists" page="home" />
-    <step type="CALL" name="kw-alert" page="home" os="Windows,MACOS"/>
+    <step type="CALL" name="kw-alert" page="home" os="Windows,MACOS" active="true"/>
     <step type="CALL" name="kw-align" page="home" />
     <step type="CALL" name="kw-attribute" page="home" />
     <step type="CALL" name="kw-cache" page="home" />
@@ -65,12 +66,13 @@
     <step type="CALL" name="kw-visible" page="home" />
     <step type="CALL" name="kw-wait" page="home" />
     <step type="CALL" name="kw-waitfor" page="home" />
+    <step type="CALL" name="kw-window" page="home" />
   </test>
   
   <test name="xFramium dev" active="false" dataProvider="callTest">
     <description>Tests the general keywords that apply to both Web and Native applications across web and mobile devices</description>
 
-    <step type="CALL" name="kw-waitfor" page="home" />
+    <step type="CALL" name="kw-window" page="home" />
 
   </test>
 

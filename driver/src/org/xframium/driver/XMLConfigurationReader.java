@@ -1144,7 +1144,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      */
     protected boolean configureProxy()
     {
-    	if ( xRoot.getProxy().getProxyHost() != null 
+    	if ( xRoot.getProxy() != null && xRoot.getProxy().getProxyHost() != null 
     			&& !xRoot.getProxy().getProxyHost().isEmpty() 
     			&& Integer.parseInt( xRoot.getProxy().getProxyPort() ) > 0 )
         {
