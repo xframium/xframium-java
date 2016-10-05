@@ -99,8 +99,13 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	 */
 	public PageData getRecord( String recordType, String recordId )
 	{
+	    return (PageData) _getRecord( recordType, recordId );
+	}
+	
+	private Object _getRecord( String recordType, String recordId )
+	{
 	    if ( recordId.contains( "." ) )
-	    {
+        {
             String[] fieldArray = recordId.split( "\\." );
             
             List<PageData> dataList = (List<PageData>) recordMap.get( recordType );
@@ -114,17 +119,17 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
                     if ( newName.trim().isEmpty() )
                         return p;
                     else
-                        return (PageData) p.get( newName );
+                        return p.get( newName );
                 }
             }
             
             return null;
-	        	        
-	    }
-	    else
-	    {
-	        return idMap.get( recordType + "." + recordId );
-	    }
+                        
+        }
+        else
+        {
+            return idMap.get( recordType + "." + recordId );
+        }
 	}
 	
 	/* (non-Javadoc)
@@ -132,11 +137,34 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	 */
 	public PageData[] getRecords( String recordType )
 	{
-		Deque<PageData> dataList = recordMap.get( recordType );
-		if ( recordType != null )
-			return dataList.toArray( new PageData[ 0 ] );
-		else
-			return null;
+	    if ( recordType.contains( "." ) )
+	    {
+	        String[] fieldArray = recordType.split( "\\." );
+	        
+	        Deque<PageData> dataList = recordMap.get( fieldArray[ 0 ] );
+            
+            for ( PageData p : dataList )
+            {
+                if ( p.getName().equals( fieldArray[ 0 ] ) )
+                {
+                    String newName = recordType.substring( recordType.indexOf( "." ) + 1 );
+                    
+                    if ( newName.trim().isEmpty() )
+                        return new PageData[] { p };
+                    else
+                        return (PageData[]) p.get( newName );
+                }
+            }
+            return dataList.toArray( new PageData[ 0 ] );
+	    }
+	    else
+	    {
+    		Deque<PageData> dataList = recordMap.get( recordType );
+    		if ( recordType != null )
+    			return dataList.toArray( new PageData[ 0 ] );
+    		else
+    			return null;
+	    }
 	}
 	
 	/* (non-Javadoc)

@@ -40,6 +40,7 @@ import org.xframium.page.element.provider.xsd.ObjectFactory;
 import org.xframium.page.element.provider.xsd.Page;
 import org.xframium.page.element.provider.xsd.RegistryRoot;
 import org.xframium.page.element.provider.xsd.Site;
+import com.xframium.serialization.SerializationManager;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -52,6 +53,7 @@ public class XMLElementProvider extends AbstractElementProvider
 	
 	/** The file name. */
 	private File fileName;
+	private File folderName;
 	
 	/** The resource name. */
 	private String resourceName;
@@ -64,6 +66,7 @@ public class XMLElementProvider extends AbstractElementProvider
 	public XMLElementProvider( File fileName )
 	{
 		this.fileName = fileName;
+		this.folderName = fileName.getParentFile();
 		readElements();
 	}
 	
@@ -147,7 +150,21 @@ public class XMLElementProvider extends AbstractElementProvider
 				if (log.isInfoEnabled())
 					log.info( "Attempting to import file [" + Paths.get(".").toAbsolutePath().normalize().toString() + imp.getFileName() + "]" );
 
-				readElements( new FileInputStream( imp.getFileName() ) );
+				if ( fileName == null )
+				{
+				    readElements( getClass().getClassLoader().getResourceAsStream( imp.getFileName() ) );
+				}
+				else
+				{
+    				File newFile = new File( imp.getFileName() );
+    				if ( newFile.exists() ) 
+    				    readElements( new FileInputStream( newFile ) );
+    				
+    				newFile = new File( folderName, imp.getFileName() );
+    				if ( newFile.exists() )
+    				    readElements( new FileInputStream( newFile ) );
+				}
+				
 			}
 			catch (FileNotFoundException e)
 			{
@@ -195,6 +212,5 @@ public class XMLElementProvider extends AbstractElementProvider
 	{
 		return elementMap.get(  elementDescriptor.toString() );
 	}
-	
 	
 }
