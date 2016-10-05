@@ -38,10 +38,6 @@
     <device name="Samsung S8" manufacturer="Samsung" model="Galaxy S8" os="Android" active="false" availableDevices="1" />
   </devices>
   <driver type="WEB" outputFolder="test-output" displayResults="true">
-    <artifact type="FAILURE_SOURCE" />
-    <artifact type="DEVICE_LOG" />
-    <artifact type="WCAG_REPORT" />
-    <artifact type="EXECUTION_RECORD_HTML" />
     <artifact type="CONSOLE_LOG" />
   </driver>
 
