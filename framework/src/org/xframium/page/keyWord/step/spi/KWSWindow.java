@@ -33,7 +33,9 @@ import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
-
+import org.xframium.page.keyWord.step.spi.KWSMath.MATH_TYPE;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,41 +45,52 @@ import java.util.Set;
  */
 public class KWSWindow extends AbstractKeyWordStep
 {
-    public KWSWindow()
-    {
-        kwName = "HTML Window Operation";
-        kwDescription = "Allows the script to work with web windows";
-        kwHelp = "https://www.xframium.org/keyword.html#kw-window";
-    }
 	/**
 	 * The Enum SwitchType.
 	 */
-	private enum SwitchType
+	public enum SwitchType
 	{
-
-		/** The by wintitle. */
-		BY_WINTITLE, 
-		/** The by winurl. */
-		BY_WINURL, 
-		/** The by frame. */
-		BY_FRAME,
-		BY_NUMBER,
-		/** The by parentframe. */
-		BY_PARENTFRAME, 
-		/** The by default. */
-		BY_DEFAULT, 
-		/** The by winclose. */
-		BY_WINCLOSE, 
-
-		BY_ELEMENT,
-		/** The by alert. */
-		BY_ALERT,
-		BY_AUTH_ALERT,
-		BY_MAXIMIZE,
-		BY_WINDOW,
-		GET_TITLE,
-		GET_URL,
-		;
+		BY_WINTITLE(1, "BY_WINTITLE", "Switch to Window with Title"), 
+		BY_WINURL(2, "BY_WINURL", "Switch to Window with URL"), 
+		BY_FRAME(3, "BY_FRAME", "Switch to Named Frame"),
+		BY_NUMBER(4, "BY_NUMBER", "Switch to Indexed frame"),
+		BY_PARENTFRAME(5, "BY_PARENTFRAME", "Switch to Parent Frame"), 
+		BY_DEFAULT(6, "BY_DEFAULT", "Switch to Default Window"), 
+		BY_WINCLOSE(7, "BY_WINCLOSE", "Close the current window"), 
+		BY_ELEMENT(8, "BY_ELEMENT", "Switch to the frame by element"),
+		BY_MAXIMIZE(9, "BY_MAXIMIZE", "Maximize the current window"),
+		BY_WINDOW(10, "BY_WINDOW", "Switch to the named window handle"),
+		GET_TITLE(11, "GET_TITLE", "Get the title of the current window"),
+		GET_URL(12, "GET_URL", "Get the URL of the current window");
+	    
+	    public List<SwitchType> getSupported()
+        {
+            List<SwitchType> supportedList = new ArrayList<SwitchType>( 10 );
+            supportedList.add( SwitchType.BY_WINTITLE );
+            supportedList.add( SwitchType.BY_WINURL );
+            supportedList.add( SwitchType.BY_FRAME );
+            supportedList.add( SwitchType.BY_NUMBER );
+            supportedList.add( SwitchType.BY_PARENTFRAME );
+            supportedList.add( SwitchType.BY_DEFAULT );
+            supportedList.add( SwitchType.BY_WINCLOSE );
+            supportedList.add( SwitchType.BY_ELEMENT );
+            supportedList.add( SwitchType.BY_MAXIMIZE );
+            supportedList.add( SwitchType.BY_WINDOW );
+            supportedList.add( SwitchType.GET_TITLE );
+            supportedList.add( SwitchType.GET_URL );
+            return supportedList;
+        }
+        
+        private SwitchType( int id, String name, String description )
+        {
+            this.id = id;
+            this.name= name;
+            this.description = description;
+        }
+        
+        private int id;
+        private String name;
+        private String description;
 	}
 
 	/*
@@ -160,21 +173,6 @@ public class KWSWindow extends AbstractKeyWordStep
 				nativeElement = ( (MorelandWebElement) nativeElement ).getWebElement();
 			webDriver.switchTo().frame( nativeElement ); 
 			break;                	
-		case BY_ALERT:
-			WebDriverWait alertWait = new WebDriverWait( webDriver, 5 );
-			alertWait.until( ExpectedConditions.alertIsPresent() );
-			Alert alert = webDriver.switchTo().alert();
-			alert.accept();
-			break;
-		case BY_AUTH_ALERT:
-			alertWait = new WebDriverWait( webDriver, 5 );
-			alertWait.until( ExpectedConditions.alertIsPresent() );
-			alert = webDriver.switchTo().alert();
-			String user = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-			String password = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "";
-			alert.authenticateUsing(new UserAndPassword(user, password));
-			//alert.accept();
-			break;
 		case BY_MAXIMIZE:
 			webDriver.manage().window().maximize();
 			break;

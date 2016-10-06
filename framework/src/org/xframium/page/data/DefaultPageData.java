@@ -70,6 +70,19 @@ public class DefaultPageData implements PageData
 		return recordName;
 	}
 
+	@Override
+	public String[] getFieldNames()
+	{
+	    List<String> fieldNames = new ArrayList<String>( 20 );
+	    fieldNames.add( "typeName" );
+	    fieldNames.add( "recordName" );
+	    fieldNames.add( "active" );
+	    for ( String name : recordMap.keySet() )
+	        fieldNames.add( name );
+	    
+	    return fieldNames.toArray( new String[ 0 ]);
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.data.PageData#getData(java.lang.String)
 	 */

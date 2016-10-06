@@ -20,9 +20,12 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.exception.ScriptException;
+import org.xframium.gesture.device.action.DeviceAction.ActionType;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordParameter;
@@ -52,6 +55,31 @@ public class KWSMath extends AbstractKeyWordStep
         return parameterValue.replace( "$", " " ).replace( "%", " " ).trim();
     }
     
+    public enum MATH_TYPE
+    {
+        add(1, "add" , "Add numbers and compare the results "),
+        subtract(2, "subtract", "Subtract numbers and compare the results");
+        
+        public List<MATH_TYPE> getSupported()
+        {
+            List<MATH_TYPE> supportedList = new ArrayList<MATH_TYPE>( 10 );
+            supportedList.add( MATH_TYPE.add );
+            supportedList.add( MATH_TYPE.subtract );
+            return supportedList;
+        }
+        
+        private MATH_TYPE( int id, String name, String description )
+        {
+            this.id = id;
+            this.name= name;
+            this.description = description;
+        }
+        
+        private int id;
+        private String name;
+        private String description;
+    }
+    
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
@@ -74,13 +102,13 @@ public class KWSMath extends AbstractKeyWordStep
 	        }
 	        else
 	        {
-	            switch ( getName().toLowerCase() )
+	            switch ( MATH_TYPE.valueOf( getName().toLowerCase() ) )
 	            {
-	                case "add":
+	                case add:
 	                    currentValue += Double.parseDouble( formatString( currentParameter ) );
 	                    break;
 	                    
-	                case "subtract":
+	                case subtract:
 	                    if ( valueAdded )
 	                        currentValue -= Double.parseDouble( formatString( currentParameter ) );
 	                    else

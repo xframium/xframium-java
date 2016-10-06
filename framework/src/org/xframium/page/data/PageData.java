@@ -80,6 +80,8 @@ public interface PageData
 	 */
 	public List<PageData> getPageData( String fieldName );
 	
+	public String[] getFieldNames();
+	
 	/**
 	 * Contains children.
 	 *
