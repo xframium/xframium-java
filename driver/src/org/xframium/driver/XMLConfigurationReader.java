@@ -28,6 +28,7 @@ import org.xframium.device.proxy.ProxyRegistry;
 import org.xframium.driver.container.ApplicationContainer;
 import org.xframium.driver.container.CloudContainer;
 import org.xframium.driver.container.DeviceContainer;
+import org.xframium.driver.container.DriverContainer;
 import org.xframium.driver.xsd.*;
 import org.xframium.page.*;
 import org.xframium.page.data.PageData;
@@ -812,107 +813,31 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     }
     
     @Override
-    protected boolean configureDriver()
+    public DriverContainer configureDriver()
     {
+        DriverContainer dC = new DriverContainer();
+        
+
         String personaNames = xRoot.getDriver().getPersonas();
         if ( personaNames != null && !personaNames.isEmpty() )
-        {
-            DataManager.instance().setPersonas( personaNames );
-            PageManager.instance().setWindTunnelEnabled( true );
-        }
+            dC.setPerfectoPersonas( personaNames );
         
-        displayResults = xRoot.getDriver().isDisplayResults();
+        dC.setDisplayReport( xRoot.getDriver().isDisplayResults() );
+        dC.setSmartCaching( xRoot.getDriver().isCachingEnabled() );
 
-        DeviceManager.instance().setCachingEnabled( xRoot.getDriver().isCachingEnabled() );
+        dC.setStepTags( xRoot.getDriver().getStepTags() );
 
-        String stepTags = xRoot.getDriver().getStepTags();
-        if ( stepTags != null && !stepTags.isEmpty() )
-            PageManager.instance().setTagNames( stepTags );
+        dC.getPropertyMap().putAll( configProperties );
 
-        Properties props = new Properties();
-        props.putAll( configProperties );
-        KeyWordDriver.instance().setConfigProperties( props );
-
-        List<String> testArray = new ArrayList<String>( 10 );
 
         //
         // Extract any named tests
         //
-        String testNames = xRoot.getDriver().getTestNames();
-        
-        if ( testNames != null && !testNames.isEmpty() )
-        {
-            Collection<KeyWordTest> testList = KeyWordDriver.instance().getNamedTests( testNames.split( "," ) );
-            
-            if ( testList.isEmpty() )
-            {
-                System.err.println( "No tests contained the names(s) [" + testNames + "]" );
-            }
-            
-            testArray.addAll( Arrays.asList( testNames ) );
-        }
+        dC.setTestNames( xRoot.getDriver().getTestNames() );
+        dC.setTestTags( xRoot.getDriver().getTagNames() );
+        dC.setDryRun( xRoot.getDriver().isDryRun() );
 
-
-        //
-        // Extract any tagged tests
-        //
-        String tagNames = xRoot.getDriver().getTagNames();
-        if ( tagNames != null && !tagNames.isEmpty() )
-        {
-            DeviceManager.instance().setTagNames( tagNames.split( "," ) );
-            Collection<KeyWordTest> testList = KeyWordDriver.instance().getTaggedTests( tagNames.split( "," ) );
-
-            if ( testList.isEmpty() )
-            {
-                System.err.println( "No tests contained the tag(s) [" + tagNames + "]" );
-            }
-
-            for ( KeyWordTest t : testList )
-                testArray.add( t.getName() );
-        }
-
-        if ( testArray.size() == 0 )
-            DataManager.instance().setTests( KeyWordDriver.instance().getTestNames() );
-        else
-            DataManager.instance().setTests( testArray.toArray( new String[0] ) );
-        
-        dryRun = xRoot.getDriver().isDryRun();
-        
-        DeviceManager.instance().setDryRun( dryRun );
-        
-        //
-        // add in support for multiple devices
-        //
-
-        PageManager.instance().setAlternateWebDriverSource( new SeleniumSessionManager()
-        {
-            public WebDriver getAltWebDriver( String name )
-            {
-                WebDriver rtn = null;
-
-                ConnectedDevice device = AbstractSeleniumTest.getConnectedDevice( name );
-
-                if ( device != null )
-                {
-                    rtn = device.getWebDriver();
-                }
-
-                return rtn;
-            }
-
-            public void registerAltWebDriver( String name, String deviceId )
-            {
-                AbstractSeleniumTest.registerSecondaryDeviceOnName( name, deviceId );
-            }
-            
-            public void registerInactiveWebDriver(String name) 
-            {
-				AbstractSeleniumTest.registerInactiveDeviceOnName( name );
-			}
-
-        } );
-        
-        return true;
+        return dC;
     }
     
     private void parseModel( SuiteContainer sC, XModel model )

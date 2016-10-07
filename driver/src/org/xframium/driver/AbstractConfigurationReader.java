@@ -4,21 +4,29 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.WebDriver;
 import org.testng.TestNG;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.debugger.DebugManager;
+import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
+import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.device.proxy.ProxyRegistry;
 import org.xframium.driver.container.ApplicationContainer;
 import org.xframium.driver.container.CloudContainer;
 import org.xframium.driver.container.DeviceContainer;
+import org.xframium.driver.container.DriverContainer;
 import org.xframium.gesture.GestureManager;
 import org.xframium.gesture.device.action.DeviceActionManager;
 import org.xframium.gesture.device.action.spi.perfecto.PerfectoDeviceActionFactory;
@@ -31,9 +39,11 @@ import org.xframium.page.data.PageDataManager;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.provider.SuiteContainer;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunDetails;
+import org.xframium.utility.SeleniumSessionManager;
 
 public abstract class AbstractConfigurationReader implements ConfigurationReader
 {
@@ -55,7 +65,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     protected abstract boolean configureContent();
     public abstract DeviceContainer configureDevice();
     protected abstract boolean configurePropertyAdapters();
-    protected abstract boolean configureDriver();
+    public abstract DriverContainer configureDriver();
     protected abstract boolean _executeTest() throws Exception;
     
     @Override
@@ -185,10 +195,91 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             PageManager.instance().setSiteName( sC.getSiteName() );
             PageManager.instance().setElementProvider( eP );
             
-            
-            
             log.info( "Driver: Configuring Driver" );
-            if ( !configureDriver() ) return;
+            DriverContainer driverC = configureDriver();
+            
+            DataManager.instance().setPersonas( driverC.getPerfectoPersonas().toArray( new String[ 0 ] ) );
+            PageManager.instance().setWindTunnelEnabled( driverC.isPerfectoWindTunnel() );
+            DeviceManager.instance().setDryRun( driverC.isDryRun() );
+            
+            displayResults = driverC.isDisplayReport();
+            DeviceManager.instance().setCachingEnabled( driverC.isSmartCaching() );
+            String stepTags = driverC.getStepTags();
+            if ( stepTags != null && !stepTags.isEmpty() )
+                PageManager.instance().setTagNames( stepTags );
+            
+            Properties props = new Properties();
+            props.putAll( driverC.getPropertyMap() );
+            KeyWordDriver.instance().setConfigProperties( props );
+            
+            List<String> testArray = new ArrayList<String>( 10 );
+            
+            if ( driverC.getTestNames().size() > 0 )
+            {
+                Collection<KeyWordTest> testList = KeyWordDriver.instance().getNamedTests( driverC.getTestNames().toArray( new String[ 0 ] ) );
+                
+                if ( testList.isEmpty() )
+                {
+                    System.err.println( "No tests contained the names(s) [" + driverC.getTestNames() + "]" );
+                }
+                
+                testArray.addAll( driverC.getTestNames() );
+            }
+            
+            //
+            // Extract any tagged tests
+            //
+            String tagNames = driverC.getTestTags();
+            if ( tagNames != null && !tagNames.isEmpty() )
+            {
+                DeviceManager.instance().setTagNames( tagNames.split( "," ) );
+                Collection<KeyWordTest> testList = KeyWordDriver.instance().getTaggedTests( tagNames.split( "," ) );
+
+                if ( testList.isEmpty() )
+                {
+                    System.err.println( "No tests contained the tag(s) [" + tagNames + "]" );
+                }
+
+                for ( KeyWordTest t : testList )
+                    testArray.add( t.getName() );
+            }
+            
+            if ( testArray.size() == 0 )
+                DataManager.instance().setTests( KeyWordDriver.instance().getTestNames() );
+            else
+                DataManager.instance().setTests( testArray.toArray( new String[0] ) );
+            
+            //
+            // add in support for multiple devices
+            //
+
+            PageManager.instance().setAlternateWebDriverSource( new SeleniumSessionManager()
+            {
+                public WebDriver getAltWebDriver( String name )
+                {
+                    WebDriver rtn = null;
+
+                    ConnectedDevice device = AbstractSeleniumTest.getConnectedDevice( name );
+
+                    if ( device != null )
+                    {
+                        rtn = device.getWebDriver();
+                    }
+
+                    return rtn;
+                }
+
+                public void registerAltWebDriver( String name, String deviceId )
+                {
+                    AbstractSeleniumTest.registerSecondaryDeviceOnName( name, deviceId );
+                }
+                
+                public void registerInactiveWebDriver(String name) 
+                {
+                    AbstractSeleniumTest.registerInactiveDeviceOnName( name );
+                }
+
+            } );
             
             RunDetails.instance().setTestName( ApplicationRegistry.instance().getAUT().getName() );
             

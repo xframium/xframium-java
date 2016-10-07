@@ -46,6 +46,7 @@ import org.xframium.device.proxy.ProxyRegistry;
 import org.xframium.driver.container.ApplicationContainer;
 import org.xframium.driver.container.CloudContainer;
 import org.xframium.driver.container.DeviceContainer;
+import org.xframium.driver.container.DriverContainer;
 import org.xframium.gesture.device.action.DeviceActionManager;
 import org.xframium.gesture.device.action.spi.perfecto.PerfectoDeviceActionFactory;
 import org.xframium.page.PageManager;
@@ -574,117 +575,32 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     }
     
     @Override
-    protected boolean configureDriver()
+    public DriverContainer configureDriver()
     {
+        DriverContainer dC = new DriverContainer();
+
         String personaNames = configProperties.getProperty( "driver.personas" );
         if ( personaNames != null && !personaNames.isEmpty() )
-        {
-            DataManager.instance().setPersonas( personaNames );
-            PageManager.instance().setWindTunnelEnabled( true );
-        }
+            dC.setPerfectoPersonas( personaNames );
         
-        if ( configProperties.getProperty( "driver.displayResults" ) != null )
-            displayResults = Boolean.parseBoolean( configProperties.getProperty( "driver.displayResults" ) );
+        dC.setDisplayReport( Boolean.parseBoolean( configProperties.getProperty( "driver.displayResults" ) ) );
+        dC.setSmartCaching( Boolean.parseBoolean( configProperties.getProperty( "driver.enableCaching" ) ) );
 
-        DeviceManager.instance().setCachingEnabled( Boolean.parseBoolean( configProperties.getProperty( "driver.enableCaching" ) ) );
+        dC.setStepTags( configProperties.getProperty( "driver.stepTags" ) );
 
-        String stepTags = configProperties.getProperty( "driver.stepTags" );
-        if ( stepTags != null && !stepTags.isEmpty() )
-            PageManager.instance().setTagNames( stepTags );
-
-        String interruptString = configProperties.getProperty( "driver.deviceInterrupts" );
-        if ( interruptString != null && !interruptString.isEmpty() )
-            DeviceManager.instance().setDeviceInterrupts( interruptString );
-
-        KeyWordDriver.instance().setConfigProperties( configProperties );
-
-        List<String> testArray = new ArrayList<String>( 10 );
+        for ( Object key : configProperties.keySet() )
+            dC.getPropertyMap().put( (String)key, configProperties.getProperty( (String)key ) );
+        
 
         //
         // Extract any named tests
         //
-        String testNames = configProperties.getProperty( "driver.testNames" );
-        if ( testNames != null && !testNames.isEmpty() )
-        {
-            Collection<KeyWordTest> testList = KeyWordDriver.instance().getNamedTests( testNames.split( "," ) );
-                
-            if ( testList.isEmpty() )
-            {
-                System.err.println( "No tests contained the names(s) [" + testNames + "]" );
-            }
-                
-            testArray.addAll( Arrays.asList( testNames ) );
-        }
-            
-        //
-        // Extract any tagged tests
-        //
-        String tagNames = configProperties.getProperty( "driver.tagNames" );
-        if ( tagNames != null && !tagNames.isEmpty() )
-        {
-            DeviceManager.instance().setTagNames( tagNames.split( "," ) );
-            Collection<KeyWordTest> testList = KeyWordDriver.instance().getTaggedTests( tagNames.split( "," ) );
-                
-            if ( testList.isEmpty() )
-            {
-                System.err.println( "No tests contained the tag(s) [" + tagNames + "]" );
-            }
-                
-            for ( KeyWordTest t : testList )
-                testArray.add( t.getName() );
-                
-            if ( testArray.isEmpty() )
-            {
-                System.err.println( "No tests were specified" );
-                System.exit( -1 );
-            }
-        }
+        dC.setDeviceInterrupts( configProperties.getProperty( "driver.deviceInterrupts" ) );
+        dC.setTestNames( configProperties.getProperty( "driver.testNames" ) );
+        dC.setTestTags( configProperties.getProperty( "driver.tagNames" ) );
+        dC.setDryRun( Boolean.parseBoolean( configProperties.getProperty( "driver.validateConfiguration" ) ) );
 
-            
-        if ( testArray.size() == 0 )
-            DataManager.instance().setTests( KeyWordDriver.instance().getTestNames() );
-        else
-            DataManager.instance().setTests( testArray.toArray( new String[0] ) );
-
-        String validateConfiguration = configProperties.getProperty( "driver.validateConfiguration" );
-        if ( validateConfiguration != null )
-            dryRun = Boolean.parseBoolean( validateConfiguration );
-        
-        DeviceManager.instance().setDryRun( dryRun );
-        
-        //
-        // add in support for multiple devices
-        //
-
-        PageManager.instance().setAlternateWebDriverSource( new SeleniumSessionManager()
-        {
-            public WebDriver getAltWebDriver( String name )
-            {
-                WebDriver rtn = null;
-
-                ConnectedDevice device = AbstractSeleniumTest.getConnectedDevice( name );
-
-                if ( device != null )
-                {
-                    rtn = device.getWebDriver();
-                }
-
-                return rtn;
-            }
-
-            public void registerAltWebDriver( String name, String deviceId )
-            {
-                AbstractSeleniumTest.registerSecondaryDeviceOnName( name, deviceId );
-            }
-            
-            public void registerInactiveWebDriver(String name) 
-            {
-				AbstractSeleniumTest.registerInactiveDeviceOnName( name );
-			}
-
-        } );
-        
-        return true;
+        return dC;
     }
     
     @Override
