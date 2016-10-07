@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
+import org.xframium.page.data.provider.PageDataProvider;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -137,7 +138,7 @@ public class DefaultPageData implements PageData
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.data.PageData#populateTreeStructure()
 	 */
-	public void populateTreeStructure()
+	public void populateTreeStructure( PageDataProvider dataProvider )
 	{
 	    if ( containsChildren )
 	    {
@@ -168,7 +169,7 @@ public class DefaultPageData implements PageData
 	                        criteriaMap.put( valueMatcher.group( 1 ), valueMatcher.group( 2 ) );
 	                    }
 	                    
-	                    PageData[] dataArray = PageDataManager.instance().getRecords( recordType );
+	                    PageData[] dataArray = dataProvider.getRecords( recordType );
 	                    
 	                    for ( PageData pageData : dataArray )
 	                    {
@@ -190,7 +191,7 @@ public class DefaultPageData implements PageData
 	                
 	                if ( !matchFound )
 	                {
-	                    PageData[] dataArray = PageDataManager.instance().getRecords( lookupValue.replace( "|", "" ).trim() );
+	                    PageData[] dataArray = dataProvider.getRecords( lookupValue.replace( "|", "" ).trim() );
 	                    if ( dataArray != null )
 	                    {
 	                        for ( PageData pageData : dataArray )

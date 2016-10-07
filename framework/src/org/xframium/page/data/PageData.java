@@ -22,6 +22,7 @@ package org.xframium.page.data;
 
 import java.util.List;
 import java.util.regex.Pattern;
+import org.xframium.page.data.provider.PageDataProvider;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -92,7 +93,7 @@ public interface PageData
 	/**
 	 * Populate tree structure.
 	 */
-	public void populateTreeStructure();
+	public void populateTreeStructure( PageDataProvider dataProvider );
 	
 	public Object get( String fieldName );
 }
