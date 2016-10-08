@@ -31,6 +31,7 @@ import org.xframium.page.data.PageDataManager;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.provider.SuiteContainer;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunDetails;
@@ -181,7 +182,24 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             log.info( "Page: Configuring Object Repository" );
             ElementProvider eP = configurePageManagement( sC );
             if ( eP == null ) return;
+
+            //
+            // In XML configuration, the test suite doesn't have a model element, so the calls to
+            // KeyWordDriver.instance().addPage() can't have done anything.  So, we'll loop through
+            // the pages from configurePageManagement() and add them here.
+            //
+            
             log.info( "Extracted " + eP.getElementTree().size() + " pages" );
+            Iterator<String> pages = eP.getElementTree().keySet().iterator();
+            boolean needSuplamentary load = KeyWordDriver.instance().getPageCount() == 0;
+            while(( pages.hasNext() ) &&
+                  ( needSuplamentary ))
+            {
+                String page = pages.next();
+                
+                KeyWordDriver.instance().addPage( page, KeyWordPage.class );
+            }
+            
             PageManager.instance().setSiteName( sC.getSiteName() );
             PageManager.instance().setElementProvider( eP );
             
