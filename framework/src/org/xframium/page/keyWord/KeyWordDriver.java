@@ -281,6 +281,16 @@ public class KeyWordDriver
     }
 
     /**
+     * Gets the page count
+     *
+     * @return count
+     */
+    public int getPageCount()
+    {
+        return pageMap.size();
+    }
+
+    /**
      * Gets the context map.
      *
      * @return the context map

@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.Iterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
@@ -41,6 +42,7 @@ import org.xframium.page.data.PageDataManager;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.provider.SuiteContainer;
 import org.xframium.spi.Device;
@@ -192,7 +194,24 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             log.info( "Page: Configuring Object Repository" );
             ElementProvider eP = configurePageManagement( sC );
             if ( eP == null ) return;
+
+            //
+            // In XML configuration, the test suite doesn't have a model element, so the calls to
+            // KeyWordDriver.instance().addPage() can't have done anything.  So, we'll loop through
+            // the pages from configurePageManagement() and add them here.
+            //
+            
             log.info( "Extracted " + eP.getElementTree().size() + " pages" );
+            Iterator<String> pages = eP.getElementTree().keySet().iterator();
+            boolean needLoad = KeyWordDriver.instance().getPageCount() == 0;
+            while(( pages.hasNext() ) &&
+                  ( needLoad ))
+            {
+                String page = pages.next();
+                
+                KeyWordDriver.instance().addPage( page, KeyWordPage.class );
+            }
+            
             PageManager.instance().setSiteName( sC.getSiteName() );
             PageManager.instance().setElementProvider( eP );
             

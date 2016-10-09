@@ -80,11 +80,39 @@ public class NamedDataProvider implements DataProvider
         if ( device.equals( "FIREFOX" ) )
         {
             return new SimpleDevice( device,
-                    "Microsoft",
+                    "Mozilla",
                     "Windows",
                     "Windows",
                     null,
                     "firefox",
+                    null,
+                    1,
+                    "WEB",
+                    true,
+                    device );
+        }
+        else if ( device.equals( "CHROME" ) )
+        {
+            return new SimpleDevice( device,
+                    "Google",
+                    "Windows",
+                    "Windows",
+                    null,
+                    "Chrome",
+                    null,
+                    1,
+                    "WEB",
+                    true,
+                    device );
+        }
+        else if ( device.equals( "INTERNET EXPLORER" ) )
+        {
+            return new SimpleDevice( device,
+                    "Microsoft",
+                    "Windows",
+                    "Windows",
+                    null,
+                    "internet explorer",
                     null,
                     1,
                     "WEB",
