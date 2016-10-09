@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
@@ -21,6 +22,7 @@ import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
+import org.xframium.device.logging.ThreadedFileHandler;
 import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.device.proxy.ProxyRegistry;
 import org.xframium.driver.container.ApplicationContainer;
@@ -59,7 +61,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     public abstract ApplicationContainer configureApplication();
     protected abstract boolean configureThirdParty();
     public abstract SuiteContainer configureTestCases( PageDataProvider pdp, boolean parseDataIterators);
-    protected abstract boolean configureArtifacts();
+    public abstract boolean configureArtifacts( DriverContainer driverContainer );
     public abstract ElementProvider configurePageManagement( SuiteContainer sC );
     public abstract PageDataProvider configureData();
     protected abstract boolean configureContent();
@@ -157,8 +159,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             log.info( "Third Party: Configuring Third Party Library Support" );
             if ( !configureThirdParty() ) return;
             
-            log.info( "Artifact: Configuring Artifact Production" );
-            if ( !configureArtifacts() ) return;
+            
             
             
             
@@ -197,6 +198,30 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             log.info( "Driver: Configuring Driver" );
             DriverContainer driverC = configureDriver();
+            
+            log.info( "Artifact: Configuring Artifact Production" );
+            if ( !configureArtifacts( driverC ) ) return;
+            
+            DataManager.instance().setReportFolder( new File( configFolder, driverC.getReportFolder() ) );
+            
+            if ( driverC.isArtifactEnabled( ArtifactType.CONSOLE_LOG ) )
+            {
+                ThreadedFileHandler threadedHandler = new ThreadedFileHandler();
+                threadedHandler.configureHandler( Level.INFO );
+            }
+            
+            if ( System.getProperty( "X_DEBUGGER" ) != null && System.getProperty( "X_DEBUGGER" ).equals( "true" ) && !driverC.isArtifactEnabled( ArtifactType.DEBUGGER ) )
+            {
+                driverC.addArtifact( ArtifactType.DEBUGGER );
+            }
+            
+            if ( driverC.isArtifactEnabled( ArtifactType.DEBUGGER ) )
+            {
+                DebugManager.instance().startUp( InetAddress.getLocalHost().getHostAddress(), 8870 );
+                KeyWordDriver.instance().addStepListener( DebugManager.instance() );
+            }
+            
+            DataManager.instance().setAutomaticDownloads( driverC.getArtifactList().toArray( new ArtifactType[0] ) );
             
             DataManager.instance().setPersonas( driverC.getPerfectoPersonas().toArray( new String[ 0 ] ) );
             PageManager.instance().setWindTunnelEnabled( driverC.isPerfectoWindTunnel() );

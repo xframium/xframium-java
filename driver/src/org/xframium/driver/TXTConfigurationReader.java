@@ -3,33 +3,23 @@ package org.xframium.driver;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import org.openqa.selenium.WebDriver;
 import org.xframium.Initializable;
 import org.xframium.application.CSVApplicationProvider;
 import org.xframium.application.ExcelApplicationProvider;
 import org.xframium.application.SQLApplicationProvider;
 import org.xframium.application.XMLApplicationProvider;
-import org.xframium.artifact.ArtifactType;
 import org.xframium.content.ContentManager;
 import org.xframium.content.provider.ExcelContentProvider;
 import org.xframium.content.provider.SQLContentProvider;
 import org.xframium.content.provider.XMLContentProvider;
-import org.xframium.debugger.DebugManager;
-import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CSVCloudProvider;
 import org.xframium.device.cloud.ExcelCloudProvider;
 import org.xframium.device.cloud.SQLCloudProvider;
 import org.xframium.device.cloud.XMLCloudProvider;
 import org.xframium.device.data.CSVDataProvider;
-import org.xframium.device.data.DataManager;
 import org.xframium.device.data.DataProvider.DriverType;
 import org.xframium.device.data.ExcelDataProvider;
 import org.xframium.device.data.NamedDataProvider;
@@ -39,8 +29,6 @@ import org.xframium.device.data.perfectoMobile.AvailableHandsetValidator;
 import org.xframium.device.data.perfectoMobile.PerfectoMobileDataProvider;
 import org.xframium.device.data.perfectoMobile.PerfectoMobilePluginProvider;
 import org.xframium.device.data.perfectoMobile.ReservedHandsetValidator;
-import org.xframium.device.logging.ThreadedFileHandler;
-import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.device.property.PropertyAdapter;
 import org.xframium.device.proxy.ProxyRegistry;
 import org.xframium.driver.container.ApplicationContainer;
@@ -49,7 +37,6 @@ import org.xframium.driver.container.DeviceContainer;
 import org.xframium.driver.container.DriverContainer;
 import org.xframium.gesture.device.action.DeviceActionManager;
 import org.xframium.gesture.device.action.spi.perfecto.PerfectoDeviceActionFactory;
-import org.xframium.page.PageManager;
 import org.xframium.page.data.provider.ExcelPageDataProvider;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.data.provider.SQLPageDataProvider;
@@ -59,14 +46,11 @@ import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.element.provider.ExcelElementProvider;
 import org.xframium.page.element.provider.SQLElementProvider;
 import org.xframium.page.element.provider.XMLElementProvider;
-import org.xframium.page.keyWord.KeyWordDriver;
-import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.provider.ExcelKeyWordProvider;
 import org.xframium.page.keyWord.provider.SQLKeyWordProvider;
 import org.xframium.page.keyWord.provider.SuiteContainer;
 import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
 import org.xframium.spi.Device;
-import org.xframium.utility.SeleniumSessionManager;
 
 public class TXTConfigurationReader extends AbstractConfigurationReader
 {
@@ -226,81 +210,11 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     }
 
     @Override
-    protected boolean configureArtifacts()
+    public boolean configureArtifacts( DriverContainer driverC )
     {
-        validateProperties( configProperties, ARTIFACT );
-
-        DataManager.instance().setReportFolder( new File( configFolder, configProperties.getProperty( ARTIFACT[0] ) ) );
-        String storeImages = configProperties.getProperty( "artifactProducer.storeImages" );
-        if ( storeImages != null && !storeImages.isEmpty() )
-            PageManager.instance().setStoreImages( Boolean.parseBoolean( storeImages ) );
-
-        String imageLocation = configProperties.getProperty( "artifactProducer.imageLocation" );
-        if ( imageLocation != null && !imageLocation.isEmpty() )
-            PageManager.instance().setImageLocation( imageLocation );
-
-        String automated = configProperties.getProperty( "artifactProducer.automated" );
-        if ( automated != null && !automated.isEmpty() )
-        {
-            String[] auto = automated.split( "," );
-            List<ArtifactType> artifactList = new ArrayList<ArtifactType>( 10 );
-            artifactList.add( ArtifactType.EXECUTION_DEFINITION );
-            boolean debuggerEnabled = false;
-            for ( String type : auto )
-            {
-                try
-                {
-                    artifactList.add( ArtifactType.valueOf( type ) );
-                    if ( type.equals( "FAILURE_SOURCE" ) )
-                    	artifactList.add( ArtifactType.FAILURE_SOURCE_HTML );
-                    
-                    if ( type.equals( "DEBUGGER" ) )
-                    {
-                        try
-                        {
-                            debuggerEnabled = true;
-                            DebugManager.instance().startUp( InetAddress.getLocalHost().getHostAddress(), 8870 );
-                            KeyWordDriver.instance().addStepListener( DebugManager.instance() );
-                        }
-                        catch( Exception e )
-                        {
-                            e.printStackTrace();
-                        }
-                    }
-                    
-                    if ( ArtifactType.valueOf( type ).equals( ArtifactType.CONSOLE_LOG ) )
-                    {
-                        String logLevel = configProperties.getProperty( "artifactProducer.logLevel" );
-                        if ( logLevel == null )
-                            logLevel = "INFO";
-                        ThreadedFileHandler threadedHandler = new ThreadedFileHandler();
-                        threadedHandler.configureHandler( Level.parse( logLevel.toUpperCase() ) );
-                    }
-                }
-                catch ( Exception e )
-                {
-                    System.out.println( "No Artifact Type exists as " + type );
-                }
-            }
-
-            if ( System.getProperty( "X_DEBUGGER" ) != null && System.getProperty( "X_DEBUGGER" ).equals( "true" ) && !debuggerEnabled )
-            {
-                try
-                {
-                    debuggerEnabled = true;
-                    artifactList.add( ArtifactType.DEBUGGER );
-                    DebugManager.instance().startUp( InetAddress.getLocalHost().getHostAddress(), 8870 );
-                    KeyWordDriver.instance().addStepListener( DebugManager.instance() );
-                }
-                catch( Exception e )
-                {
-                    e.printStackTrace();
-                }
-            }
-            
-            DataManager.instance().setAutomaticDownloads( artifactList.toArray( new ArtifactType[0] ) );
-
-        }
+        driverC.setReportFolder( configProperties.getProperty( ARTIFACT[0] ) );
+        driverC.setArtifactList( configProperties.getProperty( "artifactProducer.automated" ) );
+        
         return true;
     }
 

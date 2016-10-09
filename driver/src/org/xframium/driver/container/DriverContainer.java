@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.xframium.artifact.ArtifactType;
 
 public class DriverContainer
 {
@@ -18,12 +19,70 @@ public class DriverContainer
     private String testTags = "";
     private String deviceInterrupts = "";
     private Map<String,String> propertyMap = new HashMap<String,String>( 20 );
+    private String reportFolder;
+    private List<ArtifactType> artifactList = new ArrayList<ArtifactType>( 20 );
     
     private List<String> testNames = new ArrayList<String>( 20 );
 
     public DriverContainer()
     {
         
+    }
+
+    public String getReportFolder()
+    {
+        return reportFolder;
+    }
+
+    public void setReportFolder( String reportFolder )
+    {
+        this.reportFolder = reportFolder;
+    }
+
+    public List<ArtifactType> getArtifactList()
+    {
+        return artifactList;
+    }
+
+    public boolean isArtifactEnabled( ArtifactType aType )
+    {
+        for ( ArtifactType a : artifactList )
+        {
+            if ( a.equals( aType ) )
+                return true;
+        }
+        
+        return false;
+    }
+    
+    public void setArtifactList( String artifactList )
+    {
+        if ( artifactList != null && !artifactList.isEmpty() )
+        {
+            String[] artifacts = artifactList.split( "," );
+            
+            for ( String artifact : artifacts )
+            {
+                try
+                {
+                    this.artifactList.add( ArtifactType.valueOf( artifact.toUpperCase() ) );
+                }
+                catch( Exception e )
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    public void addArtifact( ArtifactType artifactType )
+    {
+        artifactList.add( artifactType );
+    }
+    
+    public void setArtifactList( List<ArtifactType> artifactList )
+    {
+        this.artifactList = artifactList;
     }
 
     public String getDeviceInterrupts()

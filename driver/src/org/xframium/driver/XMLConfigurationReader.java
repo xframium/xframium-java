@@ -269,58 +269,18 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     }
 
     @Override
-    protected boolean configureArtifacts()
+    public boolean configureArtifacts( DriverContainer driverC )
     {
-        DataManager.instance().setReportFolder( new File( configFolder, xRoot.getDriver().getOutputFolder() ) );
-        PageManager.instance().setStoreImages( true );
-        PageManager.instance().setImageLocation( new File( configFolder, xRoot.getDriver().getOutputFolder() ).getAbsolutePath() );
+        driverC.setReportFolder( xRoot.getDriver().getOutputFolder() );
         
-        ThreadedFileHandler threadedHandler = new ThreadedFileHandler();
-        threadedHandler.configureHandler( Level.INFO );
-        
-        List<ArtifactType> artifactList = new ArrayList<ArtifactType>( 10 );
-        artifactList.add( ArtifactType.EXECUTION_DEFINITION );
-        
-        
-        boolean debuggerEnabled = false;
-        for( XArtifact artifact : xRoot.getDriver().getArtifact() )
+        for ( XArtifact a : xRoot.getDriver().getArtifact() )
         {
-            artifactList.add( ArtifactType.valueOf( artifact.getType() ) );
-            if ( artifact.getType().equals( "FAILURE_SOURCE" ) )
-            	artifactList.add( ArtifactType.FAILURE_SOURCE_HTML );
-            else if ( artifact.getType().equals( "DEBUGGER" ) )
-            {
-                try
-                {
-                    debuggerEnabled = true;
-                    DebugManager.instance().startUp( InetAddress.getLocalHost().getHostAddress(), 8870 );
-                    KeyWordDriver.instance().addStepListener( DebugManager.instance() );
-                }
-                catch( Exception e )
-                {
-                    e.printStackTrace();
-                }
-            }
-                
+            driverC.addArtifact( ArtifactType.valueOf( a.getType().toUpperCase() ) );
         }
         
-        if ( System.getProperty( "X_DEBUGGER" ) != null && System.getProperty( "X_DEBUGGER" ).equals( "true" ) && !debuggerEnabled )
-        {
-            try
-            {
-                debuggerEnabled = true;
-                artifactList.add( ArtifactType.DEBUGGER );
-                DebugManager.instance().startUp( InetAddress.getLocalHost().getHostAddress(), 8870 );
-                KeyWordDriver.instance().addStepListener( DebugManager.instance() );
-            }
-            catch( Exception e )
-            {
-                e.printStackTrace();
-            }
-        }
-        
-        DataManager.instance().setAutomaticDownloads( artifactList.toArray( new ArtifactType[0] ) );
         return true;
+        
+        
     }
 
     @Override
