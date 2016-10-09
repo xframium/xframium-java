@@ -499,6 +499,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
         
         dC.setDisplayReport( Boolean.parseBoolean( configProperties.getProperty( "driver.displayResults" ) ) );
         dC.setSmartCaching( Boolean.parseBoolean( configProperties.getProperty( "driver.enableCaching" ) ) );
+        dC.setEmbeddedServer( Boolean.parseBoolean( configProperties.getProperty( "driver.embeddedServer" ) ) );
 
         dC.setStepTags( configProperties.getProperty( "driver.stepTags" ) );
 

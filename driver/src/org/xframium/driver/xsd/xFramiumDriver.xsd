@@ -157,6 +157,7 @@
     <attribute name="stepTags" type="string" use="optional" />
     <attribute name="testNames" type="string" use="optional" />
     <attribute name="tagNames" type="string" use="optional" />
+    <attribute name="embeddedServer" type="boolean" use="optional" default="false" />
     <attribute name="dryRun" type="boolean" use="optional" default="false" />
     <attribute name="displayResults" type="boolean" use="optional" default="true" />
     <attribute name="outputFolder" type="string" use="required" />
@@ -252,7 +253,7 @@
 
   <complexType name="xPage">
     <sequence>
-      <element name="element" type="tns:xElement" minOccurs="1" maxOccurs="unbounded" />
+      <element name="element" type="tns:xElement" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="name" type="string" use="required" />
     <attribute name="class" type="string" use="optional" />
