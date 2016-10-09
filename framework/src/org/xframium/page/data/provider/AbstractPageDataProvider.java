@@ -69,7 +69,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	    for ( PageData pageData : idMap.values() )
 	    {
 	        if ( pageData.containsChildren() )
-	            pageData.populateTreeStructure();
+	            pageData.populateTreeStructure( this );
 	    }
 	}
 	

@@ -25,6 +25,9 @@ package org.xframium.device.cloud;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import org.xframium.application.ApplicationDescriptor.AppType;
 import org.xframium.device.cloud.action.CloudActionProvider;
 
 // TODO: Auto-generated Javadoc
@@ -58,11 +61,38 @@ public class CloudDescriptor
 	/** The grid instance. */
 	private String gridInstance;
 	
-	private String provider;
+	private ProviderType provider;
 	
 	private String gesture;
 	
 	private String deviceAction;
+	
+	public enum ProviderType
+	{
+	    SELENIUM( 1, "SELENIUM", "Browsers hosted in a Selenium Grid" ),
+	    SAUCELABS( 2, "SAUCELABS", "Devices and Browsers hosted at SauceLabs" ),
+	    PERFECTO( 3, "PERFECTO", "Devices and Browsers hosted at Perfecto" );
+	    
+	    private ProviderType( int id, String name, String description )
+        {
+            this.id = id;
+            this.name = name;
+            this.description = description;
+        }
+
+        private int id;
+        private String name;
+        private String description;
+        
+        public List<ProviderType> getSupported()
+        {
+            List<ProviderType> supportedList = new ArrayList<ProviderType>( 10 );
+            supportedList.add( ProviderType.SELENIUM );
+            supportedList.add( ProviderType.SAUCELABS );
+            supportedList.add( ProviderType.PERFECTO );
+            return supportedList;
+        }
+	}
 	
 	/**
 	 * Instantiates a new cloud descriptor.
@@ -87,9 +117,9 @@ public class CloudDescriptor
 		this.description = description;
 		this.gridInstance = gridInstance;
 		if ( provider == null || provider.isEmpty() )
-		    this.provider = "PERFECTO";
+		    this.provider = ProviderType.PERFECTO;
 		else
-		    this.provider = provider.toUpperCase();
+		    this.provider = ProviderType.valueOf( provider.toUpperCase() );
 		this.gesture = gesture;
 		this.deviceAction = deviceAction;		
 	}
@@ -106,7 +136,7 @@ public class CloudDescriptor
 
 	public String getProvider()
     {
-        return provider;
+        return provider.name;
     }
 	
 	public CloudActionProvider getCloudActionProvider()
