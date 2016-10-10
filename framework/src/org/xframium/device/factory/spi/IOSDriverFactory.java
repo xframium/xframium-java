@@ -81,7 +81,6 @@ public class IOSDriverFactory extends AbstractDriverFactory
 			}
 			else
 			{
-				//dc.setCapability( PLATFORM_NAME, currentDevice.getOs() );
 				dc.setCapability( useCloud.getCloudActionProvider().getCloudPlatformName(currentDevice), currentDevice.getOs() );
 				dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
 				dc.setCapability( MODEL, currentDevice.getModel() );
@@ -107,8 +106,8 @@ public class IOSDriverFactory extends AbstractDriverFactory
             }
             
 
-			if ( log.isInfoEnabled() )
-			    log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
+            if ( log.isDebugEnabled() )
+                log.debug( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 			
 			webDriver = new DeviceWebDriver( new IOSDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
 			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );

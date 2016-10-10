@@ -107,8 +107,8 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
                 dc.setCapability( Device.LOCALE, localeToConfigure );
             }		
 			
-            			if ( log.isInfoEnabled() )
-				log.info( "Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
+            if ( log.isDebugEnabled() )
+                log.debug( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 			
 			webDriver = new DeviceWebDriver( new AndroidDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
 	
