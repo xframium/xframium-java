@@ -76,8 +76,25 @@ public class XMLTestDriver extends AbstractSeleniumTest
             
             if ( test.getOs() != null && deviceOs != null )
             {
-                if ( !deviceOs.toUpperCase().equals(  test.getOs().toUpperCase() ) )
-                    throw new SkipException( "This test is not designed to work on a device with [" + deviceOs + "]  It needs [" + test.getOs() + "]" );
+                String[] osArray = test.getOs().split( "," );
+                boolean osFound = false;
+                for ( String localOs : osArray )
+                {
+                    if ( localOs.toUpperCase().trim().equals( deviceOs.toUpperCase() ) )
+                    {
+                        osFound = true;
+                        break;
+                    }
+                }
+                
+                if ( !osFound )
+                {
+                    PageManager.instance().setThrowable( new SkipException( "This test is not designed to work on a device with [" + deviceOs + "]  It needs [" + test.getOs() + "]" ) );
+                    PageManager.instance().addExecutionLog( getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), "_SKIPPED", System.currentTimeMillis() - 5000, 5000, StepStatus.FAILURE_IGNORED,
+                            PageManager.instance().getThrowable().getMessage(), PageManager.instance().getThrowable(), 0, "", false, new String[] { PageManager.instance().getThrowable().getMessage() } );
+                    
+                    throw PageManager.instance().getThrowable();
+                }
             }
     		
             if ( DeviceManager.instance().isDryRun() )
