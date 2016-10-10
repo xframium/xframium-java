@@ -592,6 +592,9 @@ public class SeleniumElement extends AbstractElement
 
             case "INPUT":
                 returnValue = currentElement.getAttribute( "value" );
+                
+            case "SELECT":
+                returnValue = new Select(currentElement).getFirstSelectedOption().getText();
 
             default:
                 returnValue = currentElement.getText();
