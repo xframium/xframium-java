@@ -21,7 +21,12 @@
       <element name="content" type="tns:xContent" minOccurs="0" maxOccurs="1" />
       <element name="data" type="tns:xData" minOccurs="0" maxOccurs="1" />
       <element name="proxy" type="tns:xProxy" minOccurs="0" maxOccurs="1" />
+      <element name="security" type="tns:xSecurity" minOccurs="0" maxOccurs="1" />
     </sequence>
+  </complexType>
+
+  <complexType name="xSecurity">
+    <attribute name="secureCloud" type="boolean" use="optional" default="false" />
   </complexType>
 
   <complexType name="xProxy">

@@ -29,6 +29,8 @@ import org.xframium.device.DeviceManager;
 import org.xframium.device.SimpleDevice;
 import org.xframium.device.cloud.CSVCloudProvider;
 import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.cloud.CloudProvider;
+import org.xframium.device.cloud.EncryptedCloudProvider;
 import org.xframium.device.cloud.ExcelCloudProvider;
 import org.xframium.device.cloud.SQLCloudProvider;
 import org.xframium.device.cloud.XMLCloudProvider;
@@ -175,39 +177,47 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     }
 
     @Override
-    public CloudContainer configureCloud()
+    public CloudContainer configureCloud( boolean secured )
     {
         CloudContainer cC = new CloudContainer();
+        CloudProvider cloudProvider = null;
         switch ( xRoot.getCloud().getProvider() )
         {
             case "XML":
                 
-                cC.setCloudList( new XMLCloudProvider( findFile( configFolder, new File( xRoot.getCloud().getFileName() ) ) ).readData() );
+                cloudProvider = new XMLCloudProvider( findFile( configFolder, new File( xRoot.getCloud().getFileName() ) ) );
                 break;
 
             case "SQL":
-                cC.setCloudList( new SQLCloudProvider( configProperties.get( JDBC[0] ),
+                cloudProvider = new SQLCloudProvider( configProperties.get( JDBC[0] ),
                                                                                  configProperties.get( JDBC[1] ),
                                                                                  configProperties.get( JDBC[2] ),
                                                                                  configProperties.get( JDBC[3] ),
-                                                                                 configProperties.get( OPT_CLOUD[0] )).readData());
+                                                                                 configProperties.get( OPT_CLOUD[0] ));
                 break;
 
             case "CSV":
-                cC.setCloudList( new CSVCloudProvider( findFile( configFolder, new File( xRoot.getCloud().getFileName() ) ) ).readData() );
+                cloudProvider = new CSVCloudProvider( findFile( configFolder, new File( xRoot.getCloud().getFileName() ) ) );
                 break;
 
             case "EXCEL":
-                cC.setCloudList( new ExcelCloudProvider( findFile( configFolder, new File( xRoot.getCloud().getFileName() ) ), configProperties.get( "cloudRegistry.tabName" ) ).readData() );
+                cloudProvider = new ExcelCloudProvider( findFile( configFolder, new File( xRoot.getCloud().getFileName() ) ), configProperties.get( "cloudRegistry.tabName" ) );
                 break;
                 
             case "LOCAL":
-                CloudDescriptor cloud = new CloudDescriptor( xRoot.getCloud().getName(), xRoot.getCloud().getUserName(), xRoot.getCloud().getPassword(), xRoot.getCloud().getHostName(), xRoot.getCloud().getProxyHost(), xRoot.getCloud().getProxyPort().intValue() + "", "", xRoot.getCloud().getGrid(), xRoot.getCloud().getProviderType(), xRoot.getCloud().getGesture(), xRoot.getCloud().getDeviceAction() );
+                CloudDescriptor cloud = new CloudDescriptor( xRoot.getCloud().getName(), secured ? EncryptedCloudProvider.decryptValue( xRoot.getCloud().getUserName() ) : xRoot.getCloud().getUserName(), secured ? EncryptedCloudProvider.decryptValue( xRoot.getCloud().getPassword() ) : xRoot.getCloud().getPassword(), xRoot.getCloud().getHostName(), xRoot.getCloud().getProxyHost(), xRoot.getCloud().getProxyPort().intValue() + "", "", xRoot.getCloud().getGrid(), xRoot.getCloud().getProviderType(), xRoot.getCloud().getGesture(), xRoot.getCloud().getDeviceAction() );
                 cC.setCloudList( new ArrayList<CloudDescriptor>( 10 ) );
                 cC.getCloudList().add( cloud );
                 break;
         }
 
+        if ( !xRoot.getCloud().getProvider().equals( "LOCAL" ) )
+        {
+            if ( secured )
+                cloudProvider = new EncryptedCloudProvider( cloudProvider );
+            
+            cC.setCloudList( cloudProvider.readData() );
+        }
         cC.setCloudName( xRoot.getCloud().getName() );
         
         return cC;
@@ -820,6 +830,10 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         
         dC.setDisplayReport( xRoot.getDriver().isDisplayResults() );
         dC.setSmartCaching( xRoot.getDriver().isCachingEnabled() );
+        if ( xRoot.getSecurity() != null )
+        {
+            dC.setSecureCloud( xRoot.getSecurity().isSecureCloud() );
+        }
 
         dC.setStepTags( xRoot.getDriver().getStepTags() );
 

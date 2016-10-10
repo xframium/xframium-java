@@ -21,7 +21,18 @@ public class DriverContainer
     private Map<String,String> propertyMap = new HashMap<String,String>( 20 );
     private String reportFolder;
     private List<ArtifactType> artifactList = new ArrayList<ArtifactType>( 20 );
+    private boolean secureCloud = false;
     
+    public boolean isSecureCloud()
+    {
+        return secureCloud;
+    }
+
+    public void setSecureCloud( boolean secureCloud )
+    {
+        this.secureCloud = secureCloud;
+    }
+
     private List<String> testNames = new ArrayList<String>( 20 );
 
     public DriverContainer()

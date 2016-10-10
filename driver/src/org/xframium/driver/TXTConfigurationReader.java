@@ -16,6 +16,8 @@ import org.xframium.content.provider.SQLContentProvider;
 import org.xframium.content.provider.XMLContentProvider;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CSVCloudProvider;
+import org.xframium.device.cloud.CloudProvider;
+import org.xframium.device.cloud.EncryptedCloudProvider;
 import org.xframium.device.cloud.ExcelCloudProvider;
 import org.xframium.device.cloud.SQLCloudProvider;
 import org.xframium.device.cloud.XMLCloudProvider;
@@ -107,36 +109,42 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     }
 
     @Override
-    public CloudContainer configureCloud()
+    public CloudContainer configureCloud( boolean secured )
     {
         CloudContainer cC = new CloudContainer();
+        CloudProvider cloudProvider = null;
         switch ( (configProperties.getProperty( CLOUD[0] )).toUpperCase() )
         {
             case "XML":
                 validateProperties( configProperties, CLOUD );
-                cC.setCloudList( new XMLCloudProvider( findFile( configFolder, new File( configProperties.getProperty( CLOUD[1] ) ) ) ).readData() );
+                cloudProvider =  new XMLCloudProvider( findFile( configFolder, new File( configProperties.getProperty( CLOUD[1] ) ) ) );
                 break;
 
             case "SQL":
-                cC.setCloudList( new SQLCloudProvider( configProperties.getProperty( JDBC[0] ),
+                cloudProvider =  new SQLCloudProvider( configProperties.getProperty( JDBC[0] ),
                                                      configProperties.getProperty( JDBC[1] ),
                                                      configProperties.getProperty( JDBC[2] ),
                                                      configProperties.getProperty( JDBC[3] ),
-                                                     configProperties.getProperty( OPT_CLOUD[0] )).readData());
+                                                     configProperties.getProperty( OPT_CLOUD[0] ));
                 break;
 
             case "CSV":
                 validateProperties( configProperties, CLOUD );
-                cC.setCloudList( new CSVCloudProvider( findFile( configFolder, new File( configProperties.getProperty( CLOUD[1] ) ) ) ).readData() );
+                cloudProvider =  new CSVCloudProvider( findFile( configFolder, new File( configProperties.getProperty( CLOUD[1] ) ) ) );
                 break;
 
             case "EXCEL":
                 validateProperties( configProperties, CLOUD );
                 validateProperties( configProperties, new String[] { "cloudRegistry.tabName" } );
-                cC.setCloudList( new ExcelCloudProvider( findFile( configFolder, new File( configProperties.getProperty( CLOUD[1] ) ) ), configProperties.getProperty( "cloudRegistry.tabName" ) ).readData() );
+                cloudProvider =  new ExcelCloudProvider( findFile( configFolder, new File( configProperties.getProperty( CLOUD[1] ) ) ), configProperties.getProperty( "cloudRegistry.tabName" ) );
                 break;
         }
 
+        if ( secured )
+            cloudProvider = new EncryptedCloudProvider( cloudProvider );
+        
+        cC.setCloudList( cloudProvider.readData() );
+        
         cC.setCloudName( configProperties.getProperty( CLOUD[2] ) );
 
         
@@ -500,13 +508,13 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
         dC.setDisplayReport( Boolean.parseBoolean( configProperties.getProperty( "driver.displayResults" ) ) );
         dC.setSmartCaching( Boolean.parseBoolean( configProperties.getProperty( "driver.enableCaching" ) ) );
         dC.setEmbeddedServer( Boolean.parseBoolean( configProperties.getProperty( "driver.embeddedServer" ) ) );
-
+        dC.setSecureCloud( Boolean.parseBoolean( configProperties.getProperty( "security.secureCloud" ) ) );
         dC.setStepTags( configProperties.getProperty( "driver.stepTags" ) );
 
         for ( Object key : configProperties.keySet() )
             dC.getPropertyMap().put( (String)key, configProperties.getProperty( (String)key ) );
         
-
+        
         //
         // Extract any named tests
         //

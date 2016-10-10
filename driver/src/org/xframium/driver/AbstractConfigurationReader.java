@@ -58,7 +58,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     
     public abstract boolean readFile( InputStream inputStream );
     public abstract boolean readFile( File configFile );
-    public abstract CloudContainer configureCloud();
+    public abstract CloudContainer configureCloud( boolean secured );
     protected abstract boolean configureProxy();
     public abstract ApplicationContainer configureApplication();
     protected abstract boolean configureThirdParty();
@@ -84,8 +84,11 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         configureProxy();
         try
         {
+            log.info( "Driver: Configuring Driver" );
+            DriverContainer driverC = configureDriver();
+            
             log.info( "Cloud: Configuring Cloud Registry" );
-            CloudContainer cC = configureCloud();
+            CloudContainer cC = configureCloud( driverC.isSecureCloud() );
             log.info( "Cloud: Extracted " + cC.getCloudList().size() + " cloud entries" );
             for ( CloudDescriptor c : cC.getCloudList() )
                 CloudRegistry.instance().addCloudDescriptor( c );
@@ -215,8 +218,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             PageManager.instance().setSiteName( sC.getSiteName() );
             PageManager.instance().setElementProvider( eP );
             
-            log.info( "Driver: Configuring Driver" );
-            DriverContainer driverC = configureDriver();
+            
             
             log.info( "Artifact: Configuring Artifact Production" );
             if ( !configureArtifacts( driverC ) ) return;

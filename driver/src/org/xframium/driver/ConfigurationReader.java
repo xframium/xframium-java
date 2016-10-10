@@ -16,7 +16,7 @@ public interface ConfigurationReader
     public boolean executeTest();
     public boolean readFile( InputStream inputStream );
     public boolean readFile( File configFile );
-    public CloudContainer configureCloud();
+    public CloudContainer configureCloud( boolean secured );
     public SuiteContainer configureTestCases( PageDataProvider pdp, boolean parseDataIterators );
     public abstract ElementProvider configurePageManagement( SuiteContainer sC);
     public PageDataProvider configureData();

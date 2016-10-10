@@ -37,7 +37,17 @@ import org.xframium.device.cloud.action.CloudActionProvider;
 public class CloudDescriptor
 {
 	
-	/** The name. */
+	public void setUserName( String userName )
+    {
+        this.userName = userName;
+    }
+
+    public void setPassword( String password )
+    {
+        this.password = password;
+    }
+
+    /** The name. */
 	private String name;
 	
 	/** The user name. */
@@ -162,9 +172,9 @@ public class CloudDescriptor
 		
 		try
 		{
-		    if ( provider != null && provider.equals( "PERFECTO" ) )
+		    if ( provider != null && provider.name != null && provider.name.equals( "PERFECTO" ) )
 		        return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/wd/hub";
-		    else if ( provider != null && provider.equals( "SAUCELABS" ) )
+		    else if ( provider != null && provider.name != null && provider.name.equals( "SAUCELABS" ) )
 		    	return "http://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/wd/hub";
 		    else
 		    {
