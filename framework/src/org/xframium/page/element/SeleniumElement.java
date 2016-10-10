@@ -532,10 +532,6 @@ public class SeleniumElement extends AbstractElement
 
             return null;
         }
-        catch ( NoSuchElementException e )
-        {
-            throw new ObjectIdentificationException( getBy(), useBy() );
-        }
         finally
         {
             if ( currentContext != null && webDriver instanceof ContextAware )
@@ -694,8 +690,7 @@ public class SeleniumElement extends AbstractElement
         }
 
         WebElement webElement = getElement();
-        PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "present", System.currentTimeMillis(), System.currentTimeMillis() - startTime, webElement != null ? StepStatus.SUCCESS : StepStatus.FAILURE,
-                getKey(), null, 0, "", webElement instanceof CachedElement, null );
+        
         return webElement != null;
     }
 

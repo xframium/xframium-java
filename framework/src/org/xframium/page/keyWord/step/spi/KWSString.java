@@ -42,75 +42,85 @@ public class KWSString extends AbstractKeyWordStep
         kwDescription = "Allows the script to perform some basic string and formatting operations";
         kwHelp = "https://www.xframium.org/keyword.html#kw-string";
     }
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
-	 */
-	@Override
-	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
-	{
-	    String originalValue = null;
-	    String operationName = null;
-	    String expectedValue = null;
-	    
-	    if ( getParameterList().size() == 1 )
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com
+     * .perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map,
+     * java.util.Map)
+     */
+    @Override
+    public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+    {
+        String originalValue = null;
+        String operationName = null;
+
+        if ( getParameterList().size() == 1 )
         {
             originalValue = getElement( pageObject, contextMap, webDriver, dataMap ).getValue();
             operationName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
         }
-	    else if ( getParameterList().size() >= 2 )
-	    {
-	        originalValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
-	        operationName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-	        expectedValue = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "";
+        else if ( getParameterList().size() >= 2 )
+        {
+            originalValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+            operationName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
 
-	    }
+        }
 
-		String newValue = null;
-		
-		switch ( operationName.toLowerCase() )
-		{
-		    case "trim":
-		        newValue = originalValue.trim();
-		        break;
-		        
-		    case "lower":
-		        newValue = originalValue.toLowerCase();
-		        break;
-		        
-		    case "decimal":
-		        DecimalFormat decimalFormat = new DecimalFormat( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" );
-		        decimalFormat.setRoundingMode( RoundingMode.DOWN );
-		        newValue = decimalFormat.format( Double.parseDouble( originalValue ) );
-		        break;
-		        
-		    case "upper":
-		        newValue = originalValue.toUpperCase();
-		        break;
-		        
-		    case "contains":
-		    	if(expectedValue==null){
-		    		throw new ScriptConfigurationException( "STRING Expected format is: [" + expectedValue + "]");
-		    	}
-		        if(!originalValue.contains(expectedValue)&& !(expectedValue==null)&& !(expectedValue.equals(null))){		        	
-		    		throw new ScriptException( "STRING Expected [" + expectedValue + "]and original[" + originalValue + "] format is not matching ");
-		        }else{
-		        	newValue = expectedValue;
-		        }
-		        break;
-		}
-		
-		
-		if ( !validateData( newValue + "" ) )
+        String newValue = null;
+
+        switch ( operationName.toLowerCase() )
+        {
+            case "trim":
+                newValue = originalValue.trim();
+                break;
+
+            case "lower":
+                newValue = originalValue.toLowerCase();
+                break;
+
+            case "decimal":
+                DecimalFormat decimalFormat = new DecimalFormat( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" );
+                decimalFormat.setRoundingMode( RoundingMode.DOWN );
+                newValue = decimalFormat.format( Double.parseDouble( originalValue ) );
+                break;
+
+            case "upper":
+                newValue = originalValue.toUpperCase();
+                break;
+
+            case "contains":
+                String expectedValue = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "";
+
+                if ( expectedValue.isEmpty() )
+                {
+                    throw new ScriptConfigurationException( "STRING Expected format is: [" + expectedValue + "]" );
+                }
+
+                if ( !originalValue.contains( expectedValue ) && !(expectedValue == null) && !(expectedValue.equals( null )) )
+                {
+                    throw new ScriptException( "STRING Expected [" + expectedValue + "]and original[" + originalValue + "] format is not matching " );
+                }
+                else
+                {
+                    newValue = expectedValue;
+                }
+                break;
+        }
+
+        if ( !validateData( newValue + "" ) )
             throw new IllegalStateException( "STRING Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + newValue + "]" );
-        
+
         if ( getContext() != null )
         {
             if ( log.isDebugEnabled() )
                 log.debug( "Setting Context Data to [" + newValue + "] for [" + getContext() + "]" );
             contextMap.put( getContext(), newValue );
         }
-		
-		return true;
-	}
+
+        return true;
+    }
 
 }

@@ -39,7 +39,7 @@
 
 
 
-  <test name="xFramium General KeyWord Test" active="false" dataProvider="callTest">
+  <test name="xFramium General KeyWord Test" active="true" dataProvider="callTest">
     <description>Tests the general keywords that apply to both Web and Native applications across web and mobile devices</description>
 
     <step type="CALL" name="kw-exists" page="home" />
@@ -71,7 +71,7 @@
     <step type="CALL" name="kw-browser" page="home" />
   </test>
   
-  <test name="xFramium dev" active="true" dataProvider="callTest">
+  <test name="xFramium dev" active="false" dataProvider="callTest">
     <description>Tests the general keywords that apply to both Web and Native applications across web and mobile devices</description>
 
     <step type="CALL" name="kw-browser" page="home" />
