@@ -108,7 +108,7 @@ public class SQLPageDataProvider extends AbstractPageDataProvider
             for( int i = 0; i < data.length; ++i )
             {
                 String record_type_name = (String) data[i][0];
-                boolean lockRecords = "Y".equals( (String) data[i][1] ) || "1".equals( (String) data[i][3] );
+                boolean lockRecords = "Y".equals( (String) data[i][1] ) || "1".equals( (String) data[i][1] );
 
                 if ( !existingRecordTypes.contains( record_type_name ))
                 {
