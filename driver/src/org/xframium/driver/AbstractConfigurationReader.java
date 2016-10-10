@@ -224,6 +224,8 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             if ( !configureArtifacts( driverC ) ) return;
             
             DataManager.instance().setReportFolder( new File( configFolder, driverC.getReportFolder() ) );
+            PageManager.instance().setStoreImages( true );
+            PageManager.instance().setImageLocation( new File( configFolder, driverC.getReportFolder() ).getAbsolutePath() );
             
             if ( driverC.isArtifactEnabled( ArtifactType.CONSOLE_LOG ) )
             {
