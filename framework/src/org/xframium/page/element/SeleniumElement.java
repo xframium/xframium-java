@@ -588,9 +588,9 @@ public class SeleniumElement extends AbstractElement
 
             case "INPUT":
                 returnValue = currentElement.getAttribute( "value" );
-                
+
             case "SELECT":
-                returnValue = new Select(currentElement).getFirstSelectedOption().getText();
+                returnValue = new Select( currentElement ).getFirstSelectedOption().getText();
 
             default:
                 returnValue = currentElement.getText();
@@ -690,7 +690,7 @@ public class SeleniumElement extends AbstractElement
         }
 
         WebElement webElement = getElement();
-        
+
         return webElement != null;
     }
 
@@ -795,7 +795,7 @@ public class SeleniumElement extends AbstractElement
                     try
                     {
                         selectElement.selectByVisibleText( currentValue );
-                    }
+//                    }
                     catch ( Exception e )
                     {
                         selectElement.selectByValue( currentValue );
@@ -833,9 +833,6 @@ public class SeleniumElement extends AbstractElement
                 case DEFAULT:
                     if ( log.isInfoEnabled() )
                         log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue );
-                    System.out.println( "line 786:" + currentValue );
-                    System.out.println( "setMethod 786:" + setMethod );
-
                     MorelandWebElement x = (MorelandWebElement) webElement;
                     if ( x.getWebElement() instanceof IOSElement )
                         ((IOSElement) x.getWebElement()).setValue( currentValue );
@@ -849,8 +846,6 @@ public class SeleniumElement extends AbstractElement
                 case SINGLE:
                     if ( log.isInfoEnabled() )
                         log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue + " using individual send keys" );
-                    System.out.println( "line 800:" + currentValue );
-                    System.out.println( "setMethod 800:" + setMethod );
 
                     webElement.sendKeys( currentValue );
                 default:
