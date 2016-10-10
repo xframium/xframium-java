@@ -795,7 +795,7 @@ public class SeleniumElement extends AbstractElement
                     try
                     {
                         selectElement.selectByVisibleText( currentValue );
-//                    }
+                    }
                     catch ( Exception e )
                     {
                         selectElement.selectByValue( currentValue );
