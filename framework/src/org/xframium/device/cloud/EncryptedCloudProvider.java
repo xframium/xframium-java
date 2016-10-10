@@ -68,8 +68,19 @@ public class EncryptedCloudProvider extends AbstractCloudProvider
 	{
 	    try
 	    {
-    	    ByteArrayInputStream inputStream = new ByteArrayInputStream( new StringBuilder( new String( Base64.getDecoder().decode( currentValue.getBytes() ) ) ).reverse().toString().getBytes() );
-    	    return (String)SerializationManager.instance().readData( inputStream );
+	        String fullValue = new StringBuilder( currentValue ).reverse().toString();
+	        String version = fullValue.substring( 0, 2 );
+	        String actualValue = fullValue.substring( 2 );
+	        
+	        if ( version.equals( "01" ) )
+	        {
+	            ByteArrayInputStream inputStream = new ByteArrayInputStream( actualValue.getBytes() );
+	            return (String)SerializationManager.instance().readData( inputStream );
+	        }
+	        else
+	        {
+	            return currentValue;
+	        }
 	    }
 	    catch( Exception e )
 	    {
@@ -79,20 +90,11 @@ public class EncryptedCloudProvider extends AbstractCloudProvider
 	
 	public static String encryptValue(String currentValue )
 	{
-	   return new StringBuilder( new String( Base64.getEncoder().encode( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.EXTENDED_SERIALIZATION ), currentValue, 0 ) ) ) ).reverse().toString();
+	   return new StringBuilder( new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.EXTENDED_SERIALIZATION ), currentValue, 9 ) ) ).insert( 0, "01" ).reverse().toString();
 	}
 	
 	public static void main( String[] args ) throws Exception
     {
-	    byte[] x = SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.EXTENDED_SERIALIZATION ), "000", 8 );
-	    
-	    byte[] z = Base64.getEncoder().encode( x  );
-	    
-	    //byte[] y = Base64.getDecoder().decode( x );
-	    
-	    System.out.println( "here: " + new String( x ) );
-	    System.out.println( "here2: " + (String)SerializationManager.instance().readData( new ByteArrayInputStream( x ) ) );
-	    
         if ( args.length != 2 )
         {
             System.err.println( "[ENCRYPT/DECRYPT] [value]" );
