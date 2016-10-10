@@ -55,7 +55,7 @@ public class DataManager
 	 */
 	private DataManager()
 	{
-	    setReportFolder( new File( "test-otput" ) );
+	    setReportFolder( new File( "test-output" ) );
 	}
 	
 	/** The log. */
