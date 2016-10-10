@@ -28,10 +28,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.logging.Level;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.OutputType;
@@ -40,9 +41,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
+import org.xframium.application.ApplicationDescriptor;
+import org.xframium.application.ApplicationProvider;
+import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactTime;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.content.ContentManager;
@@ -50,11 +53,19 @@ import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.Artifact;
 import org.xframium.device.artifact.ArtifactProducer;
+import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.cloud.CloudProvider;
+import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
-import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.device.logging.ThreadedFileHandler;
+import org.xframium.gesture.GestureManager;
+import org.xframium.gesture.factory.spi.PerfectoGestureFactory;
+import org.xframium.page.PageManager;
+import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
-import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
+import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.listener.LoggingExecutionListener;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunDetails;
 
@@ -220,6 +231,7 @@ public abstract class AbstractSeleniumTest
         {
             this.testName = testName;
             rawName = testName;
+            baseTestName = testName;
             formatTestName();
         }
 
@@ -570,6 +582,64 @@ public abstract class AbstractSeleniumTest
         {
             log.error( Thread.currentThread() + ": Error flushing artifacts", e );
         }
+    }
+    
+    protected void configureFramework( CloudProvider cloudProvider, String cloudName, org.xframium.device.data.DataProvider dataProvider, ApplicationProvider applicationProvider, String AUT, ElementProvider elementProvider, String siteName, String reportFolder, ArtifactType[] artifactList )
+    {
+        //
+        // Configure Cloud
+        //
+        List<CloudDescriptor> cloudData = cloudProvider.readData();
+        for ( CloudDescriptor c : cloudData )
+            CloudRegistry.instance().addCloudDescriptor( c );
+        
+        CloudRegistry.instance().setCloud( cloudName );
+       
+        //
+        // Configure Devices
+        //
+        for ( Device x : dataProvider.readData() )
+        {
+            if ( x.isActive() )
+                DeviceManager.instance().registerDevice( x );
+            else
+                DeviceManager.instance().registerInactiveDevice( x );
+        }
+        
+        GestureManager.instance().setGestureFactory( new PerfectoGestureFactory() );
+        
+        //
+        // Configure Applications
+        //
+        for ( ApplicationDescriptor a : applicationProvider.readData() )
+            ApplicationRegistry.instance().addApplicationDescriptor( a );
+        ApplicationRegistry.instance().setAUT( AUT );
+        
+        //
+        // Configure the driver and load the devices
+        //
+        DataManager.instance().setReportFolder( new File( reportFolder ) );
+        DataManager.instance().setAutomaticDownloads( artifactList );
+        DataManager.instance().readData( dataProvider );
+        
+        
+        //
+        // Configure the object repository
+        //
+        PageManager.instance().setSiteName( siteName );
+        PageManager.instance().registerExecutionListener( new LoggingExecutionListener() );
+        PageManager.instance().setElementProvider( elementProvider );
+        
+        //
+        // Configure the thread logger to separate test case log files
+        //
+        ThreadedFileHandler threadedHandler = new ThreadedFileHandler();
+        threadedHandler.configureHandler( Level.INFO );
+        
+        //
+        // The RunDetail singleton can be registered to track all runs for the consolidated output report
+        //
+        DeviceManager.instance().addRunListener( RunDetails.instance() );
     }
 
     private void cleanUpConnectedDevice( String name, ConnectedDevice device, Method currentMethod, Object[] testArgs, ITestResult testResult )
