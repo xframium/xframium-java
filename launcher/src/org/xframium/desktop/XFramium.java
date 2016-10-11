@@ -411,20 +411,11 @@ public class XFramium extends JFrame implements RunListener, ActionListener
                     
                     cloud.setText( CloudRegistry.instance().getCloud().getHostName() + "  (" + CloudRegistry.instance().getCloud().getName() + ")" );
                     application.setText( ApplicationRegistry.instance().getAUT().getName() );
-                    switch ( DeviceManager.instance().getDriverType() )
-                    {
-                        case APPIUM:
-                            testType.setText( "NATIVE (Appium)" );
-                            break;
-
-                        case WEB:
-                            testType.setText( "Website" );
-                            break;
-
-                        default:
-                            testType.setText( DeviceManager.instance().getDriverType().toString() );
-                    }
-
+                    if ( ApplicationRegistry.instance().getAUT().getUrl() != null && !ApplicationRegistry.instance().getAUT().getUrl().isEmpty() )
+                        testType.setText( "NATIVE (Appium)" );
+                    else
+                        testType.setText( "Website" );
+                    
                     test.setText( "XML" );
                     device.setText( DeviceManager.instance().getDevices().size() > 1 ? "Multiple" : DeviceManager.instance().getDevices().get( 0 ).getDeviceName() );
                     executeTest.setEnabled( true );
