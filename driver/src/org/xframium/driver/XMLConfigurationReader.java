@@ -328,6 +328,13 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         
         
     }
+    
+    @Override
+    public String getSiteName()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
     @Override
     public ElementProvider configurePageManagement( SuiteContainer sC )
@@ -584,15 +591,15 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 switch( cap.getClazz() )
                 {
                     case "BOOLEAN":
-                        currentDevice.addCapability( cap.getName(), Boolean.parseBoolean( cap.getValue() ) );
+                        currentDevice.addCapability( cap.getName(), Boolean.parseBoolean( cap.getValue() ), cap.getClazz() );
                         break;
                         
                     case "STRING":
-                        currentDevice.addCapability( cap.getName(), cap.getValue() );
+                        currentDevice.addCapability( cap.getName(), cap.getValue(), cap.getClazz() );
                         break;
                         
                     case "PLATFORM":
-                        currentDevice.addCapability( cap.getName(), Platform.valueOf( cap.getValue().toUpperCase() ) );
+                        currentDevice.addCapability( cap.getName(), Platform.valueOf( cap.getValue().toUpperCase() ), cap.getClazz() );
                         break;
                 }
             }
@@ -651,7 +658,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                                         keyOptions.put( option.getKey(), option.getValue() );
                                         browserOptionMap.put( option.getName(), keyOptions );
                                     }
-                                    currentDevice.addCapability( factoryName, browserOptionMap );
+                                    currentDevice.addCapability( factoryName, browserOptionMap, "OBJECT" );
                                 }
                             }
                         }

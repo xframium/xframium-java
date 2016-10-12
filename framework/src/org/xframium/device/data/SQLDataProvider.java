@@ -179,19 +179,19 @@ public class SQLDataProvider implements DataProvider
                     switch ( type )
                     {
                         case "BOOLEAN":
-                            currentDevice.addCapability( name, Boolean.parseBoolean( value ) );
+                            currentDevice.addCapability( name, Boolean.parseBoolean( value ), type );
                             break;
 
                         case "OBJECT":
-                            currentDevice.addCapability( name, value );
+                            currentDevice.addCapability( name, value, type );
                             break;
 
                         case "STRING":
-                            currentDevice.addCapability( name, value );
+                            currentDevice.addCapability( name, value, type );
                             break;
 
                         case "PLATFORM":
-                            currentDevice.addCapability( name, Platform.valueOf( value.toUpperCase() ) );
+                            currentDevice.addCapability( name, Platform.valueOf( value.toUpperCase() ), type );
                             break;
                     }
                 }

@@ -20,6 +20,7 @@
  *******************************************************************************/
 package org.xframium.page.element.provider;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,7 +33,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
-import org.xframium.page.PageManager;
 import org.xframium.page.element.Element;
 import org.xframium.page.element.ElementFactory;
 import org.xframium.page.element.provider.xsd.Import;
@@ -40,7 +40,6 @@ import org.xframium.page.element.provider.xsd.ObjectFactory;
 import org.xframium.page.element.provider.xsd.Page;
 import org.xframium.page.element.provider.xsd.RegistryRoot;
 import org.xframium.page.element.provider.xsd.Site;
-import com.xframium.serialization.SerializationManager;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -81,6 +80,11 @@ public class XMLElementProvider extends AbstractElementProvider
 		readElements();
 	}
 	
+	public XMLElementProvider( byte[] resourceData )
+    {
+        readElements( new ByteArrayInputStream( resourceData ) );
+    }
+	
 	/**
 	 * Read elements.
 	 */
@@ -107,6 +111,8 @@ public class XMLElementProvider extends AbstractElementProvider
 		}
 	}
 	
+
+	
 	/**
 	 * Read elements.
 	 *
@@ -124,7 +130,11 @@ public class XMLElementProvider extends AbstractElementProvider
             RegistryRoot rRoot = (RegistryRoot)rootElement.getValue();
 
 			for ( Site site : rRoot.getSite() )
+			{
+			    if ( getSiteName() == null )
+			        setSiteName( site.getName() );
 				parseSite( site);
+			}
 
 			for ( Import imp : rRoot.getImport() )
 				parseImport( imp );

@@ -52,24 +52,13 @@ public class IOSDriverFactory extends AbstractDriverFactory
 	 * @see com.perfectoMobile.device.factory.AbstractDriverFactory#_createDriver(com.perfectoMobile.device.Device)
 	 */
 	@Override
-	protected DeviceWebDriver _createDriver( Device currentDevice )
+	protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud )
 	{
 		DeviceWebDriver webDriver = null;
 		try
 		{
 			DesiredCapabilities dc = new DesiredCapabilities( "", "", Platform.ANY );
 			
-			CloudDescriptor useCloud = CloudRegistry.instance().getCloud();
-            
-            if ( currentDevice.getCloud() != null )
-            {
-                useCloud = CloudRegistry.instance().getCloud( currentDevice.getCloud() );
-                if (useCloud == null)
-                {
-                    useCloud = CloudRegistry.instance().getCloud();
-                    log.warn( "A separate grid instance was specified but it does not exist in your cloud registry [" + currentDevice.getCloud() + "] - using the default Cloud instance" );
-                }
-            }
             
             DeviceManager.instance().setCurrentCloud( useCloud );
 			
@@ -92,8 +81,11 @@ public class IOSDriverFactory extends AbstractDriverFactory
 			for ( String name : currentDevice.getCapabilities().keySet() )
 				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
 			
-			for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
-				dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
+			if ( ApplicationRegistry.instance().getAUT() != null )
+			{
+    			for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
+    				dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
+			}
 			
 			dc.setCapability( AUTOMATION_NAME, "Appium" );
 
@@ -122,7 +114,7 @@ public class IOSDriverFactory extends AbstractDriverFactory
 			webDriver.context( "NATIVE_APP" );
 			
 			
-			if( ApplicationRegistry.instance().getAUT().getAppleIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAppleIdentifier().isEmpty() )
+			if( ApplicationRegistry.instance().getAUT() != null && ApplicationRegistry.instance().getAUT().getAppleIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAppleIdentifier().isEmpty() )
             {
 			    if ( ( (IOSDriver) webDriver.getNativeDriver() ).isAppInstalled( ApplicationRegistry.instance().getAUT().getAppleIdentifier() ) )
 			    {
@@ -132,10 +124,12 @@ public class IOSDriverFactory extends AbstractDriverFactory
 			    }
 			    else
 			        throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAppleIdentifier() );
+			    
+			    String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
+	            webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );
             }
 			
-			String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
-            webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );
+			
             webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );
             webDriver.setCloud( useCloud );
             

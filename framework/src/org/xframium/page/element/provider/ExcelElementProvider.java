@@ -172,6 +172,9 @@ public class ExcelElementProvider extends AbstractElementProvider
 			
 			for ( String tabName : tabs )
 			{
+			    if ( getSiteName() == null )
+                    setSiteName( tabName );
+			    
 				XSSFSheet sheet = workbook.getSheet( tabName );
 				if ( sheet == null )
 				    continue;

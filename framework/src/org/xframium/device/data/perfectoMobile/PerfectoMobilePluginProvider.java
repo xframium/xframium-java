@@ -109,7 +109,7 @@ public class PerfectoMobilePluginProvider implements DataProvider
 
             if (executionId != null)
             {
-                device.addCapability( EclipseConnector.ECLIPSE_EXECUTION_ID, executionId );
+                device.addCapability( EclipseConnector.ECLIPSE_EXECUTION_ID, executionId, "STRING" );
             }
             deviceList.add( device );
             return deviceList;

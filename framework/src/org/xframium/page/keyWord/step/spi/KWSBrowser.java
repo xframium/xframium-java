@@ -71,7 +71,8 @@ public class KWSBrowser extends AbstractKeyWordStep
         GET_URL( 12, "GET_URL", "Get the URL of the current window" ),
         FORWARD(13, "FORWARD", "Click the forward button"), 
         BACK(14, "BACK", "Click the back button"),
-        REFRESH(15, "REFRESH", "Click the refresh button")
+        REFRESH(15, "REFRESH", "Click the refresh button"),
+        NAVIGATE(16, "NAVIGATE", "Navigate to the supplied URL")
         ;
 
         public List<SwitchType> getSupported()
@@ -91,6 +92,7 @@ public class KWSBrowser extends AbstractKeyWordStep
             supportedList.add( SwitchType.FORWARD );
             supportedList.add( SwitchType.BACK );
             supportedList.add( SwitchType.REFRESH );
+            supportedList.add( SwitchType.NAVIGATE );
             return supportedList;
         }
 
@@ -157,6 +159,9 @@ public class KWSBrowser extends AbstractKeyWordStep
                     break;
                 case CLOSE_WINDOW:
                     webDriver.close();
+                    break;
+                case NAVIGATE:
+                    webDriver.navigate().to( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
                     break;
     
                 case MAXIMIZE:

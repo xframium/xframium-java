@@ -54,9 +54,20 @@ public abstract class AbstractElementProvider implements ElementProvider
 	
 	private boolean initialized = false;
 	
+	private String siteName;
 	
-	
-	public boolean isInitialized()
+
+	public String getSiteName()
+    {
+        return siteName;
+    }
+
+    public void setSiteName( String siteName )
+    {
+        this.siteName = siteName;
+    }
+
+    public boolean isInitialized()
     {
         return initialized;
     }

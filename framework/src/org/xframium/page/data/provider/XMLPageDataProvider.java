@@ -20,6 +20,7 @@
  *******************************************************************************/
 package org.xframium.page.data.provider;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -59,6 +60,7 @@ public class XMLPageDataProvider extends AbstractPageDataProvider
 	
 	/** The resource name. */
 	private String resourceName;
+	private byte[] resourceData;
 	
 	private boolean asResource = false;
 
@@ -83,6 +85,12 @@ public class XMLPageDataProvider extends AbstractPageDataProvider
 		xPathFactory = XPathFactory.newInstance();
 		this.resourceName = resourceName;
 	}
+	
+	public XMLPageDataProvider( byte[] resourceData )
+    {
+        xPathFactory = XPathFactory.newInstance();
+        this.resourceData = resourceData;
+    }
 
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.data.provider.AbstractPageDataProvider#readPageData()
@@ -90,7 +98,12 @@ public class XMLPageDataProvider extends AbstractPageDataProvider
 	@Override
 	public void readPageData()
 	{
-		if (fileName == null)
+	    if ( resourceData != null )
+	    {
+	        readElements( new ByteArrayInputStream( resourceData ) );
+            populateTrees();
+	    }
+	    else if (fileName == null)
 		{
 			if (log.isInfoEnabled())
 				log.info( "Reading from CLASSPATH as " + resourceName );

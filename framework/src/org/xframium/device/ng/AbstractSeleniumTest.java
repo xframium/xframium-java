@@ -446,7 +446,7 @@ public abstract class AbstractSeleniumTest
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Device acquired for " + currentMethod.getName() );
 
-            if ( connectedDevice.getWebDriver().isConnected() )
+            if ( connectedDevice.getWebDriver() != null && connectedDevice.getWebDriver().isConnected() )
             {
                 try
                 {
@@ -479,7 +479,7 @@ public abstract class AbstractSeleniumTest
         }
         catch ( Exception e )
         {
-            e.printStackTrace();
+            log.fatal( Thread.currentThread().getName() + ": Fatal error configuring test", e );
         }
     }
 
@@ -539,48 +539,55 @@ public abstract class AbstractSeleniumTest
     @AfterMethod
     public void afterMethod( Method currentMethod, Object[] testArgs, ITestResult testResult )
     {
-        HashMap<String, ConnectedDevice> map = getDevicesToCleanUp();
-        threadContext.set( null );
-        Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null);
-
-        if ( map.get( DEFAULT ).getWebDriver().isConnected() )
-        {
-            try
-            {
-                if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
-                    map.get( DEFAULT ).getWebDriver().getCloud().getCloudActionProvider().disableLogging( map.get( DEFAULT ).getWebDriver() );
-            }
-            catch( Exception e )
-            {
-                e.printStackTrace();
-            }
-        }
-
-        while ( (keys != null) && (keys.hasNext()) )
-        {
-            String name = keys.next();
-            ConnectedDevice device = map.get( name );
-
-            cleanUpConnectedDevice( name, device, currentMethod, testArgs, testResult );
-        }
-
-        //
-        // Write out the index file for all tests
-        //
         try
         {
-            if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_HTML ) )
-                RunDetails.instance().writeHTMLIndex( DataManager.instance().getReportFolder(), false );
-
-            if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_DEFINITION ) )
-                RunDetails.instance().writeDefinitionIndex( DataManager.instance().getReportFolder() );
-
-            DeviceManager.instance().clearAllArtifacts();
-            Thread.currentThread().setName( "Idle Thread (" + Thread.currentThread().getId() + ")" );
+            HashMap<String, ConnectedDevice> map = getDevicesToCleanUp();
+            threadContext.set( null );
+            Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null);
+    
+            if ( map.get( DEFAULT ).getWebDriver().isConnected() )
+            {
+                try
+                {
+                    if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
+                        map.get( DEFAULT ).getWebDriver().getCloud().getCloudActionProvider().disableLogging( map.get( DEFAULT ).getWebDriver() );
+                }
+                catch( Exception e )
+                {
+                    e.printStackTrace();
+                }
+            }
+    
+            while ( (keys != null) && (keys.hasNext()) )
+            {
+                String name = keys.next();
+                ConnectedDevice device = map.get( name );
+    
+                cleanUpConnectedDevice( name, device, currentMethod, testArgs, testResult );
+            }
+    
+            //
+            // Write out the index file for all tests
+            //
+            try
+            {
+                if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_HTML ) )
+                    RunDetails.instance().writeHTMLIndex( DataManager.instance().getReportFolder(), false );
+    
+                if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_DEFINITION ) )
+                    RunDetails.instance().writeDefinitionIndex( DataManager.instance().getReportFolder() );
+    
+                DeviceManager.instance().clearAllArtifacts();
+                Thread.currentThread().setName( "Idle Thread (" + Thread.currentThread().getId() + ")" );
+            }
+            catch ( Exception e )
+            {
+                log.error( Thread.currentThread() + ": Error flushing artifacts", e );
+            }
         }
-        catch ( Exception e )
+        catch( Exception e )
         {
-            log.error( Thread.currentThread() + ": Error flushing artifacts", e );
+            log.fatal( Thread.currentThread().getName() + ": Fatal error completing test", e );
         }
     }
     

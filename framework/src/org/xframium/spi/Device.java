@@ -40,7 +40,7 @@ public interface Device
 	 * @param capabilityName the capability name
 	 * @param capabilityValue the capability value
 	 */
-	void addCapability( String capabilityName, Object capabilityValue );
+    void addCapability( String capabilityName, Object capabilityValue, String classType );
 	
 	/**
 	 * Gets the cabilities.
