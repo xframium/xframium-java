@@ -39,6 +39,7 @@ import org.xframium.page.keyWord.KeyWordDriver;
 public abstract class AbstractElementProvider implements ElementProvider 
 {
     protected Map<String,PageContainer> elementTree = new HashMap<String,PageContainer>( 20 );
+    private List<PageContainer> pageList = new ArrayList<PageContainer>(20);
 	private static XPathFactory xPathFactory = XPathFactory.newInstance();
 	/** The log. */
 	protected Log log = LogFactory.getLog(ElementProvider.class);
@@ -98,6 +99,8 @@ public abstract class AbstractElementProvider implements ElementProvider
 	        Class className = KeyWordDriver.instance().getPage( elementDescriptor.getPageName() );
 	        elementList = new PageContainer( elementDescriptor.getPageName(), className != null ? className.getName() : "" );
 	        elementTree.put( elementDescriptor.getPageName(), elementList );
+	        pageList.add( elementList );
+	        
 	    }
 	    elementList.getElementList().add( currentElement );
 	    

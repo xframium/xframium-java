@@ -120,6 +120,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     
     private Map<String,Element> elementMap = new HashMap<String,Element>(20);
     private Map<String,PageContainer> elementTree = new HashMap<String,PageContainer>(20);
+    private List<PageContainer> pageList = new ArrayList<PageContainer>(20);
     
     private static XPathFactory xPathFactory = XPathFactory.newInstance();
     
@@ -393,6 +394,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                                 Class className = KeyWordDriver.instance().getPage( elementDescriptor.getPageName() );
                                 eltList = new PageContainer( elementDescriptor.getPageName(), className != null ? className.getName() : "" );
                                 elementTree.put( elementDescriptor.getPageName(), eltList );
+                                pageList.add( eltList );
                             }
                             eltList.getElementList().add( currentElement );
                         }
@@ -846,6 +848,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
 
         dC.getPropertyMap().putAll( configProperties );
         dC.setEmbeddedServer( xRoot.getDriver().isEmbeddedServer() );
+        dC.setDriverType( DriverType.valueOf( xRoot.getDriver().getType() ) );
 
 
         //

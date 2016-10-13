@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.xframium.artifact.ArtifactType;
+import org.xframium.device.data.DataProvider.DriverType;
 
 public class DriverContainer
 {
@@ -18,6 +19,17 @@ public class DriverContainer
     private String stepTags = "";
     private String testTags = "";
     private String suiteName = "";
+    private DriverType driverType;
+    public DriverType getDriverType()
+    {
+        return driverType;
+    }
+
+    public void setDriverType( DriverType driverType )
+    {
+        this.driverType = driverType;
+    }
+
     public String getSuiteName()
     {
         return suiteName;

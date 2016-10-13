@@ -523,7 +523,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
         dC.setTestTags( configProperties.getProperty( "driver.tagNames" ) );
         dC.setDryRun( Boolean.parseBoolean( configProperties.getProperty( "driver.validateConfiguration" ) ) );
         dC.setSuiteName( configProperties.getProperty( "driver.suiteName" ) );
-
+        dC.setDriverType( DriverType.valueOf( configProperties.getProperty( DEVICE[1] ) ) );
         return dC;
     }
     
