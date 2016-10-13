@@ -332,7 +332,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             if ( driverC.isEmbeddedServer() )
                 CloudRegistry.instance().startEmbeddedCloud();
             
-            RunDetails.instance().setTestName( ApplicationRegistry.instance().getAUT().getName() );
+            RunDetails.instance().setTestName( (driverC.getSuiteName() != null && !driverC.getSuiteName().isEmpty()) ? driverC.getSuiteName() : ApplicationRegistry.instance().getAUT().getName() );
             
             if ( runTest )
                 executeTest();

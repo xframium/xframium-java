@@ -17,6 +17,17 @@ public class DriverContainer
     private boolean embeddedServer = false;
     private String stepTags = "";
     private String testTags = "";
+    private String suiteName = "";
+    public String getSuiteName()
+    {
+        return suiteName;
+    }
+
+    public void setSuiteName( String suiteName )
+    {
+        this.suiteName = suiteName;
+    }
+
     private String deviceInterrupts = "";
     private Map<String,String> propertyMap = new HashMap<String,String>( 20 );
     private String reportFolder;

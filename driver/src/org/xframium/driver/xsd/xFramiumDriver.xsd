@@ -166,6 +166,7 @@
     <attribute name="dryRun" type="boolean" use="optional" default="false" />
     <attribute name="displayResults" type="boolean" use="optional" default="true" />
     <attribute name="outputFolder" type="string" use="required" />
+    <attribute name="suiteName" type="string" use="optional" />
   </complexType>
 
   <complexType name="xLibrary">
