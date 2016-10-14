@@ -218,25 +218,22 @@ public class KWSBrowser extends AbstractKeyWordStep
                     break;     
                 case SWITCH_WIN_INDEX:
                 	int i =0;
-                    Integer index = 0;
+                	int index = 0;
+                	if ( getParameterList().size() < 2)
+                		index = 0;
+                	else
+                		index = Integer.valueOf( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "");
 
-                   if ( getParameterList().size() < 2)
-                	   index = 0;
-
-                   else
-                	   index = Integer.valueOf( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "");
-
-                   for ( String handle : webDriver.getWindowHandles() )
-                   {
-
-                	   if ( i == index )
-                	   {
-                		   webDriver.switchTo().window(handle);
-                          break;
-                	   }
-                	   i+=1;  
-                   }
-                   break;
+                	for ( String handle : webDriver.getWindowHandles() )
+                	{
+                		if ( i == index )
+                		{
+                			webDriver.switchTo().window(handle);
+                			break;
+                		}
+                		i += 1;  
+                	}
+                	break;
     
                 default:
                     
