@@ -30,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.xframium.artifact.ArtifactType;
+import org.xframium.container.SuiteContainer;
 import org.xframium.content.ContentManager;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
@@ -235,11 +236,12 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      *            the data map
      * @param pageMap
      *            TODO
+     * @param sC TODO
      * @return true, if successful
      * @throws Exception
      *             the exception
      */
-    protected abstract boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap ) throws Exception;
+    protected abstract boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception;
 
     /**
      * Creates the point.
@@ -598,7 +600,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      * perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map,
      * java.util.Map)
      */
-    public boolean executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap ) throws Exception
+    public boolean executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception
     {
         PageManager.instance().setThrowable( null );
         long startTime = System.currentTimeMillis();
@@ -700,7 +702,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     }
                 }
                 
-                returnValue = _executeStep( pageObject, ((altWebDriver != null) ? altWebDriver : webDriver), contextMap, dataMap, pageMap );
+                returnValue = _executeStep( pageObject, ((altWebDriver != null) ? altWebDriver : webDriver), contextMap, dataMap, pageMap, null );
                 
                 KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE );
                 
@@ -743,7 +745,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         continue;
                     try
                     {
-                        subReturnValue = step.executeStep( pageObject, webDriver, contextMap, dataMap, pageMap );
+                        subReturnValue = step.executeStep( pageObject, webDriver, contextMap, dataMap, pageMap, sC );
                     }
                     catch ( KWSLoopBreak e )
                     {
@@ -788,7 +790,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                             boolean subReturnValue = false;
                             try
                             {
-                                subReturnValue = step.executeStep( pageObject, webDriver, contextMap, dataMap, pageMap );
+                                subReturnValue = step.executeStep( pageObject, webDriver, contextMap, dataMap, pageMap, sC );
                             }
                             catch ( KWSLoopBreak e )
                             {

@@ -22,7 +22,9 @@ package org.xframium.page.keyWord;
 
 import java.util.List;
 import java.util.Map;
+
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 
@@ -266,7 +268,7 @@ public interface KeyWordStep
 	 * @return true, if successful
 	 * @throws Exception the exception
 	 */
-	public boolean executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String,Page> pageMap ) throws Exception;
+	public boolean executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String,Page> pageMap, SuiteContainer sC ) throws Exception;
 	
 	/**
 	 * To error.

@@ -20,6 +20,8 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.provider;
 
+import org.xframium.container.SuiteContainer;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Interface KeyWordProvider.

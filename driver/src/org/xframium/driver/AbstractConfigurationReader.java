@@ -21,6 +21,7 @@ import org.xframium.container.ApplicationContainer;
 import org.xframium.container.CloudContainer;
 import org.xframium.container.DeviceContainer;
 import org.xframium.container.DriverContainer;
+import org.xframium.container.SuiteContainer;
 import org.xframium.debugger.DebugManager;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
@@ -44,7 +45,6 @@ import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordTest;
-import org.xframium.page.keyWord.provider.SuiteContainer;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunDetails;
 import org.xframium.utility.SeleniumSessionManager;
@@ -70,7 +70,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     public abstract DeviceContainer configureDevice();
     protected abstract boolean configurePropertyAdapters();
     public abstract DriverContainer configureDriver();
-    protected abstract boolean _executeTest() throws Exception;
+    protected abstract boolean _executeTest( SuiteContainer sC ) throws Exception;
     
     @Override
     public void readConfiguration( File configFile, boolean runTest )
@@ -335,7 +335,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             RunDetails.instance().setTestName( (driverC.getSuiteName() != null && !driverC.getSuiteName().isEmpty()) ? driverC.getSuiteName() : ApplicationRegistry.instance().getAUT().getName() );
             
             if ( runTest )
-                executeTest();
+                executeTest( sC );
         }
         catch( Exception e )
         {
@@ -343,7 +343,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         }
     }
     
-    public boolean executeTest()
+    public boolean executeTest( SuiteContainer sC )
     {
         log.info( "Go: Executing Tests" );
         
@@ -352,7 +352,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             if( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )
                 DebugManager.instance().launchBrowser( InetAddress.getLocalHost().getHostAddress(), 8870 );
             
-            _executeTest();
+            _executeTest( sC );
             
             if( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_HTML ) )
             {
@@ -399,13 +399,14 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         
     }
     
-    protected void runTest( String outputFolder, Class theTest )
+    protected void runTest( String outputFolder, Class theTest, SuiteContainer sC )
     {
         RunDetails.instance().setStartTime();
         TestNG testNg = new TestNG( true );
         testNg.setVerbose( 10 );
         testNg.setOutputDirectory( outputFolder + System.getProperty( "file.separator" ) + "testNg" );
         testNg.setTestClasses( new Class[] { theTest } );
+        System.out.println( "runtest: " + Thread.currentThread().getName() );
         testNg.run();
 
     }

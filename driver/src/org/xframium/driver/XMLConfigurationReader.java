@@ -25,6 +25,7 @@ import org.xframium.container.ApplicationContainer;
 import org.xframium.container.CloudContainer;
 import org.xframium.container.DeviceContainer;
 import org.xframium.container.DriverContainer;
+import org.xframium.container.SuiteContainer;
 import org.xframium.container.TagContainer;
 import org.xframium.content.ContentManager;
 import org.xframium.content.provider.ExcelContentProvider;
@@ -100,7 +101,6 @@ import org.xframium.page.keyWord.gherkinExtension.XMLFormatter;
 import org.xframium.page.keyWord.matrixExtension.MatrixTest;
 import org.xframium.page.keyWord.provider.ExcelKeyWordProvider;
 import org.xframium.page.keyWord.provider.SQLKeyWordProvider;
-import org.xframium.page.keyWord.provider.SuiteContainer;
 import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import org.xframium.spi.Device;
@@ -1078,7 +1078,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     
 
     @Override
-    protected boolean _executeTest() throws Exception
+    protected boolean _executeTest( SuiteContainer sC) throws Exception
     {
         switch ( xRoot.getSuite().getProvider() )
         {
@@ -1088,7 +1088,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             case "LOCAL":
             case "LOCAL-SQL":
             {
-                runTest( xRoot.getDriver().getOutputFolder(), XMLTestDriver.class );
+                runTest( xRoot.getDriver().getOutputFolder(), XMLTestDriver.class, sC );
                 break;
             }
 

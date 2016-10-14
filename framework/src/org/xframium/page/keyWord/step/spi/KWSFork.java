@@ -22,6 +22,7 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
@@ -48,7 +49,7 @@ public class KWSFork extends AbstractKeyWordStep
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
 	@Override
-	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap ) throws Exception
+	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception
 	{
 			
 		if ( pageObject == null )
@@ -74,7 +75,7 @@ public class KWSFork extends AbstractKeyWordStep
 		{
 			if ( log.isInfoEnabled() )
 				log.info( "Fork path " + elementFork.getElementIndex() + " chosen as " + elementFork.getElementFound().toString() + " was found" );	
-			return getStepList().get( elementFork.getElementIndex() ).executeStep( pageObject, webDriver, contextMap, dataMap, pageMap );
+			return getStepList().get( elementFork.getElementIndex() ).executeStep( pageObject, webDriver, contextMap, dataMap, pageMap, sC );
 		}
 		else
 			return false;
