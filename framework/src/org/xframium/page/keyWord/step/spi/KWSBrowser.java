@@ -72,7 +72,8 @@ public class KWSBrowser extends AbstractKeyWordStep
         FORWARD(13, "FORWARD", "Click the forward button"), 
         BACK(14, "BACK", "Click the back button"),
         REFRESH(15, "REFRESH", "Click the refresh button"),
-        NAVIGATE(16, "NAVIGATE", "Navigate to the supplied URL")
+        NAVIGATE(16, "NAVIGATE", "Navigate to the supplied URL"),
+        SWITCH_WIN_INDEX(17, "SWITCH_WIN_INDEX", "Switch to the numbered window")
         ;
 
         public List<SwitchType> getSupported()
@@ -93,6 +94,7 @@ public class KWSBrowser extends AbstractKeyWordStep
             supportedList.add( SwitchType.BACK );
             supportedList.add( SwitchType.REFRESH );
             supportedList.add( SwitchType.NAVIGATE );
+            supportedList.add(SwitchType.SWITCH_WIN_INDEX);
             return supportedList;
         }
 
@@ -213,7 +215,28 @@ public class KWSBrowser extends AbstractKeyWordStep
                     break;
                 case REFRESH:
                     webDriver.navigate().refresh();
-                    break;      
+                    break;     
+                case SWITCH_WIN_INDEX:
+                	int i =0;
+                    Integer index = 0;
+
+                   if ( getParameterList().size() < 2)
+                	   index = 0;
+
+                   else
+                	   index = Integer.valueOf( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "");
+
+                   for ( String handle : webDriver.getWindowHandles() )
+                   {
+
+                	   if ( i == index )
+                	   {
+                		   webDriver.switchTo().window(handle);
+                          break;
+                	   }
+                	   i+=1;  
+                   }
+                   break;
     
                 default:
                     
