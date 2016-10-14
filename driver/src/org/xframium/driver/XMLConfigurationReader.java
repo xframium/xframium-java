@@ -50,6 +50,7 @@ import org.xframium.driver.container.ApplicationContainer;
 import org.xframium.driver.container.CloudContainer;
 import org.xframium.driver.container.DeviceContainer;
 import org.xframium.driver.container.DriverContainer;
+import org.xframium.driver.container.TagContainer;
 import org.xframium.driver.xsd.ObjectFactory;
 import org.xframium.driver.xsd.XArtifact;
 import org.xframium.driver.xsd.XCapabilities;
@@ -66,6 +67,7 @@ import org.xframium.driver.xsd.XParameter;
 import org.xframium.driver.xsd.XProperty;
 import org.xframium.driver.xsd.XPropertyAdapter;
 import org.xframium.driver.xsd.XStep;
+import org.xframium.driver.xsd.XTag;
 import org.xframium.driver.xsd.XTest;
 import org.xframium.driver.xsd.XToken;
 import org.xframium.page.BY;
@@ -849,7 +851,28 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         dC.getPropertyMap().putAll( configProperties );
         dC.setEmbeddedServer( xRoot.getDriver().isEmbeddedServer() );
         dC.setDriverType( DriverType.valueOf( xRoot.getDriver().getType() ) );
+        
+        if ( xRoot.getDriver().getExtractors() != null )
+        {
+            for ( XTag xTag : xRoot.getDriver().getExtractors() )
+                dC.addExtractor( new TagContainer( xTag.getName(), xTag.getDescription().getValue(), xTag.getDescriptor() ) );
+        }
 
+        if ( dC.getExtractors().isEmpty() )
+        {
+            //
+            // Add some default extractor types for new projects
+            //
+            dC.addExtractor( new TagContainer( "ANCHOR", "HTML anchor tags", "//a[@href!='#']" ) );
+            dC.addExtractor( new TagContainer( "BUTTON", "HTML button tags", "//button" ) );
+            dC.addExtractor( new TagContainer( "INPUT", "HTML Input Tags", "//input[@type!='hidden']" ) );
+            dC.addExtractor( new TagContainer( "IOS button", "Apple IOS buttons", "//UIAButton" ) );
+            dC.addExtractor( new TagContainer( "IOS switch", "Apple IOS buttons", "//UIASwitch" ) );
+            dC.addExtractor( new TagContainer( "IOS table cell", "Apple IOS table cell", "//UIATableCell" ) );
+            dC.addExtractor( new TagContainer( "IOS text field", "Apple IOS test field", "//UIATextField" ) );
+            dC.addExtractor( new TagContainer( "Android button", "Android button", "//android.widget.Button" ) );
+            dC.addExtractor( new TagContainer( "Android text field", "Android text field", "//android.widget.EditText" ) );
+        }
 
         //
         // Extract any named tests

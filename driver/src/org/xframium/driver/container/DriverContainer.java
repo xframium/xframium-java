@@ -20,6 +20,30 @@ public class DriverContainer
     private String testTags = "";
     private String suiteName = "";
     private DriverType driverType;
+    private List<TagContainer> extractors = new ArrayList<TagContainer>( 10 );
+    
+
+    private String deviceInterrupts = "";
+    private Map<String,String> propertyMap = new HashMap<String,String>( 20 );
+    private String reportFolder;
+    private List<ArtifactType> artifactList = new ArrayList<ArtifactType>( 20 );
+    private boolean secureCloud = false;
+    
+    public List<TagContainer> getExtractors()
+    {
+        return extractors;
+    }
+
+    public void addExtractor( TagContainer tC )
+    {
+        extractors.add(  tC  );
+    }
+    
+    public void setExtractors( List<TagContainer> extractors )
+    {
+        this.extractors = extractors;
+    }
+
     public DriverType getDriverType()
     {
         return driverType;
@@ -39,12 +63,6 @@ public class DriverContainer
     {
         this.suiteName = suiteName;
     }
-
-    private String deviceInterrupts = "";
-    private Map<String,String> propertyMap = new HashMap<String,String>( 20 );
-    private String reportFolder;
-    private List<ArtifactType> artifactList = new ArrayList<ArtifactType>( 20 );
-    private boolean secureCloud = false;
     
     public boolean isSecureCloud()
     {
