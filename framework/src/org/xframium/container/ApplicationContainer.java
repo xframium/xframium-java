@@ -1,4 +1,4 @@
-package org.xframium.driver.container;
+package org.xframium.container;
 
 import org.xframium.application.ApplicationDescriptor;
 
