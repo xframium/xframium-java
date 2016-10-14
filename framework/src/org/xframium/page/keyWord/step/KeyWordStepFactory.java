@@ -191,6 +191,7 @@ public class KeyWordStepFactory
         addKeyWord( "NAVIGATE", KWSNavigate.class );
         addKeyWord( "VISUAL", KWSVisual.class );
         addKeyWord( "SET_CONTENT_KEY", KWSSetContentKey.class );
+        addKeyWord( "BROWSER", KWSBrowser.class );
     }
 
     /**

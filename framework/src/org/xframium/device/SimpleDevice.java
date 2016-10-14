@@ -23,7 +23,9 @@
  */
 package org.xframium.device;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 import org.xframium.device.cloud.CloudRegistry;
@@ -78,6 +80,8 @@ public class SimpleDevice implements Device
 	private String environment;
 	private String cloud;
 	
+	
+	
 	public String getCloud()
     {
         return cloud;
@@ -101,6 +105,7 @@ public class SimpleDevice implements Device
 
     /** The capabilities. */
 	private Map<String,Object> capabilities = new HashMap<String,Object>( 10 );
+	private List<DeviceCap> capList = new ArrayList<DeviceCap>( 12 );
 	
 	/* (non-Javadoc)
 	 * @see com.morelandLabs.spi.Device#isActive()
@@ -306,9 +311,10 @@ public class SimpleDevice implements Device
 	/* (non-Javadoc)
 	 * @see com.morelandLabs.spi.Device#addCapability(java.lang.String, java.lang.String)
 	 */
-	public void addCapability( String capabilityName, Object capabilityValue )
+	public void addCapability( String capabilityName, Object capabilityValue, String classType )
 	{
 		capabilities.put( capabilityName,capabilityValue);
+		capList.add(  new DeviceCap( capabilityName, capabilityValue, classType ) );
 	}
 	
 	

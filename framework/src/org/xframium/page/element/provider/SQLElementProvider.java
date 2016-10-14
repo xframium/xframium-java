@@ -130,6 +130,9 @@ public class SQLElementProvider
             for( int i = 0; i < data.length; ++i )
             {
                 String siteName = parseString( (String) data[i][0], null, true );
+                if ( getSiteName() == null )
+                    setSiteName( siteName );
+                
                 String pageName = parseString( (String) data[i][1], null, true );
                 String eltName = parseString( (String) data[i][2], null, true );
                 String eltDesc = parseString( (String) data[i][3], null, true );

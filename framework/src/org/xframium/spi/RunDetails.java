@@ -62,7 +62,7 @@ public class RunDetails implements RunListener
     protected static DateFormat simpleDateFormat = new SimpleDateFormat( "dd-MMM-yyyy" );
 
     private List<Object[]> detailsList = new ArrayList<Object[]>( 20 );
-    private HistoryWriter historyWriter = new HistoryWriter( DataManager.instance().getReportFolder() );
+    private HistoryWriter historyWriter = null;
 
     private String testName;
 
@@ -114,6 +114,8 @@ public class RunDetails implements RunListener
     @Override
     public boolean beforeRun( Device currentDevice, String runKey )
     {
+        if ( historyWriter == null )
+            historyWriter = new HistoryWriter( DataManager.instance().getReportFolder() );
         historyWriter.readData();
         return true;
     }
@@ -132,6 +134,8 @@ public class RunDetails implements RunListener
 
         String location = runKey + "/" + currentDevice.getKey() + "/" + runKey + ".html";
         File indexFile = new File( getRootFolder(), location );
+        if ( historyWriter == null )
+            historyWriter = new HistoryWriter( DataManager.instance().getReportFolder() );
         historyWriter.addExecution( runKey, currentDevice, startTime, stopTime, stepsPassed, stepsFailed, stepsIgnored, successful, indexFile.getPath(), scriptFailures, configFailures, applicationFailures, cloudFailures );
     }
 
@@ -366,8 +370,12 @@ public class RunDetails implements RunListener
             fileWriter.close();
 
             if ( complete )
+            {
+                if ( historyWriter == null )
+                    historyWriter = new HistoryWriter( DataManager.instance().getReportFolder() );
                 historyWriter.writeData( getRootFolder() + System.getProperty( "file.separator" ) + "index.html", startTime, System.currentTimeMillis(), envMap.size(), osMap.size(), successCount, detailsList.size() - successCount, envMap,
                         failureBreakdown[0], failureBreakdown[1], failureBreakdown[2], failureBreakdown[3] );
+            }
 
         }
         catch ( Exception e )

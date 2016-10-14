@@ -23,6 +23,7 @@
  */
 package org.xframium.device.factory;
 
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc
@@ -99,4 +100,5 @@ public interface DriverFactory
 	 * @return the device web driver
 	 */
 	public DeviceWebDriver createDriver( Device currentDevice );
+	public DeviceWebDriver createDriver( Device currentDevice, CloudDescriptor useCloud );
 }

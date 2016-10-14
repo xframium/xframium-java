@@ -19,6 +19,7 @@ public class DeviceContainer
 
     private List<Device> activeDevices = new ArrayList<Device>( 10 );
     private List<Device> inactiveDevices = new ArrayList<Device>( 10 );
+    private List<Device> deviceList = new ArrayList<Device>( 10 );
     
     public List<Device> getActiveDevices()
     {
@@ -43,6 +44,8 @@ public class DeviceContainer
             activeDevices.add( currentDevice );
         else
             inactiveDevices.add( currentDevice );
+        
+        deviceList.add( currentDevice );
     }
     
     

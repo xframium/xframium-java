@@ -177,13 +177,13 @@ public class SeleniumElement extends AbstractElement
             if ( imageElement.getLocation() != null && imageElement.getSize() != null && imageElement.getSize().getWidth() > 0 && imageElement.getSize().getHeight() > 0 )
             {
                 String fileKey = "PRIVATE:" + getDeviceName() + ".png";
-                
+
                 byte[] imageData = null;
-                
-                String cloudName = ( (DeviceWebDriver) webDriver ).getDevice().getCloud();
+
+                String cloudName = ((DeviceWebDriver) webDriver).getDevice().getCloud();
                 if ( cloudName == null || cloudName.trim().isEmpty() )
                     cloudName = CloudRegistry.instance().getCloud().getName();
-                
+
                 if ( CloudRegistry.instance().getCloud( cloudName ).getProvider().equals( "PERFECTO" ) )
                 {
                     PerfectoMobile.instance().imaging().screenShot( getExecutionId(), getDeviceName(), fileKey, Screen.primary, ImageFormat.png, imageResolution );
@@ -385,7 +385,7 @@ public class SeleniumElement extends AbstractElement
 
         return false;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -532,10 +532,6 @@ public class SeleniumElement extends AbstractElement
 
             return null;
         }
-        catch ( NoSuchElementException e )
-        {
-            throw new ObjectIdentificationException( getBy(), useBy() );
-        }
         finally
         {
             if ( currentContext != null && webDriver instanceof ContextAware )
@@ -592,6 +588,9 @@ public class SeleniumElement extends AbstractElement
 
             case "INPUT":
                 returnValue = currentElement.getAttribute( "value" );
+
+            case "SELECT":
+                returnValue = new Select( currentElement ).getFirstSelectedOption().getText();
 
             default:
                 returnValue = currentElement.getText();
@@ -691,8 +690,7 @@ public class SeleniumElement extends AbstractElement
         }
 
         WebElement webElement = getElement();
-        PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "present", System.currentTimeMillis(), System.currentTimeMillis() - startTime, webElement != null ? StepStatus.SUCCESS : StepStatus.FAILURE,
-                getKey(), null, 0, "", webElement instanceof CachedElement, null );
+
         return webElement != null;
     }
 
@@ -781,86 +779,80 @@ public class SeleniumElement extends AbstractElement
     @Override
     protected void _setValue( String currentValue, SetMethod setMethod )
     {
-		WebElement webElement = getElement();
+        WebElement webElement = getElement();
 
-		if ( webElement.getTagName().equalsIgnoreCase( "select" ) )
-		{
-			switch ( setMethod ){
-			case DEFAULT:
-				if ( log.isInfoEnabled() )
-					log.info( Thread.currentThread().getName() + ": Selecting element value from [" + getKey() + "] as " + currentValue );
-               System.out.println("line 744:"+currentValue);
- 			  System.out.println("setMethod 744:"+setMethod);
+        if ( webElement.getTagName().equalsIgnoreCase( "select" ) )
+        {
+            switch ( setMethod )
+            {
+                case DEFAULT:
+                    if ( log.isInfoEnabled() )
+                        log.info( Thread.currentThread().getName() + ": Selecting element value from [" + getKey() + "] as " + currentValue );
 
-				Select selectElement = new Select( webElement );
-				if ( selectElement.isMultiple() )
-					selectElement.deselectAll();
-				try
-				{
-					selectElement.selectByVisibleText( currentValue );
-				}
-				catch ( Exception e )
-				{
-					selectElement.selectByValue( currentValue );
-				}
+                    Select selectElement = new Select( webElement );
+                    if ( selectElement.isMultiple() )
+                        selectElement.deselectAll();
+                    try
+                    {
+                        selectElement.selectByVisibleText( currentValue );
+                    }
+                    catch ( Exception e )
+                    {
+                        selectElement.selectByValue( currentValue );
+                    }
 
-				break;
+                    break;
 
-			case MULTISELECT:
-				if ( log.isInfoEnabled() )
-					log.info( Thread.currentThread().getName() + ": Selecting element value from [" + getKey() + "] as " + currentValue );
-				 System.out.println("line 762:"+currentValue);
-				  System.out.println("setMethod 762:"+setMethod);
-				Select multipleselect = new Select( webElement );
-				String multiSelectTokens[]=currentValue.split(",");
-				for(String tokens:multiSelectTokens){
-				if ( multipleselect.isMultiple() ){
-					try
-					{
-						multipleselect.selectByVisibleText( tokens);
-					}
-					catch ( Exception e )
-					{
-						multipleselect.selectByValue( tokens );
-					}
-				}
-			}
-			default:
-				break;
-		   }
-		}		
-		else
-		{
-			switch ( setMethod )
-			{
-			case DEFAULT:
-				if ( log.isInfoEnabled() )
-					log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue );
-				 System.out.println("line 786:"+currentValue);
-				  System.out.println("setMethod 786:"+setMethod);
+                case MULTISELECT:
+                    if ( log.isInfoEnabled() )
+                        log.info( Thread.currentThread().getName() + ": Selecting element value from [" + getKey() + "] as " + currentValue );
+                    Select multipleselect = new Select( webElement );
+                    String multiSelectTokens[] = currentValue.split( "," );
+                    for ( String tokens : multiSelectTokens )
+                    {
+                        if ( multipleselect.isMultiple() )
+                        {
+                            try
+                            {
+                                multipleselect.selectByVisibleText( tokens );
+                            }
+                            catch ( Exception e )
+                            {
+                                multipleselect.selectByValue( tokens );
+                            }
+                        }
+                    }
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            switch ( setMethod )
+            {
+                case DEFAULT:
+                    if ( log.isInfoEnabled() )
+                        log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue );
+                    MorelandWebElement x = (MorelandWebElement) webElement;
+                    if ( x.getWebElement() instanceof IOSElement )
+                        ((IOSElement) x.getWebElement()).setValue( currentValue );
+                    else
+                    {
+                        webElement.clear();
+                        webElement.sendKeys( currentValue );
+                    }
+                    break;
 
-				MorelandWebElement x = (MorelandWebElement) webElement;
-				if ( x.getWebElement() instanceof IOSElement )
-					((IOSElement) x.getWebElement()).setValue( currentValue );
-				else
-				{
-					webElement.clear();
-					webElement.sendKeys( currentValue );
-				}
-				break;
+                case SINGLE:
+                    if ( log.isInfoEnabled() )
+                        log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue + " using individual send keys" );
 
-			case SINGLE:
-				if ( log.isInfoEnabled() )
-					log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue + " using individual send keys" );
-				 System.out.println("line 800:"+currentValue);
-				  System.out.println("setMethod 800:"+setMethod);
+                    webElement.sendKeys( currentValue );
+                default:
+                    break;
 
-				webElement.sendKeys( currentValue );
-			default:
-				break;
-
-			}
-		}
+            }
+        }
     }
 
     /*
@@ -879,8 +871,8 @@ public class SeleniumElement extends AbstractElement
                 int centerWidth = Integer.parseInt( iExec.getLeft() ) + (Integer.parseInt( iExec.getWidth() ) / 2);
                 int centerHeight = Integer.parseInt( iExec.getTop() ) + (Integer.parseInt( iExec.getHeight() ) / 2);
 
-                int useX = (int) (((double) centerWidth / (double) Integer.parseInt( iExec.getScreenWidth() )) * 100 );
-                int useY = (int) (((double) centerHeight / (double) Integer.parseInt( iExec.getScreenHeight() )) * 100 );
+                int useX = (int) (((double) centerWidth / (double) Integer.parseInt( iExec.getScreenWidth() )) * 100);
+                int useY = (int) (((double) centerHeight / (double) Integer.parseInt( iExec.getScreenHeight() )) * 100);
 
                 GestureManager.instance().createPress( new Point( useX, useY ) ).executeGesture( webDriver );
 
@@ -891,7 +883,6 @@ public class SeleniumElement extends AbstractElement
 
     }
 
-    
     /*
      * (non-Javadoc)
      * 

@@ -100,7 +100,7 @@ public class XMLEscape
             ByteArrayOutputStream htmlDocument = new ByteArrayOutputStream();
             String htmlData = new PrettyXmlSerializer( cleaner.getProperties()).getAsString( htmlIn );
             
-            htmlData = htmlData.replaceAll("(?m)^[ \t]*\r?\n", "");
+            htmlData = escapeXML( htmlData.replaceAll("(?m)^[ \t]*\r?\n", "") );
             
             return htmlData;
 

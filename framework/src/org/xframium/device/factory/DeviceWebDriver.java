@@ -23,8 +23,6 @@
  */
 package org.xframium.device.factory;
 
-import com.perfecto.reportium.client.ReportiumClient;
-import io.appium.java_client.AppiumDriver;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -40,8 +38,17 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.By.ByXPath;
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.ContextAware;
+import org.openqa.selenium.HasCapabilities;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
@@ -69,6 +76,8 @@ import org.xframium.spi.driver.NativeDriverProvider;
 import org.xframium.spi.driver.ReportiumProvider;
 import org.xframium.utility.XMLEscape;
 import org.xml.sax.InputSource;
+import com.perfecto.reportium.client.ReportiumClient;
+import io.appium.java_client.AppiumDriver;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -193,7 +202,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
 
         if ( pageSource != null )
         {
-            if ( ApplicationRegistry.instance().getAUT().isWeb() )
+            if ( ApplicationRegistry.instance().getAUT() == null || ApplicationRegistry.instance().getAUT().isWeb() )
                 return XMLEscape.toHTML( pageSource );
             else
                 return XMLEscape.toXML( pageSource );

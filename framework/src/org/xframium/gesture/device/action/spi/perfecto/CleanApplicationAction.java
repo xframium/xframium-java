@@ -73,7 +73,7 @@ public class CleanApplicationAction extends AbstractDefaultAction implements Dev
             // clear the browser cache (IOS only)
             //
 
-            if ( (localDevice.getOs().toLowerCase().equals( "ios" )) && (webDriver instanceof DeviceWebDriver) )
+            if ( (localDevice != null && localDevice.getOs().toLowerCase().equals( "ios" )) && (webDriver instanceof DeviceWebDriver) )
             {
                 try
                 {
@@ -84,7 +84,7 @@ public class CleanApplicationAction extends AbstractDefaultAction implements Dev
                     e.printStackTrace();
                 }
             }
-            else if ( (localDevice.getOs().toLowerCase().equals( "android" )) && (webDriver instanceof DeviceWebDriver) )
+            else if ( (localDevice != null && localDevice.getOs().toLowerCase().equals( "android" )) && (webDriver instanceof DeviceWebDriver) )
             {
                 try
                 {
@@ -95,6 +95,7 @@ public class CleanApplicationAction extends AbstractDefaultAction implements Dev
                     e.printStackTrace();
                 }
             }
+            
             webDriver.get(appDesc.getUrl());
 
         }

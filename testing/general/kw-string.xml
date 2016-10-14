@@ -50,6 +50,13 @@
       <parameter type="STATIC" value="123.99" />
       <parameter type="CONTEXT" value="decimalValue" />
     </step>
+    
+    <step type="STRING" name="colorCheck" page="home" context="lowerValue">
+      <parameter type="STATIC" value="lower" />
+      <parameter type="CONTEXT" value="contains" />
+      <parameter type="STATIC" value="my lower back" />
+    </step>
+
 
   </function>
 

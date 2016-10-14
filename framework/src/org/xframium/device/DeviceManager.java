@@ -589,8 +589,6 @@ public class DeviceManager implements ArtifactListener
         if ( personaName != null && !personaName.isEmpty() )
             runKey = runKey + "." + personaName;
         
-        
-        
 		boolean devicesRemain = true;
 
         
@@ -693,7 +691,7 @@ public class DeviceManager implements ArtifactListener
                                             log.debug( "Attempting to create WebDriver instance for " + currentDevice );
 										
                                         if ( personaName != null && !personaName.isEmpty() )
-                                            currentDevice.addCapability("windTunnelPersona", personaName);
+                                            currentDevice.addCapability("windTunnelPersona", personaName, "STRING");
 										
                                         webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice );
 										
@@ -880,7 +878,7 @@ public class DeviceManager implements ArtifactListener
                     log.debug( "Attempting to create WebDriver instance for " + currentDevice );
 		
                 if ( personaName != null && !personaName.isEmpty() )
-                    currentDevice.addCapability("windTunnelPersona", personaName);
+                    currentDevice.addCapability("windTunnelPersona", personaName, "STRING");
                 
                 webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice );
 		

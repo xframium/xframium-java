@@ -28,6 +28,7 @@
   <import fileName="general/kw-wait.xml" />
   <import fileName="general/kw-waitfor.xml" />
   <import fileName="general/kw-window.xml" />
+  <import fileName="general/kw-browser.xml" />
 
   <model>
     
@@ -67,12 +68,13 @@
     <step type="CALL" name="kw-wait" page="home" />
     <step type="CALL" name="kw-waitfor" page="home" />
     <step type="CALL" name="kw-window" page="home" />
+    <step type="CALL" name="kw-browser" page="home" />
   </test>
   
   <test name="xFramium dev" active="false" dataProvider="callTest">
     <description>Tests the general keywords that apply to both Web and Native applications across web and mobile devices</description>
 
-    <step type="CALL" name="kw-window" page="home" />
+    <step type="CALL" name="kw-browser" page="home" />
 
   </test>
 

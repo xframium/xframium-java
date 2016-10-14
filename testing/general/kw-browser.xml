@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+  <model>
+    
+    <page name="home" />
+
+  </model>
+
+  <function name="kw-browser" active="true">
+    <!-- TITLE and URL -->
+    <step type="BROWSER" name="GET_TITLE" page="home">
+        <parameter type="STATIC" value="xFramium Testing" />
+    </step>
+    <step type="BROWSER" name="GET_URL" page="home">
+        <parameter type="STATIC" value="http://xframium.org/testing.html" />
+    </step>
+    
+    <!-- OPEN SECOND WINDOW -->
+    <step type="CLICK" name="_testingTwo" page="home" />
+    
+    <!-- SWITCH, TITLE and URL -->
+    <step type="BROWSER" name="SWITCH_BY_TITLE" page="home">
+        <parameter type="STATIC" value="xFramium Second Page" />
+    </step>
+    <step type="BROWSER" name="GET_TITLE" page="home">
+        <parameter type="STATIC" value="xFramium Second Page" />
+    </step>
+    <step type="BROWSER" name="GET_URL" page="home">
+        <parameter type="STATIC" value="http://xframium.org/testing2.html" />
+    </step>
+    
+    <!-- SWITCH BACK, TITLE and URL -->
+    <step type="BROWSER" name="SWITCH_BY_URL" page="home">
+        <parameter type="STATIC" value="http://xframium.org/testing.html" />
+    </step>
+    <step type="BROWSER" name="GET_TITLE" page="home">
+        <parameter type="STATIC" value="xFramium Testing" />
+    </step>
+    <step type="BROWSER" name="GET_URL" page="home">
+        <parameter type="STATIC" value="http://xframium.org/testing.html" />
+    </step>
+    <!-- SWITCH BACK, TITLE and URL -->
+    <step type="BROWSER" name="SWITCH_BY_URL" page="home">
+        <parameter type="STATIC" value="http://xframium.org/testing2.html" />
+    </step>
+    <step type="BROWSER" name="GET_TITLE" page="home">
+        <parameter type="STATIC" value="xFramium Second Page" />
+    </step>
+    <step type="BROWSER" name="GET_URL" page="home">
+        <parameter type="STATIC" value="http://xframium.org/testing2.html" />
+    </step>
+    
+    <step type="BROWSER" name="SWITCH_BY_URL" page="home">
+        <parameter type="STATIC" value="http://xframium.org/testing.html" />
+    </step>
+    <!--  SWITCH TO FRAME -->
+    <step type="BROWSER" name="SWITCH_NAMED_FRAME" page="home">
+        <parameter type="STATIC" value="frameName" />
+    </step>
+    <step type="EXISTS" name="screenTwo" page="page two" />
+
+    <step type="BROWSER" name="PARENT_FRAME" page="home">
+    </step>
+    <step type="EXISTS" name="screenTwo" page="page two" inverse="true" />
+    
+    <step type="BROWSER" name="SWITCH_TO_ELEMENT.testingTwoFrame" page="home">
+    </step>
+    <step type="EXISTS" name="screenTwo" page="page two" />
+    <step type="BROWSER" name="PARENT_FRAME" page="home">
+    </step>
+    <step type="EXISTS" name="screenTwo" page="page two" inverse="true" />
+    
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+    
+    <step type="CLICK" name="toggleButton" page="home" />
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="0" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+
+    <step type="BROWSER" name="REFRESH" page="home" >
+    </step>
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+    
+    <step type="CLICK" name="testingTwo" page="home" />
+    <step type="EXISTS" name="screenTwo" page="page two" />
+    
+    <step type="BROWSER" name="BACK" page="home" >
+    </step>
+    <step type="EXISTS" name="testingTwo" page="home" />
+    <step type="BROWSER" name="FORWARD" page="home" >
+
+    </step>
+    <step type="EXISTS" name="screenTwo" page="page two" />
+    <step type="BROWSER" name="BACK" page="home" >
+    </step>
+    <step type="BROWSER" name="REFRESH" page="home" >
+      <parameter type="STATIC" value="" />
+    </step>
+  </function>
+
+</suite>

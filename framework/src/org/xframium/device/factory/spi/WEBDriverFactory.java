@@ -23,7 +23,6 @@
  */
 package org.xframium.device.factory.spi;
 
-import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.Capabilities;
@@ -33,11 +32,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
-import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.factory.AbstractDriverFactory;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.spi.Device;
-import com.xframium.serialization.SerializationManager;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -54,24 +51,14 @@ public class WEBDriverFactory extends AbstractDriverFactory
      * .perfectoMobile.device.Device)
      */
     @Override
-    protected DeviceWebDriver _createDriver( Device currentDevice )
+    protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud )
     {
         DeviceWebDriver webDriver = null;
         try
         {
             DesiredCapabilities dc = null;
             
-            CloudDescriptor useCloud = CloudRegistry.instance().getCloud();
             
-            if ( currentDevice.getCloud() != null )
-            {
-                useCloud = CloudRegistry.instance().getCloud( currentDevice.getCloud() );
-                if ( useCloud == null )
-                {
-                    useCloud = CloudRegistry.instance().getCloud();
-                    log.warn( "A separate grid instance was specified but it does not exist in your cloud registry [" + currentDevice.getCloud() + "] - using the default Cloud instance" );
-                }
-            }
             
             if ( currentDevice.getBrowserName() != null && !currentDevice.getBrowserName().isEmpty() )
                 dc = new DesiredCapabilities(  useCloud.getCloudActionProvider().getCloudBrowserName(currentDevice.getBrowserName()), "", Platform.ANY );
@@ -106,12 +93,14 @@ public class WEBDriverFactory extends AbstractDriverFactory
             	
             for ( String name : currentDevice.getCapabilities().keySet() )
 				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
-			
-            for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
-            	dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
+			if ( ApplicationRegistry.instance().getAUT() != null )
+			{
+                for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
+                	dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
+			}
 
-            if ( log.isInfoEnabled() )
-                log.info( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
+            if ( log.isDebugEnabled() )
+                log.debug( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 
             webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
             webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
@@ -127,9 +116,12 @@ public class WEBDriverFactory extends AbstractDriverFactory
             webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );
             webDriver.setCloud( useCloud );
 
-            if ( ApplicationRegistry.instance().getAUT().getUrl() != null && !ApplicationRegistry.instance().getAUT().getUrl().isEmpty() )
+            if ( ApplicationRegistry.instance().getAUT() != null && ApplicationRegistry.instance().getAUT().getUrl() != null && !ApplicationRegistry.instance().getAUT().getUrl().isEmpty() )
             {
                 webDriver.get( ApplicationRegistry.instance().getAUT().getUrl() );
+                
+                String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
+                webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );
             }
 
             return webDriver;

@@ -11,8 +11,9 @@
 
   <function name="kw-exists" active="true">
     
-    <step type="EXISTS" name="toggleButton" page="home" />
-    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="EXISTS" name="toggleButton" page="home" context=""/>
+    
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle"  />
     <step type="COMPARE" name="existsCompare" page="home">
       <parameter type="STATIC" value="1" />
       <parameter type="CONTEXT" value="existsSingle" />

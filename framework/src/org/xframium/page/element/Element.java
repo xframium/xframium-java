@@ -369,4 +369,6 @@ public interface Element
 	public void click();
 	
 	public void click (int clicks, int waitTime);
+	
+	public String getName();
 }

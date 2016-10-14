@@ -51,24 +51,14 @@ public class WINDOWSDriverFactory extends AbstractDriverFactory
 	 * @see com.perfectoMobile.device.factory.AbstractDriverFactory#_createDriver(com.perfectoMobile.device.Device)
 	 */
 	@Override
-	protected DeviceWebDriver _createDriver( Device currentDevice )
+	protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud )
 	{
 		DeviceWebDriver webDriver = null;
 		try
 		{
 			DesiredCapabilities dc = new DesiredCapabilities( "", "", Platform.ANY );
 			
-			CloudDescriptor useCloud = CloudRegistry.instance().getCloud();
-            
-            if ( currentDevice.getCloud() != null )
-            {
-                useCloud = CloudRegistry.instance().getCloud( currentDevice.getCloud() );
-                if (useCloud == null)
-                {
-                    useCloud = CloudRegistry.instance().getCloud();
-                    log.warn( "A separate grid instance was specified but it does not exist in your cloud registry [" + currentDevice.getCloud() + "] - using the default Cloud instance" );
-                }
-            }
+
             
             DeviceManager.instance().setCurrentCloud( useCloud );
 			

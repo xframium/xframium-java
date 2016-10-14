@@ -24,6 +24,21 @@
     <step type="SET" name="focusId" page="home" >
       <parameter type="STATIC" value="" />
     </step>
+    
+    <!--  Multi-tiered loop -->
+    <step type="LOOP" name="data based loop" page="home" >
+      <parameter type="STATIC" value="data{parentData.one.childRecord.childOne.loopData}"/>
+      <parameter type="STATIC" value="setValue"/>
+    </step>
+    
+    <step type="ATTRIBUTE" name="focusId" page="home" >
+      <parameter type="STATIC" value="three" />
+      <parameter type="STATIC" value="value" />
+    </step>
+    
+    <step type="SET" name="focusId" page="home" >
+      <parameter type="STATIC" value="" />
+    </step>
 
     <step type="LOOP" name="data based loop with break" page="home" >
       <parameter type="STATIC" value="data{dataLoop}"/>

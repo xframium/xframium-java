@@ -20,6 +20,7 @@
  *******************************************************************************/
 package org.xframium.page.element.provider;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,7 +33,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
-import org.xframium.page.PageManager;
 import org.xframium.page.element.Element;
 import org.xframium.page.element.ElementFactory;
 import org.xframium.page.element.provider.xsd.Import;
@@ -52,6 +52,7 @@ public class XMLElementProvider extends AbstractElementProvider
 	
 	/** The file name. */
 	private File fileName;
+	private File folderName;
 	
 	/** The resource name. */
 	private String resourceName;
@@ -64,6 +65,7 @@ public class XMLElementProvider extends AbstractElementProvider
 	public XMLElementProvider( File fileName )
 	{
 		this.fileName = fileName;
+		this.folderName = fileName.getParentFile();
 		readElements();
 	}
 	
@@ -77,6 +79,11 @@ public class XMLElementProvider extends AbstractElementProvider
 		this.resourceName = resourceName;
 		readElements();
 	}
+	
+	public XMLElementProvider( byte[] resourceData )
+    {
+        readElements( new ByteArrayInputStream( resourceData ) );
+    }
 	
 	/**
 	 * Read elements.
@@ -104,6 +111,8 @@ public class XMLElementProvider extends AbstractElementProvider
 		}
 	}
 	
+
+	
 	/**
 	 * Read elements.
 	 *
@@ -121,7 +130,11 @@ public class XMLElementProvider extends AbstractElementProvider
             RegistryRoot rRoot = (RegistryRoot)rootElement.getValue();
 
 			for ( Site site : rRoot.getSite() )
+			{
+			    if ( getSiteName() == null )
+			        setSiteName( site.getName() );
 				parseSite( site);
+			}
 
 			for ( Import imp : rRoot.getImport() )
 				parseImport( imp );
@@ -147,7 +160,21 @@ public class XMLElementProvider extends AbstractElementProvider
 				if (log.isInfoEnabled())
 					log.info( "Attempting to import file [" + Paths.get(".").toAbsolutePath().normalize().toString() + imp.getFileName() + "]" );
 
-				readElements( new FileInputStream( imp.getFileName() ) );
+				if ( fileName == null )
+				{
+				    readElements( getClass().getClassLoader().getResourceAsStream( imp.getFileName() ) );
+				}
+				else
+				{
+    				File newFile = new File( imp.getFileName() );
+    				if ( newFile.exists() ) 
+    				    readElements( new FileInputStream( newFile ) );
+    				
+    				newFile = new File( folderName, imp.getFileName() );
+    				if ( newFile.exists() )
+    				    readElements( new FileInputStream( newFile ) );
+				}
+				
 			}
 			catch (FileNotFoundException e)
 			{
@@ -195,6 +222,5 @@ public class XMLElementProvider extends AbstractElementProvider
 	{
 		return elementMap.get(  elementDescriptor.toString() );
 	}
-	
 	
 }

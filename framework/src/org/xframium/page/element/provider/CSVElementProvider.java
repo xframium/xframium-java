@@ -119,6 +119,9 @@ public class CSVElementProvider extends AbstractElementProvider
 				
 				String[] lineData = currentLine.split( "," );
 				
+				if ( getSiteName() == null )
+                    setSiteName( lineData[ 0 ] );
+				
 				if ( lineData[ 0 ].equals( PageManager.instance().getSiteName() ) )
 				{
 					ElementDescriptor elementDescriptor = new ElementDescriptor( lineData[ 0 ],  lineData[ 1 ],  lineData[ 2 ] );

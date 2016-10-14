@@ -21,7 +21,12 @@
       <element name="content" type="tns:xContent" minOccurs="0" maxOccurs="1" />
       <element name="data" type="tns:xData" minOccurs="0" maxOccurs="1" />
       <element name="proxy" type="tns:xProxy" minOccurs="0" maxOccurs="1" />
+      <element name="security" type="tns:xSecurity" minOccurs="0" maxOccurs="1" />
     </sequence>
+  </complexType>
+
+  <complexType name="xSecurity">
+    <attribute name="secureCloud" type="boolean" use="optional" default="false" />
   </complexType>
 
   <complexType name="xProxy">
@@ -157,9 +162,11 @@
     <attribute name="stepTags" type="string" use="optional" />
     <attribute name="testNames" type="string" use="optional" />
     <attribute name="tagNames" type="string" use="optional" />
+    <attribute name="embeddedServer" type="boolean" use="optional" default="false" />
     <attribute name="dryRun" type="boolean" use="optional" default="false" />
     <attribute name="displayResults" type="boolean" use="optional" default="true" />
     <attribute name="outputFolder" type="string" use="required" />
+    <attribute name="suiteName" type="string" use="optional" />
   </complexType>
 
   <complexType name="xLibrary">
@@ -252,7 +259,7 @@
 
   <complexType name="xPage">
     <sequence>
-      <element name="element" type="tns:xElement" minOccurs="1" maxOccurs="unbounded" />
+      <element name="element" type="tns:xElement" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="name" type="string" use="required" />
     <attribute name="class" type="string" use="optional" />

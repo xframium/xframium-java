@@ -199,6 +199,11 @@ public abstract class AbstractElement implements Element
 	/** The tokens applied. */
 	private boolean tokensApplied = false;
 
+	public String getName()
+	{
+	    return elementName;
+	}
+	
 	/**
 	 * Instantiates a new abstract element.
 	 *

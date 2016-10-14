@@ -20,6 +20,7 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.provider;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -73,6 +74,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	
 	/** The resource name. */
 	private String resourceName;
+	private byte[] resourceData;
 
 	/**
 	 * Instantiates a new XML key word provider.
@@ -96,6 +98,11 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	{
 		this.resourceName = resourceName;
 	}
+	
+	public XMLKeyWordProvider( byte[] resourceData )
+    {
+        this.resourceData = resourceData;
+    }
 
 	/*
 	 * (non-Javadoc)
@@ -105,7 +112,12 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	public SuiteContainer readData( boolean parseDataIterators )
 	{
 	    SuiteContainer sC = new SuiteContainer();
-		if (fileName == null)
+	    
+	    if ( resourceData != null )
+	    {
+	        readElements( sC, new ByteArrayInputStream( resourceData ), true, true, parseDataIterators );
+	    }
+	    else if (fileName == null)
 		{
 			if (log.isInfoEnabled())
 				log.info( "Reading from CLASSPATH as XMLElementProvider.elementFile" );

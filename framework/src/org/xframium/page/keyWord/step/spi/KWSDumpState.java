@@ -99,7 +99,7 @@ public class KWSDumpState extends AbstractKeyWordStep
             
             String pageSource = webDriver.getPageSource();
             outputStream = new FileOutputStream( xmlFile );
-            if ( ApplicationRegistry.instance().getAUT().isWeb() )
+            if ( ApplicationRegistry.instance().getAUT() == null || ApplicationRegistry.instance().getAUT().isWeb() )
             	outputStream.write( XMLEscape.toXML( pageSource ).getBytes() );
             else
             	outputStream.write( XMLEscape.toHTML( pageSource ).getBytes() );
@@ -118,7 +118,7 @@ public class KWSDumpState extends AbstractKeyWordStep
         }
         catch( Exception e )
         {
-            throw new IllegalArgumentException( "Could not write to file", e );
+            log.warn( "Could not write to output file", e );
         }
         finally
         {

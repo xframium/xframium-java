@@ -41,7 +41,8 @@ public class KWSVisual extends AbstractKeyWordStep
 	enum VisualType {
 		SET,
 		BUTTON,
-		FIND
+		FIND,
+		SWIPE
 	}
 
 	/* (non-Javadoc)
@@ -70,6 +71,9 @@ public class KWSVisual extends AbstractKeyWordStep
 			case FIND:
 				command = "mobile:text:find";
 				break;
+			case SWIPE:
+				command = "mobile:touch:swipe";
+				break;
 		}
 		Map<String, Object> params = new HashMap<>();
 		for (int i = 0; i < getParameterList().size(); i++) {
@@ -94,14 +98,6 @@ public class KWSVisual extends AbstractKeyWordStep
 			e.printStackTrace();
 			return false;
 		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
-	 */
-	public boolean isRecordable()
-	{
-		return false;
 	}
 
 }

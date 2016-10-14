@@ -43,4 +43,5 @@ public interface ElementProvider
 	boolean isInitialized();
 	
 	public Map<String,PageContainer> getElementTree();
+	public String getSiteName();
 }
