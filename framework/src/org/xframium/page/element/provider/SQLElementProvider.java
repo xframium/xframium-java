@@ -80,13 +80,13 @@ public class SQLElementProvider
      */
     public SQLElementProvider( String username, String password, String url, String driver )
     {
-        this.username = username;
+        /*this.username = username;
         this.password = password;
         this.url = url;
         this.driver = driver;
-        this.query = DEF_QUERY;
-        
-        readElements();
+        this.query = DEF_QUERY;*/
+    	this( username, password, url, driver, DEF_QUERY );
+//        readElements();
     }
 	
     /**
@@ -99,7 +99,11 @@ public class SQLElementProvider
      */
     public SQLElementProvider( String username, String password, String url, String driver, String query )
     {
-        this( username, password, url, driver );
+//        this( username, password, url, driver );
+        this.username = username;
+        this.password = password;
+        this.url = url;
+        this.driver = driver;
         this.query = (( query != null ) ? query : DEF_QUERY);
                 
         readElements();
