@@ -93,10 +93,10 @@ public class KWSLoop extends AbstractKeyWordStep
 				try
 				{
 				
-					if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, sC ) )
-					{
-						return false;
-					}
+				    if ( sC != null )
+                        return sC.getTest( getName() ).executeTest(webDriver, contextMap, dataMap, pageMap, sC);
+                    else
+                        return KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, sC );
 				}
 				catch( KWSLoopBreak e )
 				{
@@ -150,10 +150,10 @@ public class KWSLoop extends AbstractKeyWordStep
 						if ( log.isDebugEnabled() )
 							log.debug( "Execution Function " + functionName + " - with data " + pageData );
 						
-						if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, sC ) )
-						{
-							return false;
-						}
+						if ( sC != null )
+                            return sC.getTest( getName() ).executeTest(webDriver, contextMap, dataMap, pageMap, sC);
+                        else
+                            return KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, sC );
 					}
 					catch( KWSLoopBreak lb )
 					{
