@@ -94,9 +94,15 @@ public class KWSLoop extends AbstractKeyWordStep
 				{
 				
 				    if ( sC != null )
-                        return sC.getTest( getName() ).executeTest(webDriver, contextMap, dataMap, pageMap, sC);
+				    {
+                        if ( !sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC) )
+                            return false;
+				    }
                     else
-                        return KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, sC );
+                    {
+                        if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, sC ) )
+                            return false;
+                    }
 				}
 				catch( KWSLoopBreak e )
 				{
@@ -151,9 +157,15 @@ public class KWSLoop extends AbstractKeyWordStep
 							log.debug( "Execution Function " + functionName + " - with data " + pageData );
 						
 						if ( sC != null )
-                            return sC.getTest( getName() ).executeTest(webDriver, contextMap, dataMap, pageMap, sC);
-                        else
-                            return KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, sC );
+	                    {
+	                        if ( !sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC) )
+	                            return false;
+	                    }
+	                    else
+	                    {
+	                        if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, sC ) )
+	                            return false;
+	                    }
 					}
 					catch( KWSLoopBreak lb )
 					{
@@ -190,10 +202,16 @@ public class KWSLoop extends AbstractKeyWordStep
 					
 					try
 					{
-						if ( sC != null )
-							return sC.getTest( getName() ).executeTest(webDriver, contextMap, dataMap, pageMap, sC);
-						else
-							return KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, sC );
+					    if ( sC != null )
+	                    {
+	                        if ( !sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC) )
+	                            return false;
+	                    }
+	                    else
+	                    {
+	                        if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, sC ) )
+	                            return false;
+	                    }
 						
 					}
 					catch( KWSLoopBreak lb )

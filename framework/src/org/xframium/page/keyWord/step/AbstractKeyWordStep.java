@@ -725,7 +725,9 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 {
                     
                 }
-                log.info( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed " );
+                log.error( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed " );
+                log.debug( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed ", e );
+                
             }
 
             if ( inverse )
