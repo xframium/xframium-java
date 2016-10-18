@@ -29,6 +29,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.container.SuiteContainer;
 import org.xframium.device.data.DataManager;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
@@ -51,7 +52,7 @@ public class KWSDumpState extends AbstractKeyWordStep
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
 	@Override
-	public synchronized boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+	public synchronized boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
 	{
         long startTime = System.currentTimeMillis();
         File rootFolder = new File( DataManager.instance().getReportFolder(), RunDetails.instance().getRootFolder() );

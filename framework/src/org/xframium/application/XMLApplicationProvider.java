@@ -20,6 +20,7 @@
  *******************************************************************************/
 package org.xframium.application;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -51,6 +52,7 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
 
     /** The resource name. */
     private String resourceName;
+    private byte[] resourceData;
 
     /**
      * Instantiates a new XML application provider.
@@ -61,6 +63,11 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
     public XMLApplicationProvider( File fileName )
     {
         this.fileName = fileName;
+    }
+    
+    public XMLApplicationProvider( byte[] resourceData )
+    {
+        this.resourceData = resourceData;
     }
 
     /**
@@ -81,7 +88,11 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
      */
     public List<ApplicationDescriptor> readData()
     {
-        if ( fileName == null )
+        if ( resourceData != null )
+        {
+            return readElements( new ByteArrayInputStream( resourceData ) );
+        }
+        else if ( fileName == null )
         {
             if ( log.isInfoEnabled() )
                 log.info( "Reading from CLASSPATH as " + resourceName );

@@ -29,6 +29,7 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
 import org.xframium.exception.DataConfigurationException;
 import org.xframium.exception.TestConfigurationException;
 import org.xframium.page.Page;
@@ -37,7 +38,6 @@ import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.keyWord.provider.KeyWordProvider;
-import org.xframium.page.keyWord.provider.SuiteContainer;
 import org.xframium.page.listener.KeyWordListener;
 
 // TODO: Auto-generated Javadoc
@@ -47,7 +47,6 @@ import org.xframium.page.listener.KeyWordListener;
 public class KeyWordDriver
 {
 
-    /** The test list. */
     private List<String> testList = new ArrayList<String>( 20 );
 
     /** The test map. */
@@ -315,7 +314,7 @@ public class KeyWordDriver
      * @throws Exception
      *             the exception
      */
-    public boolean executionFunction( String testName, WebDriver webDriver, Map<String, PageData> dataMap, Map<String, Page> pageMap ) throws Exception
+    public boolean executionFunction( String testName, WebDriver webDriver, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception
     {
         if ( log.isDebugEnabled() )
             log.debug( "Attempting to locate function/test [" + testName + "]" );
@@ -370,7 +369,7 @@ public class KeyWordDriver
             }
         }
 
-        return test.executeTest( webDriver, contextMap.get(), dataMap, pageMap );
+        return test.executeTest( webDriver, contextMap.get(), dataMap, pageMap, sC );
     }
 
 
@@ -477,7 +476,7 @@ public class KeyWordDriver
      * @throws Exception
      *             the exception
      */
-    public boolean executeTest( String testName, WebDriver webDriver ) throws Exception
+    public boolean executeTest( String testName, WebDriver webDriver, SuiteContainer sC ) throws Exception
     {
         boolean testStarted = false;
         boolean returnValue = false;
@@ -557,7 +556,7 @@ public class KeyWordDriver
                 return false;
             }
             
-            returnValue = test.executeTest( webDriver, contextMap.get(), dataMap, pageMap );
+            returnValue = test.executeTest( webDriver, contextMap.get(), dataMap, pageMap, sC );
             contextMap.set( null );
 
             return returnValue;

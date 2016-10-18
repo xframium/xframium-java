@@ -611,6 +611,8 @@ public class SeleniumElement extends AbstractElement
     @Override
     protected String _getAttribute( String attributeName )
     {
+    	if ( log.isDebugEnabled() )
+    		log.debug( "Getting Attribute value for " + attributeName);
         return getElement().getAttribute( attributeName );
     }
 
@@ -825,6 +827,29 @@ public class SeleniumElement extends AbstractElement
                 default:
                     break;
             }
+        }
+        else if ( webElement.getTagName().equalsIgnoreCase( "UIAPickerWheel" ) )
+        {
+        	System.out.println( "SETTING PICKER" );
+        	try
+        	{
+        	MorelandWebElement x = (MorelandWebElement) webElement;
+            ((IOSElement) x.getWebElement()).sendKeys(currentValue);
+        	}
+        	catch( Exception e )
+        	{
+        		e.printStackTrace();
+        	}
+        	
+        	try
+        	{
+        	MorelandWebElement x = (MorelandWebElement) webElement;
+            ((IOSElement) x.getWebElement()).setValue(currentValue);
+        	}
+        	catch( Exception e )
+        	{
+        		e.printStackTrace();
+        	}
         }
         else
         {

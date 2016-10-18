@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.gesture.device.action.DeviceAction.ActionType;
 import org.xframium.gesture.device.action.DeviceActionManager;
@@ -56,7 +57,7 @@ public class KWSDevice extends AbstractKeyWordStep
 	 * java.util.Map)
 	 */
 	@Override
-	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
 	{
 		long startTime = System.currentTimeMillis();
 		if ( log.isDebugEnabled() )

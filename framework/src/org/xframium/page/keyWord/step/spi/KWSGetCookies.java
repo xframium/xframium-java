@@ -26,6 +26,7 @@ import java.util.Set;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -45,7 +46,7 @@ public class KWSGetCookies extends AbstractKeyWordStep
      * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
      */
     @Override
-    public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+    public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
     {
         if ( pageObject == null )
         {
