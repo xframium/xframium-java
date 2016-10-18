@@ -1,4 +1,4 @@
-package org.xframium.page.keyWord.provider;
+package org.xframium.container;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +40,11 @@ public class SuiteContainer
     public Map<String, Class> getModelMap()
     {
         return modelMap;
+    }
+    
+    public KeyWordTest getTest( String testName )
+    {
+    	return testMap.get( testName );
     }
     
     public void setElementProvider( ElementProvider elementProvider )

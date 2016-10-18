@@ -147,6 +147,7 @@
       <element name="propertyAdapter" type="tns:xPropertyAdapter" minOccurs="0" maxOccurs="unbounded" />
       <element name="artifact" type="tns:xArtifact" minOccurs="0" maxOccurs="unbounded" />
       <element name="library" type="tns:xLibrary" minOccurs="0" maxOccurs="unbounded" />
+      <element name="extractors" type="tns:xTag" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="type" use="required">
       <simpleType>
@@ -167,6 +168,15 @@
     <attribute name="displayResults" type="boolean" use="optional" default="true" />
     <attribute name="outputFolder" type="string" use="required" />
     <attribute name="suiteName" type="string" use="optional" />
+  </complexType>
+
+  <complexType name="xTag">
+    <sequence>
+        <element name="description" type="tns:xDescription" minOccurs="0" maxOccurs="1" />
+    </sequence>
+    <attribute name="name" use="required" />
+    <attribute name="descriptor" use="required" />
+    
   </complexType>
 
   <complexType name="xLibrary">

@@ -11,31 +11,24 @@ package org.xframium.driver.xsd;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for xToken complex type.
+ * <p>Java class for xTag complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="xToken"&gt;
+ * &lt;complexType name="xTag"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;attribute name="type" use="required"&gt;
- *         &lt;simpleType&gt;
- *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
- *             &lt;enumeration value="STATIC"/&gt;
- *             &lt;enumeration value="CONTEXT"/&gt;
- *             &lt;enumeration value="PROPERTY"/&gt;
- *             &lt;enumeration value="CONTENT"/&gt;
- *             &lt;enumeration value="DATA"/&gt;
- *           &lt;/restriction&gt;
- *         &lt;/simpleType&gt;
- *       &lt;/attribute&gt;
- *       &lt;attribute name="value" use="required" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
- *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="description" type="{http://www.xframium.org/xFramiumDriver}xDescription" minOccurs="0"/&gt;
+ *       &lt;/sequence&gt;
+ *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" /&gt;
+ *       &lt;attribute name="descriptor" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" /&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
@@ -44,62 +37,41 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "xToken")
-public class XToken {
+@XmlType(name = "xTag", propOrder = {
+    "description"
+})
+public class XTag {
 
-    @XmlAttribute(name = "type", required = true)
-    protected String type;
-    @XmlAttribute(name = "value", required = true)
-    protected String value;
+    protected XDescription description;
     @XmlAttribute(name = "name", required = true)
+    @XmlSchemaType(name = "anySimpleType")
     protected String name;
+    @XmlAttribute(name = "descriptor", required = true)
+    @XmlSchemaType(name = "anySimpleType")
+    protected String descriptor;
 
     /**
-     * Gets the value of the type property.
+     * Gets the value of the description property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link XDescription }
      *     
      */
-    public String getType() {
-        return type;
+    public XDescription getDescription() {
+        return description;
     }
 
     /**
-     * Sets the value of the type property.
+     * Sets the value of the description property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link XDescription }
      *     
      */
-    public void setType(String value) {
-        this.type = value;
-    }
-
-    /**
-     * Gets the value of the value property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getValue() {
-        return value;
-    }
-
-    /**
-     * Sets the value of the value property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setValue(String value) {
-        this.value = value;
+    public void setDescription(XDescription value) {
+        this.description = value;
     }
 
     /**
@@ -124,6 +96,30 @@ public class XToken {
      */
     public void setName(String value) {
         this.name = value;
+    }
+
+    /**
+     * Gets the value of the descriptor property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getDescriptor() {
+        return descriptor;
+    }
+
+    /**
+     * Sets the value of the descriptor property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setDescriptor(String value) {
+        this.descriptor = value;
     }
 
 }

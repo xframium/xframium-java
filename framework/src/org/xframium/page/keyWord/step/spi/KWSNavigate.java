@@ -23,6 +23,7 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
@@ -60,7 +61,7 @@ public class KWSNavigate extends  AbstractKeyWordStep {
 	 * java.util.Map)
 	 */
 	@Override
-	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
 	{
 		Boolean success = false;
 		if ( pageObject == null )

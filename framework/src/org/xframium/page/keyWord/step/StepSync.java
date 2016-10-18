@@ -179,7 +179,7 @@ public class StepSync
 	                }
 	            }
 	            
-	            if ( !step.executeStep( page, webDriver, contextMap, dataMap, pageMap ) )
+	            if ( !step.executeStep( page, webDriver, contextMap, dataMap, pageMap, null ) )
 	            {
 	                if ( log.isWarnEnabled() )
                         log.warn( "***** Step [" + step.getName() + "] Failed" );

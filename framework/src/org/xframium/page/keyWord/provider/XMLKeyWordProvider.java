@@ -33,6 +33,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;

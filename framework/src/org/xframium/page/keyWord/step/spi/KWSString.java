@@ -24,6 +24,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
@@ -52,7 +53,7 @@ public class KWSString extends AbstractKeyWordStep
      * java.util.Map)
      */
     @Override
-    public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+    public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
     {
         String originalValue = null;
         String operationName = null;

@@ -23,9 +23,11 @@ package org.xframium.page.keyWord;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
 import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
@@ -277,7 +279,7 @@ public class KeyWordTest
      * @throws Exception
      *             the exception
      */
-    public boolean executeTest( WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap ) throws Exception
+    public boolean executeTest( WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception
     {
         boolean stepSuccess = true;
         
@@ -318,7 +320,7 @@ public class KeyWordTest
                 }
             }
 
-            stepSuccess = step.executeStep( page, webDriver, contextMap, dataMap, pageMap );
+            stepSuccess = step.executeStep( page, webDriver, contextMap, dataMap, pageMap, sC );
 
             if ( !stepSuccess )
             {

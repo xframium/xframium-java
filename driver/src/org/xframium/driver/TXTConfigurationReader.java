@@ -10,6 +10,11 @@ import org.xframium.application.CSVApplicationProvider;
 import org.xframium.application.ExcelApplicationProvider;
 import org.xframium.application.SQLApplicationProvider;
 import org.xframium.application.XMLApplicationProvider;
+import org.xframium.container.ApplicationContainer;
+import org.xframium.container.CloudContainer;
+import org.xframium.container.DeviceContainer;
+import org.xframium.container.DriverContainer;
+import org.xframium.container.SuiteContainer;
 import org.xframium.content.ContentManager;
 import org.xframium.content.provider.ExcelContentProvider;
 import org.xframium.content.provider.SQLContentProvider;
@@ -33,10 +38,6 @@ import org.xframium.device.data.perfectoMobile.PerfectoMobilePluginProvider;
 import org.xframium.device.data.perfectoMobile.ReservedHandsetValidator;
 import org.xframium.device.property.PropertyAdapter;
 import org.xframium.device.proxy.ProxyRegistry;
-import org.xframium.driver.container.ApplicationContainer;
-import org.xframium.driver.container.CloudContainer;
-import org.xframium.driver.container.DeviceContainer;
-import org.xframium.driver.container.DriverContainer;
 import org.xframium.gesture.device.action.DeviceActionManager;
 import org.xframium.gesture.device.action.spi.perfecto.PerfectoDeviceActionFactory;
 import org.xframium.page.data.provider.ExcelPageDataProvider;
@@ -50,7 +51,6 @@ import org.xframium.page.element.provider.SQLElementProvider;
 import org.xframium.page.element.provider.XMLElementProvider;
 import org.xframium.page.keyWord.provider.ExcelKeyWordProvider;
 import org.xframium.page.keyWord.provider.SQLKeyWordProvider;
-import org.xframium.page.keyWord.provider.SuiteContainer;
 import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
 import org.xframium.spi.Device;
 
@@ -528,20 +528,20 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     }
     
     @Override
-    protected boolean _executeTest() throws Exception
+    protected boolean _executeTest( SuiteContainer sC ) throws Exception
     {
         switch ( configProperties.getProperty( DRIVER[0] ).toUpperCase() )
         {
             case "XML":
             {
-                runTest( configProperties.getProperty( ARTIFACT[0] ), XMLTestDriver.class );
+                runTest( configProperties.getProperty( ARTIFACT[0] ), XMLTestDriver.class, sC );
                 break;
             }
             
             case "OBJ":
             case "OBJ-SQL":
             {
-                runTest( configProperties.getProperty( ARTIFACT[0] ), Class.forName( configProperties.getProperty( DRIVER[1] ) ) );
+                runTest( configProperties.getProperty( ARTIFACT[0] ), Class.forName( configProperties.getProperty( DRIVER[1] ) ), sC );
                 break;
             }
         }

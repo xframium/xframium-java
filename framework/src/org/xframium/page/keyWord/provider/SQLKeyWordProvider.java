@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordPage;

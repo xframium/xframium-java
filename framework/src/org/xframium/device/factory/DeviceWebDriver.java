@@ -202,9 +202,9 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
 
         if ( pageSource != null )
         {
-            if ( ApplicationRegistry.instance().getAUT() == null || ApplicationRegistry.instance().getAUT().isWeb() )
-                return XMLEscape.toHTML( pageSource );
-            else
+            //if ( ApplicationRegistry.instance().getAUT() != null || ApplicationRegistry.instance().getAUT().isWeb() )
+            //    return XMLEscape.toHTML( pageSource );
+            //else
                 return XMLEscape.toXML( pageSource );
         }
         else

@@ -91,7 +91,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
                 {
                     PageManager.instance().setThrowable( new SkipException( "This test is not designed to work on a device with [" + deviceOs + "]  It needs [" + test.getOs() + "]" ) );
                     PageManager.instance().addExecutionLog( getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), "_SKIPPED", System.currentTimeMillis() - 5000, 5000, StepStatus.FAILURE_IGNORED,
-                            PageManager.instance().getThrowable().getMessage(), PageManager.instance().getThrowable(), 0, "", false, new String[] { PageManager.instance().getThrowable().getMessage() } );
+                    PageManager.instance().getThrowable().getMessage(), PageManager.instance().getThrowable(), 0, "", false, new String[] { PageManager.instance().getThrowable().getMessage() } );
                     
                     throw PageManager.instance().getThrowable();
                 }
@@ -150,7 +150,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
             if ( test.getDescription() != null && !test.getDescription().isEmpty() && getWebDriver() instanceof PropertyProvider )
                 ( (PropertyProvider) getWebDriver() ).setProperty( "testDescription", test.getDescription() );
     		
-            returnValue = KeyWordDriver.instance().executeTest( testName.getTestName().split( "\\." )[ 0 ], getWebDriver() );
+            returnValue = KeyWordDriver.instance().executeTest( testName.getTestName().split( "\\." )[ 0 ], getWebDriver(), null );
         }
         finally
         {

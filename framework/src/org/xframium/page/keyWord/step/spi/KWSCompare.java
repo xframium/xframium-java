@@ -22,6 +22,7 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
 import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
@@ -44,7 +45,7 @@ public class KWSCompare extends AbstractKeyWordStep
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
 	@Override
-	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
 	{
 
 		if ( getParameterList().size() == 2 )
