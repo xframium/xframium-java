@@ -57,7 +57,7 @@ public class CleanApplicationAction extends AbstractDefaultAction implements Dev
 
         Handset localDevice = PerfectoMobile.instance().devices().getDevice( deviceName );
 
-        if ( appDesc.getUrl() != null && !appDesc.getUrl().isEmpty() )
+        if ( appDesc == null || (appDesc.getUrl() != null && !appDesc.getUrl().isEmpty()) )
         {
             //
             // This is a Web URL so clear all cookies
@@ -96,7 +96,8 @@ public class CleanApplicationAction extends AbstractDefaultAction implements Dev
                 }
             }
             
-            webDriver.get(appDesc.getUrl());
+            if ( appDesc != null )
+                webDriver.get(appDesc.getUrl());
 
         }
         else
