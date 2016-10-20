@@ -120,6 +120,7 @@
           <enumeration value="NAVIGATE" />
           <enumeration value="VISUAL" />
           <enumeration value="SET_CONTENT_KEY" />
+          <enumeration value="BROWSER" />
         </restriction>
       </simpleType>
     </attribute>

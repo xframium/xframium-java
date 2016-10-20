@@ -189,7 +189,6 @@ public class XMLKeyWordProvider implements KeyWordProvider
 			            }
                         if (pageData == null)
                         {
-                            log.warn( "Specified Data Driver [" + currentTest.getDataDriver() + "] could not be located. Make sure it exists and it was populated prior to initializing your keyword factory" );
                             if ( currentTest.isActive() )
                                 sC.addActiveTest( currentTest );
                             else
