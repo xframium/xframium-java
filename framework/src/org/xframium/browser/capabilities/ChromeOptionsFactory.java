@@ -78,7 +78,7 @@ public class ChromeOptionsFactory extends AbstractBrowserCapability{
 				}
 			}
 			
-			else if(name.equalsIgnoreCase("prefs")) {
+			else {
 				Map<String, Object> optionsMap = (Map<String, Object>) options.get(name);
 				chromeOptions.setExperimentalOption(name, optionsMap);
 			}
