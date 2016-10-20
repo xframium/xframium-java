@@ -654,6 +654,22 @@ public class SeleniumElement extends AbstractElement
                 getKey(), null, 0, "", webElement instanceof CachedElement, null );
         return returnValue;
     }
+    
+    
+    @Override
+    protected boolean _isEnabled()
+    {
+    	 long startTime = System.currentTimeMillis();
+         WebElement webElement = (WebElement) getElement();
+         
+         boolean returnValue = webElement.isEnabled();
+         
+         PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "enabled", System.currentTimeMillis(), System.currentTimeMillis() - startTime, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE,
+                 getKey(), null, 0, "", webElement instanceof CachedElement, null );
+         return returnValue;
+         
+    }
+   
 
     private WebDriver getNativeDriver()
     {

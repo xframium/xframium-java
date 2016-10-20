@@ -185,6 +185,8 @@ public interface Element
 	public Point getAt();
 	
 	public boolean isFocused();
+	
+	public boolean isEnabled();
 	/**
 	 * Wait for visible.
 	 *
