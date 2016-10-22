@@ -188,8 +188,17 @@ public class ExcelDataProvider implements DataProvider
 						break;
 				}
 
-				Device currentDevice = new SimpleDevice( getCellValue( currentRow.getCell( 0 ) ), getCellValue( currentRow.getCell( 1 ) ), getCellValue( currentRow.getCell( 2 ) ), getCellValue( currentRow.getCell( 3 ) ), getCellValue( currentRow.getCell( 4 ) ), getCellValue( currentRow.getCell( 5 ) ), getCellValue(
+				SimpleDevice currentDevice = new SimpleDevice( getCellValue( currentRow.getCell( 0 ) ), getCellValue( currentRow.getCell( 1 ) ), getCellValue( currentRow.getCell( 2 ) ), getCellValue( currentRow.getCell( 3 ) ), getCellValue( currentRow.getCell( 4 ) ), getCellValue( currentRow.getCell( 5 ) ), getCellValue(
 						currentRow.getCell( 6 ) ), Integer.parseInt( getCellValue( currentRow.getCell( 7 ) ) ), driverName, Boolean.parseBoolean( getCellValue( currentRow.getCell( 8 ) ) ), null );
+				
+				String cloud = getCellValue( currentRow.getCell( 9 ) );
+				String tagNames = getCellValue( currentRow.getCell( 10 ) );
+				
+				if ( tagNames != null && !tagNames.trim().isEmpty() )
+                    currentDevice.setTagNames( tagNames.split( "," ) );
+                
+                if ( cloud != null && !cloud.trim().isEmpty() )
+                    currentDevice.setCloud( cloud );
 				
 				deviceList.add( currentDevice );
 

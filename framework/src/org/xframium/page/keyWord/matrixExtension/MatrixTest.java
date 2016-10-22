@@ -20,6 +20,7 @@ public class MatrixTest
     private String os;
     private String type;
     private String contentKeys;
+    private String deviceTags;
 
     public MatrixTest( String testDefinition )
     {
@@ -91,7 +92,7 @@ public class MatrixTest
     
     public KeyWordTest createTest()
     {
-        KeyWordTest kTest = new KeyWordTest( name, active, dataProvider, dataDriver, timed, linkId, os, threshold, description, tagNames, contentKeys );
+        KeyWordTest kTest = new KeyWordTest( name, active, dataProvider, dataDriver, timed, linkId, os, threshold, description, tagNames, contentKeys, deviceTags );
         
         int currentPosition = 0;
         
@@ -214,6 +215,10 @@ public class MatrixTest
 
                 case 12:
                     contentKeys = parseString( testArray[i], null );
+                    break;
+                    
+                case 13:
+                    deviceTags = parseString( testArray[i], null );
                     break;
 
             }

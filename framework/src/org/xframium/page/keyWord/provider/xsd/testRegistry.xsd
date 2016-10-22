@@ -52,7 +52,7 @@
     <attribute name="active" type="boolean" use="optional" default="true" />
     <attribute name="os" type="string" use="optional" />
     <attribute name="contentKeys" type="string" use="optional" />
-
+    <attribute name="deviceTags" type="string" use="optional" />
   </complexType>
 
   <complexType name="Description">
@@ -157,7 +157,7 @@
     <attribute name="context" type="string" use="optional" />
     <attribute name="device" type="string" use="optional" />
     <attribute name="tagNames" type="string" use="optional" />
-
+    <attribute name="deviceTags" type="string" use="optional" />
   </complexType>
 
   <complexType name="Token">

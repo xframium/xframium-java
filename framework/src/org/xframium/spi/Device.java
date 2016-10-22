@@ -99,6 +99,11 @@ public interface Device
 	String getBrowserVersion();
 	public void setBrowserVersion( String browserName );
 	
+	
+	String[] getTagNames();
+    public void setTagNames( String[] tagNames );
+    public void addTag( String tagName );
+	
 	/**
 	 * Gets the available devices.
 	 *

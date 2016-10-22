@@ -29,6 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
+import org.testng.SkipException;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.container.SuiteContainer;
 import org.xframium.content.ContentManager;
@@ -142,6 +143,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     private String device;
     
     private String[] tagNames;
+    private String[] deviceTags;
     
     protected String kwName = "N/A";
     protected String kwDescription;
@@ -156,6 +158,14 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         if ( tagNames != null && !tagNames.isEmpty() )
         {
             this.tagNames = tagNames.split( "," );
+        }
+    }
+    
+    public void setDeviceTags( String deviceTags )
+    {
+        if ( deviceTags != null && !deviceTags.isEmpty() )
+        {
+            this.deviceTags = deviceTags.split( "," );
         }
     }
     
@@ -642,6 +652,34 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 
             }
             
+            //
+            // Device tagging implementation
+            //
+            if ( deviceTags != null && deviceTags.length > 0 && PageManager.instance().getDeviceTag( webDriver ) != null && PageManager.instance().getDeviceTag( webDriver ).length > 0 )
+            {
+                boolean tagFound = false;
+                for ( String localTag : deviceTags )
+                {
+                    for ( String deviceTag : PageManager.instance().getDeviceTag( webDriver ) )
+                    {
+                        if ( localTag.toUpperCase().trim().equals( deviceTag.toUpperCase() ) )
+                        {
+                            tagFound = true;
+                            break;
+                        }
+                    }
+                    if ( tagFound )
+                        break;
+                }
+                
+                if ( !tagFound )
+                {
+                    if ( log.isInfoEnabled() )
+                        log.info( Thread.currentThread().getName() + ": This step was ignored as the tag was not specified" );
+                    return true;
+                }
+            }
+
             //
             // Check for tag names
             //

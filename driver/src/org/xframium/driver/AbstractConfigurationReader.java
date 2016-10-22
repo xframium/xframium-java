@@ -350,7 +350,14 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         try
         {
             if( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )
-                DebugManager.instance().launchBrowser( InetAddress.getLocalHost().getHostAddress(), 8870 );
+            {
+                String debuggerHost = System.getProperty( "X_DEBUGGER_HOST" );
+                if ( debuggerHost == null )
+                {
+                    debuggerHost = "127.0.0.1";
+                }
+                DebugManager.instance().launchBrowser( debuggerHost, 8870 );
+            }
             
             _executeTest( sC );
             

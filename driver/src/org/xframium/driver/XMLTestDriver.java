@@ -55,6 +55,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
     public void testDriver( TestName testName ) throws Throwable
     {
         String deviceOs = getDevice().getOs();
+        String[] deviceTags = getDevice().getTagNames();
         boolean returnValue = false;
 
         KeyWordTest test = KeyWordDriver.instance().getTest( testName.getTestName().split( "\\." )[ 0 ] );
@@ -96,6 +97,41 @@ public class XMLTestDriver extends AbstractSeleniumTest
                     throw PageManager.instance().getThrowable();
                 }
             }
+            
+            //
+            // Device tagging implementation
+            //
+            if ( deviceTags != null && deviceTags.length > 0 )
+            {
+                boolean tagFound = false;
+                if ( test.getDeviceTags() != null && test.getDeviceTags().length > 0 )
+                {
+                    for ( String localTag : test.getDeviceTags() )
+                    {
+                        for ( String deviceTag : deviceTags )
+                        {
+                            if ( localTag.toUpperCase().trim().equals( deviceTag.toUpperCase() ) )
+                            {
+                                tagFound = true;
+                                break;
+                            }
+                        }
+                        if ( tagFound )
+                            break;
+                    }
+                }
+                
+                if ( !tagFound )
+                {
+                    PageManager.instance().setThrowable( new SkipException( "This test did not contain the specified tag and will be skipped" ) );
+                    PageManager.instance().addExecutionLog( getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), "_SKIPPED", System.currentTimeMillis() - 5000, 5000, StepStatus.FAILURE_IGNORED,
+                    PageManager.instance().getThrowable().getMessage(), PageManager.instance().getThrowable(), 0, "", false, new String[] { PageManager.instance().getThrowable().getMessage() } );
+                    
+                    throw PageManager.instance().getThrowable();
+                }
+            }
+            
+            
     		
             if ( DeviceManager.instance().isDryRun() )
             {

@@ -583,6 +583,9 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         if ( device.getCloud() != null && !device.getCloud().isEmpty() )
             currentDevice.setCloud( device.getCloud() );
         
+        if ( device.getTagNames() != null && !device.getTagNames().trim().isEmpty() )
+            currentDevice.setTagNames( device.getTagNames().split( "," ) );
+        
         List<Object> list = null;
         String factoryName = null;
         Map<String, Object> keyOptions = null;
@@ -851,6 +854,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         dC.getPropertyMap().putAll( configProperties );
         dC.setEmbeddedServer( xRoot.getDriver().isEmbeddedServer() );
         dC.setDriverType( DriverType.valueOf( xRoot.getDriver().getType() ) );
+        dC.setDeviceTags( xRoot.getDriver().getDeviceTags() );
         
         if ( xRoot.getDriver().getExtractors() != null )
         {
@@ -916,7 +920,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      */
     private KeyWordTest parseTest( XTest xTest, String typeName )
     { 
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags() );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
 
@@ -948,7 +952,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                                                                                  xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
                                                                                  xStep.getOs(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
-                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint() );
+                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags() );
             
             parseParameters( xStep.getParameter(), testName, xStep.getName(), typeName, step );
             parseTokens( xStep.getToken(), testName, xStep.getName(), typeName, step );

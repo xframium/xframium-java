@@ -77,6 +77,8 @@ public class KeyWordTest
 
     /** The content keys */
     private String[] contentKeys;
+    
+    private String[] deviceTags;
 
     /** The step list. */
     private List<KeyWordStep> stepList = new ArrayList<KeyWordStep>( 10 );
@@ -107,7 +109,7 @@ public class KeyWordTest
      * @param contentKeys
      *            the content keys
      */
-    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys )
+    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys, String deviceTags )
     {
         this.name = name;
         this.active = active;
@@ -119,7 +121,7 @@ public class KeyWordTest
         this.os = os;
         this.threshold = threshold;
         this.description = description;
-
+        
         if ( testTags != null )
             this.testTags = testTags.split( "," );
         else
@@ -129,6 +131,9 @@ public class KeyWordTest
             this.contentKeys = contentKeys.split( "\\|" );
         else
             this.contentKeys = new String[] { "" };
+        
+        if ( deviceTags != null && !deviceTags.trim().isEmpty() )
+            this.deviceTags = deviceTags.split( "," );
     }
 
     /**
@@ -140,12 +145,18 @@ public class KeyWordTest
      */
     public KeyWordTest copyTest( String testName )
     {
-        KeyWordTest newTest = new KeyWordTest( testName, active, null, dataDriver, timed, linkId, os, threshold, description, null, null );
+        KeyWordTest newTest = new KeyWordTest( testName, active, null, dataDriver, timed, linkId, os, threshold, description, null, null, null );
         newTest.dataProviders = dataProviders;
         newTest.stepList = stepList;
         newTest.testTags = testTags;
         newTest.contentKeys = contentKeys;
+        newTest.deviceTags = deviceTags;
         return newTest;
+    }
+
+    public String[] getDeviceTags()
+    {
+        return deviceTags;
     }
 
     /**
@@ -161,6 +172,13 @@ public class KeyWordTest
     public String getDescription()
     {
         return description;
+    }
+    
+    
+
+    public String[] getTestTags()
+    {
+        return testTags;
     }
 
     /**
@@ -384,6 +402,20 @@ public class KeyWordTest
             return false;
 
         for ( String testTag : testTags )
+        {
+            if ( tagName.equalsIgnoreCase( testTag ) )
+                return true;
+        }
+
+        return false;
+    }
+    
+    public boolean isDeviceTagged( String tagName )
+    {
+        if ( deviceTags == null || deviceTags.length <= 0 )
+            return false;
+
+        for ( String testTag : deviceTags )
         {
             if ( tagName.equalsIgnoreCase( testTag ) )
                 return true;

@@ -40,7 +40,7 @@ public class SQLDataProvider implements DataProvider
     // class data
     //
 
-    private static final String DEF_QUERY = "SELECT NAME, DEVICE_ID, MANUFACTURER, MODEL, OS, OS_VERSION, BROWSER_NAME, BROWSER_VERSION, ACTIVE, AVAILABLE, CLOUD \n" + "FROM DEVICES";
+    private static final String DEF_QUERY = "SELECT NAME, DEVICE_ID, MANUFACTURER, MODEL, OS, OS_VERSION, BROWSER_NAME, BROWSER_VERSION, ACTIVE, AVAILABLE, CLOUD, TAG_NAMES \n" + "FROM DEVICES";
 
     private static final String DEF_CAP_QUERY = "SELECT DEVICE_NAME, NAME, CLASS, VALUE \n" + "FROM DEVICE_CAPABILITIES";
 
@@ -134,6 +134,7 @@ public class SQLDataProvider implements DataProvider
                 String active = parseString( (String) deviceData[i][8], null, true );
                 Number available = (Number) deviceData[i][9];
                 String cloud = parseString( (String) deviceData[i][10], null, true );
+                String tagNames = parseString( (String) deviceData[i][11], null, true );
 
                 String driverName = "";
                 switch ( driverType )
@@ -154,11 +155,18 @@ public class SQLDataProvider implements DataProvider
                     case WEB:
                         driverName = "WEB";
                         break;
+                        
+                    case WINDOWS:
+                        driverName = "WINDOWS";
+                        break;
                 }
 
                 SimpleDevice currentDevice = new SimpleDevice( name, manuf, model, os, os_ver, browser, browser_ver, available.intValue(), driverName, "Y".equals( active ), id );
 
-                if ( cloud != null && !cloud.isEmpty() )
+                if ( tagNames != null && !tagNames.trim().isEmpty() )
+                    currentDevice.setTagNames( tagNames.split( "," ) );
+                
+                if ( cloud != null && !cloud.trim().isEmpty() )
                     currentDevice.setCloud( cloud );
 
                 devicesByName.put( name, currentDevice );

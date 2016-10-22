@@ -340,7 +340,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 */
 	private KeyWordTest parseTest( Test xTest, String typeName )
 	{
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags() );
 		
         
 		KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
@@ -381,7 +381,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
                                                                                  xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
                                                                                  xStep.getOs(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
-                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint() );
+                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags() );
 		    
 		    parseParameters( xStep.getParameter(), testName, xStep.getName(), typeName, step );
 		    parseTokens( xStep.getToken(), testName, xStep.getName(), typeName, step );
