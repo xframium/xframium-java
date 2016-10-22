@@ -39,7 +39,7 @@
 
 
 
-  <test name="xFramium General KeyWord Test" active="true" dataProvider="callTest">
+  <test name="xFramium General KeyWord Test" active="false" dataProvider="callTest">
     <description>Tests the general keywords that apply to both Web and Native applications across web and mobile devices</description>
 
     <step type="CALL" name="kw-exists" page="home" />
@@ -71,10 +71,46 @@
     <step type="CALL" name="kw-browser" page="home" />
   </test>
   
-  <test name="xFramium dev" active="false" dataProvider="callTest">
-    <description>Tests the general keywords that apply to both Web and Native applications across web and mobile devices</description>
+  <test name="xFramium OS Step Filter" active="true" dataProvider="callTest" os="WINDOWS">
+    <description>Tests that the specified step is ignored for a specific OS type</description>
 
-    <step type="CALL" name="kw-browser" page="home" />
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+    <step type="CLICK" name="toggleButton" page="home" os="ANDROID,IOS" />
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+
+  </test>
+  
+  <test name="xFramium device tag Step Filter" active="true" dataProvider="callTest" deviceTags="tagTest">
+    <description>Tests that the specified step is ignored for a specific OS type</description>
+
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+    <step type="CLICK" name="toggleButton" page="home" deviceTags="badClick" />
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+    
+    <step type="CLICK" name="toggleButton" page="home" deviceTags="goodClick" />
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="0" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+
 
   </test>
 

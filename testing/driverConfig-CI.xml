@@ -5,7 +5,7 @@
   <application provider="LOCAL" name="Google Search Test" appPackage="" bundleId="" url="http://xframium.org/testing.html" iosInstall="" androidInstall="" />
 
   <devices provider="LOCAL">
-    <device name="Firefox Local" manufacturer="Mozilla" model="Firefox" active="false" availableDevices="1" os="Windows" browserName="firefox" osVersion="8.1" browserVersion="46" cloud="EMBEDDED" />
+    <device name="Firefox Local" manufacturer="Mozilla" model="Firefox" active="false" availableDevices="1" os="Windows" browserName="firefox" osVersion="8.1" browserVersion="46" cloud="EMBEDDED" tagNames="testTag,goodClick" />
     <device name="Chrome Local" manufacturer="Google" model="Chrome" active="false" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" cloud="EMBEDDED" >
       <objectCapability name="chrometest">
         <capabilities factoryName="ChromeOptions">
