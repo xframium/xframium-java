@@ -101,6 +101,7 @@ public abstract class AbstractElementProvider implements ElementProvider
 	    {
 	        siteContainer = new SiteContainer( elementDescriptor.getSiteName() );
 	        siteTree.put( siteContainer.getSiteName(), siteContainer );
+	        siteList.add( siteContainer );
 	    }
 	    
 	    PageContainer elementList = siteContainer.getPage( elementDescriptor.getPageName() );
