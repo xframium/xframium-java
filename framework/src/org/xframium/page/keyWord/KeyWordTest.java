@@ -320,7 +320,12 @@ public class KeyWordTest
             Page page = null;
             String siteName = step.getSiteName();
             if ( siteName == null || siteName.isEmpty() )
-                siteName = sC.getSiteName();
+            {
+                if ( sC != null )
+                    siteName = sC.getSiteName();
+                else
+                    siteName = PageManager.instance().getSiteName();
+            }
             
             if ( step.getPageName() != null )
             {
