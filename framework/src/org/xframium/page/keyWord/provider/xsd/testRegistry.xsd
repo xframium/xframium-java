@@ -31,6 +31,7 @@
   </complexType>
 
   <complexType name="Page">
+    <attribute name="site" type="string" use="optional" />
     <attribute name="name" type="string" use="required" />
     <attribute name="class" type="string" use="optional" />
   </complexType>
@@ -69,6 +70,7 @@
     </sequence>
     <attribute name="name" type="string" use="required" />
     <attribute name="page" type="string" use="optional" />
+    <attribute name="site" type="string" use="optional" />
     <attribute name="type" use="required">
       <simpleType>
         <restriction base="string">

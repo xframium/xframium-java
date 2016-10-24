@@ -46,6 +46,7 @@ public class Tester
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( SeleniumElement.class, new ReflectionSerializer() );
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( Capabilities.class, new MapSerializer() );
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( XMLElementProvider.class, new ReflectionSerializer() );
+        SerializationManager.instance().getDefaultAdapter().addCustomMapping( XMLElementProvider.class, new ReflectionSerializer() );
         
         List x = new ArrayList();
         x.add( new KWSClick() );
@@ -61,9 +62,5 @@ public class Tester
         PageManager.instance().setElementProvider( new XMLElementProvider( new File( "C:\\Projects\\Git\\morelandLabs\\customerProjects\\xmlDriven\\verizon\\pageElements.xml" ) ) );
         
 
-        
-        System.out.println( new String( SerializationManager.instance().toByteArray( PageManager.instance().getElementProvider().getElementTree() ) ) );
-        
-        
     }
 }

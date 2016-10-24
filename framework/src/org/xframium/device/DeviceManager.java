@@ -467,9 +467,7 @@ public class DeviceManager implements ArtifactListener
                 int filteredTests = 0;
                 
                 int successFlag = successful ? 1 : 0;
-                
-                if ( !successful )
-                    System.out.println(  "FAILED" );
+
                 
                 if ( DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) != null && !DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ).isEmpty() )
                 {

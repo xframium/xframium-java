@@ -71,6 +71,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
     /** The page name. */
     private String pageName;
+    
+    private String siteName;
 
     /** The active. */
     private boolean active;
@@ -169,6 +171,22 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         }
     }
     
+    
+    
+    public String getSiteName()
+    {
+        return siteName;
+    }
+
+
+
+    public void setSiteName( String siteName )
+    {
+        this.siteName = siteName;
+    }
+
+
+
     public boolean isStartAt()
     {
         return startAt;
@@ -541,7 +559,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 if ( log.isDebugEnabled() )
                     log.debug( Thread.currentThread().getName() + ": CONTEXT element found as " + currentElement );
 
-                ElementDescriptor elementDescriptor = new ElementDescriptor( PageManager.instance().getSiteName(), getPageName(), elementName );
+                ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance().getSiteName(), getPageName(), elementName );
                 Element myElement = PageManager.instance().getElementProvider().getElement( elementDescriptor ).cloneElement();
 
                 if ( myElement == null )
@@ -571,9 +589,10 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 if ( log.isInfoEnabled() )
                     log.info( Thread.currentThread().getName() + ": Cloning Element " + useName + " on page " + pageName );
                 
-                Element originalElement = pageObject.getElement( pageName, useName );
+                ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance().getSiteName(), pageName, useName );
+                Element originalElement = PageManager.instance().getElementProvider().getElement( elementDescriptor ).cloneElement();
                 if ( originalElement == null )
-                    throw new ObjectConfigurationException( pageName, useName );
+                    throw new ObjectConfigurationException( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance().getSiteName(), pageName, useName );
                 
                 Element clonedElement = originalElement.cloneElement();
                 clonedElement.setDriver( webDriver );
@@ -590,14 +609,15 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             {
                 try
                 {
-                    Element elt = pageObject.getElement( pageName, useName ).cloneElement();
+                    ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance().getSiteName(), pageName, useName );
+                    Element elt = PageManager.instance().getElementProvider().getElement( elementDescriptor ).cloneElement();
                     elt.setDriver( webDriver );
                     elt.setCacheNative( true );
                     return elt;
                 }
                 catch( NullPointerException e )
                 {
-                    throw new ObjectConfigurationException( pageName, useName );
+                    throw new ObjectConfigurationException( siteName == null ? PageManager.instance().getSiteName() : siteName, pageName, useName );
                 }
             }
         }

@@ -20,9 +20,9 @@
  *******************************************************************************/
 package org.xframium.page.element.provider;
 
-import java.util.Map;
+import java.util.List;
+import org.xframium.container.SiteContainer;
 import org.xframium.page.ElementDescriptor;
-import org.xframium.page.PageContainer;
 import org.xframium.page.element.Element;
 
 // TODO: Auto-generated Javadoc
@@ -41,7 +41,7 @@ public interface ElementProvider
 	Element getElement( ElementDescriptor elementDescriptor );
 	
 	boolean isInitialized();
+	List<SiteContainer> getSiteList();
 	
-	public Map<String,PageContainer> getElementTree();
 	public String getSiteName();
 }

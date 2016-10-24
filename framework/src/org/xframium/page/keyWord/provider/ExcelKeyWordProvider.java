@@ -164,7 +164,7 @@ public class ExcelKeyWordProvider implements KeyWordProvider
                     if (log.isDebugEnabled())
                         log.debug( "Creating page as " + useClass.getSimpleName() + " for " + pageName );
         
-                    sC.addPageModel( pageName, useClass );
+                    sC.addPageModel( sC.getSiteName(), pageName, useClass );
                 }
                 catch( Exception e )
                 {

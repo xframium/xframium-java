@@ -310,6 +310,7 @@ public class KeyWordTest
         
         String executionId = PageManager.instance().getExecutionId( webDriver );
         String deviceName = PageManager.instance().getDeviceName( webDriver );
+        
 
         for ( KeyWordStep step : stepList )
         {
@@ -317,24 +318,28 @@ public class KeyWordTest
                 log.debug( "Executing Step [" + step.getName() + "]" );
 
             Page page = null;
+            String siteName = step.getSiteName();
+            if ( siteName == null || siteName.isEmpty() )
+                siteName = sC.getSiteName();
+            
             if ( step.getPageName() != null )
             {
-                page = pageMap.get( step.getPageName() );
+                page = pageMap.get( siteName + "." + step.getPageName() );
                 if ( page == null )
                 {
                     if ( log.isInfoEnabled() )
-                        log.info( "Creating Page [" + step.getPageName() + "]" );
+                        log.info( "Creating Page [" + siteName + "." + step.getPageName() + "]" );
 
-                    page = PageManager.instance().createPage( KeyWordDriver.instance().getPage( step.getPageName() ), webDriver );
+                    page = PageManager.instance().createPage( KeyWordDriver.instance().getPage(step.getSiteName() != null && step.getSiteName().trim().length() > 0 ? step.getSiteName() : PageManager.instance().getSiteName(), step.getPageName() ), webDriver );
                     if ( page == null )
                     {
-                        PageManager.instance().setThrowable( new ObjectConfigurationException( step.getPageName(), null ) );
+                        PageManager.instance().setThrowable( new ObjectConfigurationException( step.getSiteName() == null ? PageManager.instance().getSiteName() : step.getSiteName(), step.getPageName(), null ) );
                         PageManager.instance().addExecutionLog( executionId, deviceName, step.getPageName(), step.getName(), "_" + step.getClass().getSimpleName(), startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE,
                                 PageManager.instance().getThrowable().getMessage(), PageManager.instance().getThrowable(), 0, "", false, new String[] { PageManager.instance().getThrowable().getMessage() } );
                         stepSuccess = false;
                         return false;
                     }
-                    pageMap.put( step.getPageName(), page );
+                    pageMap.put( siteName + "." + step.getPageName(), page );
                 }
             }
 

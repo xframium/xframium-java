@@ -143,6 +143,7 @@ public interface KeyWordStep
 	 *            the new name
 	 */
 	public void setName( String name );
+	
 
 	/**
 	 * Checks if is active.
@@ -196,6 +197,16 @@ public interface KeyWordStep
 	 *            the new page name
 	 */
 	public void setPageName( String pageName );
+	
+	public String getSiteName();
+
+    /**
+     * Sets the page name.
+     *
+     * @param pageName
+     *            the new page name
+     */
+    public void setSiteName( String siteName );
 
 	/**
 	 * Checks if is timed.
