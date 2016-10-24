@@ -311,23 +311,27 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 */
 	private void parseModel( Model model, SuiteContainer sC )
 	{
-	    for ( org.xframium.page.keyWord.provider.xsd.Page page : model.getPage() )
+	    
+	    if ( model != null )
 	    {
-	        try
-	        {
-    	        Class useClass = KeyWordPage.class;
-    	        if ( page.getClazz() != null && !page.getClazz().isEmpty() )
-    	            useClass = ( Class<Page> ) Class.forName( page.getClazz() );
-    	        
-    	        if (log.isDebugEnabled())
-                    log.debug( "Creating page as " + useClass.getSimpleName() + " for " + page.getName() );
-    
-                sC.addPageModel( page.getSite() != null && page.getSite().trim().length() > 0 ? page.getSite() : sC.getSiteName(), page.getName(), useClass );
-	        }
-	        catch( Exception e )
-	        {
-	            log.error( "Error creating instance of [" + page.getClazz() + "]" );
-	        }
+    	    for ( org.xframium.page.keyWord.provider.xsd.Page page : model.getPage() )
+    	    {
+    	        try
+    	        {
+        	        Class useClass = KeyWordPage.class;
+        	        if ( page.getClazz() != null && !page.getClazz().isEmpty() )
+        	            useClass = ( Class<Page> ) Class.forName( page.getClazz() );
+        	        
+        	        if (log.isDebugEnabled())
+                        log.debug( "Creating page as " + useClass.getSimpleName() + " for " + page.getName() );
+        
+                    sC.addPageModel( page.getSite() != null && page.getSite().trim().length() > 0 ? page.getSite() : sC.getSiteName(), page.getName(), useClass );
+    	        }
+    	        catch( Exception e )
+    	        {
+    	            log.error( "Error creating instance of [" + page.getClazz() + "]" );
+    	        }
+    	    }
 	    }
 	}
 
