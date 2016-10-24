@@ -67,7 +67,7 @@ public class Execution {
     @XmlAttribute(name = "total", required = true)
     protected int total;
     @XmlAttribute(name = "success", required = true)
-    protected boolean success;
+    protected int success;
     @XmlAttribute(name = "fileName", required = true)
     protected String fileName;
     @XmlAttribute(name = "persona")
@@ -177,7 +177,7 @@ public class Execution {
      * Gets the value of the success property.
      * 
      */
-    public boolean isSuccess() {
+    public int isSuccess() {
         return success;
     }
 
@@ -185,7 +185,7 @@ public class Execution {
      * Sets the value of the success property.
      * 
      */
-    public void setSuccess(boolean value) {
+    public void setSuccess(int value) {
         this.success = value;
     }
 

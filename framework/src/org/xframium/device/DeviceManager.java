@@ -464,6 +464,12 @@ public class DeviceManager implements ArtifactListener
                 int appFailures = 0;
                 int cloudFailures = 0;
                 int configFailures = 0;
+                int filteredTests = 0;
+                
+                int successFlag = successful ? 1 : 0;
+                
+                if ( !successful )
+                    System.out.println(  "FAILED" );
                 
                 if ( DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) != null && !DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ).isEmpty() )
                 {
@@ -505,6 +511,11 @@ public class DeviceManager implements ArtifactListener
                                             case SCRIPT:
                                                 scriptFailures++;
                                                 break;
+                                                
+                                            case FILTERED:
+                                                successFlag = 2;
+                                                filteredTests++;
+                                                break;
                                         }
                                     }
                                 }
@@ -522,7 +533,7 @@ public class DeviceManager implements ArtifactListener
                     }
                 }
                 
-                runListener.afterRun( currentDevice, runKey, successful, stepsPassed, stepsFailed, stepsIgnored, startTime, stopTime, scriptFailures, configFailures, appFailures, cloudFailures );
+                runListener.afterRun( currentDevice, runKey, successFlag, stepsPassed, stepsFailed, stepsIgnored, startTime, stopTime, scriptFailures, configFailures, appFailures, cloudFailures, filteredTests );
             }
             catch( Exception e )
             {
