@@ -202,6 +202,7 @@
           <enumeration value="CONSOLE_LOG" />
           <enumeration value="REPORTIUM" />
           <enumeration value="DEBUGGER" />
+          <enumeration value="SAUCE_LABS" />
         </restriction>
       </simpleType>
     </attribute>
