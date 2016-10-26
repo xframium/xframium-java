@@ -60,31 +60,26 @@ public class KeyWordPageImpl extends AbstractPage implements KeyWordPage
         this( PageManager.instance().getElementProvider(), PageManager.instance().getSiteName() );
     }
 	
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.AbstractPage#getElement(java.lang.String, java.lang.String, java.lang.String)
-	 */
-	public Element getElement( String siteName, String pageName, String elementName )
-    {
-    	ElementDescriptor elementDescriptor = new ElementDescriptor( siteName, pageName, elementName );
-    	
-    	if ( log.isInfoEnabled() )
-    		log.info( Thread.currentThread().getName() + ": Attempting to locate element using [" + elementDescriptor.toString() + "]" + " - " + webDriver );
-    	
-    	Element myElement = elementProvider.getElement( elementDescriptor );
-    	
-    	if ( myElement == null )
-    	{
-    	    return null;
-    	}
-    	else
-    	{
-    	    myElement = myElement.cloneElement();
-    	    myElement.setDriver( webDriver );
+	@Override
+	public Element getElement( ElementDescriptor elementDescriptor )
+	{
+	    if ( log.isInfoEnabled() )
+            log.info( Thread.currentThread().getName() + ": Attempting to locate element using [" + elementDescriptor.toString() + "]" + " - " + webDriver );
+        
+        Element myElement = elementProvider.getElement( elementDescriptor );
+        
+        if ( myElement == null )
+        {
+            return null;
+        }
+        else
+        {
+            myElement = myElement.cloneElement();
+            myElement.setDriver( webDriver );
             return myElement;
-    	}
-    	
-    	
-    }
+        }
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.AbstractPage#getElement(java.lang.String, java.lang.String)

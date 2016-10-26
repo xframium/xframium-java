@@ -560,7 +560,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     log.debug( Thread.currentThread().getName() + ": CONTEXT element found as " + currentElement );
 
                 ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance().getSiteName(), getPageName(), elementName );
-                Element myElement = PageManager.instance().getElementProvider().getElement( elementDescriptor ).cloneElement();
+                Element myElement = pageObject.getElement( elementDescriptor ).cloneElement();
 
                 if ( myElement == null )
                 {
@@ -590,7 +590,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     log.info( Thread.currentThread().getName() + ": Cloning Element " + useName + " on page " + pageName );
                 
                 ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance().getSiteName(), pageName, useName );
-                Element originalElement = PageManager.instance().getElementProvider().getElement( elementDescriptor ).cloneElement();
+                Element originalElement = pageObject.getElement( elementDescriptor ).cloneElement();
                 if ( originalElement == null )
                     throw new ObjectConfigurationException( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance().getSiteName(), pageName, useName );
                 
@@ -610,7 +610,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 try
                 {
                     ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance().getSiteName(), pageName, useName );
-                    Element elt = PageManager.instance().getElementProvider().getElement( elementDescriptor ).cloneElement();
+                    Element elt = pageObject.getElement( elementDescriptor ).cloneElement();
                     elt.setDriver( webDriver );
                     elt.setCacheNative( true );
                     return elt;

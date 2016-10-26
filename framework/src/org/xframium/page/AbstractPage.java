@@ -75,11 +75,16 @@ public abstract class AbstractPage implements Page
     public Element getElement( String siteName, String pageName, String elementName )
     {
     	ElementDescriptor elementDescriptor = new ElementDescriptor( siteName, pageName, elementName );
+    	return getElement( elementDescriptor );
     	
-    	if ( log.isDebugEnabled() )
-    		log.debug( "Attempting to locate element using [" + elementDescriptor.toString() + "]" );
-    	
-    	return elementCache.get( elementDescriptor.toString() );
+    }
+    
+    public Element getElement( ElementDescriptor elementDescriptor )
+    {
+        if ( log.isDebugEnabled() )
+            log.debug( "Attempting to locate element using [" + elementDescriptor.toString() + "]" );
+        
+        return elementCache.get( elementDescriptor.toString() );
     }
     
     /* (non-Javadoc)
