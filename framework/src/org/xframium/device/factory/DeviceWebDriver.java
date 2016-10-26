@@ -566,7 +566,14 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
      */
     public String getWindowHandle()
     {
-        return webDriver.getWindowHandle();
+        try
+        {
+            return webDriver.getWindowHandle();
+        }
+        catch( Exception e )
+        {
+            return null;
+        }
     }
 
     /*

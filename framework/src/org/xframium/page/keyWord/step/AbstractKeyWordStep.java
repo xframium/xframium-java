@@ -37,6 +37,7 @@ import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.services.WindTunnel.Status;
 import org.xframium.page.ElementDescriptor;
@@ -761,6 +762,17 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 }
                 
                 returnValue = _executeStep( pageObject, ((altWebDriver != null) ? altWebDriver : webDriver), contextMap, dataMap, pageMap, sC );
+                
+                //
+                // If threshold was specified then make sure we cam in under it
+                //
+                if ( threshold > 0 )
+                {
+                    if ( System.currentTimeMillis() - startTime > threshold )
+                    {
+                        throw new ScriptException( "The current step failed to complete in the defined threshold. Expected[" + threshold + "ms] but it took [" + (System.currentTimeMillis() - startTime) + "ms]" );
+                    }
+                }
                 
                 KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE );
                 
