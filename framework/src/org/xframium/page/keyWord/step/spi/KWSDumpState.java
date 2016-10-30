@@ -23,24 +23,36 @@ package org.xframium.page.keyWord.step.spi;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.data.DataManager;
+import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.exception.ScriptException;
+import org.xframium.exception.XFramiumException;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.spi.RunDetails;
+import org.xframium.utility.ImageUtility;
 import org.xframium.utility.XMLEscape;
 
 public class KWSDumpState extends AbstractKeyWordStep
 {
+    private static NumberFormat numberFormat = new DecimalFormat( "0000" );
     public KWSDumpState()
     {
         kwName = "Platform Checkpoint";
@@ -54,6 +66,28 @@ public class KWSDumpState extends AbstractKeyWordStep
 	@Override
 	public synchronized boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
 	{
+	    String checkPointName = null;
+	    int historicalCount = -1;
+	    int deviationPercentage = -1;
+	    
+	    File checkPointFolder = null;
+	    
+	    if ( getParameterList().size() >= 1 )
+	    {
+	        checkPointFolder = new File( DataManager.instance().getReportFolder(), "historicalComparison" );
+	        checkPointFolder = new File( checkPointFolder, ( (DeviceWebDriver) webDriver ).getDevice().getKey() );
+
+	        checkPointName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+	        if ( getParameterList().size() >= 2 )
+	        {
+	            historicalCount = Integer.parseInt( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" );
+	            if ( getParameterList().size() >= 3 )
+	            {
+	                deviationPercentage = Integer.parseInt( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" );
+	            }
+	        }
+	    }
+	    
         long startTime = System.currentTimeMillis();
         File rootFolder = new File( DataManager.instance().getReportFolder(), RunDetails.instance().getRootFolder() );
         File useFolder = new File( rootFolder, "artifacts" );
@@ -68,19 +102,77 @@ public class KWSDumpState extends AbstractKeyWordStep
             try
             {
                 byte[] screenShot = ( ( TakesScreenshot ) webDriver ).getScreenshotAs( OutputType.BYTES );
+                if ( checkPointName != null )
+                    screenFile = new File( useFolder, "grid-" + checkPointName.replace("-", "_" ) + "-" + ( (DeviceWebDriver) webDriver ).getDevice().getKey() + ".png" );
+                else
+                    screenFile = File.createTempFile( "state", ".png", useFolder );
                 
-                screenFile = File.createTempFile( "state", ".png", useFolder );
                 contextMap.put( "_SCREENSHOT", screenFile.getAbsolutePath() );
                 screenFile.getParentFile().mkdirs();
                 os = new BufferedOutputStream( new FileOutputStream( screenFile ) );
                 os.write( screenShot );
                 os.flush();
                 os.close();
+                
+                if ( checkPointFolder != null )
+                {
+                    //
+                    // Dump state as historical 
+                    //
+                    checkPointFolder.mkdirs();
+                    
+                    if ( historicalCount >= 0 )
+                    {
+                        List<File> historicalFiles = Arrays.asList( checkPointFolder.listFiles( new CheckPointFiles( checkPointName + "-" ) ) );
+                        Collections.sort( historicalFiles );
+                        Collections.reverse( historicalFiles );
+                        
+                        if ( historicalFiles.size() >= historicalCount )
+                            historicalFiles.get( 0 ).delete();
+                        
+                        for ( File file : historicalFiles )
+                        {
+                            String[] fileParts = file.getName().split( "\\." );
+                            int fileNumber = Integer.parseInt( fileParts[ 0 ].substring( checkPointName.length() + 1 ) );
+                            
+                            file.renameTo( new File( file.getParentFile(), checkPointName + "-" + numberFormat.format( fileNumber+1 ) + ".png" ) );
+                        }
+                        
+                        os = new BufferedOutputStream( new FileOutputStream( new File( checkPointFolder, checkPointName + "-0000.png" ) ) );
+                    }
+                    else
+                        os = new BufferedOutputStream( new FileOutputStream( new File( checkPointFolder, checkPointName + ".png" ) ) );
+
+                    os.write( screenShot );
+                    os.flush();
+                    os.close();
+                    
+                    if ( deviationPercentage >= 0 )
+                    {
+                        //
+                        // Compare with the last image
+                        //
+                        File newFile = new File( checkPointFolder, checkPointName + "-0000.png" );
+                        File previousFile = new File( checkPointFolder, checkPointName + "-0001.png" );
+                        
+                        if ( newFile.exists() && previousFile.exists() )
+                        {
+                            double computedDeviation = ( ImageUtility.compareImages( ImageIO.read( newFile ), ImageIO.read( previousFile ) ) * 100 );
+                            
+                            if ( computedDeviation > deviationPercentage )
+                                throw new ScriptException( "Historical image comparison failed.  Expected a maximum difference of [" + deviationPercentage + "] but found [" + computedDeviation + "]" );
+                        }
+                    }
+                }
+            }
+            catch( ScriptException xe )
+            {
+                throw xe;
             }
             catch( Exception e )
             {
-                log.error( "Error taking screenshot", e );
-                try { os.close(); } catch( Exception e2 ) {}
+                e.printStackTrace(  );
+                throw new ScriptException( "Error taking screenshot" );
             }
             finally
             {
@@ -120,6 +212,7 @@ public class KWSDumpState extends AbstractKeyWordStep
         catch( Exception e )
         {
             log.warn( "Could not write to output file", e );
+            throw new ScriptException( "Error capturing device source" );
         }
         finally
         {
@@ -139,6 +232,21 @@ public class KWSDumpState extends AbstractKeyWordStep
 	{
 	    return false;
 	}
-
 	
+	private class CheckPointFiles implements FilenameFilter
+	{
+	    private String checkPointName;
+	    
+	    public CheckPointFiles( String checkPointName )
+	    {
+	        this.checkPointName = checkPointName;
+	    }
+	    
+        @Override
+        public boolean accept( File dir, String name )
+        {
+            return ( name.startsWith( checkPointName ) );
+        }
+	}
+
 }
