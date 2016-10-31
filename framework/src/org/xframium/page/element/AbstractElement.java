@@ -148,6 +148,8 @@ public abstract class AbstractElement implements Element
 	protected abstract boolean _release();
 	
 	protected abstract boolean _isFocused();
+	
+	protected abstract boolean _isEnabled();
 	/**
 	 * _wait for visible.
 	 *
@@ -722,5 +724,9 @@ public abstract class AbstractElement implements Element
         return _getAt();
     }
 
-
+	@Override
+    public boolean isEnabled()
+    {
+        return _isEnabled();
+    }
 }
