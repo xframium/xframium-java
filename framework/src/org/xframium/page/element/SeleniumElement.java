@@ -113,6 +113,7 @@ public class SeleniumElement extends AbstractElement
     {
         SeleniumElement element = new SeleniumElement( getBy(), getKey(), getElementName(), getPageName(), getContextElement(), locatedElement, index );
         element.setDriver( webDriver );
+        element.setDeviceContext( getDeviceContext() );
         return element;
     }
 
@@ -298,7 +299,14 @@ public class SeleniumElement extends AbstractElement
      */
     private By useBy()
     {
-        if ( getBy().getContext() != null )
+        if ( getDeviceContext() != null && !getDeviceContext().trim().isEmpty() )
+        {
+            if ( webDriver instanceof VisualDriverProvider )
+                useVisualDriver = true;
+            else if ( webDriver instanceof ContextAware )
+                ((ContextAware) webDriver).context( getDeviceContext() );
+        }
+        else if ( getBy().getContext() != null )
         {
             if ( webDriver instanceof VisualDriverProvider )
                 useVisualDriver = true;

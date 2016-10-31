@@ -289,6 +289,9 @@ public interface Element
 	 */
 	public void setContext( Element context );
 	
+	public void setDeviceContext( String deviceContext );
+	public String getDeviceContext();
+	
 	
 	/**
 	 * The Enum TAG.

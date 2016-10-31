@@ -1,4 +1,4 @@
-package org.xframium.driver;
+ package org.xframium.driver;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -380,6 +380,9 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     {
                         elementDescriptor = new ElementDescriptor( page.getSite() != null && page.getSite().trim().length() > 0 ? page.getSite() : xRoot.getModel().getSiteName(), page.getName(), ele.getName() );
                         currentElement = ElementFactory.instance().createElement( BY.valueOf( ele.getDescriptor() ), ele.getValue(), ele.getName(), page.getName(), ele.getContextName() );
+                        
+                        if ( ele.getDeviceContext() != null && !ele.getDeviceContext().trim().isEmpty() )
+                            currentElement.setDeviceContext( ele.getDeviceContext() );
                         
                         if (log.isDebugEnabled())
                             log.debug( "Adding XML Element using [" + elementDescriptor.toString() + "] as [" + currentElement + "]" );

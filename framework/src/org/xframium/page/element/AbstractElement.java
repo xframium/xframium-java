@@ -195,6 +195,8 @@ public abstract class AbstractElement implements Element
 	/** The context. */
 	private Element context;
 	
+	private String deviceContext;
+	
 	/** The token map. */
 	private Map<String,String> tokenMap = null;
 	
@@ -204,6 +206,18 @@ public abstract class AbstractElement implements Element
 	public String getName()
 	{
 	    return elementName;
+	}
+	
+	@Override
+	public String getDeviceContext()
+	{
+	    return deviceContext;
+	}
+	@Override
+	public void setDeviceContext( String deviceContext )
+	{
+	    this.deviceContext = deviceContext;
+	    
 	}
 	
 	/**

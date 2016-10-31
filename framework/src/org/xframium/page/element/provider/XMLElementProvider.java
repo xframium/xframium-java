@@ -202,6 +202,9 @@ public class XMLElementProvider extends AbstractElementProvider
 	            ElementDescriptor elementDescriptor = new ElementDescriptor( site.getName(), page.getName(), ele.getName() );
 	            Element currentElement = ElementFactory.instance().createElement( BY.valueOf( ele.getDescriptor() ), ele.getValue(), ele.getName(), page.getName(), ele.getContextName() );
 	            
+	            if ( ele.getDeviceContext() != null )
+	                currentElement.setDeviceContext( ele.getDeviceContext() );
+	            
 	            if (log.isDebugEnabled())
 	                log.debug( "Adding XML Element using [" + elementDescriptor.toString() + "] as [" + currentElement + "]" );
 	            

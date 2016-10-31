@@ -132,6 +132,9 @@ public class CSVElementProvider extends AbstractElementProvider
 					
 					Element currentElement = ElementFactory.instance().createElement( BY.valueOf( lineData[ 3 ] ), lineData[ 4 ].replace( "$$", ","), lineData[ 2 ], lineData[ 1 ], contextName );
 					
+					if ( lineData.length > 6 )
+                        currentElement.setDeviceContext( lineData[ 6 ] );
+					
 					if ( log.isDebugEnabled() )
 						log.debug( "Adding CSV Element using [" + elementDescriptor.toString() + "] as [" + currentElement );
 					
