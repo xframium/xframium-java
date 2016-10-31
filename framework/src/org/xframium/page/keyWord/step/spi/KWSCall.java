@@ -22,6 +22,7 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordDriver;
@@ -58,12 +59,18 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSCall extends AbstractKeyWordStep
 {
-
+    public KWSCall()
+    {
+        kwName = "Call Test/Function";
+        kwDescription = "Allows the script to call another pre-defined function or test";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-call";
+        orMapping = false;
+    }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
 	@Override
-	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap ) throws Exception
+	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception
 	{
 		if ( log.isDebugEnabled() )
 			log.debug( "Execution Function " + getName() );
@@ -83,7 +90,10 @@ public class KWSCall extends AbstractKeyWordStep
 			}
 		}
 		
-		return KeyWordDriver.instance().executionFunction( getName(), webDriver, dataMap, pageMap );
+		if ( sC != null )
+			return sC.getTest( getName() ).executeTest(webDriver, contextMap, dataMap, pageMap, sC);
+		else
+			return KeyWordDriver.instance().executionFunction( getName(), webDriver, dataMap, pageMap, sC );
 	}
 	
 	public boolean isRecordable()

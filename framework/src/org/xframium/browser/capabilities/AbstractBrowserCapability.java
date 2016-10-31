@@ -18,10 +18,10 @@ public abstract class AbstractBrowserCapability implements BrowserCapabilityFact
 	 * @return DesiredCapabilities
 	 */
 
-	protected abstract DesiredCapabilities _createBrowserOptions(DesiredCapabilities dc, Map <String,List<String>> options);
+	protected abstract DesiredCapabilities _createBrowserOptions(DesiredCapabilities dc, Map <String,Object> options);
 	
 	@Override
-	public DesiredCapabilities createBrowserOptions(DesiredCapabilities dc, Map <String,List<String>> options) {
+	public DesiredCapabilities createBrowserOptions(DesiredCapabilities dc, Map <String,Object> options) {
 		return _createBrowserOptions(dc, options);
 	}
 

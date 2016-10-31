@@ -54,6 +54,7 @@
 		</attribute>
 		<attribute name="value" type="string" use="required" />
 		<attribute name="contextName" type="string" use="optional" />
+        <attribute name="deviceContext" type="string" use="optional" />
 	</complexType>
 
 

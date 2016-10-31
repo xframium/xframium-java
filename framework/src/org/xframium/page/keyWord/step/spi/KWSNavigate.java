@@ -23,13 +23,15 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
+import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 
 
 public class KWSNavigate extends  AbstractKeyWordStep {
-
 
 
 	/**
@@ -59,14 +61,14 @@ public class KWSNavigate extends  AbstractKeyWordStep {
 	 * java.util.Map)
 	 */
 	@Override
-	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
 	{
 		Boolean success = false;
 		if ( pageObject == null )
-			throw new IllegalStateException( "There was no Page Object defined" );
+			throw new ScriptConfigurationException( "There was no Page Object defined" );
 		
 		if ( getParameterList().size() < 1)
-			throw new IllegalArgumentException( "Please provide the type of navigation as the first parameter" );
+			throw new ScriptConfigurationException( "Please provide the type of navigation as the first parameter" );
 		
 		try{
 			String NavigateType = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
@@ -86,25 +88,12 @@ public class KWSNavigate extends  AbstractKeyWordStep {
 				success=true;
 				break;			
 			default:
-				throw new IllegalArgumentException( "Parameter NavigationType should be FORWARD|BACK|REFRESH|MAXIMIZE" );
+				throw new ScriptConfigurationException( "Parameter NavigationType should be FORWARD|BACK|REFRESH|MAXIMIZE" );
 			}
 		}
 		catch(Exception c){
-			throw new IllegalStateException( c );
+			throw new ScriptException( "Error executing navigation command: " + c.getMessage() );
 		}
 		return  success;
 	}
-
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
-	 */
-	public boolean isRecordable()
-	{
-		return false;
-	}
-
-
-
-
-
 }

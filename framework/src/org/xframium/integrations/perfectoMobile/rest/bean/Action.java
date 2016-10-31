@@ -205,16 +205,5 @@ public class Action extends AbstractBean
 		this.failureDescription = failureDescription;
 	}
 	
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 * @throws Exception the exception
-	 */
-	public static void main( String[] args ) throws Exception
-	{
-		XMLBeanFactory x = new XMLBeanFactory();
-		System.out.println( x.createBean( ExecutionReport.class, new FileInputStream( "C:/Users/Allen/Downloads/DiscoverNative_v1_16-01-13_16_57_13_3718.xml") ) );
-	}
 
 }

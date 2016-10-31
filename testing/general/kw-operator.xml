@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+  <model>
+    
+    <page name="home" />
+
+  </model>
+
+
+
+
+  <function name="kw-operator" active="true">
+    <step type="LOOP" name="data based loop" page="home" >
+      <parameter type="STATIC" value="data{dataLoop}"/>
+      <parameter type="STATIC" value="orSet"/>
+    </step>
+    
+    <step type="ATTRIBUTE" name="focusId" page="home" >
+      <parameter type="STATIC" value="OR" />
+      <parameter type="STATIC" value="value" />
+    </step>
+    
+    <step type="LOOP" name="data based loop" page="home" >
+      <parameter type="STATIC" value="data{dataLoop}"/>
+      <parameter type="STATIC" value="andSet"/>
+    </step>
+    
+    <step type="ATTRIBUTE" name="focusId" page="home" >
+      <parameter type="STATIC" value="OR" />
+      <parameter type="STATIC" value="value" />
+    </step>
+    
+    <step type="SET" name="focusId" page="home" >
+      <parameter type="STATIC" value="" />
+    </step>
+
+  </function>
+  
+  <function name="orSet" active="true">
+    <step type="OPERATOR" name="one or three" page="home" failureMode="IGNORE">
+      <parameter type="STATIC" value="OR" />
+      <parameter type="DATA" value="dataLoop.value" />
+      <parameter type="STATIC" value="one" />
+      <parameter type="DATA" value="dataLoop.value" />
+      <parameter type="STATIC" value="two" />
+      <step type="SET" name="focusId" page="home" >
+        <parameter type="STATIC" value="OR" />
+      </step>
+    </step>
+  </function>
+  
+  <function name="andSet" active="true">
+    <step type="OPERATOR" name="one or three" page="home" failureMode="IGNORE" >
+      <parameter type="STATIC" value="AND" />
+      <parameter type="DATA" value="dataLoop.value" />
+      <parameter type="STATIC" value="one" />
+      <parameter type="DATA" value="dataLoop.value" />
+      <parameter type="STATIC" value="two" />
+      <step type="SET" name="focusId" page="home" >
+        <parameter type="STATIC" value="AND" />
+      </step>
+    </step>
+  </function>
+
+</suite>

@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.xframium</groupId>
   <artifactId>xframium-java</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.6-SNAPSHOT</version>
   <name>xframium-java</name>
   <repositories>
     <repository>
@@ -82,6 +82,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <failOnError>false</failOnError>
+        </configuration>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -90,6 +93,13 @@
             </goals>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+	        <groupId>org.apache.httpcomponents</groupId>
+	        <artifactId>httpclient</artifactId>
+	        <version>4.5.2</version>
+	      </dependency>
+	    </dependencies>
       </plugin>
     </plugins>
   </build>
@@ -112,7 +122,7 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>2.53.0</version>
+      <version>2.53.1</version>
     </dependency>
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
@@ -142,7 +152,7 @@
     <dependency>
       <groupId>net.sourceforge.htmlcleaner</groupId>
       <artifactId>htmlcleaner</artifactId>
-      <version>2.6.1</version>
+      <version>2.17</version>
     </dependency>
     <dependency>
       <groupId>org.antlr</groupId>
@@ -165,9 +175,31 @@
       <version>2.0.0</version>
     </dependency>
     <dependency>
+      <groupId>com.perfectomobile</groupId>
+      <artifactId>intellij-connector</artifactId>
+      <version>9.0.0.0</version>
+    </dependency>
+    <dependency>
       <groupId>com.perfecto.reporting-sdk</groupId>
       <artifactId>reportium-testng</artifactId>
       <version>0.0.23</version>
+    </dependency>
+    <dependency>
+      <groupId>com.perfecto.reporting-sdk</groupId>
+      <artifactId>reportium-testng</artifactId>
+      <version>0.0.23</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.perfectomobile</groupId>
+      <artifactId>pm-webdriver</artifactId>
+      <version>9.0.0.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.perfectomobile</groupId>
+      <artifactId>http-client</artifactId>
+      <version>9.0.0.0</version>
     </dependency>
 
     <dependency>
@@ -178,7 +210,7 @@
     <dependency>
       <groupId>com.xframium</groupId>
       <artifactId>xframium-serialization</artifactId>
-      <version>2.0.1</version>
+      <version>2.0.4-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>

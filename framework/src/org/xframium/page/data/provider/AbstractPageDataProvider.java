@@ -20,15 +20,18 @@
  *******************************************************************************/
 package org.xframium.page.data.provider;
 
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.page.data.PageData;
+import org.xframium.page.data.PageDataContainer;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -49,10 +52,13 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	private long waitTimeOut = 240;
 	
 	/** The record map. */
-	private Map<String,Deque<PageData>> recordMap = new HashMap<String,Deque<PageData>>( 10 );
+	private Map<String,PageDataContainer> recordMap = new HashMap<String,PageDataContainer>( 10 );
 	
 	/** The id map. */
 	private Map<String,PageData> idMap = new HashMap<String,PageData>( 10 );
+	
+	private List<PageDataContainer> pC = new ArrayList<PageDataContainer>( 10 );
+	private Map<String,PageDataContainer> allRecordMap = new HashMap<String,PageDataContainer>( 10 );
 
 	
 	/**
@@ -63,7 +69,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	    for ( PageData pageData : idMap.values() )
 	    {
 	        if ( pageData.containsChildren() )
-	            pageData.populateTreeStructure();
+	            pageData.populateTreeStructure( this );
 	    }
 	}
 	
@@ -75,7 +81,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	{
 		try
 		{
-			Deque<PageData> dataList = recordMap.get( recordType );
+			Deque<PageData> dataList = recordMap.get( recordType ).getRecordList();
 			
 			if ( dataList instanceof LinkedBlockingDeque )
 				return ( (LinkedBlockingDeque<PageData>) dataList ).pollFirst( waitTimeOut, TimeUnit.SECONDS );
@@ -98,7 +104,37 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	 */
 	public PageData getRecord( String recordType, String recordId )
 	{
-		return idMap.get( recordType + "." + recordId );
+	    return (PageData) _getRecord( recordType, recordId );
+	}
+	
+	private Object _getRecord( String recordType, String recordId )
+	{
+	    if ( recordId.contains( "." ) )
+        {
+            String[] fieldArray = recordId.split( "\\." );
+            
+            List<PageData> dataList = (List<PageData>) recordMap.get( recordType );
+            
+            for ( PageData p : dataList )
+            {
+                if ( p.getName().equals( fieldArray[ 0 ] ) )
+                {
+                    String newName = recordId.substring( recordId.indexOf( "." ) + 1 );
+                    
+                    if ( newName.trim().isEmpty() )
+                        return p;
+                    else
+                        return p.get( newName );
+                }
+            }
+            
+            return null;
+                        
+        }
+        else
+        {
+            return idMap.get( recordType + "." + recordId );
+        }
 	}
 	
 	/* (non-Javadoc)
@@ -106,11 +142,37 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	 */
 	public PageData[] getRecords( String recordType )
 	{
-		Deque<PageData> dataList = recordMap.get( recordType );
-		if ( recordType != null )
-			return dataList.toArray( new PageData[ 0 ] );
-		else
-			return null;
+	    if ( recordType.contains( "." ) )
+	    {
+	        String[] fieldArray = recordType.split( "\\." );
+	        
+	        Deque<PageData> dataList = recordMap.get( fieldArray[ 0 ] ).getRecordList();
+            
+            for ( PageData p : dataList )
+            {
+                if ( p.getName().equals( fieldArray[ 0 ] ) )
+                {
+                    String newName = recordType.substring( recordType.indexOf( "." ) + 1 );
+                    
+                    if ( newName.trim().isEmpty() )
+                        return new PageData[] { p };
+                    else
+                        return (PageData[]) p.get( newName );
+                }
+            }
+            return dataList.toArray( new PageData[ 0 ] );
+	    }
+	    else
+	    {
+	        if ( recordMap.get( recordType  ) == null )
+	            return null;
+	        
+    		Deque<PageData> dataList = recordMap.get( recordType ).getRecordList();
+    		if ( dataList != null )
+    			return dataList.toArray( new PageData[ 0 ] );
+    		else
+    			return null;
+	    }
 	}
 	
 	/* (non-Javadoc)
@@ -120,7 +182,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	{
 		if ( pageData != null )
 		{
-			Deque<PageData> dataList = recordMap.get( pageData.getType() );
+			Deque<PageData> dataList = recordMap.get( pageData.getType() ).getRecordList();
 			if ( dataList instanceof LinkedBlockingDeque )
 				dataList.offer( pageData );
 		}
@@ -132,18 +194,18 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	 * @param typeName the type name
 	 * @param lockRecords the lock records
 	 */
-	protected void addRecordType( String typeName, boolean lockRecords )
+	public void addRecordType( String typeName, boolean lockRecords )
 	{
-		Deque<PageData> dataList = recordMap.get( typeName );
+	    PageDataContainer dC = recordMap.get( typeName );
 		
-		if ( dataList == null )
-		{
-			if ( lockRecords )
-				dataList = new LinkedBlockingDeque<PageData>();
-			else
-				dataList = new LinkedList<PageData>();
+	    if ( dC == null )
+	    {
+	        dC = new PageDataContainer( typeName, lockRecords );
+			recordMap.put( typeName, dC );
 			
-			recordMap.put( typeName, dataList );
+			dC = new PageDataContainer( typeName, lockRecords );
+			pC.add( dC );
+			allRecordMap.put( typeName, dC );
 		}
 	}
 	
@@ -152,12 +214,14 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	 *
 	 * @param pageData the page data
 	 */
-	protected void addRecord( PageData pageData )
+	public void addRecord( PageData pageData )
 	{
+	    allRecordMap.get( pageData.getType() ).addRecord( pageData );
+	    
 	    if ( !pageData.isActive() )
 	        return;
 	    
-		Deque<PageData> dataList = recordMap.get( pageData.getType() );
+		Deque<PageData> dataList = recordMap.get( pageData.getType() ).getRecordList();
 		idMap.put( pageData.getType() + "." + pageData.getName(), pageData );
 		dataList.offer( pageData );
 	}

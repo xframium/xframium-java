@@ -56,7 +56,7 @@ public class KeyPressGesture extends AbstractKeyPressGesture
 			return false;
 		
 		if ( appiumDriver instanceof AndroidDriver )
-			( (AndroidDriver) appiumDriver ).pressKeyCode( getKeyCode(), getMetaState() );
+			( (AndroidDriver) appiumDriver ).pressKeyCode( Integer.valueOf(getKeyCode()), getMetaState() );
 		else
 		{
 			log.error( "Key Press is not supported for " + appiumDriver.getClass().getName() );

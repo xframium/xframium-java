@@ -21,10 +21,13 @@
 package org.xframium.utility;
 
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.data.DataProvider.DriverType;
 
 public interface SeleniumSessionManager
 {
     public WebDriver getAltWebDriver( String name );
 
     public void registerAltWebDriver( String name, String deviceId );
+    
+    public void registerInactiveWebDriver( String name );
 }

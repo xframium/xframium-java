@@ -65,13 +65,12 @@ public class CloudRegistry
 	/** The cloud map. */
 	private Map<String,CloudDescriptor> cloudMap = new HashMap<String,CloudDescriptor>( 20 );
 	
-	/** The cloud provider. */
-	private CloudProvider cloudProvider;
 	
 	/** The cut. */
 	private CloudDescriptor cut = null;
 	
 	private boolean embeddedGrid = false;
+	private boolean serverStarted = false;
 	private SeleniumServer _server = null;
 	
 	public boolean isEmbeddedGrid()
@@ -94,16 +93,7 @@ public class CloudRegistry
 		cloudMap.put( cloudDescriptor.getName(), cloudDescriptor );
 		
 	}
-	
-	/**
-	 * Sets the cloud provider.
-	 *
-	 * @param cloudProvider the new cloud provider
-	 */
-	public void setCloudProvider( CloudProvider cloudProvider )
-	{
-		this.cloudProvider = cloudProvider;
-	}
+
 	
 	
 	/**
@@ -134,23 +124,29 @@ public class CloudRegistry
 		
 		if ( cut.getGridInstance() != null && cut.getGridInstance().equals( "EMBEDDED" ) )
 		{
-		    try
-		    {
-    		    _server = new SeleniumServer();
-    		    _server.boot();
-    		    _server.start();
-    		    CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( "EMBEDDED", "", "", "127.0.0.1:4444", "", "0", "", null, "SELENIUM" ) );
-    		    embeddedGrid=true;
-		    }
-		    catch( Exception e )
-		    {
-		        log.fatal( "Could not start embedded grid", e );
-		    }
+		    startEmbeddedCloud();
 		}
 		
 		System.setProperty( "__cloudUrl", "https://" + cut.getHostName() );
 		System.setProperty( "__userName", cut.getUserName() );
 		System.setProperty( "__password", cut.getPassword() );
+	}
+	
+	public void startEmbeddedCloud()
+	{
+	    try
+        {
+	        serverStarted = true;
+            _server = new SeleniumServer();
+            _server.boot();
+            _server.start();
+            CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( "EMBEDDED", "", "", "127.0.0.1:4444", "", "0", "", null, "SELENIUM", "SELENIUM", "SELENIUM" ) );
+            embeddedGrid=true;
+        }
+        catch( Exception e )
+        {
+            log.fatal( "Could not start embedded grid", e );
+        }
 	}
 	
 	/**
@@ -185,8 +181,10 @@ public class CloudRegistry
 	{
 	    try
 	    {
-    	    if ( embeddedGrid && _server != null )
+    	    if ( serverStarted && embeddedGrid && _server != null )
     	        _server.stop();
+    	    
+    	    serverStarted = false;
 	    }
 	    catch( Exception e )
 	    {

@@ -27,6 +27,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -92,24 +94,25 @@ public class ExcelDataProvider implements DataProvider
 	 * 
 	 * @see com.perfectoMobile.device.data.DataProvider#readData()
 	 */
-	public void readData()
+	public List<Device> readData()
 	{
 		if (fileName == null)
 		{
 			if (log.isInfoEnabled())
 				log.info( "Reading Device Data from Resource " + resourceName );
 
-			readData( getClass().getClassLoader().getResourceAsStream( resourceName ) );
+			return readData( getClass().getClassLoader().getResourceAsStream( resourceName ) );
 		}
 		else
 		{
 			try
 			{
-				readData( new FileInputStream( fileName ) );
+				return readData( new FileInputStream( fileName ) );
 			}
 			catch (Exception e)
 			{
 				log.fatal( "Could mot read from " + fileName, e );
+				return null;
 			}
 		}
 	}
@@ -145,8 +148,9 @@ public class ExcelDataProvider implements DataProvider
 	 *
 	 * @param inputStream the input stream
 	 */
-	private void readData( InputStream inputStream )
+	private List<Device> readData( InputStream inputStream )
 	{
+	    List<Device> deviceList = new ArrayList<Device>( 10 );
 		BufferedReader fileReader = null;
 
 		XSSFWorkbook workbook = null;
@@ -184,20 +188,27 @@ public class ExcelDataProvider implements DataProvider
 						break;
 				}
 
-				Device currentDevice = new SimpleDevice( getCellValue( currentRow.getCell( 0 ) ), getCellValue( currentRow.getCell( 1 ) ), getCellValue( currentRow.getCell( 2 ) ), getCellValue( currentRow.getCell( 3 ) ), getCellValue( currentRow.getCell( 4 ) ), getCellValue( currentRow.getCell( 5 ) ), getCellValue(
+				SimpleDevice currentDevice = new SimpleDevice( getCellValue( currentRow.getCell( 0 ) ), getCellValue( currentRow.getCell( 1 ) ), getCellValue( currentRow.getCell( 2 ) ), getCellValue( currentRow.getCell( 3 ) ), getCellValue( currentRow.getCell( 4 ) ), getCellValue( currentRow.getCell( 5 ) ), getCellValue(
 						currentRow.getCell( 6 ) ), Integer.parseInt( getCellValue( currentRow.getCell( 7 ) ) ), driverName, Boolean.parseBoolean( getCellValue( currentRow.getCell( 8 ) ) ), null );
-				if (currentDevice.isActive())
-				{
-					if (log.isDebugEnabled())
-						log.debug( "Extracted: " + currentDevice );
+				
+				String cloud = getCellValue( currentRow.getCell( 9 ) );
+				String tagNames = getCellValue( currentRow.getCell( 10 ) );
+				
+				if ( tagNames != null && !tagNames.trim().isEmpty() )
+                    currentDevice.setTagNames( tagNames.split( "," ) );
+                
+                if ( cloud != null && !cloud.trim().isEmpty() )
+                    currentDevice.setCloud( cloud );
+				
+				deviceList.add( currentDevice );
 
-					DeviceManager.instance().registerDevice( currentDevice );
-				}
 			}
+			return deviceList;
 		}
 		catch (Exception e)
 		{
 			log.fatal( "Error reading Excel Element File", e );
+			return null;
 		}
 		finally
 		{

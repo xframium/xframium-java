@@ -95,13 +95,13 @@ public class XMLDataProvider implements DataProvider
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.device.data.DataProvider#readData()
 	 */
-	public void readData()
+	public List<Device> readData()
 	{
 		if ( fileName == null )
 		{
 			if ( log.isInfoEnabled() )
 				log.info( "Reading from CLASSPATH as " + resourceName );
-			readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
+			return readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
 		}
 		else
 		{
@@ -109,11 +109,12 @@ public class XMLDataProvider implements DataProvider
 			{
 				if ( log.isInfoEnabled() )
 					log.info( "Reading from FILE SYSTEM as [" + fileName + "]" );
-				readElements( new FileInputStream( fileName ) );
+				return readElements( new FileInputStream( fileName ) );
 			}
 			catch( FileNotFoundException e )
 			{
 				log.fatal( "Could not read from " + fileName, e );
+				return null;
 			}
 		}
 	}
@@ -123,8 +124,9 @@ public class XMLDataProvider implements DataProvider
 	 *
 	 * @param inputStream the input stream
 	 */
-	private void readElements( InputStream inputStream )
+	private List<Device> readElements( InputStream inputStream )
 	{
+	    List<Device> deviceList = new ArrayList<Device>( 10 );
 		try
 		{
 		
@@ -135,12 +137,15 @@ public class XMLDataProvider implements DataProvider
             RegistryRoot rRoot = (RegistryRoot)rootElement.getValue();
 		
 			for ( org.xframium.device.data.xsd.Device device : rRoot.getDevice() )
-				parseDevice( device );
+				deviceList.add( parseDevice( device ) );
+			
+			return deviceList;
 			
 		}
 		catch( Exception e )
 		{
 			log.fatal( "Error reading XML Element File", e );
+			return null;
 		}
 	}
 	
@@ -149,14 +154,20 @@ public class XMLDataProvider implements DataProvider
 	 *
 	 * @param deviceNode the device node
 	 */
-	private void parseDevice( org.xframium.device.data.xsd.Device device )
+	@SuppressWarnings("unchecked")
+	private Device parseDevice( org.xframium.device.data.xsd.Device device )
 	{
 		String driverName = "";
-		List<String> list = null;
+		List<Object> list = null;
 		String factoryName = null;
-		Map<String, List<String>> browserOptionMap = null;
+		Map<String, Object> keyOptions = null;
+		Map<String, Object> browserOptionMap = null;
+		DriverType tempDriverType = driverType;
 		
-		switch( driverType )
+		if ( device.getDriverType() != null && !device.getDriverType().isEmpty() )
+			tempDriverType = DriverType.valueOf(device.getDriverType());
+
+		switch( tempDriverType )
 		{
 			case APPIUM:
 				if ( device.getOs().toUpperCase().equals( "IOS" ) )
@@ -177,7 +188,8 @@ public class XMLDataProvider implements DataProvider
 		}
 		
 		SimpleDevice currentDevice = new SimpleDevice(device.getName(), device.getManufacturer(), device.getModel(), device.getOs(), device.getOsVersion(), device.getBrowserName(), device.getBrowserVersion(), device.getAvailableDevices().intValue(), driverName, device.isActive(), device.getId() );
-		
+		if ( device.getTagNames() != null && !device.getTagNames().trim().isEmpty() )
+		    currentDevice.setTagNames( device.getTagNames().split( "," ) );
 		
 		if ( device.getCloud() != null && !device.getCloud().isEmpty() )
 		    currentDevice.setCloud( device.getCloud() );
@@ -188,62 +200,67 @@ public class XMLDataProvider implements DataProvider
 		        switch( cap.getClazz() )
 		        {
 		            case "BOOLEAN":
-		                currentDevice.addCapability( cap.getName(), Boolean.parseBoolean( cap.getValue() ) );
+		                currentDevice.addCapability( cap.getName(), Boolean.parseBoolean( cap.getValue() ), cap.getClazz() );
 		                break;
                         
 		            case "STRING":
-		                currentDevice.addCapability( cap.getName(), cap.getValue() );
+		                currentDevice.addCapability( cap.getName(), cap.getValue(), cap.getClazz() );
                         break;
                         
 		            case "PLATFORM":
-		                currentDevice.addCapability( cap.getName(), Platform.valueOf( cap.getValue().toUpperCase() ) );
+		                currentDevice.addCapability( cap.getName(), Platform.valueOf( cap.getValue().toUpperCase() ), cap.getClazz() );
                         break;
 		        }
 		    }
 		}
 		
 		//Parse the Object Capability element for browser options
-		if ( device.getObjectCapability() != null )
-		{
-		    for ( ObjectDeviceCapability cap : device.getObjectCapability() )
-		    {
-		    	browserOptionMap = new HashMap<String, List<String>>();
-		    	
-		    	if ( cap.getCapabilities() != null )
-		    	{
-		    		for ( Capabilities capabilities : cap.getCapabilities() ) 
-		    		{
-		    			factoryName = capabilities.getFactoryName();
-		    			
-		    			if ( capabilities.getOptions() != null )
-		    			{
-		    				for ( Options option : capabilities.getOptions() )
-		    				{
-		    					if (browserOptionMap.get(option.getName()) == null) {
-		    						list = new ArrayList<String>();
+		if (device.getObjectCapability() != null) {
+			
+			for (ObjectDeviceCapability cap : device.getObjectCapability()) {
+				
+				browserOptionMap = new HashMap<String, Object>();
 
-		    					} else {
-		    						list = browserOptionMap.get(option.getName());
+				if (cap.getCapabilities() != null) {
+					
+					for (Capabilities capabilities : cap.getCapabilities()) {
+						
+						factoryName = capabilities.getFactoryName();
 
-		    					}
-		    					list.add(option.getValue());
-		    					browserOptionMap.put(option.getName(), list);
-		    				}
-		    			}
-		    		}
-		    	}
-		    	currentDevice.addCapability(factoryName, browserOptionMap);
-		    }
+						if (capabilities.getOptions() != null) {
+							
+							for (Options option : capabilities.getOptions()) {
+							
+								if (option.getKey() == null) {
+								
+									if (browserOptionMap.get(option.getName()) == null) {
+										list = new ArrayList<Object>();
+									
+									} else {
+										list = (List<Object>) browserOptionMap.get(option.getName());
+									}
+									browserOptionMap.put(option.getName(), list);
+									list.add(option.getValue());
+								    
+								} else {
+									
+									if (browserOptionMap.get(option.getName()) == null) {
+										keyOptions = new HashMap<String, Object>();
+									
+									} else {
+										keyOptions = (HashMap<String, Object>) browserOptionMap.get(option.getName());
+									}
+									keyOptions.put(option.getKey(), option.getValue());
+									browserOptionMap.put(option.getName(), keyOptions);
+								}
+								currentDevice.addCapability(factoryName, browserOptionMap, "OBJECT");
+							}
+						}
+					}
+				}
+			}
 		}
 		
-
-		if ( currentDevice.isActive() )
-		{				
-			if (log.isDebugEnabled())
-				log.debug( "Extracted: " + currentDevice );
-
-			DeviceManager.instance().registerDevice( currentDevice );
-		}
-		
+		return currentDevice;
 	}
 }

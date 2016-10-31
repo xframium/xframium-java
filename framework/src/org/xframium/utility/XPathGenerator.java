@@ -163,18 +163,6 @@ public class XPathGenerator
         return xpath;
     }
 
-    //
-    // Main
-    //
-
-    public static void main( String[] args )
-    {
-        Map<String,String> map = new HashMap<String,String>();
-        map.put(  "resource-id", "com.discoverfinancial.mobile" );
-        
-        System.out.println( generateXPathFromProperty( map, "resource-id=password_field&name=Forgot Password,text=Bank" ) );
-    }
-    
 
 
     //

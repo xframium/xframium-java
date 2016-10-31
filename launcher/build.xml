@@ -60,7 +60,7 @@
 			<attribute name="Built-By" value="Moreland Labs, Ltd." />
 			<attribute name="Permissions" value="all-permissions" />
 			<attribute name="Implementation-Title" value="xFramium" />
-			<attribute name="Implementation-Version" value="Cronos (1.0.1)" />
+			<attribute name="Implementation-Version" value="Janus (1.0.4)" />
 			<attribute name="Implementation-Vendor" value="Moreland Labs, Ltd." />
 		</manifest>
 
@@ -85,37 +85,6 @@
 		</for>
 	</target>
 
-	<target name="-initClassPath">
-		<path id="compileLib">
-			<pathelement location="${buildRoot}" />
-			<pathelement location="..${file.separator}..${file.separator}persistence${file.separator}build" />
-			<pathelement location="..${file.separator}..${file.separator}common${file.separator}build" />
-			<pathelement location="..${file.separator}..${file.separator}serialization${file.separator}build" />
-			<pathelement location="..${file.separator}..${file.separator}textComp${file.separator}build" />
-			<pathelement location="..${file.separator}..${file.separator}qbit${file.separator}build" />
-			<pathelement location="..${file.separator}..${file.separator}core${file.separator}build" />
-			<pathelement location="..${file.separator}..${file.separator}frac${file.separator}common${file.separator}build" />
-			<pathelement location="..${file.separator}..${file.separator}frac${file.separator}core${file.separator}build" />
-			<pathelement location="..${file.separator}..${file.separator}basic${file.separator}desktop${file.separator}build" />
-			<pathelement location="${libRoot}${file.separator}commons-logging.jar" />
-			<pathelement location="${libRoot}${file.separator}avalon-framework-4.2.0.jar" />
-			<pathelement location="${libRoot}${file.separator}barcode4j-fop-ext-complete.jar" />
-			<pathelement location="${libRoot}${file.separator}batik-all-1.7.jar" />
-			<pathelement location="${libRoot}${file.separator}commons-io-1.4.jar" />
-			<pathelement location="${libRoot}${file.separator}commons-logging.jar" />
-			<pathelement location="${libRoot}${file.separator}derby.jar" />
-			<pathelement location="${libRoot}${file.separator}dpfpenrollment.jar" />
-			<pathelement location="${libRoot}${file.separator}dpfpverification.jar" />
-			<pathelement location="${libRoot}${file.separator}dpotapi.jar" />
-			<pathelement location="${libRoot}${file.separator}dpotjni.jar" />
-			<pathelement location="${libRoot}${file.separator}fop.jar" />
-			<pathelement location="${libRoot}${file.separator}jai_codec.jar" />
-			<pathelement location="${libRoot}${file.separator}jai_core.jar" />
-			<pathelement location="${libRoot}${file.separator}jmfCustom.jar" />
-			<pathelement location="${libRoot}${file.separator}xml-apis-ext-1.3.04.jar" />
-			<pathelement location="${libRoot}${file.separator}xmlgraphics-commons-1.4.jar" />
-		</path>
-	</target>
 
 
 </project>

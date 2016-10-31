@@ -1,48 +1,48 @@
-package org.xframium.driver;
+ package org.xframium.driver;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.xpath.XPathFactory;
 import org.openqa.selenium.Platform;
-import org.openqa.selenium.WebDriver;
 import org.xframium.Initializable;
 import org.xframium.application.ApplicationDescriptor;
-import org.xframium.application.ApplicationRegistry;
 import org.xframium.application.CSVApplicationProvider;
 import org.xframium.application.ExcelApplicationProvider;
 import org.xframium.application.SQLApplicationProvider;
 import org.xframium.application.XMLApplicationProvider;
 import org.xframium.artifact.ArtifactType;
+import org.xframium.container.ApplicationContainer;
+import org.xframium.container.CloudContainer;
+import org.xframium.container.DeviceContainer;
+import org.xframium.container.DriverContainer;
+import org.xframium.container.PageContainer;
+import org.xframium.container.SiteContainer;
+import org.xframium.container.SuiteContainer;
+import org.xframium.container.TagContainer;
 import org.xframium.content.ContentManager;
 import org.xframium.content.provider.ExcelContentProvider;
 import org.xframium.content.provider.SQLContentProvider;
 import org.xframium.content.provider.XMLContentProvider;
-import org.xframium.debugger.DebugManager;
-import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.SimpleDevice;
 import org.xframium.device.cloud.CSVCloudProvider;
 import org.xframium.device.cloud.CloudDescriptor;
-import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.device.cloud.CloudProvider;
+import org.xframium.device.cloud.EncryptedCloudProvider;
 import org.xframium.device.cloud.ExcelCloudProvider;
 import org.xframium.device.cloud.SQLCloudProvider;
 import org.xframium.device.cloud.XMLCloudProvider;
 import org.xframium.device.data.CSVDataProvider;
-import org.xframium.device.data.DataManager;
 import org.xframium.device.data.DataProvider.DriverType;
 import org.xframium.device.data.ExcelDataProvider;
 import org.xframium.device.data.NamedDataProvider;
@@ -50,32 +50,35 @@ import org.xframium.device.data.SQLDataProvider;
 import org.xframium.device.data.XMLDataProvider;
 import org.xframium.device.data.perfectoMobile.AvailableHandsetValidator;
 import org.xframium.device.data.perfectoMobile.PerfectoMobileDataProvider;
+import org.xframium.device.data.perfectoMobile.PerfectoMobilePluginProvider;
 import org.xframium.device.data.perfectoMobile.ReservedHandsetValidator;
-import org.xframium.device.logging.ThreadedFileHandler;
-import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.device.property.PropertyAdapter;
+import org.xframium.device.proxy.ProxyRegistry;
 import org.xframium.driver.xsd.ObjectFactory;
 import org.xframium.driver.xsd.XArtifact;
+import org.xframium.driver.xsd.XCapabilities;
 import org.xframium.driver.xsd.XDevice;
 import org.xframium.driver.xsd.XDeviceCapability;
 import org.xframium.driver.xsd.XElement;
 import org.xframium.driver.xsd.XFramiumRoot;
 import org.xframium.driver.xsd.XLibrary;
 import org.xframium.driver.xsd.XModel;
+import org.xframium.driver.xsd.XObjectDeviceCapability;
+import org.xframium.driver.xsd.XOptions;
 import org.xframium.driver.xsd.XPage;
 import org.xframium.driver.xsd.XParameter;
 import org.xframium.driver.xsd.XProperty;
 import org.xframium.driver.xsd.XPropertyAdapter;
 import org.xframium.driver.xsd.XStep;
+import org.xframium.driver.xsd.XTag;
 import org.xframium.driver.xsd.XTest;
 import org.xframium.driver.xsd.XToken;
 import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.Page;
-import org.xframium.page.PageManager;
 import org.xframium.page.data.PageData;
-import org.xframium.page.data.PageDataManager;
 import org.xframium.page.data.provider.ExcelPageDataProvider;
+import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.data.provider.SQLPageDataProvider;
 import org.xframium.page.data.provider.XMLPageDataProvider;
 import org.xframium.page.element.Element;
@@ -101,12 +104,12 @@ import org.xframium.page.keyWord.provider.ExcelKeyWordProvider;
 import org.xframium.page.keyWord.provider.SQLKeyWordProvider;
 import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
-import org.xframium.spi.RunDetails;
-import org.xframium.utility.SeleniumSessionManager;
+import org.xframium.spi.Device;
 import gherkin.parser.Parser;
 
 public class XMLConfigurationReader extends AbstractConfigurationReader implements ElementProvider
 {
+	private static final String[] PROXY_SETTINGS = new String[] { "proxy.host", "proxy.port", "proxy.ignoreHost" };
     private static final String[] JDBC = new String[] { "jdbc.username", "jdbc.password", "jdbc.url", "jdbc.driverClassName" };
     private static final String[] OPT_CLOUD = new String[] { "cloudRegistry.query" };
     private static final String[] OPT_APP = new String[] { "applicationRegistry.query", "applicationRegistry.capQuery" };
@@ -114,17 +117,17 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     private static final String[] OPT_DATA = new String[] { "pageManagement.pageData.query" };
     private static final String[] OPT_CONTENT = new String[] { "pageManagement.content.query" };
     private static final String[] OPT_DEVICE = new String[] { "deviceManagement.device.query", "deviceManagement.capability.query" };
-    private static final String[] OPT_DRIVER = new String[] { "driver.suite", "driver.suiteQuery", "driver.pageQuery", "driver.importQuery",  "driver.testQuery",
-                                                              "driver.stepQuery", "driver.substepQuery", "driver.paramQuery", "driver.tokenQuery",
-                                                              "driver.functionQuery" };
+    private static final String[] OPT_DRIVER = new String[] { "driver.suiteName", "driver.modelQuery", "driver.testSuiteQuery", "driver.testCaseQuery" };
     private XFramiumRoot xRoot;
     private Map<String,String> configProperties = new HashMap<String,String>( 10 );
     
     private Map<String,Element> elementMap = new HashMap<String,Element>(20);
     
     private static XPathFactory xPathFactory = XPathFactory.newInstance();
+    private String siteName;
     
-
+    private Map<String,SiteContainer> siteTree = new HashMap<String,SiteContainer>( 20 );
+    private List<SiteContainer> siteList = new ArrayList<SiteContainer>( 10 );
     
     private boolean pageInitialized = false;
     
@@ -134,16 +137,17 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         return pageInitialized;
     }
     
+    
+    
     @Override
-    protected boolean readFile( File configFile )
+    public boolean readFile( InputStream inputStream )
     {
         try
         {
             
-            configFolder = configFile.getParentFile();
             JAXBContext jc = JAXBContext.newInstance( ObjectFactory.class );
             Unmarshaller u = jc.createUnmarshaller();
-            JAXBElement<?> rootElement = (JAXBElement<?>) u.unmarshal( new FileInputStream( configFile ) );
+            JAXBElement<?> rootElement = (JAXBElement<?>) u.unmarshal( inputStream );
 
             xRoot = (XFramiumRoot) rootElement.getValue();
             
@@ -159,78 +163,104 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             return false;
         }
     }
-
+    
     @Override
-    protected boolean configureCloud()
+    public boolean readFile( File configFile )
     {
-        switch ( xRoot.getCloud().getProvider() )
+        try
         {
-            case "XML":
-                CloudRegistry.instance().setCloudProvider( new XMLCloudProvider( findFile( configFolder, new File( xRoot.getCloud().getFileName() ) ) ) );
-                break;
-
-            case "SQL":
-                CloudRegistry.instance().setCloudProvider( new SQLCloudProvider( configProperties.get( JDBC[0] ),
-                                                                                 configProperties.get( JDBC[1] ),
-                                                                                 configProperties.get( JDBC[2] ),
-                                                                                 configProperties.get( JDBC[3] ),
-                                                                                 configProperties.get( OPT_CLOUD[0] )));
-                break;
-
-            case "CSV":
-                CloudRegistry.instance().setCloudProvider( new CSVCloudProvider( findFile( configFolder, new File( xRoot.getCloud().getFileName() ) ) ) );
-                break;
-
-            case "EXCEL":
-                CloudRegistry.instance().setCloudProvider( new ExcelCloudProvider( findFile( configFolder, new File( xRoot.getCloud().getFileName() ) ), configProperties.get( "cloudRegistry.tabName" ) ) );
-                break;
-                
-            case "LOCAL":
-                CloudDescriptor cloud = new CloudDescriptor( xRoot.getCloud().getName(), xRoot.getCloud().getUserName(), xRoot.getCloud().getPassword(), xRoot.getCloud().getHostName(), xRoot.getCloud().getProxyHost(), xRoot.getCloud().getProxyPort().intValue() + "", "", xRoot.getCloud().getGrid(), xRoot.getCloud().getProviderType() );
-                CloudRegistry.instance().addCloudDescriptor( cloud );
-                break;
+            configFolder = configFile.getParentFile();
+            return readFile( new FileInputStream( configFile ) );
         }
-
-        CloudRegistry.instance().setCloud( xRoot.getCloud().getName() );
-        
-        return true;
+        catch ( Exception e )
+        {
+            log.fatal( "Error reading configuration File", e );
+            return false;
+        }
+       
     }
 
     @Override
-    protected boolean configureApplication()
+    public CloudContainer configureCloud( boolean secured )
     {
+        CloudContainer cC = new CloudContainer();
+        CloudProvider cloudProvider = null;
+        switch ( xRoot.getCloud().getProvider() )
+        {
+            case "XML":
+                
+                cloudProvider = new XMLCloudProvider( findFile( configFolder, new File( xRoot.getCloud().getFileName() ) ) );
+                break;
+
+            case "SQL":
+                cloudProvider = new SQLCloudProvider( configProperties.get( JDBC[0] ),
+                                                                                 configProperties.get( JDBC[1] ),
+                                                                                 configProperties.get( JDBC[2] ),
+                                                                                 configProperties.get( JDBC[3] ),
+                                                                                 configProperties.get( OPT_CLOUD[0] ));
+                break;
+
+            case "CSV":
+                cloudProvider = new CSVCloudProvider( findFile( configFolder, new File( xRoot.getCloud().getFileName() ) ) );
+                break;
+
+            case "EXCEL":
+                cloudProvider = new ExcelCloudProvider( findFile( configFolder, new File( xRoot.getCloud().getFileName() ) ), configProperties.get( "cloudRegistry.tabName" ) );
+                break;
+                
+            case "LOCAL":
+                CloudDescriptor cloud = new CloudDescriptor( xRoot.getCloud().getName(), secured ? EncryptedCloudProvider.decryptValue( xRoot.getCloud().getUserName() ) : xRoot.getCloud().getUserName(), secured ? EncryptedCloudProvider.decryptValue( xRoot.getCloud().getPassword() ) : xRoot.getCloud().getPassword(), xRoot.getCloud().getHostName(), xRoot.getCloud().getProxyHost(), xRoot.getCloud().getProxyPort().intValue() + "", "", xRoot.getCloud().getGrid(), xRoot.getCloud().getProviderType(), xRoot.getCloud().getGesture(), xRoot.getCloud().getDeviceAction() );
+                cC.setCloudList( new ArrayList<CloudDescriptor>( 10 ) );
+                cC.getCloudList().add( cloud );
+                break;
+        }
+
+        if ( !xRoot.getCloud().getProvider().equals( "LOCAL" ) )
+        {
+            if ( secured )
+                cloudProvider = new EncryptedCloudProvider( cloudProvider );
+            
+            cC.setCloudList( cloudProvider.readData() );
+        }
+        cC.setCloudName( xRoot.getCloud().getName() );
+        
+        return cC;
+    }
+
+    @Override
+    public ApplicationContainer configureApplication()
+    {
+        ApplicationContainer appContainer = new ApplicationContainer();
         
         switch ( xRoot.getApplication().getProvider() )
         {
             case "XML":
-                ApplicationRegistry.instance().setApplicationProvider( new XMLApplicationProvider( findFile( configFolder, new File( xRoot.getApplication().getFileName() ) ) ) );
+                appContainer.setAppList( new XMLApplicationProvider( findFile( configFolder, new File( xRoot.getApplication().getFileName() ) ) ).readData() );
                 break;
 
             case "CSV":
-                ApplicationRegistry.instance().setApplicationProvider( new CSVApplicationProvider( findFile( configFolder, new File( xRoot.getApplication().getFileName() ) ) ) );
+                appContainer.setAppList( new CSVApplicationProvider( findFile( configFolder, new File( xRoot.getApplication().getFileName() ) ) ).readData() );
                 break;
                 
             case "SQL":
-                ApplicationRegistry.instance().setApplicationProvider( new SQLApplicationProvider( configProperties.get( JDBC[0] ),
+                appContainer.setAppList( new SQLApplicationProvider( configProperties.get( JDBC[0] ),
                                                                                                    configProperties.get( JDBC[1] ),
                                                                                                    configProperties.get( JDBC[2] ),
                                                                                                    configProperties.get( JDBC[3] ),
                                                                                                    configProperties.get( OPT_APP[0] ),
-                                                                                                   configProperties.get( OPT_APP[1] )));
+                                                                                                   configProperties.get( OPT_APP[1] )).readData());
                 break;
 
             case "EXCEL":
-                ApplicationRegistry.instance().setApplicationProvider( new ExcelApplicationProvider( findFile( configFolder, new File( xRoot.getApplication().getFileName() ) ), configProperties.get( "applicationRegistry.tabName" ) ) );
+                appContainer.setAppList( new ExcelApplicationProvider( findFile( configFolder, new File( xRoot.getApplication().getFileName() ) ), configProperties.get( "applicationRegistry.tabName" ) ).readData() );
                 break;
                 
             case "LOCAL":
-                ApplicationDescriptor app = new ApplicationDescriptor( xRoot.getApplication().getName(), "", xRoot.getApplication().getAppPackage(), xRoot.getApplication().getBundleId(), xRoot.getApplication().getUrl(), xRoot.getApplication().getIosInstall(), xRoot.getApplication().getAndroidInstall(), createCapabilities( xRoot.getApplication().getCapability() ) );
-                ApplicationRegistry.instance().addApplicationDescriptor( app );
+                appContainer.getAppList().add( new ApplicationDescriptor( xRoot.getApplication().getName(), "", xRoot.getApplication().getAppPackage(), xRoot.getApplication().getBundleId(), xRoot.getApplication().getUrl(), xRoot.getApplication().getIosInstall(), xRoot.getApplication().getAndroidInstall(), createCapabilities( xRoot.getApplication().getCapability() ) ) );
                 break;
         }
-
-        ApplicationRegistry.instance().setAUT( xRoot.getApplication().getName() );
-        return true;
+        appContainer.setApplicationName( xRoot.getApplication().getName() );
+        return appContainer;
     }
 
     private Map<String,Object> createCapabilities( List<XDeviceCapability> capabilityList )
@@ -289,65 +319,47 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     }
 
     @Override
-    protected boolean configureArtifacts()
+    public boolean configureArtifacts( DriverContainer driverC )
     {
-        DataManager.instance().setReportFolder( new File( configFolder, xRoot.getDriver().getOutputFolder() ) );
-        PageManager.instance().setStoreImages( true );
-        PageManager.instance().setImageLocation( new File( configFolder, xRoot.getDriver().getOutputFolder() ).getAbsolutePath() );
+        driverC.setReportFolder( xRoot.getDriver().getOutputFolder() );
         
-        ThreadedFileHandler threadedHandler = new ThreadedFileHandler();
-        threadedHandler.configureHandler( Level.INFO );
-        
-        List<ArtifactType> artifactList = new ArrayList<ArtifactType>( 10 );
-        artifactList.add( ArtifactType.EXECUTION_DEFINITION );
-        
-        for( XArtifact artifact : xRoot.getDriver().getArtifact() )
+        for ( XArtifact a : xRoot.getDriver().getArtifact() )
         {
-            artifactList.add( ArtifactType.valueOf( artifact.getType() ) );
-            if ( artifact.getType().equals( "FAILURE_SOURCE" ) )
-            	artifactList.add( ArtifactType.FAILURE_SOURCE_HTML );
-            else if ( artifact.getType().equals( "DEBUGGER" ) )
-            {
-                try
-                {
-                    DebugManager.instance().startUp( InetAddress.getLocalHost().getHostAddress(), 8870 );
-                    KeyWordDriver.instance().addStepListener( DebugManager.instance() );
-                }
-                catch( Exception e )
-                {
-                    e.printStackTrace();
-                }
-            }
-                
+            driverC.addArtifact( ArtifactType.valueOf( a.getType().toUpperCase() ) );
         }
         
-        DataManager.instance().setAutomaticDownloads( artifactList.toArray( new ArtifactType[0] ) );
         return true;
+        
+        
+    }
+    
+    @Override
+    public String getSiteName()
+    {
+        return siteName;
     }
 
     @Override
-    protected boolean configurePageManagement()
+    public ElementProvider configurePageManagement( SuiteContainer sC )
     {
-        PageManager.instance().setSiteName( xRoot.getModel().getSiteName() );
+        sC.setSiteName( xRoot.getModel().getSiteName() );
+        siteName = sC.getSiteName();
 
         switch ( xRoot.getModel().getProvider() )
         {
             case "XML":
 
-                PageManager.instance().setElementProvider( new XMLElementProvider( findFile( configFolder, new File( xRoot.getModel().getFileName() ) ) ) );
-                break;
+                return new XMLElementProvider( findFile( configFolder, new File( xRoot.getModel().getFileName() ) ) );
 
             case "SQL":
-                PageManager.instance().setElementProvider( new SQLElementProvider( configProperties.get( JDBC[0] ),
+                return new SQLElementProvider( configProperties.get( JDBC[0] ),
                                                                                    configProperties.get( JDBC[1] ),
                                                                                    configProperties.get( JDBC[2] ),
                                                                                    configProperties.get( JDBC[3] ),
-                                                                                   configProperties.get( OPT_PAGE[0] )));
-                break;
+                                                                                   configProperties.get( OPT_PAGE[0] ));
 
             case "CSV":
-                PageManager.instance().setElementProvider( new CSVElementProvider( findFile( configFolder, new File( xRoot.getModel().getFileName() ) ) ) );
-                break;
+                return new CSVElementProvider( findFile( configFolder, new File( xRoot.getModel().getFileName() ) ) );
 
             case "EXCEL":
                 String[] fileNames = xRoot.getModel().getFileName().split( "," );
@@ -356,8 +368,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 for ( int i = 0; i < fileNames.length; i++ )
                     files[i] = findFile( configFolder, new File( fileNames[i] ) );
 
-                PageManager.instance().setElementProvider( new ExcelElementProvider( files, xRoot.getModel().getSiteName() ) );
-                break;
+                return new ExcelElementProvider( files, xRoot.getModel().getSiteName() );
                 
             case "LOCAL":
                 ElementDescriptor elementDescriptor = null;
@@ -367,8 +378,11 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 {
                     for ( XElement ele : page.getElement() )
                     {
-                        elementDescriptor = new ElementDescriptor( xRoot.getModel().getSiteName(), page.getName(), ele.getName() );
+                        elementDescriptor = new ElementDescriptor( page.getSite() != null && page.getSite().trim().length() > 0 ? page.getSite() : xRoot.getModel().getSiteName(), page.getName(), ele.getName() );
                         currentElement = ElementFactory.instance().createElement( BY.valueOf( ele.getDescriptor() ), ele.getValue(), ele.getName(), page.getName(), ele.getContextName() );
+                        
+                        if ( ele.getDeviceContext() != null && !ele.getDeviceContext().trim().isEmpty() )
+                            currentElement.setDeviceContext( ele.getDeviceContext() );
                         
                         if (log.isDebugEnabled())
                             log.debug( "Adding XML Element using [" + elementDescriptor.toString() + "] as [" + currentElement + "]" );
@@ -377,6 +391,19 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                         {
                             if ( currentElement.getBy() == BY.XPATH )
                                 xPathFactory.newXPath().compile( currentElement.getKey().replace( "{", "" ).replace( "}", "" ) );
+                            
+                            SiteContainer siteContainer = siteTree.get( elementDescriptor.getSiteName() );
+                            
+                            if ( siteContainer == null )
+                            {
+                                siteContainer = new SiteContainer( elementDescriptor.getSiteName() );
+                                siteTree.put( siteContainer.getSiteName(), siteContainer );
+                                siteList.add( siteContainer );
+                            }
+                            
+                            PageContainer elementList = siteContainer.getPage( elementDescriptor.getPageName() );
+                            elementList.getElementList().add( currentElement );
+                            
                             elementMap.put(elementDescriptor.toString(), currentElement );
                         }
                         catch( Exception e )
@@ -391,36 +418,28 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 
                 pageInitialized = elementsRead;
 
-                PageManager.instance().setElementProvider( this );
-                
-                break;
+               return this;
         }
 
-        
-        if ( PageManager.instance().getElementProvider() == null )
-            return false;
-        
-        return PageManager.instance().getElementProvider().isInitialized();
+        return null;
     }
     
     @Override
-    protected boolean configureData()
+    public PageDataProvider configureData()
     {
         if ( xRoot.getData() == null )
-            return true;
+            return null;
         switch ( xRoot.getData().getProvider() )
         {
             case "XML":
-                PageDataManager.instance().setPageDataProvider( new XMLPageDataProvider( findFile( configFolder, new File( xRoot.getData().getFileName() ) ) ) );
-                break;
+                return new XMLPageDataProvider( findFile( configFolder, new File( xRoot.getData().getFileName() ) ) );
 
             case "SQL":
-                PageDataManager.instance().setPageDataProvider( new SQLPageDataProvider( configProperties.get( JDBC[0] ),
-                                                                                         configProperties.get( JDBC[1] ),
-                                                                                         configProperties.get( JDBC[2] ),
-                                                                                         configProperties.get( JDBC[3] ),
-                                                                                         configProperties.get( OPT_DATA[0] )));
-                break;
+                return new SQLPageDataProvider( configProperties.get( JDBC[0] ),
+                                                             configProperties.get( JDBC[1] ),
+                                                             configProperties.get( JDBC[2] ),
+                                                             configProperties.get( JDBC[3] ),
+                                                             configProperties.get( OPT_DATA[0] ));
 
             case "EXCEL":
                 String[] fileNames = xRoot.getData().getFileName().split( "," );
@@ -429,11 +448,10 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 for ( int i = 0; i < fileNames.length; i++ )
                     files[i] = findFile( configFolder, new File( fileNames[i] ) );
                 
-                PageDataManager.instance().setPageDataProvider( new ExcelPageDataProvider( files, configProperties.get( "pageManagement.pageData.tabNames" ) ) );
-                break;
+                return new ExcelPageDataProvider( files, configProperties.get( "pageManagement.pageData.tabNames" ) );
 
         }
-        return true;
+        return null;
     }
 
     @Override
@@ -472,68 +490,80 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     }
 
     @Override
-    protected boolean configureDevice()
+    public DeviceContainer configureDevice()
     {
+        DeviceContainer dC = new DeviceContainer();
+        List<Device> deviceList = null;
         switch ( xRoot.getDevices().getProvider() )
         {
+            case "PERFECTO_PLUGIN":
+                deviceList = new PerfectoMobilePluginProvider( configProperties.get( "deviceManagement.deviceList" ) + "", DriverType.valueOf( xRoot.getDriver().getType() ), configProperties.get( "deviceManagement.pluginType" ) ).readData();
+                break;
+            
             case "RESERVED":
-                DataManager.instance().readData( new PerfectoMobileDataProvider( new ReservedHandsetValidator(), DriverType.valueOf( xRoot.getDriver().getType() ) ) );
+                deviceList = new PerfectoMobileDataProvider( new ReservedHandsetValidator(), DriverType.valueOf( xRoot.getDriver().getType() ) ).readData();
                 break;
 
             case "AVAILABLE":
-                DataManager.instance().readData( new PerfectoMobileDataProvider( new AvailableHandsetValidator(), DriverType.valueOf( xRoot.getDriver().getType() ) ) );
+                deviceList = new PerfectoMobileDataProvider( new AvailableHandsetValidator(), DriverType.valueOf( xRoot.getDriver().getType() ) ).readData();
                 break;
 
             case "CSV":
-                DataManager.instance().readData( new CSVDataProvider( findFile( configFolder, new File( xRoot.getDevices().getFileName() ) ), DriverType.valueOf( xRoot.getDriver().getType() ) ) );
+                deviceList = new CSVDataProvider( findFile( configFolder, new File( xRoot.getDevices().getFileName() ) ), DriverType.valueOf( xRoot.getDriver().getType() ) ).readData();
                 break;
 
             case "XML":
 
-                DataManager.instance().readData( new XMLDataProvider( findFile( configFolder, new File( xRoot.getDevices().getFileName() ) ), DriverType.valueOf( xRoot.getDriver().getType() ) ) );
+                deviceList =  new XMLDataProvider( findFile( configFolder, new File( xRoot.getDevices().getFileName() ) ), DriverType.valueOf( xRoot.getDriver().getType() ) ).readData();
                 break;
 
             case "SQL":
-                DataManager.instance().readData( new SQLDataProvider( configProperties.get( JDBC[0] ),
+                deviceList = new SQLDataProvider( configProperties.get( JDBC[0] ),
                                                                       configProperties.get( JDBC[1] ),
                                                                       configProperties.get( JDBC[2] ),
                                                                       configProperties.get( JDBC[3] ),
                                                                       configProperties.get( OPT_DEVICE[0] ),
                                                                       configProperties.get( OPT_DEVICE[1] ),
-                                                                      DriverType.valueOf( xRoot.getDriver().getType())));
+                                                                      DriverType.valueOf( xRoot.getDriver().getType())).readData();
                 break;
 
             case "EXCEL":
-                DataManager.instance().readData( new ExcelDataProvider( findFile( configFolder, new File( xRoot.getDevices().getFileName() ) ), configProperties.get( "deviceManagement.tabName" ), DriverType.valueOf( xRoot.getDriver().getType() ) ) );
+                deviceList = new ExcelDataProvider( findFile( configFolder, new File( xRoot.getDevices().getFileName() ) ), configProperties.get( "deviceManagement.tabName" ), DriverType.valueOf( xRoot.getDriver().getType() ) ).readData();
                 break;
 
             case "NAMED":
-                String deviceList = configProperties.get( "deviceManagement.deviceList" );
-                if ( deviceList == null )
+                String devices = configProperties.get( "deviceManagement.deviceList" );
+                if ( devices == null )
                 {
                     System.err.println( "******* Property [deviceManagement.deviceList] was not specified" );
                     System.exit( -1 );
                 }
-                DataManager.instance().readData( new NamedDataProvider( deviceList, DriverType.valueOf( xRoot.getDriver().getType() ) ) );
+                deviceList = new NamedDataProvider( devices, DriverType.valueOf( xRoot.getDriver().getType() ) ).readData();
                 break;
                 
             case "LOCAL":
+                deviceList = new ArrayList<Device>( 10 );
                 for ( XDevice device : xRoot.getDevices().getDevice() )
                 {
-                    parseDevice( device );
+                    deviceList.add( parseDevice( device ) );
                 }
                 
         }
 
-        DeviceManager.instance().addRunListener( RunDetails.instance() );
-        DeviceManager.instance().setDriverType( DriverType.valueOf( xRoot.getDriver().getType() ) );
-        return true;
+        dC.setdType( DriverType.valueOf( xRoot.getDriver().getType() ) );
+        
+        if ( deviceList != null )
+        {
+            for ( Device d : deviceList )
+                dC.addDevice( d );
+        }
+        
+        return dC;
+
     }
     
-    private void parseDevice( XDevice device )
+    private Device parseDevice( XDevice device )
     {
-        if (!device.isActive() )
-            return;
         String driverName = "";
         switch( xRoot.getDriver().getType() )
         {
@@ -558,6 +588,15 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         SimpleDevice currentDevice = new SimpleDevice(device.getName(), device.getManufacturer(), device.getModel(), device.getOs(), device.getOsVersion(), device.getBrowserName(), device.getBrowserVersion(), device.getAvailableDevices().intValue(), driverName, device.isActive(), device.getId() );
         if ( device.getCloud() != null && !device.getCloud().isEmpty() )
             currentDevice.setCloud( device.getCloud() );
+        
+        if ( device.getTagNames() != null && !device.getTagNames().trim().isEmpty() )
+            currentDevice.setTagNames( device.getTagNames().split( "," ) );
+        
+        List<Object> list = null;
+        String factoryName = null;
+        Map<String, Object> keyOptions = null;
+        Map<String, Object> browserOptionMap = null;
+        
         if ( device.getCapability() != null )
         {
             for ( XDeviceCapability cap : device.getCapability() )
@@ -565,31 +604,84 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 switch( cap.getClazz() )
                 {
                     case "BOOLEAN":
-                        currentDevice.addCapability( cap.getName(), Boolean.parseBoolean( cap.getValue() ) );
-                        break;
-                        
-                    case "OBJECT":
-                        currentDevice.addCapability( cap.getName(), cap.getValue() );
+                        currentDevice.addCapability( cap.getName(), Boolean.parseBoolean( cap.getValue() ), cap.getClazz() );
                         break;
                         
                     case "STRING":
-                        currentDevice.addCapability( cap.getName(), cap.getValue() );
+                        currentDevice.addCapability( cap.getName(), cap.getValue(), cap.getClazz() );
                         break;
                         
                     case "PLATFORM":
-                        currentDevice.addCapability( cap.getName(), Platform.valueOf( cap.getValue().toUpperCase() ) );
+                        currentDevice.addCapability( cap.getName(), Platform.valueOf( cap.getValue().toUpperCase() ), cap.getClazz() );
                         break;
                 }
             }
+            
+            // Parse the Object Capability element for browser options
+            if ( device.getObjectCapability() != null )
+            {
+
+                for ( XObjectDeviceCapability cap : device.getObjectCapability() )
+                {
+
+                    browserOptionMap = new HashMap<String, Object>();
+
+                    if ( cap.getCapabilities() != null )
+                    {
+
+                        for ( XCapabilities capabilities : cap.getCapabilities() )
+                        {
+
+                            factoryName = capabilities.getFactoryName();
+
+                            if ( capabilities.getOptions() != null )
+                            {
+
+                                for ( XOptions option : capabilities.getOptions() )
+                                {
+
+                                    if ( option.getKey() == null )
+                                    {
+
+                                        if ( browserOptionMap.get( option.getName() ) == null )
+                                        {
+                                            list = new ArrayList<Object>();
+
+                                        }
+                                        else
+                                        {
+                                            list = (List<Object>) browserOptionMap.get( option.getName() );
+                                        }
+                                        browserOptionMap.put( option.getName(), list );
+                                        list.add( option.getValue() );
+
+                                    }
+                                    else
+                                    {
+
+                                        if ( browserOptionMap.get( option.getName() ) == null )
+                                        {
+                                            keyOptions = new HashMap<String, Object>();
+
+                                        }
+                                        else
+                                        {
+                                            keyOptions = (HashMap<String, Object>) browserOptionMap.get( option.getName() );
+                                        }
+                                        keyOptions.put( option.getKey(), option.getValue() );
+                                        browserOptionMap.put( option.getName(), keyOptions );
+                                    }
+                                    currentDevice.addCapability( factoryName, browserOptionMap, "OBJECT" );
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
         }
 
-        if ( currentDevice.isActive() )
-        {               
-            if (log.isDebugEnabled())
-                log.debug( "Extracted: " + currentDevice );
-
-            DeviceManager.instance().registerDevice( currentDevice );
-        }
+        return currentDevice;
         
     }
 
@@ -615,30 +707,17 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     }
 
     @Override
-    protected boolean configureDriver()
+    public SuiteContainer configureTestCases( PageDataProvider pdp, boolean parseDataIterators )
     {
-        String personaNames = xRoot.getDriver().getPersonas();
-        if ( personaNames != null && !personaNames.isEmpty() )
-        {
-            DataManager.instance().setPersonas( personaNames );
-            PageManager.instance().setWindTunnelEnabled( true );
-        }
-        
-        displayResults = xRoot.getDriver().isDisplayResults();
-
-        DeviceManager.instance().setCachingEnabled( xRoot.getDriver().isCachingEnabled() );
-
-        String stepTags = xRoot.getDriver().getStepTags();
-        if ( stepTags != null && !stepTags.isEmpty() )
-            PageManager.instance().setTagNames( stepTags );
-
+        SuiteContainer sC = null;
         switch ( xRoot.getSuite().getProvider() )
         {
             case "LOCAL":
-                parseModel( xRoot.getModel() );
+                sC = new SuiteContainer(); 
+                parseModel( sC, xRoot.getModel() );
                 for( XTest test : xRoot.getSuite().getTest() )
                 {
-                    if (KeyWordDriver.instance().getTest( test.getName() ) != null)
+                    if ( sC.testExists( test.getName() ) )
                     {
                         log.warn( "The test [" + test.getName() + "] is already defined and will not be added again" );
                         continue;
@@ -646,10 +725,10 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     
                     if ( test.getType().equals( "BDD" ) )
                     {
-                        XMLFormatter xmlFormatter = new XMLFormatter( PageDataManager.instance().getDataProvider() );
+                        XMLFormatter xmlFormatter = new XMLFormatter( sC.getDataProvider() );
                         Parser bddParser = new Parser( xmlFormatter );
                         bddParser.parse( test.getDescription().getValue(), "", 0 );
-                        PageDataManager.instance().setPageDataProvider( xmlFormatter );
+                        sC.setDataProvider( xmlFormatter );
                     }
                     else if ( test.getType().equals( "CSV" ) )
                     {
@@ -669,20 +748,25 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                         stringBuilder.append( test.getOs()!= null ? test.getOs() : "" );
                         
                         MatrixTest matrixTest = new MatrixTest( stringBuilder.toString(), test.getDescription().getValue() );
-                        
-                        KeyWordDriver.instance().addTest( matrixTest.createTest() );
+                        if ( matrixTest.isActive() )
+                            sC.addActiveTest( matrixTest.createTest() );
+                        else
+                            sC.addInactiveTest( matrixTest.createTest() );
                     }
                     else if ( test.getType().equals( "XML" ) )
                     {
                         KeyWordTest currentTest = parseTest( test, "test" );
                         
-                        if (currentTest.getDataDriver() != null && !currentTest.getDataDriver().isEmpty())
+                        if ( currentTest.getDataDriver() != null && !currentTest.getDataDriver().isEmpty() && parseDataIterators )
                         {
-                            PageData[] pageData = PageDataManager.instance().getRecords( currentTest.getDataDriver() );
+                            PageData[] pageData = pdp.getRecords( currentTest.getDataDriver() );
                             if (pageData == null)
                             {
                                 log.warn( "Specified Data Driver [" + currentTest.getDataDriver() + "] could not be located. Make sure it exists and it was populated prior to initializing your keyword factory" );
-                                KeyWordDriver.instance().addTest( currentTest );
+                                if ( currentTest.isActive() )
+                                    sC.addActiveTest( currentTest );
+                                else
+                                    sC.addInactiveTest( currentTest );
                             }
                             else
                             {
@@ -690,144 +774,128 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     
                                 for (PageData record : pageData)
                                 {
-                                    KeyWordDriver.instance().addTest( currentTest.copyTest( testName + "!" + record.getName() ) );
+                                    if ( currentTest.isActive() )
+                                        sC.addActiveTest( currentTest.copyTest( testName + "!" + record.getName() ) );
+                                    else
+                                        sC.addInactiveTest( currentTest.copyTest( testName + "!" + record.getName() ) );
                                 }
                             }
                         }
                         else
-                            KeyWordDriver.instance().addTest( currentTest );
+                        {
+                            if ( currentTest.isActive() )
+                                sC.addActiveTest( currentTest );
+                            else
+                                sC.addInactiveTest( currentTest );
+                        }
                     }
                 }
                 
                 for( XTest test : xRoot.getSuite().getFunction() )
                 {
-                    if (KeyWordDriver.instance().getTest( test.getName() ) != null)
+                    if ( sC.testExists( test.getName() ) )
                     {
                         log.warn( "The function [" + test.getName() + "] is already defined and will not be added again" );
                         continue;
                     }
                     
-                    KeyWordDriver.instance().addFunction( parseTest( test, "function" ) );
+                    sC.addFunction( parseTest( test, "function" ) );
                 }
                 break;
                 
                 
             
             case "XML":
-                KeyWordDriver.instance().loadTests( new XMLKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ) ) );
+                sC = new XMLKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ) ).readData( true );
 
                 break;
                 
             case "EXCEL":
-                KeyWordDriver.instance().loadTests( new ExcelKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ) ) );
+                sC =  new ExcelKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ) ).readData( true );
 
                 break;
 
             case "SQL":
             case "LOCAL-SQL":
             {
-                KeyWordDriver.instance().loadTests( new SQLKeyWordProvider( configProperties.get( JDBC[0] ),
+                sC = new SQLKeyWordProvider( configProperties.get( JDBC[0] ),
                                                                             configProperties.get( JDBC[1] ),
                                                                             configProperties.get( JDBC[2] ),
                                                                             configProperties.get( JDBC[3] ),
-                                                                            xRoot.getSuite().getFileName(),
+                                                                            configProperties.get( OPT_DRIVER[0] ),
+                                                                            xRoot.getModel().getSiteName(),
                                                                             configProperties.get( OPT_DRIVER[1] ),
                                                                             configProperties.get( OPT_DRIVER[2] ),
-                                                                            configProperties.get( OPT_DRIVER[3] ),
-                                                                            configProperties.get( OPT_DRIVER[4] ),
-                                                                            configProperties.get( OPT_DRIVER[5] ),
-                                                                            configProperties.get( OPT_DRIVER[6] ),
-                                                                            configProperties.get( OPT_DRIVER[7] ),
-                                                                            configProperties.get( OPT_DRIVER[8] ),
-                                                                            configProperties.get( OPT_DRIVER[9] )
-                                                                            ));
+                                                                            configProperties.get( OPT_DRIVER[3] )
+                                                                            ).readData( true ) ;
                                                    
                 break;
             }
         }
+        
+        if ( sC != null )
+            sC.setDataProvider( pdp );
+        return sC;
+    }
+    
+    @Override
+    public DriverContainer configureDriver()
+    {
+        DriverContainer dC = new DriverContainer();
+        
 
-        Properties props = new Properties();
-        props.putAll( configProperties );
-        KeyWordDriver.instance().setConfigProperties( props );
+        String personaNames = xRoot.getDriver().getPersonas();
+        if ( personaNames != null && !personaNames.isEmpty() )
+            dC.setPerfectoPersonas( personaNames );
+        
+        dC.setDisplayReport( xRoot.getDriver().isDisplayResults() );
+        dC.setSmartCaching( xRoot.getDriver().isCachingEnabled() );
+        if ( xRoot.getSecurity() != null )
+        {
+            dC.setSecureCloud( xRoot.getSecurity().isSecureCloud() );
+        }
 
-        List<String> testArray = new ArrayList<String>( 10 );
+        dC.setStepTags( xRoot.getDriver().getStepTags() );
+
+        dC.getPropertyMap().putAll( configProperties );
+        dC.setEmbeddedServer( xRoot.getDriver().isEmbeddedServer() );
+        dC.setDriverType( DriverType.valueOf( xRoot.getDriver().getType() ) );
+        dC.setDeviceTags( xRoot.getDriver().getDeviceTags() );
+        
+        if ( xRoot.getDriver().getExtractors() != null )
+        {
+            for ( XTag xTag : xRoot.getDriver().getExtractors() )
+                dC.addExtractor( new TagContainer( xTag.getName(), xTag.getDescription().getValue(), xTag.getDescriptor() ) );
+        }
+
+        if ( dC.getExtractors().isEmpty() )
+        {
+            //
+            // Add some default extractor types for new projects
+            //
+            dC.addExtractor( new TagContainer( "ANCHOR", "HTML anchor tags", "//a[@href!='#']" ) );
+            dC.addExtractor( new TagContainer( "BUTTON", "HTML button tags", "//button" ) );
+            dC.addExtractor( new TagContainer( "INPUT", "HTML Input Tags", "//input[@type!='hidden']" ) );
+            dC.addExtractor( new TagContainer( "IOS button", "Apple IOS buttons", "//UIAButton" ) );
+            dC.addExtractor( new TagContainer( "IOS switch", "Apple IOS buttons", "//UIASwitch" ) );
+            dC.addExtractor( new TagContainer( "IOS table cell", "Apple IOS table cell", "//UIATableCell" ) );
+            dC.addExtractor( new TagContainer( "IOS text field", "Apple IOS test field", "//UIATextField" ) );
+            dC.addExtractor( new TagContainer( "Android button", "Android button", "//android.widget.Button" ) );
+            dC.addExtractor( new TagContainer( "Android text field", "Android text field", "//android.widget.EditText" ) );
+        }
 
         //
         // Extract any named tests
         //
-        String testNames = xRoot.getDriver().getTestNames();
-        
-        if ( testNames != null && !testNames.isEmpty() )
-        {
-            Collection<KeyWordTest> testList = KeyWordDriver.instance().getNamedTests( testNames.split( "," ) );
-            
-            if ( testList.isEmpty() )
-            {
-                System.err.println( "No tests contained the names(s) [" + testNames + "]" );
-            }
-            
-            testArray.addAll( Arrays.asList( testNames ) );
-        }
+        dC.setTestNames( xRoot.getDriver().getTestNames() );
+        dC.setTestTags( xRoot.getDriver().getTagNames() );
+        dC.setDryRun( xRoot.getDriver().isDryRun() );
+        dC.setSuiteName( xRoot.getDriver().getSuiteName() );
 
-
-        //
-        // Extract any tagged tests
-        //
-        String tagNames = xRoot.getDriver().getTagNames();
-        if ( tagNames != null && !tagNames.isEmpty() )
-        {
-            DeviceManager.instance().setTagNames( tagNames.split( "," ) );
-            Collection<KeyWordTest> testList = KeyWordDriver.instance().getTaggedTests( tagNames.split( "," ) );
-
-            if ( testList.isEmpty() )
-            {
-                System.err.println( "No tests contained the tag(s) [" + tagNames + "]" );
-            }
-
-            for ( KeyWordTest t : testList )
-                testArray.add( t.getName() );
-        }
-
-        if ( testArray.size() == 0 )
-            DataManager.instance().setTests( KeyWordDriver.instance().getTestNames() );
-        else
-            DataManager.instance().setTests( testArray.toArray( new String[0] ) );
-        
-        dryRun = xRoot.getDriver().isDryRun();
-        
-        DeviceManager.instance().setDryRun( dryRun );
-        
-        //
-        // add in support for multiple devices
-        //
-
-        PageManager.instance().setAlternateWebDriverSource( new SeleniumSessionManager()
-        {
-            public WebDriver getAltWebDriver( String name )
-            {
-                WebDriver rtn = null;
-
-                ConnectedDevice device = AbstractSeleniumTest.getConnectedDevice( name );
-
-                if ( device != null )
-                {
-                    rtn = device.getWebDriver();
-                }
-
-                return rtn;
-            }
-
-            public void registerAltWebDriver( String name, String deviceId )
-            {
-                AbstractSeleniumTest.registerSecondaryDeviceOnName( name, deviceId );
-            }
-
-        } );
-        
-        return true;
+        return dC;
     }
     
-    private void parseModel( XModel model )
+    private void parseModel( SuiteContainer sC, XModel model )
     {
         for ( XPage page : model.getPage() )
         {
@@ -840,7 +908,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 if (log.isDebugEnabled())
                     log.debug( "Creating page as " + useClass.getSimpleName() + " for " + page.getName() );
     
-                KeyWordDriver.instance().addPage( page.getName(), useClass );
+                sC.addPageModel( page.getSite() != null && page.getSite().trim().length() > 0 ? page.getSite() : sC.getSiteName(), page.getName(), useClass );
             }
             catch( Exception e )
             {
@@ -858,7 +926,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      */
     private KeyWordTest parseTest( XTest xTest, String typeName )
     { 
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags() );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
 
@@ -890,7 +958,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                                                                                  xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
                                                                                  xStep.getOs(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
-                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames() );
+                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite() );
             
             parseParameters( xStep.getParameter(), testName, xStep.getName(), typeName, step );
             parseTokens( xStep.getToken(), testName, xStep.getName(), typeName, step );
@@ -937,7 +1005,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 {
                     try
                     {
-                        kp.setValue( readFile( new FileInputStream( dataFile ) ) );
+                        kp.setValue( readIFile( new FileInputStream( dataFile ) ) );
                         kp.setFileName( dataFile.getAbsolutePath() );
                     }
                     catch( FileNotFoundException e )
@@ -952,7 +1020,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     {
                         try
                         {
-                            kp.setValue( readFile( new FileInputStream( dataFile ) ) );
+                            kp.setValue( readIFile( new FileInputStream( dataFile ) ) );
                             kp.setFileName( dataFile.getAbsolutePath() );
                         }
                         catch( FileNotFoundException e )
@@ -967,7 +1035,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         }
     }
     
-    private String readFile( InputStream inputStream )
+    private String readIFile( InputStream inputStream )
     {
         
         try
@@ -1020,16 +1088,17 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     
 
     @Override
-    protected boolean _executeTest() throws Exception
+    protected boolean _executeTest( SuiteContainer sC) throws Exception
     {
         switch ( xRoot.getSuite().getProvider() )
         {
             case "XML":
+            case "SQL":
             case "EXCEL": 
             case "LOCAL":
             case "LOCAL-SQL":
             {
-                runTest( xRoot.getDriver().getOutputFolder(), XMLTestDriver.class );
+                runTest( xRoot.getDriver().getOutputFolder(), XMLTestDriver.class, sC );
                 break;
             }
 
@@ -1041,6 +1110,30 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     public Element getElement( ElementDescriptor elementDescriptor )
     {
         return elementMap.get(  elementDescriptor.toString() );
+    }
+    
+    @Override
+    public List<SiteContainer> getSiteList()
+    {
+        return siteList;
+    }
+    
+    /**
+     * Configure the proxy settings from the driver config file
+     * @return
+     */
+    protected boolean configureProxy()
+    {
+    	if ( xRoot.getProxy() != null && xRoot.getProxy().getProxyHost() != null 
+    			&& !xRoot.getProxy().getProxyHost().isEmpty() 
+    			&& Integer.parseInt( xRoot.getProxy().getProxyPort() ) > 0 )
+        {
+            log.info( "Proxy configured as " + xRoot.getProxy().getProxyHost() + ":" + xRoot.getProxy().getProxyPort() );
+            ProxyRegistry.instance().setProxyHost(xRoot.getProxy().getProxyHost());
+            ProxyRegistry.instance().setProxyPort(xRoot.getProxy().getProxyPort());
+            ProxyRegistry.instance().setIgnoreHost(xRoot.getProxy().getProxyIgnoreHost());
+        }
+        return true;
     }
 
 }

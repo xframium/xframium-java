@@ -23,7 +23,10 @@
  */
 package org.xframium.device;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 import org.xframium.device.cloud.CloudRegistry;
@@ -77,6 +80,9 @@ public class SimpleDevice implements Device
 	private String resolution;
 	private String environment;
 	private String cloud;
+	private List<String> tagNames = new ArrayList<String>( 5 );
+	
+	
 	
 	public String getCloud()
     {
@@ -101,6 +107,7 @@ public class SimpleDevice implements Device
 
     /** The capabilities. */
 	private Map<String,Object> capabilities = new HashMap<String,Object>( 10 );
+	private List<DeviceCap> capList = new ArrayList<DeviceCap>( 12 );
 	
 	/* (non-Javadoc)
 	 * @see com.morelandLabs.spi.Device#isActive()
@@ -306,9 +313,10 @@ public class SimpleDevice implements Device
 	/* (non-Javadoc)
 	 * @see com.morelandLabs.spi.Device#addCapability(java.lang.String, java.lang.String)
 	 */
-	public void addCapability( String capabilityName, Object capabilityValue )
+	public void addCapability( String capabilityName, Object capabilityValue, String classType )
 	{
 		capabilities.put( capabilityName,capabilityValue);
+		capList.add(  new DeviceCap( capabilityName, capabilityValue, classType ) );
 	}
 	
 	
@@ -431,4 +439,22 @@ public class SimpleDevice implements Device
 	{
 		return capabilities;
 	}
+
+    public String[] getTagNames()
+    {
+        return tagNames.toArray( new String[ 0 ] );
+    }
+
+    public void setTagNames( String[] tagNames )
+    {
+        this.tagNames.addAll( Arrays.asList( tagNames ) );
+    }
+    
+    @Override
+    public void addTag( String tagName )
+    {
+        tagNames.add( tagName );
+    }
+	
+	
 }

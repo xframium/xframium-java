@@ -29,6 +29,7 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
 import org.xframium.exception.DataConfigurationException;
 import org.xframium.exception.TestConfigurationException;
 import org.xframium.page.Page;
@@ -37,6 +38,7 @@ import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.keyWord.provider.KeyWordProvider;
+import org.xframium.page.keyWord.spi.KeyWordPageImpl;
 import org.xframium.page.listener.KeyWordListener;
 
 // TODO: Auto-generated Javadoc
@@ -46,7 +48,6 @@ import org.xframium.page.listener.KeyWordListener;
 public class KeyWordDriver
 {
 
-    /** The test list. */
     private List<String> testList = new ArrayList<String>( 20 );
 
     /** The test map. */
@@ -59,7 +60,7 @@ public class KeyWordDriver
     private Map<String, KeyWordTest> functionMap = new HashMap<String, KeyWordTest>( 10 );
 
     /** The page map. */
-    private Map<String, Class<Page>> pageMap = new HashMap<String, Class<Page>>( 10 );
+    private Map<String, Class> pageMap = new HashMap<String, Class>( 10 );
 
     /** The context map. */
     private ThreadLocal<Map<String, Object>> contextMap = new ThreadLocal<Map<String, Object>>();
@@ -85,13 +86,6 @@ public class KeyWordDriver
         return singleton;
     }
 
-    /**
-     * Instantiates a new key word driver.
-     */
-    private KeyWordDriver()
-    {
-
-    }
 
     /**
      * Load tests.
@@ -99,9 +93,25 @@ public class KeyWordDriver
      * @param keyWordProvider
      *            the key word provider
      */
-    public void loadTests( KeyWordProvider keyWordProvider )
+    public void loadTests( SuiteContainer sC )
     {
-        keyWordProvider.readData();
+
+        for ( KeyWordTest t : sC.getActiveTestList() )
+        {
+            addTest( t );
+        }
+        
+        for ( KeyWordTest t : sC.getInactiveTestList() )
+        {
+            addTest( t );
+        }
+        
+        for ( KeyWordTest t : sC.getFunctionList() )
+        {
+            addFunction( t );
+        }
+        
+        
     }
 
     /** The log. */
@@ -115,11 +125,16 @@ public class KeyWordDriver
      * @param pageClass
      *            the page class
      */
-    public void addPage( String pageName, Class pageClass )
+    public void addPage( String siteName, String pageName, Class pageClass )
     {
-        if ( log.isDebugEnabled() )
-            log.debug( "Mapping Page [" + pageName + "] to [" + pageClass.getName() + "]" );
-        pageMap.put( pageName, pageClass );
+        String useName = null;
+        if ( siteName != null )
+            useName = siteName + "." + pageName;
+        else
+            useName = PageManager.instance().getSiteName() + "." + pageName;
+        if ( log.isInfoEnabled() )
+            log.info( "Mapping Page [" + useName + "] to [" + pageClass.getName() + "]" );
+        pageMap.put( useName, pageClass );
     }
 
     public void addStepListener( KeyWordListener stepListener )
@@ -265,9 +280,28 @@ public class KeyWordDriver
      *            the page name
      * @return the page
      */
-    public Class<Page> getPage( String pageName )
+    public Class getPage( String siteName, String pageName )
     {
-        return pageMap.get( pageName );
+        String useName = siteName + "." + pageName;
+        
+        Class pageClass = pageMap.get( useName );
+        if ( pageClass == null )
+        {
+            addPage( siteName, pageName, KeyWordPage.class );
+            return KeyWordPage.class;
+        }
+        
+        return pageClass;
+    }
+
+    /**
+     * Gets the page count
+     *
+     * @return count
+     */
+    public int getPageCount()
+    {
+        return pageMap.size();
     }
 
     /**
@@ -295,7 +329,7 @@ public class KeyWordDriver
      * @throws Exception
      *             the exception
      */
-    public boolean executionFunction( String testName, WebDriver webDriver, Map<String, PageData> dataMap, Map<String, Page> pageMap ) throws Exception
+    public boolean executionFunction( String testName, WebDriver webDriver, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception
     {
         if ( log.isDebugEnabled() )
             log.debug( "Attempting to locate function/test [" + testName + "]" );
@@ -333,14 +367,9 @@ public class KeyWordDriver
                     PageData pageData = null;
                     if ( dataProvider.contains( "." ) )
                     {
-                        String[] typeId = dataProvider.split( "\\." );
-                        if ( typeId.length == 2 )
-                        {
-                            pageData = PageDataManager.instance().getPageData( typeId[0], typeId[1] );
-                            dpMe = typeId[0];
-                        }
-                        else
-                            pageData = PageDataManager.instance().getPageData( dataProvider );
+                        dpMe = dataProvider.substring( 0, dataProvider.indexOf( "." ) );
+                        String recordName = dataProvider.substring( dataProvider.indexOf( "." ) + 1 );
+                        pageData = PageDataManager.instance().getPageData( dpMe, recordName );
                     }
                     else
                         pageData = PageDataManager.instance().getPageData( dataProvider );
@@ -355,8 +384,9 @@ public class KeyWordDriver
             }
         }
 
-        return test.executeTest( webDriver, contextMap.get(), dataMap, pageMap );
+        return test.executeTest( webDriver, contextMap.get(), dataMap, pageMap, sC );
     }
+
 
     /**
      * Gets the test.
@@ -461,7 +491,7 @@ public class KeyWordDriver
      * @throws Exception
      *             the exception
      */
-    public boolean executeTest( String testName, WebDriver webDriver ) throws Exception
+    public boolean executeTest( String testName, WebDriver webDriver, SuiteContainer sC ) throws Exception
     {
         boolean testStarted = false;
         boolean returnValue = false;
@@ -493,10 +523,11 @@ public class KeyWordDriver
                     if ( dataProvider.contains( "." ) )
                     {
                         String[] typeId = dataProvider.split( "\\." );
-                        if ( typeId.length == 2 )
+                        if ( typeId.length > 1  )
                         {
                             dpMe = typeId[0];
-                            pageData = PageDataManager.instance().getPageData( typeId[0], typeId[1] );
+                            String recordName = dataProvider.substring( dataProvider.indexOf( "." ) + 1 );
+                            pageData = PageDataManager.instance().getPageData( typeId[0], recordName );
                         }
                         else
                             pageData = PageDataManager.instance().getPageData( dataProvider );
@@ -540,7 +571,7 @@ public class KeyWordDriver
                 return false;
             }
             
-            returnValue = test.executeTest( webDriver, contextMap.get(), dataMap, pageMap );
+            returnValue = test.executeTest( webDriver, contextMap.get(), dataMap, pageMap, sC );
             contextMap.set( null );
 
             return returnValue;

@@ -29,6 +29,10 @@ import java.util.concurrent.Semaphore;
  */
 public interface Device
 {
+    /**
+     * The name of the device capability that allows configuration of locale.
+     **/
+    public static final String LOCALE = "locale";
 	
 	/**
 	 * Adds the capability.
@@ -36,7 +40,7 @@ public interface Device
 	 * @param capabilityName the capability name
 	 * @param capabilityValue the capability value
 	 */
-	void addCapability( String capabilityName, Object capabilityValue );
+    void addCapability( String capabilityName, Object capabilityValue, String classType );
 	
 	/**
 	 * Gets the cabilities.
@@ -94,6 +98,11 @@ public interface Device
 	 */
 	String getBrowserVersion();
 	public void setBrowserVersion( String browserName );
+	
+	
+	String[] getTagNames();
+    public void setTagNames( String[] tagNames );
+    public void addTag( String tagName );
 	
 	/**
 	 * Gets the available devices.

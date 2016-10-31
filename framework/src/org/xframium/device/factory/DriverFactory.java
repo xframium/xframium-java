@@ -23,6 +23,7 @@
  */
 package org.xframium.device.factory;
 
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc
@@ -77,6 +78,9 @@ public interface DriverFactory
 	/** The Constant APPLICATION_PACKAGE. */
 	public static final String APPLICATION_NAME = "appName";
 	
+	/** The Constant APPLICATION_PACKAGE. */
+    public static final String APPLICATION = "app";
+	
 	/** The Constant BUNDLE_ID. */
 	public static final String BUNDLE_ID = "bundleId";
 	
@@ -96,4 +100,5 @@ public interface DriverFactory
 	 * @return the device web driver
 	 */
 	public DeviceWebDriver createDriver( Device currentDevice );
+	public DeviceWebDriver createDriver( Device currentDevice, CloudDescriptor useCloud );
 }

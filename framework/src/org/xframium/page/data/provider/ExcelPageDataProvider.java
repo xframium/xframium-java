@@ -133,7 +133,13 @@ public class ExcelPageDataProvider extends AbstractPageDataProvider
 				case XSSFCell.CELL_TYPE_BOOLEAN:
 					return String.valueOf( cell.getBooleanCellValue() );
 				case XSSFCell.CELL_TYPE_NUMERIC:
-					return String.valueOf( cell.getNumericCellValue() );
+				{
+				    String useValue = String.valueOf( cell.getNumericCellValue() );
+				    if ( useValue.endsWith( ".0" ) )
+				        return useValue.split( "\\." )[0];
+				    else
+				        return useValue;
+				}
 				case XSSFCell.CELL_TYPE_STRING:
 					return cell.getRichStringCellValue().toString();
 			}
@@ -154,12 +160,17 @@ public class ExcelPageDataProvider extends AbstractPageDataProvider
 
 		try
 		{
+		    
+		    
 			workbook = new XSSFWorkbook( inputStream );
 			
 			String[] tabs = tabNames.split( "," );
 			
 			for ( String tabName : tabs )
 			{
+			    if (log.isInfoEnabled())
+                    log.info( "Reading Record Type [" + tabName + "]" );
+			    
 			    XSSFSheet sheet = workbook.getSheet( tabName );
 			    
 			    if ( sheet == null )
@@ -172,34 +183,38 @@ public class ExcelPageDataProvider extends AbstractPageDataProvider
 				for (int i = 1; i <= sheet.getLastRowNum(); i++)
 				{
 					XSSFRow currentRow = sheet.getRow( i );
-	
-					if ( getCellValue( currentRow.getCell( 0 ) ) == null || getCellValue( currentRow.getCell( 0 ) ).isEmpty() )
-						break;
-					
-					DefaultPageData currentRecord = new DefaultPageData( tabName, tabName + "-" + i, true );
-					for ( int x=0; x<firstRow.getLastCellNum(); x++ )
+
+					try
 					{
-					    
-					    String currentName = getCellValue( firstRow.getCell( x ) );
-		                String currentValue = getCellValue( currentRow.getCell( x ) );
-		                
-		                if ( currentValue == null )
-		                    currentValue = "";
-		                
-		                if ( currentValue.startsWith( PageData.TREE_MARKER ) && currentValue.endsWith( PageData.TREE_MARKER ) )
-		                {
-		                    //
-		                    // This is a reference to another page data table
-		                    //
-		                    currentRecord.addPageData( currentName );
-		                    currentRecord.addValue( currentName + PageData.DEF, currentValue );
-		                    currentRecord.setContainsChildren( true );
-		                }
-		                else
-		                    currentRecord.addValue( currentName, currentValue );
+    					DefaultPageData currentRecord = new DefaultPageData( tabName, tabName + "-" + i, true );
+    					for ( int x=0; x<firstRow.getLastCellNum(); x++ )
+    					{
+    					    
+    					    String currentName = getCellValue( firstRow.getCell( x ) );
+    		                String currentValue = getCellValue( currentRow.getCell( x ) );
+    		                
+    		                if ( currentValue == null )
+    		                    currentValue = "";
+    		                
+    		                if ( currentValue.startsWith( PageData.TREE_MARKER ) && currentValue.endsWith( PageData.TREE_MARKER ) )
+    		                {
+    		                    //
+    		                    // This is a reference to another page data table
+    		                    //
+    		                    currentRecord.addPageData( currentName );
+    		                    currentRecord.addValue( currentName + PageData.DEF, currentValue );
+    		                    currentRecord.setContainsChildren( true );
+    		                }
+    		                else
+    		                    currentRecord.addValue( currentName, currentValue );
+    					}
+    					
+    					addRecord( currentRecord );
 					}
-					
-					addRecord( currentRecord );
+					catch( Exception e )
+					{
+					    log.error( "Ignoring Row: " + e.getMessage() );
+					}
 				}
 			}
 

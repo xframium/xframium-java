@@ -54,6 +54,8 @@ public class PerfectoDeviceActionFactory implements DeviceActionFactory
 		DeviceActionManager.instance().registerAction( ActionType.SEND_KEYS, SendKeysAction.class );
 		DeviceActionManager.instance().registerAction( ActionType.SEND_TEXT, SendTextAction.class );
 		DeviceActionManager.instance().registerAction( ActionType.CALL, CallAction.class );
+		DeviceActionManager.instance().registerAction( ActionType.START_V_NET, StartNetworkVirtualization.class );
+		DeviceActionManager.instance().registerAction( ActionType.STOP_V_NET, StopNetworkVirtualization.class );
 	}
 
 }

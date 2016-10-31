@@ -106,6 +106,8 @@ public interface Page
      */
     public Element getElement( String pageName, String elementName );
     
+    public Element getElement( ElementDescriptor elementDescriptor );
+    
     /**
      * Initialize page.
      */

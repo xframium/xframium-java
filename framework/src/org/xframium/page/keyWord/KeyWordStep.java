@@ -22,7 +22,9 @@ package org.xframium.page.keyWord;
 
 import java.util.List;
 import java.util.Map;
+
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 
@@ -67,8 +69,9 @@ public interface KeyWordStep
 	}
 
 	public void setTagNames( String tagNames );
-	
-	
+	public void setDeviceTags( String tagNames );
+	public Object getParameterValue( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap );
+	public String getTokenValue( KeyWordToken token, Map<String, Object> contextMap, Map<String, PageData> dataMap );
 	
 	/**
 	 * Gets the link id.
@@ -83,6 +86,10 @@ public interface KeyWordStep
 	 * @param os the new os
 	 */
 	public void setOs( String os );
+	public List<KeyWordParameter> getParameterList();
+	
+	public List<KeyWordToken> getTokenList();
+
 	
 	/**
 	 * Gets the link id.
@@ -136,6 +143,7 @@ public interface KeyWordStep
 	 *            the new name
 	 */
 	public void setName( String name );
+	
 
 	/**
 	 * Checks if is active.
@@ -166,6 +174,14 @@ public interface KeyWordStep
 	 *            the new inverse
 	 */
 	public void setInverse( boolean inverse );
+	
+	public boolean isStartAt();
+	
+	public void setStartAt( boolean startAt );
+	
+	public boolean isBreakpoint();
+    
+    public void setBreakpoint( boolean breakpoint );
 
 	/**
 	 * Gets the page name.
@@ -181,6 +197,16 @@ public interface KeyWordStep
 	 *            the new page name
 	 */
 	public void setPageName( String pageName );
+	
+	public String getSiteName();
+
+    /**
+     * Sets the page name.
+     *
+     * @param pageName
+     *            the new page name
+     */
+    public void setSiteName( String siteName );
 
 	/**
 	 * Checks if is timed.
@@ -254,7 +280,7 @@ public interface KeyWordStep
 	 * @return true, if successful
 	 * @throws Exception the exception
 	 */
-	public boolean executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String,Page> pageMap ) throws Exception;
+	public boolean executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String,Page> pageMap, SuiteContainer sC ) throws Exception;
 	
 	/**
 	 * To error.

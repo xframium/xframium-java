@@ -20,7 +20,10 @@
  *******************************************************************************/
 package org.xframium.application;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import org.xframium.page.keyWord.step.spi.KWSBrowser.SwitchType;
 import org.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc
@@ -30,6 +33,35 @@ import org.xframium.spi.Device;
 public class ApplicationDescriptor
 {
 	
+    public enum AppType
+    {
+        NATIVE( 1, "NATIVE", "A native IOS, Android or Windows application"),
+        HYBRID( 2, "HYBRID", "A mix of native and web applications"),
+        UNKNOWN( 3, "UNKNOWN", "An unknown application type"),
+        WEB( 4, "WEB", "A web application or web site");
+        
+        private AppType( int id, String name, String description )
+        {
+            this.id = id;
+            this.name = name;
+            this.description = description;
+        }
+
+        private int id;
+        private String name;
+        private String description;
+        
+        public List<AppType> getSupported()
+        {
+            List<AppType> supportedList = new ArrayList<AppType>( 10 );
+            supportedList.add( AppType.NATIVE );
+            supportedList.add( AppType.HYBRID );
+            supportedList.add( AppType.UNKNOWN );
+            supportedList.add( AppType.WEB );
+            return supportedList;
+        }
+    }
+    
 	/** The name. */
 	private String name;
 	
@@ -54,7 +86,8 @@ public class ApplicationDescriptor
 	/** The capabilities. */
 	private Map<String,Object> capabilities;
 
-
+	private AppType appType;
+	
 	/**
 	 * Gets the capabilities.
 	 *
@@ -91,6 +124,7 @@ public class ApplicationDescriptor
 	public void setIosInstallation( String iosInstallation )
 	{
 		this.iosInstallation = iosInstallation;
+		_setAppType();
 	}
 
 	/**
@@ -111,6 +145,7 @@ public class ApplicationDescriptor
 	public void setAndroidInstallation( String androidInstallation )
 	{
 		this.androidInstallation = androidInstallation;
+		_setAppType();
 	}
 
 	/* (non-Javadoc)
@@ -119,20 +154,25 @@ public class ApplicationDescriptor
 	@Override
 	public String toString()
 	{
-		if ( url != null && !url.isEmpty() )
-		{
-			if ( (androidIdentifier != null && !androidIdentifier.isEmpty() ) || (appleIdentifier != null && !appleIdentifier.isEmpty() ) )
-				return name + " (HYBRID)";
-			else
-				return name + " (WEB)";
-		}
-		else
-		{
-			if ( (androidIdentifier != null && !androidIdentifier.isEmpty() ) || (appleIdentifier != null && !appleIdentifier.isEmpty() ) )
-				return name + " (NATIVE)";
-			else
-				return name + " (UNKNOWN)";
-		}
+	    return name + " (" + appType.name() + ")";
+	}
+	
+	private void _setAppType()
+	{
+	    if ( url != null && !url.isEmpty() )
+        {
+            if ( (androidIdentifier != null && !androidIdentifier.isEmpty() ) || (appleIdentifier != null && !appleIdentifier.isEmpty() ) )
+                appType = AppType.HYBRID;
+            else
+                appType = AppType.WEB;
+        }
+        else
+        {
+            if ( (androidIdentifier != null && !androidIdentifier.isEmpty() ) || (appleIdentifier != null && !appleIdentifier.isEmpty() ) )
+                appType = AppType.NATIVE;
+            else
+                appType = AppType.UNKNOWN;
+        }
 	}
 	
 	public boolean isWeb()
@@ -163,6 +203,7 @@ public class ApplicationDescriptor
 		this.iosInstallation = iosInstallation;
 		this.androidInstallation = androidInstallation;
 		this.capabilities = capabilities;
+		_setAppType();
 	}
 	
 	/**
@@ -185,6 +226,7 @@ public class ApplicationDescriptor
 	public void setUrl( String url )
 	{
 		this.url = url;
+		_setAppType();
 	}
 	
 	/**
@@ -245,6 +287,7 @@ public class ApplicationDescriptor
 	public void setAndroidIdentifier( String androidIdentifier )
 	{
 		this.androidIdentifier = androidIdentifier;
+		_setAppType();
 	}
 	
 	/**
@@ -265,6 +308,7 @@ public class ApplicationDescriptor
 	public void setAppleIdentifier( String appleIdentifier )
 	{
 		this.appleIdentifier = appleIdentifier;
+		_setAppType();
 	}
 	
 	/**

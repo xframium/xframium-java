@@ -20,16 +20,18 @@
  *******************************************************************************/
 package org.xframium.gesture.device.action.spi.perfecto;
 
-import java.util.List;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
 import org.xframium.utility.BrowserCacheLogic;
+
+import java.util.List;
 
 /**
  * The Class CleanApplicationAction.
@@ -55,29 +57,48 @@ public class CleanApplicationAction extends AbstractDefaultAction implements Dev
 
         Handset localDevice = PerfectoMobile.instance().devices().getDevice( deviceName );
 
-        if ( appDesc.getUrl() != null && !appDesc.getUrl().isEmpty() )
+        if ( appDesc == null || (appDesc.getUrl() != null && !appDesc.getUrl().isEmpty()) )
         {
             //
             // This is a Web URL so clear all cookies
             //
 
-            webDriver.manage().deleteAllCookies();
+            try {
+                webDriver.manage().deleteAllCookies();
+            } catch (Exception e) {
+                log.error("Failed to delete all Cookies.");
+            }
 
             //
             // clear the browser cache (IOS only)
             //
 
-            if ( (localDevice.getOs().toLowerCase().equals( "ios" )) && (webDriver instanceof RemoteWebDriver) )
+            if ( (localDevice != null && localDevice.getOs().toLowerCase().equals( "ios" )) && (webDriver instanceof DeviceWebDriver) )
             {
                 try
                 {
-                    BrowserCacheLogic.clearSafariIOSCache( (RemoteWebDriver) webDriver );
+                    BrowserCacheLogic.clearSafariIOSCache( (RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver() );
                 }
                 catch ( Throwable e )
                 {
                     e.printStackTrace();
                 }
             }
+            else if ( (localDevice != null && localDevice.getOs().toLowerCase().equals( "android" )) && (webDriver instanceof DeviceWebDriver) )
+            {
+                try
+                {
+                    BrowserCacheLogic.clearChromeAndroidCache( (RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver() );
+                }
+                catch ( Throwable e )
+                {
+                    e.printStackTrace();
+                }
+            }
+            
+            if ( appDesc != null )
+                webDriver.get(appDesc.getUrl());
+
         }
         else
         {

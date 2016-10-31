@@ -38,12 +38,7 @@ public class SQLPageDataProvider extends AbstractPageDataProvider
     //
 
     private static final String DEF_QUERY =
-        "SELECT DT.NAME, DT.LOCK_RECORDS, \n" +
-        "       PG.NAME, PG.ACTIVE, \n" +
-        "       AT.NAME, AT.VALUE \n" +
-        "FROM PERFECTO_PAGE_DATA_TYPE DT \n" +
-        "     INNER JOIN PERFECTO_PAGE_DATA PG ON PG.TYPE_NAME = DT.NAME \n" +
-        "     INNER JOIN PERFECTO_PAGE_DATA_ATTRS AT ON AT.TYPE_NAME = DT.NAME AND AT.RECORD_NAME = PG.NAME";
+        "SELECT DT.NAME, DT.LOCK_RECORDS, PG.NAME, PG.ACTIVE, AT.NAME, AT.VALUE FROM PAGE_DATA_TYPE DT INNER JOIN PAGE_DATA PG ON PG.TYPE_ID = DT.ID INNER JOIN PAGE_DATA_ATTRS AT ON AT.TYPE_ID = DT.ID AND AT.RECORD_ID = PG.ID";
 
     private static final String[] STR_ARR = new String[0];
 
@@ -113,7 +108,7 @@ public class SQLPageDataProvider extends AbstractPageDataProvider
             for( int i = 0; i < data.length; ++i )
             {
                 String record_type_name = (String) data[i][0];
-                boolean lockRecords = "Y".equals( (String) data[i][1] ) || "1".equals( (String) data[i][3] );
+                boolean lockRecords = "Y".equals( (String) data[i][1] ) || "1".equals( (String) data[i][1] );
 
                 if ( !existingRecordTypes.contains( record_type_name ))
                 {

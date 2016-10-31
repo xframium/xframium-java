@@ -20,9 +20,25 @@
       <element name="suite" type="tns:xSuite" minOccurs="1" maxOccurs="1" />
       <element name="content" type="tns:xContent" minOccurs="0" maxOccurs="1" />
       <element name="data" type="tns:xData" minOccurs="0" maxOccurs="1" />
+      <element name="proxy" type="tns:xProxy" minOccurs="0" maxOccurs="1" />
+      <element name="security" type="tns:xSecurity" minOccurs="0" maxOccurs="1" />
     </sequence>
   </complexType>
 
+  <complexType name="xSecurity">
+    <attribute name="secureCloud" type="boolean" use="optional" default="false" />
+  </complexType>
+
+  <complexType name="xProxy">
+  	<simpleContent>
+		<extension base="string">
+    		<attribute name="proxyHost" type="string" use="optional" />
+    		<attribute name="proxyPort" type="string" use="optional" />
+    		<attribute name="proxyIgnoreHost" type="string" use="optional" />
+    	</extension>
+    </simpleContent>
+  </complexType>
+  
   <complexType name="xDevices">
     <sequence>
       <element name="device" type="tns:xDevice" minOccurs="0" maxOccurs="unbounded" />
@@ -31,6 +47,7 @@
     <attribute name="provider" use="optional" default="LOCAL">
       <simpleType>
         <restriction base="string">
+          <enumeration value="PERFECTO_PLUGIN" />
           <enumeration value="RESERVED" />
           <enumeration value="AVAILABLE" />
           <enumeration value="NAMED" />
@@ -60,6 +77,16 @@
     <attribute name="active" type="boolean" use="optional" default="true" />
     <attribute name="availableDevices" type="integer" use="optional" default="1" />
     <attribute name="cloud" type="string" use="optional" />
+    <attribute name="tagNames" type="string" use="optional" />
+    <attribute name="driverType" use="optional">
+		<simpleType>
+			<restriction base="string">
+				<enumeration value="APPIUM" />
+				<enumeration value="WEB" />
+				<enumeration value="PERFECTO" />
+			</restriction>
+		</simpleType>
+	</attribute>
   </complexType>
 
   <complexType name="xContent">
@@ -121,6 +148,7 @@
       <element name="propertyAdapter" type="tns:xPropertyAdapter" minOccurs="0" maxOccurs="unbounded" />
       <element name="artifact" type="tns:xArtifact" minOccurs="0" maxOccurs="unbounded" />
       <element name="library" type="tns:xLibrary" minOccurs="0" maxOccurs="unbounded" />
+      <element name="extractors" type="tns:xTag" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="type" use="required">
       <simpleType>
@@ -134,11 +162,23 @@
     <attribute name="personas" type="string" use="optional" />
     <attribute name="cachingEnabled" type="boolean" use="optional" default="false" />
     <attribute name="stepTags" type="string" use="optional" />
+    <attribute name="deviceTags" type="string" use="optional" />
     <attribute name="testNames" type="string" use="optional" />
     <attribute name="tagNames" type="string" use="optional" />
+    <attribute name="embeddedServer" type="boolean" use="optional" default="false" />
     <attribute name="dryRun" type="boolean" use="optional" default="false" />
     <attribute name="displayResults" type="boolean" use="optional" default="true" />
     <attribute name="outputFolder" type="string" use="required" />
+    <attribute name="suiteName" type="string" use="optional" />
+  </complexType>
+
+  <complexType name="xTag">
+    <sequence>
+        <element name="description" type="tns:xDescription" minOccurs="0" maxOccurs="1" />
+    </sequence>
+    <attribute name="name" use="required" />
+    <attribute name="descriptor" use="required" />
+    
   </complexType>
 
   <complexType name="xLibrary">
@@ -161,6 +201,8 @@
           <enumeration value="EXECUTION_RECORD_CSV" />
           <enumeration value="CONSOLE_LOG" />
           <enumeration value="REPORTIUM" />
+          <enumeration value="DEBUGGER" />
+          <enumeration value="SAUCE_LABS" />
         </restriction>
       </simpleType>
     </attribute>
@@ -224,12 +266,15 @@
     <attribute name="proxyPassword" type="string" use="optional" />
     <attribute name="grid" type="string" use="optional" />
     <attribute name="providerType" type="string" use="optional" default="PERFECTO" />
+    <attribute name="gesture" type="string" use="optional" />
+    <attribute name="deviceAction" type="string" use="optional" />
   </complexType>
 
   <complexType name="xPage">
     <sequence>
-      <element name="element" type="tns:xElement" minOccurs="1" maxOccurs="unbounded" />
+      <element name="element" type="tns:xElement" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
+    <attribute name="site" type="string" use="optional" />
     <attribute name="name" type="string" use="required" />
     <attribute name="class" type="string" use="optional" />
   </complexType>
@@ -315,6 +360,8 @@
     <attribute name="threshold" type="integer" use="optional" default="0" />
     <attribute name="active" type="boolean" use="optional" default="true" />
     <attribute name="os" type="string" use="optional" />
+    <attribute name="contentKeys" type="string" use="optional" />
+    <attribute name="deviceTags" type="string" use="optional" />
   </complexType>
 
   <complexType name="xDescription">
@@ -330,7 +377,8 @@
       <element name="step" type="tns:xStep" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="name" type="string" use="required" />
-    <attribute name="page" type="string" use="required" />
+    <attribute name="page" type="string" use="optional" />
+    <attribute name="site" type="string" use="optional" />
     <attribute name="type" use="required">
       <simpleType>
         <restriction base="string">
@@ -379,6 +427,9 @@
           <enumeration value="SQL" />
           <enumeration value="OPERATOR" />
           <enumeration value="NAVIGATE" />
+          <enumeration value="VISUAL" />
+          <enumeration value="SET_CONTENT_KEY" />
+          <enumeration value="BROWSER" />
         </restriction>
       </simpleType>
     </attribute>
@@ -389,6 +440,8 @@
     <attribute name="threshold" type="integer" use="optional" default="0" />
     <attribute name="timed" type="boolean" use="optional" default="false" />
     <attribute name="inverse" type="boolean" use="optional" default="false" />
+    <attribute name="startAt" type="boolean" use="optional" default="false" />
+    <attribute name="breakpoint" type="boolean" use="optional" default="false" />
     <attribute name="wait" type="integer" use="optional" default="0" />
     <attribute name="failureMode" use="optional" default="ERROR">
       <simpleType>
@@ -413,6 +466,7 @@
     <attribute name="context" type="string" use="optional" />
     <attribute name="device" type="string" use="optional" />
     <attribute name="tagNames" type="string" use="optional" />
+    <attribute name="deviceTags" type="string" use="optional" />
   </complexType>
 
   <complexType name="xToken">
@@ -466,7 +520,8 @@
 			<simpleType>
 				<restriction base="string">
 					<enumeration value="ChromeOptions" />
-				</restriction>
+					<enumeration value="FirefoxProfile"/>
+			</restriction>
 			</simpleType>
 		</attribute>
 	</complexType>
@@ -475,7 +530,8 @@
 		<simpleContent>
 			<extension base="string">
 				<attribute name="name" type="string" use="required" />
-			</extension>
+				<attribute name="key" type="string" use="optional" />
+		 </extension>
 		</simpleContent>
 	</complexType>
 </schema>

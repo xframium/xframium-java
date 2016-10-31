@@ -22,6 +22,7 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
@@ -29,9 +30,14 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 
 public class KWSFocus extends AbstractKeyWordStep
 {
-    
+    public KWSFocus()
+    {
+        kwName = "Has Focus";
+        kwDescription = "Allows the script check if the current element has focus";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-focus";
+    }
 	@Override
-	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
 	{
 	    if ( pageObject == null )
             throw new IllegalStateException( "There was no Page Object defined" );

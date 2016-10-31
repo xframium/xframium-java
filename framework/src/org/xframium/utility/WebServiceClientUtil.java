@@ -30,6 +30,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.xframium.exception.ScriptConfigurationException;
+
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
@@ -93,6 +95,7 @@ public class WebServiceClientUtil
         private ArrayList<CallParameter> parameters = new ArrayList<CallParameter>();
         private String payload = null;
         private boolean valid = false;
+        private HashMap<String,String> headers = new HashMap<String,String>();
 
         public CallDetails()
         {}
@@ -200,6 +203,11 @@ public class WebServiceClientUtil
         public void setValid(boolean valid)
         {
             this.valid = valid;
+        }
+
+        public HashMap<String,String> getHeaders()
+        {
+            return headers;
         }
     }
 
@@ -352,6 +360,18 @@ public class WebServiceClientUtil
             con.setRequestMethod( callDetails.method );
             con.setRequestProperty("User-Agent", "Java Program");
 
+            if ( callDetails.headers.size() > 0 )
+            {
+                Iterator<String> names = callDetails.headers.keySet().iterator();
+                while( names.hasNext() )
+                {
+                    String name = names.next();
+                    String value = callDetails.headers.get( name );
+
+                    con.setRequestProperty( name, value );
+                }
+            }
+
             setBasicAuthIfRequested( con, callDetails );
 
             if (( HTTP_GET.equalsIgnoreCase( callDetails.method )) ||
@@ -476,6 +496,10 @@ public class WebServiceClientUtil
                 ResponceVariable param = params.next();
 
                 Node node = (Node) xPath.evaluate( param.path, document, XPathConstants.NODE );
+                
+                if (node == null){
+                	throw new ScriptConfigurationException("No result found. Check xpath expression " + param.path);
+                }
 
                 String value = node.getTextContent();
 

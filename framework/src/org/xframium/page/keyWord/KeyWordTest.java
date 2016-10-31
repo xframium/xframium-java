@@ -23,9 +23,11 @@ package org.xframium.page.keyWord;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
 import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
@@ -73,6 +75,11 @@ public class KeyWordTest
     /** The test tags. */
     private String[] testTags;
 
+    /** The content keys */
+    private String[] contentKeys;
+    
+    private String[] deviceTags;
+
     /** The step list. */
     private List<KeyWordStep> stepList = new ArrayList<KeyWordStep>( 10 );
 
@@ -99,8 +106,10 @@ public class KeyWordTest
      *            the description
      * @param testTags
      *            the test tags
+     * @param contentKeys
+     *            the content keys
      */
-    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags )
+    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys, String deviceTags )
     {
         this.name = name;
         this.active = active;
@@ -112,11 +121,19 @@ public class KeyWordTest
         this.os = os;
         this.threshold = threshold;
         this.description = description;
-
+        
         if ( testTags != null )
             this.testTags = testTags.split( "," );
         else
             this.testTags = new String[] { "" };
+
+        if ( contentKeys != null )
+            this.contentKeys = contentKeys.split( "\\|" );
+        else
+            this.contentKeys = new String[] { "" };
+        
+        if ( deviceTags != null && !deviceTags.trim().isEmpty() )
+            this.deviceTags = deviceTags.split( "," );
     }
 
     /**
@@ -128,11 +145,18 @@ public class KeyWordTest
      */
     public KeyWordTest copyTest( String testName )
     {
-        KeyWordTest newTest = new KeyWordTest( testName, active, null, dataDriver, timed, linkId, os, threshold, description, null );
+        KeyWordTest newTest = new KeyWordTest( testName, active, null, dataDriver, timed, linkId, os, threshold, description, null, null, null );
         newTest.dataProviders = dataProviders;
         newTest.stepList = stepList;
         newTest.testTags = testTags;
+        newTest.contentKeys = contentKeys;
+        newTest.deviceTags = deviceTags;
         return newTest;
+    }
+
+    public String[] getDeviceTags()
+    {
+        return deviceTags;
     }
 
     /**
@@ -149,6 +173,13 @@ public class KeyWordTest
     {
         return description;
     }
+    
+    
+
+    public String[] getTestTags()
+    {
+        return testTags;
+    }
 
     /**
      * Adds the step.
@@ -162,9 +193,17 @@ public class KeyWordTest
         {
             if ( log.isDebugEnabled() )
                 log.debug( "Adding Step [" + step.getName() + "] to [" + name + "]" );
+            
+            if ( step.isStartAt() )
+            {
+                log.warn( "Clearing steps out of " + getName() + " as the startAt flag was set" );
+                stepList.clear();
+            }
+            
             stepList.add( step );
         }
     }
+    
 
     /**
      * Get step at offset.
@@ -258,7 +297,7 @@ public class KeyWordTest
      * @throws Exception
      *             the exception
      */
-    public boolean executeTest( WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap ) throws Exception
+    public boolean executeTest( WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception
     {
         boolean stepSuccess = true;
         
@@ -271,6 +310,7 @@ public class KeyWordTest
         
         String executionId = PageManager.instance().getExecutionId( webDriver );
         String deviceName = PageManager.instance().getDeviceName( webDriver );
+        
 
         for ( KeyWordStep step : stepList )
         {
@@ -278,28 +318,37 @@ public class KeyWordTest
                 log.debug( "Executing Step [" + step.getName() + "]" );
 
             Page page = null;
+            String siteName = step.getSiteName();
+            if ( siteName == null || siteName.isEmpty() )
+            {
+                if ( sC != null )
+                    siteName = sC.getSiteName();
+                else
+                    siteName = PageManager.instance().getSiteName();
+            }
+            
             if ( step.getPageName() != null )
             {
-                page = pageMap.get( step.getPageName() );
+                page = pageMap.get( siteName + "." + step.getPageName() );
                 if ( page == null )
                 {
                     if ( log.isInfoEnabled() )
-                        log.info( "Creating Page [" + step.getPageName() + "]" );
+                        log.info( "Creating Page [" + siteName + "." + step.getPageName() + "]" );
 
-                    page = PageManager.instance().createPage( KeyWordDriver.instance().getPage( step.getPageName() ), webDriver );
+                    page = PageManager.instance().createPage( KeyWordDriver.instance().getPage(step.getSiteName() != null && step.getSiteName().trim().length() > 0 ? step.getSiteName() : PageManager.instance().getSiteName(), step.getPageName() ), webDriver );
                     if ( page == null )
                     {
-                        PageManager.instance().setThrowable( new ObjectConfigurationException( step.getPageName(), null ) );
+                        PageManager.instance().setThrowable( new ObjectConfigurationException( step.getSiteName() == null ? PageManager.instance().getSiteName() : step.getSiteName(), step.getPageName(), null ) );
                         PageManager.instance().addExecutionLog( executionId, deviceName, step.getPageName(), step.getName(), "_" + step.getClass().getSimpleName(), startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE,
                                 PageManager.instance().getThrowable().getMessage(), PageManager.instance().getThrowable(), 0, "", false, new String[] { PageManager.instance().getThrowable().getMessage() } );
                         stepSuccess = false;
                         return false;
                     }
-                    pageMap.put( step.getPageName(), page );
+                    pageMap.put( siteName + "." + step.getPageName(), page );
                 }
             }
 
-            stepSuccess = step.executeStep( page, webDriver, contextMap, dataMap, pageMap );
+            stepSuccess = step.executeStep( page, webDriver, contextMap, dataMap, pageMap, sC );
 
             if ( !stepSuccess )
             {
@@ -370,6 +419,20 @@ public class KeyWordTest
 
         return false;
     }
+    
+    public boolean isDeviceTagged( String tagName )
+    {
+        if ( deviceTags == null || deviceTags.length <= 0 )
+            return false;
+
+        for ( String testTag : deviceTags )
+        {
+            if ( tagName.equalsIgnoreCase( testTag ) )
+                return true;
+        }
+
+        return false;
+    }
 
     /**
      * Gets the tags.
@@ -382,6 +445,16 @@ public class KeyWordTest
             return new String[] { "" };
         else
             return testTags;
+    }
+
+    /**
+     * Gets the content keys.
+     *
+     * @return the content keys
+     */
+    public String[] getContentKeys()
+    {
+        return contentKeys;
     }
 
 }

@@ -20,11 +20,18 @@
  *******************************************************************************/
 package org.xframium.page.element.provider;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.xml.xpath.XPathFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xframium.container.PageContainer;
+import org.xframium.container.SiteContainer;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.element.Element;
+import org.xframium.page.keyWord.KeyWordDriver;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -32,6 +39,9 @@ import org.xframium.page.element.Element;
  */
 public abstract class AbstractElementProvider implements ElementProvider 
 {
+    private Map<String,SiteContainer> siteTree = new HashMap<String,SiteContainer>( 20 );
+    private List<SiteContainer> siteList = new ArrayList<SiteContainer>( 10 );
+
 	private static XPathFactory xPathFactory = XPathFactory.newInstance();
 	/** The log. */
 	protected Log log = LogFactory.getLog(ElementProvider.class);
@@ -47,9 +57,25 @@ public abstract class AbstractElementProvider implements ElementProvider
 	
 	private boolean initialized = false;
 	
+	private String siteName;
 	
+	@Override
+	public List<SiteContainer> getSiteList()
+	{
+	    return siteList;
+	}
 	
-	public boolean isInitialized()
+	public String getSiteName()
+    {
+        return siteName;
+    }
+
+    public void setSiteName( String siteName )
+    {
+        this.siteName = siteName;
+    }
+
+    public boolean isInitialized()
     {
         return initialized;
     }
@@ -69,6 +95,19 @@ public abstract class AbstractElementProvider implements ElementProvider
 	
 	protected boolean validateElement( ElementDescriptor elementDescriptor, Element currentElement ) throws Exception
 	{
+	    SiteContainer siteContainer = siteTree.get( elementDescriptor.getSiteName() );
+	    
+	    if ( siteContainer == null )
+	    {
+	        siteContainer = new SiteContainer( elementDescriptor.getSiteName() );
+	        siteTree.put( siteContainer.getSiteName(), siteContainer );
+	        siteList.add( siteContainer );
+	    }
+	    
+	    PageContainer elementList = siteContainer.getPage( elementDescriptor.getPageName() );
+	    elementList.getElementList().add( currentElement );
+	    
+	    
 	    try
 	    {
     	    switch ( currentElement.getBy() )

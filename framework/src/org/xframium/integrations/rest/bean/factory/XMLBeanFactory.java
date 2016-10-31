@@ -118,14 +118,6 @@ public class XMLBeanFactory extends AbstractBeanFactory
         return returnBean;
 
     }
-    
-    public static void main( String[] args ) throws Exception
-    {
-        BeanFactory x = new XMLBeanFactory();
-        
-        System.out.println( x.createBean( ImageExecution.class, "<response><timer.device>0</timer.device><screenAnalysis.resultRegion.width>563</screenAnalysis.resultRegion.width><timer.system>2735</timer.system><screenAnalysis.analyzedRegion.width>1080</screenAnalysis.analyzedRegion.width><reason>Success</reason><returnValue>true</returnValue><executionId>ageary@morelandlabs.com_RemoteWebDriver_16-07-25_13_21_38_11143</executionId><screenAnalysis.resultRegion.height>106</screenAnalysis.resultRegion.height><singleTestReportUrl>https://partners.perfectomobile.com/nexperience/singletest/report/?reportRepositoryKey=PRIVATE:RemoteWebDriver/RemoteWebDriver_16-07-25_13_21_38_11143.xml&amp;ownerId=ageary@morelandlabs.com&amp;sharingCode=2a1d8347-b655-4938-adf7-65d71d10f80d</singleTestReportUrl><screenAnalysis.analyzedRegion.left>0</screenAnalysis.analyzedRegion.left><screenAnalysis.grade>64</screenAnalysis.grade><screenAnalysis.analyzedRegion.top>0</screenAnalysis.analyzedRegion.top><testGridReportUrl>https://reporting.perfectomobile.com?TENANTID=DUMMY_SSO_TENANT_ID&amp;externalId[0]=ageary@morelandlabs.com_RemoteWebDriver_16-07-25_13_21_38_11143</testGridReportUrl><timer.ux>0</timer.ux><flowEndCode>SUCCEEDED</flowEndCode><description>Success</description><screenAnalysis.resultRegion.left>111</screenAnalysis.resultRegion.left><reportKey>PRIVATE:RemoteWebDriver/RemoteWebDriver_16-07-25_13_21_38_11143.xml</reportKey><screenAnalysis.resultRegion.top>888</screenAnalysis.resultRegion.top><screenAnalysis.analyzedRegion.height>1920</screenAnalysis.analyzedRegion.height><timer.elapsed>2735</timer.elapsed><completed>true</completed></response>" ) );
-        
-    }
 
     /**
      * Populate bean.

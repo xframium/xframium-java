@@ -34,6 +34,9 @@ public class MatrixStep
     private int threshold = 0;
     private int wait = 0;
     private String linkId;
+    private boolean startAt;
+    private String deviceTags;
+    private String siteName;
     
 
     public MatrixStep( String stepDefinition )
@@ -51,7 +54,7 @@ public class MatrixStep
     
     public KeyWordStep createStep()
     {
-        KeyWordStep kStep = KeyWordStepFactory.instance().createStep( name, pageName, active, type, linkId, timed, failureMode, inverse, os, poi, threshold, "", wait, context, validationDetail, device, vType, tagNames );
+        KeyWordStep kStep = KeyWordStepFactory.instance().createStep( name, pageName, active, type, linkId, timed, failureMode, inverse, os, poi, threshold, "", wait, context, validationDetail, device, vType, tagNames, startAt, false, deviceTags, siteName );
         if ( parameterArray != null )
         {
             List<KeyWordParameter> parameterList = parameterArray.getParameters();
@@ -87,12 +90,17 @@ public class MatrixStep
         return stepArray;
     }
     
-    private String parseString( String currentValue, String defaultValue )
+    private String parseString( String currentValue, String defaultValue, boolean emptyCheck )
     {
         if ( currentValue == null )
             return defaultValue;
         else
-            return currentValue;
+        {
+            if ( emptyCheck && currentValue.trim().isEmpty() )
+                return defaultValue;
+            else
+                return currentValue;
+        }
     }
     
     private boolean parseBoolean( String currentValue, boolean defaultValue )
@@ -100,6 +108,8 @@ public class MatrixStep
         if ( currentValue == null || currentValue.trim().isEmpty() )
             return defaultValue;
         else
+            if ( currentValue.equals( "1" ) )
+                return true;
             return Boolean.parseBoolean( currentValue );
     }
     
@@ -128,28 +138,28 @@ public class MatrixStep
             switch ( i+1 )
             {
                 case 1:
-                    level = parseString( stepArray[ i ], null );
+                    level = parseString( stepArray[ i ], null, true );
                     break;
                     
                 case 2:
-                    type = parseString( stepArray[ i ], "EXISTS" );
+                    type = parseString( stepArray[ i ], "EXISTS", true );
                     type = type.toUpperCase();
                     break;
                     
                 case 3:
-                    name = parseString( stepArray[ i ], null );
+                    name = parseString( stepArray[ i ], null, false );
                     break;
                     
                 case 4:
-                    pageName = parseString( stepArray[ i ], null );
+                    pageName = parseString( stepArray[ i ], null, false );
                     break;
                     
                 case 5:
-                    parameterArray = new MatrixParameterArray( parseString( stepArray[ i ], null ) );
+                    parameterArray = new MatrixParameterArray( parseString( stepArray[ i ], null, true ) );
                     break;
                     
                 case 6:
-                    tokenArray = new MatrixTokenArray( parseString( stepArray[ i ], null ) );
+                    tokenArray = new MatrixTokenArray( parseString( stepArray[ i ], null, true ) );
                     break;
                     
                 case 7:
@@ -157,7 +167,7 @@ public class MatrixStep
                     break;
                     
                 case 8:
-                    failureMode = StepFailure.valueOf( parseString( stepArray[ i ], StepFailure.ERROR.name() ) );
+                    failureMode = StepFailure.valueOf( parseString( stepArray[ i ], StepFailure.ERROR.name(), false ) );
                     break;
                     
                 case 9:
@@ -165,27 +175,27 @@ public class MatrixStep
                     break;
                     
                 case 10:
-                    os = parseString( stepArray[ i ], null );
+                    os = parseString( stepArray[ i ], null, true );
                     break;
                     
                 case 11:
-                    vType = ValidationType.valueOf( parseString( stepArray[ i ], ValidationType.REGEX.name() ) );
+                    vType = ValidationType.valueOf( parseString( stepArray[ i ], ValidationType.REGEX.name(), false ) );
                     break;
                     
                 case 12:
-                    validationDetail = parseString( stepArray[ i ], null );
+                    validationDetail = parseString( stepArray[ i ], null, true );
                     break;
                     
                 case 13:
-                    context = parseString( stepArray[ i ], null );
+                    context = parseString( stepArray[ i ], null, true );
                     break;
                     
                 case 14:
-                    device = parseString( stepArray[ i ], null );
+                    device = parseString( stepArray[ i ], null, true );
                     break;
                     
                 case 15:
-                    poi = parseString( stepArray[ i ], null );
+                    poi = parseString( stepArray[ i ], null, true );
                     break;
                     
                 case 16:
@@ -193,7 +203,7 @@ public class MatrixStep
                     break;
                     
                 case 17:
-                    tagNames = parseString( stepArray[ i ], null );
+                    tagNames = parseString( stepArray[ i ], null, true );
                     break;
                     
                 case 18:
@@ -205,7 +215,14 @@ public class MatrixStep
                     break;
                 
                 case 20:
-                    linkId = parseString( stepArray[ i ], null );
+                    linkId = parseString( stepArray[ i ], null, false );
+                    break;
+                    
+                case 21:
+                    deviceTags = parseString( stepArray[ i ], null, false );
+                    break;
+                case 22:
+                    siteName = parseString( stepArray[ i ], null, false );
                     break;
             }
         }

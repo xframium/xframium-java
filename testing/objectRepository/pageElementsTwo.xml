@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
+  <import fileName="objectRepository/pageElementsTwo.xml"/>
+  <site name="xTest">
+    <page name="page two">
+      <element name="screenTwo" descriptor="ID" value="screenTwo" />
+    </page>
+  </site>
+</elementDefinition>

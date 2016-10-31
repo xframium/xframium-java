@@ -39,7 +39,7 @@ public class KeyPressGesture extends AbstractKeyPressGesture
 	{
 		String executionId = getExecutionId( webDriver );
 		String deviceName = getDeviceName( webDriver );
-		PerfectoMobile.instance().gestures().sendKey(executionId, deviceName, getKeyCode(), getMetaState() );
+		PerfectoMobile.instance().gestures().sendKey(executionId, deviceName, Integer.valueOf(getKeyCode()), getMetaState() );
 		return true;
 	}
 

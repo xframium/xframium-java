@@ -17,7 +17,8 @@ public interface BrowserCapabilityFactory {
 	 * @param Map <String,List<String>> - browser specific options
 	 * @return DesiredCapabilities
 	 */
-	public DesiredCapabilities createBrowserOptions(DesiredCapabilities dc, Map <String,List<String>> options);
+	public DesiredCapabilities createBrowserOptions(DesiredCapabilities dc, Map <String,Object> options);
+
 
 
 }

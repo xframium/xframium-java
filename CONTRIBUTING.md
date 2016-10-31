@@ -27,10 +27,6 @@ restrictions:
   Use [GitHub's "reactions" feature](https://github.com/blog/2119-add-reactions-to-pull-requests-issues-and-comments)
   instead. We reserve the right to delete comments which violate this rule.
 
-* Please **do not** open issues or pull requests regarding the code in
-  [`Normalize`](https://github.com/necolas/normalize.css) (open them in
-  their respective repositories).
-
 
 
 ## Bug reports
@@ -67,9 +63,10 @@ provide as much detail and context as possible.
 
 ## Pull requests
 
-Good pull requests—patches, improvements, new features—are a fantastic
-help. They should remain focused in scope and avoid containing unrelated
-commits.
+Good pull requestsâ€”patches, improvements, new featuresâ€”are a fantastic
+help. They must remain focused in scope and avoid containing unrelated
+commits.  A pull request must reference an open bug or feature request that 
+documents what is contained within the pull request.
 
 **Please ask first** before embarking on any significant pull request (e.g.
 implementing features, refactoring code, porting to a different language),

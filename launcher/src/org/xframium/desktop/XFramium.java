@@ -27,6 +27,7 @@ import javax.swing.filechooser.FileFilter;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.device.factory.DriverManager;
 import org.xframium.driver.ConfigurationReader;
 import org.xframium.driver.TXTConfigurationReader;
 import org.xframium.driver.TestDriver;
@@ -64,7 +65,7 @@ public class XFramium extends JFrame implements RunListener, ActionListener
     public XFramium()
     {
        
-        
+        System.setProperty( "X_DEBUGGER", "true" );
         try
         {
             failIcon = new ImageIcon( new URL( "http://www.xframium.org/fail.png" ) );
@@ -123,6 +124,7 @@ public class XFramium extends JFrame implements RunListener, ActionListener
         testType = new JLabel( "" );
         executeTest = new JButton( "Execute Tests" );
         executeTest.addActionListener( this );
+        executeTest.setEnabled( false );
 
         setLayout( new GridBagLayout() );
         GridBagConstraints c = new GridBagConstraints();
@@ -380,7 +382,7 @@ public class XFramium extends JFrame implements RunListener, ActionListener
                 @Override
                 public boolean accept( File f )
                 {
-                    if ( f.getName().equals( "driverConfig.xml" ) || f.getName().equals( "driverConfig.txt" ) || f.isDirectory() )
+                    if ( f.getName().endsWith( ".xml" ) || f.getName().endsWith( ".txt" ) || f.isDirectory() )
                         return true;
 
                     return false;
@@ -406,31 +408,27 @@ public class XFramium extends JFrame implements RunListener, ActionListener
                     
                     configReader.readConfiguration( fileChooser.getSelectedFile(), false );
                     
+                    
                     cloud.setText( CloudRegistry.instance().getCloud().getHostName() + "  (" + CloudRegistry.instance().getCloud().getName() + ")" );
                     application.setText( ApplicationRegistry.instance().getAUT().getName() );
-                    switch ( DeviceManager.instance().getDriverType() )
-                    {
-                        case APPIUM:
-                            testType.setText( "NATIVE (Appium)" );
-                            break;
-
-                        case WEB:
-                            testType.setText( "Website" );
-                            break;
-
-                        default:
-                            testType.setText( DeviceManager.instance().getDriverType().toString() );
-                    }
-
+                    if ( ApplicationRegistry.instance().getAUT().getUrl() != null && !ApplicationRegistry.instance().getAUT().getUrl().isEmpty() )
+                        testType.setText( "NATIVE (Appium)" );
+                    else
+                        testType.setText( "Website" );
+                    
                     test.setText( "XML" );
                     device.setText( DeviceManager.instance().getDevices().size() > 1 ? "Multiple" : DeviceManager.instance().getDevices().get( 0 ).getDeviceName() );
+                    executeTest.setEnabled( true );
 
                 }
+                
                 catch ( Exception ex )
                 {
                     ex.printStackTrace();
                 }
             }
+            else
+                executeTest.setEnabled( false );
         }
     }
 

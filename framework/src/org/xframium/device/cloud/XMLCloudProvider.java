@@ -27,6 +27,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
@@ -55,7 +57,6 @@ public class XMLCloudProvider extends AbstractCloudProvider
 	public XMLCloudProvider( File fileName )
 	{
 		this.fileName = fileName;
-		readData();
 	}
 	
 	/**
@@ -66,20 +67,18 @@ public class XMLCloudProvider extends AbstractCloudProvider
 	public XMLCloudProvider( String resourceName )
 	{
 		this.resourceName = resourceName;
-		readData();
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.device.application.ApplicationProvider#readData()
 	 */
-	public void readData()
+	public List<CloudDescriptor> readData()
 	{
-	    CloudRegistry.instance().clear();
 		if ( fileName == null )
 		{
 			if ( log.isInfoEnabled() )
 				log.info( "Reading from CLASSPATH as " + resourceName );
-			readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
+			return readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
 		}
 		else
 		{
@@ -87,13 +86,15 @@ public class XMLCloudProvider extends AbstractCloudProvider
 			{
 				if ( log.isInfoEnabled() )
 					log.info( "Reading from FILE SYSTEM as [" + fileName + "]" );
-				readElements( new FileInputStream( fileName ) );
+				return readElements( new FileInputStream( fileName ) );
 			}
 			catch( FileNotFoundException e )
 			{
 				log.fatal( "Could not read from " + fileName, e );
 			}
 		}
+		
+		return null;
 	}
 	
 	/**
@@ -101,9 +102,9 @@ public class XMLCloudProvider extends AbstractCloudProvider
 	 *
 	 * @param inputStream the input stream
 	 */
-	private void readElements( InputStream inputStream )
+	private List<CloudDescriptor> readElements( InputStream inputStream )
 	{
-		
+	    List<CloudDescriptor> cList = new ArrayList<CloudDescriptor>( 10 );
 		try
 		{
 		
@@ -114,12 +115,13 @@ public class XMLCloudProvider extends AbstractCloudProvider
             RegistryRoot rRoot = (RegistryRoot)rootElement.getValue();
 		    
 			for ( Cloud cloud : rRoot.getCloud() )
-				parseApplication( cloud );
-			
+			    cList.add( parseApplication( cloud ) );
+			return cList;
 		}
 		catch( Exception e )
 		{
 			log.fatal( "Error reading CSV Element File", e );
+			return null;
 		}
 	}
 	
@@ -128,9 +130,9 @@ public class XMLCloudProvider extends AbstractCloudProvider
 	 *
 	 * @param appNode the app node
 	 */
-	private void parseApplication( Cloud cloud )
+	private CloudDescriptor parseApplication( Cloud cloud )
 	{
-	    CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( cloud.getName(), cloud.getUserName(), cloud.getPassword(), cloud.getHostName(), cloud.getProxyHost(), cloud.getProxyPort() + "", "", cloud.getGrid(), cloud.getProviderType() ) );
+	    return new CloudDescriptor( cloud.getName(), cloud.getUserName(), cloud.getPassword(), cloud.getHostName(), cloud.getProxyHost(), cloud.getProxyPort() + "", "", cloud.getGrid(), cloud.getProviderType(), cloud.getGesture(), cloud.getDeviceAction() );
 	}
 
 	

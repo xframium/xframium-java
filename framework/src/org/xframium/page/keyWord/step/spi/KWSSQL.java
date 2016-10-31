@@ -20,17 +20,22 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
-import java.util.Map;
-import java.util.Iterator;
 import java.util.ArrayList;
-
+import java.util.Iterator;
+import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
+import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
+import org.xframium.page.data.DefaultPageData;
 import org.xframium.page.data.PageData;
-import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+import org.xframium.page.data.PageDataManager;
+import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordToken;
+import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.utility.SQLUtil;
 
 // TODO: Auto-generated Javadoc
@@ -39,6 +44,14 @@ import org.xframium.utility.SQLUtil;
  */
 public class KWSSQL extends AbstractKeyWordStep
 {
+    public KWSSQL()
+    {
+        kwName = "Execute SQL";
+        kwDescription = "Allows the script to execute a SQL statement and process the results";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-sql";
+        orMapping = false;
+    }
+    
     private static final String[] JDBC = new String[] { "jdbc.username", "jdbc.password", "jdbc.url", "jdbc.driverClassName" };
     private static final String[] EMPTY = new String[0];
 
@@ -46,12 +59,12 @@ public class KWSSQL extends AbstractKeyWordStep
      * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
      */
     @Override
-    public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+    public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
     {
         boolean rtn = true;
         
         if ( pageObject == null )
-            throw new IllegalStateException( "Page Object was not defined" );
+            throw new ScriptConfigurationException( "Page Object was not defined" );
 
         //
         // OK, this step needs at least one parameter and the first is the query to execute.  If there are
@@ -67,13 +80,13 @@ public class KWSSQL extends AbstractKeyWordStep
         
         if ( paramCount < 1 )
         {
-            throw new IllegalStateException( "SQL requires at least one parameter" );
+            throw new ScriptConfigurationException( "SQL requires at least one parameter" );
         }
         else
         {
             param1 = (( getParameterList().size() == 0 ) ? null : getParameterList().get( 0 ) );
             query = (( param1 != null ) ? param1.getValue() : null );
-            query_params = loadQueryParams( param1 );
+            query_params = loadQueryParams( param1, contextMap, dataMap );
         }
 
         try
@@ -91,6 +104,30 @@ public class KWSSQL extends AbstractKeyWordStep
                                                    query,
                                                    query_params );
                 Map results = resultsArr[0];
+                
+                if (resultsArr.length > 1)
+                {
+	                DefaultPageData pageData = null;
+	                Map resultMap = null;
+	                String mapKey = null;
+	                String mapValue = null;
+	                PageDataProvider dp = PageDataManager.instance().getDataProvider();
+	                dp.addRecordType(getContext(), false);
+	                
+	                for (int i=1; i<resultsArr.length; i++) {
+	                	resultMap = resultsArr[i];
+		                pageData = new DefaultPageData(getContext(), String.valueOf(i), true);
+		                dp.addRecord(pageData);
+		                
+		                Iterator keySet = resultMap.keySet().iterator();
+		                
+		                while (keySet.hasNext()) {
+		                	mapKey = String.valueOf(keySet.next());
+		                	mapValue = String.valueOf(resultMap.get(mapKey));
+		                	pageData.addValue( mapKey, mapValue );
+		                }
+	                }
+                }
 
                 //
                 // The Map returned is keyed by the selected column alias AND
@@ -153,7 +190,7 @@ public class KWSSQL extends AbstractKeyWordStep
         }
         catch( Throwable e )
         {
-            throw new IllegalStateException( "SQL execution failed with: ", e );
+            throw new ScriptException( "SQL execution failed with: " + e.getMessage() );
         }
 		
         return rtn;
@@ -171,7 +208,7 @@ public class KWSSQL extends AbstractKeyWordStep
     // Helpers
     //
 
-    private String[] loadQueryParams( KeyWordParameter param )
+    private String[] loadQueryParams( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap )
     {
         ArrayList<String> rtn = new ArrayList<String>();
 
@@ -180,7 +217,7 @@ public class KWSSQL extends AbstractKeyWordStep
         {
             KeyWordToken token = tokens.next();
 
-            rtn.add( token.getValue() );
+            rtn.add( getTokenValue( token, contextMap, dataMap ));
         }
 
         return rtn.toArray( EMPTY );

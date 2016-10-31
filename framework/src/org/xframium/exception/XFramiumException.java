@@ -7,7 +7,8 @@ public abstract class XFramiumException extends RuntimeException
         APPLICATION,
         CONFIGURATION,
         SCRIPT,
-        CLOUD;
+        CLOUD,
+        FILTERED;
     }
     
     private ExceptionType eType;

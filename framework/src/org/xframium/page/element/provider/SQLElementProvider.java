@@ -41,10 +41,10 @@ public class SQLElementProvider
     private static final String DEF_QUERY =
         "SELECT PS.NAME, \n" +
         "       PP.NAME, \n" +
-        "       PE.NAME, PE.DESCRIPTOR, PE.VALUE, PE.CONTEXT_NAME \n" +
-        "FROM PERFECTO_SITES PS \n" +
-        "     INNER JOIN PERFECTO_PAGES PP ON PP.SITE_NAME = PS.NAME \n" +
-        "     INNER JOIN PERFECTO_ELEMENTS PE ON PE.SITE_NAME = PP.SITE_NAME AND PE.PAGE_NAME = PP.NAME \n" +
+        "       PE.NAME, PE.DESCRIPTOR, PE.VALUE, PE.CONTEXT_NAME, PE.DEVICE_CONTEXT \n" +
+        "FROM SITES PS \n" +
+        "     INNER JOIN PAGES PP ON PP.SITE_ID = PS.ID \n" +
+        "     INNER JOIN ELEMENTS PE ON PE.PAGE_ID = PP.ID \n" +
         "ORDER BY PS.NAME, PP.NAME";
 
     //
@@ -80,13 +80,13 @@ public class SQLElementProvider
      */
     public SQLElementProvider( String username, String password, String url, String driver )
     {
-        this.username = username;
+        /*this.username = username;
         this.password = password;
         this.url = url;
         this.driver = driver;
-        this.query = DEF_QUERY;
-        
-        readElements();
+        this.query = DEF_QUERY;*/
+    	this( username, password, url, driver, DEF_QUERY );
+//        readElements();
     }
 	
     /**
@@ -99,12 +99,29 @@ public class SQLElementProvider
      */
     public SQLElementProvider( String username, String password, String url, String driver, String query )
     {
-        this( username, password, url, driver );
+//        this( username, password, url, driver );
+        this.username = username;
+        this.password = password;
+        this.url = url;
+        this.driver = driver;
         this.query = (( query != null ) ? query : DEF_QUERY);
                 
         readElements();
     }
 	
+    private String parseString( String currentValue, String defaultValue, boolean emptyCheck )
+    {
+        if ( currentValue == null )
+            return defaultValue;
+        else
+        {
+            if ( emptyCheck && currentValue.trim().isEmpty() )
+                return defaultValue;
+            else
+                return currentValue;
+        }
+    }
+    
     /**
      * Read elements.
      */
@@ -116,12 +133,16 @@ public class SQLElementProvider
             boolean elementsRead = true;
             for( int i = 0; i < data.length; ++i )
             {
-                String siteName = (String) data[i][0];
-                String pageName = (String) data[i][1];
-                String eltName = (String) data[i][2];
-                String eltDesc = (String) data[i][3];
-                String eltVal = (String) data[i][4];
-                String contextName = (String) data[i][5];
+                String siteName = parseString( (String) data[i][0], null, true );
+                if ( getSiteName() == null )
+                    setSiteName( siteName );
+                
+                String pageName = parseString( (String) data[i][1], null, true );
+                String eltName = parseString( (String) data[i][2], null, true );
+                String eltDesc = parseString( (String) data[i][3], null, true );
+                String eltVal = parseString( (String) data[i][4], null, true );
+                String contextName = parseString( (String) data[i][5], null, true );
+                String deviceContext = parseString( (String) data[i][6], null, true );
                 
 
                 ElementDescriptor elementDescriptor = new ElementDescriptor( siteName,
@@ -133,9 +154,11 @@ public class SQLElementProvider
                                                                                   eltName,
                                                                                   pageName,
                                                                                   contextName );
+                if ( deviceContext != null )
+                    currentElement.setDeviceContext( deviceContext );
             
-                if ( log.isDebugEnabled() )
-                    log.debug( "Adding Excel Element using [" + elementDescriptor.toString() + "] as [" + currentElement );
+                if ( log.isInfoEnabled() )
+                    log.info( "Adding SQL Element using [" + elementDescriptor.toString() + "] as [" + currentElement );
                 
                 elementsRead = elementsRead & validateElement( elementDescriptor, currentElement );
                 elementMap.put(elementDescriptor.toString(), currentElement );

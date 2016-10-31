@@ -34,32 +34,35 @@ import org.xframium.content.provider.ContentProvider;
 public class ContentManager
 {
 	
-	/** The Constant OB. */
-	private static final String OB = "{";
+    /** The Constant OB. */
+    private static final String OB = "{";
 	
-	/** The Constant CB. */
-	private static final String CB = "}";
+    /** The Constant CB. */
+    private static final String CB = "}";
 	
-	/** The Constant PS. */
-	private static final String PS = "#";
+    /** The Constant PS. */
+    private static final String PS = "#";
 	
-	/** The content pattern. */
-	private static Pattern CONTENT_PATTERN = Pattern.compile( "(\\S*)\\{?(#)?(\\w*)?\\}?" );
+    /** The content pattern. */
+    private static Pattern CONTENT_PATTERN = Pattern.compile( "(\\S*)\\{?(#)?(\\w*)?\\}?" );
+
+    /** The content key holder. */
+    private static ThreadLocal<String> CONTENT_KEY_HOLDER = new ThreadLocal<String>();
 	
-	/** The singleton. */
-	private static ContentManager singleton = new ContentManager();
+    /** The singleton. */
+    private static ContentManager singleton = new ContentManager();
 	
-	/** The content map. */
-	private Map<String,ContentData> contentMap = new HashMap<String,ContentData>( 100 );
+    /** The content map. */
+    private Map<String,ContentData> contentMap = new HashMap<String,ContentData>( 100 );
 	
-	/** The matrix positions. */
-	private Map<String,Integer> matrixPositions = new HashMap<String,Integer> ();
+    /** The matrix positions. */
+    private Map<String,Integer> matrixPositions = new HashMap<String,Integer> ();
 	
-	/** The matrix data. */
-	private Map<Integer,String> matrixData = new HashMap<Integer,String> ();
+    /** The matrix data. */
+    private Map<Integer,String> matrixData = new HashMap<Integer,String> ();
 	
-	/** The log. */
-	private Log log = LogFactory.getLog( ContentManager.class );
+    /** The log. */
+    private Log log = LogFactory.getLog( ContentManager.class );
 	
     /**
      * Instance.
@@ -129,9 +132,15 @@ public class ContentManager
     	}
     	else
     		contentName = contentKey;
-    	
-    	
+    	    	
     	ContentData contentData = contentMap.get( contentName );
+
+        if (( keyName == null ) &&
+            ( CONTENT_KEY_HOLDER.get() != null ) &&
+            ( CONTENT_KEY_HOLDER.get().length() > 0 ))
+        {
+            keyName = CONTENT_KEY_HOLDER.get();
+        }
     	
     	if ( contentData != null )
     	{
@@ -200,5 +209,23 @@ public class ContentManager
     		
     		contentMap.put( contentData.getName(), contentData );
     	}
+    }
+
+    /**
+     * Set the current content key.
+     *
+     * @param contentKey the content key
+     */
+    public void setCurrentContentKey( String key )
+    {
+        CONTENT_KEY_HOLDER.set( key );
+    }
+
+    /**
+     * Get the current content key.
+     */
+    public String getCurrentContentKey()
+    {
+        return CONTENT_KEY_HOLDER.get();
     }
 }

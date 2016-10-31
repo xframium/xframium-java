@@ -20,7 +20,9 @@
  *******************************************************************************/
 package org.xframium.application;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import org.openqa.selenium.Platform;
 import org.xframium.utility.SQLUtil;
 
@@ -36,11 +38,11 @@ public class SQLApplicationProvider extends AbstractApplicationProvider
 
     private static final String DEF_QUERY =
         "SELECT NAME, APP_PACKAGE, BUNDLE_ID, URL, IOS_INSTALL, ANDROID_INSTALL \n" +
-        "FROM PERFECTO_APPLICATIONS";
+        "FROM APPLICATIONS";
 
     private static final String DEF_CAP_QUERY =
         "SELECT APP_NAME, NAME, CLASS, VALUE \n" +
-        "FROM PERFECTO_APP_DEV_CAPABILITIES";
+        "FROM APP_DEV_CAPABILITIES";
 
     //
     // instance data
@@ -77,8 +79,6 @@ public class SQLApplicationProvider extends AbstractApplicationProvider
         this.driver = driver;
         this.query = DEF_QUERY;
         this.capQuery = DEF_CAP_QUERY;
-        
-        readData();
     }
 	
     /**
@@ -91,37 +91,49 @@ public class SQLApplicationProvider extends AbstractApplicationProvider
         this( username, password, url, driver );
         this.query = (( query != null ) ? query : DEF_QUERY );;
         this.capQuery = (( capQuery != null ) ? capQuery : DEF_CAP_QUERY );
-        
-        readData();
     }
 	
     /* (non-Javadoc)
      * @see com.perfectoMobile.device.application.ApplicationProvider#readData()
      */
-    public void readData()
+    
+    private String parseString( String currentValue, String defaultValue, boolean emptyCheck )
     {
-        ApplicationRegistry.instance().clear();
+        if ( currentValue == null )
+            return defaultValue;
+        else
+        {
+            if ( emptyCheck && currentValue.trim().isEmpty() )
+                return defaultValue;
+            else
+                return currentValue;
+        }
+    }
+    
+    public List<ApplicationDescriptor> readData()
+    {
         HashMap capabilitiesByName = new HashMap();
         
-
+        List<ApplicationDescriptor> appList = new ArrayList<ApplicationDescriptor>( 10 );
+        
         try
         {
             Object[][] data = SQLUtil.getResults( username, password, url, driver, query, null );
 
             for( int i = 0; i < data.length; ++i )
             {
-                String name = (String) data[i][0];
-                String pkg = (String) data[i][1];
-                String bndl = (String) data[i][2];
-                String url = (String) data[i][3];
-                String ios_inst = (String) data[i][4];
-                String and_inst = (String) data[i][5];
+                String name = parseString( (String) data[i][0], null, true );
+                String pkg = parseString( (String) data[i][1], null, true );
+                String bndl = parseString( (String) data[i][2], null, true );
+                String url = parseString( (String) data[i][3], null, true );
+                String ios_inst = parseString( (String) data[i][4], null, true );
+                String and_inst = parseString( (String) data[i][5], null, true );
 
                 HashMap<String,Object> capabilities = new HashMap<String,Object>( 0 );
 
                 capabilitiesByName.put( name, capabilities );
 
-                ApplicationRegistry.instance().addApplicationDescriptor( new ApplicationDescriptor( name,
+                appList.add( new ApplicationDescriptor( name,
                                                                                                     name,
                                                                                                     pkg,
                                                                                                     bndl,
@@ -146,11 +158,14 @@ public class SQLApplicationProvider extends AbstractApplicationProvider
                 {
                     capabilities.put( name, getValue( clazz, value ));
                 }
-            }       
+            }    
+            return appList;
+            
         }
         catch ( Throwable e )
         {
             e.printStackTrace();
+            return null;
         }
     }
 

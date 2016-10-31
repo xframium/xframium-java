@@ -20,6 +20,8 @@
  *******************************************************************************/
 package org.xframium.device.cloud;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.xframium.utility.SQLUtil;
 
 /**
@@ -31,29 +33,26 @@ public class SQLCloudProvider extends AbstractCloudProvider
     // class data
     //
 
-    private static final String DEF_QUERY =
-        "SELECT NAME, USER_NAME, PASSWORD, HOST_NAME, \n" +
-        "       PROXY_HOST, PROXY_PORT, DESCRIPTION, GRID_INSTANCE \n" +
-        "FROM PERFECTO_CLOUDS";
+    private static final String DEF_QUERY = "SELECT NAME, USER_NAME, PASSWORD, HOST_NAME, \n" + "       PROXY_HOST, PROXY_PORT, DESCRIPTION, GRID_INSTANCE, CLOUD_PROVIDER \n" + "FROM CLOUDS";
 
     private static final String[] STR_ARR = new String[0];
 
     //
     // instance data
     //
-	
+
     /** The username. */
     private String username;
-	
+
     /** The password. */
     private String password;
-	
+
     /** The JDBC URL. */
     private String url;
-	
+
     /** The driver class name. */
     private String driver;
-	
+
     /** The query. */
     private String query;
 
@@ -62,30 +61,28 @@ public class SQLCloudProvider extends AbstractCloudProvider
      *
      * 
      */
-    public SQLCloudProvider( String username, String password, String url, String driver  )
+    public SQLCloudProvider( String username, String password, String url, String driver )
     {
         this.username = username;
         this.password = password;
         this.url = url;
         this.driver = driver;
         this.query = DEF_QUERY;
-        
-        readData();
     }
 
     /**
      * Instantiates a new SQL application provider.
      *
-     * @param resourceName            the resource name
-     * @param tabName the tab name
+     * @param resourceName
+     *            the resource name
+     * @param tabName
+     *            the tab name
      */
     public SQLCloudProvider( String username, String password, String url, String driver, String query )
     {
         this( username, password, url, driver );
 
-        this.query = (( query != null ) ? query : DEF_QUERY );
-        
-        readData();
+        this.query = ((query != null) ? query : DEF_QUERY);
     }
 
     /*
@@ -93,29 +90,54 @@ public class SQLCloudProvider extends AbstractCloudProvider
      * 
      * @see com.perfectoMobile.device.application.ApplicationProvider#readData()
      */
-    public void readData()
+    public List<CloudDescriptor> readData()
     {
-        CloudRegistry.instance().clear();
+        List<CloudDescriptor> cList = new ArrayList<CloudDescriptor>( 10 );
 
         try
         {
             Object[][] data = SQLUtil.getResults( username, password, url, driver, query, null );
 
-            for( int i = 0; i < data.length; ++i )
+            for ( int i = 0; i < data.length; ++i )
             {
-                CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( (String) data[i][0],    // name
-                                                                                  (String) data[i][1],    // user nemr
-                                                                                  (String) data[i][2],    // password
-                                                                                  (String) data[i][3],    // host name
-                                                                                  (String) data[i][4],    // proxy host 
-                                                                                  (String) data[i][5],    // proxy post
-                                                                                  (String) data[i][6],    // description
-                                                                                  (String) data[i][7], "PERFECTO" )); // grid instance
+                cList.add( new CloudDescriptor( parseString( (String) data[i][0], null, true ), // name
+                                parseString( (String) data[i][1], null, true ), // user
+                                                                                // nemr
+                                parseString( (String) data[i][2], null, true ), // password
+                                parseString( (String) data[i][3], null, true ), // host
+                                                                                // name
+                                parseString( (String) data[i][4], null, true ), // proxy
+                                                                                // host
+                                parseString( (String) data[i][5], null, true ), // proxy
+                                                                                // post
+                                parseString( (String) data[i][6], null, true ), // description
+                                parseString( (String) data[i][7], null, true ), 
+                                parseString( (String) data[i][8], null, true ), //grid
+                				parseString( (String) data[i][9], null, true ) ,
+                				parseString( (String) data[i][10], null, true ) )
+                		);
+                // instance
             }
+            
+            return cList;
         }
-        catch (Exception e)
+        catch ( Exception e )
         {
             log.fatal( "Error reading Excel Element File", e );
+            return null;
+        }
+    }
+
+    private String parseString( String currentValue, String defaultValue, boolean emptyCheck )
+    {
+        if ( currentValue == null )
+            return defaultValue;
+        else
+        {
+            if ( emptyCheck && currentValue.trim().isEmpty() )
+                return defaultValue;
+            else
+                return currentValue;
         }
     }
 

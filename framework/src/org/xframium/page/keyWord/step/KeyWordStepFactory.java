@@ -20,14 +20,18 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step;
 
+import com.xframium.serialization.SerializationManager;
+import com.xframium.serialization.json.ReflectionSerializer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.xframium.debugger.TestContainer;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
+import org.xframium.page.keyWord.step.spi.*;
 import org.xframium.page.keyWord.step.spi.KWSAddCookie;
 import org.xframium.page.keyWord.step.spi.KWSAddDevice;
 import org.xframium.page.keyWord.step.spi.KWSAlert;
@@ -66,6 +70,7 @@ import org.xframium.page.keyWord.step.spi.KWSReport;
 import org.xframium.page.keyWord.step.spi.KWSReturn;
 import org.xframium.page.keyWord.step.spi.KWSSQL;
 import org.xframium.page.keyWord.step.spi.KWSSet;
+import org.xframium.page.keyWord.step.spi.KWSSetContentKey;
 import org.xframium.page.keyWord.step.spi.KWSString;
 import org.xframium.page.keyWord.step.spi.KWSSync;
 import org.xframium.page.keyWord.step.spi.KWSValue;
@@ -73,8 +78,6 @@ import org.xframium.page.keyWord.step.spi.KWSVisible;
 import org.xframium.page.keyWord.step.spi.KWSWait;
 import org.xframium.page.keyWord.step.spi.KWSWaitFor;
 import org.xframium.page.keyWord.step.spi.KWSWindow;
-import com.xframium.serialization.SerializationManager;
-import com.xframium.serialization.json.ReflectionSerializer;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -98,16 +101,42 @@ public class KeyWordStepFactory
 
     /** The step map. */
     private Map<String, Class> stepMap = new HashMap<String, Class>( 20 );
+    private Map<Class, String> classMap = new HashMap<Class, String>( 20 );
 
     /** The log. */
     private Log log = LogFactory.getLog( KeyWordStepFactory.class );
 
+    public String getKW( Class currentClass )
+    {
+        return classMap.get( currentClass );
+    }
+    
     /**
      * Instantiates a new key word step factory.
      */
     private KeyWordStepFactory()
     {
         initializeDefaults();
+    }
+    
+    public List<KeyWordStep> getSupportedKeywords()
+    {
+        List<KeyWordStep> supportedKeywords = new ArrayList<KeyWordStep>( 20 );
+        
+        for ( Class keyword : stepMap.values() )
+        {
+            try
+            {
+                supportedKeywords.add( (KeyWordStep) keyword.newInstance() );
+            }
+            catch( Exception e )
+            {
+                
+            }
+        }
+        
+        return supportedKeywords;
+        
     }
 
     /**
@@ -122,7 +151,6 @@ public class KeyWordStepFactory
         addKeyWord( "GESTURE", KWSGesture.class );
         addKeyWord( "RETURN", KWSReturn.class );
         addKeyWord( "SET", KWSSet.class );
-        addKeyWord( "VALUE", KWSValue.class );
         addKeyWord( "GET", KWSValue.class );
         addKeyWord( "WAIT", KWSWait.class );
         addKeyWord( "WAIT_FOR", KWSWaitFor.class );
@@ -161,6 +189,10 @@ public class KeyWordStepFactory
         addKeyWord( "SQL", KWSSQL.class );
         addKeyWord( "OPERATOR", KWSOperator.class );
         addKeyWord( "NAVIGATE", KWSNavigate.class );
+        addKeyWord( "VISUAL", KWSVisual.class );
+        addKeyWord( "SET_CONTENT_KEY", KWSSetContentKey.class );
+        addKeyWord( "BROWSER", KWSBrowser.class );
+        addKeyWord( "IS_ENABLED", KWSEnabled.class );
     }
 
     /**
@@ -177,6 +209,7 @@ public class KeyWordStepFactory
             log.warn( "Overwriting Keyword [" + keyWord + "] of type [" + stepMap.get( keyWord ).getClass().getSimpleName() + "] with [" + kwImpl.getClass().getSimpleName() );
 
         stepMap.put( keyWord.toUpperCase(), kwImpl );
+        classMap.put( kwImpl, keyWord );
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( kwImpl, new ReflectionSerializer() );
     }
 
@@ -220,7 +253,7 @@ public class KeyWordStepFactory
      * @return the key word step
      */
     public KeyWordStep createStep( String name, String pageName, boolean active, String type, String linkId, boolean timed, StepFailure sFailure, boolean inverse, String os, String poi, int threshold, String description, long waitTime, String context,
-            String validation, String device, ValidationType validationType, String tagNames )
+            String validation, String device, ValidationType validationType, String tagNames, boolean startAt, boolean breakpoint, String deviceTags, String siteName )
     {
 
         Class kwImpl = stepMap.get( type.toUpperCase() );
@@ -250,6 +283,11 @@ public class KeyWordStepFactory
             returnValue.setContext( context );
             returnValue.setDevice( device );
             returnValue.setTagNames( tagNames );
+            returnValue.setStartAt( startAt );
+            returnValue.setBreakpoint( breakpoint );
+            returnValue.setDeviceTags( deviceTags );
+            if ( siteName != null && siteName.trim().length() > 0 )
+                returnValue.setSiteName( siteName );
 
             return returnValue;
         }

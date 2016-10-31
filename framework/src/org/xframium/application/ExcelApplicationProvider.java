@@ -24,7 +24,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -56,7 +58,6 @@ public class ExcelApplicationProvider extends AbstractApplicationProvider
 	{
 		this.fileName = fileName;
 		this.tabName = tabName;
-		readData();
 	}
 	
 	/**
@@ -69,20 +70,20 @@ public class ExcelApplicationProvider extends AbstractApplicationProvider
 	{
 		this.resourceName = resourceName;
 		this.tabName = tabName;
-		readData();
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.device.application.ApplicationProvider#readData()
 	 */
-	public void readData()
+	public List<ApplicationDescriptor> readData()
 	{
-	    ApplicationRegistry.instance().clear();
+	    List<ApplicationDescriptor> appList = new ArrayList<ApplicationDescriptor>( 10 );
+	    
 		if ( fileName == null )
 		{
 			if ( log.isInfoEnabled() )
 				log.info( "Reading from CLASSPATH as " + resourceName );
-			readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
+			return readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
 		}
 		else
 		{
@@ -90,11 +91,12 @@ public class ExcelApplicationProvider extends AbstractApplicationProvider
 			{
 				if ( log.isInfoEnabled() )
 					log.info( "Reading from FILE SYSTEM as [" + fileName + "]" );
-				readElements( new FileInputStream( fileName ) );
+				return readElements( new FileInputStream( fileName ) );
 			}
 			catch( FileNotFoundException e )
 			{
 				log.fatal( "Could not read from " + fileName, e );
+				return null;
 			}
 		}
 	}
@@ -129,9 +131,9 @@ public class ExcelApplicationProvider extends AbstractApplicationProvider
 	 *
 	 * @param inputStream the input stream
 	 */
-	private void readElements( InputStream inputStream )
+	private List<ApplicationDescriptor> readElements( InputStream inputStream )
 	{
-		
+	    List<ApplicationDescriptor> appList = new ArrayList<ApplicationDescriptor>( 10 );
 		XSSFWorkbook workbook = null;
 
 		try
@@ -146,15 +148,16 @@ public class ExcelApplicationProvider extends AbstractApplicationProvider
 				if ( getCellValue( currentRow.getCell( 0 ) ) == null || getCellValue( currentRow.getCell( 0 ) ).isEmpty() )
 					break;
 				
-				ApplicationRegistry.instance().addApplicationDescriptor( new ApplicationDescriptor( getCellValue( currentRow.getCell( 0 ) ), getCellValue( currentRow.getCell( 4 ) ), getCellValue( currentRow.getCell( 1 ) ), getCellValue( currentRow.getCell( 2 ) ), getCellValue( currentRow.getCell( 3 ) ), getCellValue( currentRow.getCell( 5 ) ), getCellValue( currentRow.getCell( 6 ) ), new HashMap<String,Object>( 0 ) ) );
+				appList.add( new ApplicationDescriptor( getCellValue( currentRow.getCell( 0 ) ), getCellValue( currentRow.getCell( 4 ) ), getCellValue( currentRow.getCell( 1 ) ), getCellValue( currentRow.getCell( 2 ) ), getCellValue( currentRow.getCell( 3 ) ), getCellValue( currentRow.getCell( 5 ) ), getCellValue( currentRow.getCell( 6 ) ), new HashMap<String,Object>( 0 ) ) );
 				
 			}
 
-			
+			return appList;
 		}
 		catch (Exception e)
 		{
 			log.fatal( "Error reading Excel Element File", e );
+			return null;
 		}
 		finally
 		{

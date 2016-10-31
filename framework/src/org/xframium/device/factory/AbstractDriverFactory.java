@@ -26,7 +26,6 @@ package org.xframium.device.factory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Capabilities;
@@ -37,7 +36,6 @@ import org.xframium.device.SimpleDevice;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.cloud.action.CloudActionProvider;
-import org.xframium.device.cloud.xsd.Cloud;
 import org.xframium.device.interrupt.DeviceInterrupt;
 import org.xframium.device.interrupt.DeviceInterrupt.INTERRUPT_TYPE;
 import org.xframium.device.interrupt.DeviceInterruptFactory;
@@ -60,7 +58,7 @@ public abstract class AbstractDriverFactory implements DriverFactory
      *            the current device
      * @return the device web driver
      */
-    protected abstract DeviceWebDriver _createDriver( Device currentDevice );
+    protected abstract DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud );
 
     public CloudActionProvider getCloudActionProvider( CloudDescriptor currentCloud )
     {
@@ -84,22 +82,41 @@ public abstract class AbstractDriverFactory implements DriverFactory
      */
     public DeviceWebDriver createDriver( Device currentDevice )
     {
+        return createDriver( currentDevice, CloudRegistry.instance().getCloud() );
+    }
+    
+    public DeviceWebDriver createDriver( Device currentDevice, CloudDescriptor useCloud )
+    {
         if ( log.isDebugEnabled() )
             log.debug( "Creating Driver for " + getClass().getSimpleName() );
 
-        DeviceWebDriver webDriver = _createDriver( currentDevice );
+        
+        
+        if ( currentDevice.getCloud() != null )
+        {
+            useCloud = CloudRegistry.instance().getCloud( currentDevice.getCloud() );
+            if ( useCloud == null )
+            {
+                useCloud = CloudRegistry.instance().getCloud();
+                log.warn( "A separate grid instance was specified but it does not exist in your cloud registry [" + currentDevice.getCloud() + "] - using the default Cloud instance" );
+            }
+        }
+        
+        DeviceWebDriver webDriver = _createDriver( currentDevice, useCloud );
 
         if ( webDriver != null )
         {
             try
             {
 
-                Device newDevice = new SimpleDevice( currentDevice.getKey(), currentDevice.getDriverType() );
+                SimpleDevice newDevice = new SimpleDevice( currentDevice.getKey(), currentDevice.getDriverType() );
                 newDevice.setBrowserName( currentDevice.getBrowserName() );
                 newDevice.setBrowserVersion( currentDevice.getBrowserVersion() );
                 CloudActionProvider actionProvider = (CloudActionProvider) Class.forName( CloudActionProvider.class.getPackage().getName() + "." + webDriver.getCloud().getProvider() + "CloudActionProvider" ).newInstance();
                 if ( actionProvider.popuplateDevice( webDriver, webDriver.getDeviceName(), newDevice ) )
                     webDriver.setPopulatedDevice( newDevice );
+                
+                newDevice.setCloud( currentDevice.getCloud() );
             }
             catch ( Exception e )
             {
@@ -169,6 +186,7 @@ public abstract class AbstractDriverFactory implements DriverFactory
 	 * @param String - name of the option
 	 * @return DesiredCapabilities
 	 */
+	@SuppressWarnings("unchecked")
 	protected DesiredCapabilities setCapabilities(Object value, DesiredCapabilities dc, String name) {
 		if (value instanceof Boolean)
 		{
@@ -188,7 +206,7 @@ public abstract class AbstractDriverFactory implements DriverFactory
 		else if (value instanceof Map) 
 		{
 			dc = BrowserCapabilityManager.instance().getBrowsercapabilityFactory(name)
-					.createBrowserOptions(dc, (Map<String,List<String>>)value);
+					.createBrowserOptions(dc, (Map<String,Object>)value);
 		}
 		return dc;
 	}

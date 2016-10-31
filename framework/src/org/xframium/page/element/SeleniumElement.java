@@ -36,7 +36,9 @@ import org.openqa.selenium.ContextAware;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -46,6 +48,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.factory.MorelandWebElement;
 import org.xframium.exception.ObjectIdentificationException;
 import org.xframium.gesture.GestureManager;
@@ -109,6 +113,7 @@ public class SeleniumElement extends AbstractElement
     {
         SeleniumElement element = new SeleniumElement( getBy(), getKey(), getElementName(), getPageName(), getContextElement(), locatedElement, index );
         element.setDriver( webDriver );
+        element.setDeviceContext( getDeviceContext() );
         return element;
     }
 
@@ -173,8 +178,32 @@ public class SeleniumElement extends AbstractElement
             if ( imageElement.getLocation() != null && imageElement.getSize() != null && imageElement.getSize().getWidth() > 0 && imageElement.getSize().getHeight() > 0 )
             {
                 String fileKey = "PRIVATE:" + getDeviceName() + ".png";
-                PerfectoMobile.instance().imaging().screenShot( getExecutionId(), getDeviceName(), fileKey, Screen.primary, ImageFormat.png, imageResolution );
-                byte[] imageData = PerfectoMobile.instance().repositories().download( RepositoryType.MEDIA, fileKey );
+
+                byte[] imageData = null;
+
+                String cloudName = ((DeviceWebDriver) webDriver).getDevice().getCloud();
+                if ( cloudName == null || cloudName.trim().isEmpty() )
+                    cloudName = CloudRegistry.instance().getCloud().getName();
+
+                if ( CloudRegistry.instance().getCloud( cloudName ).getProvider().equals( "PERFECTO" ) )
+                {
+                    PerfectoMobile.instance().imaging().screenShot( getExecutionId(), getDeviceName(), fileKey, Screen.primary, ImageFormat.png, imageResolution );
+                    imageData = PerfectoMobile.instance().repositories().download( RepositoryType.MEDIA, fileKey );
+                }
+                else
+                {
+                    if ( webDriver instanceof TakesScreenshot )
+                    {
+                        try
+                        {
+                            imageData = ((TakesScreenshot) webDriver).getScreenshotAs( OutputType.BYTES );
+                        }
+                        catch ( Exception e )
+                        {
+                            log.error( "Error taking screenshot", e );
+                        }
+                    }
+                }
                 if ( imageData != null && imageData.length > 0 )
                 {
                     try
@@ -270,7 +299,14 @@ public class SeleniumElement extends AbstractElement
      */
     private By useBy()
     {
-        if ( getBy().getContext() != null )
+        if ( getDeviceContext() != null && !getDeviceContext().trim().isEmpty() )
+        {
+            if ( webDriver instanceof VisualDriverProvider )
+                useVisualDriver = true;
+            else if ( webDriver instanceof ContextAware )
+                ((ContextAware) webDriver).context( getDeviceContext() );
+        }
+        else if ( getBy().getContext() != null )
         {
             if ( webDriver instanceof VisualDriverProvider )
                 useVisualDriver = true;
@@ -361,6 +397,26 @@ public class SeleniumElement extends AbstractElement
     /*
      * (non-Javadoc)
      * 
+     * @see com.perfectoMobile.page.element.AbstractElement#_mouseDoubleClick()
+     */
+    public boolean _mouseDoubleClick()
+    {
+        WebElement webElement = getElement();
+        if ( webElement != null && webElement.getSize().getHeight() > 0 && webElement.getSize().getWidth() > 0 )
+        {
+            if ( webDriver instanceof HasInputDevices )
+            {
+                new Actions( webDriver ).doubleClick( webElement ).build().perform();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.perfectoMobile.page.element.AbstractElement#_release()
      */
     public boolean _release()
@@ -434,8 +490,8 @@ public class SeleniumElement extends AbstractElement
     {
         if ( locatedElement != null )
         {
-            if ( log.isInfoEnabled() )
-                log.info( Thread.currentThread().getName() + ": Element " + getKey() + " Read from cache" );
+            if ( log.isDebugEnabled() )
+                log.debug( Thread.currentThread().getName() + ": Element " + getKey() + " Read from cache" );
             return locatedElement;
         }
 
@@ -483,10 +539,6 @@ public class SeleniumElement extends AbstractElement
             }
 
             return null;
-        }
-        catch ( NoSuchElementException e )
-        {
-            throw new ObjectIdentificationException( getBy(), useBy() );
         }
         finally
         {
@@ -545,6 +597,9 @@ public class SeleniumElement extends AbstractElement
             case "INPUT":
                 returnValue = currentElement.getAttribute( "value" );
 
+            case "SELECT":
+                returnValue = new Select( currentElement ).getFirstSelectedOption().getText();
+
             default:
                 returnValue = currentElement.getText();
         }
@@ -564,6 +619,8 @@ public class SeleniumElement extends AbstractElement
     @Override
     protected String _getAttribute( String attributeName )
     {
+    	if ( log.isDebugEnabled() )
+    		log.debug( "Getting Attribute value for " + attributeName);
         return getElement().getAttribute( attributeName );
     }
 
@@ -605,6 +662,22 @@ public class SeleniumElement extends AbstractElement
                 getKey(), null, 0, "", webElement instanceof CachedElement, null );
         return returnValue;
     }
+    
+    
+    @Override
+    protected boolean _isEnabled()
+    {
+    	 long startTime = System.currentTimeMillis();
+         WebElement webElement = (WebElement) getElement();
+         
+         boolean returnValue = webElement.isEnabled();
+         
+         PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "enabled", System.currentTimeMillis(), System.currentTimeMillis() - startTime, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE,
+                 getKey(), null, 0, "", webElement instanceof CachedElement, null );
+         return returnValue;
+         
+    }
+   
 
     private WebDriver getNativeDriver()
     {
@@ -643,8 +716,7 @@ public class SeleniumElement extends AbstractElement
         }
 
         WebElement webElement = getElement();
-        PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "present", System.currentTimeMillis(), System.currentTimeMillis() - startTime, webElement != null ? StepStatus.SUCCESS : StepStatus.FAILURE,
-                getKey(), null, 0, "", webElement instanceof CachedElement, null );
+
         return webElement != null;
     }
 
@@ -737,20 +809,71 @@ public class SeleniumElement extends AbstractElement
 
         if ( webElement.getTagName().equalsIgnoreCase( "select" ) )
         {
-            if ( log.isInfoEnabled() )
-                log.info( Thread.currentThread().getName() + ": Selecting element value from [" + getKey() + "] as " + currentValue );
+            switch ( setMethod )
+            {
+                case DEFAULT:
+                    if ( log.isInfoEnabled() )
+                        log.info( Thread.currentThread().getName() + ": Selecting element value from [" + getKey() + "] as " + currentValue );
 
-            Select selectElement = new Select( webElement );
-            if ( selectElement.isMultiple() )
-                selectElement.deselectAll();
-            try
-            {
-                selectElement.selectByVisibleText( currentValue );
+                    Select selectElement = new Select( webElement );
+                    if ( selectElement.isMultiple() )
+                        selectElement.deselectAll();
+                    try
+                    {
+                        selectElement.selectByVisibleText( currentValue );
+                    }
+                    catch ( Exception e )
+                    {
+                        selectElement.selectByValue( currentValue );
+                    }
+
+                    break;
+
+                case MULTISELECT:
+                    if ( log.isInfoEnabled() )
+                        log.info( Thread.currentThread().getName() + ": Selecting element value from [" + getKey() + "] as " + currentValue );
+                    Select multipleselect = new Select( webElement );
+                    String multiSelectTokens[] = currentValue.split( "," );
+                    for ( String tokens : multiSelectTokens )
+                    {
+                        if ( multipleselect.isMultiple() )
+                        {
+                            try
+                            {
+                                multipleselect.selectByVisibleText( tokens );
+                            }
+                            catch ( Exception e )
+                            {
+                                multipleselect.selectByValue( tokens );
+                            }
+                        }
+                    }
+                default:
+                    break;
             }
-            catch ( Exception e )
-            {
-                selectElement.selectByValue( currentValue );
-            }
+        }
+        else if ( webElement.getTagName().equalsIgnoreCase( "UIAPickerWheel" ) )
+        {
+        	System.out.println( "SETTING PICKER" );
+        	try
+        	{
+        	MorelandWebElement x = (MorelandWebElement) webElement;
+            ((IOSElement) x.getWebElement()).sendKeys(currentValue);
+        	}
+        	catch( Exception e )
+        	{
+        		e.printStackTrace();
+        	}
+        	
+        	try
+        	{
+        	MorelandWebElement x = (MorelandWebElement) webElement;
+            ((IOSElement) x.getWebElement()).setValue(currentValue);
+        	}
+        	catch( Exception e )
+        	{
+        		e.printStackTrace();
+        	}
         }
         else
         {
@@ -759,7 +882,6 @@ public class SeleniumElement extends AbstractElement
                 case DEFAULT:
                     if ( log.isInfoEnabled() )
                         log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue );
-
                     MorelandWebElement x = (MorelandWebElement) webElement;
                     if ( x.getWebElement() instanceof IOSElement )
                         ((IOSElement) x.getWebElement()).setValue( currentValue );
@@ -775,10 +897,11 @@ public class SeleniumElement extends AbstractElement
                         log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue + " using individual send keys" );
 
                     webElement.sendKeys( currentValue );
+                default:
+                    break;
 
             }
         }
-
     }
 
     /*
@@ -797,8 +920,8 @@ public class SeleniumElement extends AbstractElement
                 int centerWidth = Integer.parseInt( iExec.getLeft() ) + (Integer.parseInt( iExec.getWidth() ) / 2);
                 int centerHeight = Integer.parseInt( iExec.getTop() ) + (Integer.parseInt( iExec.getHeight() ) / 2);
 
-                int useX = (int) (((double) centerWidth / (double) Integer.parseInt( iExec.getScreenWidth() )) * 100 );
-                int useY = (int) (((double) centerHeight / (double) Integer.parseInt( iExec.getScreenHeight() )) * 100 );
+                int useX = (int) (((double) centerWidth / (double) Integer.parseInt( iExec.getScreenWidth() )) * 100);
+                int useY = (int) (((double) centerHeight / (double) Integer.parseInt( iExec.getScreenHeight() )) * 100);
 
                 GestureManager.instance().createPress( new Point( useX, useY ) ).executeGesture( webDriver );
 
@@ -809,7 +932,6 @@ public class SeleniumElement extends AbstractElement
 
     }
 
-    
     /*
      * (non-Javadoc)
      * 

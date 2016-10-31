@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+  <model>
+    
+    <page name="home" />
+
+  </model>
+
+  <function name="kw-align" active="true">
+    
+    <step type="ALIGN" name="toggleButton" page="home" >
+      <parameter type="STATIC" value="LEFT=toggleValue" />
+    </step>
+    
+    <step type="ALIGN" name="confirmValue" page="home" >
+      <parameter type="STATIC" value="RIGHT=promptValue" />
+    </step>
+    
+    <step type="ALIGN" name="confirmValue" page="home" >
+      <parameter type="STATIC" value="RIGHT=promptValue(50)" />
+    </step>
+    
+    <step type="ALIGN" name="alertButton" page="home" >
+      <parameter type="STATIC" value="TOP=confirmButton" />
+      <parameter type="STATIC" value="BOTTOM=confirmButton" />
+    </step>
+    
+
+  </function>
+
+</suite>

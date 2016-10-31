@@ -59,7 +59,7 @@ public class HistoryWriter
         this.rootFolder = rootFolder;
     }
 
-    public void addExecution( String testName, Device device, long startTime, long stopTime, int passed, int failed, int ignored, boolean success, String indexFile, int scriptFailures, int configFailures, int applicationFailures, int cloudFailures )
+    public void addExecution( String testName, Device device, long startTime, long stopTime, int passed, int failed, int ignored, int success, String indexFile, int scriptFailures, int configFailures, int applicationFailures, int cloudFailures, int filteredTests )
     {
         
         
@@ -181,7 +181,7 @@ public class HistoryWriter
 
     }
 
-    public void writeData( String fileName, long startTime, long endTime, int env, int oss, int pass, int fail, TreeMap<String, int[]> envMap, int scriptFailures, int configFailures, int applicationFailures, int cloudFailures )
+    public void writeData( String fileName, long startTime, long endTime, int env, int oss, int pass, int fail, TreeMap<String, int[]> envMap, int scriptFailures, int configFailures, int applicationFailures, int cloudFailures, int filteredTests )
     {
         OutputStream os = null;
 
@@ -285,17 +285,21 @@ public class HistoryWriter
                 if  (suiteName == null )
                 	suiteName = hRoot.getName();
 
-                for ( TestCase tc : hRoot.testCase )
+                if (( hRoot != null ) &&
+                    ( hRoot.testCase != null ))
                 {
-                    testMap.put( tc.getName(), tc );
-
-                    for ( Environment env : tc.environment )
+                    for ( TestCase tc : hRoot.testCase )
                     {
-                        environmentMap.put( env.getName(), env );
+                        testMap.put( tc.getName(), tc );
+                        
+                        for ( Environment env : tc.environment )
+                        {
+                            environmentMap.put( env.getName(), env );
+                        }
                     }
+                    
+                    executionList.addAll( hRoot.getSuite() );
                 }
-                
-                executionList.addAll( hRoot.getSuite() );
             }
 
         }
@@ -737,6 +741,7 @@ public class HistoryWriter
     {
         int testSuccess = 0;
         int testFail = 0;
+        int testIgnored = 0;
         int stepSuccess = 0;
         int stepFail = 0;
         int stepIgnore = 0;
@@ -757,21 +762,26 @@ public class HistoryWriter
                     int[] caseValue = envMap.get( runKey );
                     if ( caseValue == null )
                     {
-                        caseValue = new int[] { 0, 0 };
+                        caseValue = new int[] { 0, 0, 0 };
                         envMap.put( runKey, caseValue );
                     }
     
                     for ( Execution exe : env.getExecution() )
                     {
-                        if ( exe.isSuccess() )
+                        if ( exe.isSuccess() == 1 )
                         {
                             caseValue[0]++;
                             testSuccess++;
                         }
-                        else
+                        else if ( exe.isSuccess() == 0 )
                         {
                             caseValue[1]++;
                             testFail++;
+                        }
+                        else
+                        {
+                            caseValue[2]++;
+                            testIgnored++;
                         }
     
                         stepSuccess += exe.getPassed();
@@ -791,20 +801,25 @@ public class HistoryWriter
                 int[] caseValue = envMap.get( runKey );
                 if ( caseValue == null )
                 {
-                    caseValue = new int[] { 0, 0 };
+                    caseValue = new int[] { 0, 0, 0 };
                     envMap.put( runKey, caseValue );
                 }
 
                 for ( Execution exe : env.getExecution() )
                 {
-                    if ( exe.isSuccess() )
+                    if ( exe.isSuccess() == 1 )
                     {
                         caseValue[0]++;
                         testSuccess++;
                     }
-                    else
+                    else if ( exe.isSuccess() == 0 )
                     {
                         caseValue[1]++;
+                        testFail++;
+                    }
+                    else
+                    {
+                        caseValue[2]++;
                         testFail++;
                     }
 

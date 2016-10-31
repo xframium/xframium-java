@@ -100,5 +100,30 @@ public class BeanManager
 		return beanFactory.createBean( returnType, inputStream );
 	}
 	
+	/**
+     * Creates the bean.
+     *
+     * @param returnType the return type
+     * @param inputData the input data
+     * @return the bean
+     * @throws Exception the exception
+     */
+    public Bean createBean( BeanFactory beanFactory, Class returnType, String inputData ) throws Exception
+    {
+        return beanFactory.createBean( returnType, inputData );
+    }
+    
+    /**
+     * Creates the bean.
+     *
+     * @param returnType the return type
+     * @param inputStream the input stream
+     * @return the bean
+     * @throws Exception the exception
+     */
+    public Bean createBean( BeanFactory beanFactory, Class returnType, InputStream inputStream ) throws Exception
+    {
+        return beanFactory.createBean( returnType, inputStream );
+    }
 	
 }

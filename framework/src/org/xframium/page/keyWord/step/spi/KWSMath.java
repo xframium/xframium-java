@@ -20,8 +20,13 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
+import org.xframium.exception.ScriptException;
+import org.xframium.gesture.device.action.DeviceAction.ActionType;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordParameter;
@@ -33,7 +38,13 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSMath extends AbstractKeyWordStep
 {
-    
+    public KWSMath()
+    {
+        kwName = "Math";
+        kwDescription = "Allows the script to perform some basic math operations";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-math";
+        orMapping = false;
+    }
     /**
      * Format string.
      *
@@ -45,17 +56,43 @@ public class KWSMath extends AbstractKeyWordStep
         return parameterValue.replace( "$", " " ).replace( "%", " " ).trim();
     }
     
+    public enum MATH_TYPE
+    {
+        add(1, "add" , "Add numbers and compare the results "),
+        subtract(2, "subtract", "Subtract numbers and compare the results");
+        
+        public List<MATH_TYPE> getSupported()
+        {
+            List<MATH_TYPE> supportedList = new ArrayList<MATH_TYPE>( 10 );
+            supportedList.add( MATH_TYPE.add );
+            supportedList.add( MATH_TYPE.subtract );
+            return supportedList;
+        }
+        
+        private MATH_TYPE( int id, String name, String description )
+        {
+            this.id = id;
+            this.name= name;
+            this.description = description;
+        }
+        
+        private int id;
+        private String name;
+        private String description;
+    }
+    
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
 	@Override
-	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
 	{
 	    String compareToString = null;
 	    double currentValue = 0;
+	    boolean valueAdded = false;
 	    for ( int i=0; i<getParameterList().size(); i++ )
 	    {
-	        boolean valueAdded = false;
+	        
 
 	        String currentParameter = getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "";
 	        
@@ -66,13 +103,13 @@ public class KWSMath extends AbstractKeyWordStep
 	        }
 	        else
 	        {
-	            switch ( getName().toLowerCase() )
+	            switch ( MATH_TYPE.valueOf( getName().toLowerCase() ) )
 	            {
-	                case "add":
+	                case add:
 	                    currentValue += Double.parseDouble( formatString( currentParameter ) );
 	                    break;
 	                    
-	                case "subtract":
+	                case subtract:
 	                    if ( valueAdded )
 	                        currentValue -= Double.parseDouble( formatString( currentParameter ) );
 	                    else
@@ -89,11 +126,11 @@ public class KWSMath extends AbstractKeyWordStep
 	        double compareTo = Double.parseDouble( formatString( compareToString ) );
 	        
 	        if ( compareTo != currentValue )
-                throw new IllegalStateException( "GET Expected [" + compareTo + "] but found [" + currentValue + "]" );
+                throw new ScriptException( "GET Expected [" + compareTo + "] but found [" + currentValue + "]" );
 	    }
 		
 		if ( !validateData( currentValue + "" ) )
-            throw new IllegalStateException( "MATH Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + currentValue + "]" );
+            throw new ScriptException( "MATH Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + currentValue + "]" );
         
         if ( getContext() != null )
         {

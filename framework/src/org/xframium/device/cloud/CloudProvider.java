@@ -23,6 +23,8 @@
  */
 package org.xframium.device.cloud;
 
+import java.util.List;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Interface ApplicationProvider.
@@ -33,5 +35,5 @@ public interface CloudProvider
 	/**
 	 * Read data.
 	 */
-	public void readData();
+	public List<CloudDescriptor> readData();
 }

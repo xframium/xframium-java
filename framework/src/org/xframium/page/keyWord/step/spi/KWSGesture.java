@@ -25,6 +25,7 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.xframium.container.SuiteContainer;
 import org.xframium.gesture.Gesture.Direction;
 import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.gesture.GestureManager;
@@ -39,12 +40,18 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSGesture extends AbstractKeyWordStep
 {
-	
+	public KWSGesture()
+    {
+	    kwName = "Perform Gesture";
+        kwDescription = "Allows the script to perform a gesture on a touch-enabled device";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-gesture";
+        orMapping = false;
+    }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
 	@Override
-	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
 	{
 		if ( log.isDebugEnabled() )
 			log.info( "Executing Gesture " + getName() );
@@ -134,7 +141,7 @@ public class KWSGesture extends AbstractKeyWordStep
 				break;
 				
 			case KEYPRESS:
-				GestureManager.instance().createKeyPress( Integer.parseInt( ( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) ) ), Integer.parseInt( ( (String) getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) ) ) ).executeGesture( webDriver, webElement );
+				GestureManager.instance().createKeyPress( ( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) ), Integer.parseInt( ( (String) getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) ) ) ).executeGesture( webDriver, webElement );
 				break;
 				
 			case HIDE_KEYBOARD:

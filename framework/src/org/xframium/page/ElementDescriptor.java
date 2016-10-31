@@ -47,19 +47,7 @@ public class ElementDescriptor
 	{
 		// TODO Auto-generated constructor stub
 	}
-	
-	/**
-	 * Instantiates a new element descriptor using the System site name defined by page manager.
-	 *
-	 * @param pageClass the page class
-	 * @param elementName the element name
-	 */
-	public ElementDescriptor( Class pageClass, String elementName )
-	{
-		this.siteName = PageManager.instance().getSiteName();
-		this.pageName = pageClass.getInterfaces()[0].getSimpleName();
-		this.elementName = elementName;
-	}
+
 	
 	/**
 	 * Instantiates a new element descriptor.

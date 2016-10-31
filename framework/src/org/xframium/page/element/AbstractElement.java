@@ -134,6 +134,13 @@ public abstract class AbstractElement implements Element
 	protected abstract boolean _press();
 	
 	/**
+	 * _mouseDoubleClick.
+	 *
+	 * @return true, if successful
+	 */
+	protected abstract boolean _mouseDoubleClick();
+	
+	/**
 	 * _release.
 	 *
 	 * @return true, if successful
@@ -141,6 +148,8 @@ public abstract class AbstractElement implements Element
 	protected abstract boolean _release();
 	
 	protected abstract boolean _isFocused();
+	
+	protected abstract boolean _isEnabled();
 	/**
 	 * _wait for visible.
 	 *
@@ -186,12 +195,31 @@ public abstract class AbstractElement implements Element
 	/** The context. */
 	private Element context;
 	
+	private String deviceContext;
+	
 	/** The token map. */
 	private Map<String,String> tokenMap = null;
 	
 	/** The tokens applied. */
 	private boolean tokensApplied = false;
 
+	public String getName()
+	{
+	    return elementName;
+	}
+	
+	@Override
+	public String getDeviceContext()
+	{
+	    return deviceContext;
+	}
+	@Override
+	public void setDeviceContext( String deviceContext )
+	{
+	    this.deviceContext = deviceContext;
+	    
+	}
+	
 	/**
 	 * Instantiates a new abstract element.
 	 *
@@ -600,35 +628,52 @@ public abstract class AbstractElement implements Element
 
 	
 	
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.element.Element#click()
-	 */
 	@Override
 	public void click()
 	{
+		click( 1, 0 );
+	}
+
+	public void click( int clickCount, int waitTime )
+	{
 		long startTime = System.currentTimeMillis();
 		boolean success = false;
+		String clickval = String.valueOf(clickCount);
+		String waitval =  String.valueOf(waitTime);
+		String clickArray[]=new String[2];
+		clickArray[0]=clickval;
+		clickArray[1]=waitval;
 		try
 		{
-			_click();
+			if (clickCount == 1) {
+				_click();			
+			} else if (clickCount > 1) {
+				_mouseDoubleClick();
+//				new Actions( webDriver ).doubleClick( webElement ).build().perform();
+			}
+								
 			success = true;
-			PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), pageName, elementName, "click", System.currentTimeMillis(), System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, getKey(), null, 0, "", false, null );
-		}
+			PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), pageName, elementName, "click", System.currentTimeMillis(), System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, getKey(), null, 0, "", false,clickArray );
+		}	
 		catch( Exception e )
 		{
-		    if ( e instanceof XFramiumException )
-		        throw e;
-		    else
-		        throw new ScriptConfigurationException( e.getMessage() );
+			if(e instanceof XFramiumException)
+				try {
+					throw e;
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			else
+				throw new ScriptConfigurationException( e.getMessage() );
 		}
 		finally
 		{			
 			if ( timed )
 				PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".click()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
 		}
-
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.element.Element#setTimed(boolean)
 	 */
@@ -693,5 +738,9 @@ public abstract class AbstractElement implements Element
         return _getAt();
     }
 
-
+	@Override
+    public boolean isEnabled()
+    {
+        return _isEnabled();
+    }
 }

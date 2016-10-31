@@ -24,6 +24,7 @@ import org.xframium.page.AbstractPage;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.PageManager;
 import org.xframium.page.element.Element;
+import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.keyWord.KeyWordPage;
 
 // TODO: Auto-generated Javadoc
@@ -35,6 +36,8 @@ public class KeyWordPageImpl extends AbstractPage implements KeyWordPage
 
 	/** The _page name. */
 	private String _pageName;
+	private ElementProvider elementProvider;
+	private String siteName;
 	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.Page#initializePage()
@@ -43,41 +46,47 @@ public class KeyWordPageImpl extends AbstractPage implements KeyWordPage
 	public void initializePage()
 	{
 		// TODO Auto-generated method stub
-
+	    
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.AbstractPage#getElement(java.lang.String, java.lang.String, java.lang.String)
-	 */
-	public Element getElement( String siteName, String pageName, String elementName )
+	public KeyWordPageImpl( ElementProvider elementProvider, String siteName )
+	{
+	    this.elementProvider = elementProvider;
+	    this.siteName = siteName;
+	}
+	
+	public KeyWordPageImpl()
     {
-    	ElementDescriptor elementDescriptor = new ElementDescriptor( siteName, pageName, elementName );
-    	
-    	if ( log.isInfoEnabled() )
-    		log.info( Thread.currentThread().getName() + ": Attempting to locate element using [" + elementDescriptor.toString() + "]" + " - " + webDriver );
-    	
-    	Element myElement = PageManager.instance().getElementProvider().getElement( elementDescriptor );
-    	
-    	if ( myElement == null )
-    	{
-    	    return null;
-    	}
-    	else
-    	{
-    	    myElement = myElement.cloneElement();
-    	    myElement.setDriver( webDriver );
-            return myElement;
-    	}
-    	
-    	
+        this( PageManager.instance().getElementProvider(), PageManager.instance().getSiteName() );
     }
+	
+	@Override
+	public Element getElement( ElementDescriptor elementDescriptor )
+	{
+	    if ( log.isInfoEnabled() )
+            log.info( Thread.currentThread().getName() + ": Attempting to locate element using [" + elementDescriptor.toString() + "]" + " - " + webDriver );
+        
+        Element myElement = elementProvider.getElement( elementDescriptor );
+        
+        if ( myElement == null )
+        {
+            return null;
+        }
+        else
+        {
+            myElement = myElement.cloneElement();
+            myElement.setDriver( webDriver );
+            return myElement;
+        }
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.AbstractPage#getElement(java.lang.String, java.lang.String)
 	 */
 	public Element getElement( String pageName, String elementName )
     {
-    	return getElement( PageManager.instance().getSiteName(), pageName, elementName );
+    	return getElement( siteName, pageName, elementName );
     }
     
     /* (non-Javadoc)
@@ -85,7 +94,7 @@ public class KeyWordPageImpl extends AbstractPage implements KeyWordPage
      */
     public Element getElement( String elementName )
     {
-    	return getElement( PageManager.instance().getSiteName(), _pageName, elementName );
+    	return getElement( siteName, _pageName, elementName );
     }
     
     /* (non-Javadoc)
