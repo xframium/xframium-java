@@ -2,15 +2,11 @@
 <?xml-stylesheet type="text/xsl" href="http://xframium.org/xsl/xs3p.xsl"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.xframium.org/xFramiumDriver" xmlns:tns="http://www.xframium.org/xFramiumDriver" elementFormDefault="qualified">
   <annotation>
-    <documentation xml:lang="en">
-      xFramium Driver Definition
+    <documentation xml:lang="en"> xFramium Driver Definition
     </documentation>
   </annotation>
-
   <element name="xFramium" type="tns:xFramiumRoot" />
-
   <complexType name="xFramiumRoot">
-  
     <sequence>
       <element name="cloud" type="tns:xCloud" minOccurs="1" maxOccurs="1" />
       <element name="application" type="tns:xApplication" minOccurs="1" maxOccurs="1" />
@@ -24,21 +20,18 @@
       <element name="security" type="tns:xSecurity" minOccurs="0" maxOccurs="1" />
     </sequence>
   </complexType>
-
   <complexType name="xSecurity">
     <attribute name="secureCloud" type="boolean" use="optional" default="false" />
   </complexType>
-
   <complexType name="xProxy">
-  	<simpleContent>
-		<extension base="string">
-    		<attribute name="proxyHost" type="string" use="optional" />
-    		<attribute name="proxyPort" type="string" use="optional" />
-    		<attribute name="proxyIgnoreHost" type="string" use="optional" />
-    	</extension>
+    <simpleContent>
+      <extension base="string">
+        <attribute name="proxyHost" type="string" use="optional" />
+        <attribute name="proxyPort" type="string" use="optional" />
+        <attribute name="proxyIgnoreHost" type="string" use="optional" />
+      </extension>
     </simpleContent>
   </complexType>
-  
   <complexType name="xDevices">
     <sequence>
       <element name="device" type="tns:xDevice" minOccurs="0" maxOccurs="unbounded" />
@@ -60,7 +53,6 @@
       </simpleType>
     </attribute>
   </complexType>
-
   <complexType name="xDevice">
     <sequence>
       <element name="capability" type="tns:xDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
@@ -79,16 +71,15 @@
     <attribute name="cloud" type="string" use="optional" />
     <attribute name="tagNames" type="string" use="optional" />
     <attribute name="driverType" use="optional">
-		<simpleType>
-			<restriction base="string">
-				<enumeration value="APPIUM" />
-				<enumeration value="WEB" />
-				<enumeration value="PERFECTO" />
-			</restriction>
-		</simpleType>
-	</attribute>
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="APPIUM" />
+          <enumeration value="WEB" />
+          <enumeration value="PERFECTO" />
+        </restriction>
+      </simpleType>
+    </attribute>
   </complexType>
-
   <complexType name="xContent">
     <attribute name="fileName" type="string" use="optional" />
     <attribute name="provider" use="optional" default="EXCEL">
@@ -102,7 +93,6 @@
       </simpleType>
     </attribute>
   </complexType>
-
   <complexType name="xData">
     <attribute name="fileName" type="string" use="optional" />
     <attribute name="provider" use="optional" default="XML">
@@ -116,7 +106,6 @@
       </simpleType>
     </attribute>
   </complexType>
-
   <complexType name="xApplication">
     <sequence>
       <element name="capability" type="tns:xDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
@@ -141,7 +130,6 @@
     <attribute name="iosInstall" type="string" use="optional" />
     <attribute name="androidInstall" type="string" use="optional" />
   </complexType>
-
   <complexType name="xDriver">
     <sequence>
       <element name="property" type="tns:xProperty" minOccurs="0" maxOccurs="unbounded" />
@@ -171,21 +159,17 @@
     <attribute name="outputFolder" type="string" use="required" />
     <attribute name="suiteName" type="string" use="optional" />
   </complexType>
-
   <complexType name="xTag">
     <sequence>
-        <element name="description" type="tns:xDescription" minOccurs="0" maxOccurs="1" />
+      <element name="description" type="tns:xDescription" minOccurs="0" maxOccurs="1" />
     </sequence>
     <attribute name="name" use="required" />
     <attribute name="descriptor" use="required" />
-    
   </complexType>
-
   <complexType name="xLibrary">
     <attribute name="name" use="required" />
     <attribute name="className" use="required" />
   </complexType>
-
   <complexType name="xArtifact">
     <attribute name="type" use="required">
       <simpleType>
@@ -208,7 +192,6 @@
     </attribute>
     <attribute name="active" type="boolean" use="optional" default="true" />
   </complexType>
-
   <complexType name="xProperty">
     <simpleContent>
       <extension base="string">
@@ -216,7 +199,6 @@
       </extension>
     </simpleContent>
   </complexType>
-
   <complexType name="xPropertyAdapter">
     <simpleContent>
       <extension base="string">
@@ -224,7 +206,6 @@
       </extension>
     </simpleContent>
   </complexType>
-
   <complexType name="xDeviceCapability">
     <simpleContent>
       <extension base="string">
@@ -242,7 +223,6 @@
       </extension>
     </simpleContent>
   </complexType>
-
   <complexType name="xCloud">
     <attribute name="provider" use="optional" default="LOCAL">
       <simpleType>
@@ -269,7 +249,6 @@
     <attribute name="gesture" type="string" use="optional" />
     <attribute name="deviceAction" type="string" use="optional" />
   </complexType>
-
   <complexType name="xPage">
     <sequence>
       <element name="element" type="tns:xElement" minOccurs="0" maxOccurs="unbounded" />
@@ -278,8 +257,10 @@
     <attribute name="name" type="string" use="required" />
     <attribute name="class" type="string" use="optional" />
   </complexType>
-
   <complexType name="xElement">
+    <sequence>
+      <element name="parameter" type="tns:xElementParameter" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
     <attribute name="name" type="string" use="required" />
     <attribute name="descriptor" use="required">
       <simpleType>
@@ -299,8 +280,12 @@
     </attribute>
     <attribute name="value" type="string" use="required" />
     <attribute name="contextName" type="string" use="optional" />
+    <attribute name="deviceContext" type="string" use="optional" />
   </complexType>
-
+  <complexType name="xElementParameter">
+    <attribute name="name" type="string" use="required" />
+    <attribute name="value" type="string" use="required" />
+  </complexType>
   <complexType name="xSuite">
     <sequence>
       <element name="test" type="tns:xTest" minOccurs="0" maxOccurs="unbounded" />
@@ -317,7 +302,6 @@
       </simpleType>
     </attribute>
   </complexType>
-
   <complexType name="xModel">
     <sequence>
       <element name="page" type="tns:xPage" minOccurs="0" maxOccurs="unbounded" />
@@ -336,7 +320,6 @@
     </attribute>
     <attribute name="siteName" type="string" use="required" />
   </complexType>
-
   <complexType name="xTest">
     <sequence>
       <element name="description" type="tns:xDescription" minOccurs="0" maxOccurs="1" />
@@ -363,13 +346,11 @@
     <attribute name="contentKeys" type="string" use="optional" />
     <attribute name="deviceTags" type="string" use="optional" />
   </complexType>
-
   <complexType name="xDescription">
     <simpleContent>
       <extension base="string" />
     </simpleContent>
   </complexType>
-
   <complexType name="xStep">
     <sequence>
       <element name="parameter" type="tns:xParameter" minOccurs="0" maxOccurs="unbounded" />
@@ -452,7 +433,6 @@
         </restriction>
       </simpleType>
     </attribute>
-
     <attribute name="validation" type="string" use="optional" />
     <attribute name="validationType" use="optional">
       <simpleType>
@@ -468,7 +448,6 @@
     <attribute name="tagNames" type="string" use="optional" />
     <attribute name="deviceTags" type="string" use="optional" />
   </complexType>
-
   <complexType name="xToken">
     <attribute name="type" use="required">
       <simpleType>
@@ -484,7 +463,6 @@
     <attribute name="value" type="string" use="required" />
     <attribute name="name" type="string" use="required" />
   </complexType>
-
   <complexType name="xParameter">
     <sequence>
       <element name="token" type="tns:xToken" minOccurs="0" maxOccurs="unbounded" />
@@ -504,34 +482,31 @@
     <attribute name="value" type="string" use="required" />
     <attribute name="name" type="string" use="optional" />
   </complexType>
-
-	<complexType name="xObjectDeviceCapability">
-		<sequence>
-			<element name="capabilities" type="tns:xCapabilities" minOccurs="0" maxOccurs="unbounded" />
-		</sequence>
-		<attribute name="name" type="string" use="required" />
-	</complexType>
-
-	<complexType name="xCapabilities">
-		<sequence>
-			<element name="options" type="tns:xOptions" minOccurs="0" maxOccurs="unbounded" />
-		</sequence>
-		<attribute name="factoryName" use="required">
-			<simpleType>
-				<restriction base="string">
-					<enumeration value="ChromeOptions" />
-					<enumeration value="FirefoxProfile"/>
-			</restriction>
-			</simpleType>
-		</attribute>
-	</complexType>
-	
-	<complexType name="xOptions">
-		<simpleContent>
-			<extension base="string">
-				<attribute name="name" type="string" use="required" />
-				<attribute name="key" type="string" use="optional" />
-		 </extension>
-		</simpleContent>
-	</complexType>
+  <complexType name="xObjectDeviceCapability">
+    <sequence>
+      <element name="capabilities" type="tns:xCapabilities" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+    <attribute name="name" type="string" use="required" />
+  </complexType>
+  <complexType name="xCapabilities">
+    <sequence>
+      <element name="options" type="tns:xOptions" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+    <attribute name="factoryName" use="required">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="ChromeOptions" />
+          <enumeration value="FirefoxProfile" />
+        </restriction>
+      </simpleType>
+    </attribute>
+  </complexType>
+  <complexType name="xOptions">
+    <simpleContent>
+      <extension base="string">
+        <attribute name="name" type="string" use="required" />
+        <attribute name="key" type="string" use="optional" />
+      </extension>
+    </simpleContent>
+  </complexType>
 </schema>

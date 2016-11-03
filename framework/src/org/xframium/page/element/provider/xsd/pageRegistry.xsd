@@ -32,6 +32,7 @@
 			<element name="element" type="tns:Element" minOccurs="1" maxOccurs="unbounded" />
 		</sequence>
 		<attribute name="name" type="string" use="required" />
+        <attribute name="class" type="string" use="required" />
 	</complexType>
 
 	<complexType name="Element">

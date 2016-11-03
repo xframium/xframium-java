@@ -60,6 +60,7 @@ import org.xframium.driver.xsd.XCapabilities;
 import org.xframium.driver.xsd.XDevice;
 import org.xframium.driver.xsd.XDeviceCapability;
 import org.xframium.driver.xsd.XElement;
+import org.xframium.driver.xsd.XElementParameter;
 import org.xframium.driver.xsd.XFramiumRoot;
 import org.xframium.driver.xsd.XLibrary;
 import org.xframium.driver.xsd.XModel;
@@ -88,7 +89,6 @@ import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.element.provider.ExcelElementProvider;
 import org.xframium.page.element.provider.SQLElementProvider;
 import org.xframium.page.element.provider.XMLElementProvider;
-import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
@@ -383,6 +383,14 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                         
                         if ( ele.getDeviceContext() != null && !ele.getDeviceContext().trim().isEmpty() )
                             currentElement.setDeviceContext( ele.getDeviceContext() );
+                        
+                        if ( ele.getParameter() != null )
+                        {
+                            for ( XElementParameter xP : ele.getParameter() )
+                            {
+                                currentElement.addElementProperty( xP.getName(), xP.getValue() );
+                            }
+                        }
                         
                         if (log.isDebugEnabled())
                             log.debug( "Adding XML Element using [" + elementDescriptor.toString() + "] as [" + currentElement + "]" );

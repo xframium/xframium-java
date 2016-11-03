@@ -8,29 +8,23 @@
 
 package org.xframium.page.element.provider.xsd;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for Page complex type.
+ * <p>Java class for ElementParameter complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="Page"&gt;
+ * &lt;complexType name="ElementParameter"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;sequence&gt;
- *         &lt;element name="element" type="{http://www.xframium.org/pageRegistry}Element" maxOccurs="unbounded"/&gt;
- *       &lt;/sequence&gt;
  *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
- *       &lt;attribute name="class" use="required" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="value" use="required" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
@@ -39,46 +33,13 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Page", propOrder = {
-    "element"
-})
-public class Page {
+@XmlType(name = "ElementParameter")
+public class ElementParameter {
 
-    @XmlElement(required = true)
-    protected List<Element> element;
     @XmlAttribute(name = "name", required = true)
     protected String name;
-    @XmlAttribute(name = "class", required = true)
-    protected String clazz;
-
-    /**
-     * Gets the value of the element property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the element property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getElement().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Element }
-     * 
-     * 
-     */
-    public List<Element> getElement() {
-        if (element == null) {
-            element = new ArrayList<Element>();
-        }
-        return this.element;
-    }
+    @XmlAttribute(name = "value", required = true)
+    protected String value;
 
     /**
      * Gets the value of the name property.
@@ -105,27 +66,27 @@ public class Page {
     }
 
     /**
-     * Gets the value of the clazz property.
+     * Gets the value of the value property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getClazz() {
-        return clazz;
+    public String getValue() {
+        return value;
     }
 
     /**
-     * Sets the value of the clazz property.
+     * Sets the value of the value property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setClazz(String value) {
-        this.clazz = value;
+    public void setValue(String value) {
+        this.value = value;
     }
 
 }

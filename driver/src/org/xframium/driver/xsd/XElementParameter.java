@@ -15,25 +15,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for xData complex type.
+ * <p>Java class for xElementParameter complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="xData"&gt;
+ * &lt;complexType name="xElementParameter"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;attribute name="fileName" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
- *       &lt;attribute name="provider" default="XML"&gt;
- *         &lt;simpleType&gt;
- *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
- *             &lt;enumeration value="XML"/&gt;
- *             &lt;enumeration value="SQL"/&gt;
- *             &lt;enumeration value="CSV"/&gt;
- *             &lt;enumeration value="EXCEL"/&gt;
- *           &lt;/restriction&gt;
- *         &lt;/simpleType&gt;
- *       &lt;/attribute&gt;
+ *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="value" use="required" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
@@ -42,64 +33,60 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "xData")
-public class XData {
+@XmlType(name = "xElementParameter")
+public class XElementParameter {
 
-    @XmlAttribute(name = "fileName")
-    protected String fileName;
-    @XmlAttribute(name = "provider")
-    protected String provider;
+    @XmlAttribute(name = "name", required = true)
+    protected String name;
+    @XmlAttribute(name = "value", required = true)
+    protected String value;
 
     /**
-     * Gets the value of the fileName property.
+     * Gets the value of the name property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getFileName() {
-        return fileName;
+    public String getName() {
+        return name;
     }
 
     /**
-     * Sets the value of the fileName property.
+     * Sets the value of the name property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setFileName(String value) {
-        this.fileName = value;
+    public void setName(String value) {
+        this.name = value;
     }
 
     /**
-     * Gets the value of the provider property.
+     * Gets the value of the value property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getProvider() {
-        if (provider == null) {
-            return "XML";
-        } else {
-            return provider;
-        }
+    public String getValue() {
+        return value;
     }
 
     /**
-     * Sets the value of the provider property.
+     * Sets the value of the value property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setProvider(String value) {
-        this.provider = value;
+    public void setValue(String value) {
+        this.value = value;
     }
 
 }
