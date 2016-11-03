@@ -44,6 +44,7 @@ public abstract class AbstractElement implements Element
 	
 	
 	/** The log. */
+    protected Map<String,String> elementProperties;
 	protected Log log = LogFactory.getLog( Element.class );
 	private boolean cacheNative = false;
 
@@ -57,6 +58,27 @@ public abstract class AbstractElement implements Element
         this.cacheNative = cacheNative;
     }
 
+    public void addElementProperty( String name, String value )
+    {
+        if ( elementProperties == null )
+            elementProperties = new HashMap<String,String>( 20 );
+        
+        elementProperties.put( name, value );
+    }
+    
+    public Map<String,String> getElementProperties()
+    {
+        return elementProperties;
+    }
+    
+    public String getElementProperty( String name )
+    {
+        if ( elementProperties != null )
+            return elementProperties.get( name );
+        
+        else return null;
+    }
+    
     /**
 	 * _get native.
 	 *
