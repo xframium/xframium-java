@@ -751,8 +751,10 @@ public class SeleniumElement extends AbstractElement
             else
             {
                 String testValue = PerfectoMobile.instance().imaging().textExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, 50 ).getStatus();
-                returnValue = Boolean.parseBoolean( testValue ) | testValue.toUpperCase().equals( "SUCCESS" );
-                ;
+                if ( testValue == null )
+                    returnValue = true;
+                else
+                    returnValue = Boolean.parseBoolean( testValue ) | testValue.toUpperCase().equals( "SUCCESS" );
             }
 
             PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "present", System.currentTimeMillis(), System.currentTimeMillis() - startTime, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE,

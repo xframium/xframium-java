@@ -179,6 +179,7 @@
           <enumeration value="EXECUTION_REPORT_XML" />
           <enumeration value="EXECUTION_REPORT_CSV" />
           <enumeration value="FAILURE_SOURCE" />
+          <enumeration value="FAILURE_SOURCE_HTML" />
           <enumeration value="WCAG_REPORT" />
           <enumeration value="DEVICE_LOG" />
           <enumeration value="EXECUTION_RECORD_HTML" />

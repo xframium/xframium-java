@@ -100,7 +100,8 @@ public class WINDOWSDriverFactory extends AbstractDriverFactory
 		}
 		catch( Exception e )
 		{
-			log.fatal( "Could not connect to Cloud instance for " + currentDevice, e );
+		    log.fatal( "Could not connect to " + currentDevice + " (" + e.getMessage() + ")" );
+            log.debug( e );
 			if ( webDriver != null )
 			{
 				try { webDriver.close(); } catch( Exception e2 ) {}
