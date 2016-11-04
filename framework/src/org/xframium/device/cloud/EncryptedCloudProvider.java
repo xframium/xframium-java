@@ -24,8 +24,6 @@
 package org.xframium.device.cloud;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.util.Base64;
 import java.util.List;
 import com.xframium.serialization.SerializationManager;
 
