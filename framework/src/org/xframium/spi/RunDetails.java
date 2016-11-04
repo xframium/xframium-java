@@ -128,21 +128,21 @@ public class RunDetails implements RunListener
     }
 
     @Override
-    public void afterRun( Device currentDevice, String runKey, boolean successful, int stepsPassed, int stepsFailed, int stepsIgnored, long startTime, long stopTime, int scriptFailures, int configFailures, int applicationFailures, int cloudFailures )
+    public void afterRun( Device currentDevice, String runKey, int successful, int stepsPassed, int stepsFailed, int stepsIgnored, long startTime, long stopTime, int scriptFailures, int configFailures, int applicationFailures, int cloudFailures, int filteredTests )
     {
-        detailsList.add( new Object[] { runKey, currentDevice, successful, stepsPassed, stepsFailed, stepsIgnored, startTime, stopTime, scriptFailures, configFailures, applicationFailures, cloudFailures } );
+        detailsList.add( new Object[] { runKey, currentDevice, successful, stepsPassed, stepsFailed, stepsIgnored, startTime, stopTime, scriptFailures, configFailures, applicationFailures, cloudFailures, filteredTests } );
 
         String location = runKey + "/" + currentDevice.getKey() + "/" + runKey + ".html";
         File indexFile = new File( getRootFolder(), location );
         if ( historyWriter == null )
             historyWriter = new HistoryWriter( DataManager.instance().getReportFolder() );
-        historyWriter.addExecution( runKey, currentDevice, startTime, stopTime, stepsPassed, stepsFailed, stepsIgnored, successful, indexFile.getPath(), scriptFailures, configFailures, applicationFailures, cloudFailures );
+        historyWriter.addExecution( runKey, currentDevice, startTime, stopTime, stepsPassed, stepsFailed, stepsIgnored, successful, indexFile.getPath(), scriptFailures, configFailures, applicationFailures, cloudFailures, filteredTests );
     }
 
     @Override
     public void skipRun( Device currentDevice, String runKey )
     {
-        detailsList.add( new Object[] { runKey, currentDevice, false, 0, 0, 0, 0, 0 } );
+        detailsList.add( new Object[] { runKey, currentDevice, 0, 0, 0, 0, 0, 0, 0 } );
     }
 
     private class RunComparator implements Comparator
@@ -177,14 +177,14 @@ public class RunDetails implements RunListener
         TreeMap<String, int[]> osMap = new TreeMap<String, int[]>();
         TreeMap<String, int[]> envMap = new TreeMap<String, int[]>();
         int[] stepBreakdown = new int[3];
-        int[] failureBreakdown = new int[4];
+        int[] failureBreakdown = new int[5];
 
         int successCount = 0;
         for ( int i = 0; i < detailsList.size(); i++ )
         {
             String runKey = (String) detailsList.get( i )[0];
             Device device = (Device) detailsList.get( i )[1];
-            boolean success = (boolean) detailsList.get( i )[2];
+            int success = (int) detailsList.get( i )[2];
 
             stepBreakdown[0] += (int) detailsList.get( i )[3];
             stepBreakdown[1] += (int) detailsList.get( i )[4];
@@ -196,20 +196,23 @@ public class RunDetails implements RunListener
             failureBreakdown[1] += (int) detailsList.get( i )[9];
             failureBreakdown[2] += (int) detailsList.get( i )[10];
             failureBreakdown[3] += (int) detailsList.get( i )[11];
+            failureBreakdown[4] += (int) detailsList.get( i )[12];
 
             String deviceKey = device.getEnvironment();
 
             int[] caseValue = caseMap.get( runKey );
             if ( caseValue == null )
             {
-                caseValue = new int[] { 0, 0, 0, 0 };
+                caseValue = new int[] { 0, 0, 0, 0, 0 };
                 caseMap.put( runKey, caseValue );
             }
 
-            if ( success )
+            if ( success == 1 )
                 caseValue[0]++;
-            else
+            else if ( success == 2 )
                 caseValue[1]++;
+            else
+                caseValue[4]++;
 
             caseValue[2]++;
             caseValue[3] += (stopTime - startTime);
@@ -217,26 +220,30 @@ public class RunDetails implements RunListener
             caseValue = envMap.get( device.getEnvironment() );
             if ( caseValue == null )
             {
-                caseValue = new int[] { 0, 0 };
+                caseValue = new int[] { 0, 0, 0 };
                 envMap.put( device.getEnvironment(), caseValue );
             }
 
-            if ( success )
+            if ( success == 1 )
                 caseValue[0]++;
-            else
+            else if ( success == 2 )
                 caseValue[1]++;
+            else
+                caseValue[2]++;
 
             caseValue = deviceMap.get( deviceKey );
             if ( caseValue == null )
             {
-                caseValue = new int[] { 0, 0 };
+                caseValue = new int[] { 0, 0, 0 };
                 deviceMap.put( deviceKey, caseValue );
             }
 
-            if ( success )
+            if ( success == 1 )
                 caseValue[0]++;
-            else
+            else if ( success == 2 )
                 caseValue[1]++;
+            else
+                caseValue[2]++;
 
             String osName = device.getOs();
             if ( osName == null )
@@ -245,16 +252,18 @@ public class RunDetails implements RunListener
             caseValue = osMap.get( osName );
             if ( caseValue == null )
             {
-                caseValue = new int[] { 0, 0 };
+                caseValue = new int[] { 0, 0, 0 };
                 osMap.put( osName, caseValue );
             }
 
-            if ( success )
+            if ( success == 1 )
                 caseValue[0]++;
-            else
+            else if ( success == 2 )
                 caseValue[1]++;
+            else
+                caseValue[2]++;
 
-            if ( (boolean) detailsList.get( i )[2] )
+            if ( (int)detailsList.get( i )[2] == 1 )
                 successCount++;
         }
 
@@ -270,13 +279,13 @@ public class RunDetails implements RunListener
         stringBuilder.append( "<div class=\"row\"><div class=\"pull-right text-muted\"><a hRef=\"../index.html\" style=\"margin-right: 18px;\">Return to Test Execution History</a></div></div>" );
         stringBuilder.append( "<div class=\"panel panel-primary\"><div class=panel-heading><div class=panel-title>Execution Detail (" + runLength + ")</div></div><div class=panel-body><table class=\"table table-hover table-condensed\">" );
         stringBuilder.append( "<tr><th width=\"40%\">Test</th><th width=\"40%\">Environment</th><th width=\"20%\">Duration</th><th>Status</th></tr><tbody>" );
-        int[] localBreakdown = new int[4];
+        int[] localBreakdown = new int[5];
         for ( int i = 0; i < detailsList.size(); i++ )
         {
             String runKey = (String) detailsList.get( i )[0];
             Device device = (Device) detailsList.get( i )[1];
             String location = runKey + "/" + device.getKey() + "/";
-            boolean success = (boolean) detailsList.get( i )[2];
+            int success = (int) detailsList.get( i )[2];
             long startTime = (long) detailsList.get( i )[6];
             long stopTime = (long) detailsList.get( i )[7];
 
@@ -284,6 +293,7 @@ public class RunDetails implements RunListener
             localBreakdown[1] = (int) detailsList.get( i )[9];
             localBreakdown[2] = (int) detailsList.get( i )[10];
             localBreakdown[3] = (int) detailsList.get( i )[11];
+            localBreakdown[4] = (int) detailsList.get( i )[12];
 
             long testRunTime = stopTime - startTime;
             String testRunLength = String.format( "%2dh %2dm %2ds", TimeUnit.MILLISECONDS.toHours( testRunTime ), TimeUnit.MILLISECONDS.toMinutes( testRunTime ) - TimeUnit.HOURS.toMinutes( TimeUnit.MILLISECONDS.toHours( testRunTime ) ),
@@ -292,7 +302,7 @@ public class RunDetails implements RunListener
             stringBuilder.append( "<tr><td><a href='" ).append( location + runKey + ".html'>" ).append( runKey ).append( "</a></td><td>" );
             stringBuilder.append( device.getEnvironment() ).append( "</td>" );
             stringBuilder.append( "<td>" ).append( testRunLength ).append( "</td><td style=\"padding-top: 10px; \" align=\"center\">" );
-            if ( success )
+            if ( success == 1 )
                 stringBuilder.append( "<span class=\"label label-success\">Pass</span>" );
             else
             {
@@ -304,6 +314,8 @@ public class RunDetails implements RunListener
                     stringBuilder.append( "<span class=\"label label-danger\">Application</span>" );
                 else if ( localBreakdown[3] > 0 )
                     stringBuilder.append( "<span class=\"label label-danger\">Cloud</span>" );
+                else if ( localBreakdown[4] > 0 )
+                    stringBuilder.append( "<span class=\"label label-warning\">Skipped</span>" );
                 else
                     stringBuilder.append( "<span class=\"label label-danger\">Fail</span>" );
             }
@@ -356,6 +368,7 @@ public class RunDetails implements RunListener
         stringBuilder.append( "<tr><td width=90%>Configuration Issues</td><td nowrap>" + failureBreakdown[1] + "</td></tr>" );
         stringBuilder.append( "<tr><td width=90%>Application Issues</td><td nowrap>" + failureBreakdown[2] + "</td></tr>" );
         stringBuilder.append( "<tr><td width=90%>Cloud Issues</td><td nowrap>" + failureBreakdown[3] + "</td></tr>" );
+        stringBuilder.append( "<tr><td width=90%>Skipped Tests</td><td nowrap>" + failureBreakdown[4] + "</td></tr>" );
         stringBuilder.append( "</tbody></table></div></div></div>" );
         stringBuilder.append( "</div></div></div></div>" );
 
@@ -374,7 +387,7 @@ public class RunDetails implements RunListener
                 if ( historyWriter == null )
                     historyWriter = new HistoryWriter( DataManager.instance().getReportFolder() );
                 historyWriter.writeData( getRootFolder() + System.getProperty( "file.separator" ) + "index.html", startTime, System.currentTimeMillis(), envMap.size(), osMap.size(), successCount, detailsList.size() - successCount, envMap,
-                        failureBreakdown[0], failureBreakdown[1], failureBreakdown[2], failureBreakdown[3] );
+                        failureBreakdown[0], failureBreakdown[1], failureBreakdown[2], failureBreakdown[3], failureBreakdown[4] );
             }
 
         }
@@ -467,6 +480,8 @@ public class RunDetails implements RunListener
         int osFail = 0;
         int[] stepBreakdown = new int[3];
         int successCount = 0;
+        int skipCount = 0;
+        int failCount = 0;
         int scriptFailure = 0;
         int configFailure = 0;
         int appFailure = 0;
@@ -475,7 +490,7 @@ public class RunDetails implements RunListener
         {
             String runKey = (String) detailsList.get( i )[0];
             Device device = (Device) detailsList.get( i )[1];
-            boolean success = (boolean) detailsList.get( i )[2];
+            int success = (int) detailsList.get( i )[2];
             stepBreakdown[0] += (int) detailsList.get( i )[3];
             stepBreakdown[1] += (int) detailsList.get( i )[4];
             stepBreakdown[2] += (int) detailsList.get( i )[5];
@@ -490,26 +505,30 @@ public class RunDetails implements RunListener
             int[] caseValue = caseMap.get( runKey );
             if ( caseValue == null )
             {
-                caseValue = new int[] { 0, 0 };
+                caseValue = new int[] { 0, 0, 0 };
                 caseMap.put( runKey, caseValue );
             }
 
-            if ( success )
+            if ( success == 1 )
                 caseValue[0]++;
-            else
+            else if ( success == 0 )
                 caseValue[1]++;
+            else
+                caseValue[2]++;
 
             caseValue = deviceMap.get( deviceKey );
             if ( caseValue == null )
             {
-                caseValue = new int[] { 0, 0 };
+                caseValue = new int[] { 0, 0, 0 };
                 deviceMap.put( deviceKey, caseValue );
             }
 
-            if ( success )
+            if ( success == 1 )
                 caseValue[0]++;
-            else
+            else if ( success == 0 )
                 caseValue[1]++;
+            else
+                caseValue[2]++;
 
             String osName = device.getEnvironment();
             if ( osName == null )
@@ -518,17 +537,23 @@ public class RunDetails implements RunListener
             caseValue = osMap.get( osName );
             if ( caseValue == null )
             {
-                caseValue = new int[] { 0, 0 };
+                caseValue = new int[] { 0, 0, 0 };
                 osMap.put( osName, caseValue );
             }
 
-            if ( success )
+            if ( success == 1 )
                 caseValue[0]++;
-            else
+            else if ( success == 0 )
                 caseValue[1]++;
+            else
+                caseValue[2]++;
 
-            if ( (boolean) detailsList.get( i )[2] )
+            if ( success == 1 )
                 successCount++;
+            else if ( success == 0 )
+                failCount++;
+            else
+                skipCount++;
         }
 
         for ( int[] caseValue : osMap.values() )
@@ -550,12 +575,11 @@ public class RunDetails implements RunListener
 
         stringBuilder.append( "<div class=\"row text-center m-t-lg\"><div class=\"col-sm-2 m-b-md\"></div><div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\">" );
         stringBuilder.append( "<div class=\"abscenter\"  style=\"width: 100%; height: 100px; vertical-align: center;  line-height:19px; text-align: center; z-index: 999999999999999\"><h2 class=\"text-muted\"><b>" + detailsList.size()
-                + "</b></h2><h4><span class=\"pass\">" + successCount + "</span> / <span class=\"fail\">" + (detailsList.size() - successCount) + "</span></h4></div>" );
+                + "</b></h2><h4><span class=\"text-success\">" + successCount + "</span> / <span class=\"text-warning\">" + skipCount + "</span> / <span class=\"text-danger\">" + failCount + "</span></h4></div>" );
         stringBuilder.append( "<canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-animation=\"true\" data-animation-easing=\"easeOutQuart\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( successCount ).append( ", color: '#1bc98e', label: 'Passed' }," );
 
-        int failureCount = detailsList.size() - successCount;
-
+        int failureCount = failCount;
         if ( scriptFailure > 0 )
         {
             stringBuilder.append( "{ value: " ).append( scriptFailure ).append( ", color: '#ea6272', label: 'Script Issues' }," );
@@ -579,6 +603,12 @@ public class RunDetails implements RunListener
             stringBuilder.append( "{ value: " ).append( cloudFailure ).append( ", color: '#e01f35', label: 'Device Issues' }," );
             failureCount -= cloudFailure;
         }
+        
+        if ( skipCount > 0 )
+        {
+            stringBuilder.append( "{ value: " ).append( skipCount ).append( ", color: '#e4d836', label: 'Skipped Tests' }," );
+            failureCount -= configFailure;
+        }
 
         if ( failureCount > 0 )
         {
@@ -589,7 +619,7 @@ public class RunDetails implements RunListener
 
         stringBuilder.append( "<div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\">" );
         stringBuilder.append( "<div class=\"abscenter\"  style=\"width: 100%; height: 100px; vertical-align: center;  line-height:19px; text-align: center; z-index: 999999999999999\"><h2 class=\"text-muted\"><b>"
-                + (stepBreakdown[0] + stepBreakdown[1] + stepBreakdown[2]) + "</b></h2><h4><span class=\"pass\">" + stepBreakdown[0] + "</span> / <span class=\"fail\">" + stepBreakdown[1] + "</span></h4></div>" );
+                + (stepBreakdown[0] + stepBreakdown[1] + stepBreakdown[2]) + "</b></h2><h4><span class=\"text-success\">" + stepBreakdown[0] + "</span> / <span class=\"text-danger\">" + stepBreakdown[1] + "</span></h4></div>" );
         stringBuilder.append( "<canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-animation=\"true\" data-animation-easing=\"easeOutQuart\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( stepBreakdown[0] ).append( ", color: '#1bc98e', label: 'Passed' }," );
         stringBuilder.append( "{ value: " ).append( stepBreakdown[1] ).append( ", color: '#e64759', label: 'Failed' }," );
@@ -598,7 +628,7 @@ public class RunDetails implements RunListener
 
         stringBuilder.append( "<div class=\"col-sm-3 m-b-md\"><div class=\"w-lg m-x-auto\">" );
         stringBuilder.append( "<div class=\"abscenter\"  style=\"width: 100%; height: 100px; vertical-align: center;  line-height:19px; text-align: center; z-index: 999999999999999\"><h2 class=\"text-muted\"><b>" + (osSuccess + osFail)
-                + "</b></h2><h4><span class=\"pass\">" + osSuccess + "</span> / <span class=\"fail\">" + osFail + "</span></h4></div>" );
+                + "</b></h2><h4><span class=\"text-success\">" + osSuccess + "</span> / <span class=\"text-danger\">" + osFail + "</span></h4></div>" );
         stringBuilder.append( "<canvas class=\"ex-graph\" width=\"200\" height=\"200\" data-animation=\"true\" data-animation-easing=\"easeOutQuart\" data-chart=\"doughnut\" data-value=\"[" );
         stringBuilder.append( "{ value: " ).append( osSuccess ).append( ", color: '#1bc98e', label: 'Passed' }," );
         stringBuilder.append( "{ value: " ).append( osFail ).append( ", color: '#e64759', label: 'Failed' }," );

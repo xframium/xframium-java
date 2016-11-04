@@ -38,6 +38,7 @@ import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.keyWord.provider.KeyWordProvider;
+import org.xframium.page.keyWord.spi.KeyWordPageImpl;
 import org.xframium.page.listener.KeyWordListener;
 
 // TODO: Auto-generated Javadoc
@@ -59,7 +60,7 @@ public class KeyWordDriver
     private Map<String, KeyWordTest> functionMap = new HashMap<String, KeyWordTest>( 10 );
 
     /** The page map. */
-    private Map<String, Class<Page>> pageMap = new HashMap<String, Class<Page>>( 10 );
+    private Map<String, Class> pageMap = new HashMap<String, Class>( 10 );
 
     /** The context map. */
     private ThreadLocal<Map<String, Object>> contextMap = new ThreadLocal<Map<String, Object>>();
@@ -124,11 +125,16 @@ public class KeyWordDriver
      * @param pageClass
      *            the page class
      */
-    public void addPage( String pageName, Class pageClass )
+    public void addPage( String siteName, String pageName, Class pageClass )
     {
-        if ( log.isDebugEnabled() )
-            log.debug( "Mapping Page [" + pageName + "] to [" + pageClass.getName() + "]" );
-        pageMap.put( pageName, pageClass );
+        String useName = null;
+        if ( siteName != null )
+            useName = siteName + "." + pageName;
+        else
+            useName = PageManager.instance().getSiteName() + "." + pageName;
+        if ( log.isInfoEnabled() )
+            log.info( "Mapping Page [" + useName + "] to [" + pageClass.getName() + "]" );
+        pageMap.put( useName, pageClass );
     }
 
     public void addStepListener( KeyWordListener stepListener )
@@ -274,9 +280,18 @@ public class KeyWordDriver
      *            the page name
      * @return the page
      */
-    public Class<Page> getPage( String pageName )
+    public Class getPage( String siteName, String pageName )
     {
-        return pageMap.get( pageName );
+        String useName = siteName + "." + pageName;
+        
+        Class pageClass = pageMap.get( useName );
+        if ( pageClass == null )
+        {
+            addPage( siteName, pageName, KeyWordPage.class );
+            return KeyWordPage.class;
+        }
+        
+        return pageClass;
     }
 
     /**

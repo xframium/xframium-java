@@ -189,7 +189,6 @@ public class XMLKeyWordProvider implements KeyWordProvider
 			            }
                         if (pageData == null)
                         {
-                            log.warn( "Specified Data Driver [" + currentTest.getDataDriver() + "] could not be located. Make sure it exists and it was populated prior to initializing your keyword factory" );
                             if ( currentTest.isActive() )
                                 sC.addActiveTest( currentTest );
                             else
@@ -312,23 +311,27 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 */
 	private void parseModel( Model model, SuiteContainer sC )
 	{
-	    for ( org.xframium.page.keyWord.provider.xsd.Page page : model.getPage() )
+	    
+	    if ( model != null )
 	    {
-	        try
-	        {
-    	        Class useClass = KeyWordPage.class;
-    	        if ( page.getClazz() != null && !page.getClazz().isEmpty() )
-    	            useClass = ( Class<Page> ) Class.forName( page.getClazz() );
-    	        
-    	        if (log.isDebugEnabled())
-                    log.debug( "Creating page as " + useClass.getSimpleName() + " for " + page.getName() );
-    
-                sC.addPageModel( page.getName(), useClass );
-	        }
-	        catch( Exception e )
-	        {
-	            log.error( "Error creating instance of [" + page.getClazz() + "]" );
-	        }
+    	    for ( org.xframium.page.keyWord.provider.xsd.Page page : model.getPage() )
+    	    {
+    	        try
+    	        {
+        	        Class useClass = KeyWordPage.class;
+        	        if ( page.getClazz() != null && !page.getClazz().isEmpty() )
+        	            useClass = ( Class<Page> ) Class.forName( page.getClazz() );
+        	        
+        	        if (log.isDebugEnabled())
+                        log.debug( "Creating page as " + useClass.getSimpleName() + " for " + page.getName() );
+        
+                    sC.addPageModel( page.getSite() != null && page.getSite().trim().length() > 0 ? page.getSite() : sC.getSiteName(), page.getName(), useClass );
+    	        }
+    	        catch( Exception e )
+    	        {
+    	            log.error( "Error creating instance of [" + page.getClazz() + "]" );
+    	        }
+    	    }
 	    }
 	}
 
@@ -341,7 +344,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 */
 	private KeyWordTest parseTest( Test xTest, String typeName )
 	{
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags() );
 		
         
 		KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
@@ -373,16 +376,11 @@ public class XMLKeyWordProvider implements KeyWordProvider
 		for ( Step xStep : xSteps )
 		{
 		    
-		    if ( xStep.getPage() != null )
-		    {
-		        log.fatal( "The page [" + xStep.getPage() + "] defined the step " + xStep.getName() + " in " + testName + " was not specified in the Model" );
-		    }
-		    
 		    KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), xStep.getPage(), xStep.isActive(), xStep.getType(),
                                                                                  xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
                                                                                  xStep.getOs(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
-                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint() );
+                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite() );
 		    
 		    parseParameters( xStep.getParameter(), testName, xStep.getName(), typeName, step );
 		    parseTokens( xStep.getToken(), testName, xStep.getName(), typeName, step );

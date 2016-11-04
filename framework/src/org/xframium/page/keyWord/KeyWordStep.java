@@ -69,6 +69,7 @@ public interface KeyWordStep
 	}
 
 	public void setTagNames( String tagNames );
+	public void setDeviceTags( String tagNames );
 	public Object getParameterValue( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap );
 	public String getTokenValue( KeyWordToken token, Map<String, Object> contextMap, Map<String, PageData> dataMap );
 	
@@ -142,6 +143,7 @@ public interface KeyWordStep
 	 *            the new name
 	 */
 	public void setName( String name );
+	
 
 	/**
 	 * Checks if is active.
@@ -195,6 +197,16 @@ public interface KeyWordStep
 	 *            the new page name
 	 */
 	public void setPageName( String pageName );
+	
+	public String getSiteName();
+
+    /**
+     * Sets the page name.
+     *
+     * @param pageName
+     *            the new page name
+     */
+    public void setSiteName( String siteName );
 
 	/**
 	 * Checks if is timed.

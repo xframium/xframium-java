@@ -6,10 +6,10 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
-import java.util.Iterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
@@ -21,6 +21,7 @@ import org.xframium.container.ApplicationContainer;
 import org.xframium.container.CloudContainer;
 import org.xframium.container.DeviceContainer;
 import org.xframium.container.DriverContainer;
+import org.xframium.container.ModelContainer;
 import org.xframium.container.SuiteContainer;
 import org.xframium.debugger.DebugManager;
 import org.xframium.device.ConnectedDevice;
@@ -187,39 +188,20 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             if ( sC == null ) 
                 return;
             
-            log.info( "Extracted " + sC.getTestList().size() + " test cases (" + sC.getActiveTestList().size() + " active)" );
-            for ( String modelName : sC.getModelMap().keySet() )
-                KeyWordDriver.instance().addPage( modelName, sC.getModelMap().get( modelName ) ); 
-            
-            KeyWordDriver.instance().loadTests( sC );
-            
-            
             log.info( "Page: Configuring Object Repository" );
             ElementProvider eP = configurePageManagement( sC );
             if ( eP == null ) return;
-
-            //
-            // In XML configuration, the test suite doesn't have a model element, so the calls to
-            // KeyWordDriver.instance().addPage() can't have done anything.  So, we'll loop through
-            // the pages from configurePageManagement() and add them here.
-            //
-            
-            log.info( "Extracted " + eP.getElementTree().size() + " pages" );
-            Iterator<String> pages = eP.getElementTree().keySet().iterator();
-            boolean needLoad = KeyWordDriver.instance().getPageCount() == 0;
-            while(( pages.hasNext() ) &&
-                  ( needLoad ))
-            {
-                String page = pages.next();
-                
-                KeyWordDriver.instance().addPage( page, KeyWordPage.class );
-            }
             
             PageManager.instance().setSiteName( sC.getSiteName() );
+            log.info( "Extracted " + sC.getTestList().size() + " test cases (" + sC.getActiveTestList().size() + " active)" );
+            for ( ModelContainer mC : sC.getModel() )
+                KeyWordDriver.instance().addPage( mC.getSiteName(), mC.getPageName(), mC.getClassName() ); 
+            
+            KeyWordDriver.instance().loadTests( sC );
+            
             PageManager.instance().setElementProvider( eP );
             
-            
-            
+
             log.info( "Artifact: Configuring Artifact Production" );
             if ( !configureArtifacts( driverC ) ) return;
             
@@ -350,7 +332,14 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         try
         {
             if( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )
-                DebugManager.instance().launchBrowser( InetAddress.getLocalHost().getHostAddress(), 8870 );
+            {
+                String debuggerHost = System.getProperty( "X_DEBUGGER_HOST" );
+                if ( debuggerHost == null )
+                {
+                    debuggerHost = "127.0.0.1";
+                }
+                DebugManager.instance().launchBrowser( debuggerHost, 8870 );
+            }
             
             _executeTest( sC );
             

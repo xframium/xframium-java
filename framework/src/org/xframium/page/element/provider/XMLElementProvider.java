@@ -35,6 +35,7 @@ import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.element.Element;
 import org.xframium.page.element.ElementFactory;
+import org.xframium.page.element.provider.xsd.ElementParameter;
 import org.xframium.page.element.provider.xsd.Import;
 import org.xframium.page.element.provider.xsd.ObjectFactory;
 import org.xframium.page.element.provider.xsd.Page;
@@ -201,6 +202,17 @@ public class XMLElementProvider extends AbstractElementProvider
 	        {
 	            ElementDescriptor elementDescriptor = new ElementDescriptor( site.getName(), page.getName(), ele.getName() );
 	            Element currentElement = ElementFactory.instance().createElement( BY.valueOf( ele.getDescriptor() ), ele.getValue(), ele.getName(), page.getName(), ele.getContextName() );
+	            
+	            if ( ele.getParameter() != null )
+                {
+                    for ( ElementParameter xP : ele.getParameter() )
+                    {
+                        currentElement.addElementProperty( xP.getName(), xP.getValue() );
+                    }
+                }
+	            
+	            if ( ele.getDeviceContext() != null )
+	                currentElement.setDeviceContext( ele.getDeviceContext() );
 	            
 	            if (log.isDebugEnabled())
 	                log.debug( "Adding XML Element using [" + elementDescriptor.toString() + "] as [" + currentElement + "]" );

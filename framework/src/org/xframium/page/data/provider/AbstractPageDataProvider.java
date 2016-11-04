@@ -201,8 +201,10 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	    if ( dC == null )
 	    {
 	        dC = new PageDataContainer( typeName, lockRecords );
-	        pC.add( dC );
 			recordMap.put( typeName, dC );
+			
+			dC = new PageDataContainer( typeName, lockRecords );
+			pC.add( dC );
 			allRecordMap.put( typeName, dC );
 		}
 	}

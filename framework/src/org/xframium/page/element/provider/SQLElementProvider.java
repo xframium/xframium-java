@@ -41,7 +41,7 @@ public class SQLElementProvider
     private static final String DEF_QUERY =
         "SELECT PS.NAME, \n" +
         "       PP.NAME, \n" +
-        "       PE.NAME, PE.DESCRIPTOR, PE.VALUE, PE.CONTEXT_NAME \n" +
+        "       PE.NAME, PE.DESCRIPTOR, PE.VALUE, PE.CONTEXT_NAME, PE.DEVICE_CONTEXT \n" +
         "FROM SITES PS \n" +
         "     INNER JOIN PAGES PP ON PP.SITE_ID = PS.ID \n" +
         "     INNER JOIN ELEMENTS PE ON PE.PAGE_ID = PP.ID \n" +
@@ -142,6 +142,7 @@ public class SQLElementProvider
                 String eltDesc = parseString( (String) data[i][3], null, true );
                 String eltVal = parseString( (String) data[i][4], null, true );
                 String contextName = parseString( (String) data[i][5], null, true );
+                String deviceContext = parseString( (String) data[i][6], null, true );
                 
 
                 ElementDescriptor elementDescriptor = new ElementDescriptor( siteName,
@@ -153,6 +154,8 @@ public class SQLElementProvider
                                                                                   eltName,
                                                                                   pageName,
                                                                                   contextName );
+                if ( deviceContext != null )
+                    currentElement.setDeviceContext( deviceContext );
             
                 if ( log.isInfoEnabled() )
                     log.info( "Adding SQL Element using [" + elementDescriptor.toString() + "] as [" + currentElement );

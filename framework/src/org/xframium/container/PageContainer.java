@@ -1,4 +1,4 @@
-package org.xframium.page;
+package org.xframium.container;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import org.xframium.page.element.Element;
 
 public class PageContainer
 {
+
     private String pageName;
     private String className;
     

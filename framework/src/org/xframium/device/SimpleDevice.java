@@ -24,6 +24,7 @@
 package org.xframium.device;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +80,7 @@ public class SimpleDevice implements Device
 	private String resolution;
 	private String environment;
 	private String cloud;
+	private List<String> tagNames = new ArrayList<String>( 5 );
 	
 	
 	
@@ -437,4 +439,22 @@ public class SimpleDevice implements Device
 	{
 		return capabilities;
 	}
+
+    public String[] getTagNames()
+    {
+        return tagNames.toArray( new String[ 0 ] );
+    }
+
+    public void setTagNames( String[] tagNames )
+    {
+        this.tagNames.addAll( Arrays.asList( tagNames ) );
+    }
+    
+    @Override
+    public void addTag( String tagName )
+    {
+        tagNames.add( tagName );
+    }
+	
+	
 }

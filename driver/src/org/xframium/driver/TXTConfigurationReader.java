@@ -510,6 +510,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
         dC.setEmbeddedServer( Boolean.parseBoolean( configProperties.getProperty( "driver.embeddedServer" ) ) );
         dC.setSecureCloud( Boolean.parseBoolean( configProperties.getProperty( "security.secureCloud" ) ) );
         dC.setStepTags( configProperties.getProperty( "driver.stepTags" ) );
+        dC.setDeviceTags( configProperties.getProperty( "driver.deviceTags" ) );
 
         for ( Object key : configProperties.keySet() )
             dC.getPropertyMap().put( (String)key, configProperties.getProperty( (String)key ) );

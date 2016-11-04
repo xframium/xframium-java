@@ -27,8 +27,9 @@ import java.util.Map;
 import javax.xml.xpath.XPathFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xframium.container.PageContainer;
+import org.xframium.container.SiteContainer;
 import org.xframium.page.ElementDescriptor;
-import org.xframium.page.PageContainer;
 import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.KeyWordDriver;
 
@@ -38,8 +39,9 @@ import org.xframium.page.keyWord.KeyWordDriver;
  */
 public abstract class AbstractElementProvider implements ElementProvider 
 {
-    protected Map<String,PageContainer> elementTree = new HashMap<String,PageContainer>( 20 );
-    private List<PageContainer> pageList = new ArrayList<PageContainer>(20);
+    private Map<String,SiteContainer> siteTree = new HashMap<String,SiteContainer>( 20 );
+    private List<SiteContainer> siteList = new ArrayList<SiteContainer>( 10 );
+
 	private static XPathFactory xPathFactory = XPathFactory.newInstance();
 	/** The log. */
 	protected Log log = LogFactory.getLog(ElementProvider.class);
@@ -57,7 +59,12 @@ public abstract class AbstractElementProvider implements ElementProvider
 	
 	private String siteName;
 	
-
+	@Override
+	public List<SiteContainer> getSiteList()
+	{
+	    return siteList;
+	}
+	
 	public String getSiteName()
     {
         return siteName;
@@ -77,11 +84,6 @@ public abstract class AbstractElementProvider implements ElementProvider
     {
         this.initialized = initialized;
     }
-    
-    public Map<String,PageContainer> getElementTree()
-    {
-        return elementTree;
-    }
 
     /**
 	 * _get element.
@@ -93,15 +95,16 @@ public abstract class AbstractElementProvider implements ElementProvider
 	
 	protected boolean validateElement( ElementDescriptor elementDescriptor, Element currentElement ) throws Exception
 	{
-	    PageContainer elementList = elementTree.get( elementDescriptor.getPageName() );
-	    if ( elementList == null )
+	    SiteContainer siteContainer = siteTree.get( elementDescriptor.getSiteName() );
+	    
+	    if ( siteContainer == null )
 	    {
-	        Class className = KeyWordDriver.instance().getPage( elementDescriptor.getPageName() );
-	        elementList = new PageContainer( elementDescriptor.getPageName(), className != null ? className.getName() : "" );
-	        elementTree.put( elementDescriptor.getPageName(), elementList );
-	        pageList.add( elementList );
-	        
+	        siteContainer = new SiteContainer( elementDescriptor.getSiteName() );
+	        siteTree.put( siteContainer.getSiteName(), siteContainer );
+	        siteList.add( siteContainer );
 	    }
+	    
+	    PageContainer elementList = siteContainer.getPage( elementDescriptor.getPageName() );
 	    elementList.getElementList().add( currentElement );
 	    
 	    

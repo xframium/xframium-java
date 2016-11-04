@@ -464,6 +464,10 @@ public class DeviceManager implements ArtifactListener
                 int appFailures = 0;
                 int cloudFailures = 0;
                 int configFailures = 0;
+                int filteredTests = 0;
+                
+                int successFlag = successful ? 1 : 0;
+
                 
                 if ( DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) != null && !DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ).isEmpty() )
                 {
@@ -505,6 +509,11 @@ public class DeviceManager implements ArtifactListener
                                             case SCRIPT:
                                                 scriptFailures++;
                                                 break;
+                                                
+                                            case FILTERED:
+                                                successFlag = 2;
+                                                filteredTests++;
+                                                break;
                                         }
                                     }
                                 }
@@ -522,7 +531,7 @@ public class DeviceManager implements ArtifactListener
                     }
                 }
                 
-                runListener.afterRun( currentDevice, runKey, successful, stepsPassed, stepsFailed, stepsIgnored, startTime, stopTime, scriptFailures, configFailures, appFailures, cloudFailures );
+                runListener.afterRun( currentDevice, runKey, successFlag, stepsPassed, stepsFailed, stepsIgnored, startTime, stopTime, scriptFailures, configFailures, appFailures, cloudFailures, filteredTests );
             }
             catch( Exception e )
             {
@@ -613,6 +622,7 @@ public class DeviceManager implements ArtifactListener
                 
                 if ( !deviceRan && currentFailures < currentDevice.getAvailableDevices() * retryCount )
                 {
+                    System.out.println( currentDevice );
                     deviceFound = true;
                     break;
                 }
@@ -680,7 +690,9 @@ public class DeviceManager implements ArtifactListener
 
                                 if ( attachDevice && !dryRun )
                                 {
-
+                                    activeRuns.put( currentDevice.getKey() + "." + runKey , true );
+                                    try { managerLock.unlock(); } catch( Exception e ) {}
+                                    
                                     //
                                     // Create the WebDriver here if we are attaching this device
                                     //
@@ -703,8 +715,6 @@ public class DeviceManager implements ArtifactListener
                                                 log.debug( "WebDriver Created - Creating Connected Device for " + currentDevice );
 										
                                             DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
-
-                                            activeRuns.put( currentDevice.getKey() + "." + runKey , true );
 											
                                             return new ConnectedDevice( webDriver, currentDevice, personaName );
                                         }
@@ -722,6 +732,9 @@ public class DeviceManager implements ArtifactListener
                                     }
                                     catch( Exception e )
                                     {
+                                        managerLock.lock();
+                                        activeRuns.remove( currentDevice.getKey() + "." + runKey );
+                                        try { managerLock.unlock(); } catch( Exception e2 ) {}
                                         log.error( "Error creating factory instance", e );
                                         try { webDriver.close(); } catch( Exception e2 ) {}
                                         try { webDriver.quit(); } catch( Exception e2 ) {}

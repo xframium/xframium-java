@@ -418,7 +418,7 @@ public abstract class AbstractSeleniumTest
      * @param testArgs
      *            the test args
      */
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void beforeMethod( Method currentMethod, Object[] testArgs )
     {
         try
@@ -536,7 +536,7 @@ public abstract class AbstractSeleniumTest
      * @param testResult
      *            the test result
      */
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void afterMethod( Method currentMethod, Object[] testArgs, ITestResult testResult )
     {
         try

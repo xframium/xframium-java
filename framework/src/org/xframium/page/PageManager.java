@@ -601,6 +601,16 @@ public class PageManager
 
         return os;
     }
+    
+    public String[] getDeviceTag( WebDriver webDriver )
+    {
+        if ( webDriver instanceof DeviceProvider )
+        {
+            return ((DeviceProvider) webDriver).getDevice().getTagNames();
+        }
+
+        return null;
+    }
 
     /**
      * Gets the device name.

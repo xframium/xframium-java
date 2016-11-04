@@ -44,6 +44,7 @@ import org.xframium.page.keyWord.step.spi.KWSCall;
 import org.xframium.page.keyWord.step.spi.KWSCheckColor;
 import org.xframium.page.keyWord.step.spi.KWSClick;
 import org.xframium.page.keyWord.step.spi.KWSCompare;
+import org.xframium.page.keyWord.step.spi.KWSConcat;
 import org.xframium.page.keyWord.step.spi.KWSContrastRatio;
 import org.xframium.page.keyWord.step.spi.KWSDeleteCookie;
 import org.xframium.page.keyWord.step.spi.KWSDeleteCookies;
@@ -72,6 +73,7 @@ import org.xframium.page.keyWord.step.spi.KWSSQL;
 import org.xframium.page.keyWord.step.spi.KWSSet;
 import org.xframium.page.keyWord.step.spi.KWSSetContentKey;
 import org.xframium.page.keyWord.step.spi.KWSString;
+import org.xframium.page.keyWord.step.spi.KWSSubStr;
 import org.xframium.page.keyWord.step.spi.KWSSync;
 import org.xframium.page.keyWord.step.spi.KWSValue;
 import org.xframium.page.keyWord.step.spi.KWSVisible;
@@ -193,6 +195,8 @@ public class KeyWordStepFactory
         addKeyWord( "SET_CONTENT_KEY", KWSSetContentKey.class );
         addKeyWord( "BROWSER", KWSBrowser.class );
         addKeyWord( "IS_ENABLED", KWSEnabled.class );
+        addKeyWord( "CONCAT", KWSConcat.class );
+        addKeyWord( "SUBSTR", KWSSubStr.class );
     }
 
     /**
@@ -253,7 +257,7 @@ public class KeyWordStepFactory
      * @return the key word step
      */
     public KeyWordStep createStep( String name, String pageName, boolean active, String type, String linkId, boolean timed, StepFailure sFailure, boolean inverse, String os, String poi, int threshold, String description, long waitTime, String context,
-            String validation, String device, ValidationType validationType, String tagNames, boolean startAt, boolean breakpoint )
+            String validation, String device, ValidationType validationType, String tagNames, boolean startAt, boolean breakpoint, String deviceTags, String siteName )
     {
 
         Class kwImpl = stepMap.get( type.toUpperCase() );
@@ -285,6 +289,9 @@ public class KeyWordStepFactory
             returnValue.setTagNames( tagNames );
             returnValue.setStartAt( startAt );
             returnValue.setBreakpoint( breakpoint );
+            returnValue.setDeviceTags( deviceTags );
+            if ( siteName != null && siteName.trim().length() > 0 )
+                returnValue.setSiteName( siteName );
 
             return returnValue;
         }

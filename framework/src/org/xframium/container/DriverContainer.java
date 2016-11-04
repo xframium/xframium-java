@@ -18,10 +18,10 @@ public class DriverContainer
     private boolean embeddedServer = false;
     private String stepTags = "";
     private String testTags = "";
+    private String deviceTags = "";
     private String suiteName = "";
     private DriverType driverType;
     private List<TagContainer> extractors = new ArrayList<TagContainer>( 10 );
-    
 
     private String deviceInterrupts = "";
     private Map<String,String> propertyMap = new HashMap<String,String>( 20 );
@@ -29,6 +29,18 @@ public class DriverContainer
     private List<ArtifactType> artifactList = new ArrayList<ArtifactType>( 20 );
     private boolean secureCloud = false;
     
+    
+    
+    public String getDeviceTags()
+    {
+        return deviceTags;
+    }
+
+    public void setDeviceTags( String deviceTags )
+    {
+        this.deviceTags = deviceTags;
+    }
+
     public List<TagContainer> getExtractors()
     {
         return extractors;

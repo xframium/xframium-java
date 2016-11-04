@@ -267,7 +267,7 @@ public class SQLKeyWordProvider implements KeyWordProvider
                     if ( log.isDebugEnabled() )
                         log.debug( "Creating page as " + useClass.getSimpleName() + " for " + resultRow[1] );
 
-                    sC.addPageModel( resultRow[1] + "", useClass );
+                    sC.addPageModel( sC.getSiteName(), resultRow[1] + "", useClass );
                 }
                 catch ( Exception e )
                 {

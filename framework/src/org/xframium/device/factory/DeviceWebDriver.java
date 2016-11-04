@@ -566,7 +566,14 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
      */
     public String getWindowHandle()
     {
-        return webDriver.getWindowHandle();
+        try
+        {
+            return webDriver.getWindowHandle();
+        }
+        catch( Exception e )
+        {
+            return null;
+        }
     }
 
     /*
@@ -617,6 +624,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
 
             if ( webDriver instanceof RemoteWebDriver )
             {
+                log.info( "Switching context to " + newContext );
                 RemoteExecuteMethod executeMethod = new RemoteExecuteMethod( (RemoteWebDriver) webDriver );
                 Map<String, String> params = new HashMap<String, String>( 5 );
                 params.put( "name", newContext );
@@ -624,6 +632,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
             }
             else if ( webDriver instanceof AppiumDriver )
             {
+                log.info( "Switching context to " + newContext );
                 ((AppiumDriver) webDriver).context( newContext );
             }
             else

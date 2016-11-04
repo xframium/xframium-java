@@ -1,4 +1,4 @@
-package org.xframium.driver;
+ package org.xframium.driver;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +25,8 @@ import org.xframium.container.ApplicationContainer;
 import org.xframium.container.CloudContainer;
 import org.xframium.container.DeviceContainer;
 import org.xframium.container.DriverContainer;
+import org.xframium.container.PageContainer;
+import org.xframium.container.SiteContainer;
 import org.xframium.container.SuiteContainer;
 import org.xframium.container.TagContainer;
 import org.xframium.content.ContentManager;
@@ -58,6 +60,7 @@ import org.xframium.driver.xsd.XCapabilities;
 import org.xframium.driver.xsd.XDevice;
 import org.xframium.driver.xsd.XDeviceCapability;
 import org.xframium.driver.xsd.XElement;
+import org.xframium.driver.xsd.XElementParameter;
 import org.xframium.driver.xsd.XFramiumRoot;
 import org.xframium.driver.xsd.XLibrary;
 import org.xframium.driver.xsd.XModel;
@@ -74,7 +77,6 @@ import org.xframium.driver.xsd.XToken;
 import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.Page;
-import org.xframium.page.PageContainer;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.provider.ExcelPageDataProvider;
 import org.xframium.page.data.provider.PageDataProvider;
@@ -87,7 +89,6 @@ import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.element.provider.ExcelElementProvider;
 import org.xframium.page.element.provider.SQLElementProvider;
 import org.xframium.page.element.provider.XMLElementProvider;
-import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
@@ -121,12 +122,12 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     private Map<String,String> configProperties = new HashMap<String,String>( 10 );
     
     private Map<String,Element> elementMap = new HashMap<String,Element>(20);
-    private Map<String,PageContainer> elementTree = new HashMap<String,PageContainer>(20);
-    private List<PageContainer> pageList = new ArrayList<PageContainer>(20);
     
     private static XPathFactory xPathFactory = XPathFactory.newInstance();
+    private String siteName;
     
-
+    private Map<String,SiteContainer> siteTree = new HashMap<String,SiteContainer>( 20 );
+    private List<SiteContainer> siteList = new ArrayList<SiteContainer>( 10 );
     
     private boolean pageInitialized = false;
     
@@ -335,14 +336,14 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     @Override
     public String getSiteName()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return siteName;
     }
 
     @Override
     public ElementProvider configurePageManagement( SuiteContainer sC )
     {
         sC.setSiteName( xRoot.getModel().getSiteName() );
+        siteName = sC.getSiteName();
 
         switch ( xRoot.getModel().getProvider() )
         {
@@ -377,8 +378,19 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 {
                     for ( XElement ele : page.getElement() )
                     {
-                        elementDescriptor = new ElementDescriptor( xRoot.getModel().getSiteName(), page.getName(), ele.getName() );
+                        elementDescriptor = new ElementDescriptor( page.getSite() != null && page.getSite().trim().length() > 0 ? page.getSite() : xRoot.getModel().getSiteName(), page.getName(), ele.getName() );
                         currentElement = ElementFactory.instance().createElement( BY.valueOf( ele.getDescriptor() ), ele.getValue(), ele.getName(), page.getName(), ele.getContextName() );
+                        
+                        if ( ele.getDeviceContext() != null && !ele.getDeviceContext().trim().isEmpty() )
+                            currentElement.setDeviceContext( ele.getDeviceContext() );
+                        
+                        if ( ele.getParameter() != null )
+                        {
+                            for ( XElementParameter xP : ele.getParameter() )
+                            {
+                                currentElement.addElementProperty( xP.getName(), xP.getValue() );
+                            }
+                        }
                         
                         if (log.isDebugEnabled())
                             log.debug( "Adding XML Element using [" + elementDescriptor.toString() + "] as [" + currentElement + "]" );
@@ -388,17 +400,19 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                             if ( currentElement.getBy() == BY.XPATH )
                                 xPathFactory.newXPath().compile( currentElement.getKey().replace( "{", "" ).replace( "}", "" ) );
                             
-                            elementMap.put(elementDescriptor.toString(), currentElement );
-
-                            PageContainer eltList = elementTree.get( elementDescriptor.getPageName() );
-                            if ( eltList == null )
+                            SiteContainer siteContainer = siteTree.get( elementDescriptor.getSiteName() );
+                            
+                            if ( siteContainer == null )
                             {
-                                Class className = KeyWordDriver.instance().getPage( elementDescriptor.getPageName() );
-                                eltList = new PageContainer( elementDescriptor.getPageName(), className != null ? className.getName() : "" );
-                                elementTree.put( elementDescriptor.getPageName(), eltList );
-                                pageList.add( eltList );
+                                siteContainer = new SiteContainer( elementDescriptor.getSiteName() );
+                                siteTree.put( siteContainer.getSiteName(), siteContainer );
+                                siteList.add( siteContainer );
                             }
-                            eltList.getElementList().add( currentElement );
+                            
+                            PageContainer elementList = siteContainer.getPage( elementDescriptor.getPageName() );
+                            elementList.getElementList().add( currentElement );
+                            
+                            elementMap.put(elementDescriptor.toString(), currentElement );
                         }
                         catch( Exception e )
                         {
@@ -582,6 +596,9 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         SimpleDevice currentDevice = new SimpleDevice(device.getName(), device.getManufacturer(), device.getModel(), device.getOs(), device.getOsVersion(), device.getBrowserName(), device.getBrowserVersion(), device.getAvailableDevices().intValue(), driverName, device.isActive(), device.getId() );
         if ( device.getCloud() != null && !device.getCloud().isEmpty() )
             currentDevice.setCloud( device.getCloud() );
+        
+        if ( device.getTagNames() != null && !device.getTagNames().trim().isEmpty() )
+            currentDevice.setTagNames( device.getTagNames().split( "," ) );
         
         List<Object> list = null;
         String factoryName = null;
@@ -851,6 +868,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         dC.getPropertyMap().putAll( configProperties );
         dC.setEmbeddedServer( xRoot.getDriver().isEmbeddedServer() );
         dC.setDriverType( DriverType.valueOf( xRoot.getDriver().getType() ) );
+        dC.setDeviceTags( xRoot.getDriver().getDeviceTags() );
         
         if ( xRoot.getDriver().getExtractors() != null )
         {
@@ -898,7 +916,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 if (log.isDebugEnabled())
                     log.debug( "Creating page as " + useClass.getSimpleName() + " for " + page.getName() );
     
-                sC.addPageModel( page.getName(), useClass );
+                sC.addPageModel( page.getSite() != null && page.getSite().trim().length() > 0 ? page.getSite() : sC.getSiteName(), page.getName(), useClass );
             }
             catch( Exception e )
             {
@@ -916,7 +934,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      */
     private KeyWordTest parseTest( XTest xTest, String typeName )
     { 
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags() );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
 
@@ -948,7 +966,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                                                                                  xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
                                                                                  xStep.getOs(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
-                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint() );
+                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite() );
             
             parseParameters( xStep.getParameter(), testName, xStep.getName(), typeName, step );
             parseTokens( xStep.getToken(), testName, xStep.getName(), typeName, step );
@@ -1101,11 +1119,11 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     {
         return elementMap.get(  elementDescriptor.toString() );
     }
-
+    
     @Override
-    public Map<String,PageContainer> getElementTree()
+    public List<SiteContainer> getSiteList()
     {
-        return elementTree;
+        return siteList;
     }
     
     /**

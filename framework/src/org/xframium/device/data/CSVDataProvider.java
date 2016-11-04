@@ -152,8 +152,18 @@ public class CSVDataProvider implements DataProvider
 						break;
 				}
 				
-				Device currentDevice = new SimpleDevice( lineData[0], lineData[1], lineData[2], lineData[3], lineData[4], lineData[5], lineData[6], Integer.parseInt( lineData[7] ), driverName, Boolean.parseBoolean( lineData[8] ), null );
+				SimpleDevice currentDevice = new SimpleDevice( lineData[0], lineData[1], lineData[2], lineData[3], lineData[4], lineData[5], lineData[6], Integer.parseInt( lineData[7] ), driverName, Boolean.parseBoolean( lineData[8] ), null );
 
+				
+				String cloud = lineData[9];
+                String tagNames =  lineData[10];
+                
+                if ( tagNames != null && !tagNames.trim().isEmpty() )
+                    currentDevice.setTagNames( tagNames.split( "," ) );
+                
+                if ( cloud != null && !cloud.trim().isEmpty() )
+                    currentDevice.setCloud( cloud );
+				
 				deviceList.add( currentDevice );
 			}
 			return deviceList;

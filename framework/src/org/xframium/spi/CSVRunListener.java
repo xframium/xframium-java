@@ -88,7 +88,7 @@ public class CSVRunListener implements RunListener
 	 * @see com.perfectoMobile.device.listener.RunListener#afterRun(com.morelandLabs.spi.Device, java.lang.String, boolean)
 	 */
 	@Override
-	public synchronized void afterRun( Device currentDevice, String runKey, boolean successful, int stepsPassed, int stepsFailed, int stepsIgnored, long startTime, long stopTime, int scriptFailures, int configFailures, int appFailures, int cloudFailures )
+	public synchronized void afterRun( Device currentDevice, String runKey, int successful, int stepsPassed, int stepsFailed, int stepsIgnored, long startTime, long stopTime, int scriptFailures, int configFailures, int appFailures, int cloudFailures, int testFiltered )
 	{
 		FileOutputStream outputStream = null;
 		

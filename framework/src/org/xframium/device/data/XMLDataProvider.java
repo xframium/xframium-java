@@ -188,7 +188,8 @@ public class XMLDataProvider implements DataProvider
 		}
 		
 		SimpleDevice currentDevice = new SimpleDevice(device.getName(), device.getManufacturer(), device.getModel(), device.getOs(), device.getOsVersion(), device.getBrowserName(), device.getBrowserVersion(), device.getAvailableDevices().intValue(), driverName, device.isActive(), device.getId() );
-		
+		if ( device.getTagNames() != null && !device.getTagNames().trim().isEmpty() )
+		    currentDevice.setTagNames( device.getTagNames().split( "," ) );
 		
 		if ( device.getCloud() != null && !device.getCloud().isEmpty() )
 		    currentDevice.setCloud( device.getCloud() );

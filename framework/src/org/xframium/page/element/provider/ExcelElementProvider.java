@@ -194,8 +194,15 @@ public class ExcelElementProvider extends AbstractElementProvider
 						contextName = getCellValue( currentRow.getCell( 4 ) );
 					}
 					
+					
+					
 					Element currentElement = ElementFactory.instance().createElement( BY.valueOf( getCellValue( currentRow.getCell( 2 ) ) ), getCellValue( currentRow.getCell( 3 ) ).replace( "$$", ","), getCellValue( currentRow.getCell( 1 ) ), getCellValue( currentRow.getCell( 0 ) ), contextName );
 					
+                    if ( getCellValue( currentRow.getCell( 5 ) ) != null && !getCellValue( currentRow.getCell( 5 ) ).isEmpty() )
+                    {
+                        currentElement.setDeviceContext( getCellValue( currentRow.getCell( 5 ) ) );
+                    }
+
 					if ( log.isDebugEnabled() )
 						log.debug( "Adding Excel Element using [" + elementDescriptor.toString() + "] as [" + currentElement );
 					elementsRead = elementsRead & validateElement( elementDescriptor, currentElement );

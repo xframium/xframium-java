@@ -20,15 +20,10 @@
  *******************************************************************************/
 package org.xframium.driver;
 
-import com.perfecto.reportium.client.ReportiumClientFactory;
-import com.perfecto.reportium.model.PerfectoExecutionContext;
-import com.perfecto.reportium.model.Project;
-import com.perfecto.reportium.test.result.TestResultFactory;
-import org.apache.commons.lang3.ArrayUtils;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang3.ArrayUtils;
 import org.testng.Assert;
-import org.testng.SkipException;
 import org.testng.annotations.Test;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactType;
@@ -39,6 +34,7 @@ import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.exception.DeviceAcquisitionException;
+import org.xframium.exception.FilteredException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.integrations.sauceLabs.rest.SauceREST;
 import org.xframium.page.PageManager;
@@ -47,6 +43,10 @@ import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.spi.PropertyProvider;
 import org.xframium.spi.driver.ReportiumProvider;
+import com.perfecto.reportium.client.ReportiumClientFactory;
+import com.perfecto.reportium.model.PerfectoExecutionContext;
+import com.perfecto.reportium.model.Project;
+import com.perfecto.reportium.test.result.TestResultFactory;
 
 
 public class XMLTestDriver extends AbstractSeleniumTest
@@ -55,6 +55,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
     public void testDriver( TestName testName ) throws Throwable
     {
         String deviceOs = getDevice().getOs();
+        String[] deviceTags = getDevice().getTagNames();
         boolean returnValue = false;
 
         KeyWordTest test = KeyWordDriver.instance().getTest( testName.getTestName().split( "\\." )[ 0 ] );
@@ -89,13 +90,48 @@ public class XMLTestDriver extends AbstractSeleniumTest
                 
                 if ( !osFound )
                 {
-                    PageManager.instance().setThrowable( new SkipException( "This test is not designed to work on a device with [" + deviceOs + "]  It needs [" + test.getOs() + "]" ) );
-                    PageManager.instance().addExecutionLog( getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), "_SKIPPED", System.currentTimeMillis() - 5000, 5000, StepStatus.FAILURE_IGNORED,
+                    PageManager.instance().setThrowable( new FilteredException( "This test is not designed to work on a device with [" + deviceOs + "]  It needs [" + test.getOs() + "]" ) );
+                    PageManager.instance().addExecutionLog( getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), "_SKIPPED", System.currentTimeMillis() - 5000, 5000, StepStatus.FAILURE,
                     PageManager.instance().getThrowable().getMessage(), PageManager.instance().getThrowable(), 0, "", false, new String[] { PageManager.instance().getThrowable().getMessage() } );
                     
                     throw PageManager.instance().getThrowable();
                 }
             }
+            
+            //
+            // Device tagging implementation
+            //
+            if ( test.getDeviceTags() != null && test.getDeviceTags().length > 0 )
+            {
+                boolean tagFound = false;
+                if ( deviceTags != null && deviceTags.length > 0 )
+                {
+                    for ( String localTag : test.getDeviceTags() )
+                    {
+                        for ( String deviceTag : deviceTags )
+                        {
+                            if ( localTag.toUpperCase().trim().equals( deviceTag.toUpperCase() ) )
+                            {
+                                tagFound = true;
+                                break;
+                            }
+                        }
+                        if ( tagFound )
+                            break;
+                    }
+                }
+                
+                if ( !tagFound )
+                {
+                    PageManager.instance().setThrowable( new FilteredException( "This test did not contain the specified tag and will be skipped" ) );
+                    PageManager.instance().addExecutionLog( getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), "_SKIPPED", System.currentTimeMillis() - 5000, 5000, StepStatus.FAILURE,
+                    PageManager.instance().getThrowable().getMessage(), PageManager.instance().getThrowable(), 0, "", false, new String[] { PageManager.instance().getThrowable().getMessage() } );
+                    
+                    throw PageManager.instance().getThrowable();
+                }
+            }
+            
+            
     		
             if ( DeviceManager.instance().isDryRun() )
             {

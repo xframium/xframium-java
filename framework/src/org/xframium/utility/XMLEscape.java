@@ -21,15 +21,13 @@
 package org.xframium.utility;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.PrettyXmlSerializer;
-import org.htmlcleaner.TagNode;
-import org.w3c.dom.Document;
+import org.htmlcleaner.XmlSerializer;
 import org.xml.sax.InputSource;
 
 public class XMLEscape
@@ -74,6 +72,7 @@ public class XMLEscape
         // Try to simply escape some characters
         //
         String escapedString = escapeXML( xmlIn );
+        System.out.println( "XXX" + escapedString );
         if ( validateDocument( escapedString ) )
             return escapedString;
         
@@ -93,12 +92,15 @@ public class XMLEscape
      */
     public static String toHTML( String htmlIn )
     {
+        //System.setProperty( "XML_Tags", "true" );
     	try
         {
             HtmlCleaner cleaner = new HtmlCleaner();
+            cleaner.getProperties().setNamespacesAware( true ); 
+            
+            XmlSerializer xmlSerializer = new PrettyXmlSerializer( cleaner.getProperties(), "  " );
 
-            ByteArrayOutputStream htmlDocument = new ByteArrayOutputStream();
-            String htmlData = new PrettyXmlSerializer( cleaner.getProperties()).getAsString( htmlIn );
+            String htmlData = xmlSerializer.getAsString( htmlIn );
             
             htmlData = escapeXML( htmlData.replaceAll("(?m)^[ \t]*\r?\n", "") );
             
@@ -110,6 +112,26 @@ public class XMLEscape
         	e.printStackTrace();
             return null;
         }
+    }
+    
+    public static void main( String[] args ) throws Exception
+    {
+        StringBuilder  x = new StringBuilder();
+        
+        int bytesRead = 0;
+        byte[] buffer = new byte[ 512 ];
+        
+        FileInputStream y = new FileInputStream( "C:\\Users\\Allen\\Desktop\\a.xml");
+        while ( ( bytesRead = y.read( buffer ) ) != -1 )
+        {
+            x.append( new String( buffer, 0, bytesRead ) );
+        }
+        
+        System.out.println( toXML( x.toString() ) );
+        
+        
+        
+        
     }
     
     /**
