@@ -55,8 +55,10 @@ public class KWSString extends AbstractKeyWordStep
     @Override
     public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
     {
+        boolean rtn = true;
         String originalValue = null;
         String operationName = null;
+        int paramCount = getParameterList().size();
 
         if ( getParameterList().size() == 1 )
         {
@@ -67,7 +69,6 @@ public class KWSString extends AbstractKeyWordStep
         {
             originalValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
             operationName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-
         }
 
         String newValue = null;
@@ -102,12 +103,41 @@ public class KWSString extends AbstractKeyWordStep
 
                 if ( !originalValue.contains( expectedValue ) && !(expectedValue == null) && !(expectedValue.equals( null )) )
                 {
-                    throw new ScriptException( "STRING Expected [" + expectedValue + "]and original[" + originalValue + "] format is not matching " );
+                    throw new ScriptException( "STRING Expected [" + expectedValue + "] and original[" + originalValue + "] format is not matching " );
                 }
                 else
                 {
                     newValue = expectedValue;
                 }
+                break;
+
+            case "concat":
+                StringBuilder buff = new StringBuilder( originalValue );
+                for( int i = 2; i < paramCount; ++i )
+                {
+                    buff.append( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "" );
+                }
+                newValue = buff.toString();
+                break;
+
+            case "substr":
+                if ( paramCount < 4 )
+                {
+                    throw new ScriptConfigurationException( "STRING operation substr requires four parameters" );
+                }
+
+                int beginIndex = getInt( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" );
+                int endIndex = getInt( getParameterValue( getParameterList().get( 3 ), contextMap, dataMap ) + "" );
+
+                newValue = originalValue.substring( beginIndex, endIndex );
+
+                if ( paramCount > 4 )
+                {
+                    String compareTo = getParameterValue( getParameterList().get( 4 ), contextMap, dataMap ) + "";
+
+                    rtn = newValue.equals( compareTo );
+                }
+                
                 break;
         }
 
@@ -121,7 +151,26 @@ public class KWSString extends AbstractKeyWordStep
             contextMap.put( getContext(), newValue );
         }
 
-        return true;
+        return rtn;
     }
 
+    //
+    // Helpers
+    //
+
+    private int getInt( String value )
+    {
+        int rtn = 0;
+        
+        try
+        {
+            rtn = Integer.parseInt( value );
+        }
+        catch( Exception e )
+        {
+            throw new IllegalStateException( e );
+        }
+
+        return rtn;
+    }
 }
