@@ -394,6 +394,34 @@ public class SeleniumElement extends AbstractElement
 
         return false;
     }
+    
+    public boolean _clickAt( int offsetX, int offsetY )
+    {
+        WebElement webElement = getElement();
+        
+        if ( webElement != null )
+        {
+        
+            Dimension elementSize = webElement.getSize();
+            
+            int useX = (int) ((double)elementSize.getWidth() * ((double)offsetX / 100.0 ) );
+            int useY = (int) ((double)elementSize.getHeight() * ((double)offsetY / 100.0 ) );
+            
+            if ( log.isInfoEnabled() )
+                log.info( "Clicking " + useX + "," + useY + " pixels relative to " + getName() );
+            
+            if ( webDriver instanceof HasInputDevices )
+            {
+                new Actions( webDriver ).moveToElement( webElement, useX, useY ).click().build().perform();
+                return true;
+            }
+            
+            return true;
+        }
+        
+        return false;
+
+    }
 
     /*
      * (non-Javadoc)
