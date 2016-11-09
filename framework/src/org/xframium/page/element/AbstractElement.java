@@ -203,6 +203,7 @@ public abstract class AbstractElement implements Element
 	
 	/** The element key. */
 	private String elementKey;
+	private String rawElementKey;
 	
 	/** The timed. */
 	private boolean timed;
@@ -257,6 +258,7 @@ public abstract class AbstractElement implements Element
 	{
 		this.by = by;
 		this.elementKey = elementKey;
+		this.rawElementKey = elementKey;
 		this.elementName = elementName;
 		this.pageName = pageName;
 		this.contextElement = contextElement;
@@ -356,6 +358,18 @@ public abstract class AbstractElement implements Element
 		}
 		
 		return elementKey;
+	}
+	
+	public String getRawKey()
+	{
+	    return rawElementKey;
+	}
+	
+	public void setKey( String elementKey )
+	{
+	    this.elementKey = elementKey;
+	    this.rawElementKey = elementKey;
+	    tokensApplied = false;
 	}
 	
 	/**
