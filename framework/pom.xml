@@ -177,29 +177,29 @@
     <dependency>
       <groupId>com.perfectomobile</groupId>
       <artifactId>intellij-connector</artifactId>
-      <version>9.0.0.0</version>
+      <version>9.2.0.0</version>
     </dependency>
     <dependency>
       <groupId>com.perfecto.reporting-sdk</groupId>
       <artifactId>reportium-testng</artifactId>
-      <version>0.0.23</version>
+      <version>1.1.2</version>
     </dependency>
     <dependency>
       <groupId>com.perfecto.reporting-sdk</groupId>
       <artifactId>reportium-testng</artifactId>
-      <version>0.0.23</version>
+      <version>1.1.2</version>
     </dependency>
     
     <dependency>
       <groupId>com.perfectomobile</groupId>
       <artifactId>pm-webdriver</artifactId>
-      <version>9.0.0.0</version>
+      <version>9.2.0.1</version>
     </dependency>
 
     <dependency>
       <groupId>com.perfectomobile</groupId>
       <artifactId>http-client</artifactId>
-      <version>9.0.0.0</version>
+      <version>9.2.0.1</version>
     </dependency>
 
     <dependency>
