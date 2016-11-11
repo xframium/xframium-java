@@ -435,15 +435,19 @@ public class ExecutionRecord
 
                 stringBuffer.append( "</h6></td>" );
                 
-                if ( status.equals( StepStatus.FAILURE ) && DataManager.instance().isArtifactEnabled( ArtifactType.FAILURE_SOURCE ) )
+                stringBuffer.append( "<td colSpan=\"2\" align=\"center\"><a hRef=\"failure-screenshot.png\" class=\"thumbnail\"><img class=\"img-rounded img-responsive\" src=\"failure-screenshot.png\" style=\"height: 200px; margin-left:5px; margin-right: 5px\"/></a>" );
+                if ( status.equals( StepStatus.FAILURE ) && DataManager.instance().isArtifactEnabled( ArtifactType.FAILURE_SOURCE_HTML ) )
                 {
                     
-                    stringBuffer.append( "<td colSpan=\"2\" align=\"center\"><a hRef=\"failure-screenshot.png\" class=\"thumbnail\"><img class=\"img-rounded img-responsive\" src=\"failure-screenshot.png\" style=\"height: 200px;\"/></a>" );
-                    stringBuffer.append( "<a target=\"_blank\" class=\"btn btn-danger\" hRef='failureDOM.html'>View Device State</a></td>" );
+                    stringBuffer.append( "<a target=\"_blank\" class=\"btn btn-danger\" hRef='failureDOM.html'>View as HTML</a>" );
                 }
-                else
-                    stringBuffer.append( "<td colSpan=\"2\"></td>" );
-                stringBuffer.append( "</tr>" );
+                
+                if ( status.equals( StepStatus.FAILURE ) && DataManager.instance().isArtifactEnabled( ArtifactType.FAILURE_SOURCE ) )
+                {
+                    stringBuffer.append( "<a target=\"_blank\" class=\"btn btn-danger\" hRef='failureDOM.xml'>View as XML</a>" );
+                }
+
+                stringBuffer.append( "</td></tr>" );
             }
         }
         else if ( type.equals( "KWSDumpState" ) )

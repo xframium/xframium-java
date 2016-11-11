@@ -723,6 +723,7 @@ public class DeviceManager implements ArtifactListener
                                             //
                                             // We got a null web driver here
                                             //
+                                            activeRuns.remove( currentDevice.getKey() + "." + runKey );
                                             Integer failureCount = failureMap.get( currentDevice );
                                             if ( failureCount == null )
                                                 failureMap.put( currentDevice, 1 );
@@ -836,9 +837,6 @@ public class DeviceManager implements ArtifactListener
                     }
                     DeviceWebDriver webDriver = new DeviceWebDriver( null, deviceRan, currentDevice );
                     webDriver.setArtifactProducer( useCloud.getCloudActionProvider().getArtifactProducer() );
-                    
-                    
-                    
                     
                     return new ConnectedDevice( webDriver, currentDevice, personaName );
                 }

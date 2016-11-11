@@ -26,6 +26,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.HasCapabilities;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.HasInputDevices;
@@ -38,6 +40,8 @@ import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.factory.MorelandWebElement;
 import org.xframium.exception.ObjectIdentificationException;
+import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.gesture.GestureManager;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.bean.ImageExecution;
@@ -386,6 +390,34 @@ public class SeleniumElement extends AbstractElement
 
         return false;
     }
+    
+    public boolean _clickAt( int offsetX, int offsetY )
+    {
+        WebElement webElement = getElement();
+        
+        if ( webElement != null )
+        {
+        
+            Dimension elementSize = webElement.getSize();
+            
+            int useX = (int) ((double)elementSize.getWidth() * ((double)offsetX / 100.0 ) );
+            int useY = (int) ((double)elementSize.getHeight() * ((double)offsetY / 100.0 ) );
+            
+            if ( log.isInfoEnabled() )
+                log.info( "Clicking " + useX + "," + useY + " pixels relative to " + getName() );
+            
+            if ( webDriver instanceof HasInputDevices )
+            {
+                new Actions( webDriver ).moveToElement( webElement, useX, useY ).click().build().perform();
+                return true;
+            }
+            
+            return true;
+        }
+        
+        return false;
+
+    }
 
     /*
      * (non-Javadoc)
@@ -612,8 +644,8 @@ public class SeleniumElement extends AbstractElement
     @Override
     protected String _getAttribute( String attributeName )
     {
-    	if ( log.isDebugEnabled() )
-    		log.debug( "Getting Attribute value for " + attributeName);
+        if ( log.isDebugEnabled() )
+            log.debug( "Getting Attribute value for " + attributeName );
         return getElement().getAttribute( attributeName );
     }
 
@@ -655,22 +687,20 @@ public class SeleniumElement extends AbstractElement
                 getKey(), null, 0, "", webElement instanceof CachedElement, null );
         return returnValue;
     }
-    
-    
+
     @Override
     protected boolean _isEnabled()
     {
-    	 long startTime = System.currentTimeMillis();
-         WebElement webElement = (WebElement) getElement();
-         
-         boolean returnValue = webElement.isEnabled();
-         
-         PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "enabled", System.currentTimeMillis(), System.currentTimeMillis() - startTime, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE,
-                 getKey(), null, 0, "", webElement instanceof CachedElement, null );
-         return returnValue;
-         
+        long startTime = System.currentTimeMillis();
+        WebElement webElement = (WebElement) getElement();
+
+        boolean returnValue = webElement.isEnabled();
+
+        PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "enabled", System.currentTimeMillis(), System.currentTimeMillis() - startTime, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE,
+                getKey(), null, 0, "", webElement instanceof CachedElement, null );
+        return returnValue;
+
     }
-   
 
     private WebDriver getNativeDriver()
     {
@@ -694,8 +724,18 @@ public class SeleniumElement extends AbstractElement
 
         if ( "V_TEXT".equals( getBy().name().toUpperCase() ) )
         {
-            String testValue = PerfectoMobile.instance().imaging().textExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, 50 ).getStatus();
-            returnValue = Boolean.parseBoolean( testValue ) | testValue.toUpperCase().equals( "SUCCESS" );
+            if ( getElementProperties() != null )
+            {
+                String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript( "mobile:text:find", getElementProperties() ) + "";
+                returnValue = !"false".equals( result.toLowerCase() );
+            }
+            else
+            {
+                String testValue = PerfectoMobile.instance().imaging().textExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, 50 ).getStatus();
+                returnValue = Boolean.parseBoolean( testValue ) | testValue.toUpperCase().equals( "SUCCESS" );
+                ;
+            }
+
             PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "present", System.currentTimeMillis(), System.currentTimeMillis() - startTime, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE,
                     getKey(), null, 0, "", false, null );
             return returnValue;
@@ -726,11 +766,23 @@ public class SeleniumElement extends AbstractElement
         long startTime = System.currentTimeMillis();
         if ( "V_TEXT".equals( getBy().name().toUpperCase() ) )
         {
-            boolean returnValue = Boolean.parseBoolean( PerfectoMobile.instance().imaging().textExists( getExecutionId(), getDeviceName(), getKey(), (short) timeOut, 50 ).getStatus() );
+            boolean returnValue = false;
+            if ( getElementProperties() != null )
+            {
+                String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript( "mobile:text:find", getElementProperties() ) + "";
+                returnValue = !"false".equals( result.toLowerCase() );
+            }
+            else
+            {
+                String testValue = PerfectoMobile.instance().imaging().textExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, 50 ).getStatus();
+                if ( testValue == null )
+                    returnValue = true;
+                else
+                    returnValue = Boolean.parseBoolean( testValue ) | testValue.toUpperCase().equals( "SUCCESS" );
+            }
 
-            PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "waitFor", System.currentTimeMillis(), System.currentTimeMillis() - startTime, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE,
-                    getKey(), null, 0, "", false, new String[] { waitType.name().toLowerCase() } );
-
+            PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "present", System.currentTimeMillis(), System.currentTimeMillis() - startTime, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE,
+                    getKey(), null, 0, "", false, null );
             return returnValue;
         }
         else
@@ -800,99 +852,114 @@ public class SeleniumElement extends AbstractElement
     {
         WebElement webElement = getElement();
 
-        if ( webElement.getTagName().equalsIgnoreCase( "select" ) )
+        if ( "V_TEXT".equals( getBy().name().toUpperCase() ) )
         {
-            switch ( setMethod )
+            if ( getElementProperties() != null )
             {
-                case DEFAULT:
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": Selecting element value from [" + getKey() + "] as " + currentValue );
+                String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript( "mobile:edit-text:set", getElementProperties() ) + "";
+                if ( "false".equals( result.toLowerCase() ) )
+                    throw new ScriptException( "Visual set failed to execute" );
 
-                    Select selectElement = new Select( webElement );
-                    if ( selectElement.isMultiple() )
-                        selectElement.deselectAll();
-                    try
-                    {
-                        selectElement.selectByVisibleText( currentValue );
-                    }
-                    catch ( Exception e )
-                    {
-                        selectElement.selectByValue( currentValue );
-                    }
-
-                    break;
-
-                case MULTISELECT:
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": Selecting element value from [" + getKey() + "] as " + currentValue );
-                    Select multipleselect = new Select( webElement );
-                    String multiSelectTokens[] = currentValue.split( "," );
-                    for ( String tokens : multiSelectTokens )
-                    {
-                        if ( multipleselect.isMultiple() )
-                        {
-                            try
-                            {
-                                multipleselect.selectByVisibleText( tokens );
-                            }
-                            catch ( Exception e )
-                            {
-                                multipleselect.selectByValue( tokens );
-                            }
-                        }
-                    }
-                default:
-                    break;
             }
-        }
-        else if ( webElement.getTagName().equalsIgnoreCase( "UIAPickerWheel" ) )
-        {
-        	System.out.println( "SETTING PICKER" );
-        	try
-        	{
-        	MorelandWebElement x = (MorelandWebElement) webElement;
-            ((IOSElement) x.getWebElement()).sendKeys(currentValue);
-        	}
-        	catch( Exception e )
-        	{
-        		e.printStackTrace();
-        	}
-        	
-        	try
-        	{
-        	MorelandWebElement x = (MorelandWebElement) webElement;
-            ((IOSElement) x.getWebElement()).setValue(currentValue);
-        	}
-        	catch( Exception e )
-        	{
-        		e.printStackTrace();
-        	}
+            else
+                throw new ScriptConfigurationException( "A visual set requires element properties to be specified" );
         }
         else
         {
-            switch ( setMethod )
+            if ( webElement.getTagName().equalsIgnoreCase( "select" ) )
             {
-                case DEFAULT:
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue );
+                switch ( setMethod )
+                {
+                    case DEFAULT:
+                        if ( log.isInfoEnabled() )
+                            log.info( Thread.currentThread().getName() + ": Selecting element value from [" + getKey() + "] as " + currentValue );
+
+                        Select selectElement = new Select( webElement );
+                        if ( selectElement.isMultiple() )
+                            selectElement.deselectAll();
+                        try
+                        {
+                            selectElement.selectByVisibleText( currentValue );
+                        }
+                        catch ( Exception e )
+                        {
+                            selectElement.selectByValue( currentValue );
+                        }
+
+                        break;
+
+                    case MULTISELECT:
+                        if ( log.isInfoEnabled() )
+                            log.info( Thread.currentThread().getName() + ": Selecting element value from [" + getKey() + "] as " + currentValue );
+                        Select multipleselect = new Select( webElement );
+                        String multiSelectTokens[] = currentValue.split( "," );
+                        for ( String tokens : multiSelectTokens )
+                        {
+                            if ( multipleselect.isMultiple() )
+                            {
+                                try
+                                {
+                                    multipleselect.selectByVisibleText( tokens );
+                                }
+                                catch ( Exception e )
+                                {
+                                    multipleselect.selectByValue( tokens );
+                                }
+                            }
+                        }
+                    default:
+                        break;
+                }
+            }
+            else if ( webElement.getTagName().equalsIgnoreCase( "UIAPickerWheel" ) )
+            {
+                System.out.println( "SETTING PICKER" );
+                try
+                {
                     MorelandWebElement x = (MorelandWebElement) webElement;
-                    if ( x.getWebElement() instanceof IOSElement )
-                        ((IOSElement) x.getWebElement()).setValue( currentValue );
-                    else
-                    {
-                        webElement.clear();
+                    ((IOSElement) x.getWebElement()).sendKeys( currentValue );
+                }
+                catch ( Exception e )
+                {
+                    e.printStackTrace();
+                }
+
+                try
+                {
+                    MorelandWebElement x = (MorelandWebElement) webElement;
+                    ((IOSElement) x.getWebElement()).setValue( currentValue );
+                }
+                catch ( Exception e )
+                {
+                    e.printStackTrace();
+                }
+            }
+            else
+            {
+                switch ( setMethod )
+                {
+                    case DEFAULT:
+                        if ( log.isInfoEnabled() )
+                            log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue );
+                        MorelandWebElement x = (MorelandWebElement) webElement;
+                        if ( x.getWebElement() instanceof IOSElement )
+                            ((IOSElement) x.getWebElement()).setValue( currentValue );
+                        else
+                        {
+                            webElement.clear();
+                            webElement.sendKeys( currentValue );
+                        }
+                        break;
+
+                    case SINGLE:
+                        if ( log.isInfoEnabled() )
+                            log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue + " using individual send keys" );
+
                         webElement.sendKeys( currentValue );
-                    }
-                    break;
+                    default:
+                        break;
 
-                case SINGLE:
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": Setting element [" + getKey() + "] to " + currentValue + " using individual send keys" );
-
-                    webElement.sendKeys( currentValue );
-                default:
-                    break;
-
+                }
             }
         }
     }
@@ -919,16 +986,26 @@ public class SeleniumElement extends AbstractElement
     }
 
     private void createPressFromVisual(ImageExecution iExec) {
-        if ( Boolean.parseBoolean( iExec.getStatus() ) )
+        if ( getElementProperties() != null )
         {
-            int centerWidth = Integer.parseInt( iExec.getLeft() ) + (Integer.parseInt( iExec.getWidth() ) / 2);
-            int centerHeight = Integer.parseInt( iExec.getTop() ) + (Integer.parseInt( iExec.getHeight() ) / 2);
+            String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript( "mobile:button-text:click", getElementProperties() ) + "";
+            if ( "false".equals( result.toLowerCase() ) )
+                throw new ScriptException( "Visual click failed to execute" );
 
-            int useX = (int) (((double) centerWidth / (double) Integer.parseInt( iExec.getScreenWidth() )) * 100);
-            int useY = (int) (((double) centerHeight / (double) Integer.parseInt( iExec.getScreenHeight() )) * 100);
+        }
+        else
+        {
+            if ( Boolean.parseBoolean( iExec.getStatus() ) )
+            {
+                int centerWidth = Integer.parseInt( iExec.getLeft() ) + (Integer.parseInt( iExec.getWidth() ) / 2);
+                int centerHeight = Integer.parseInt( iExec.getTop() ) + (Integer.parseInt( iExec.getHeight() ) / 2);
 
-            GestureManager.instance().createPress( new Point( useX, useY ) ).executeGesture( webDriver );
+                int useX = (int) (((double) centerWidth / (double) Integer.parseInt( iExec.getScreenWidth() )) * 100);
+                int useY = (int) (((double) centerHeight / (double) Integer.parseInt( iExec.getScreenHeight() )) * 100);
 
+                GestureManager.instance().createPress( new Point( useX, useY ) ).executeGesture( webDriver );
+
+            }
         }
     }
 

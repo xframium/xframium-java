@@ -44,6 +44,12 @@ public class SiteContainer implements Iterable<PageContainer>
         return pC;
     }
     
+    public void addPage( PageContainer pageContainer )
+    {
+        pageMap.put( pageContainer.getPageName(), pageContainer );
+        pageList.add( pageContainer );
+    }
+    
     @Override
     public Iterator<PageContainer> iterator()
     {

@@ -44,6 +44,7 @@ public abstract class AbstractElement implements Element
 	
 	
 	/** The log. */
+    protected Map<String,String> elementProperties;
 	protected Log log = LogFactory.getLog( Element.class );
 	private boolean cacheNative = false;
 
@@ -57,6 +58,27 @@ public abstract class AbstractElement implements Element
         this.cacheNative = cacheNative;
     }
 
+    public void addElementProperty( String name, String value )
+    {
+        if ( elementProperties == null )
+            elementProperties = new HashMap<String,String>( 20 );
+        
+        elementProperties.put( name, value );
+    }
+    
+    public Map<String,String> getElementProperties()
+    {
+        return elementProperties;
+    }
+    
+    public String getElementProperty( String name )
+    {
+        if ( elementProperties != null )
+            return elementProperties.get( name );
+        
+        else return null;
+    }
+    
     /**
 	 * _get native.
 	 *
@@ -166,6 +188,8 @@ public abstract class AbstractElement implements Element
 	 * _click.
 	 */
 	protected abstract void _click();
+	
+	protected abstract boolean _clickAt( int offsetPercentX, int offsetPercentY );
 
 	/**
 	 * _get all.
@@ -179,6 +203,7 @@ public abstract class AbstractElement implements Element
 	
 	/** The element key. */
 	private String elementKey;
+	private String rawElementKey;
 	
 	/** The timed. */
 	private boolean timed;
@@ -233,6 +258,7 @@ public abstract class AbstractElement implements Element
 	{
 		this.by = by;
 		this.elementKey = elementKey;
+		this.rawElementKey = elementKey;
 		this.elementName = elementName;
 		this.pageName = pageName;
 		this.contextElement = contextElement;
@@ -332,6 +358,18 @@ public abstract class AbstractElement implements Element
 		}
 		
 		return elementKey;
+	}
+	
+	public String getRawKey()
+	{
+	    return rawElementKey;
+	}
+	
+	public void setKey( String elementKey )
+	{
+	    this.elementKey = elementKey;
+	    this.rawElementKey = elementKey;
+	    tokensApplied = false;
 	}
 	
 	/**
@@ -632,6 +670,11 @@ public abstract class AbstractElement implements Element
 	public void click()
 	{
 		click( 1, 0 );
+	}
+	
+	public boolean clickAt( int offsetPercentX, int offsetPercentY )
+	{
+	    return _clickAt( offsetPercentX, offsetPercentY );
 	}
 
 	public void click( int clickCount, int waitTime )

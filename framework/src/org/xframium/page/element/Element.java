@@ -22,7 +22,9 @@ package org.xframium.page.element;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
@@ -114,6 +116,10 @@ public interface Element
         }
     }
 	
+	public void addElementProperty( String name, String value );
+    public Map<String,String> getElementProperties();
+    public String getElementProperty( String name );
+	
 	public BY getBy();
 	
 	/**
@@ -122,6 +128,8 @@ public interface Element
 	 * @return true, if successful
 	 */
 	public boolean moveTo();
+	
+	public boolean clickAt( int offsetPercentX, int offsetPercentY );
 
     /**
      * Get Element Key
