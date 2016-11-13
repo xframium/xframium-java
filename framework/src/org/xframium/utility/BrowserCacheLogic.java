@@ -202,7 +202,7 @@ public class BrowserCacheLogic
             String osVerStr = (String) driver.executeScript("mobile:handset:info", params);
             int[] osVer = parseVersion( osVerStr );
 
-            if ( osVer[0] >= 5 )
+            if ( osVer[0] >= 4 )
             {
                 //
                 // Launch Chrome
@@ -270,12 +270,22 @@ public class BrowserCacheLogic
                 //
                 // text: Clear
                 //
-                switchToContext(driver, "WEBVIEW");
-                params.clear();
-                params.put("value", "//*[@resource-id=\"com.android.chrome:id/button_preference\"]");
-                params.put("framework", "appium-1.3.4");
-                driver.executeScript("mobile:application.element:click", params);
-
+                try {
+                    params.clear();
+                    params.put("value", "//*[@resource-id=\"android:id/button1\"]");
+                    params.put("framework", "appium-1.3.4");
+                    driver.executeScript("mobile:application.element:click", params);
+                } catch (Exception e) {
+                    try {
+                        switchToContext(driver, "WEBVIEW");
+                        params.clear();
+                        params.put("value", "//*[@resource-id=\"com.android.chrome:id/button_preference\"]");
+                        params.put("framework", "appium-1.3.4");
+                        driver.executeScript("mobile:application.element:click", params);
+                    } catch (Exception e2) {
+                        //do nothing
+                    }
+                }
 
                 //
                 // Close Chrome
