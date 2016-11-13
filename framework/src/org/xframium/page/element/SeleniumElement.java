@@ -622,15 +622,19 @@ public class SeleniumElement extends AbstractElement
         {
             case "IMG":
                 returnValue = currentElement.getAttribute( "src" );
+                break;
 
             case "INPUT":
                 returnValue = currentElement.getAttribute( "value" );
+                break;
 
             case "SELECT":
                 returnValue = new Select( currentElement ).getFirstSelectedOption().getText();
+                break;
 
             default:
                 returnValue = currentElement.getText();
+                break;
         }
 
         PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "get", System.currentTimeMillis(), System.currentTimeMillis() - startTime, StepStatus.SUCCESS, getKey(), null, 0, "",
