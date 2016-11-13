@@ -926,17 +926,20 @@ public class SeleniumElement extends AbstractElement
                 catch ( Exception e )
                 {
                     e.printStackTrace();
-                }
 
-                try
-                {
                     MorelandWebElement x = (MorelandWebElement) webElement;
                     ((IOSElement) x.getWebElement()).setValue( currentValue );
                 }
-                catch ( Exception e )
-                {
-                    e.printStackTrace();
-                }
+
+                // try
+                // {
+                //     MorelandWebElement x = (MorelandWebElement) webElement;
+                //     ((IOSElement) x.getWebElement()).setValue( currentValue );
+                // }
+                // catch ( Exception e )
+                // {
+                //     e.printStackTrace();
+                // }
             }
             else
             {
