@@ -3,6 +3,8 @@
   <import fileName="pageElementsTwo.xml"/>
   <site name="xTest">
     <page name="home">
+      <element name="toggleButtonWeb" descriptor="XPATH" value="//button[text()='Toggle Value']" deviceContext="WEBVIEW_1" />
+      <element name="toggleButtonNative" descriptor="XPATH" value="//button[text()='Toggle Value']" deviceContext="NATIVE_APP" />
       <element name="toggleButton" descriptor="XPATH" value="//button[text()='Toggle Value']" />
       <element name="toggleValue" descriptor="ID" value="singleModel" />
       <element name="elementList" descriptor="CSS" value="#elementList>pre" />

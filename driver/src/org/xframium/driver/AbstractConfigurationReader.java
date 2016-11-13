@@ -222,7 +222,13 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             if ( driverC.isArtifactEnabled( ArtifactType.DEBUGGER ) )
             {
-                DebugManager.instance().startUp( InetAddress.getLocalHost().getHostAddress(), 8870 );
+                String debuggerHost = System.getProperty( "X_DEBUGGER_HOST" );
+                if ( debuggerHost == null )
+                {
+                    debuggerHost = "127.0.0.1";
+                }
+                
+                DebugManager.instance().startUp( debuggerHost, 8870 );
                 KeyWordDriver.instance().addStepListener( DebugManager.instance() );
             }
             

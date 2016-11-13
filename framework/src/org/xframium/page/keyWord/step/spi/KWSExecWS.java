@@ -157,37 +157,37 @@ public class KWSExecWS extends AbstractKeyWordStep
             {
                 case TOKEN_URL:
                 {
-                    rtn.setUrl( param.getValue() );
+                    rtn.setUrl( (String) getParameterValue( param, contextMap, dataMap ) );
                     break;
                 }
 
                 case TOKEN_METHOD:
                 {
-                    rtn.setMethod( param.getValue() );
+                    rtn.setMethod( (String) getParameterValue( param, contextMap, dataMap ) );
                     break;
                 }
 
                 case TOKEN_TYPE:
                 {
-                    rtn.setType( param.getValue() );
+                    rtn.setType( (String) getParameterValue( param, contextMap, dataMap ) );
                     break;
                 }
 
                 case TOKEN_MEDIA_TYPE:
                 {
-                    rtn.setMediaType( param.getValue() );
+                    rtn.setMediaType( (String) getParameterValue( param, contextMap, dataMap ) );
                     break;
                 }
 
                 case TOKEN_UNAME:
                 {
-                    rtn.setUsername( param.getValue() );
+                    rtn.setUsername( (String) getParameterValue( param, contextMap, dataMap ) );
                     break;
                 }
 
                 case TOKEN_PWD:
                 {
-                    rtn.setPassword( param.getValue() );
+                    rtn.setPassword( (String) getParameterValue( param, contextMap, dataMap ) );
                     break;
                 }
 
@@ -213,7 +213,7 @@ public class KWSExecWS extends AbstractKeyWordStep
                     WebServiceClientUtil.CallParameter cparam = new WebServiceClientUtil.CallParameter();
                     
                     cparam.setName( param.getName() );
-                    cparam.setValue( param.getValue() );
+                    cparam.setValue( (String) getParameterValue( param, contextMap, dataMap ) );
                     rtn.getParameters().add( cparam );
                     
                     break;
