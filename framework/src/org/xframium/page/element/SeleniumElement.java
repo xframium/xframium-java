@@ -20,26 +20,15 @@
  *******************************************************************************/
 package org.xframium.page.element;
 
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import javax.imageio.ImageIO;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.ios.IOSElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.ContextAware;
+import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -71,8 +60,15 @@ import org.xframium.spi.driver.NativeDriverProvider;
 import org.xframium.spi.driver.VisualDriverProvider;
 import org.xframium.utility.XPathGenerator;
 import org.xframium.utility.html.HTMLElementLookup;
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.ios.IOSElement;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -985,32 +981,39 @@ public class SeleniumElement extends AbstractElement
     {
         if ( "V_TEXT".equals( getBy().name().toUpperCase() ) )
         {
-            if ( getElementProperties() != null )
-            {
-                String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript( "mobile:button-text:click", getElementProperties() ) + "";
-                if ( "false".equals( result.toLowerCase() ) )
-                    throw new ScriptException( "Visual click failed to execute" );
-
-            }
-            else
-            {
-                
-                ImageExecution iExec = PerfectoMobile.instance().imaging().textExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, 50 );
-                if ( Boolean.parseBoolean( iExec.getStatus() ) )
-                {
-                    int centerWidth = Integer.parseInt( iExec.getLeft() ) + (Integer.parseInt( iExec.getWidth() ) / 2);
-                    int centerHeight = Integer.parseInt( iExec.getTop() ) + (Integer.parseInt( iExec.getHeight() ) / 2);
-    
-                    int useX = (int) (((double) centerWidth / (double) Integer.parseInt( iExec.getScreenWidth() )) * 100);
-                    int useY = (int) (((double) centerHeight / (double) Integer.parseInt( iExec.getScreenHeight() )) * 100);
-    
-                    GestureManager.instance().createPress( new Point( useX, useY ) ).executeGesture( webDriver );    
-                }
-            }
+            createPressFromVisual( PerfectoMobile.instance().imaging().textExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, 50 ) );
+        }
+        else if ( "V_IMAGE".equals( getBy().name().toUpperCase() ) )
+        {
+            createPressFromVisual( PerfectoMobile.instance().imaging().imageExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, MatchMode.bounded ) );
         }
         else
             getElement().click();
 
+    }
+
+    private void createPressFromVisual(ImageExecution iExec) {
+        if ( getElementProperties() != null )
+        {
+            String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript( "mobile:button-text:click", getElementProperties() ) + "";
+            if ( "false".equals( result.toLowerCase() ) )
+                throw new ScriptException( "Visual click failed to execute" );
+
+        }
+        else
+        {
+            if ( Boolean.parseBoolean( iExec.getStatus() ) )
+            {
+                int centerWidth = Integer.parseInt( iExec.getLeft() ) + (Integer.parseInt( iExec.getWidth() ) / 2);
+                int centerHeight = Integer.parseInt( iExec.getTop() ) + (Integer.parseInt( iExec.getHeight() ) / 2);
+
+                int useX = (int) (((double) centerWidth / (double) Integer.parseInt( iExec.getScreenWidth() )) * 100);
+                int useY = (int) (((double) centerHeight / (double) Integer.parseInt( iExec.getScreenHeight() )) * 100);
+
+                GestureManager.instance().createPress( new Point( useX, useY ) ).executeGesture( webDriver );
+
+            }
+        }
     }
 
     /*
