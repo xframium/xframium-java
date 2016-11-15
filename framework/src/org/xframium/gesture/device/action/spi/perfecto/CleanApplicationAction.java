@@ -97,8 +97,14 @@ public class CleanApplicationAction extends AbstractDefaultAction implements Dev
             }
             
             if ( appDesc != null )
+            {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 webDriver.get(appDesc.getUrl());
-
+            }
         }
         else
         {

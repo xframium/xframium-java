@@ -48,6 +48,10 @@ public class HideKeyboardAction extends AbstractDefaultAction implements DeviceA
 		else if ( webDriver instanceof NativeDriverProvider )
 		{
 			NativeDriverProvider nativeProvider = (NativeDriverProvider) webDriver;
+			
+			System.out.print( nativeProvider );
+			System.out.print( nativeProvider.getNativeDriver() );
+			
 			if ( nativeProvider.getNativeDriver() instanceof AppiumDriver )
 				appiumDriver = (AppiumDriver) nativeProvider.getNativeDriver();
 			else

@@ -1240,20 +1240,22 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
             case FILE:
                 returnValue = param.getValue();
-                for ( KeyWordToken token : param.getTokenList() )
-                {
-                    if ( log.isDebugEnabled() )
-                        log.debug( "Applying token " + token.getName() );
-                    
-                    returnValue = returnValue.replace( "{" + token.getName() + "}", getTokenValue( token, contextMap, dataMap ) );
-                }
+                
                 break;
                 
             default:
                 throw new ScriptConfigurationException( Thread.currentThread().getName() + ": Unknown Parameter Type [" + param.getValue() + "]" );
         }
-        
-        
+        if ( param.getTokenList() != null )
+        {
+            for ( KeyWordToken token : param.getTokenList() )
+            {
+                if ( log.isDebugEnabled() )
+                    log.debug( "Applying token " + token.getName() );
+                
+                returnValue = returnValue.replace( "{" + token.getName() + "}", getTokenValue( token, contextMap, dataMap ) );
+            }
+        }
         
         return returnValue;
     }

@@ -128,6 +128,8 @@ public interface Element
 	 * @return true, if successful
 	 */
 	public boolean moveTo();
+	
+	public boolean clickAt( int offsetPercentX, int offsetPercentY );
 
     /**
      * Get Element Key

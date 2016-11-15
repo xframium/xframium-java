@@ -243,12 +243,12 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
             {
                 ExecutionRecord eItem = (ExecutionRecord) item;
 
-                if (( eItem.getDeviceName() != null ) &&
-                    ( device.getDeviceName() != null ) &&
-                    ( !eItem.getDeviceName().equals( device.getDeviceName() )))
-                {
-                    continue;
-                }
+                //if (( eItem.getDeviceName() != null ) &&
+                //    ( device.getDeviceName() != null ) &&
+                //    ( !eItem.getDeviceName().equals( device.getDeviceName() )))
+                //{
+                //    continue;
+               // }
                 
                 stringBuffer.append( eItem.toHTML( spaceCount ) );
                 spaceCount++;

@@ -72,7 +72,6 @@ public class XMLEscape
         // Try to simply escape some characters
         //
         String escapedString = escapeXML( xmlIn );
-        System.out.println( "XXX" + escapedString );
         if ( validateDocument( escapedString ) )
             return escapedString;
         

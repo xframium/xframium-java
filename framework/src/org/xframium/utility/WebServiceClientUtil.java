@@ -20,23 +20,33 @@
  *******************************************************************************/
 package org.xframium.utility;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xframium.exception.ScriptConfigurationException;
-
+import org.xframium.exception.ScriptException;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 public class WebServiceClientUtil
 {
+    private static Log log = LogFactory.getLog( WebServiceClientUtil.class );
     //
     // Constants
     //
@@ -45,7 +55,7 @@ public class WebServiceClientUtil
     private static final String HTTP_DELETE = "DELETE";
     private static final String HTTP_POST = "POST";
     private static final String HTTP_PUT = "PUT";
-    
+
     private static final String CONTENT_XML = "xml";
     private static final String CONTENT_JSON = "json";
 
@@ -69,10 +79,10 @@ public class WebServiceClientUtil
         try
         {
             Responce result = makeCall( callDetails );
-            
+
             processResult( result, responceDetails, rtn );
         }
-        catch( Throwable e )
+        catch ( Throwable e )
         {
             throw new IllegalStateException( "Call failed with:", e );
         }
@@ -83,7 +93,7 @@ public class WebServiceClientUtil
     //
     // Data Structures
     //
-    
+
     public static class CallDetails
     {
         private String url = null;
@@ -95,13 +105,13 @@ public class WebServiceClientUtil
         private ArrayList<CallParameter> parameters = new ArrayList<CallParameter>();
         private String payload = null;
         private boolean valid = false;
-        private HashMap<String,String> headers = new HashMap<String,String>();
+        private HashMap<String, String> headers = new HashMap<String, String>();
 
         public CallDetails()
-        {}
-        
-        public CallDetails(String url, String method, String media_type, String type, String username, String password,
-                           String payload, boolean valid)
+        {
+        }
+
+        public CallDetails( String url, String method, String media_type, String type, String username, String password, String payload, boolean valid )
         {
             super();
             this.url = url;
@@ -110,102 +120,101 @@ public class WebServiceClientUtil
             this.type = type;
             this.username = username;
             this.password = password;
-            this.parameters = parameters;
             this.payload = payload;
             this.valid = valid;
         }
-        
+
         public String getUrl()
         {
             return url;
         }
-        
+
         public String getMethod()
         {
             return method;
         }
-        
+
         public String getMediaType()
         {
             return media_type;
         }
-        
+
         public String getType()
         {
             return type;
         }
-        
+
         public String getUsername()
         {
             return username;
         }
-        
+
         public String getPassword()
         {
             return password;
         }
-        
+
         public ArrayList<CallParameter> getParameters()
         {
             return parameters;
         }
-        
+
         public String getPayload()
         {
             return payload;
         }
-        
+
         public boolean isValid()
         {
             return valid;
         }
 
-        public void setUrl(String url)
+        public void setUrl( String url )
         {
             this.url = url;
         }
 
-        public void setMethod(String method)
+        public void setMethod( String method )
         {
             this.method = method;
         }
 
-        public void setMediaType(String media_type)
+        public void setMediaType( String media_type )
         {
             this.media_type = media_type;
         }
 
-        public void setType(String type)
+        public void setType( String type )
         {
             this.type = type;
         }
 
-        public void setUsername(String username)
+        public void setUsername( String username )
         {
             this.username = username;
         }
 
-        public void setPassword(String password)
+        public void setPassword( String password )
         {
             this.password = password;
         }
 
-        public void setParameters(ArrayList<CallParameter> parameters)
+        public void setParameters( ArrayList<CallParameter> parameters )
         {
             this.parameters = parameters;
         }
 
-        public void setPayload(String payload)
+        public void setPayload( String payload )
         {
             this.payload = payload;
         }
 
-        public void setValid(boolean valid)
+        public void setValid( boolean valid )
         {
             this.valid = valid;
         }
 
-        public HashMap<String,String> getHeaders()
+        public HashMap<String, String> getHeaders()
         {
             return headers;
         }
@@ -217,31 +226,32 @@ public class WebServiceClientUtil
         private String value = null;
 
         public CallParameter()
-        {}
-        
-        public CallParameter(String name, String value)
+        {
+        }
+
+        public CallParameter( String name, String value )
         {
             super();
             this.name = name;
             this.value = value;
         }
-        
+
         public String getName()
         {
             return name;
         }
-        
+
         public String getValue()
         {
             return value;
         }
 
-        public void setName(String name)
+        public void setName( String name )
         {
             this.name = name;
         }
-        
-        public void setValue(String value)
+
+        public void setValue( String value )
         {
             this.value = value;
         }
@@ -252,12 +262,17 @@ public class WebServiceClientUtil
         private String payload = null;
 
         public Responce()
-        {}
-        
-        public Responce(String payload)
+        {
+        }
+
+        public Responce( String payload )
         {
             super();
             this.payload = payload;
+            
+            if ( log.isInfoEnabled() )
+                log.info( "Return Payload " + payload );
+            
         }
 
         public String getPayload()
@@ -265,7 +280,7 @@ public class WebServiceClientUtil
             return payload;
         }
 
-        public void setPayload(String payload)
+        public void setPayload( String payload )
         {
             this.payload = payload;
         }
@@ -277,20 +292,21 @@ public class WebServiceClientUtil
         private ArrayList<ResponceVariable> parameters = new ArrayList<ResponceVariable>();
 
         public ResponceDetails()
-        {}
-        
-        public ResponceDetails(String type)
+        {
+        }
+
+        public ResponceDetails( String type )
         {
             super();
             this.type = type;
         }
-        
+
         public String getType()
         {
             return type;
         }
-        
-        public void setType(String type)
+
+        public void setType( String type )
         {
             this.type = type;
         }
@@ -307,15 +323,16 @@ public class WebServiceClientUtil
         private String path = null;
 
         public ResponceVariable()
-        {}
-        
-        public ResponceVariable(String name, String path)
+        {
+        }
+
+        public ResponceVariable( String name, String path )
         {
             super();
             this.name = name;
             this.path = path;
         }
-        
+
         public String getName()
         {
             return name;
@@ -326,25 +343,23 @@ public class WebServiceClientUtil
             return path;
         }
 
-        public void setName(String name)
+        public void setName( String name )
         {
             this.name = name;
         }
-        
-        public void setPath(String path)
+
+        public void setPath( String path )
         {
             this.path = path;
         }
 
-        
     }
 
     //
     // Helpers
     //
 
-    private static Responce makeCall( CallDetails callDetails )
-        throws Exception
+    private static Responce makeCall( CallDetails callDetails ) throws Exception
     {
         Responce rtn = null;
 
@@ -354,16 +369,19 @@ public class WebServiceClientUtil
 
         try
         {
-            URL obj = new URL( targetURL );
+            if ( log.isInfoEnabled() )
+                log.info( "Executing " + callDetails.method + " WebService call to " + targetURL );
             
+            URL obj = new URL( targetURL );
+
             con = (HttpURLConnection) obj.openConnection();
             con.setRequestMethod( callDetails.method );
-            con.setRequestProperty("User-Agent", "Java Program");
+            con.setRequestProperty( "User-Agent", "xFramium" );
 
             if ( callDetails.headers.size() > 0 )
             {
                 Iterator<String> names = callDetails.headers.keySet().iterator();
-                while( names.hasNext() )
+                while ( names.hasNext() )
                 {
                     String name = names.next();
                     String value = callDetails.headers.get( name );
@@ -374,78 +392,79 @@ public class WebServiceClientUtil
 
             setBasicAuthIfRequested( con, callDetails );
 
-            if (( HTTP_GET.equalsIgnoreCase( callDetails.method )) ||
-                ( HTTP_DELETE.equalsIgnoreCase( callDetails.method )))
+            if ( (HTTP_GET.equalsIgnoreCase( callDetails.method )) || (HTTP_DELETE.equalsIgnoreCase( callDetails.method )) )
             {
-                int responseCode = con.getResponseCode();
-                
-                if (responseCode == HttpURLConnection.HTTP_OK ) // success
-                { 
-                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                    String inputLine;
-                    StringBuffer response = new StringBuffer();
-                    
-                    while ((inputLine = in.readLine()) != null)
-                    {
-                        response.append(inputLine);
-                    }
-                    
-                    in.close();
-                    
-                    rtn = new Responce(response.toString());
-                }
-            }
-            else if (( HTTP_POST.equals( callDetails.method )) ||
-                     ( HTTP_PUT.equals( callDetails.method )))
-            {
-                con.setDoOutput(true);
-                con.setRequestProperty("Content-Type", callDetails.media_type);
-                
-                OutputStream os = con.getOutputStream();
-		os.write(callDetails.payload.getBytes());
-		os.flush();
-                
                 int responseCode = con.getResponseCode();
 
-                if (responseCode == HttpURLConnection.HTTP_OK ) // success
-                { 
-                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                if ( responseCode == HttpURLConnection.HTTP_OK ) // success
+                {
+                    BufferedReader in = new BufferedReader( new InputStreamReader( con.getInputStream() ) );
                     String inputLine;
                     StringBuffer response = new StringBuffer();
-                    
-                    while ((inputLine = in.readLine()) != null)
+
+                    while ( (inputLine = in.readLine()) != null )
                     {
-                        response.append(inputLine).append("\n");
+                        response.append( inputLine );
                     }
-                    
+
+                    in.close();
+
+                    rtn = new Responce( response.toString() );
+                }
+            }
+            else if ( (HTTP_POST.equals( callDetails.method )) || (HTTP_PUT.equals( callDetails.method )) )
+            {
+                con.setDoOutput( true );
+                con.setRequestProperty( "Content-Type", callDetails.media_type );
+
+                if ( log.isInfoEnabled() )
+                    log.info( "Payload is " + callDetails.payload );
+                
+                OutputStream os = con.getOutputStream();
+                os.write( callDetails.payload.getBytes() );
+                os.flush();
+
+                int responseCode = con.getResponseCode();
+
+                if ( responseCode == HttpURLConnection.HTTP_OK ) // success
+                {
+                    BufferedReader in = new BufferedReader( new InputStreamReader( con.getInputStream() ) );
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
+
+                    while ( (inputLine = in.readLine()) != null )
+                    {
+                        response.append( inputLine ).append( "\n" );
+                    }
+
                     in.close();
                     os.close();
-                    
-                    rtn = new Responce(response.toString());
+
+                    rtn = new Responce( response.toString() );
                 }
                 else
                 {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+                    BufferedReader in = new BufferedReader( new InputStreamReader( con.getErrorStream() ) );
                     String inputLine;
                     StringBuffer response = new StringBuffer();
-                    
-                    while ((inputLine = in.readLine()) != null)
+
+                    while ( (inputLine = in.readLine()) != null )
                     {
-                        response.append(inputLine).append("\n");
+                        response.append( inputLine ).append( "\n" );
                     }
-                    
+
                     in.close();
                     os.close();
-                    
-                    throw new IllegalStateException( response.toString() );
+
+                    throw new ScriptException( response.toString() );
                 }
             }
-        }        
+        }
         finally
         {
-            if( con != null)
+            if ( con != null )
             {
-                con.disconnect(); 
+                con.disconnect();
             }
         }
 
@@ -461,12 +480,12 @@ public class WebServiceClientUtil
         if ( callDetails.parameters.size() > 0 )
         {
             rtn.append( PATH_DIVIDER );
-            
+
             Iterator<CallParameter> params = callDetails.parameters.iterator();
-            while( params.hasNext() )
+            while ( params.hasNext() )
             {
                 CallParameter param = params.next();
-                
+
                 rtn.append( param.name );
                 rtn.append( PATH_DIVIDER );
                 rtn.append( param.value );
@@ -476,13 +495,13 @@ public class WebServiceClientUtil
         return rtn.toString();
     }
 
-    private static void processResult( Responce result, ResponceDetails responceDetails, Map<String, String> contextMap )
-        throws Exception
+    private static void processResult( Responce result, ResponceDetails responceDetails, Map<String, String> contextMap ) throws Exception
     {
-        if ( CONTENT_XML.equalsIgnoreCase( responceDetails.type ))
+        if ( CONTENT_XML.equalsIgnoreCase( responceDetails.type ) )
         {
             //
-            // In this case, result.payload is an XML document and the paths in responceDetails.parameters are XPATH
+            // In this case, result.payload is an XML document and the paths in
+            // responceDetails.parameters are XPATH
             // expressions
             //
 
@@ -491,14 +510,15 @@ public class WebServiceClientUtil
             XPath xPath = xPathFactory.newXPath();
 
             Iterator<ResponceVariable> params = responceDetails.parameters.iterator();
-            while( params.hasNext() )
+            while ( params.hasNext() )
             {
                 ResponceVariable param = params.next();
 
                 Node node = (Node) xPath.evaluate( param.path, document, XPathConstants.NODE );
-                
-                if (node == null){
-                	throw new ScriptConfigurationException("No result found. Check xpath expression " + param.path);
+
+                if ( node == null )
+                {
+                    throw new ScriptConfigurationException( "No result found. Check xpath expression " + param.path );
                 }
 
                 String value = node.getTextContent();
@@ -506,17 +526,18 @@ public class WebServiceClientUtil
                 contextMap.put( param.name, value );
             }
         }
-        else if ( CONTENT_JSON.equalsIgnoreCase( responceDetails.type ))
+        else if ( CONTENT_JSON.equalsIgnoreCase( responceDetails.type ) )
         {
             //
-            // In this case, result.payload is an JSON document and the paths in responceDetails.parameters are JASONPATH
+            // In this case, result.payload is an JSON document and the paths in
+            // responceDetails.parameters are JASONPATH
             // (https://github.com/jayway/JsonPath) expressions
             //
 
             DocumentContext ctx = JsonPath.parse( result.payload );
 
             Iterator<ResponceVariable> params = responceDetails.parameters.iterator();
-            while( params.hasNext() )
+            while ( params.hasNext() )
             {
                 ResponceVariable param = params.next();
 
@@ -529,13 +550,12 @@ public class WebServiceClientUtil
 
     private static void setBasicAuthIfRequested( HttpURLConnection con, CallDetails callDetails )
     {
-        if (( callDetails.username != null ) &&
-            ( callDetails.password != null ))
+        if ( (callDetails.username != null) && (callDetails.password != null) )
         {
             String userpass = callDetails.username + ":" + callDetails.password;
-            String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
+            String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary( userpass.getBytes() );
 
-            con.setRequestProperty ("Authorization", basicAuth);
+            con.setRequestProperty( "Authorization", basicAuth );
         }
     }
 }

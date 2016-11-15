@@ -55,6 +55,9 @@ public class KWSMouse extends AbstractKeyWordStep
 	            
 	        case "PRESS":
                 return getElement( pageObject, contextMap, webDriver, dataMap ).press();
+                
+	        case "CLICK_AT":
+	            return getElement( pageObject, contextMap, webDriver, dataMap ).clickAt( Integer.parseInt( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" ), Integer.parseInt( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" ) );
                         
 	        case "RELEASE":
                 return getElement( pageObject, contextMap, webDriver, dataMap ).release();

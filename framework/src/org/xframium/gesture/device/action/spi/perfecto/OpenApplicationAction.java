@@ -28,9 +28,11 @@ import org.openqa.selenium.WebDriver;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
+import org.xframium.integrations.perfectoMobile.rest.bean.Execution;
 import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
 
 // TODO: Auto-generated Javadoc
@@ -68,17 +70,29 @@ public class OpenApplicationAction extends AbstractDefaultAction implements Devi
 		else
 		{
     		Handset localDevice = PerfectoMobile.instance().devices().getDevice( deviceName );
-    		
+    		Execution appExec = null;
     		if ( localDevice.getOs().toLowerCase().equals( "ios" ) )				
-    			PerfectoMobile.instance().application().open( executionId, deviceName, appDesc.getName(), appDesc.getAppleIdentifier() );
+    			appExec = PerfectoMobile.instance().application().open( executionId, deviceName, appDesc.getName(), appDesc.getAppleIdentifier() );
     		else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-    			PerfectoMobile.instance().application().open( executionId, deviceName, appDesc.getName(), appDesc.getAndroidIdentifier() );
+    			appExec = PerfectoMobile.instance().application().open( executionId, deviceName, appDesc.getName(), appDesc.getAndroidIdentifier() );
     		else
     			throw new IllegalArgumentException( "Could not install application to " + localDevice.getOs() );
     		
+    		if ( appExec != null )
+    		{
+    		    if ( appExec.getStatus().toLowerCase().equals( "success" ) )
+    		    {
+    		        if ( webDriver instanceof ContextAware )
+    	                ( ( ContextAware ) webDriver ).context( "NATIVE_APP" );
+    		        return true;
+    		    }
+    		    else
+    		        throw new ScriptException( "Failed to launch application " + appDesc.getName() );
+    		}
+    		else 
+    		    throw new ScriptException( "Failed to launch application " + appDesc.getName() );
     		
-    		if ( webDriver instanceof ContextAware )
-    			( ( ContextAware ) webDriver ).context( "NATIVE_APP" );
+    		
 		}
 		return true;
 	}

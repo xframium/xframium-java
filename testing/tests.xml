@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-
   <import fileName="general/kw-exists.xml" />
   <import fileName="general/kw-alert.xml" />
   <import fileName="general/kw-align.xml" />
@@ -29,35 +28,28 @@
   <import fileName="general/kw-waitfor.xml" />
   <import fileName="general/kw-window.xml" />
   <import fileName="general/kw-browser.xml" />
-
+  <import fileName="general/kw-execws.xml" />
   <model>
-    
     <page name="home" />
-
   </model>
-
-
-
-
-  <test name="xFramium General KeyWord Test" active="false" dataProvider="callTest">
+  <test name="xFramium General KeyWord Test" active="true" dataProvider="callTest">
     <description>Tests the general keywords that apply to both Web and Native applications across web and mobile devices</description>
-
     <step type="CALL" name="kw-exists" page="home" />
-    <step type="CALL" name="kw-alert" page="home" os="Windows,MACOS" active="true"/>
+    <step type="CALL" name="kw-alert" page="home" os="Windows,MACOS" active="true" />
     <step type="CALL" name="kw-align" page="home" />
     <step type="CALL" name="kw-attribute" page="home" />
     <step type="CALL" name="kw-cache" page="home" />
     <step type="CALL" name="kw-call" page="home" />
-    <step type="CALL" name="kw-checkcolor" page="home"  os="Windows,MACOS"/>
+    <step type="CALL" name="kw-checkcolor" page="home" os="Windows,MACOS" />
     <step type="CALL" name="kw-click" page="home" />
     <step type="CALL" name="kw-compare" page="home" />
-    <step type="CALL" name="kw-checkcontrast" page="home"  os="Windows,MACOS"/>
+    <step type="CALL" name="kw-checkcontrast" page="home" os="Windows,MACOS" />
     <step type="CALL" name="kw-dumpstate" page="home" />
     <step type="CALL" name="kw-else" page="home" />
-    <step type="CALL" name="kw-execjs" page="home"  os="Windows,MACOS"/>
+    <step type="CALL" name="kw-execjs" page="home" os="Windows,MACOS" />
     <step type="CALL" name="kw-focus" page="home" active="false" />
     <step type="CALL" name="kw-loop" page="home" />
-    <step type="CALL" name="kw-mouse" page="home"  os="Windows,MACOS"/>
+    <step type="CALL" name="kw-mouse" page="home" os="Windows,MACOS" />
     <step type="CALL" name="kw-navigate" page="home" />
     <step type="CALL" name="kw-operator" page="home" />
     <step type="CALL" name="kw-report" page="home" />
@@ -69,11 +61,11 @@
     <step type="CALL" name="kw-waitfor" page="home" />
     <step type="CALL" name="kw-window" page="home" />
     <step type="CALL" name="kw-browser" page="home" />
+    <step type="CALL" name="kw-execws" page="home" />
   </test>
-  
+
   <test name="xFramium OS Step Filter" active="true" dataProvider="callTest" os="WINDOWS">
     <description>Tests that the specified step is ignored for a specific OS type</description>
-
     <step type="EXISTS" name="toggleButton" page="home" />
     <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
     <step type="COMPARE" name="existsCompare" page="home">
@@ -85,12 +77,68 @@
       <parameter type="STATIC" value="1" />
       <parameter type="CONTEXT" value="existsSingle" />
     </step>
-
   </test>
-  
-  <test name="xFramium device tag Step Filter" active="true" dataProvider="callTest" deviceTags="tagTest">
+  <test name="xFramium Page Element Context" active="true" dataProvider="callTest" os="ANDROID,IOS">
     <description>Tests that the specified step is ignored for a specific OS type</description>
-
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="EXISTS" name="toggleButtonWeb" page="home" />
+    <step type="EXISTS" name="toggleButtonNative" page="home" inverse="true" />
+  </test>
+  <test name="xFramium OS Step Filter" active="true" dataProvider="callTest" os="WINDOWS">
+    <description>Tests that the specified step is ignored for a specific OS type</description>
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+    <step type="CLICK" name="toggleButton" page="home" os="ANDROID,IOS" />
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+  </test>
+  <test name="xFramium Dump State Test" active="true" dataProvider="callTest" os="WINDOWS">
+    <description>Tests that the specified step is ignored for a specific OS type</description>
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+    <step type="STATE" name="dumpState" page="home">
+      <parameter type="STATIC" value="beforeClick" />
+    </step>
+    <step type="CLICK" name="toggleButton" page="home" />
+    <step type="STATE" name="afterState" page="home">
+      <parameter type="STATIC" value="afterClick" />
+    </step>
+  </test>
+  <test name="xFramium Dump State Historical Test" active="true" dataProvider="callTest" os="WINDOWS">
+    <description>Tests that the specified step is ignored for a specific OS type</description>
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+    <step type="STATE" name="dumpState" page="home">
+      <parameter type="STATIC" value="beforeClick" />
+      <parameter type="STATIC" value="5" />
+    </step>
+    <step type="CLICK" name="toggleButton" page="home" />
+    <step type="STATE" name="afterState" page="home">
+      <parameter type="STATIC" value="afterClick" />
+      <parameter type="STATIC" value="2" />
+      <parameter type="STATIC" value="0" />
+    </step>
+  </test>
+  <test name="xFramium OS Filter" active="true" dataProvider="callTest" os="ANDROID">
+    <description>Tests that the specified test is ignored for a specific OS type</description>
+    <step type="EXISTS" name="toggleButton" page="home" />
+  </test>
+  <test name="xFramium device tag Step Filter" active="true" dataProvider="callTest" deviceTags="tagTest">
+    <description>Tests that the specified step is ignored for a specific device tag</description>
     <step type="EXISTS" name="toggleButton" page="home" />
     <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
     <step type="COMPARE" name="existsCompare" page="home">
@@ -103,18 +151,11 @@
       <parameter type="STATIC" value="1" />
       <parameter type="CONTEXT" value="existsSingle" />
     </step>
-    
     <step type="CLICK" name="toggleButton" page="home" deviceTags="goodClick" />
     <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
     <step type="COMPARE" name="existsCompare" page="home">
       <parameter type="STATIC" value="0" />
       <parameter type="CONTEXT" value="existsSingle" />
     </step>
-
-
   </test>
-
-
-  
-
 </suite>
