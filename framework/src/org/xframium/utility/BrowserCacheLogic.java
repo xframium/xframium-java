@@ -45,12 +45,14 @@ public class BrowserCacheLogic
 
         try
         {
+
             switchToContext(driver, "NATIVE_APP");
 
             //
             // get os version
             //
-        
+
+            params.clear();
             params.put("property", "osVersion");
             String osVerStr = (String) driver.executeScript("mobile:handset:info", params);
             int[] osVer = parseVersion( osVerStr );
@@ -116,15 +118,6 @@ public class BrowserCacheLogic
                     }
                 }
 
-
-                /*switchToContext(driver, "VISUAL");
-                params.clear();
-                params.put("label", "Safari");
-                params.put("threshold", "100");
-                params.put("scrolling", "scroll");
-                driver.executeScript("mobile:button-text:click", params);
-    */
-
                 //
                 // swipe to bottom
                 //
@@ -169,8 +162,15 @@ public class BrowserCacheLogic
         
             params.clear();
             params.put("name", "Settings");
-        
-            driver.executeScript("mobile:application:close", params);
+
+            try {
+                driver.executeScript("mobile:application:close", params);
+            } catch (Exception e) {}
+
+            params.clear();
+            params.put("automation", "simulated");
+            driver.executeScript("mobile:browser:open", params);
+
         }
         finally
         {
