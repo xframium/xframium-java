@@ -23,6 +23,9 @@ package org.xframium.page.keyWord.step.spi;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.gesture.GestureManager;
+import org.xframium.gesture.Gesture.Direction;
+import org.xframium.gesture.factory.GestureFactory;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -36,7 +39,7 @@ public class KWSVisible extends AbstractKeyWordStep
     public KWSVisible()
     {
         kwName = "Is Visible";
-        kwDescription = "Allows the script to validate that the element exists and is visible on the screen";
+        kwDescription = "Allows the script to validate that the element exists and is visible on the screen - Can scroll and search as well";
         kwHelp = "https://www.xframium.org/keyword.html#kw-visible";
     }
 	/* (non-Javadoc)
@@ -47,7 +50,27 @@ public class KWSVisible extends AbstractKeyWordStep
 	{
 		if ( pageObject == null )
 			throw new IllegalStateException( "There was not page object defined" );
-		return getElement( pageObject, contextMap, webDriver, dataMap ).isVisible();
+		
+		if ( getParameterList().size() == 2 )
+		{
+			int searchCount = Integer.parseInt( getParameterValue(getParameterList().get(0), contextMap, dataMap) + "" );
+			for ( int i=0; i<searchCount; i++)
+			{
+				try
+				{
+					if ( getElement( pageObject, contextMap, webDriver, dataMap ).isVisible() )
+						return true;
+				}
+				catch( Exception e )
+				{
+					
+				}
+				GestureManager.instance().createSwipe( Direction.valueOf( getParameterValue(getParameterList().get(1), contextMap, dataMap) + "" ) ).executeGesture(webDriver);
+			}
+			return false;
+		}
+		else
+			return getElement( pageObject, contextMap, webDriver, dataMap ).isVisible();
 	}
 	
 	/* (non-Javadoc)
