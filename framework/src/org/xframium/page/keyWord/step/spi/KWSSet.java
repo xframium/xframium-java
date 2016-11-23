@@ -21,14 +21,19 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
+
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
 import org.xframium.page.element.Element.SetMethod;
+import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+
+import gherkin.Main;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -63,13 +68,66 @@ public class KWSSet extends AbstractKeyWordStep
 			log.info( "Attmepting to set " + getName() + " to [" + newValue + "]" );
 
 		Element elt = getElement( pageObject, contextMap, webDriver, dataMap );
-		if(option == null){
+		if(option == null)
+		{
 			elt.setValue( newValue);
-		}else {
-			elt.setValue( newValue,SetMethod.valueOf(option.toUpperCase()));
+		}
+		else 
+		{
+			SetMethod setMethod = SetMethod.valueOf( option.toUpperCase() );
+			
+			switch( setMethod )
+			{
+				
+			
+				case VALIDATE:
+					String previousValue = elt.getValue();
+					
+					int length = -1;
+					KeyWordParameter lengthParam = getParameter( "length" );
+					if ( lengthParam != null )
+						length = Integer.parseInt( getParameterValue( lengthParam, contextMap, dataMap ) + "" );
+					
+					String useCharacters = "abcdef";
+					KeyWordParameter charParam = getParameter( "characters" );
+					if ( charParam != null )
+						useCharacters = getParameterValue( charParam, contextMap, dataMap ) + "";
+					
+					String testString = createString( length, useCharacters.getBytes() );
+					
+					elt.setValue( testString + "xxx" );
+					String setValue = elt.getValue();
+					if ( !setValue.equals( testString ) )
+						throw new ScriptException( "The length of was exceeded - expected " + length );
+					
+					elt.setValue( previousValue );
+					
+					
+					
+				default:
+					elt.setValue( newValue,setMethod );
+			}
+			
+			
 		}		
 		return true;
       }	
+
+	
+	private static String createString( int length, byte[] useChars )
+	{
+		StringBuilder stringBuilder = new StringBuilder();
+		int currentPosition = 0;
+		for ( int i=0; i<length; i++ )
+		{
+			if ( currentPosition >= useChars.length )
+				currentPosition = 0;
+			
+			stringBuilder.append( new String( useChars, currentPosition++, 1 ) );
+		}
+		
+		return stringBuilder.toString();
+	}
 	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
