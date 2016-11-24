@@ -65,6 +65,8 @@ public class KWSVisible extends AbstractKeyWordStep
 				{
 					
 				}
+				
+				
 				GestureManager.instance().createSwipe( Direction.valueOf( getParameterValue(getParameterList().get(1), contextMap, dataMap) + "" ) ).executeGesture(webDriver);
 			}
 			return false;
