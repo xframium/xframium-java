@@ -1020,6 +1020,16 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     {
         return parameterList;
     }
+    
+    protected KeyWordParameter getParameter( String parameterName )
+    {
+    	for ( KeyWordParameter p : parameterList )
+    	{
+    		if ( parameterName.equals( p.getName() ) )
+    			return p;
+    	}
+    	return null;
+    }
 
     /**
      * Gets the token list.
