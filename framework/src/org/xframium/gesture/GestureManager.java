@@ -26,7 +26,6 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.ScreenOrientation;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
-import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.gesture.Gesture.Direction;
 import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.gesture.factory.GestureFactory;
