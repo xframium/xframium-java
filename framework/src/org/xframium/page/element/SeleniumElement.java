@@ -628,6 +628,14 @@ public class SeleniumElement extends AbstractElement
                 returnValue = new Select( currentElement ).getFirstSelectedOption().getText();
                 break;
 
+            case "UIATEXTFIELD":
+            	returnValue = currentElement.getAttribute( "value" );
+            	break;
+            	
+            case "ANDROID.WIDGET.EDITTEXT":
+            	returnValue = currentElement.getAttribute( "text" );
+            	break;
+                
             default:
                 returnValue = currentElement.getText();
                 break;
