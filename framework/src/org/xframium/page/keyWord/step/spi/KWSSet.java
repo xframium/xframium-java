@@ -78,10 +78,7 @@ public class KWSSet extends AbstractKeyWordStep
 			
 			switch( setMethod )
 			{
-				
-			
 				case VALIDATE:
-					String previousValue = elt.getValue();
 					
 					int length = -1;
 					KeyWordParameter lengthParam = getParameter( "length" );
@@ -96,11 +93,14 @@ public class KWSSet extends AbstractKeyWordStep
 					String testString = createString( length, useCharacters.getBytes() );
 					
 					elt.setValue( testString + "xxx" );
+					
+					try { Thread.sleep( 1000 ); } catch( Exception e ) {}
+					
 					String setValue = elt.getValue();
 					if ( !setValue.equals( testString ) )
 						throw new ScriptException( "The length of was exceeded - expected " + length );
 					
-					elt.setValue( previousValue );
+					elt.setValue( newValue );
 					
 					
 					

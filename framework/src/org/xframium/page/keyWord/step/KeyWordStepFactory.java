@@ -194,6 +194,7 @@ public class KeyWordStepFactory
         addKeyWord( "BROWSER", KWSBrowser.class );
         addKeyWord( "IS_ENABLED", KWSEnabled.class );
         addKeyWord( "ENABLED", KWSEnabled.class );
+        addKeyWord( "COMMAND", KWSCommand.class );
     }
 
     /**

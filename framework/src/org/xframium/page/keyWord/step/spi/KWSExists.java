@@ -74,7 +74,7 @@ public class KWSExists extends AbstractKeyWordStep
 				{
 					
 				}
-				GestureManager.instance().createSwipe( Direction.valueOf( getParameterValue(getParameterList().get(1), contextMap, dataMap) + "" ) ).executeGesture(webDriver);
+				scroll( Direction.valueOf( getParameterValue(getParameterList().get(1), contextMap, dataMap) + "" ), webDriver);
 			}
 		}
 		else
