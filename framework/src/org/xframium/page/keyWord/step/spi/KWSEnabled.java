@@ -32,7 +32,7 @@ public class KWSEnabled extends AbstractKeyWordStep
 {
     public KWSEnabled()
     {
-        kwName = "Is Enabled";
+        kwName = "Enabled";
         kwDescription = "Allows the script check if the current element is enabled";
         kwHelp = "https://www.xframium.org/keyword.html#kw-enabled";
     }

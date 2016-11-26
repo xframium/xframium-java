@@ -44,6 +44,8 @@ import org.xframium.exception.ScriptException;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
+import net.minidev.json.JSONArray;
+
 public class WebServiceClientUtil
 {
     private static Log log = LogFactory.getLog( WebServiceClientUtil.class );
@@ -541,9 +543,13 @@ public class WebServiceClientUtil
             {
                 ResponceVariable param = params.next();
 
-                String value = ctx.read( param.path );
+               /* String value = ctx.read( param.path );
 
-                contextMap.put( param.name, value );
+                contextMap.put( param.name, value );*/
+                
+                JSONArray value = (JSONArray)ctx.read( param.path );
+                
+                contextMap.put( param.name, value.toJSONString() );
             }
         }
     }

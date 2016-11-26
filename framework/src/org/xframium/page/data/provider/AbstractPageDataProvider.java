@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.logging.Log;
@@ -245,5 +246,14 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	{
 		this.waitTimeOut = waitTimeOut;
 	}
+	
+	/**
+	 * gets the list of record types from allRecordMap
+	 * 
+	 * @return the list of record types
+	 */
+	public List<String> getRecordTypes() {
+    	return new ArrayList<String>(allRecordMap.keySet());
+    }
 
 }
