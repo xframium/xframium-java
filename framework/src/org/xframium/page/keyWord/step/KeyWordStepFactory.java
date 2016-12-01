@@ -193,6 +193,8 @@ public class KeyWordStepFactory
         addKeyWord( "SET_CONTENT_KEY", KWSSetContentKey.class );
         addKeyWord( "BROWSER", KWSBrowser.class );
         addKeyWord( "IS_ENABLED", KWSEnabled.class );
+        addKeyWord( "ENABLED", KWSEnabled.class );
+        addKeyWord( "COMMAND", KWSCommand.class );
     }
 
     /**

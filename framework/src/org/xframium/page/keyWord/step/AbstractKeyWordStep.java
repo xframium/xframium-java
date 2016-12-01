@@ -25,11 +25,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
-import org.testng.SkipException;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.container.SuiteContainer;
 import org.xframium.content.ContentManager;
@@ -38,6 +39,9 @@ import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
+import org.xframium.gesture.Gesture;
+import org.xframium.gesture.Gesture.Direction;
+import org.xframium.gesture.GestureManager;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.services.WindTunnel.Status;
 import org.xframium.page.ElementDescriptor;
@@ -67,6 +71,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         natualLanguage = PageManager.instance().getFormattedMessage( getClass().getSimpleName() );
     }
     
+    
+    
     /** The name. */
     private String name;
 
@@ -89,6 +95,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     private boolean breakpoint;
     
     protected boolean orMapping = true;
+    
+    private static Random numberGenerator = new Random();
 
     @Override
     public boolean isBreakpoint()
@@ -104,6 +112,34 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     {
         // TODO Auto-generated method stub
         
+    }
+    
+    protected void scroll( Direction scrollDirection, WebDriver webDriver )
+    {
+    	
+    	int randomNumber = numberGenerator.nextInt( 45 );
+    	
+    	Gesture currentGesture = null;
+		switch ( scrollDirection  )
+        {
+            case DOWN:
+            	currentGesture = GestureManager.instance().createSwipe( new Point( 50, randomNumber ), new Point( 50, 45+randomNumber ) );
+            	break;
+
+            case LEFT:
+            	currentGesture = GestureManager.instance().createSwipe( new Point( randomNumber, 50 ), new Point( 45+randomNumber, 50 ) );
+            	break;
+
+            case RIGHT:
+            	currentGesture = GestureManager.instance().createSwipe( new Point( 45+randomNumber, 50 ), new Point( randomNumber, 50 ) );
+            	break;
+
+            case UP:
+            	currentGesture = GestureManager.instance().createSwipe( new Point( 50, 45+randomNumber ), new Point( 50, randomNumber ) );
+            	break;
+        }
+		
+		currentGesture.executeGesture( webDriver );
     }
 
     /** The s failure. */
@@ -1019,6 +1055,16 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     public List<KeyWordParameter> getParameterList()
     {
         return parameterList;
+    }
+    
+    protected KeyWordParameter getParameter( String parameterName )
+    {
+    	for ( KeyWordParameter p : parameterList )
+    	{
+    		if ( parameterName.equals( p.getName() ) )
+    			return p;
+    	}
+    	return null;
     }
 
     /**

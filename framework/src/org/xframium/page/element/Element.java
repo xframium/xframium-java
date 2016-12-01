@@ -53,7 +53,8 @@ public interface Element
     {
         DEFAULT,
         SINGLE,
-    	MULTISELECT;
+    	MULTISELECT,
+    	VALIDATE;
     }
 	
 	/**

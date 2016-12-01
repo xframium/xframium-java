@@ -23,6 +23,8 @@ package org.xframium.page.keyWord.step.spi;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.gesture.GestureManager;
+import org.xframium.gesture.Gesture.Direction;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
@@ -52,12 +54,35 @@ public class KWSExists extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
 	{
+		boolean returnValue = false;
+		Element currentElement = null;
 		if ( pageObject == null )
 			throw new IllegalStateException( "There was no Page Object defined" );
 		
-		Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap );
-
-		boolean returnValue = currentElement.isPresent();
+		if ( getParameterList().size() == 2 )
+		{
+			int searchCount = Integer.parseInt( getParameterValue(getParameterList().get(0), contextMap, dataMap) + "" );
+			for ( int i=0; i<searchCount; i++)
+			{
+				try
+				{
+					currentElement = getElement( pageObject, contextMap, webDriver, dataMap );
+					if ( currentElement.isPresent() )
+						returnValue = true;
+				}
+				catch( Exception e )
+				{
+					
+				}
+				scroll( Direction.valueOf( getParameterValue(getParameterList().get(1), contextMap, dataMap) + "" ), webDriver);
+			}
+		}
+		else
+		{
+		
+			currentElement = getElement( pageObject, contextMap, webDriver, dataMap );
+			returnValue = currentElement.isPresent();
+		}
 		
 		if ( getContext() != null )
         {
