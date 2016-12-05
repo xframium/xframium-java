@@ -185,6 +185,10 @@ public class XMLDataProvider implements DataProvider
 			case WEB:
 				driverName = "WEB";
 				break;
+				
+			case WINDOWS:
+                driverName = "WINDOWS";
+                break;
 		}
 		
 		SimpleDevice currentDevice = new SimpleDevice(device.getName(), device.getManufacturer(), device.getModel(), device.getOs(), device.getOsVersion(), device.getBrowserName(), device.getBrowserVersion(), device.getAvailableDevices().intValue(), driverName, device.isActive(), device.getId() );

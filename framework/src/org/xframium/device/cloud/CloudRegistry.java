@@ -29,7 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openqa.selenium.server.SeleniumServer;
+import org.openqa.grid.internal.utils.configuration.StandaloneConfiguration;
+import org.openqa.selenium.remote.server.SeleniumServer;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -137,9 +138,8 @@ public class CloudRegistry
 	    try
         {
 	        serverStarted = true;
-            _server = new SeleniumServer();
+            _server = new SeleniumServer( new StandaloneConfiguration() );
             _server.boot();
-            _server.start();
             CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( "EMBEDDED", "", "", "127.0.0.1:4444", "", "0", "", null, "SELENIUM", "SELENIUM", "SELENIUM" ) );
             embeddedGrid=true;
         }

@@ -25,26 +25,19 @@ package org.xframium.device.factory.spi;
 
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.DeviceManager;
-import org.xframium.device.artifact.api.PerfectoArtifactProducer;
 import org.xframium.device.cloud.CloudDescriptor;
-import org.xframium.device.cloud.CloudRegistry;
-import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.factory.AbstractDriverFactory;
 import org.xframium.device.factory.DeviceWebDriver;
-import org.xframium.exception.DeviceConfigurationException;
 import org.xframium.spi.Device;
-import io.appium.java_client.ios.IOSDriver;
+import com.experitest.selenium.MobileWebDriver;
 
 // TODO: Auto-generated Javadoc
 /**
  * A factory for creating IOSDriver objects.
  */
-public class WINDOWSDriverFactory extends AbstractDriverFactory
+public class EXPERITESTDriverFactory extends AbstractDriverFactory
 {
 	
 	/* (non-Javadoc)
@@ -56,37 +49,44 @@ public class WINDOWSDriverFactory extends AbstractDriverFactory
 		DeviceWebDriver webDriver = null;
 		try
 		{
-			DesiredCapabilities dc = new DesiredCapabilities();
 			
-
             
             DeviceManager.instance().setCurrentCloud( useCloud );
 			
 			URL hubUrl = new URL( useCloud.getCloudUrl() );
-	
+
+            if ( log.isDebugEnabled() )
+                log.debug( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + currentDevice.getDeviceName() + "\r\nagainst " + hubUrl );
+			MobileWebDriver mDriver = new MobileWebDriver( useCloud.getHostName().split( ":" )[ 0 ], Integer.parseInt( useCloud.getHostName().split( ":" )[ 1 ] ) );
+			mDriver.setDevice( currentDevice.getDeviceName() );
 			
-			//dc.setCapability( APPLICATION, ApplicationRegistry.instance().getAUT().getUrl() );
-			
-			for ( String name : currentDevice.getCapabilities().keySet() )
-				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
-			
-			if ( log.isInfoEnabled() )
-			    log.info( "Acquiring Windows Application as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
-			
-			webDriver = new DeviceWebDriver( new IOSDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
+			if( ApplicationRegistry.instance().getAUT() != null && 
+			    ( ( ApplicationRegistry.instance().getAUT().getAppleIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAppleIdentifier().isEmpty() || 
+			    ApplicationRegistry.instance().getAUT().getAndroidIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAndroidIdentifier().isEmpty() ) ) )
+            {
+			    if ( currentDevice != null && currentDevice.getOs() != null )
+	            {
+			        if ( currentDevice.getOs().toLowerCase().equals( "ios" ) )
+			            mDriver.application( ApplicationRegistry.instance().getAUT().getAppleIdentifier() ).launch( true, false );
+			        else if ( currentDevice.getOs().toLowerCase().equals( "android" ) )
+			            mDriver.application( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() ).launch( true, false );
+	            }
+            }
+			else
+			{
+			    if ( ApplicationRegistry.instance().getAUT() != null && !ApplicationRegistry.instance().getAUT().getUrl().isEmpty() )
+			    {
+			        mDriver.get( ApplicationRegistry.instance().getAUT().getUrl() );
+			    }
+			}
+            
+			webDriver = new DeviceWebDriver( mDriver, DeviceManager.instance().isCachingEnabled(), currentDevice );
 			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
-			
-			
-			Capabilities caps = ( (IOSDriver) webDriver.getWebDriver() ).getCapabilities();
-			
-			System.out.println( caps );
-			
-			webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
-			webDriver.setDeviceName( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
             webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );
             webDriver.setCloud( useCloud );
             
 			return webDriver;
+
 		}
 		catch( Exception e )
 		{
