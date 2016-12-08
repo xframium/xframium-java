@@ -20,11 +20,8 @@
  *******************************************************************************/
 package org.xframium.gesture.factory.spi.selenium;
 
-import static io.appium.java_client.MobileCommand.PRESS_KEY_CODE;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;

@@ -23,13 +23,6 @@
  */
 package org.xframium.device.proxy;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openqa.selenium.server.SeleniumServer;
 
 // TODO: Auto-generated Javadoc
 /**
