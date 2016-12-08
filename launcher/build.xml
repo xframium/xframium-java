@@ -77,12 +77,13 @@
 
 		<for param="jarFile">
 			<path>
-				<fileset dir="${distRoot}" includes="**/*.jar" />
+				<fileset dir="${distRoot}" includes="**/xframium*.jar" />
 			</path>
 			<sequential>
 				<signjar jar="@{jarFile}" keystore="c:/projects/git/morelandlabs/internal/xframium" alias="xframium-code" storepass="xframium" />
 			</sequential>
 		</for>
+
 	</target>
 
 
