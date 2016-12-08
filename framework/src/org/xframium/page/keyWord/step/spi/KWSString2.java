@@ -22,6 +22,8 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,13 +34,68 @@ import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+import org.xframium.page.keyWord.step.spi.KWSBrowser.SwitchType;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class KWSValue.
  */
-public class KWSString extends AbstractKeyWordStep
+public class KWSString2 extends AbstractKeyWordStep
 {
+    private static final String FORMAT = "Decimal Format";
+    private static final String O_VALUE = "Original Value";
+    private static final String REGEX = "Regex";
+    private static final String VALUE = "Value";
+    private static final String BEGIN = "Begin";
+    private static final String END = "End";
+    private static final String COMPARE = "Compare To";
+    
+    public KWSString2()
+    {
+        kwName = "String Operations";
+        kwDescription = "Allows the script to perform some basic string and formatting operations";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-string";
+        orMapping = false;
+        
+    }
+    
+    public enum OperationType
+    {
+        TRIM( 1, "TRIM", "Trim excess space" ), 
+        LOWER( 2, "LOWER", "Change to lowercase" ), 
+        UPPER( 3, "UPPER", "Change to uppercase" ), 
+        DECIMAL( 4, "DECIMAL", "Apply decimal formatting" ), 
+        REGEX( 5, "REGEX", "Validate with regular Expressions" ), 
+        CONTAINS( 6, "CONTAINS", "Find a string in a string" ), 
+        CONCAT( 7, "CONCAT", "Add all strings together" ), 
+        SUBSTR( 8, "SUBSTR","Extract a portion of the string" )
+        ;
+
+        public List<OperationType> getSupported()
+        {
+            List<OperationType> supportedList = new ArrayList<OperationType>( 10 );
+            supportedList.add( OperationType.TRIM );
+            supportedList.add( OperationType.LOWER );
+            supportedList.add( OperationType.UPPER );
+            supportedList.add( OperationType.DECIMAL );
+            supportedList.add( OperationType.REGEX );
+            supportedList.add( OperationType.CONTAINS );
+            supportedList.add( OperationType.CONCAT );
+            supportedList.add( OperationType.SUBSTR );
+            return supportedList;
+        }
+
+        private OperationType( int id, String name, String description )
+        {
+            this.id = id;
+            this.name = name;
+            this.description = description;
+        }
+
+        private int id;
+        private String name;
+        private String description;
+    }
 
     /*
      * (non-Javadoc)
@@ -53,44 +110,36 @@ public class KWSString extends AbstractKeyWordStep
     {
         boolean rtn = true;
         String originalValue = null;
-        String operationName = null;
+        String operationName = getName();
         int paramCount = getParameterList().size();
 
-        if ( getParameterList().size() == 1 )
-        {
-            originalValue = getElement( pageObject, contextMap, webDriver, dataMap ).getValue();
-            operationName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
-        }
-        else if ( getParameterList().size() >= 2 )
-        {
-            originalValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
-            operationName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-        }
+        originalValue = getParameterValue( getParameter( O_VALUE ), contextMap, dataMap ) + "";
 
         String newValue = null;
 
-        switch ( operationName.toLowerCase() )
+        switch ( OperationType.valueOf( getName().toUpperCase() ) )
         {
-            case "trim":
+            case TRIM:
                 newValue = originalValue.trim();
                 break;
 
-            case "lower":
+            case LOWER:
                 newValue = originalValue.toLowerCase();
                 break;
 
-            case "decimal":
-                DecimalFormat decimalFormat = new DecimalFormat( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" );
+            case DECIMAL:
+                
+                DecimalFormat decimalFormat = new DecimalFormat( getParameterValue( getParameter( FORMAT ), contextMap, dataMap ) + "" );
                 decimalFormat.setRoundingMode( RoundingMode.DOWN );
                 newValue = decimalFormat.format( Double.parseDouble( originalValue ) );
                 break;
 
-            case "upper":
+            case UPPER:
                 newValue = originalValue.toUpperCase();
                 break;
 
-            case "regex":
-                String regex = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "";
+            case REGEX:
+                String regex = getParameterValue( getParameter( REGEX ), contextMap, dataMap ) + "";
                 Pattern regexPattern = Pattern.compile( regex );
                
                 Matcher regexMatcher = regexPattern.matcher( originalValue );
@@ -98,7 +147,7 @@ public class KWSString extends AbstractKeyWordStep
                 {
                     if ( getContext() != null )
                     {
-                        for ( int i=1; i<regexMatcher.groupCount(); i++ )
+                        for ( int i=1; i<regexMatcher.groupCount() + 1; i++ )
                         {
                             contextMap.put( getContext() + "_Group " + i, regexMatcher.group( i ) );
                         }
@@ -108,8 +157,8 @@ public class KWSString extends AbstractKeyWordStep
                 
                 break;
                 
-            case "contains":
-                String expectedValue = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "";
+            case CONTAINS:
+                String expectedValue = getParameterValue( getParameter( VALUE ), contextMap, dataMap ) + "";
 
                 if ( expectedValue.isEmpty() )
                 {
@@ -126,30 +175,25 @@ public class KWSString extends AbstractKeyWordStep
                 }
                 break;
 
-            case "concat":
+            case CONCAT:
                 StringBuilder buff = new StringBuilder( originalValue );
-                for( int i = 2; i < paramCount; ++i )
+                for( int i = 0; i < paramCount; ++i )
                 {
                     buff.append( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "" );
                 }
                 newValue = buff.toString();
                 break;
 
-            case "substr":
-                if ( paramCount < 4 )
-                {
-                    throw new ScriptConfigurationException( "STRING operation substr requires four parameters" );
-                }
+            case SUBSTR:
 
-                int beginIndex = getInt( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" );
-                int endIndex = getInt( getParameterValue( getParameterList().get( 3 ), contextMap, dataMap ) + "" );
+                int beginIndex = getInt( getParameterValue( getParameter( BEGIN ), contextMap, dataMap ) + "" );
+                int endIndex = getInt( getParameterValue( getParameter( END ), contextMap, dataMap ) + "" );
 
                 newValue = originalValue.substring( beginIndex, endIndex );
 
-                if ( paramCount > 4 )
+                if ( getParameter( VALUE ) != null )
                 {
-                    String compareTo = getParameterValue( getParameterList().get( 4 ), contextMap, dataMap ) + "";
-
+                    String compareTo = getParameterValue( getParameter( COMPARE ), contextMap, dataMap ) + "";
                     rtn = newValue.equals( compareTo );
                 }
                 

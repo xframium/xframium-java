@@ -136,6 +136,11 @@ public class CloudDescriptor
 		this.deviceAction = deviceAction;		
 	}
 	
+	public boolean isEmbedded()
+	{
+	    return name != null && ( name.equals( "EMBEDDED" ) || name.equals( "xOL" ) );
+	}
+	
 	public String getGesture() 
 	{
 		return gesture;
