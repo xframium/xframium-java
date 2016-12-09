@@ -1,29 +1,19 @@
 package org.xframium.page.keyWord.gherkinExtension;
 
-import java.util.ArrayList;
-import java.util.List;
+import gherkin.formatter.Formatter;
+import gherkin.formatter.model.*;
 import org.xframium.page.PageManager;
 import org.xframium.page.data.DefaultPageData;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.provider.AbstractPageDataProvider;
 import org.xframium.page.data.provider.PageDataProvider;
-import org.xframium.page.keyWord.KeyWordDriver;
-import org.xframium.page.keyWord.KeyWordPage;
-import org.xframium.page.keyWord.KeyWordParameter;
+import org.xframium.page.keyWord.*;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
-import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
-import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
-import gherkin.formatter.Formatter;
-import gherkin.formatter.model.Background;
-import gherkin.formatter.model.Examples;
-import gherkin.formatter.model.ExamplesTableRow;
-import gherkin.formatter.model.Feature;
-import gherkin.formatter.model.Scenario;
-import gherkin.formatter.model.ScenarioOutline;
-import gherkin.formatter.model.Step;
-import gherkin.formatter.model.Tag;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class XMLFormatter extends AbstractPageDataProvider implements Formatter
 {
@@ -178,7 +168,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
     public void step( Step xStep )
     {
         
-        KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), "bdd", true, "CALL", "", false, StepFailure.ERROR, false,null, null, 0, "", 0, "", null, null, null, null, false, false, null, null );
+        KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), "bdd", true, "CALL", "", false, StepFailure.ERROR, false, null, null, null, 0, "", 0, "", null, null, null, null, false, false, null, null );
          
         switch( currentSection )
         {

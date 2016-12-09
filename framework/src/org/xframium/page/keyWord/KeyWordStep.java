@@ -86,6 +86,21 @@ public interface KeyWordStep
 	 * @param os the new os
 	 */
 	public void setOs( String os );
+
+	/**
+	 * Gets the link id.
+	 *
+	 * @return the link id
+	 */
+	public String getBrowser();
+
+	/**
+	 * Sets the link id.
+	 *
+	 * @param browser the new os
+	 */
+	public void setBrowser( String browser );
+
 	public List<KeyWordParameter> getParameterList();
 	
 	public List<KeyWordToken> getTokenList();
