@@ -49,7 +49,7 @@ public class FirefoxProfileFactory extends AbstractBrowserCapability {
 					for (String filePath : extensions) {
 						try {
 							profile.addExtension(new File(filePath));
-						} catch (IOException exception) {
+						} catch (Exception exception) {
 							exception.printStackTrace();
 						}
 

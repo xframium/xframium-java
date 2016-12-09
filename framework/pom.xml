@@ -26,6 +26,17 @@
       <name>Perfecto mobile</name>
       <url>http://repository-perfectomobile.forge.cloudbees.com/public</url>
     </repository>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+        <checksumPolicy>fail</checksumPolicy>
+      </releases>
+      <id>Experitest Public REPO</id>
+      <name>xFramium</name>
+      <url>http://repo.experitest.com:8010/Maven2/</url>
+      <layout>default</layout>
+    </repository>
   </repositories>
   <distributionManagement>
     <repository>
@@ -66,7 +77,6 @@
           <failOnError>false</failOnError>
         </configuration>
       </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
@@ -95,11 +105,11 @@
         </executions>
         <dependencies>
           <dependency>
-	        <groupId>org.apache.httpcomponents</groupId>
-	        <artifactId>httpclient</artifactId>
-	        <version>4.5.2</version>
-	      </dependency>
-	    </dependencies>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
@@ -122,17 +132,22 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>2.53.1</version>
+      <version>3.0.1</version>
     </dependency>
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-server-standalone</artifactId>
-      <version>2.53.0</version>
+      <artifactId>selenium-api</artifactId>
+      <version>3.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-server</artifactId>
+      <version>3.0.1</version>
     </dependency>
     <dependency>
       <groupId>io.appium</groupId>
       <artifactId>java-client</artifactId>
-      <version>3.4.0</version>
+      <version>4.1.2</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jaxb</groupId>
@@ -182,26 +197,23 @@
     <dependency>
       <groupId>com.perfecto.reporting-sdk</groupId>
       <artifactId>reportium-testng</artifactId>
-      <version>1.1.2</version>
+      <version>1.1.4</version>
     </dependency>
     <dependency>
       <groupId>com.perfecto.reporting-sdk</groupId>
       <artifactId>reportium-testng</artifactId>
-      <version>1.1.2</version>
+      <version>1.1.4</version>
     </dependency>
-    
     <dependency>
       <groupId>com.perfectomobile</groupId>
       <artifactId>pm-webdriver</artifactId>
       <version>9.2.0.1</version>
     </dependency>
-
     <dependency>
       <groupId>com.perfectomobile</groupId>
       <artifactId>http-client</artifactId>
       <version>9.2.0.1</version>
     </dependency>
-
     <dependency>
       <groupId>info.cukes</groupId>
       <artifactId>gherkin</artifactId>
@@ -211,6 +223,16 @@
       <groupId>com.xframium</groupId>
       <artifactId>xframium-serialization</artifactId>
       <version>2.0.4</version>
+    </dependency>
+    <dependency>
+      <groupId>com.experitest</groupId>
+      <artifactId>mobile-webdriver</artifactId>
+      <version>LATEST</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>1.5.0-b01</version>
     </dependency>
   </dependencies>
 </project>

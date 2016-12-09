@@ -3,10 +3,8 @@ package org.xframium.driver;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -44,7 +42,6 @@ import org.xframium.page.data.PageDataManager;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
-import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunDetails;
@@ -56,6 +53,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     protected File configFolder;
     protected boolean dryRun = false;
     protected boolean displayResults = true;
+    private SuiteContainer suiteContainer;
     
     public abstract boolean readFile( InputStream inputStream );
     public abstract boolean readFile( File configFile );
@@ -324,6 +322,8 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             if ( runTest )
                 executeTest( sC );
+            
+            suiteContainer = sC;
         }
         catch( Exception e )
         {
@@ -347,7 +347,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                 DebugManager.instance().launchBrowser( debuggerHost, 8870 );
             }
             
-            _executeTest( sC );
+            _executeTest( sC == null ? suiteContainer : sC );
             
             if( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_HTML ) )
             {

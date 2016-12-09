@@ -533,12 +533,8 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     log.warn( "Appium is not supported on the following OS " + device.getOs().toUpperCase() + " - this device will be ignored" );
                 break;
                 
-            case "PERFECTO":
-                driverName = "PERFECTO";
-                break;
-                
-            case "WEB":
-                driverName = "WEB";
+            default:
+                driverName = xRoot.getDriver().getType();
                 break;
         }
         
@@ -839,6 +835,9 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             dC.addExtractor( new TagContainer( "IOS text field", "Apple IOS test field", "//UIATextField" ) );
             dC.addExtractor( new TagContainer( "Android button", "Android button", "//android.widget.Button" ) );
             dC.addExtractor( new TagContainer( "Android text field", "Android text field", "//android.widget.EditText" ) );
+            dC.addExtractor( new TagContainer( "Windows Button", "A Windows XAML Button", "//Button" ) );
+            dC.addExtractor( new TagContainer( "Windows Text", "A Windows XAML Text Field", "//Text" ) );
+            dC.addExtractor( new TagContainer( "Windows List", "A Windows XAML List", "//List" ) );
         }
 
         //
