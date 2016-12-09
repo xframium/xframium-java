@@ -1,79 +1,27 @@
  package org.xframium.driver;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.xpath.XPathFactory;
+import gherkin.parser.Parser;
 import org.openqa.selenium.Platform;
 import org.xframium.Initializable;
-import org.xframium.application.ApplicationDescriptor;
-import org.xframium.application.CSVApplicationProvider;
-import org.xframium.application.ExcelApplicationProvider;
-import org.xframium.application.SQLApplicationProvider;
-import org.xframium.application.XMLApplicationProvider;
+import org.xframium.application.*;
 import org.xframium.artifact.ArtifactType;
-import org.xframium.container.ApplicationContainer;
-import org.xframium.container.CloudContainer;
-import org.xframium.container.DeviceContainer;
-import org.xframium.container.DriverContainer;
-import org.xframium.container.PageContainer;
-import org.xframium.container.SiteContainer;
-import org.xframium.container.SuiteContainer;
-import org.xframium.container.TagContainer;
+import org.xframium.container.*;
 import org.xframium.content.ContentManager;
 import org.xframium.content.provider.ExcelContentProvider;
 import org.xframium.content.provider.SQLContentProvider;
 import org.xframium.content.provider.XMLContentProvider;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.SimpleDevice;
-import org.xframium.device.cloud.CSVCloudProvider;
-import org.xframium.device.cloud.CloudDescriptor;
-import org.xframium.device.cloud.CloudProvider;
-import org.xframium.device.cloud.EncryptedCloudProvider;
-import org.xframium.device.cloud.ExcelCloudProvider;
-import org.xframium.device.cloud.SQLCloudProvider;
-import org.xframium.device.cloud.XMLCloudProvider;
-import org.xframium.device.data.CSVDataProvider;
+import org.xframium.device.cloud.*;
+import org.xframium.device.data.*;
 import org.xframium.device.data.DataProvider.DriverType;
-import org.xframium.device.data.ExcelDataProvider;
-import org.xframium.device.data.NamedDataProvider;
-import org.xframium.device.data.SQLDataProvider;
-import org.xframium.device.data.XMLDataProvider;
 import org.xframium.device.data.perfectoMobile.AvailableHandsetValidator;
 import org.xframium.device.data.perfectoMobile.PerfectoMobileDataProvider;
 import org.xframium.device.data.perfectoMobile.PerfectoMobilePluginProvider;
 import org.xframium.device.data.perfectoMobile.ReservedHandsetValidator;
 import org.xframium.device.property.PropertyAdapter;
 import org.xframium.device.proxy.ProxyRegistry;
-import org.xframium.driver.xsd.ObjectFactory;
-import org.xframium.driver.xsd.XArtifact;
-import org.xframium.driver.xsd.XCapabilities;
-import org.xframium.driver.xsd.XDevice;
-import org.xframium.driver.xsd.XDeviceCapability;
-import org.xframium.driver.xsd.XElement;
-import org.xframium.driver.xsd.XElementParameter;
-import org.xframium.driver.xsd.XFramiumRoot;
-import org.xframium.driver.xsd.XLibrary;
-import org.xframium.driver.xsd.XModel;
-import org.xframium.driver.xsd.XObjectDeviceCapability;
-import org.xframium.driver.xsd.XOptions;
-import org.xframium.driver.xsd.XPage;
-import org.xframium.driver.xsd.XParameter;
-import org.xframium.driver.xsd.XProperty;
-import org.xframium.driver.xsd.XPropertyAdapter;
-import org.xframium.driver.xsd.XStep;
-import org.xframium.driver.xsd.XTag;
-import org.xframium.driver.xsd.XTest;
-import org.xframium.driver.xsd.XToken;
+import org.xframium.driver.xsd.*;
 import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.Page;
@@ -84,19 +32,11 @@ import org.xframium.page.data.provider.SQLPageDataProvider;
 import org.xframium.page.data.provider.XMLPageDataProvider;
 import org.xframium.page.element.Element;
 import org.xframium.page.element.ElementFactory;
-import org.xframium.page.element.provider.CSVElementProvider;
-import org.xframium.page.element.provider.ElementProvider;
-import org.xframium.page.element.provider.ExcelElementProvider;
-import org.xframium.page.element.provider.SQLElementProvider;
-import org.xframium.page.element.provider.XMLElementProvider;
-import org.xframium.page.keyWord.KeyWordPage;
-import org.xframium.page.keyWord.KeyWordParameter;
+import org.xframium.page.element.provider.*;
+import org.xframium.page.keyWord.*;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
-import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
-import org.xframium.page.keyWord.KeyWordTest;
-import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.KeyWordToken.TokenType;
 import org.xframium.page.keyWord.gherkinExtension.XMLFormatter;
 import org.xframium.page.keyWord.matrixExtension.MatrixTest;
@@ -105,7 +45,16 @@ import org.xframium.page.keyWord.provider.SQLKeyWordProvider;
 import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import org.xframium.spi.Device;
-import gherkin.parser.Parser;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.xpath.XPathFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.*;
 
 public class XMLConfigurationReader extends AbstractConfigurationReader implements ElementProvider
 {
@@ -964,7 +913,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         {
             KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), xStep.getPage(), xStep.isActive(), xStep.getType(),
                                                                                  xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
-                                                                                 xStep.getOs(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
+                                                                                 xStep.getOs(), xStep.getBrowser(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
                                                                                  (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite() );
             
