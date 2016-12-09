@@ -65,8 +65,14 @@ public class KWSMouse extends AbstractKeyWordStep
                 
 	        case "CLICK_AT":
 	            return getElement( pageObject, contextMap, webDriver, dataMap ).clickAt( Integer.parseInt( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" ), Integer.parseInt( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" ) );
-                        
-	        case "RELEASE":
+
+			case "CLICK_JS":
+				return clickWithJS(webDriver, getElement( pageObject, contextMap, webDriver, dataMap ));
+
+			case "ENTER_KEY_JS":
+				return enterWithJS(webDriver);
+
+			case "RELEASE":
                 return getElement( pageObject, contextMap, webDriver, dataMap ).release();
 	            
 	    }
@@ -74,30 +80,58 @@ public class KWSMouse extends AbstractKeyWordStep
 		return true;
 	}
 
+	private String getJSElement(WebDriver driver, Element locator) {
+		String elem = "var elem = document;";
+		if (locator.getBy() == BY.ID) {
+			elem = "var elem = document.getElementById(\"" + locator.getKey() + "\");";
+		}
+		else if (locator.getBy() == BY.XPATH) {
+			String snippet = "document.getElementByXPath = function(sValue) { var a = this.evaluate(sValue, this, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null); if (a.snapshotLength > 0) { return a.snapshotItem(0); } }; ";
+			((JavascriptExecutor) driver).executeScript(snippet);
+			elem = "var elem = document.getElementByXPath(\"" + locator.getKey() + "\");";
+		}
+		else if (locator.getBy() == BY.CLASS) {
+			elem = "var elem = document.getElementsByClassName(\"" + locator.getKey() + "\")[0];";
+		}
+		return elem;
+	}
+
 	// Safari desktop browser does not support the moveTo API so must use JS equivalent
 	private boolean moveToElementWithJS(WebDriver driver, Element locator) {
 		try {
-			JavascriptExecutor js = (JavascriptExecutor) driver;
-			String elem = "var elem = document;";
-			if (locator.getBy() == BY.ID) {
-                elem = "var elem = document.getElementById(\""+locator.getKey()+"\");";
-            }
-            else if (locator.getBy() == BY.XPATH) {
-                String snippet = "document.getElementByXPath = function(sValue) { var a = this.evaluate(sValue, this, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null); if (a.snapshotLength > 0) { return a.snapshotItem(0); } }; ";
-                js.executeScript(snippet);
-                elem = "var elem = document.getElementByXPath(\"" + locator.getKey() + "\");";
-            }
-            else if (locator.getBy() == BY.CLASS) {
-                elem = "var elem = document.getElementsByClassName(\""+locator.getKey()+"\")[0];";
-            }
-			String mouseOverScript = elem + " if(document.createEvent){var evObj = document.createEvent('MouseEvents');evObj.initEvent('mouseover', true, false);" +
+
+			String mouseOverScript = getJSElement(driver, locator) + " if(document.createEvent){var evObj = document.createEvent('MouseEvents');evObj.initEvent('mouseover', true, false);" +
                 " elem.dispatchEvent(evObj);} else if(document.createEventObject) { elem.fireEvent('onmouseover');}";
-			js.executeScript(mouseOverScript);
+			((JavascriptExecutor) driver).executeScript(mouseOverScript);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
 	}
+
+	private boolean clickWithJS(WebDriver driver, Element locator) {
+		try {
+			((JavascriptExecutor) driver).executeScript(getJSElement(driver, locator) + " elem.click();");
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	private boolean enterWithJS(WebDriver driver) {
+		try {
+			String enterCmd = "var keyboardEvent = document.createEvent('KeyboardEvent');" +
+					"var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? 'initKeyboardEvent' : 'initKeyEvent';" +
+					"keyboardEvent[initMethod]('keydown',true,true,window,false,false,false,false,13,0);document.dispatchEvent(keyboardEvent);";
+			((JavascriptExecutor) driver).executeScript(enterCmd);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 
 }
