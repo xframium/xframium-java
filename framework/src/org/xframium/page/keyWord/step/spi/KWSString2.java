@@ -142,6 +142,11 @@ public class KWSString2 extends AbstractKeyWordStep
                 String regex = getParameterValue( getParameter( REGEX ), contextMap, dataMap ) + "";
                 Pattern regexPattern = Pattern.compile( regex );
                
+                if ( log.isInfoEnabled() )
+                {
+                    log.info(  "Attempting to locate [" + regex + "] in \r\n[" + originalValue + "]" );
+                }
+                
                 Matcher regexMatcher = regexPattern.matcher( originalValue );
                 if ( regexMatcher.find() )
                 {
@@ -154,6 +159,8 @@ public class KWSString2 extends AbstractKeyWordStep
                     }
                     newValue = regexMatcher.group( 0 );
                 }
+                else
+                    throw new ScriptException( "Could not locate value using " + regex );
                 
                 break;
                 
