@@ -20,43 +20,29 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.provider;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
+import gherkin.parser.Parser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
-import org.xframium.page.keyWord.KeyWordPage;
-import org.xframium.page.keyWord.KeyWordParameter;
+import org.xframium.page.keyWord.*;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
-import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
-import org.xframium.page.keyWord.KeyWordTest;
-import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.KeyWordToken.TokenType;
 import org.xframium.page.keyWord.gherkinExtension.XMLFormatter;
-import org.xframium.page.keyWord.provider.xsd.Import;
-import org.xframium.page.keyWord.provider.xsd.Model;
-import org.xframium.page.keyWord.provider.xsd.ObjectFactory;
-import org.xframium.page.keyWord.provider.xsd.Parameter;
-import org.xframium.page.keyWord.provider.xsd.RegistryRoot;
-import org.xframium.page.keyWord.provider.xsd.Step;
-import org.xframium.page.keyWord.provider.xsd.Test;
-import org.xframium.page.keyWord.provider.xsd.Token;
+import org.xframium.page.keyWord.provider.xsd.*;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
-import gherkin.parser.Parser;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Unmarshaller;
+import java.io.*;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -378,7 +364,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 		    
 		    KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), xStep.getPage(), xStep.isActive(), xStep.getType(),
                                                                                  xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
-                                                                                 xStep.getOs(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
+                                                                                 xStep.getOs(), xStep.getBrowser(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
                                                                                  (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite() );
 		    

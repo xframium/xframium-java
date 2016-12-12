@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.page.keyWord.KeyWordStep;
@@ -39,6 +40,7 @@ import org.xframium.page.keyWord.step.spi.KWSBreak;
 import org.xframium.page.keyWord.step.spi.KWSBrowser;
 import org.xframium.page.keyWord.step.spi.KWSCache;
 import org.xframium.page.keyWord.step.spi.KWSCall;
+import org.xframium.page.keyWord.step.spi.KWSCall2;
 import org.xframium.page.keyWord.step.spi.KWSCheckColor;
 import org.xframium.page.keyWord.step.spi.KWSClick;
 import org.xframium.page.keyWord.step.spi.KWSCommand;
@@ -81,6 +83,7 @@ import org.xframium.page.keyWord.step.spi.KWSVisual;
 import org.xframium.page.keyWord.step.spi.KWSWait;
 import org.xframium.page.keyWord.step.spi.KWSWaitFor;
 import org.xframium.page.keyWord.step.spi.KWSWindow;
+
 import com.xframium.serialization.SerializationManager;
 import com.xframium.serialization.json.ReflectionSerializer;
 
@@ -150,6 +153,7 @@ public class KeyWordStepFactory
     private void initializeDefaults()
     {
         addKeyWord( "CALL", KWSCall.class );
+        addKeyWord( "CALL2", KWSCall2.class );
         addKeyWord( "CLICK", KWSClick.class );
         addKeyWord( "EXISTS", KWSExists.class );
         addKeyWord( "FUNCTION", KWSFunction.class );
@@ -261,7 +265,7 @@ public class KeyWordStepFactory
      *            the validation type
      * @return the key word step
      */
-    public KeyWordStep createStep( String name, String pageName, boolean active, String type, String linkId, boolean timed, StepFailure sFailure, boolean inverse, String os, String poi, int threshold, String description, long waitTime, String context,
+    public KeyWordStep createStep( String name, String pageName, boolean active, String type, String linkId, boolean timed, StepFailure sFailure, boolean inverse, String os, String browser, String poi, int threshold, String description, long waitTime, String context,
             String validation, String device, ValidationType validationType, String tagNames, boolean startAt, boolean breakpoint, String deviceTags, String siteName )
     {
 
@@ -283,6 +287,7 @@ public class KeyWordStepFactory
             returnValue.setFailure( sFailure );
             returnValue.setInverse( inverse );
             returnValue.setOs( os );
+            returnValue.setBrowser( browser );
             returnValue.setPoi( poi );
             returnValue.setThreshold( threshold );
             returnValue.setDescription( description );
