@@ -8,13 +8,13 @@
 
 package org.xframium.driver.xsd;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -153,6 +153,8 @@ public class XStep {
     protected String linkId;
     @XmlAttribute(name = "os")
     protected String os;
+    @XmlAttribute(name = "browser")
+    protected String browser;
     @XmlAttribute(name = "poi")
     protected String poi;
     @XmlAttribute(name = "threshold")
@@ -431,14 +433,38 @@ public class XStep {
 
     /**
      * Sets the value of the os property.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setOs(String value) {
         this.os = value;
+    }
+
+    /**
+     * Sets the value of the browser property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *
+     */
+    public void setBrowser(String value) {
+        this.browser = value;
+    }
+
+    /**
+     * Gets the value of the browser property.
+     *
+     * @return
+     *     possible object is
+     *     {@link String }
+     *
+     */
+    public String getBrowser() {
+        return browser;
     }
 
     /**

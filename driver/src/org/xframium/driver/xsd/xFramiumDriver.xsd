@@ -343,7 +343,7 @@
     <attribute name="timed" type="boolean" use="optional" default="false" />
     <attribute name="threshold" type="integer" use="optional" default="0" />
     <attribute name="active" type="boolean" use="optional" default="true" />
-    <attribute name="os" type="string" use="optional" />
+    <attribute name="browser" type="string" use="optional" />
     <attribute name="contentKeys" type="string" use="optional" />
     <attribute name="deviceTags" type="string" use="optional" />
   </complexType>
@@ -418,6 +418,7 @@
     <attribute name="active" type="boolean" use="optional" default="true" />
     <attribute name="linkId" type="string" use="optional" />
     <attribute name="os" type="string" use="optional" />
+    <attribute name="browser" type="string" use="optional" />
     <attribute name="poi" type="string" use="optional" />
     <attribute name="threshold" type="integer" use="optional" default="0" />
     <attribute name="timed" type="boolean" use="optional" default="false" />

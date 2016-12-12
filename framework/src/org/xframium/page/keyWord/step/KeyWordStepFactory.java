@@ -261,7 +261,7 @@ public class KeyWordStepFactory
      *            the validation type
      * @return the key word step
      */
-    public KeyWordStep createStep( String name, String pageName, boolean active, String type, String linkId, boolean timed, StepFailure sFailure, boolean inverse, String os, String poi, int threshold, String description, long waitTime, String context,
+    public KeyWordStep createStep( String name, String pageName, boolean active, String type, String linkId, boolean timed, StepFailure sFailure, boolean inverse, String os, String browser, String poi, int threshold, String description, long waitTime, String context,
             String validation, String device, ValidationType validationType, String tagNames, boolean startAt, boolean breakpoint, String deviceTags, String siteName )
     {
 
@@ -283,6 +283,7 @@ public class KeyWordStepFactory
             returnValue.setFailure( sFailure );
             returnValue.setInverse( inverse );
             returnValue.setOs( os );
+            returnValue.setBrowser( browser );
             returnValue.setPoi( poi );
             returnValue.setThreshold( threshold );
             returnValue.setDescription( description );

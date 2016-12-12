@@ -20,13 +20,6 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Point;
@@ -57,6 +50,13 @@ import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.step.spi.KWSElse;
 import org.xframium.page.keyWord.step.spi.KWSLoopBreak;
 import org.xframium.spi.driver.ReportiumProvider;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -156,6 +156,9 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
     /** The os. */
     private String os;
+
+    /** The browser. */
+    private String browser;
 
     /** The context. */
     private String context;
@@ -361,6 +364,25 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     /*
      * (non-Javadoc)
      * 
+     * @see com.perfectoMobile.page.keyWord.KeyWordStep#getBrowser()
+     */
+    @Override
+    public String getBrowser() { return browser; }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.perfectoMobile.page.keyWord.KeyWordStep#setBrowser(java.lang.String)
+     */
+    @Override
+    public void setBrowser( String browser )
+    {
+        this.browser = browser != null ? browser.toUpperCase() : browser;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see com.perfectoMobile.page.keyWord.KeyWordStep#getOs()
      */
     @Override
@@ -371,7 +393,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.perfectoMobile.page.keyWord.KeyWordStep#setOs(java.lang.String)
      */
     @Override
@@ -379,7 +401,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     {
         this.os = os != null ? os.toUpperCase() : os;
     }
-
     /*
      * (non-Javadoc)
      * 
@@ -705,8 +726,35 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         log.info( Thread.currentThread().getName() + ": A Required OS in [" + os + "] was specified however the OS of the device was [" + deviceOs.toUpperCase() + "]" );
                     return true;
                 }
-                
-                
+            }
+
+            if ( browser != null )
+            {
+                String browserName = ((DeviceWebDriver) webDriver).getDevice().getBrowserName();
+                if ( browserName == null )
+                {
+                    if ( log.isInfoEnabled() )
+                        log.info( Thread.currentThread().getName() + ": A Required Browser of [" + browser + "] was specified however the Browser of the device could not be determined" );
+                    return true;
+                }
+
+                String[] browserArray = browser.split( "," );
+                boolean browserFound = false;
+                for ( String localBrowser : browserArray )
+                {
+                    if ( localBrowser.toUpperCase().trim().equals( browserName.toUpperCase() ) )
+                    {
+                        browserFound = true;
+                        break;
+                    }
+                }
+
+                if ( !browserFound )
+                {
+                    if ( log.isInfoEnabled() )
+                        log.info( Thread.currentThread().getName() + ": A Required Browser in [" + browser + "] was specified however the Browser of the device was [" + browserName.toUpperCase() + "]" );
+                    return true;
+                }
             }
             
             //

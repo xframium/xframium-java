@@ -23,27 +23,12 @@
  */
 package org.xframium.device.artifact;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xframium.Initializable;
-import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
@@ -51,15 +36,22 @@ import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
-import org.xframium.integrations.sauceLabs.rest.SauceREST;
 import org.xframium.page.ExecutionRecord;
 import org.xframium.page.StepStatus;
 import org.xframium.spi.Device;
 import org.xframium.spi.PropertyProvider;
-import org.xframium.spi.RunDetails;
 import org.xframium.spi.driver.ReportiumProvider;
 import org.xframium.wcag.WCAGRecord;
 import org.yaml.snakeyaml.util.UriEncoder;
+
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -306,6 +298,7 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
                 {
                     if ( ((ReportiumProvider) webDriver).getReportiumClient() != null )
                     {
+                        log.info("REPORTIUM URL: " + ((ReportiumProvider) webDriver).getReportiumClient().getReportUrl());
                         stringBuffer.append( "<a target=_blank hRef=\"" + ((ReportiumProvider) webDriver).getReportiumClient().getReportUrl() + "\" class=\"list-group-item\">Perfecto Reportium Report</a>" );
                     }
                 }
