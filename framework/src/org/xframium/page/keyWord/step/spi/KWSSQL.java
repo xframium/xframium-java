@@ -50,6 +50,7 @@ public class KWSSQL extends AbstractKeyWordStep
         kwDescription = "Allows the script to execute a SQL statement and process the results";
         kwHelp = "https://www.xframium.org/keyword.html#kw-sql";
         orMapping = false;
+        category = "Utility";
     }
     
     private static final String[] JDBC = new String[] { "jdbc.username", "jdbc.password", "jdbc.url", "jdbc.driverClassName" };

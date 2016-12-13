@@ -69,6 +69,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         kwImpl = getClass().getName();
         kw = KeyWordStepFactory.instance().getKW( getClass() );
         natualLanguage = PageManager.instance().getFormattedMessage( getClass().getSimpleName() );
+        category = "Other";
     }
     
     
@@ -94,53 +95,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     
     private boolean breakpoint;
     
+    protected String category;
+    
     protected boolean orMapping = true;
     
     private static Random numberGenerator = new Random();
-
-    @Override
-    public boolean isBreakpoint()
-    {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-
-
-    @Override
-    public void setBreakpoint( boolean breakpoint )
-    {
-        // TODO Auto-generated method stub
-        
-    }
-    
-    protected void scroll( Direction scrollDirection, WebDriver webDriver )
-    {
-    	
-    	int randomNumber = numberGenerator.nextInt( 45 );
-    	
-    	Gesture currentGesture = null;
-		switch ( scrollDirection  )
-        {
-            case DOWN:
-            	currentGesture = GestureManager.instance().createSwipe( new Point( 50, randomNumber ), new Point( 50, 45+randomNumber ) );
-            	break;
-
-            case LEFT:
-            	currentGesture = GestureManager.instance().createSwipe( new Point( randomNumber, 50 ), new Point( 45+randomNumber, 50 ) );
-            	break;
-
-            case RIGHT:
-            	currentGesture = GestureManager.instance().createSwipe( new Point( 45+randomNumber, 50 ), new Point( randomNumber, 50 ) );
-            	break;
-
-            case UP:
-            	currentGesture = GestureManager.instance().createSwipe( new Point( 50, 45+randomNumber ), new Point( 50, randomNumber ) );
-            	break;
-        }
-		
-		currentGesture.executeGesture( webDriver );
-    }
 
     /** The s failure. */
     private StepFailure sFailure;
@@ -193,6 +152,52 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     protected String kwImpl;
     protected String kw;
     protected String natualLanguage;
+    
+    @Override
+    public boolean isBreakpoint()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+
+
+    @Override
+    public void setBreakpoint( boolean breakpoint )
+    {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    protected void scroll( Direction scrollDirection, WebDriver webDriver )
+    {
+    	
+    	int randomNumber = numberGenerator.nextInt( 45 );
+    	
+    	Gesture currentGesture = null;
+		switch ( scrollDirection  )
+        {
+            case DOWN:
+            	currentGesture = GestureManager.instance().createSwipe( new Point( 50, randomNumber ), new Point( 50, 45+randomNumber ) );
+            	break;
+
+            case LEFT:
+            	currentGesture = GestureManager.instance().createSwipe( new Point( randomNumber, 50 ), new Point( 45+randomNumber, 50 ) );
+            	break;
+
+            case RIGHT:
+            	currentGesture = GestureManager.instance().createSwipe( new Point( 45+randomNumber, 50 ), new Point( randomNumber, 50 ) );
+            	break;
+
+            case UP:
+            	currentGesture = GestureManager.instance().createSwipe( new Point( 50, 45+randomNumber ), new Point( 50, randomNumber ) );
+            	break;
+        }
+		
+		currentGesture.executeGesture( webDriver );
+    }
+
+    
 
     @Override
     public void setTagNames( String tagNames )

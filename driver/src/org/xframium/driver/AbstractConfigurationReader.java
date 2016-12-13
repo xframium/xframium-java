@@ -19,6 +19,7 @@ import org.xframium.container.ApplicationContainer;
 import org.xframium.container.CloudContainer;
 import org.xframium.container.DeviceContainer;
 import org.xframium.container.DriverContainer;
+import org.xframium.container.FavoriteContainer;
 import org.xframium.container.ModelContainer;
 import org.xframium.container.SuiteContainer;
 import org.xframium.debugger.DebugManager;
@@ -69,6 +70,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     public abstract DeviceContainer configureDevice();
     protected abstract boolean configurePropertyAdapters();
     public abstract DriverContainer configureDriver();
+    public abstract FavoriteContainer configureFavorites();
     protected abstract boolean _executeTest( SuiteContainer sC ) throws Exception;
     
     @Override

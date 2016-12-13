@@ -18,6 +18,7 @@
       <element name="data" type="tns:xData" minOccurs="0" maxOccurs="1" />
       <element name="proxy" type="tns:xProxy" minOccurs="0" maxOccurs="1" />
       <element name="security" type="tns:xSecurity" minOccurs="0" maxOccurs="1" />
+      <element name="favorites" type="string" minOccurs="0" maxOccurs="1" />
     </sequence>
   </complexType>
   <complexType name="xSecurity">
@@ -346,6 +347,7 @@
     <attribute name="browser" type="string" use="optional" />
     <attribute name="contentKeys" type="string" use="optional" />
     <attribute name="deviceTags" type="string" use="optional" />
+    <attribute name="os" type="string" use="optional" />
   </complexType>
   <complexType name="xDescription">
     <simpleContent>
@@ -365,13 +367,13 @@
       <simpleType>
         <restriction base="string">
           <enumeration value="CALL" />
+          <enumeration value="CALL2" />
           <enumeration value="CLICK" />
           <enumeration value="EXISTS" />
           <enumeration value="FUNCTION" />
           <enumeration value="GESTURE" />
           <enumeration value="RETURN" />
           <enumeration value="SET" />
-          <enumeration value="VALUE" />
           <enumeration value="GET" />
           <enumeration value="WAIT" />
           <enumeration value="WAIT_FOR" />
@@ -385,24 +387,19 @@
           <enumeration value="VERIFY_CONTRAST" />
           <enumeration value="WINDOW" />
           <enumeration value="EXECJS" />
+          <enumeration value="EXECWS" />
           <enumeration value="COMPARE" />
           <enumeration value="STRING" />
+          <enumeration value="STRING2" />
           <enumeration value="MATH" />
           <enumeration value="MOUSE" />
           <enumeration value="CACHE" />
           <enumeration value="REPORT" />
-          <enumeration value="SYNC" />
-          <enumeration value="OPEN_PAGE" />
-          <enumeration value="ADD_COOKIE" />
-          <enumeration value="DELETE_COOKIE" />
-          <enumeration value="DELETE_COOKIES" />
-          <enumeration value="GET_COOKIE" />
-          <enumeration value="GET_COOKIES" />
           <enumeration value="ADD_DEVICE" />
-          <enumeration value="AT" />
           <enumeration value="HAS_FOCUS" />
           <enumeration value="ALIGN" />
-          <enumeration value="PERFECTO_SCRIPT" />
+          <enumeration value="SYNC" />
+          <enumeration value="AT" />
           <enumeration value="ELSE" />
           <enumeration value="STATE" />
           <enumeration value="ALERT" />
@@ -412,6 +409,10 @@
           <enumeration value="VISUAL" />
           <enumeration value="SET_CONTENT_KEY" />
           <enumeration value="BROWSER" />
+          <enumeration value="IS_ENABLED" />
+          <enumeration value="ENABLED" />
+          <enumeration value="COMMAND" />
+          <enumeration value="EMAIL" />
         </restriction>
       </simpleType>
     </attribute>

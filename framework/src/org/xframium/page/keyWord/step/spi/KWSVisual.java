@@ -44,6 +44,7 @@ public class KWSVisual extends AbstractKeyWordStep
         kwDescription = "Allows the script to perform a Visual operation";
         kwHelp = "https://www.xframium.org/keyword.html#kw-visual";
         orMapping = false;
+        category = "Visual";
     }
     
 	public enum VisualType 

@@ -42,6 +42,7 @@ public class KWSCache extends AbstractKeyWordStep
         kwDescription = "Allows the script enable or disable the intelligent caching subsystem";
         kwHelp = "https://www.xframium.org/keyword.html#kw-cache";
         orMapping = false;
+        category = "Utility";
     }
 	/*
 	 * (non-Javadoc)

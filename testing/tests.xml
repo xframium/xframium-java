@@ -63,6 +63,21 @@
     <step type="CALL" name="kw-browser" page="home" />
     <step type="CALL" name="kw-execws" page="home" />
   </test>
+  
+  <test name="xFramium Step Tags" active="true">
+    <description>Tests that specific steps without the specified tags are ignored</description>
+    <step type="EXISTS" name="toggleButton" page="home" tagNames="myTag" />
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" tagNames="myTag" />
+    <step type="COMPARE" name="existsCompare" page="home" tagNames="myTag">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+    <step type="CLICK" name="toggleButton" page="home" />
+    <step type="COMPARE" name="existsCompare" page="home" tagNames="myTag">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+  </test>
 
   <test name="xFramium REGEX" active="true">
     <description>Tests that the specified step is ignored for a specific OS type</description>

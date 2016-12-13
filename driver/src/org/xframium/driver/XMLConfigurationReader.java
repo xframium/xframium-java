@@ -130,6 +130,15 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     }
 
     @Override
+    public FavoriteContainer configureFavorites()
+    {
+        String favorites = xRoot.getFavorites();
+        
+        return new FavoriteContainer( favorites );
+        
+    }
+    
+    @Override
     public CloudContainer configureCloud( boolean secured )
     {
         CloudContainer cC = new CloudContainer();

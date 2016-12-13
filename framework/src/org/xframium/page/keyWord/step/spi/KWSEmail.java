@@ -59,6 +59,7 @@ public class KWSEmail extends AbstractKeyWordStep
         kwDescription = "Allows the script send and check for received emails";
         kwHelp = "https://www.xframium.org/keyword.html#kw-email";
         orMapping = false;
+        category = "Utility";
     }
 
     /*
@@ -130,11 +131,14 @@ public class KWSEmail extends AbstractKeyWordStep
             
             if ( messageWrapper != null )
             {
-                contextMap.put( getContext() + "_count", messageWrapper.getMessageCount() + "" );
-                contextMap.put( getContext() + "_FROM", messageWrapper.getFrom() );
-                contextMap.put( getContext() + "_SUBJECT", messageWrapper.getSubject() );
-                contextMap.put( getContext() + "_BODY", messageWrapper.getBody() );
-                contextMap.put( getContext() + "_MIMETYPE", messageWrapper.getMimeType() );
+                if ( getContext() != null )
+                {
+                    contextMap.put( getContext() + "_count", messageWrapper.getMessageCount() + "" );
+                    contextMap.put( getContext() + "_FROM", messageWrapper.getFrom() );
+                    contextMap.put( getContext() + "_SUBJECT", messageWrapper.getSubject() );
+                    contextMap.put( getContext() + "_BODY", messageWrapper.getBody() );
+                    contextMap.put( getContext() + "_MIMETYPE", messageWrapper.getMimeType() );
+                }
                 
                 if ( !validateData( messageWrapper.getBody() + "" ) )
                     throw new ScriptException( "EMAIL Body Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + messageWrapper.getBody() + "]" );

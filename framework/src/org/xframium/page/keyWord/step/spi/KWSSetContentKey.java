@@ -40,6 +40,7 @@ public class KWSSetContentKey extends AbstractKeyWordStep
         kwName = "Set Content Key";
         kwDescription = "Allows the script to change the content key in force for the current test iteration";
         kwHelp = "https://www.xframium.org/keyword.html#kw-setcontentkey";
+        category = "Utility";
     }
     /* (non-Javadoc)
      * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

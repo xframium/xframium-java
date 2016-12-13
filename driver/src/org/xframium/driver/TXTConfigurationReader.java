@@ -14,6 +14,7 @@ import org.xframium.container.ApplicationContainer;
 import org.xframium.container.CloudContainer;
 import org.xframium.container.DeviceContainer;
 import org.xframium.container.DriverContainer;
+import org.xframium.container.FavoriteContainer;
 import org.xframium.container.SuiteContainer;
 import org.xframium.content.ContentManager;
 import org.xframium.content.provider.ExcelContentProvider;
@@ -106,6 +107,15 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             log.error( "Error reading configruation file", e );
             return false;
         }
+    }
+    
+    @Override
+    public FavoriteContainer configureFavorites()
+    {
+        String favorites = configProperties.getProperty( "favorites" );
+        
+        return new FavoriteContainer( favorites );
+        
     }
 
     @Override

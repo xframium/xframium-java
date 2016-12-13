@@ -44,6 +44,7 @@ public class KWSCommand extends AbstractKeyWordStep
         kwDescription = "Executes an arbitrary named command with parameters";
         kwHelp = "https://www.xframium.org/keyword.html#kw-command";
         orMapping = false;
+        category = "Utility";
     }
    
 

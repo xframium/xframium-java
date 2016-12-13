@@ -56,7 +56,7 @@ public class KWSString2 extends AbstractKeyWordStep
         kwDescription = "Allows the script to perform some basic string and formatting operations";
         kwHelp = "https://www.xframium.org/keyword.html#kw-string";
         orMapping = false;
-        
+        category = "Utility";
     }
     
     public enum OperationType

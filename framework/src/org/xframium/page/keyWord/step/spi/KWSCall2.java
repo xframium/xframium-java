@@ -67,6 +67,7 @@ public class KWSCall2 extends AbstractKeyWordStep
         kwDescription = "Allows the script to call another pre-defined function or test.  You can pass named context parameters that are scoped to the =function call by adding parameters with names and values.  OVERRIDE is the only reserved name using for overriding data provider names";
         kwHelp = "https://www.xframium.org/keyword.html#kw-call";
         orMapping = false;
+        category = "Flow Control";
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
