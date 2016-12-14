@@ -283,7 +283,8 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         
         for ( XArtifact a : xRoot.getDriver().getArtifact() )
         {
-            driverC.addArtifact( ArtifactType.valueOf( a.getType().toUpperCase() ) );
+            if ( a.isActive() )
+                driverC.addArtifact( ArtifactType.valueOf( a.getType().toUpperCase() ) );
         }
         
         return true;
