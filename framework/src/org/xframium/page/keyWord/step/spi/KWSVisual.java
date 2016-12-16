@@ -44,6 +44,7 @@ public class KWSVisual extends AbstractKeyWordStep
         kwDescription = "Allows the script to perform a Visual operation";
         kwHelp = "https://www.xframium.org/keyword.html#kw-visual";
         orMapping = false;
+        category = "Visual";
     }
     
 	public enum VisualType 
@@ -51,7 +52,9 @@ public class KWSVisual extends AbstractKeyWordStep
 		SET,
 		BUTTON,
 		FIND,
-		SWIPE
+		SWIPE,
+		TAP,
+		DRAG
 	}
 
 	/* (non-Javadoc)
@@ -82,6 +85,14 @@ public class KWSVisual extends AbstractKeyWordStep
 				break;
 			case SWIPE:
 				command = "mobile:touch:swipe";
+				break;
+			case TAP:
+				command = "mobile:touch:tap";
+				break;
+			case DRAG:
+				// specify 4 coordinates in comma delimited list. Ex:
+				// <parameter type="STATIC" value="location=97%,80%,97%,95%"/>
+				command = "mobile:touch:drag";
 				break;
 		}
 		Map<String, Object> params = new HashMap<>();

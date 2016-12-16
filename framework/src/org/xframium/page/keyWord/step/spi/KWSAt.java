@@ -34,40 +34,50 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 
 public class KWSAt extends AbstractKeyWordStep
 {
+    public KWSAt()
+    {
+        kwName = "Element dimensions";
+        kwDescription = "Extract the size and location of a named element";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-at";
+        category = "Visual";
+    }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com
+     * .perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map,
+     * java.util.Map)
+     */
+    @Override
+    public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
+    {
+        if ( pageObject == null )
+            throw new ScriptConfigurationException( "There was no Page Object defined" );
 
-    
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
-	 */
-	@Override
-	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
-	{
-		if ( pageObject == null )
-			throw new ScriptConfigurationException( "There was no Page Object defined" );
-		
-		Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap ).cloneElement();
-		currentElement.setCacheNative( true );
-		Point at = ( (WebElement) currentElement.getNative() ).getLocation();
-        Dimension size = ( (WebElement) currentElement.getNative() ).getSize();
-		
+        Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap ).cloneElement();
+        currentElement.setCacheNative( true );
+        Point at = ((WebElement) currentElement.getNative()).getLocation();
+        Dimension size = ((WebElement) currentElement.getNative()).getSize();
+
         String contextName = getContext();
         if ( contextName == null )
             contextName = getName();
-        
-		if ( getContext() != null )
+
+        if ( getContext() != null )
         {
             if ( log.isDebugEnabled() )
                 log.debug( "Setting Context Data to [" + currentElement.getValue() + "] for [" + getContext() + "]" );
+
+            contextMap.put( contextName + ".x", at.getX() + "" );
+            contextMap.put( contextName + ".y", at.getY() + "" );
+            contextMap.put( contextName + ".width", size.getWidth() + "" );
+            contextMap.put( contextName + ".height", size.getHeight() + "" );
             
-            contextMap.put( contextName+".x", at.getX() + "" );
-            contextMap.put( contextName+".y", at.getY() + "" );
-            contextMap.put( contextName+".width", size.getWidth() + "" );
-            contextMap.put( contextName+".height", size.getHeight() + "" );
+            
         }
-		
-		return currentElement.isPresent();
-	}
 
-
+        return currentElement.isPresent();
+    }
 
 }

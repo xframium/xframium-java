@@ -53,7 +53,7 @@ public class DownloadFileAction extends AbstractDefaultAction implements DeviceA
 		String repFileName = deviceFilePath.substring(deviceFilePath.lastIndexOf("/"), deviceFilePath.length());
 		String repFilePath = "PRIVATE:" + repFileName;
 		
-		// Copy the file from device to Perfecto Repository
+		// Copy file from device to Perfecto Repository
 		PerfectoMobile.instance().device().getFile( executionId, deviceName, deviceFilePath, repFilePath );
 		
 		String destinationFolderPath;
@@ -89,7 +89,7 @@ public class DownloadFileAction extends AbstractDefaultAction implements DeviceA
 			throw new IllegalArgumentException( "Could not write to file", e );
 		}	
 		
-		// Delete the file from repository
+		// Delete file from repository
 		PerfectoMobile.instance().repositories().delete(RepositoryType.MEDIA, repFilePath );
 		
 		return true;

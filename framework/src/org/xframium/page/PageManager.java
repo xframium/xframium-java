@@ -633,7 +633,8 @@ public class PageManager
             if ( webDriver instanceof HasCapabilities )
             {
                 Capabilities caps = ((HasCapabilities) webDriver).getCapabilities();
-                executionId = caps.getCapability( "deviceName" ).toString();
+                if ( caps.getCapability( "deviceName" ) != null )
+                    executionId = caps.getCapability( "deviceName" ).toString();
             }
         }
 
@@ -645,7 +646,8 @@ public class PageManager
                 if ( nativeDriver instanceof HasCapabilities )
                 {
                     Capabilities caps = ((HasCapabilities) webDriver).getCapabilities();
-                    executionId = caps.getCapability( "deviceName" ).toString();
+                    if ( caps.getCapability( "deviceName" ) != null )
+                        executionId = caps.getCapability( "deviceName" ).toString();
                 }
             }
         }

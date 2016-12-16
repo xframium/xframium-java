@@ -78,8 +78,12 @@ public class DefaultPageData implements PageData
 	    fieldNames.add( "typeName" );
 	    fieldNames.add( "recordName" );
 	    fieldNames.add( "active" );
+	    
 	    for ( String name : recordMap.keySet() )
-	        fieldNames.add( name );
+	    {
+	        if ( !name.equals( "recordName" ) && !name.equals( "active" ) )
+	            fieldNames.add( name );
+	    }
 	    
 	    return fieldNames.toArray( new String[ 0 ]);
 	}

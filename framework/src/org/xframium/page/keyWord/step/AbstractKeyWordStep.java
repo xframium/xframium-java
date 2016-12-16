@@ -20,13 +20,6 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Point;
@@ -58,6 +51,13 @@ import org.xframium.page.keyWord.step.spi.KWSElse;
 import org.xframium.page.keyWord.step.spi.KWSLoopBreak;
 import org.xframium.spi.driver.ReportiumProvider;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class AbstractKeyWordStep.
@@ -69,6 +69,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         kwImpl = getClass().getName();
         kw = KeyWordStepFactory.instance().getKW( getClass() );
         natualLanguage = PageManager.instance().getFormattedMessage( getClass().getSimpleName() );
+        category = "Other";
     }
     
     
@@ -94,10 +95,64 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     
     private boolean breakpoint;
     
+    protected String category;
+    
     protected boolean orMapping = true;
     
     private static Random numberGenerator = new Random();
 
+    /** The s failure. */
+    private StepFailure sFailure;
+
+    /** The inverse. */
+    private boolean inverse = false;
+
+    /** The Constant SPLIT. */
+    private static final String SPLIT = "-->";
+
+    /** The fork. */
+    private boolean fork;
+
+    /** The os. */
+    private String os;
+
+    /** The browser. */
+    private String browser;
+
+    /** The context. */
+    private String context;
+
+    /** The validation. */
+    private String validation;
+
+    /** The threshold. */
+    private int threshold;
+
+    /** The description. */
+    private String description;
+
+    /** The validation type. */
+    private ValidationType validationType;
+
+    /** The poi. */
+    private String poi;
+
+    /** The wait time. */
+    private long waitTime;
+
+    /** The device. */
+    private String device;
+    
+    private String[] tagNames;
+    private String[] deviceTags;
+    
+    protected String kwName = "N/A";
+    protected String kwDescription;
+    protected String kwHelp;
+    protected String kwImpl;
+    protected String kw;
+    protected String natualLanguage;
+    
     @Override
     public boolean isBreakpoint()
     {
@@ -142,54 +197,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 		currentGesture.executeGesture( webDriver );
     }
 
-    /** The s failure. */
-    private StepFailure sFailure;
-
-    /** The inverse. */
-    private boolean inverse = false;
-
-    /** The Constant SPLIT. */
-    private static final String SPLIT = "-->";
-
-    /** The fork. */
-    private boolean fork;
-
-    /** The os. */
-    private String os;
-
-    /** The context. */
-    private String context;
-
-    /** The validation. */
-    private String validation;
-
-    /** The threshold. */
-    private int threshold;
-
-    /** The description. */
-    private String description;
-
-    /** The validation type. */
-    private ValidationType validationType;
-
-    /** The poi. */
-    private String poi;
-
-    /** The wait time. */
-    private long waitTime;
-
-    /** The device. */
-    private String device;
     
-    private String[] tagNames;
-    private String[] deviceTags;
-    
-    protected String kwName = "N/A";
-    protected String kwDescription;
-    protected String kwHelp;
-    protected String kwImpl;
-    protected String kw;
-    protected String natualLanguage;
 
     @Override
     public void setTagNames( String tagNames )
@@ -361,6 +369,25 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     /*
      * (non-Javadoc)
      * 
+     * @see com.perfectoMobile.page.keyWord.KeyWordStep#getBrowser()
+     */
+    @Override
+    public String getBrowser() { return browser; }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.perfectoMobile.page.keyWord.KeyWordStep#setBrowser(java.lang.String)
+     */
+    @Override
+    public void setBrowser( String browser )
+    {
+        this.browser = browser != null ? browser.toUpperCase() : browser;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see com.perfectoMobile.page.keyWord.KeyWordStep#getOs()
      */
     @Override
@@ -371,7 +398,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.perfectoMobile.page.keyWord.KeyWordStep#setOs(java.lang.String)
      */
     @Override
@@ -379,7 +406,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     {
         this.os = os != null ? os.toUpperCase() : os;
     }
-
     /*
      * (non-Javadoc)
      * 
@@ -705,8 +731,35 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         log.info( Thread.currentThread().getName() + ": A Required OS in [" + os + "] was specified however the OS of the device was [" + deviceOs.toUpperCase() + "]" );
                     return true;
                 }
-                
-                
+            }
+
+            if ( browser != null )
+            {
+                String browserName = ((DeviceWebDriver) webDriver).getDevice().getBrowserName();
+                if ( browserName == null )
+                {
+                    if ( log.isInfoEnabled() )
+                        log.info( Thread.currentThread().getName() + ": A Required Browser of [" + browser + "] was specified however the Browser of the device could not be determined" );
+                    return true;
+                }
+
+                String[] browserArray = browser.split( "," );
+                boolean browserFound = false;
+                for ( String localBrowser : browserArray )
+                {
+                    if ( localBrowser.toUpperCase().trim().equals( browserName.toUpperCase() ) )
+                    {
+                        browserFound = true;
+                        break;
+                    }
+                }
+
+                if ( !browserFound )
+                {
+                    if ( log.isInfoEnabled() )
+                        log.info( Thread.currentThread().getName() + ": A Required Browser in [" + browser + "] was specified however the Browser of the device was [" + browserName.toUpperCase() + "]" );
+                    return true;
+                }
             }
             
             //

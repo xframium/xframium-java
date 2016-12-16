@@ -106,6 +106,7 @@ public class KWSAddDevice extends AbstractKeyWordStep
         kwDescription = "Allows thte script to add a additional device to the same script to validate device/device actions";
         kwHelp = "https://www.xframium.org/keyword.html#kw-adddevice";
         orMapping = false;
+        category="Utility";
     }
 
 }

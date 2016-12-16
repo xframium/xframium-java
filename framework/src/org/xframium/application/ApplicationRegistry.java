@@ -96,6 +96,12 @@ public class ApplicationRegistry
 	 */
 	public void setAUT( String appName )
 	{
+	    if ( appName == null )
+	    {
+	        aut = null;
+	        return;
+	    }
+	    
 		aut = applicationMap.get( appName );
 		
 		if ( aut == null )

@@ -7,9 +7,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileInputStream;
 import java.net.URL;
-import java.util.Properties;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,10 +25,8 @@ import javax.swing.filechooser.FileFilter;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudRegistry;
-import org.xframium.device.factory.DriverManager;
 import org.xframium.driver.ConfigurationReader;
 import org.xframium.driver.TXTConfigurationReader;
-import org.xframium.driver.TestDriver;
 import org.xframium.driver.XMLConfigurationReader;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunListener;
@@ -225,7 +221,8 @@ public class XFramium extends JFrame implements RunListener, ActionListener
     }
 
     @Override
-    public void afterRun(Device currentDevice, String runKey, boolean successful, int stepsPassed, int stepsFailed, int stepsIgnored, long startTime, long stopTime, int scriptFailures, int configFailures, int applicationFailures, int cloudFailures)
+    public void afterRun( Device currentDevice, String runKey, int successful, int stepsPassed, int stepsFailed, int stepsIgnored, long startTime, long stopTime, int scriptFailures, int configFailures, int applicationFailures, int cloudFailures,
+            int filteredTests )
     {
         for ( int i = 0; i < activeModel.getSize(); i++ )
         {
@@ -236,7 +233,7 @@ public class XFramium extends JFrame implements RunListener, ActionListener
             }
         }
 
-        completeModel.addElement( new ListEntry( new XFramiumEntry( currentDevice, runKey, successful ), successful ? successIcon : failIcon ) );
+        completeModel.addElement( new ListEntry( new XFramiumEntry( currentDevice, runKey, successful == 1 ), successful == 1 ? successIcon : failIcon ) );
     }
 
     class XFramiumEntry
@@ -361,7 +358,7 @@ public class XFramium extends JFrame implements RunListener, ActionListener
                 public void run()
                 {
                     if ( configReader != null )
-                        configReader.executeTest();
+                        configReader.executeTest( null );
                 }
             }).start();
             
@@ -409,12 +406,14 @@ public class XFramium extends JFrame implements RunListener, ActionListener
                     configReader.readConfiguration( fileChooser.getSelectedFile(), false );
                     
                     
+                    
                     cloud.setText( CloudRegistry.instance().getCloud().getHostName() + "  (" + CloudRegistry.instance().getCloud().getName() + ")" );
                     application.setText( ApplicationRegistry.instance().getAUT().getName() );
                     if ( ApplicationRegistry.instance().getAUT().getUrl() != null && !ApplicationRegistry.instance().getAUT().getUrl().isEmpty() )
-                        testType.setText( "NATIVE (Appium)" );
-                    else
                         testType.setText( "Website" );
+                        
+                    else
+                        testType.setText( "NATIVE (Appium)" );
                     
                     test.setText( "XML" );
                     device.setText( DeviceManager.instance().getDevices().size() > 1 ? "Multiple" : DeviceManager.instance().getDevices().get( 0 ).getDeviceName() );

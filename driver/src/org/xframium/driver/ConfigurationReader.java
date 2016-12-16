@@ -7,6 +7,7 @@ import org.xframium.container.ApplicationContainer;
 import org.xframium.container.CloudContainer;
 import org.xframium.container.DeviceContainer;
 import org.xframium.container.DriverContainer;
+import org.xframium.container.FavoriteContainer;
 import org.xframium.container.SuiteContainer;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.element.provider.ElementProvider;
@@ -25,5 +26,5 @@ public interface ConfigurationReader
     public ApplicationContainer configureApplication();
     public DriverContainer configureDriver();
     public boolean configureArtifacts( DriverContainer driverContainer );
-    
+    public FavoriteContainer configureFavorites();
 }

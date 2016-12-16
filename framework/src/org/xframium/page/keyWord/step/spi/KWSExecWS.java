@@ -48,6 +48,7 @@ public class KWSExecWS extends AbstractKeyWordStep
         kwDescription = "Allows the script to call an existing WebService and analyze the results";
         kwHelp = "https://www.xframium.org/keyword.html#kw-execws";
         orMapping = false;
+        category = "Utility";
     }
     
     private static final String HTTP_GET = "GET";

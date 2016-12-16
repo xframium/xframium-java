@@ -40,6 +40,7 @@ public class KWSWaitFor extends AbstractKeyWordStep
         kwName = "Wait for element";
         kwDescription = "Allows the script to wait for an element to be exist in a certain state";
         kwHelp = "https://www.xframium.org/keyword.html#kw-waitfor";
+        category = "Flow Control";
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

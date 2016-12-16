@@ -20,8 +20,6 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step;
 
-import com.xframium.serialization.SerializationManager;
-import com.xframium.serialization.json.ReflectionSerializer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,25 +29,26 @@ import org.apache.commons.logging.LogFactory;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
-import org.xframium.page.keyWord.step.spi.*;
-import org.xframium.page.keyWord.step.spi.KWSAddCookie;
 import org.xframium.page.keyWord.step.spi.KWSAddDevice;
 import org.xframium.page.keyWord.step.spi.KWSAlert;
 import org.xframium.page.keyWord.step.spi.KWSAlign;
 import org.xframium.page.keyWord.step.spi.KWSAt;
 import org.xframium.page.keyWord.step.spi.KWSAttribute;
 import org.xframium.page.keyWord.step.spi.KWSBreak;
+import org.xframium.page.keyWord.step.spi.KWSBrowser;
 import org.xframium.page.keyWord.step.spi.KWSCache;
 import org.xframium.page.keyWord.step.spi.KWSCall;
+import org.xframium.page.keyWord.step.spi.KWSCall2;
 import org.xframium.page.keyWord.step.spi.KWSCheckColor;
 import org.xframium.page.keyWord.step.spi.KWSClick;
+import org.xframium.page.keyWord.step.spi.KWSCommand;
 import org.xframium.page.keyWord.step.spi.KWSCompare;
 import org.xframium.page.keyWord.step.spi.KWSContrastRatio;
-import org.xframium.page.keyWord.step.spi.KWSDeleteCookie;
-import org.xframium.page.keyWord.step.spi.KWSDeleteCookies;
 import org.xframium.page.keyWord.step.spi.KWSDevice;
 import org.xframium.page.keyWord.step.spi.KWSDumpState;
 import org.xframium.page.keyWord.step.spi.KWSElse;
+import org.xframium.page.keyWord.step.spi.KWSEmail;
+import org.xframium.page.keyWord.step.spi.KWSEnabled;
 import org.xframium.page.keyWord.step.spi.KWSExecJS;
 import org.xframium.page.keyWord.step.spi.KWSExecWS;
 import org.xframium.page.keyWord.step.spi.KWSExists;
@@ -57,27 +56,27 @@ import org.xframium.page.keyWord.step.spi.KWSFocus;
 import org.xframium.page.keyWord.step.spi.KWSFork;
 import org.xframium.page.keyWord.step.spi.KWSFunction;
 import org.xframium.page.keyWord.step.spi.KWSGesture;
-import org.xframium.page.keyWord.step.spi.KWSGetCookie;
-import org.xframium.page.keyWord.step.spi.KWSGetCookies;
 import org.xframium.page.keyWord.step.spi.KWSLoop;
 import org.xframium.page.keyWord.step.spi.KWSMath;
 import org.xframium.page.keyWord.step.spi.KWSMouse;
 import org.xframium.page.keyWord.step.spi.KWSNavigate;
-import org.xframium.page.keyWord.step.spi.KWSOpenPage;
 import org.xframium.page.keyWord.step.spi.KWSOperator;
-import org.xframium.page.keyWord.step.spi.KWSPerfectoScript;
 import org.xframium.page.keyWord.step.spi.KWSReport;
 import org.xframium.page.keyWord.step.spi.KWSReturn;
 import org.xframium.page.keyWord.step.spi.KWSSQL;
 import org.xframium.page.keyWord.step.spi.KWSSet;
 import org.xframium.page.keyWord.step.spi.KWSSetContentKey;
 import org.xframium.page.keyWord.step.spi.KWSString;
+import org.xframium.page.keyWord.step.spi.KWSString2;
 import org.xframium.page.keyWord.step.spi.KWSSync;
 import org.xframium.page.keyWord.step.spi.KWSValue;
 import org.xframium.page.keyWord.step.spi.KWSVisible;
+import org.xframium.page.keyWord.step.spi.KWSVisual;
 import org.xframium.page.keyWord.step.spi.KWSWait;
 import org.xframium.page.keyWord.step.spi.KWSWaitFor;
 import org.xframium.page.keyWord.step.spi.KWSWindow;
+import com.xframium.serialization.SerializationManager;
+import com.xframium.serialization.json.ReflectionSerializer;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -145,6 +144,7 @@ public class KeyWordStepFactory
     private void initializeDefaults()
     {
         addKeyWord( "CALL", KWSCall.class );
+        addKeyWord( "CALL2", KWSCall2.class );
         addKeyWord( "CLICK", KWSClick.class );
         addKeyWord( "EXISTS", KWSExists.class );
         addKeyWord( "FUNCTION", KWSFunction.class );
@@ -165,14 +165,9 @@ public class KeyWordStepFactory
         addKeyWord( "WINDOW", KWSWindow.class );
         addKeyWord( "EXECJS", KWSExecJS.class );
         addKeyWord( "EXECWS", KWSExecWS.class );
-        addKeyWord( "OPEN_PAGE", KWSOpenPage.class );
-        addKeyWord( "ADD_COOKIE", KWSAddCookie.class );
-        addKeyWord( "DELETE_COOKIE", KWSDeleteCookie.class );
-        addKeyWord( "DELETE_COOKIES", KWSDeleteCookies.class );
-        addKeyWord( "GET_COOKIE", KWSGetCookie.class );
-        addKeyWord( "GET_COOKIES", KWSGetCookies.class );
         addKeyWord( "COMPARE", KWSCompare.class );
         addKeyWord( "STRING", KWSString.class );
+        addKeyWord( "STRING2", KWSString2.class );
         addKeyWord( "MATH", KWSMath.class );
         addKeyWord( "MOUSE", KWSMouse.class );
         addKeyWord( "CACHE", KWSCache.class );
@@ -182,7 +177,6 @@ public class KeyWordStepFactory
         addKeyWord( "ALIGN", KWSAlign.class );
         addKeyWord( "SYNC", KWSSync.class );
         addKeyWord( "AT", KWSAt.class );
-        addKeyWord( "PERFECTO_SCRIPT", KWSPerfectoScript.class );
         addKeyWord( "ELSE", KWSElse.class );
         addKeyWord( "STATE", KWSDumpState.class );
         addKeyWord( "ALERT", KWSAlert.class );
@@ -195,6 +189,7 @@ public class KeyWordStepFactory
         addKeyWord( "IS_ENABLED", KWSEnabled.class );
         addKeyWord( "ENABLED", KWSEnabled.class );
         addKeyWord( "COMMAND", KWSCommand.class );
+        addKeyWord( "EMAIL", KWSEmail.class );
     }
 
     /**
@@ -254,7 +249,7 @@ public class KeyWordStepFactory
      *            the validation type
      * @return the key word step
      */
-    public KeyWordStep createStep( String name, String pageName, boolean active, String type, String linkId, boolean timed, StepFailure sFailure, boolean inverse, String os, String poi, int threshold, String description, long waitTime, String context,
+    public KeyWordStep createStep( String name, String pageName, boolean active, String type, String linkId, boolean timed, StepFailure sFailure, boolean inverse, String os, String browser, String poi, int threshold, String description, long waitTime, String context,
             String validation, String device, ValidationType validationType, String tagNames, boolean startAt, boolean breakpoint, String deviceTags, String siteName )
     {
 
@@ -276,6 +271,7 @@ public class KeyWordStepFactory
             returnValue.setFailure( sFailure );
             returnValue.setInverse( inverse );
             returnValue.setOs( os );
+            returnValue.setBrowser( browser );
             returnValue.setPoi( poi );
             returnValue.setThreshold( threshold );
             returnValue.setDescription( description );

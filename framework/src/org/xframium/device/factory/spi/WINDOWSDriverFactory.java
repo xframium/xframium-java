@@ -56,7 +56,7 @@ public class WINDOWSDriverFactory extends AbstractDriverFactory
 		DeviceWebDriver webDriver = null;
 		try
 		{
-			DesiredCapabilities dc = new DesiredCapabilities( "", "", Platform.ANY );
+			DesiredCapabilities dc = new DesiredCapabilities();
 			
 
             
@@ -65,14 +65,10 @@ public class WINDOWSDriverFactory extends AbstractDriverFactory
 			URL hubUrl = new URL( useCloud.getCloudUrl() );
 	
 			
-			dc.setCapability( APPLICATION, ApplicationRegistry.instance().getAUT().getUrl() );
+			//dc.setCapability( APPLICATION, ApplicationRegistry.instance().getAUT().getUrl() );
 			
 			for ( String name : currentDevice.getCapabilities().keySet() )
 				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
-			
-			for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
-				dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
-
 			
 			if ( log.isInfoEnabled() )
 			    log.info( "Acquiring Windows Application as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
@@ -85,14 +81,8 @@ public class WINDOWSDriverFactory extends AbstractDriverFactory
 			
 			System.out.println( caps );
 			
-			//webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
-			//webDriver.setReportKey( caps.getCapability( "reportKey" ).toString() );
-			//webDriver.setDeviceName( caps.getCapability( "deviceName" ).toString() );
-			//webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
-			//webDriver.context( "NATIVE_APP" );
-			
-			
-			String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
+			webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
+			webDriver.setDeviceName( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
             webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );
             webDriver.setCloud( useCloud );
             
