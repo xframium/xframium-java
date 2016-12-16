@@ -110,8 +110,8 @@ public interface WindTunnel extends PerfectoService
 	 * @return the network setting
 	 */
 	@Operation( operationName="command" )
-	@PerfectoCommand( commandName="status", subCommandName = "event" )
-	public Execution getNetworkSetting( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="property" ) Network property );
+	@PerfectoCommand( commandName="network.settings", subCommandName = "get" )
+	public Execution getNetworkSetting( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="property" ) Network property);
 	
 	/**
 	 * Configure network.
@@ -123,8 +123,8 @@ public interface WindTunnel extends PerfectoService
 	 * @return the execution
 	 */
 	@Operation( operationName="command" )
-	@PerfectoCommand( commandName="status", subCommandName = "event" )
-	public Execution configureNetwork( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="wifi" ) boolean wifi, @Parameter( name="data" ) boolean data );
+	@PerfectoCommand( commandName="network.settings", subCommandName = "set" )
+	public Execution configureNetwork( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="wifi" ) String wifi, @Parameter( name="data" ) String data, @Parameter( name="airplanemode" ) String airplanemode );
 	
 	/**
 	 * Start network virtualization.
