@@ -89,7 +89,11 @@ public interface DeviceAction
 		
 		START_V_NET(18, "START_V_NET", "Start network virtualization"),
 		
-		STOP_V_NET(19, "STOP_V_NET", "Stop Network Virtualization");
+		STOP_V_NET(19, "STOP_V_NET", "Stop Network Virtualization"),
+		
+		DOWNLOAD_FILE(20, "DOWNLOAD_FILE", "Get file from device to local system"),
+		
+		CONFIGURE_NETWORK(21, "CONFIGURE_NETWORK", "To set network settings on the device (wifi, data, airplanemode)");
 	    
 	    public List<ActionType> getSupportedActions()
 	    {
@@ -111,6 +115,8 @@ public interface DeviceAction
 	        supportedList.add( ActionType.SEND_TEXT );
 	        supportedList.add( ActionType.START_V_NET );
 	        supportedList.add( ActionType.STOP_V_NET );
+	        supportedList.add( ActionType.DOWNLOAD_FILE );
+	        supportedList.add( ActionType.CONFIGURE_NETWORK );
 	        return supportedList;
 	    }
 	    

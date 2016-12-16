@@ -22,6 +22,7 @@ package org.xframium.integrations.perfectoMobile.rest.bean;
 
 import org.xframium.integrations.rest.bean.AbstractBean;
 import org.xframium.integrations.rest.bean.Bean.BeanDescriptor;
+import org.xframium.integrations.rest.bean.Bean.FieldDescriptor;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -42,6 +43,10 @@ public class Execution extends AbstractBean
 	/** The status. */
 	@FieldDescriptor ( fieldPath = "description" )
 	private String status;
+	
+	/** The return value. */
+	@FieldDescriptor ( )
+	private String returnValue;
 
 	/**
 	 * Gets the execution id.
@@ -101,6 +106,26 @@ public class Execution extends AbstractBean
 	public void setStatus( String status )
 	{
 		this.status = status;
+	}
+	
+	/**
+	 * Gets the return value.
+	 *
+	 * @return the return value
+	 */
+	public String getReturnValue()
+	{
+		return returnValue;
+	}
+
+	/**
+	 * Sets the return value.
+	 *
+	 * @param returnValue the new return value
+	 */
+	public void setReturnValue( String returnValue )
+	{
+		this.returnValue = returnValue;
 	}
 
 	/* (non-Javadoc)

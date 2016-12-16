@@ -68,5 +68,14 @@ public interface Repositories extends PerfectoService
 	public byte[] download( @ResourceID RepositoryType rType, @ResourceID String fileKey );
 	
 	
+	/**
+	 * Delete.
+	 *
+	 * @param rType the r type
+	 * @param fileKey the file key
+	 * @return the byte[]
+	 */
+	@Operation( operationName="delete" )
+	public byte[] delete( @ResourceID RepositoryType rType, @ResourceID String fileKey );
 	
 }
