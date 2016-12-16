@@ -151,7 +151,6 @@ public interface Device extends PerfectoService
     @PerfectoCommand( commandName="logs", subCommandName = "stop" )
     public Execution stopDebug( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId );
 
-    //New changes
     @Operation( operationName="command" )
     @PerfectoCommand( commandName="media", subCommandName = "get" )
     public Execution getFile( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="handsetFile" ) String handsetFile, @Parameter( name="repositoryFile" ) String repositoryFile );
