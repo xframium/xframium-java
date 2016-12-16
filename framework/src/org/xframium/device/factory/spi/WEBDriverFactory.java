@@ -23,6 +23,10 @@
  */
 package org.xframium.device.factory.spi;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.Capabilities;
@@ -32,6 +36,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.AbstractDriverFactory;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.spi.Device;
@@ -57,8 +62,6 @@ public class WEBDriverFactory extends AbstractDriverFactory
         try
         {
             DesiredCapabilities dc = null;
-            
-            
             
             if ( currentDevice.getBrowserName() != null && !currentDevice.getBrowserName().isEmpty() )
                 dc = new DesiredCapabilities(  useCloud.getCloudActionProvider().getCloudBrowserName(currentDevice.getBrowserName()), "", Platform.ANY );
@@ -99,9 +102,81 @@ public class WEBDriverFactory extends AbstractDriverFactory
                 	dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
 			}
 
+			if ( useCloud.isEmbedded() )
+			{
+			    if ( currentDevice.getBrowserName() != null )
+			    {
+			        if ( log.isInfoEnabled() )
+			            log.info( "Configuring LOCAL selenium grid" );
+			        //
+			        // Automatically download and reference the driver server if using embedded
+			        //
+			        File driverFile;
+			        switch( currentDevice.getBrowserName().toLowerCase() )
+			        {
+			            case "firefox":
+			                
+			                if ( log.isInfoEnabled() )
+		                        log.info( "webdriver.gecko.driver=" +  System.getProperty( "webdriver.gecko.driver" ) );
+			                
+			                if ( System.getProperty( "webdriver.gecko.driver" ) == null )
+			                {
+			                    driverFile = new File( DataManager.instance().getReportFolder(), "geckodriver.exe" );
+			                    
+			                    if ( !driverFile.exists() )
+			                    {
+			                        log.warn( "Downloading http://xframium.org/driver/geckodriver.exe to " + driverFile.getAbsolutePath() );
+			                        driverFile = downloadFile( new URL( "http://xframium.org/driver/geckodriver.exe" ), driverFile );
+			                    }
+			                    
+			                    if ( driverFile.exists() )
+			                        System.setProperty( "webdriver.gecko.driver", driverFile.getAbsolutePath() );
+			                    
+			                }
+			                break;
+			                
+			            case "chrome":
+			                if ( log.isInfoEnabled() )
+                                log.info( "webdriver.chrome.driver=" +  System.getProperty( "webdriver.chrome.driver" ) );
+			                if ( System.getProperty( "webdriver.chrome.driver" ) == null )
+                            {
+			                    driverFile = new File( DataManager.instance().getReportFolder(), "chromedriver.exe" );
+			                    
+                                if ( !driverFile.exists() )
+                                {
+                                    log.warn( "Downloading http://xframium.org/driver/chromedriver.exe to " + driverFile.getAbsolutePath() );
+                                    driverFile = downloadFile( new URL( "http://xframium.org/driver/chromedriver.exe" ), driverFile );
+                                }
+                                
+                                if ( driverFile.exists() )
+                                    System.setProperty( "webdriver.chrome.driver", driverFile.getAbsolutePath() );
+                            }
+                            break;
+			            case "internet explorer":
+			                if ( log.isInfoEnabled() )
+                                log.info( "webdriver.ie.driver=" +  System.getProperty( "webdriver.ie.driver" ) );
+			                if ( System.getProperty( "webdriver.ie.driver" ) == null )
+                            {
+			                    driverFile = new File( DataManager.instance().getReportFolder(), "IEDriverServer.exe" );
+			                    
+                                if ( !driverFile.exists() )
+                                {
+                                    log.warn( "Downloading http://xframium.org/driver/IEDriverServer.exe to " + driverFile.getAbsolutePath() );
+                                    driverFile = downloadFile( new URL( "http://xframium.org/driver/IEDriverServer.exe" ), driverFile );
+                                }
+                                
+                                if ( driverFile.exists() )
+                                    System.setProperty( "webdriver.ie.driver", driverFile.getAbsolutePath() );
+                            }
+                            break;
+			        }
+			    }
+			}
+			
+			
             if ( log.isDebugEnabled() )
                 log.debug( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
-
+            
             webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
             webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 
@@ -149,6 +224,42 @@ public class WEBDriverFactory extends AbstractDriverFactory
             }
             return null;
         }
-
     }
+    
+    private File downloadFile( URL urlData, File outputFile )
+    {
+        log.warn( "Attempting to dowbnload driver from " + urlData + " as " + outputFile.toString() );
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        
+        try
+        {
+            outputFile.getParentFile().mkdirs();
+            byte[] buffer = new byte[ 512 ];
+            int bytesRead = 0;
+            inputStream = urlData.openStream();
+            outputStream = new FileOutputStream( outputFile );
+            
+            while ( ( bytesRead = inputStream.read( buffer ) ) > 0 )
+            {
+                outputStream.write( buffer, 0, bytesRead );
+            }
+            
+            
+        }
+        catch( Exception e )
+        {
+            log.error( "Error download driver", e );
+        }
+        finally
+        {
+            try { inputStream.close(); } catch( Exception e ) {}
+            try { outputStream.flush(); } catch( Exception e ) {}
+            try { outputStream.close(); } catch( Exception e ) {}
+        }
+        
+        return outputFile;
+        
+    }
+    
 }

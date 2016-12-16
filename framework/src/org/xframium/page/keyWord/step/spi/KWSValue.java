@@ -40,6 +40,7 @@ public class KWSValue extends AbstractKeyWordStep
         kwName = "Get Value";
         kwDescription = "Allows the script to extract a value for an element";
         kwHelp = "https://www.xframium.org/keyword.html#kw-get";
+        category = "Verification";
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

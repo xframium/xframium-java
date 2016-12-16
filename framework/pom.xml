@@ -229,5 +229,10 @@
       <artifactId>mobile-webdriver</artifactId>
       <version>LATEST</version>
     </dependency>
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>1.5.0-b01</version>
+    </dependency>
   </dependencies>
 </project>

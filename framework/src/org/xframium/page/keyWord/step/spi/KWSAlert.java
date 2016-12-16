@@ -45,6 +45,7 @@ public class KWSAlert extends AbstractKeyWordStep
         kwDescription = "Allows the script to interact with web based alerts";
         kwHelp = "https://www.xframium.org/keyword.html#kw-alert";
         orMapping = false;
+        category = "Web";
     }
     
     public enum ALERT_TYPE

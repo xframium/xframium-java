@@ -55,7 +55,11 @@ public class KWSFunction extends AbstractKeyWordStep
 {
     public KWSFunction()
     {
+        kwName = "Hybrid Execution";
+        kwDescription = "Allows the script to execute a named Java function on a Java page object implementation";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-function";
         orMapping = false;
+        category = "Utility";
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

@@ -45,12 +45,14 @@ public class BrowserCacheLogic
 
         try
         {
+
             switchToContext(driver, "NATIVE_APP");
 
             //
             // get os version
             //
-        
+
+            params.clear();
             params.put("property", "osVersion");
             String osVerStr = (String) driver.executeScript("mobile:handset:info", params);
             int[] osVer = parseVersion( osVerStr );
@@ -116,15 +118,6 @@ public class BrowserCacheLogic
                     }
                 }
 
-
-                /*switchToContext(driver, "VISUAL");
-                params.clear();
-                params.put("label", "Safari");
-                params.put("threshold", "100");
-                params.put("scrolling", "scroll");
-                driver.executeScript("mobile:button-text:click", params);
-    */
-
                 //
                 // swipe to bottom
                 //
@@ -143,11 +136,13 @@ public class BrowserCacheLogic
             switchToContext(driver, "NATIVE_APP");
             clickIfPresent( driver, "//*[@label=\"Cancel\"]" );
             params.clear();
-            params.put("value", "//*[@value=\"Clear History and Website Data\"]");
-            params.put("framework", "appium-1.3.4");
-            driver.executeScript("mobile:application.element:click", params);
-            params.put("value", "//UIAButton[contains(@label,\"Clear\")]");
-            driver.executeScript("mobile:application.element:click", params);
+            //params.put("value", "//*[@value=\"Clear History and Website Data\"]");
+            //params.put("framework", "appium-1.3.4");
+            //driver.executeScript("mobile:application.element:click", params);
+            driver.findElementByXPath("//*[@value=\"Clear History and Website Data\"]").click();
+           //params.put("value", "//UIAButton[contains(@label,\"Clear\")]");
+            driver.findElementByXPath("//UIAButton[contains(@label,\"Clear\")]").click();
+            //driver.executeScript("mobile:application.element:click", params);
         
             //
             // below version 8 need to clear also data
@@ -169,8 +164,15 @@ public class BrowserCacheLogic
         
             params.clear();
             params.put("name", "Settings");
-        
-            driver.executeScript("mobile:application:close", params);
+
+            try {
+                driver.executeScript("mobile:application:close", params);
+            } catch (Exception e) {}
+
+            params.clear();
+            params.put("automation", "simulated");
+            driver.executeScript("mobile:browser:open", params);
+
         }
         finally
         {
@@ -225,12 +227,12 @@ public class BrowserCacheLogic
 
                 params.clear();
                 driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+                switchToContext(driver, "NATIVE_APP");
 
-
-                params.put("value", "//*[@resource-id=\"com.android.chrome:id/menu_button\"]");
-                params.put("framework", "appium-1.3.4");
-                driver.executeScript("mobile:application.element:click", params);
-
+                //params.put("value", "//*[@resource-id=\"com.android.chrome:id/menu_button\"]");
+                //params.put("framework", "appium-1.3.4");
+                //driver.executeScript("mobile:application.element:click", params);
+                driver.findElementByXPath("//*[@resource-id=\"com.android.chrome:id/menu_button\"]").click();
                 //
                 // select history
                 //
@@ -238,11 +240,12 @@ public class BrowserCacheLogic
                 // resource-id: com.android.chrome:id/menu_item_text
                 // content-desc: History
                 //
-
+                sleep(5000);
                 params.clear();
-                params.put("value", "//*[@content-desc='History']");
-                params.put("framework", "appium-1.3.4");
-                driver.executeScript("mobile:application.element:click", params);
+                //params.put("value", "//*[@content-desc='History']");
+                //params.put("framework", "appium-1.3.4");
+                //driver.executeScript("mobile:application.element:click", params);
+                driver.findElementByXPath("//*[@content-desc='History']").click();
 
                 //
                 // select clear browsing data
@@ -271,17 +274,19 @@ public class BrowserCacheLogic
                 // text: Clear
                 //
                 try {
-                    params.clear();
-                    params.put("value", "//*[@resource-id=\"android:id/button1\"]");
-                    params.put("framework", "appium-1.3.4");
-                    driver.executeScript("mobile:application.element:click", params);
+                    //params.clear();
+                    //params.put("value", "//*[@resource-id=\"android:id/button1\"]");
+                    //params.put("framework", "appium-1.3.4");
+                   // driver.executeScript("mobile:application.element:click", params);
+                    driver.findElementByXPath("//*[@resource-id=\"android:id/button1\"]").click();
                 } catch (Exception e) {
                     try {
                         switchToContext(driver, "WEBVIEW");
                         params.clear();
-                        params.put("value", "//*[@resource-id=\"com.android.chrome:id/button_preference\"]");
-                        params.put("framework", "appium-1.3.4");
-                        driver.executeScript("mobile:application.element:click", params);
+                        //params.put("value", "//*[@resource-id=\"com.android.chrome:id/button_preference\"]");
+                        //params.put("framework", "appium-1.3.4");
+                        //driver.executeScript("mobile:application.element:click", params);
+                        driver.findElementByXPath("//*[@resource-id=\"com.android.chrome:id/button_preference\"]").click();
                     } catch (Exception e2) {
                         //do nothing
                     }

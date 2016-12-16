@@ -23,6 +23,8 @@ package org.xframium.page.keyWord.step.spi;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.exception.ScriptConfigurationException;
@@ -37,12 +39,6 @@ import org.xframium.page.keyWord.step.AbstractKeyWordStep;
  */
 public class KWSString extends AbstractKeyWordStep
 {
-    public KWSString()
-    {
-        kwName = "String Operations";
-        kwDescription = "Allows the script to perform some basic string and formatting operations";
-        kwHelp = "https://www.xframium.org/keyword.html#kw-string";
-    }
 
     /*
      * (non-Javadoc)
@@ -93,6 +89,25 @@ public class KWSString extends AbstractKeyWordStep
                 newValue = originalValue.toUpperCase();
                 break;
 
+            case "regex":
+                String regex = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "";
+                Pattern regexPattern = Pattern.compile( regex );
+               
+                Matcher regexMatcher = regexPattern.matcher( originalValue );
+                if ( regexMatcher.find() )
+                {
+                    if ( getContext() != null )
+                    {
+                        for ( int i=1; i<regexMatcher.groupCount(); i++ )
+                        {
+                            contextMap.put( getContext() + "_Group " + i, regexMatcher.group( i ) );
+                        }
+                    }
+                    newValue = regexMatcher.group( 0 );
+                }
+                
+                break;
+                
             case "contains":
                 String expectedValue = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "";
 

@@ -1,13 +1,14 @@
 package org.xframium.page.keyWord.matrixExtension;
 
-import java.util.Arrays;
-import java.util.List;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
 import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class MatrixStep
 {
@@ -24,6 +25,7 @@ public class MatrixStep
     private StepFailure failureMode = StepFailure.ERROR;
     private boolean inverse;
     private String os;
+    private String browser;
     private ValidationType vType = ValidationType.REGEX;
     private String validationDetail;
     private String context;
@@ -54,7 +56,7 @@ public class MatrixStep
     
     public KeyWordStep createStep()
     {
-        KeyWordStep kStep = KeyWordStepFactory.instance().createStep( name, pageName, active, type, linkId, timed, failureMode, inverse, os, poi, threshold, "", wait, context, validationDetail, device, vType, tagNames, startAt, false, deviceTags, siteName );
+        KeyWordStep kStep = KeyWordStepFactory.instance().createStep( name, pageName, active, type, linkId, timed, failureMode, inverse, os, browser, poi, threshold, "", wait, context, validationDetail, device, vType, tagNames, startAt, false, deviceTags, siteName );
         if ( parameterArray != null )
         {
             List<KeyWordParameter> parameterList = parameterArray.getParameters();
@@ -128,7 +130,7 @@ public class MatrixStep
     {
         return "MatrixStep [stepDefinition=" + stepDefinition + ", stepArray=" + Arrays.toString( stepArray ) + ", level=" + level + ", type=" + type + ", name=" + name + ", pageName=" + pageName + ", parameterArray=" + parameterArray + ", tokenArray="
                 + tokenArray + ", active=" + active + ", failureMode=" + failureMode + ", inverse=" + inverse + ", os=" + os + ", vType=" + vType + ", validationDetail=" + validationDetail + ", context=" + context + ", device=" + device + ", poi=" + poi
-                + ", timed=" + timed + ", tagNames=" + tagNames + ", threshold=" + threshold + ", wait=" + wait + ", linkId=" + linkId + "]";
+                + ", timed=" + timed + ", tagNames=" + tagNames + ", threshold=" + threshold + ", wait=" + wait + ", linkId=" + linkId + ", browser=" + browser + "]";
     }
 
     private void parseStep()
@@ -224,6 +226,9 @@ public class MatrixStep
                 case 22:
                     siteName = parseString( stepArray[ i ], null, false );
                     break;
+                case 23:
+                    browser = parseString( stepArray[ i ], null, false );
+                    break;
             }
         }
     }
@@ -266,6 +271,11 @@ public class MatrixStep
     public String getOs()
     {
         return os;
+    }
+
+    public String getBrowser()
+    {
+        return browser;
     }
 
     public ValidationType getvType()

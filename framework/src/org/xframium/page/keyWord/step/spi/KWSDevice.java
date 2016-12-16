@@ -47,6 +47,7 @@ public class KWSDevice extends AbstractKeyWordStep
         kwDescription = "Allows the script to perform device specific actions";
         kwHelp = "https://www.xframium.org/keyword.html#kw-device";
         orMapping = false;
+        category = "Utility";
     }
 	/*
 	 * (non-Javadoc)

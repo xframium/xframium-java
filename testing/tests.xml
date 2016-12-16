@@ -63,7 +63,46 @@
     <step type="CALL" name="kw-browser" page="home" />
     <step type="CALL" name="kw-execws" page="home" />
   </test>
+  
+  <test name="xFramium Step Tags" active="true">
+    <description>Tests that specific steps without the specified tags are ignored</description>
+    <step type="EXISTS" name="toggleButton" page="home" tagNames="myTag" />
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" tagNames="myTag" />
+    <step type="COMPARE" name="existsCompare" page="home" tagNames="myTag">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+    <step type="CLICK" name="toggleButton" page="home" />
+    <step type="COMPARE" name="existsCompare" page="home" tagNames="myTag">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+  </test>
 
+  <test name="xFramium REGEX" active="true">
+    <description>Tests that the specified step is ignored for a specific OS type</description>
+    <step type="EXISTS" name="focusId" page="home" />
+    <step type="SET" name="focusId" page="home" >
+        <parameter type="STATIC" value="100.23" />
+    </step>
+    <step type="GET" name="focusId" page="home" validation="^-?(?:0|[1-9]\d{0,2}(?:,?\d{3})*)(?:\.\d+)?$" validationType="REGEX" context="currency" />
+    
+    <step type="SET" name="focusId" page="home" >
+        <parameter type="STATIC" value="2,123.23" />
+    </step>
+    <step type="GET" name="focusId" page="home" validation="^-?(?:0|[1-9]\d{0,2}(?:,?\d{3})*)(?:\.\d+)?$" validationType="REGEX" context="currency2" />
+    
+    <step type="SET" name="focusId" page="home" >
+        <parameter type="STATIC" value="100" />
+    </step>
+    <step type="GET" name="focusId" page="home" validation="^-?(?:0|[1-9]\d{0,2}(?:,?\d{3})*)(?:\.\d+)?$" validationType="REGEX" context="currency3" />
+    
+    <step type="SET" name="focusId" page="home"  >
+        <parameter type="STATIC" value="100.010A" />
+    </step>
+    <step type="GET" name="focusId" page="home" validation="^-?(?:0|[1-9]\d{0,2}(?:,?\d{3})*)(?:\.\d+)?$" validationType="REGEX" context="currency4" inverse="true" />
+  </test>
+  
   <test name="xFramium OS Step Filter" active="true" dataProvider="callTest" os="WINDOWS">
     <description>Tests that the specified step is ignored for a specific OS type</description>
     <step type="EXISTS" name="toggleButton" page="home" />
@@ -132,10 +171,6 @@
       <parameter type="STATIC" value="2" />
       <parameter type="STATIC" value="0" />
     </step>
-  </test>
-  <test name="xFramium OS Filter" active="true" dataProvider="callTest" os="ANDROID">
-    <description>Tests that the specified test is ignored for a specific OS type</description>
-    <step type="EXISTS" name="toggleButton" page="home" />
   </test>
   <test name="xFramium device tag Step Filter" active="true" dataProvider="callTest" deviceTags="tagTest">
     <description>Tests that the specified step is ignored for a specific device tag</description>
