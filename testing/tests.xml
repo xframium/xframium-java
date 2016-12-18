@@ -34,34 +34,34 @@
   </model>
   <test name="xFramium General KeyWord Test" active="true" dataProvider="callTest">
     <description>Tests the general keywords that apply to both Web and Native applications across web and mobile devices</description>
-    <step type="CALL" name="kw-exists" page="home" />
-    <step type="CALL" name="kw-alert" page="home" os="Windows,MACOS" active="true" />
-    <step type="CALL" name="kw-align" page="home" />
-    <step type="CALL" name="kw-attribute" page="home" />
-    <step type="CALL" name="kw-cache" page="home" />
-    <step type="CALL" name="kw-call" page="home" />
-    <step type="CALL" name="kw-checkcolor" page="home" os="Windows,MACOS" />
-    <step type="CALL" name="kw-click" page="home" />
-    <step type="CALL" name="kw-compare" page="home" />
-    <step type="CALL" name="kw-checkcontrast" page="home" os="Windows,MACOS" />
-    <step type="CALL" name="kw-dumpstate" page="home" />
-    <step type="CALL" name="kw-else" page="home" />
-    <step type="CALL" name="kw-execjs" page="home" os="Windows,MACOS" />
-    <step type="CALL" name="kw-focus" page="home" active="false" />
-    <step type="CALL" name="kw-loop" page="home" />
-    <step type="CALL" name="kw-mouse" page="home" os="Windows,MACOS" />
-    <step type="CALL" name="kw-navigate" page="home" />
-    <step type="CALL" name="kw-operator" page="home" />
-    <step type="CALL" name="kw-report" page="home" />
-    <step type="CALL" name="kw-set" page="home" />
-    <step type="CALL" name="kw-string" page="home" />
-    <step type="CALL" name="kw-get" page="home" />
-    <step type="CALL" name="kw-visible" page="home" />
-    <step type="CALL" name="kw-wait" page="home" />
-    <step type="CALL" name="kw-waitfor" page="home" />
-    <step type="CALL" name="kw-window" page="home" />
-    <step type="CALL" name="kw-browser" page="home" />
-    <step type="CALL" name="kw-execws" page="home" />
+    <step type="CALL2" name="kw-exists" page="home" />
+    <step type="CALL2" name="kw-alert" page="home" os="Windows,MACOS" active="true" />
+    <step type="CALL2" name="kw-align" page="home" />
+    <step type="CALL2" name="kw-attribute" page="home" />
+    <step type="CALL2" name="kw-cache" page="home" />
+    <step type="CALL2" name="kw-call" page="home" />
+    <step type="CALL2" name="kw-checkcolor" page="home" os="Windows,MACOS" />
+    <step type="CALL2" name="kw-click" page="home" />
+    <step type="CALL2" name="kw-compare" page="home" />
+    <step type="CALL2" name="kw-checkcontrast" page="home" os="Windows,MACOS" />
+    <step type="CALL2" name="kw-dumpstate" page="home" />
+    <step type="CALL2" name="kw-else" page="home" />
+    <step type="CALL2" name="kw-execjs" page="home" os="Windows,MACOS" />
+    <step type="CALL2" name="kw-focus" page="home" active="false" />
+    <step type="CALL2" name="kw-loop" page="home" />
+    <step type="CALL2" name="kw-mouse" page="home" os="Windows,MACOS" />
+    <step type="CALL2" name="kw-navigate" page="home" />
+    <step type="CALL2" name="kw-operator" page="home" />
+    <step type="CALL2" name="kw-report" page="home" />
+    <step type="CALL2" name="kw-set" page="home" />
+    <step type="CALL2" name="kw-string" page="home" />
+    <step type="CALL2" name="kw-get" page="home" />
+    <step type="CALL2" name="kw-visible" page="home" />
+    <step type="CALL2" name="kw-wait" page="home" />
+    <step type="CALL2" name="kw-waitfor" page="home" />
+    <step type="CALL2" name="kw-window" page="home" />
+    <step type="CALL2" name="kw-browser" page="home" />
+    <step type="CALL2" name="kw-execws" page="home" />
   </test>
   
   <test name="xFramium Step Tags" active="true">

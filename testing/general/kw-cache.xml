@@ -12,7 +12,7 @@
   <function name="kw-cache" active="true">
     
     <step type="CACHE" name="enableCache" page="home" />
-    <step type="CALL" name="kw-exists" page="home" />
+    <step type="CALL2" name="kw-exists" page="home" />
     <step type="CACHE" name="disableCache" page="home" />
 
   </function>

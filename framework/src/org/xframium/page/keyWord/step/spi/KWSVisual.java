@@ -54,7 +54,8 @@ public class KWSVisual extends AbstractKeyWordStep
 		FIND,
 		SWIPE,
 		TAP,
-		DRAG
+		DRAG,
+		ROTATE		
 	}
 
 	/* (non-Javadoc)
@@ -94,6 +95,9 @@ public class KWSVisual extends AbstractKeyWordStep
 				// <parameter type="STATIC" value="location=97%,80%,97%,95%"/>
 				command = "mobile:touch:drag";
 				break;
+			case ROTATE:
+				command = "mobile:device:rotate";
+				break;			
 		}
 		Map<String, Object> params = new HashMap<>();
 		for (int i = 0; i < getParameterList().size(); i++) {
