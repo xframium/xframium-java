@@ -66,7 +66,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     public abstract boolean configureArtifacts( DriverContainer driverContainer );
     public abstract ElementProvider configurePageManagement( SuiteContainer sC );
     public abstract PageDataProvider configureData();
-    protected abstract boolean configureContent();
+    public abstract boolean configureContent();
     public abstract DeviceContainer configureDevice();
     protected abstract boolean configurePropertyAdapters();
     public abstract DriverContainer configureDriver();

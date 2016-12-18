@@ -24,10 +24,13 @@ import java.awt.Image;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
+import org.xframium.content.ContentManager;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.XFramiumException;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
@@ -42,7 +45,7 @@ import org.xframium.page.StepStatus;
 public abstract class AbstractElement implements Element
 {
 	
-	
+	private static Pattern CONTENT_KEY_SHORTHAND = Pattern.compile( "!\\{([^\\}]*)\\}" );
 	/** The log. */
     protected Map<String,String> elementProperties;
 	protected Log log = LogFactory.getLog( Element.class );
@@ -341,6 +344,23 @@ public abstract class AbstractElement implements Element
 	{
 		if ( !tokensApplied )
 		{
+		    //
+		    // Content key shortcuts first
+		    //
+		    Matcher matcher = CONTENT_KEY_SHORTHAND.matcher( elementKey );
+		    
+		    while ( matcher.find() )
+		    {
+		        String contentKey = matcher.group( 1 );
+		        String replacementValue = ContentManager.instance().getContentValue( contentKey );
+		        
+		        if ( replacementValue != null )
+		            elementKey = elementKey.replace( "!{" + contentKey + "}", replacementValue );
+		    }
+		    
+		    //
+		    // Now, do token replacement
+		    //
 			if ( tokenMap != null && !tokenMap.isEmpty() )
 			{
 				String newKey = elementKey;

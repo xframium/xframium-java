@@ -154,6 +154,14 @@ public class ExcelContentProvider extends AbstractContentProvider
 			
 			XSSFSheet sheet = workbook.getSheet( tabName );
 	
+			XSSFRow headerRow = sheet.getRow( 0 );
+			String[] headerList = new String[ lookupColumns.length ];
+			for ( int i=1; i<lookupColumns.length + 1; i++ )
+			{
+			    headerList[ i-1 ] = getCellValue( headerRow.getCell( i ) );
+			}
+			ContentManager.instance().setMatrixData( headerList );
+			
 			for (int i = 1; i <= sheet.getLastRowNum(); i++)
 			{
 				XSSFRow currentRow = sheet.getRow( i );

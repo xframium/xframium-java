@@ -316,7 +316,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     }
     
     @Override
-    protected boolean configureContent()
+    public boolean configureContent()
     {
         String content = configProperties.getProperty( CONTENT[0] );
         if ( content != null && !content.isEmpty() )

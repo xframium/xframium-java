@@ -429,7 +429,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     }
 
     @Override
-    protected boolean configureContent()
+    public boolean configureContent()
     {
         if ( xRoot.getContent() == null )
             return true;

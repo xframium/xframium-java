@@ -27,4 +27,5 @@ public interface ConfigurationReader
     public DriverContainer configureDriver();
     public boolean configureArtifacts( DriverContainer driverContainer );
     public FavoriteContainer configureFavorites();
+    public boolean configureContent();
 }

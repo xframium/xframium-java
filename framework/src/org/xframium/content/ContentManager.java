@@ -153,7 +153,9 @@ public class ContentManager
     		return contentData.getValue();
     	}
     	else
-    		log.error( "No content could be found for [" + contentName + "]" );
+    	{
+    	    log.error( "No content could be found for [" + contentName + "]" );
+    	}
     	
     	return null;
     }
