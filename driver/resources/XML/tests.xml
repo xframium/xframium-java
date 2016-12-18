@@ -96,7 +96,7 @@
           <parameter type="static" value="SEARCH" />
           <step name="RESULTS" page="Search" type="EXISTS" />
           <step name="RESULTS" page="Search" type="EXISTS" />
-          <step name="viewResult" page="Search" type="CALL" />
+          <step name="viewResult" page="Search" type="CALL2" />
       </step>
       
       <step type="LOOP" page="Search" name="checkResults">
@@ -123,7 +123,7 @@
           <parameter type="static" value="SEARCH" />
           <step name="RESULTS" page="Search" type="EXISTS" />
           <step name="RESULTS" page="Search" type="EXISTS" />
-          <step name="viewResult" page="Search" type="CALL" />
+          <step name="viewResult" page="Search" type="CALL2" />
       </step> &ndash;&gt;
       
       <step type="LOOP" page="Search" name="checkResults">

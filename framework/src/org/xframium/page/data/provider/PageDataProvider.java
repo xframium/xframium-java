@@ -68,4 +68,8 @@ public interface PageDataProvider
 	
 	public void addRecordType( String typeName, boolean lockRecords );
 	public void addRecord( PageData pageData );
+	
+	public void addOverride( String originalName, String newName );
+    public void addOverride( String nvPair );
+    public void addOverrides( String pairList );
 }

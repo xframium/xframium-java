@@ -21,8 +21,8 @@
 package org.xframium.page.data;
 
 import java.io.File;
-import org.xframium.device.data.DataProvider.DriverType;
-import org.xframium.device.data.XMLDataProvider;
+import java.util.HashMap;
+import java.util.Map;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.data.provider.XMLPageDataProvider;
 
@@ -32,7 +32,7 @@ import org.xframium.page.data.provider.XMLPageDataProvider;
  */
 public class PageDataManager
 {
-	
+    
 	/** The singleton. */
 	private static PageDataManager singleton = new PageDataManager();
 
@@ -53,6 +53,8 @@ public class PageDataManager
     
     /** The data provider. */
     private PageDataProvider dataProvider;
+    
+    
     
     /**
      * Sets the page data provider.

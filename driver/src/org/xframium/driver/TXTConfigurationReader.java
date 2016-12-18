@@ -279,20 +279,23 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     {
         String data = configProperties.getProperty( DATA[0] );
 
+        PageDataProvider dataProvider = null;
         if ( data != null && !data.isEmpty() )
         {
             switch ( (configProperties.getProperty( DATA[0] )).toUpperCase() )
             {
                 case "XML":
                     validateProperties( configProperties, DATA );
-                    return new XMLPageDataProvider( findFile( configFolder, new File( configProperties.getProperty( DATA[1] ) ) ) );
+                    dataProvider = new XMLPageDataProvider( findFile( configFolder, new File( configProperties.getProperty( DATA[1] ) ) ) );
+                    break;
 
                 case "SQL":
-                    return new SQLPageDataProvider( configProperties.getProperty( JDBC[0] ),
+                    dataProvider = new SQLPageDataProvider( configProperties.getProperty( JDBC[0] ),
                                                                  configProperties.getProperty( JDBC[1] ),
                                                                  configProperties.getProperty( JDBC[2] ),
                                                                  configProperties.getProperty( JDBC[3] ),
                                                                  configProperties.getProperty( OPT_DATA[0] ));
+                    break;
 
                 case "EXCEL":
                     validateProperties( configProperties, DATA );
@@ -303,12 +306,13 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                         files[i] = findFile( configFolder, new File( fileNames[i] ) );
                     
                     validateProperties( configProperties, new String[] { "pageManagement.pageData.tabNames" } );
-                    return new ExcelPageDataProvider( files, configProperties.getProperty( "pageManagement.pageData.tabNames" ) ) ;
+                    dataProvider = new ExcelPageDataProvider( files, configProperties.getProperty( "pageManagement.pageData.tabNames" ) ) ;
+                    break;
 
             }
         }
         
-        return null;
+        return dataProvider;
     }
     
     @Override

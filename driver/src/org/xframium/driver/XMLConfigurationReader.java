@@ -396,18 +396,23 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     {
         if ( xRoot.getData() == null )
             return null;
+        
+        PageDataProvider dataProvider = null;
+        
         switch ( xRoot.getData().getProvider() )
         {
             case "XML":
-                return new XMLPageDataProvider( findFile( configFolder, new File( xRoot.getData().getFileName() ) ) );
+                dataProvider = new XMLPageDataProvider( findFile( configFolder, new File( xRoot.getData().getFileName() ) ) );
+                break;
 
             case "SQL":
-                return new SQLPageDataProvider( configProperties.get( JDBC[0] ),
+                dataProvider =  new SQLPageDataProvider( configProperties.get( JDBC[0] ),
                                                              configProperties.get( JDBC[1] ),
                                                              configProperties.get( JDBC[2] ),
                                                              configProperties.get( JDBC[3] ),
                                                              configProperties.get( OPT_DATA[0] ));
-
+                break;
+                
             case "EXCEL":
                 String[] fileNames = xRoot.getData().getFileName().split( "," );
 
@@ -415,10 +420,12 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 for ( int i = 0; i < fileNames.length; i++ )
                     files[i] = findFile( configFolder, new File( fileNames[i] ) );
                 
-                return new ExcelPageDataProvider( files, configProperties.get( "pageManagement.pageData.tabNames" ) );
+                dataProvider = new ExcelPageDataProvider( files, configProperties.get( "pageManagement.pageData.tabNames" ) );
+                break;
 
         }
-        return null;
+        
+        return dataProvider;
     }
 
     @Override

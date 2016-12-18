@@ -533,8 +533,19 @@ public class KeyWordDriver
                             pageData = PageDataManager.instance().getPageData( dataProvider );
                     }
                     else
-                        pageData = PageDataManager.instance().getPageData( dataProvider );
-
+                    {
+                        if ( dataProvider.contains( "=" ) )
+                        {
+                            String[] aliasMap = dataProvider.split( "=" );
+                            pageData = PageDataManager.instance().getPageData( aliasMap[ 1 ] );
+                            
+                            if ( log.isInfoEnabled() )
+                                log.info( "Adding Alias " + aliasMap[ 0 ] + " for " + aliasMap[ 1 ] );
+                            dataMap.put( aliasMap[ 0 ], pageData );
+                        }
+                        else
+                            pageData = PageDataManager.instance().getPageData( dataProvider );
+                    }
                     if ( pageData == null )
                     {
                         log.fatal( "Invalid page data value specified.  Ensure that [" + dataProvider + "] exists in your page data definition" );

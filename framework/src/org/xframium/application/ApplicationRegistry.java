@@ -129,8 +129,8 @@ public class ApplicationRegistry
 	 */
 	public ApplicationDescriptor getAUT()
 	{
-		if ( aut == null && !applicationMap.isEmpty() )
-			aut = applicationMap.values().toArray( new ApplicationDescriptor[ 0 ])[ 0 ];
+		//if ( aut == null && !applicationMap.isEmpty() )
+		//	aut = applicationMap.values().toArray( new ApplicationDescriptor[ 0 ])[ 0 ];
 		return aut;
 	}
 	
