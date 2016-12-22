@@ -371,8 +371,23 @@ public class KeyWordDriver
                         String recordName = dataProvider.substring( dataProvider.indexOf( "." ) + 1 );
                         pageData = PageDataManager.instance().getPageData( dpMe, recordName );
                     }
+                    else if ( dataProvider.contains( "=" ) )
+                    {
+                        String[] aliasMap = dataProvider.split( "=" );
+
+                        String realName = aliasMap[ 0 ];
+                        String alias = aliasMap[ 1 ];
+                        
+                        pageData = PageDataManager.instance().getPageData( realName );
+                        
+                        if ( log.isInfoEnabled() )
+                            log.info( "Adding Alias " + alias + " for " + realName );
+                        dataMap.put( alias, pageData );
+                    }
                     else
+                    {
                         pageData = PageDataManager.instance().getPageData( dataProvider );
+                    }
 
                     if ( pageData == null )
                         throw new IllegalArgumentException( "Invalid page data value specified.  Ensure that [" + dataProvider + "] exists in your page data definition" );
@@ -537,11 +552,15 @@ public class KeyWordDriver
                         if ( dataProvider.contains( "=" ) )
                         {
                             String[] aliasMap = dataProvider.split( "=" );
-                            pageData = PageDataManager.instance().getPageData( aliasMap[ 1 ] );
+
+                            String realName = aliasMap[ 0 ];
+                            String alias = aliasMap[ 1 ];
+                            
+                            pageData = PageDataManager.instance().getPageData( realName );
                             
                             if ( log.isInfoEnabled() )
-                                log.info( "Adding Alias " + aliasMap[ 0 ] + " for " + aliasMap[ 1 ] );
-                            dataMap.put( aliasMap[ 0 ], pageData );
+                                log.info( "Adding Alias " + alias + " for " + realName );
+                            dataMap.put( alias, pageData );
                         }
                         else
                             pageData = PageDataManager.instance().getPageData( dataProvider );
