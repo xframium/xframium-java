@@ -21,9 +21,9 @@
 package org.xframium.page.keyWord;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
@@ -34,6 +34,7 @@ import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
+import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -109,31 +110,66 @@ public class KeyWordTest
      * @param contentKeys
      *            the content keys
      */
-    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys, String deviceTags )
+    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys, String deviceTags, Map<String,String> overrideMap )
     {
         this.name = name;
-        this.active = active;
-        if ( dataProviders != null )
-            this.dataProviders = dataProviders.split( "," );
-        this.dataDriver = dataDriver;
-        this.timed = timed;
-        this.linkId = linkId;
-        this.os = os;
-        this.threshold = threshold;
-        this.description = description;
+        this.active = Boolean.parseBoolean( getValue( name, "active", active + "", overrideMap ) );
         
-        if ( testTags != null )
-            this.testTags = testTags.split( "," );
+        String dP = getValue( name, "dataProvider", dataProviders, overrideMap );
+        
+        if ( dP != null )
+            this.dataProviders = dP.split( "," );
+        this.dataDriver = getValue( name, "dataDriver", dataDriver, overrideMap );
+        this.timed = Boolean.parseBoolean( getValue( name, "timed", timed + "", overrideMap ) );
+        this.linkId = getValue( name, "linkId", linkId, overrideMap );
+        this.os = getValue( name, "os", os, overrideMap );
+        
+        if ( threshold > 0 )
+        {
+            String thresholdModifier = overrideMap.get( "thresholdModifier" );
+            if ( thresholdModifier != null )
+            {
+                double modifierPercent = ( Integer.parseInt( thresholdModifier ) / 100.0 );
+                double modifierValue = Math.abs( modifierPercent ) * (double) threshold;
+                
+                if ( modifierPercent > 0 )
+                    this.threshold = threshold + (int)modifierValue;
+                else
+                    this.threshold = threshold - (int)modifierValue;
+            }
+        }
+        else
+            this.threshold = threshold;
+        
+        this.description = getValue( name, "description", description, overrideMap );
+        
+        String value = getValue( name, "testTags", testTags, overrideMap );
+        
+        if ( value != null )
+            this.testTags = value.split( "," );
         else
             this.testTags = new String[] { "" };
 
-        if ( contentKeys != null )
-            this.contentKeys = contentKeys.split( "\\|" );
+        value = getValue( name, "contentKeys", contentKeys, overrideMap );
+        if ( value != null )
+            this.contentKeys = value.split( "\\|" );
         else
             this.contentKeys = new String[] { "" };
         
-        if ( deviceTags != null && !deviceTags.trim().isEmpty() )
-            this.deviceTags = deviceTags.split( "," );
+        value = getValue( name, "deviceTags", deviceTags, overrideMap );
+        if ( value != null && !value.trim().isEmpty() )
+            this.deviceTags = value.split( "," );
+    }
+    
+    private String getValue( String testName, String attributeName, String attributeValue, Map<String,String> overrideMap )
+    {
+        String keyName = testName + "." + attributeName;
+        if ( System.getProperty( keyName ) != null )
+            return System.getProperty( keyName );
+        if ( overrideMap.containsKey( keyName ) )
+            return overrideMap.get( keyName );
+        else
+            return attributeValue;
     }
 
     /**
@@ -145,7 +181,7 @@ public class KeyWordTest
      */
     public KeyWordTest copyTest( String testName )
     {
-        KeyWordTest newTest = new KeyWordTest( testName, active, null, dataDriver, timed, linkId, os, threshold, description, null, null, null );
+        KeyWordTest newTest = new KeyWordTest( testName, active, null, dataDriver, timed, linkId, os, threshold, description, null, null, null, null );
         newTest.dataProviders = dataProviders;
         newTest.stepList = stepList;
         newTest.testTags = testTags;
@@ -241,6 +277,13 @@ public class KeyWordTest
         return sBuilder.toString();
     }
 
+    @Override
+    public String toString()
+    {
+        return "KeyWordTest [name=" + name + ", active=" + active + ", dataProviders=" + Arrays.toString( dataProviders ) + ", dataDriver=" + dataDriver + ", timed=" + timed + ", linkId=" + linkId + ", os=" + os + ", description=" + description
+                + ", threshold=" + threshold + ", testTags=" + Arrays.toString( testTags ) + ", contentKeys=" + Arrays.toString( contentKeys ) + ", deviceTags=" + Arrays.toString( deviceTags ) + "]";
+    }
+
     /**
      * Gets the name.
      *
@@ -297,7 +340,7 @@ public class KeyWordTest
      * @throws Exception
      *             the exception
      */
-    public boolean executeTest( WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception
+    public boolean executeTest( WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception
     {
         boolean stepSuccess = true;
         
@@ -348,7 +391,7 @@ public class KeyWordTest
                 }
             }
 
-            stepSuccess = step.executeStep( page, webDriver, contextMap, dataMap, pageMap, sC );
+            stepSuccess = step.executeStep( page, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
 
             if ( !stepSuccess )
             {

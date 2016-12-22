@@ -127,7 +127,7 @@ public abstract class AbstractElementProvider implements ElementProvider
     	            break;
     	        
     	        case XPATH:
-    	            xPathFactory.newXPath().compile( currentElement.getKey().replace( "{", "" ).replace( "}", "" ) );
+    	            xPathFactory.newXPath().compile( currentElement.getRawKey().replace( "{", "" ).replace( "}", "" ) );
     	            
     	    }
 	    }

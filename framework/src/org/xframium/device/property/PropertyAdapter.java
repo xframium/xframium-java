@@ -20,7 +20,7 @@
  *******************************************************************************/
 package org.xframium.device.property;
 
-import java.util.Properties;
+import java.util.Map;
 
 public interface PropertyAdapter
 {
@@ -29,6 +29,6 @@ public interface PropertyAdapter
         Selenium;        
     }
     
-    public boolean applyProperties( Properties configurationProperties );
-    public boolean applyInstanceProperties( Properties configurationProperties, Object webDriver );
+    public boolean applyProperties( Map<String,String> configurationProperties );
+    public boolean applyInstanceProperties( Map<String,String> configurationProperties, Object webDriver );
 }

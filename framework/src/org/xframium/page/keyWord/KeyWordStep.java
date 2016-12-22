@@ -27,6 +27,7 @@ import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
+import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -292,10 +293,11 @@ public interface KeyWordStep
 	 * @param contextMap            the context map
 	 * @param dataMap            the data map
 	 * @param pageMap the page map
+	 * @param exeuctionContext TODO
 	 * @return true, if successful
 	 * @throws Exception the exception
 	 */
-	public boolean executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String,Page> pageMap, SuiteContainer sC ) throws Exception;
+	public boolean executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String,Page> pageMap, SuiteContainer sC, ExecutionContextTest exeuctionContext ) throws Exception;
 	
 	/**
 	 * To error.

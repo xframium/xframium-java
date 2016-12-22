@@ -59,7 +59,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
@@ -68,6 +67,7 @@ import org.xframium.device.artifact.ArtifactProducer;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.interrupt.DeviceInterrupt;
 import org.xframium.device.interrupt.DeviceInterruptThread;
+import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
 import org.xframium.spi.PropertyProvider;
 import org.xframium.spi.driver.CachingDriver;
@@ -738,7 +738,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
      * com.perfectoMobile.device.artifact.ArtifactProducer.ArtifactType,
      * com.perfectoMobile.device.ConnectedDevice)
      */
-    public Artifact getArtifact( WebDriver webDriver, ArtifactType aType, ConnectedDevice connectedDevice, String testName, boolean success )
+    public Artifact getArtifact( WebDriver webDriver, ArtifactType aType, ConnectedDevice connectedDevice, String testName, boolean success, ExecutionContextTest test )
     {
         if ( artifactProducer != null )
         {
@@ -747,7 +747,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
             parameterMap.put( REPORT_KEY, reportKey );
             parameterMap.put( DEVICE_NAME, deviceName );
             parameterMap.put( WIND_TUNNEL, windTunnelReport );
-            return artifactProducer.getArtifact( webDriver, aType, parameterMap, connectedDevice, testName, success );
+            return artifactProducer.getArtifact( webDriver, aType, parameterMap, connectedDevice, testName, success, test );
         }
         else
             return null;
@@ -761,7 +761,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
      * com.perfectoMobile.device.artifact.ArtifactProducer.ArtifactType,
      * java.util.Map, com.perfectoMobile.device.ConnectedDevice)
      */
-    public Artifact getArtifact( WebDriver webDriver, ArtifactType aType, Map<String, String> parameterMap, ConnectedDevice connectedDevice, String testName, boolean success )
+    public Artifact getArtifact( WebDriver webDriver, ArtifactType aType, Map<String, String> parameterMap, ConnectedDevice connectedDevice, String testName, boolean success, ExecutionContextTest test )
     {
         if ( artifactProducer != null )
         {
@@ -773,7 +773,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
             parameterMap.put( DEVICE_NAME, deviceName );
             parameterMap.put( WIND_TUNNEL, windTunnelReport );
 
-            return artifactProducer.getArtifact( webDriver, aType, parameterMap, connectedDevice, testName, success );
+            return artifactProducer.getArtifact( webDriver, aType, parameterMap, connectedDevice, testName, success, test );
         }
         else
             return null;

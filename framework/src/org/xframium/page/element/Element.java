@@ -290,6 +290,7 @@ public interface Element
 	 * @return the context
 	 */
 	public Element getContext();
+	public String getRawKey();
 	
 	/**
 	 * Sets the context.

@@ -33,7 +33,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
@@ -52,9 +51,19 @@ import org.xframium.device.factory.DriverManager;
 import org.xframium.device.property.PropertyAdapter;
 import org.xframium.exception.XFramiumException;
 import org.xframium.page.ExecutionRecord;
+import org.xframium.page.Page;
+import org.xframium.page.data.PageData;
+import org.xframium.page.keyWord.KeyWordParameter;
+import org.xframium.page.keyWord.KeyWordStep;
+import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.keyWord.KeyWordToken;
+import org.xframium.reporting.ExecutionContext;
+import org.xframium.reporting.ExecutionContextStep;
+import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunListener;
-import com.perfectomobile.httpclient.device.DeviceResult;
+import com.xframium.serialization.SerializationManager;
+import com.xframium.serialization.json.ReflectionSerializer;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -79,7 +88,7 @@ public class DeviceManager implements ArtifactListener
 	
     private List<PropertyAdapter> propertyAdapterList = new ArrayList<PropertyAdapter>( 10 );
 	
-    private Properties configurationProperties;
+    private Map<String,String> configurationProperties;
 	
     private Device selectedDevice;
     
@@ -143,12 +152,12 @@ public class DeviceManager implements ArtifactListener
         return selectedDevice;
     }
 
-    public Properties getConfigurationProperties()
+    public Map<String,String> getConfigurationProperties()
     {
         return configurationProperties;
     }
 
-    public void setConfigurationProperties( Properties configurationProperties )
+    public void setConfigurationProperties( Map<String,String> configurationProperties )
     {
         this.configurationProperties = configurationProperties;
     }
@@ -168,7 +177,7 @@ public class DeviceManager implements ArtifactListener
         propertyAdapterList.add( propertyAdapter );
     }
     
-    public void notifyPropertyAdapter( Properties configurationProperties )
+    public void notifyPropertyAdapter( Map<String,String> configurationProperties )
     {
         if ( configurationProperties != null )
         {
@@ -177,7 +186,7 @@ public class DeviceManager implements ArtifactListener
         }
     }
     
-    public void notifyPropertyAdapter( Properties configurationProperties, Object webDriver )
+    public void notifyPropertyAdapter( Map<String,String> configurationProperties, Object webDriver )
     {
         if ( configurationProperties != null )
         {
@@ -276,6 +285,20 @@ public class DeviceManager implements ArtifactListener
     private DeviceManager()
     {
         ArtifactManager.instance().addArtifactListener( this );
+        
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ExecutionContext.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ExecutionContextTest.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ExecutionContextStep.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( Device.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( KeyWordTest.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( KeyWordStep.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( KeyWordParameter.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( KeyWordToken.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( CloudDescriptor.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( Page.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( PageData.class, new ReflectionSerializer() );
+        
+        
     }
 	
     /** The log. */
@@ -494,9 +517,6 @@ public class DeviceManager implements ArtifactListener
                                     {
                                         switch ( ( (XFramiumException) eItem.getT() ).getType() )
                                         {
-                                            case APPLICATION:
-                                                appFailures++;
-                                                break;
                                                 
                                             case CLOUD:
                                                 cloudFailures++;

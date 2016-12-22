@@ -11,7 +11,7 @@ public class DataIdentificationException extends XFramiumException
     
     public DataIdentificationException( String value )
     {
-        super( ExceptionType.APPLICATION );
+        super( ExceptionType.SCRIPT );
     }
     
     @Override

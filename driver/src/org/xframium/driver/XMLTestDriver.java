@@ -41,6 +41,8 @@ import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.reporting.ExecutionContextTest;
+import org.xframium.reporting.ExecutionContextTest.TestStatus;
 import org.xframium.spi.PropertyProvider;
 import org.xframium.spi.driver.ReportiumProvider;
 import com.perfecto.reportium.client.ReportiumClientFactory;
@@ -66,6 +68,10 @@ public class XMLTestDriver extends AbstractSeleniumTest
         {	
             if ( !( (DeviceWebDriver) getWebDriver() ).isConnected() )
             {
+                ExecutionContextTest executionContextTest = new ExecutionContextTest();
+                executionContextTest.setTest( test );
+                executionContextTest.completeTest( TestStatus.FAILED, new DeviceAcquisitionException( getDevice() ) );
+                testName.setTest( executionContextTest );
                 
                 PageManager.instance().setThrowable( new DeviceAcquisitionException( getDevice() ) );
                 PageManager.instance().addExecutionLog( getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), "_ACQUIRE", System.currentTimeMillis() - 5000, 5000, StepStatus.FAILURE,
@@ -90,6 +96,12 @@ public class XMLTestDriver extends AbstractSeleniumTest
                 
                 if ( !osFound )
                 {
+                    
+                    ExecutionContextTest executionContextTest = new ExecutionContextTest();
+                    executionContextTest.setTest( test );
+                    executionContextTest.completeTest( TestStatus.SKIPPED, new FilteredException( "This test is not designed to work on a device with [" + deviceOs + "]  It needs [" + test.getOs() + "]" ) );
+                    testName.setTest( executionContextTest );
+                    
                     PageManager.instance().setThrowable( new FilteredException( "This test is not designed to work on a device with [" + deviceOs + "]  It needs [" + test.getOs() + "]" ) );
                     PageManager.instance().addExecutionLog( getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), "_SKIPPED", System.currentTimeMillis() - 5000, 5000, StepStatus.FAILURE,
                     PageManager.instance().getThrowable().getMessage(), PageManager.instance().getThrowable(), 0, "", false, new String[] { PageManager.instance().getThrowable().getMessage() } );
@@ -123,6 +135,10 @@ public class XMLTestDriver extends AbstractSeleniumTest
                 
                 if ( !tagFound )
                 {
+                    ExecutionContextTest executionContextTest = new ExecutionContextTest();
+                    executionContextTest.setTest( test );
+                    executionContextTest.completeTest( TestStatus.SKIPPED, new FilteredException( "This test did not contain the specified tag and will be skipped" ) );
+                    testName.setTest( executionContextTest );
                     PageManager.instance().setThrowable( new FilteredException( "This test did not contain the specified tag and will be skipped" ) );
                     PageManager.instance().addExecutionLog( getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), getDevice().getKey(), "_SKIPPED", System.currentTimeMillis() - 5000, 5000, StepStatus.FAILURE,
                     PageManager.instance().getThrowable().getMessage(), PageManager.instance().getThrowable(), 0, "", false, new String[] { PageManager.instance().getThrowable().getMessage() } );
@@ -186,7 +202,9 @@ public class XMLTestDriver extends AbstractSeleniumTest
             if ( test.getDescription() != null && !test.getDescription().isEmpty() && getWebDriver() instanceof PropertyProvider )
                 ( (PropertyProvider) getWebDriver() ).setProperty( "testDescription", test.getDescription() );
     		
-            returnValue = KeyWordDriver.instance().executeTest( testName.getTestName().split( "\\." )[ 0 ], getWebDriver(), null );
+            ExecutionContextTest executionContextTest = KeyWordDriver.instance().executeTest( testName.getTestName().split( "\\." )[ 0 ], getWebDriver(), null );
+            returnValue = executionContextTest.getStatus();
+            testName.setTest( executionContextTest );
         }
         finally
         {

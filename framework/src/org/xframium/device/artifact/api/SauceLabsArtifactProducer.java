@@ -48,6 +48,7 @@ import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.sauceLabs.rest.SauceREST;
+import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc
@@ -91,47 +92,17 @@ public class SauceLabsArtifactProducer extends AbstractArtifactProducer
 	 * @see com.perfectoMobile.device.artifact.AbstractArtifactProducer#_getArtifact(org.openqa.selenium.WebDriver, com.perfectoMobile.device.artifact.ArtifactProducer.ArtifactType, com.perfectoMobile.device.ConnectedDevice)
 	 */
 	@Override
-	protected Artifact _getArtifact( WebDriver webDriver, ArtifactType aType, ConnectedDevice connectedDevice, String testName, boolean success )
+	protected Artifact _getArtifact( WebDriver webDriver, ArtifactType aType, ConnectedDevice connectedDevice, String testName, boolean success, ExecutionContextTest test )
 	{
 		return null;
 	}
 	
-	/*private Artifact generateExecutionReport( Device device, String operation, Map<String,String> parameterMap, String reportFormat, String rootFolder, ArtifactType aType)
-	{
-	    try
-        {
-	    	CloudDescriptor currentCloud = CloudRegistry.instance().getCloud();
-	        if ( device.getCloud() != null && !device.getCloud().isEmpty() )
-	            currentCloud = CloudRegistry.instance().getCloud( device.getCloud() );
-	        
-            StringBuilder urlBuilder = new StringBuilder();
-            urlBuilder.append( "https://" ).append( currentCloud.getHostName() ).append( "/services/reports/" ).append( parameterMap.get( REPORT_KEY ) );
-            urlBuilder.append( "?operation=" ).append( operation ).append( "&user=" ).append( currentCloud.getUserName() ).append( "&password=" ).append( currentCloud.getPassword() );
-            String format = parameterMap.get( FORMAT );
-            if (format == null)
-            {
-                if (reportFormat == null)
-                    format = DEFAULT_FORMAT;
-                else
-                    format = reportFormat;
-            }
-
-            urlBuilder.append( "&format=" ).append( format );
-
-            return new Artifact( rootFolder + aType + "." + format, getUrl( new URL( urlBuilder.toString() ) ) );
-        }
-        catch (Exception e)
-        {
-            log.error( "Error download artifact data", e );
-            return null;
-        }
-	}*/
 
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.device.artifact.AbstractArtifactProducer#_getArtifact(org.openqa.selenium.WebDriver, com.perfectoMobile.device.artifact.ArtifactProducer.ArtifactType, java.util.Map, com.perfectoMobile.device.ConnectedDevice)
 	 */
 	@Override
-	protected Artifact _getArtifact( WebDriver webDriver, ArtifactType aType, Map<String, String> parameterMap, ConnectedDevice connectedDevice, String testName, boolean success )
+	protected Artifact _getArtifact( WebDriver webDriver, ArtifactType aType, Map<String, String> parameterMap, ConnectedDevice connectedDevice, String testName, boolean success, ExecutionContextTest test )
 	{
 	    String rootFolder = testName + System.getProperty( "file.separator" ) + connectedDevice.getDevice().getKey() + System.getProperty( "file.separator" );
 	    
@@ -158,6 +129,9 @@ public class SauceLabsArtifactProducer extends AbstractArtifactProducer
     			case FAILURE_SOURCE:
     			    return new Artifact( rootFolder + "failureDOM.xml", webDriver.getPageSource().getBytes());
     			
+    			case EXECUTION_RECORD_JSON:
+    			    return generateJSONRecord( test, testName, rootFolder );
+    			    
     			case FAILURE_SOURCE_HTML:
     				return new Artifact( rootFolder + "failureDOM.html", ( "<html><head><link href=\"http://www.xframium.org/output/assets/css/prism.css\" rel=\"stylesheet\"><script src=\"http://www.xframium.org/output/assets/js/prism.js\"></script><body><pre class\"line-numbers\"><code class=\"language-markup\">" + webDriver.getPageSource().replace( "<", "&lt;" ).replace( ">", "&gt;" ).replace( "\t", "  ") + "</code></pre></body></html>" ).getBytes());
     

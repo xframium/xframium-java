@@ -70,6 +70,7 @@ public class SQLKeyWordProvider implements KeyWordProvider
     private String modelQuery;
     private String testCaseQuery;
     private String testStepQuery;
+    private Map<String,String> configPropeties;
 
     /**
      * Instantiates a new SQL key word provider.
@@ -83,7 +84,7 @@ public class SQLKeyWordProvider implements KeyWordProvider
      * @param driver
      *            the driver class name
      */
-    public SQLKeyWordProvider( String username, String password, String url, String driver, String suite, String siteName )
+    public SQLKeyWordProvider( String username, String password, String url, String driver, String suite, String siteName, Map<String,String> configProperties )
     {
         this.username = username;
         this.password = password;
@@ -94,6 +95,7 @@ public class SQLKeyWordProvider implements KeyWordProvider
         this.modelQuery = DEF_MODEL_QUERY;
         this.testCaseQuery = DEF_TEST_CASE_QUERY;
         this.testStepQuery = DEF_TEST_STEP_QUERY;
+        this.configPropeties = configProperties;
     }
 
     /**
@@ -110,9 +112,9 @@ public class SQLKeyWordProvider implements KeyWordProvider
      * @param queryies...
      *            the query that loads data
      */
-    public SQLKeyWordProvider( String username, String password, String url, String driver, String suite, String siteName, String modelQuery, String testCaseQuery, String testStepQuery )
+    public SQLKeyWordProvider( String username, String password, String url, String driver, String suite, String siteName, String modelQuery, String testCaseQuery, String testStepQuery, Map<String,String> configProperties )
     {
-        this( username, password, url, driver, suite, siteName );
+        this( username, password, url, driver, suite, siteName, configProperties );
 
         this.modelQuery = ((modelQuery != null) ? modelQuery : DEF_MODEL_QUERY);
         this.testCaseQuery = ((testCaseQuery != null) ? testCaseQuery : DEF_TEST_CASE_QUERY);
@@ -233,13 +235,13 @@ public class SQLKeyWordProvider implements KeyWordProvider
             {
                 if ( currentTest.getType().toLowerCase().equals( "function" ) )
                     
-                    sC.addFunction( currentTest.createTest() );
+                    sC.addFunction( currentTest.createTest(configPropeties) );
                 else
                 {
                     if ( currentTest.isActive() )
-                        sC.addActiveTest( currentTest.createTest() );
+                        sC.addActiveTest( currentTest.createTest(configPropeties) );
                     else
-                        sC.addInactiveTest( currentTest.createTest() );
+                        sC.addInactiveTest( currentTest.createTest(configPropeties) );
                 }
             }
 

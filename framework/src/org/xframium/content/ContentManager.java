@@ -206,8 +206,8 @@ public class ContentManager
     {
     	if ( contentData != null && contentData.getName() != null && contentData.getValue() != null )
     	{
-    		if ( log.isInfoEnabled() )
-    			log.info( "Adding content for [" + contentData.getName() + "] as [" + contentData + "]" );
+    		if ( log.isDebugEnabled() )
+    			log.debug( "Adding content for [" + contentData.getName() + "] as [" + contentData + "]" );
     		
     		contentMap.put( contentData.getName(), contentData );
     	}

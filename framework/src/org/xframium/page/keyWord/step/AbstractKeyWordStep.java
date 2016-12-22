@@ -20,10 +20,29 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import javax.imageio.ImageIO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.container.SuiteContainer;
 import org.xframium.content.ContentManager;
@@ -49,14 +68,12 @@ import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.step.spi.KWSElse;
 import org.xframium.page.keyWord.step.spi.KWSLoopBreak;
+import org.xframium.reporting.ExecutionContext;
+import org.xframium.reporting.ExecutionContextTest;
+import org.xframium.spi.RunDetails;
 import org.xframium.spi.driver.ReportiumProvider;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import org.xframium.utility.ImageUtility;
+import org.xframium.utility.XMLEscape;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -64,6 +81,8 @@ import java.util.Random;
  */
 public abstract class AbstractKeyWordStep implements KeyWordStep
 {
+    private static NumberFormat numberFormat = new DecimalFormat( "0000" );
+    
     public AbstractKeyWordStep()
     {
         kwImpl = getClass().getName();
@@ -156,22 +175,20 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     @Override
     public boolean isBreakpoint()
     {
-        // TODO Auto-generated method stub
-        return false;
+        return breakpoint;
     }
-
-
 
     @Override
     public void setBreakpoint( boolean breakpoint )
     {
-        // TODO Auto-generated method stub
-        
+        this.breakpoint = breakpoint;
     }
     
     protected void scroll( Direction scrollDirection, WebDriver webDriver )
     {
-    	
+    	//
+        // This is randomized to ensure that we are not swiping from an area that does not allow a swipe
+        //
     	int randomNumber = numberGenerator.nextInt( 45 );
     	
     	Gesture currentGesture = null;
@@ -310,11 +327,12 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      * @param pageMap
      *            TODO
      * @param sC TODO
+     * @param executionContext TODO
      * @return true, if successful
      * @throws Exception
      *             the exception
      */
-    protected abstract boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception;
+    protected abstract boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception;
 
     /**
      * Creates the point.
@@ -693,11 +711,12 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      * perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map,
      * java.util.Map)
      */
-    public boolean executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception
+    public boolean executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception
     {
         PageManager.instance().setThrowable( null );
         long startTime = System.currentTimeMillis();
-
+        boolean returnValue = false;
+        
         try
         {
             //
@@ -824,7 +843,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 log.info( Thread.currentThread().getName() + ": Executing Step " + name + "(" + getClass().getSimpleName() + ")" + (linkId != null ? " linked to " + linkId : "") );
 
             Exception stepException = null;
-            boolean returnValue = false;
+            
             boolean caughtException = false;
             try
             {
@@ -850,7 +869,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     }
                 }
                 
-                returnValue = _executeStep( pageObject, ((altWebDriver != null) ? altWebDriver : webDriver), contextMap, dataMap, pageMap, sC );
+                executionContext.startStep( this, contextMap, dataMap );
+                returnValue = _executeStep( pageObject, ((altWebDriver != null) ? altWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext );
                 
                 //
                 // If threshold was specified then make sure we cam in under it
@@ -906,7 +926,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         continue;
                     try
                     {
-                        subReturnValue = step.executeStep( pageObject, webDriver, contextMap, dataMap, pageMap, sC );
+                        subReturnValue = step.executeStep( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
                     }
                     catch ( KWSLoopBreak e )
                     {
@@ -918,11 +938,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         subReturnValue = false;
                         log.debug( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " encoundered error: ", e );
                     }
-
-                    //if ( step.isInverse() )
-                    //{
-                    //    subReturnValue = !subReturnValue;
-                    //}
 
                     if ( !subReturnValue )
                     {
@@ -951,7 +966,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                             boolean subReturnValue = false;
                             try
                             {
-                                subReturnValue = step.executeStep( pageObject, webDriver, contextMap, dataMap, pageMap, sC );
+                                subReturnValue = step.executeStep( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
                             }
                             catch ( KWSLoopBreak e )
                             {
@@ -983,6 +998,43 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 }
             }
 
+            StepStatus stepStatus = StepStatus.SUCCESS;
+            
+            if ( !returnValue )
+            {
+                switch ( sFailure )
+                {
+                    case ERROR:
+                        stepStatus = StepStatus.FAILURE;
+                        if ( stepException == null )
+                            stepException = new ScriptConfigurationException( kwName + " has failed to complete" );
+                        
+                        break;
+                        
+                    case IGNORE:
+                        stepStatus = StepStatus.FAILURE_IGNORED;
+                        stepException = null;
+                        break;
+                        
+                    case LOG_IGNORE:
+                        stepStatus = StepStatus.FAILURE_IGNORED;
+                        if ( stepException == null )
+                            stepException = new ScriptConfigurationException( kwName + " has failed to complete" );
+                }
+            }
+            
+            try
+            {
+                if ( !returnValue )
+                    dumpState( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+            }
+            catch( Exception e )
+            {
+                e.printStackTrace();
+            }
+            
+            executionContext.completeStep( stepStatus, stepException );
+            
             if ( isRecordable() )
             {
                 PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), getName(), getClass().getSimpleName(), startTime, System.currentTimeMillis() - startTime,
@@ -1000,6 +1052,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 switch ( sFailure )
                 {
                     case ERROR:
+                        
                         if ( PageManager.instance().getThrowable() == null )
                         {
                             if ( stepException == null )
@@ -1040,7 +1093,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                                 PerfectoMobile.instance().windTunnel().addPointOfInterest( getExecutionId( webDriver ), getPoi() + "(" + getPageName() + "." + getName() + ")", Status.failure );
                         }
 
-                        return !subFailure;
+                        returnValue = !subFailure;
 
                 }
             }
@@ -1054,6 +1107,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         }
         finally
         {
+            
+            
             if ( waitTime > 0 )
             {
                 try
@@ -1299,8 +1354,10 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      *            the data map
      * @return the parameter value
      */
-    public Object getParameterValue( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap )
+    public String getParameterValue( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap )
     {
+        if ( param == null )
+            return null;
         String returnValue;
         switch ( param.getType() )
         {
@@ -1740,5 +1797,183 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         }
 
         return rtn;
+    }
+    
+    protected void dumpState( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
+    {
+        String checkPointName = null;
+        int historicalCount = -1;
+        int deviationPercentage = -1;
+        
+        File checkPointFolder = null;
+        
+        
+        checkPointName = getParameterValue( getParameter( "checkPointName" ), contextMap, dataMap );
+        if ( checkPointName != null )
+        {
+            checkPointFolder = new File( DataManager.instance().getReportFolder(), "historicalComparison" );
+            checkPointFolder = new File( checkPointFolder, ( (DeviceWebDriver) webDriver ).getDevice().getKey() );
+
+            String hCount = getParameterValue( getParameter( "historicalCount" ), contextMap, dataMap );
+            if ( hCount != null )
+            {
+                historicalCount = Integer.parseInt( hCount );
+                
+                String dP = getParameterValue( getParameter( "deviationPercentage" ), contextMap, dataMap );
+                if ( dP != null )
+                    deviationPercentage = Integer.parseInt( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" );
+            }
+        }
+        
+        File rootFolder = ExecutionContext.instance().getReportFolder();
+        File useFolder = new File( rootFolder, "artifacts" );
+        useFolder.mkdirs();
+        
+        File screenFile = null;
+        File domFile = null;;
+        
+        if ( webDriver instanceof TakesScreenshot )
+        {
+            OutputStream os = null;
+            try
+            {
+                byte[] screenShot = ( ( TakesScreenshot ) webDriver ).getScreenshotAs( OutputType.BYTES );
+                if ( checkPointName != null )
+                    screenFile = new File( useFolder, "grid-" + checkPointName.replace("-", "_" ) + "-" + ( (DeviceWebDriver) webDriver ).getDevice().getKey() + ".png" );
+                else
+                    screenFile = File.createTempFile( "state", ".png", useFolder );
+                
+                contextMap.put( "_SCREENSHOT", screenFile.getAbsolutePath() );
+                executionContext.getStep().addExecutionParameter( "SCREENSHOT", screenFile.getPath() );
+                screenFile.getParentFile().mkdirs();
+                os = new BufferedOutputStream( new FileOutputStream( screenFile ) );
+                os.write( screenShot );
+                os.flush();
+                os.close();
+                
+                if ( checkPointFolder != null )
+                {
+                    //
+                    // Dump state as historical 
+                    //
+                    checkPointFolder.mkdirs();
+                    
+                    if ( historicalCount >= 0 )
+                    {
+                        List<File> historicalFiles = Arrays.asList( checkPointFolder.listFiles( new CheckPointFiles( checkPointName + "-" ) ) );
+                        Collections.sort( historicalFiles );
+                        Collections.reverse( historicalFiles );
+                        
+                        if ( historicalFiles.size() >= historicalCount )
+                            historicalFiles.get( 0 ).delete();
+                        
+                        for ( File file : historicalFiles )
+                        {
+                            String[] fileParts = file.getName().split( "\\." );
+                            int fileNumber = Integer.parseInt( fileParts[ 0 ].substring( checkPointName.length() + 1 ) );
+                            
+                            file.renameTo( new File( file.getParentFile(), checkPointName + "-" + numberFormat.format( fileNumber+1 ) + ".png" ) );
+                        }
+                        
+                        os = new BufferedOutputStream( new FileOutputStream( new File( checkPointFolder, checkPointName + "-0000.png" ) ) );
+                    }
+                    else
+                        os = new BufferedOutputStream( new FileOutputStream( new File( checkPointFolder, checkPointName + ".png" ) ) );
+
+                    os.write( screenShot );
+                    os.flush();
+                    os.close();
+                    
+                    if ( deviationPercentage >= 0 )
+                    {
+                        //
+                        // Compare with the last image
+                        //
+                        File newFile = new File( checkPointFolder, checkPointName + "-0000.png" );
+                        File previousFile = new File( checkPointFolder, checkPointName + "-0001.png" );
+                        
+                        if ( newFile.exists() && previousFile.exists() )
+                        {
+                            double computedDeviation = ( ImageUtility.compareImages( ImageIO.read( newFile ), ImageIO.read( previousFile ) ) * 100 );
+                            
+                            if ( computedDeviation > deviationPercentage )
+                                throw new ScriptException( "Historical image comparison failed.  Expected a maximum difference of [" + deviationPercentage + "] but found [" + computedDeviation + "]" );
+                        }
+                    }
+                }
+            }
+            catch( ScriptException xe )
+            {
+                throw xe;
+            }
+            catch( Exception e )
+            {
+                e.printStackTrace(  );
+                throw new ScriptException( "Error taking screenshot" );
+            }
+            finally
+            {
+                if ( os != null )
+                    try{ os.close(); } catch( Exception e ) {}
+            }         
+        }
+
+        FileOutputStream outputStream = null;
+        try
+        {
+            File xmlFile = File.createTempFile( "dom-", ".xml", useFolder );
+            domFile = new File( xmlFile.getParentFile(), xmlFile.getName().replace( ".xml", ".html" ) );
+            
+            contextMap.put( "_DOM_XML", xmlFile.getAbsolutePath() );
+            contextMap.put( "_DOM_HTML", domFile.getAbsolutePath() );
+            
+            executionContext.getStep().addExecutionParameter( "XML", xmlFile.getPath() );
+            executionContext.getStep().addExecutionParameter( "HTML", domFile.getPath() );
+            
+            String pageSource = webDriver.getPageSource();
+            outputStream = new FileOutputStream( xmlFile );
+            if ( ApplicationRegistry.instance().getAUT() == null || ApplicationRegistry.instance().getAUT().isWeb() )
+                outputStream.write( XMLEscape.toXML( pageSource ).getBytes() );
+            else
+                outputStream.write( XMLEscape.toHTML( pageSource ).getBytes() );
+            
+            outputStream.flush();
+            outputStream.close();
+            
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append( "<html><head><link href=\"http://www.xframium.org/output/assets/css/prism.css\" rel=\"stylesheet\"><script src=\"http://www.xframium.org/output/assets/js/prism.js\"></script>" );
+            stringBuilder.append( "</script></head><body><pre class\"line-numbers\"><code class=\"language-markup\">" + pageSource.replace( "<", "&lt;" ).replace( ">", "&gt;" ).replace( "\t", "  ") + "</code></pre></body></html>" );
+
+            outputStream = new FileOutputStream( domFile );
+            outputStream.write( stringBuilder.toString().getBytes() );
+            outputStream.flush();
+            outputStream.close();                        
+        }
+        catch( Exception e )
+        {
+            log.warn( "Could not write to output file", e );
+            throw new ScriptException( "Error capturing device source" );
+        }
+        finally
+        {
+            if ( outputStream != null )
+                try{ outputStream.close(); } catch( Exception e ) {}
+        }
+    }
+    
+    private class CheckPointFiles implements FilenameFilter
+    {
+        private String checkPointName;
+        
+        public CheckPointFiles( String checkPointName )
+        {
+            this.checkPointName = checkPointName;
+        }
+        
+        @Override
+        public boolean accept( File dir, String name )
+        {
+            return ( name.startsWith( checkPointName ) );
+        }
     }
 }

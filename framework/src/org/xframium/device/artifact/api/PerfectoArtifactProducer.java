@@ -45,6 +45,7 @@ import org.xframium.device.artifact.Artifact;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
+import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc
@@ -88,7 +89,7 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 	 * @see com.perfectoMobile.device.artifact.AbstractArtifactProducer#_getArtifact(org.openqa.selenium.WebDriver, com.perfectoMobile.device.artifact.ArtifactProducer.ArtifactType, com.perfectoMobile.device.ConnectedDevice)
 	 */
 	@Override
-	protected Artifact _getArtifact( WebDriver webDriver, ArtifactType aType, ConnectedDevice connectedDevice, String testName, boolean success )
+	protected Artifact _getArtifact( WebDriver webDriver, ArtifactType aType, ConnectedDevice connectedDevice, String testName, boolean success, ExecutionContextTest test )
 	{
 		return null;
 	}
@@ -128,7 +129,7 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 	 * @see com.perfectoMobile.device.artifact.AbstractArtifactProducer#_getArtifact(org.openqa.selenium.WebDriver, com.perfectoMobile.device.artifact.ArtifactProducer.ArtifactType, java.util.Map, com.perfectoMobile.device.ConnectedDevice)
 	 */
 	@Override
-	protected Artifact _getArtifact( WebDriver webDriver, ArtifactType aType, Map<String, String> parameterMap, ConnectedDevice connectedDevice, String testName, boolean success )
+	protected Artifact _getArtifact( WebDriver webDriver, ArtifactType aType, Map<String, String> parameterMap, ConnectedDevice connectedDevice, String testName, boolean success, ExecutionContextTest test )
 	{
 	    String rootFolder = testName + System.getProperty( "file.separator" ) + connectedDevice.getDevice().getKey() + System.getProperty( "file.separator" );
 	    
@@ -163,6 +164,9 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
     			    DeviceManager.instance().clearLog();
     			    return consoleArtifact;
     				
+    			case EXECUTION_RECORD_JSON:
+    			    return generateJSONRecord( test, testName, rootFolder );
+    			    
     			case DEVICE_LOG:
     				try
     				{

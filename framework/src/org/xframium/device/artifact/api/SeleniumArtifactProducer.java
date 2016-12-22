@@ -38,6 +38,7 @@ import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.AbstractArtifactProducer;
 import org.xframium.device.artifact.Artifact;
+import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -74,7 +75,7 @@ public class SeleniumArtifactProducer extends AbstractArtifactProducer
      * com.perfectoMobile.device.ConnectedDevice)
      */
     @Override
-    protected Artifact _getArtifact( WebDriver webDriver, ArtifactType aType, ConnectedDevice connectedDevice, String testName, boolean success )
+    protected Artifact _getArtifact( WebDriver webDriver, ArtifactType aType, ConnectedDevice connectedDevice, String testName, boolean success, ExecutionContextTest test )
     {
         return null;
     }
@@ -89,38 +90,41 @@ public class SeleniumArtifactProducer extends AbstractArtifactProducer
      * java.util.Map, com.perfectoMobile.device.ConnectedDevice)
      */
     @Override
-    protected Artifact _getArtifact( WebDriver webDriver, ArtifactType aType, Map<String, String> parameterMap, ConnectedDevice connectedDevice, String testName, boolean success )
+    protected Artifact _getArtifact( WebDriver webDriver, ArtifactType aType, Map<String, String> parameterMap, ConnectedDevice connectedDevice, String testName, boolean success, ExecutionContextTest test )
     {
         String rootFolder = testName + System.getProperty( "file.separator" ) + connectedDevice.getDevice().getKey() + System.getProperty( "file.separator" );
         try
         {
-            
+
             switch ( aType )
             {
+
                 case FAILURE_SOURCE:
                     return new Artifact( rootFolder + "failureDOM.xml", webDriver.getPageSource().getBytes() );
-                    
+
                 case FAILURE_SOURCE_HTML:
-                	return new Artifact( rootFolder + "failureDOM.html", ( "<html><head><link href=\"http://www.xframium.org/output/assets/css/prism.css\" rel=\"stylesheet\"><script src=\"http://www.xframium.org/output/assets/js/prism.js\"></script><body><pre class\"line-numbers\"><code class=\"language-markup\">" + webDriver.getPageSource().replace( "<", "&lt;" ).replace( ">", "&gt;" ).replace( "\t", "  ") + "</code></pre></body></html>" ).getBytes());
-                    
+                    return new Artifact( rootFolder + "failureDOM.html",
+                            ("<html><head><link href=\"http://www.xframium.org/output/assets/css/prism.css\" rel=\"stylesheet\"><script src=\"http://www.xframium.org/output/assets/js/prism.js\"></script><body><pre class\"line-numbers\"><code class=\"language-markup\">"
+                                    + webDriver.getPageSource().replace( "<", "&lt;" ).replace( ">", "&gt;" ).replace( "\t", "  " ) + "</code></pre></body></html>").getBytes() );
+
                 case EXECUTION_DEFINITION:
-    				StringBuilder defBuilder = new StringBuilder();
-    				defBuilder.append( "DATE=" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "\r\n");
-    				defBuilder.append( "TIME=" ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "\r\n");
-    				defBuilder.append( "TEST_CASE=" ).append( testName ).append( "\r\n");
-    				defBuilder.append( "DEVICE=" ).append( connectedDevice.getDevice().getKey() ).append( "\r\n");
-    				defBuilder.append( "SUCCESS=" ).append( success ).append( "\r\n");
-    				defBuilder.append( "MANUFACTURER=" ).append( connectedDevice.getDevice().getManufacturer() ).append( "\r\n");
-    				defBuilder.append( "MODEL=" ).append( connectedDevice.getDevice().getBrowserName() ).append( "\r\n");
-    				return new Artifact( rootFolder + "executionDefinition.properties", defBuilder.toString().getBytes() );
-        
+                    StringBuilder defBuilder = new StringBuilder();
+                    defBuilder.append( "DATE=" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "\r\n" );
+                    defBuilder.append( "TIME=" ).append( timeFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "\r\n" );
+                    defBuilder.append( "TEST_CASE=" ).append( testName ).append( "\r\n" );
+                    defBuilder.append( "DEVICE=" ).append( connectedDevice.getDevice().getKey() ).append( "\r\n" );
+                    defBuilder.append( "SUCCESS=" ).append( success ).append( "\r\n" );
+                    defBuilder.append( "MANUFACTURER=" ).append( connectedDevice.getDevice().getManufacturer() ).append( "\r\n" );
+                    defBuilder.append( "MODEL=" ).append( connectedDevice.getDevice().getBrowserName() ).append( "\r\n" );
+                    return new Artifact( rootFolder + "executionDefinition.properties", defBuilder.toString().getBytes() );
+
                 case CONSOLE_LOG:
                     Artifact consoleArtifact = new Artifact( rootFolder + "console.txt", DeviceManager.instance().getLog().getBytes() );
                     DeviceManager.instance().clearLog();
                     return consoleArtifact;
-        
+
                 case DEVICE_LOG:
-        
+
                     try
                     {
                         LogEntries logEntries = webDriver.manage().logs().get( LogType.BROWSER );
@@ -129,7 +133,7 @@ public class SeleniumArtifactProducer extends AbstractArtifactProducer
                             StringBuilder logBuilder = new StringBuilder();
                             for ( LogEntry logEntry : logEntries )
                                 logBuilder.append( dateFormat.format( new Date( logEntry.getTimestamp() ) ) ).append( ": " ).append( logEntry.getMessage() ).append( "\r\n" );
-        
+
                             return new Artifact( rootFolder + "deviceLog.txt", logBuilder.toString().getBytes() );
                         }
                         return null;
@@ -139,22 +143,25 @@ public class SeleniumArtifactProducer extends AbstractArtifactProducer
                         log.info( "Could not generate device logs" );
                         return null;
                     }
-        
+
                 case EXECUTION_RECORD_CSV:
                     return generateCSVRecord( connectedDevice.getDevice(), testName, rootFolder );
-        
+
                 case EXECUTION_RECORD_HTML:
                     return generateHTMLRecord( connectedDevice.getDevice(), testName, rootFolder, webDriver );
-        
+
+                case EXECUTION_RECORD_JSON:
+                    return generateJSONRecord( test, testName, rootFolder );
+
                 case WCAG_REPORT:
                     return generateWCAG( connectedDevice.getDevice(), testName, rootFolder );
-        
+
                 default:
                     return null;
-    
+
             }
         }
-        catch( Exception e )
+        catch ( Exception e )
         {
             return new Artifact( rootFolder + "generationFailure.txt", e.getMessage().getBytes() );
         }

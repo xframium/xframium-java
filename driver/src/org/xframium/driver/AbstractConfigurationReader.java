@@ -2,9 +2,11 @@ package org.xframium.driver;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -25,6 +27,7 @@ import org.xframium.container.SuiteContainer;
 import org.xframium.debugger.DebugManager;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
+import org.xframium.device.artifact.Artifact;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
@@ -44,9 +47,11 @@ import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.reporting.ExecutionContext;
 import org.xframium.spi.Device;
 import org.xframium.spi.RunDetails;
 import org.xframium.utility.SeleniumSessionManager;
+import com.xframium.serialization.SerializationManager;
 
 public abstract class AbstractConfigurationReader implements ConfigurationReader
 {
@@ -72,6 +77,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     public abstract DriverContainer configureDriver();
     public abstract FavoriteContainer configureFavorites();
     protected abstract boolean _executeTest( SuiteContainer sC ) throws Exception;
+    
     
     @Override
     public void readConfiguration( File configFile, boolean runTest )
@@ -320,7 +326,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             if ( driverC.isEmbeddedServer() )
                 CloudRegistry.instance().startEmbeddedCloud();
             
-            RunDetails.instance().setTestName( (driverC.getSuiteName() != null && !driverC.getSuiteName().isEmpty()) ? driverC.getSuiteName() : ApplicationRegistry.instance().getAUT().getName() );
+            ExecutionContext.instance().setSuiteName( (driverC.getSuiteName() != null && !driverC.getSuiteName().isEmpty()) ? driverC.getSuiteName() : ApplicationRegistry.instance().getAUT().getName() );
             
             if ( runTest )
                 executeTest( sC );
@@ -336,7 +342,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     public boolean executeTest( SuiteContainer sC )
     {
         log.info( "Go: Executing Tests" );
-        
+        ExecutionContext.instance().isEnabled();
         try
         {
             if( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )
@@ -351,19 +357,62 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             _executeTest( sC == null ? suiteContainer : sC );
             
-            if( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_HTML ) )
+            if ( ExecutionContext.instance().isEnabled() )
             {
-            	RunDetails.instance().writeHTMLIndex( DataManager.instance().getReportFolder(), true );
-            	
-                File htmlFile = RunDetails.instance().getIndex( DataManager.instance().getReportFolder() );
+                ExecutionContext.instance().setEndTime( new Date( System.currentTimeMillis() ) );
+                String outputData = "var testData = " + new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ), ExecutionContext.instance(), 0 ) ) + ";";
+                Artifact jsArtifact = new Artifact( "Suite.js", outputData.getBytes() );
+                jsArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
+                
+                StringBuilder stringBuffer = new StringBuilder();
+                InputStream inputStream = null;
                 try
                 {
-                    Desktop.getDesktop().browse( htmlFile.toURI() );
+                    if ( System.getProperty( "reportTemplateFolder" ) == null )
+                    {
+                        if ( System.getProperty( "reportTemplate" ) == null )
+                            inputStream = ClassLoader.getSystemResourceAsStream( "org/xframium/reporting/html/dark/Suite.html" );
+                        else
+                            inputStream = ClassLoader.getSystemResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/Suite.html" );
+                    }
+                    else
+                        inputStream = new FileInputStream( new File(  System.getProperty( "reportTemplateFolder" ), "Suite.html" ) );
+                    
+                    int bytesRead = 0;
+                    byte[] buffer = new byte[ 512 ];
+                    
+                    while ( ( bytesRead = inputStream.read( buffer ) ) > 0 )
+                    {
+                        stringBuffer.append( new String( buffer, 0, bytesRead ) );
+                    }
+                    
+                    Artifact indexArtifact = new Artifact( "index.html", stringBuffer.toString().getBytes() );
+                    indexArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
+                    
+                    File htmlFile = new File( ExecutionContext.instance().getReportFolder(), "index.html" );
+                    
+                    try
+                    {
+                        if ( htmlFile.exists() )
+                            Desktop.getDesktop().browse( htmlFile.toURI() );
+                    }
+                    catch( Exception e )
+                    {
+                        e.printStackTrace();
+                    }
                 }
                 catch( Exception e )
                 {
-                    e.printStackTrace();
+                    log.error( "Error generating INDEX", e );
+
                 }
+                finally
+                {
+                    try { inputStream.close(); } catch( Exception e ) {}
+                }
+                
+                
+                
             }
             
             if( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )

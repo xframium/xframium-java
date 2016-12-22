@@ -250,7 +250,7 @@ public class KeyWordStepFactory
      * @return the key word step
      */
     public KeyWordStep createStep( String name, String pageName, boolean active, String type, String linkId, boolean timed, StepFailure sFailure, boolean inverse, String os, String browser, String poi, int threshold, String description, long waitTime, String context,
-            String validation, String device, ValidationType validationType, String tagNames, boolean startAt, boolean breakpoint, String deviceTags, String siteName )
+            String validation, String device, ValidationType validationType, String tagNames, boolean startAt, boolean breakpoint, String deviceTags, String siteName, Map<String,String> overrideMap )
     {
 
         Class kwImpl = stepMap.get( type.toUpperCase() );
@@ -273,9 +273,43 @@ public class KeyWordStepFactory
             returnValue.setOs( os );
             returnValue.setBrowser( browser );
             returnValue.setPoi( poi );
-            returnValue.setThreshold( threshold );
+
+            if ( threshold > 0 )
+            {
+                String thresholdModifier = overrideMap.get( "thresholdModifier" );
+                if ( thresholdModifier != null )
+                {
+                    double modifierPercent = ( Integer.parseInt( thresholdModifier ) / 100.0 );
+                    double modifierValue = Math.abs( modifierPercent ) * (double) threshold;
+                    
+                    if ( modifierPercent > 0 )
+                        returnValue.setThreshold( threshold + (int)modifierValue );
+                    else
+                        returnValue.setThreshold( threshold - (int)modifierValue );
+                }
+            }
+            else
+                returnValue.setThreshold( threshold );
+            
             returnValue.setDescription( description );
-            returnValue.setWait( waitTime );
+            
+            if ( waitTime > 0 )
+            {
+                String waitModifier = overrideMap.get( "waitModifier" );
+                if ( waitModifier != null )
+                {
+                    double modifierPercent = ( Integer.parseInt( waitModifier ) / 100.0 );
+                    double modifierValue = Math.abs( modifierPercent ) * (double) waitTime;
+                    
+                    if ( modifierPercent > 0 )
+                        returnValue.setWait( waitTime + (int)modifierValue );
+                    else
+                        returnValue.setWait( waitTime - (int)modifierValue );
+                }
+            }
+            else
+                returnValue.setWait( waitTime );
+            
             returnValue.setValidation( validation );
             returnValue.setValidationType( validationType );
             returnValue.setContext( context );
@@ -293,6 +327,16 @@ public class KeyWordStepFactory
         {
             throw new IllegalArgumentException( "Unknown KeyWord [" + type + "]", e );
         }
-
+    }
+    
+    private String getValue( String attributeName, String attributeValue, Map<String,String> overrideMap )
+    {
+        String keyName = attributeName;
+        if ( System.getProperty( keyName ) != null )
+            return System.getProperty( keyName );
+        if ( overrideMap.containsKey( keyName ) )
+            return overrideMap.get( keyName );
+        else
+            return attributeValue;
     }
 }

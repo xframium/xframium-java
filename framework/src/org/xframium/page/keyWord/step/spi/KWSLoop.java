@@ -32,6 +32,7 @@ import org.xframium.page.data.PageDataManager;
 import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+import org.xframium.reporting.ExecutionContextTest;
 
 
 
@@ -59,7 +60,7 @@ public class KWSLoop extends AbstractKeyWordStep
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
 	@Override
-	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception
+	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception
 	{
 		if ( getParameterList().size() < 2 )
 			throw new ScriptConfigurationException( "You must provide one parameter specifying either the loop count or the name of the element to execute on along with a function name to execution" );
@@ -96,12 +97,12 @@ public class KWSLoop extends AbstractKeyWordStep
 				
 				    if ( sC != null )
 				    {
-                        if ( !sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC) )
+                        if ( !sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext) )
                             return false;
 				    }
                     else
                     {
-                        if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, sC ) )
+                        if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext ) )
                             return false;
                     }
 				}
@@ -159,12 +160,12 @@ public class KWSLoop extends AbstractKeyWordStep
 						
 						if ( sC != null )
 	                    {
-	                        if ( !sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC) )
+	                        if ( !sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext) )
 	                            return false;
 	                    }
 	                    else
 	                    {
-	                        if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, sC ) )
+	                        if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext ) )
 	                            return false;
 	                    }
 					}
@@ -205,12 +206,12 @@ public class KWSLoop extends AbstractKeyWordStep
 					{
 					    if ( sC != null )
 	                    {
-	                        if ( !sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC) )
+	                        if ( !sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext) )
 	                            return false;
 	                    }
 	                    else
 	                    {
-	                        if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, sC ) )
+	                        if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext ) )
 	                            return false;
 	                    }
 						

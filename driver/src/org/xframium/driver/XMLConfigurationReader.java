@@ -264,7 +264,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 Initializable newExtension = (Initializable) Class.forName( lib.getClassName() ).newInstance();
                 Properties props = new Properties();
                 props.putAll( configProperties );
-                newExtension.initialize( lib.getName(), props );
+                newExtension.initialize( lib.getName(), configProperties );
 
             }
             catch ( Exception e )
@@ -669,10 +669,9 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 log.error( "Error creating proeprty adapter", e );
             }
         }
-        Properties props = new Properties();
-        props.putAll( configProperties );
-        DeviceManager.instance().setConfigurationProperties( props );
-        DeviceManager.instance().notifyPropertyAdapter( props );
+        
+        DeviceManager.instance().setConfigurationProperties( configProperties );
+        DeviceManager.instance().notifyPropertyAdapter( configProperties );
         return true;
     }
 
@@ -695,7 +694,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     
                     if ( test.getType().equals( "BDD" ) )
                     {
-                        XMLFormatter xmlFormatter = new XMLFormatter( sC.getDataProvider() );
+                        XMLFormatter xmlFormatter = new XMLFormatter( sC.getDataProvider(), configProperties );
                         Parser bddParser = new Parser( xmlFormatter );
                         bddParser.parse( test.getDescription().getValue(), "", 0 );
                         sC.setDataProvider( xmlFormatter );
@@ -719,9 +718,9 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                         
                         MatrixTest matrixTest = new MatrixTest( stringBuilder.toString(), test.getDescription().getValue() );
                         if ( matrixTest.isActive() )
-                            sC.addActiveTest( matrixTest.createTest() );
+                            sC.addActiveTest( matrixTest.createTest( configProperties ) );
                         else
-                            sC.addInactiveTest( matrixTest.createTest() );
+                            sC.addInactiveTest( matrixTest.createTest( configProperties ) );
                     }
                     else if ( test.getType().equals( "XML" ) )
                     {
@@ -776,12 +775,12 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 
             
             case "XML":
-                sC = new XMLKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ) ).readData( true );
+                sC = new XMLKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ), configProperties ).readData( true );
 
                 break;
                 
             case "EXCEL":
-                sC =  new ExcelKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ) ).readData( true );
+                sC =  new ExcelKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ), configProperties ).readData( true );
 
                 break;
 
@@ -796,8 +795,8 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                                                                             xRoot.getModel().getSiteName(),
                                                                             configProperties.get( OPT_DRIVER[1] ),
                                                                             configProperties.get( OPT_DRIVER[2] ),
-                                                                            configProperties.get( OPT_DRIVER[3] )
-                                                                            ).readData( true ) ;
+                                                                            configProperties.get( OPT_DRIVER[3] ),
+                                                                            configProperties).readData( true ) ;
                                                    
                 break;
             }
@@ -899,7 +898,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      */
     private KeyWordTest parseTest( XTest xTest, String typeName )
     { 
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
 
@@ -931,7 +930,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                                                                                  xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
                                                                                  xStep.getOs(), xStep.getBrowser(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
-                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite() );
+                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties );
             
             parseParameters( xStep.getParameter(), testName, xStep.getName(), typeName, step );
             parseTokens( xStep.getToken(), testName, xStep.getName(), typeName, step );

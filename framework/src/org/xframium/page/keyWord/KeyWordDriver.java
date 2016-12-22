@@ -30,16 +30,18 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.DataConfigurationException;
+import org.xframium.exception.FilteredException;
 import org.xframium.exception.TestConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
-import org.xframium.page.keyWord.provider.KeyWordProvider;
-import org.xframium.page.keyWord.spi.KeyWordPageImpl;
 import org.xframium.page.listener.KeyWordListener;
+import org.xframium.reporting.ExecutionContextTest;
+import org.xframium.reporting.ExecutionContextTest.TestStatus;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -61,9 +63,6 @@ public class KeyWordDriver
 
     /** The page map. */
     private Map<String, Class> pageMap = new HashMap<String, Class>( 10 );
-
-    /** The context map. */
-    private ThreadLocal<Map<String, Object>> contextMap = new ThreadLocal<Map<String, Object>>();
 
     /** The tag map. */
     private Map<String, List<KeyWordTest>> tagMap = new HashMap<String, List<KeyWordTest>>( 10 );
@@ -305,16 +304,6 @@ public class KeyWordDriver
     }
 
     /**
-     * Gets the context map.
-     *
-     * @return the context map
-     */
-    public Map<String, Object> getContextMap()
-    {
-        return contextMap.get();
-    }
-
-    /**
      * Execution function.
      *
      * @param testName
@@ -329,7 +318,7 @@ public class KeyWordDriver
      * @throws Exception
      *             the exception
      */
-    public boolean executionFunction( String testName, WebDriver webDriver, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception
+    public boolean executionFunction( String testName, WebDriver webDriver, Map<String, PageData> dataMap, Map<String, Page> pageMap, Map<String,Object> contextMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception
     {
         if ( log.isDebugEnabled() )
             log.debug( "Attempting to locate function/test [" + testName + "]" );
@@ -384,7 +373,7 @@ public class KeyWordDriver
             }
         }
 
-        return test.executeTest( webDriver, contextMap.get(), dataMap, pageMap, sC );
+        return test.executeTest( webDriver, contextMap, dataMap, pageMap, sC, executionContext );
     }
 
 
@@ -491,13 +480,15 @@ public class KeyWordDriver
      * @throws Exception
      *             the exception
      */
-    public boolean executeTest( String testName, WebDriver webDriver, SuiteContainer sC ) throws Exception
+    public ExecutionContextTest executeTest( String testName, WebDriver webDriver, SuiteContainer sC ) throws Exception
     {
         boolean testStarted = false;
         boolean returnValue = false;
         long startTime = System.currentTimeMillis();
         PageManager.instance().getPageCache().clear();
 
+        ExecutionContextTest executionContext = new ExecutionContextTest();
+        
         if ( log.isDebugEnabled() )
             log.debug( "Attempting to locate test [" + testName + "]" );
 
@@ -505,10 +496,21 @@ public class KeyWordDriver
 
         if ( test == null )
             throw new TestConfigurationException( testName );
+        
+        executionContext.setTest( test );
+        executionContext.setDevice( ( (DeviceWebDriver) webDriver ).getPopulatedDevice() );
+        executionContext.setCloud( ( (DeviceWebDriver) webDriver ).getCloud() );
+        
 
         Map<String, PageData> dataMap = new HashMap<String, PageData>( 10 );
         Map<String, Page> pageMap = new HashMap<String, Page>( 10 );
-
+        Map<String, Object> contextMap = new HashMap<String, Object>( 10 );
+        
+        executionContext.setDataMap( dataMap );
+        executionContext.setPageMap( pageMap );
+        executionContext.setContextMap( contextMap );
+        executionContext.setSessionId( ( (DeviceWebDriver) webDriver ).getExecutionId() );
+        
         try
         {
             if ( test.getDataProviders() != null )
@@ -573,35 +575,38 @@ public class KeyWordDriver
             //
             // Create a new context map and pass it along to all of the steps
             //
-            contextMap.set( new HashMap<String, Object>( 10 ) );
             testStarted = true;
             
-            if ( !KeyWordDriver.instance().notifyBeforeTest( webDriver, test, contextMap.get(), dataMap, pageMap ) )
+            if ( !KeyWordDriver.instance().notifyBeforeTest( webDriver, test, contextMap, dataMap, pageMap ) )
             {
                 log.warn( "Test was skipped due to a failed test notification listener" );
-                return false;
+                executionContext.completeTest( TestStatus.SKIPPED, new FilteredException( "Test was skipped due to a failed test notification listener" ) );
+                return executionContext;
             }
             
-            returnValue = test.executeTest( webDriver, contextMap.get(), dataMap, pageMap, sC );
-            contextMap.set( null );
+            returnValue = test.executeTest( webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+            
+            executionContext.completeTest( returnValue ? TestStatus.PASSED : TestStatus.FAILED, null );
 
-            return returnValue;
+            return executionContext;
 
         }
         catch ( Throwable e )
         {
+            executionContext.completeTest( TestStatus.FAILED, e );
+            
             if ( !testStarted )
                 PageManager.instance().addExecutionLog( null, null, "", testName, testName, startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE, e.getMessage(), e, 0, e.getMessage(), false, new String[] { e.getMessage() } );
             if ( PageManager.instance().getThrowable() == null )
                 PageManager.instance().setThrowable( e );
 
             log.error( "Error executing Test " + testName, PageManager.instance().getThrowable() );
-            return false;
+            return executionContext;
         }
         finally
         {
             if ( testStarted )
-                KeyWordDriver.instance().notifyAfterTest( webDriver, test, contextMap.get(), dataMap, pageMap, returnValue );
+                KeyWordDriver.instance().notifyAfterTest( webDriver, test, contextMap, dataMap, pageMap, returnValue );
             
             for ( String key : dataMap.keySet() )
             {

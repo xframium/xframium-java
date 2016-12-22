@@ -46,6 +46,7 @@ import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.factory.DefaultPageFactory;
 import org.xframium.page.factory.PageFactory;
 import org.xframium.page.listener.ExecutionListener;
+import org.xframium.reporting.ExecutionContext;
 import org.xframium.spi.PropertyProvider;
 import org.xframium.spi.RunDetails;
 import org.xframium.spi.driver.DeviceProvider;
@@ -234,9 +235,9 @@ public class PageManager
         {
             File outputFile = null;
             if ( imageLocation != null )
-                outputFile = new File( new File( imageLocation, RunDetails.instance().getRootFolder() + System.getProperty( "file.separator" ) + "wcag" ), fileName );
+                outputFile = new File( new File( imageLocation, System.getProperty( "file.separator" ) + "wcag" ), fileName );
             else
-                outputFile = new File( RunDetails.instance().getRootFolder() + System.getProperty( "file.separator" ) + "wcag", fileName );
+                outputFile = new File( new File( ExecutionContext.instance().getReportFolder(),  "wcag" ), fileName );
 
             outputFile.getParentFile().mkdirs();
             ImageIO.write( image, "png", outputFile );

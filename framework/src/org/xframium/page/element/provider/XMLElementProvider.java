@@ -158,8 +158,7 @@ public class XMLElementProvider extends AbstractElementProvider
 		{
 			try
 			{
-				if (log.isInfoEnabled())
-					log.info( "Attempting to import file [" + Paths.get(".").toAbsolutePath().normalize().toString() + imp.getFileName() + "]" );
+				
 
 				if ( fileName == null )
 				{
@@ -169,11 +168,19 @@ public class XMLElementProvider extends AbstractElementProvider
 				{
     				File newFile = new File( imp.getFileName() );
     				if ( newFile.exists() ) 
+    				{
+    				    if (log.isInfoEnabled())
+    	                    log.info( "Attempting to import file [" + newFile.getAbsolutePath() + "]" );
     				    readElements( new FileInputStream( newFile ) );
-    				
+    				}
+    				    
     				newFile = new File( folderName, imp.getFileName() );
     				if ( newFile.exists() )
+    				{
+    				    if (log.isInfoEnabled())
+                            log.info( "Attempting to import file [" + newFile.getAbsolutePath() + "]" );
     				    readElements( new FileInputStream( newFile ) );
+    				}
 				}
 				
 			}
@@ -214,8 +221,8 @@ public class XMLElementProvider extends AbstractElementProvider
 	            if ( ele.getDeviceContext() != null )
 	                currentElement.setDeviceContext( ele.getDeviceContext() );
 	            
-	            if (log.isDebugEnabled())
-	                log.debug( "Adding XML Element using [" + elementDescriptor.toString() + "] as [" + currentElement + "]" );
+	            //if (log.isDebugEnabled())
+	            //    log.debug( "Adding XML Element using [" + elementDescriptor.toString() + "] as [" + currentElement + "]" );
 	            
 	            elementsRead = elementsRead & validateElement( elementDescriptor, currentElement );
 	            

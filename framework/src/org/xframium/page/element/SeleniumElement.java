@@ -108,7 +108,7 @@ public class SeleniumElement extends AbstractElement
      */
     public Element cloneElement()
     {
-        SeleniumElement element = new SeleniumElement( getBy(), getKey(), getElementName(), getPageName(), getContextElement(), locatedElement, index );
+        SeleniumElement element = new SeleniumElement( getBy(), getRawKey(), getElementName(), getPageName(), getContextElement(), locatedElement, index );
         element.setDriver( webDriver );
         element.setDeviceContext( getDeviceContext() );
         return element;
@@ -242,7 +242,7 @@ public class SeleniumElement extends AbstractElement
      */
     public String toString()
     {
-        return getClass().getSimpleName() + " - " + getBy() + " {" + getKey() + "}";
+        return getClass().getSimpleName() + " - " + getBy() + " {" + getRawKey() + "}";
     }
 
     /**

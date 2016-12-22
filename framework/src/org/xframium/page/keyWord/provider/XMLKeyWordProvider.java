@@ -20,29 +20,44 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.provider;
 
-import gherkin.parser.Parser;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Unmarshaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
-import org.xframium.page.keyWord.*;
+import org.xframium.page.keyWord.KeyWordPage;
+import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
+import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
+import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.KeyWordToken.TokenType;
 import org.xframium.page.keyWord.gherkinExtension.XMLFormatter;
-import org.xframium.page.keyWord.provider.xsd.*;
+import org.xframium.page.keyWord.provider.xsd.Import;
+import org.xframium.page.keyWord.provider.xsd.Model;
+import org.xframium.page.keyWord.provider.xsd.ObjectFactory;
+import org.xframium.page.keyWord.provider.xsd.Parameter;
+import org.xframium.page.keyWord.provider.xsd.RegistryRoot;
+import org.xframium.page.keyWord.provider.xsd.Step;
+import org.xframium.page.keyWord.provider.xsd.Test;
+import org.xframium.page.keyWord.provider.xsd.Token;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
-import java.io.*;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import gherkin.parser.Parser;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -62,6 +77,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	/** The resource name. */
 	private String resourceName;
 	private byte[] resourceData;
+	private Map<String,String> configProperties;
 
 	/**
 	 * Instantiates a new XML key word provider.
@@ -69,10 +85,11 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 * @param fileName
 	 *            the file name
 	 */
-	public XMLKeyWordProvider( File fileName )
+	public XMLKeyWordProvider( File fileName, Map<String,String> configProperties )
 	{
 		this.fileName = fileName;
 		rootFolder = fileName.getParentFile();
+		this.configProperties = configProperties;
 	}
 
 	/**
@@ -81,14 +98,16 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 * @param resourceName
 	 *            the resource name
 	 */
-	public XMLKeyWordProvider( String resourceName )
+	public XMLKeyWordProvider( String resourceName, Map<String,String> configProperties )
 	{
 		this.resourceName = resourceName;
+		this.configProperties = configProperties;
 	}
 	
-	public XMLKeyWordProvider( byte[] resourceData )
+	public XMLKeyWordProvider( byte[] resourceData, Map<String,String> configProperties )
     {
         this.resourceData = resourceData;
+        this.configProperties = configProperties;
     }
 
 	/*
@@ -264,7 +283,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	            }
 	            else if ( imp.getFileName().toLowerCase().endsWith( ".bdd" ) )
 	            {
-	                Parser bddParser = new Parser( new XMLFormatter( PageDataManager.instance().getDataProvider() ) );
+	                Parser bddParser = new Parser( new XMLFormatter( PageDataManager.instance().getDataProvider(), configProperties ) );
 	                
 	                byte[] buffer = new byte[512];
 	                int bytesRead = 0;
@@ -330,7 +349,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 */
 	private KeyWordTest parseTest( Test xTest, String typeName )
 	{
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties );
 		
         
 		KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
@@ -366,7 +385,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
                                                                                  xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
                                                                                  xStep.getOs(), xStep.getBrowser(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
-                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite() );
+                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties );
 		    
 		    parseParameters( xStep.getParameter(), testName, xStep.getName(), typeName, step );
 		    parseTokens( xStep.getToken(), testName, xStep.getName(), typeName, step );
