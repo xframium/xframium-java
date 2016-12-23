@@ -70,7 +70,6 @@ import org.xframium.page.keyWord.step.spi.KWSElse;
 import org.xframium.page.keyWord.step.spi.KWSLoopBreak;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
-import org.xframium.spi.RunDetails;
 import org.xframium.spi.driver.ReportiumProvider;
 import org.xframium.utility.ImageUtility;
 import org.xframium.utility.XMLEscape;
@@ -888,6 +887,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             }
             catch ( KWSLoopBreak lb )
             {
+                executionContext.completeStep( StepStatus.SUCCESS, null );
                 throw lb;
             }
             catch ( Exception e )
@@ -930,6 +930,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     }
                     catch ( KWSLoopBreak e )
                     {
+                        executionContext.completeStep( StepStatus.SUCCESS, null );
                         throw e;
                     }
                     catch ( Exception e )
@@ -970,6 +971,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                             }
                             catch ( KWSLoopBreak e )
                             {
+                                executionContext.completeStep( StepStatus.SUCCESS, null );
                                 throw e;
                             }
                             catch ( Exception e )
@@ -1037,8 +1039,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             
             if ( isRecordable() )
             {
-                PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), getName(), getClass().getSimpleName(), startTime, System.currentTimeMillis() - startTime,
-                        returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, "", null, getThreshold(), getDescription(), false, null );
                 if ( isTimed() )
                     PageManager.instance().addExecutionTiming( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName() + "." + getName() + "." + getClass().getSimpleName(), System.currentTimeMillis() - startTime,
                             returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, description, threshold );
@@ -1059,8 +1059,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                                 stepException = new ScriptConfigurationException( toError() );
 
                             PageManager.instance().setThrowable( stepException );
-                            PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), getName(), "_" + getClass().getSimpleName(), startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE,
-                                    stepException.getMessage(), stepException, getThreshold(), getDescription(), false, new String[] { stepException.getMessage() } );
 
                             if ( isTimed() )
                                 PageManager.instance().addExecutionTiming( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName() + "." + getName() + "." + getClass().getSimpleName(), System.currentTimeMillis() - startTime,
@@ -1082,8 +1080,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                                 stepException = new IllegalArgumentException( toError() );
 
                             PageManager.instance().setThrowable( stepException );
-                            PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), getName(), "_" + getClass().getSimpleName(), startTime, System.currentTimeMillis() - startTime,
-                                    StepStatus.FAILURE_IGNORED, stepException.getMessage(), stepException, getThreshold(), getDescription(), false, new String[] { stepException.getMessage() } );
 
                             if ( isTimed() )
                                 PageManager.instance().addExecutionTiming( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName() + "." + getName() + "." + getClass().getSimpleName(), System.currentTimeMillis() - startTime,

@@ -29,6 +29,7 @@ import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.reporting.ExecutionContextTest;
+import com.gargoylesoftware.htmlunit.javascript.host.Console;
 
 
 
@@ -36,13 +37,13 @@ import org.xframium.reporting.ExecutionContextTest;
 /**
  * The Class KWSReport.
  */
-public class KWSReport extends AbstractKeyWordStep
+public class KWSConsole extends AbstractKeyWordStep
 {
-    public KWSReport()
+    public KWSConsole()
     {
-        kwName = "Report Item";
-        kwDescription = "Alolows the script to add a parameter value to the output report";
-        kwHelp = "https://www.xframium.org/keyword.html#kw-report";
+        kwName = "Console Item";
+        kwDescription = "Allows the script to print a parameter value to the execution console";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-console";
         orMapping = false;
         category = "Utility";
     }
@@ -57,29 +58,21 @@ public class KWSReport extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
-	    long startTime = System.currentTimeMillis();
-		if ( log.isDebugEnabled() )
-			log.debug( "Executing Device Action " + getName() + " using " + getParameterList() );
-		
 		StringBuilder reportData = new StringBuilder();
+		
+		reportData.append( "**********************************************************************************************************************\r\n" );
+		
 		if ( getName() != null && !getName().isEmpty() )
-		    reportData.append( getName() ).append( "\t" );
+		    reportData.append( "*  " ).append( getName() ).append( "\r\n" );
 		
 		for ( int i=0; i<getParameterList().size(); i++ )
-		    reportData.append( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) ).append( "\t" );
+		    reportData.append( "*       " ).append( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) ).append( "\r\n" );
 		
-		executionContext.getStep().addExecutionParameter( "REPORT_ENTRY", reportData.toString() );
+		reportData.append( "**********************************************************************************************************************\r\n" );
+		
+		log.warn( reportData.toString() );
 
 		return true;
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
-	 */
-	@Override
-	public boolean isRecordable()
-	{
-	    return false;
 	}
 
 }

@@ -38,8 +38,6 @@ import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.WebDriver;
-import org.xframium.artifact.ArtifactManager;
-import org.xframium.artifact.ArtifactType;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.services.WindTunnel.Status;
 import org.xframium.page.element.provider.ElementProvider;
@@ -48,7 +46,6 @@ import org.xframium.page.factory.PageFactory;
 import org.xframium.page.listener.ExecutionListener;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.spi.PropertyProvider;
-import org.xframium.spi.RunDetails;
 import org.xframium.spi.driver.DeviceProvider;
 import org.xframium.spi.driver.NativeDriverProvider;
 import org.xframium.utility.SeleniumSessionManager;
@@ -431,69 +428,7 @@ public class PageManager
         }
     }
 
-    /**
-     * Adds the execution log.
-     *
-     * @param executionId
-     *            the execution id
-     * @param deviceName
-     *            the device name
-     * @param group
-     *            the group
-     * @param name
-     *            the name
-     * @param type
-     *            the type
-     * @param timestamp
-     *            the timestamp
-     * @param runLength
-     *            the run length
-     * @param status
-     *            the status
-     * @param detail
-     *            the detail
-     * @param t
-     *            the t
-     * @param threshold
-     *            the threshold
-     * @param description
-     *            the description
-     * @param fromCache
-     *            the from cache
-     */
-    public void addExecutionLog( String executionId, String deviceName, String group, String name, String type, long timestamp, long runLength, StepStatus status, String detail, Throwable t, int threshold, String description, boolean fromCache,
-            String[] parameterArray )
-    {
-        List<Object> arrayList = new ArrayList<Object>( 10 );
-        arrayList.add( name );
-        arrayList.add( group );
-
-        if ( parameterArray != null )
-        {
-            for ( String param : parameterArray )
-                arrayList.add( param );
-        }
-
-        String message = null;
-        if ( type != null )
-        {
-            try
-            {
-                message = outputFormatter.getProperty( type );
-                if ( message != null )
-                {
-                    message = String.format( message, arrayList.toArray() );
-                }
-            }
-            catch ( Exception e )
-            {
-                log.error( "Error formatting message", e );
-            }
-        }
-
-        ArtifactManager.instance().notifyArtifactListeners( ArtifactType.EXECUTION_RECORD, new ExecutionRecord( group, name, type, timestamp, runLength, status, detail, t, fromCache, deviceName, message ) );
-    }
-
+    
     /**
      * Sets the throwable.
      *

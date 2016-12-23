@@ -39,6 +39,7 @@ import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
+import org.xframium.page.keyWord.step.SyntheticStep;
 import org.xframium.page.listener.KeyWordListener;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.reporting.ExecutionContextTest.TestStatus;
@@ -612,10 +613,10 @@ public class KeyWordDriver
         }
         catch ( Throwable e )
         {
+            executionContext.startStep( new SyntheticStep( test.getName(), "TEST" ), contextMap, dataMap );
+            executionContext.completeStep( StepStatus.FAILURE, e );
             executionContext.completeTest( TestStatus.FAILED, e );
             
-            if ( !testStarted )
-                PageManager.instance().addExecutionLog( null, null, "", testName, testName, startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE, e.getMessage(), e, 0, e.getMessage(), false, new String[] { e.getMessage() } );
             if ( PageManager.instance().getThrowable() == null )
                 PageManager.instance().setThrowable( e );
 

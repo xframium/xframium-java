@@ -64,7 +64,6 @@ import org.xframium.page.listener.LoggingExecutionListener;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
-import org.xframium.spi.RunDetails;
 import org.xframium.spi.driver.ReportiumProvider;
 
 // TODO: Auto-generated Javadoc
@@ -581,12 +580,6 @@ public abstract class AbstractSeleniumTest
             //
             try
             {
-                if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_HTML ) )
-                    RunDetails.instance().writeHTMLIndex( DataManager.instance().getReportFolder(), false );
-
-                if ( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_DEFINITION ) )
-                    RunDetails.instance().writeDefinitionIndex( DataManager.instance().getReportFolder() );
-
                 DeviceManager.instance().clearAllArtifacts();
                 Thread.currentThread().setName( "Idle Thread (" + Thread.currentThread().getId() + ")" );
             }
@@ -657,7 +650,6 @@ public abstract class AbstractSeleniumTest
         // The RunDetail singleton can be registered to track all runs for the
         // consolidated output report
         //
-        DeviceManager.instance().addRunListener( RunDetails.instance() );
     }
 
     private void cleanUpConnectedDevice( String name, ConnectedDevice device, Method currentMethod, Object[] testArgs, ITestResult testResult )
@@ -797,6 +789,7 @@ public abstract class AbstractSeleniumTest
 
                         try
                         {
+                            test.popupateSystemProperties();
                             Artifact currentArtifact = ((ArtifactProducer) webDriver).getArtifact( webDriver, ArtifactType.EXECUTION_RECORD_JSON, device, runKey, testResult.getStatus() == ITestResult.SUCCESS, test );
                             if ( currentArtifact != null )
                                 currentArtifact.writeToDisk( rootFolder );

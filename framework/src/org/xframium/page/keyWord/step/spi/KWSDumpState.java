@@ -20,36 +20,13 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.OutputStream;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import javax.imageio.ImageIO;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.xframium.application.ApplicationRegistry;
 import org.xframium.container.SuiteContainer;
-import org.xframium.device.data.DataManager;
-import org.xframium.device.factory.DeviceWebDriver;
-import org.xframium.exception.ScriptException;
-import org.xframium.exception.XFramiumException;
 import org.xframium.page.Page;
-import org.xframium.page.PageManager;
-import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.reporting.ExecutionContextTest;
-import org.xframium.spi.RunDetails;
-import org.xframium.utility.ImageUtility;
-import org.xframium.utility.XMLEscape;
 
 public class KWSDumpState extends AbstractKeyWordStep
 {

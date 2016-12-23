@@ -597,8 +597,6 @@ public class SeleniumElement extends AbstractElement
 
         String returnValue = getElement().getCssValue( styleProperty );
 
-        PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "style", System.currentTimeMillis(), System.currentTimeMillis() - startTime, StepStatus.SUCCESS, getKey(), null, 0, "",
-                currentElement instanceof CachedElement, new String[] { styleProperty, returnValue } );
         return returnValue;
     }
 
@@ -641,8 +639,6 @@ public class SeleniumElement extends AbstractElement
                 break;
         }
 
-        PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "get", System.currentTimeMillis(), System.currentTimeMillis() - startTime, StepStatus.SUCCESS, getKey(), null, 0, "",
-                currentElement instanceof CachedElement, new String[] { returnValue } );
         return returnValue;
     }
 
@@ -672,8 +668,7 @@ public class SeleniumElement extends AbstractElement
         long startTime = System.currentTimeMillis();
         WebElement webElement = (WebElement) getElement();
         boolean returnValue = webElement.isDisplayed();
-        PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "visible", System.currentTimeMillis(), System.currentTimeMillis() - startTime, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE,
-                getKey(), null, 0, "", webElement instanceof CachedElement, null );
+
         return returnValue;
     }
 
@@ -695,8 +690,6 @@ public class SeleniumElement extends AbstractElement
         else if ( getNativeDriver() instanceof RemoteWebDriver )
             returnValue = webElement.equals( webDriver.switchTo().activeElement() );
 
-        PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "focused", System.currentTimeMillis(), System.currentTimeMillis() - startTime, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE,
-                getKey(), null, 0, "", webElement instanceof CachedElement, null );
         return returnValue;
     }
 
@@ -708,8 +701,6 @@ public class SeleniumElement extends AbstractElement
 
         boolean returnValue = webElement.isEnabled();
 
-        PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "enabled", System.currentTimeMillis(), System.currentTimeMillis() - startTime, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE,
-                getKey(), null, 0, "", webElement instanceof CachedElement, null );
         return returnValue;
 
     }
@@ -748,15 +739,11 @@ public class SeleniumElement extends AbstractElement
                 ;
             }
 
-            PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "present", System.currentTimeMillis(), System.currentTimeMillis() - startTime, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE,
-                    getKey(), null, 0, "", false, null );
             return returnValue;
         }
         else if ( "V_IMAGE".equals( getBy().name().toUpperCase() ) )
         {
             returnValue = Boolean.parseBoolean( PerfectoMobile.instance().imaging().imageExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, MatchMode.bounded ).getStatus() );
-            PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "present", System.currentTimeMillis(), System.currentTimeMillis() - startTime, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE,
-                    getKey(), null, 0, "", false, null );
             return returnValue;
         }
 
@@ -792,9 +779,6 @@ public class SeleniumElement extends AbstractElement
                 else
                     returnValue = Boolean.parseBoolean( testValue ) | testValue.toUpperCase().equals( "SUCCESS" );
             }
-
-            PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "present", System.currentTimeMillis(), System.currentTimeMillis() - startTime, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE,
-                    getKey(), null, 0, "", false, null );
             return returnValue;
         }
         else
@@ -841,8 +825,6 @@ public class SeleniumElement extends AbstractElement
                 if ( currentContext != null && webDriver instanceof ContextAware )
                     ((ContextAware) webDriver).context( currentContext );
 
-                PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), getPageName(), getElementName(), "waitFor", System.currentTimeMillis(), System.currentTimeMillis() - startTime,
-                        webElement != null ? StepStatus.SUCCESS : StepStatus.FAILURE, getKey(), null, 0, "", webElement instanceof CachedElement, new String[] { waitType.name().toLowerCase() } );
                 return webElement != null;
             }
             catch ( Exception e )

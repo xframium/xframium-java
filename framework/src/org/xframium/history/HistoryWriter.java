@@ -19,17 +19,14 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.Initializable;
 import org.xframium.spi.Device;
-import org.xframium.spi.RunDetails;
 
 public class HistoryWriter
 {
@@ -189,8 +186,6 @@ public class HistoryWriter
         History hRoot = objFactory.createHistory();
         JAXBElement<History> jRoot = objFactory.createHistory( hRoot );
 
-        hRoot.setName( RunDetails.instance().getTestName() );
-
         hRoot.getTestCase().addAll( testMap.values() );
         TestSuite testSuite = new TestSuite();
         testSuite.setFileName( fileName );
@@ -263,7 +258,6 @@ public class HistoryWriter
 
     public synchronized void readData()
     {
-    	suiteName = RunDetails.instance().getTestName();
         if ( fileLoaded )
             return;
 
@@ -281,7 +275,6 @@ public class HistoryWriter
                 JAXBElement<?> rootElement = (JAXBElement<?>) u.unmarshal( inputStream );
                 History hRoot = (History) rootElement.getValue();
 
-                suiteName = RunDetails.instance().getTestName();
                 if  (suiteName == null )
                 	suiteName = hRoot.getName();
 

@@ -5,8 +5,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import org.xframium.device.data.DataManager;
 
 public class ExecutionContext
@@ -17,7 +19,9 @@ public class ExecutionContext
     private String suiteName;
     private Date startTime;
     private Date endTime;
+    
     private List<Map<String, Object>> executionSummary = new ArrayList<Map<String, Object>>( 10 );
+    private Map<String,String> sPMap = new HashMap<String,String>( 10 );
 
     private ExecutionContext()
     {
@@ -31,6 +35,16 @@ public class ExecutionContext
 
     private transient List<ExecutionContextTest> executionList = new ArrayList<ExecutionContextTest>( 10 );
 
+    public void popupateSystemProperties()
+    {
+        sPMap.clear();
+        Properties sP = System.getProperties();
+        for ( Object key : sP.keySet() )
+        {
+            sPMap.put( (String) key, sP.getProperty( (String)key ) ); 
+        }
+    }
+    
     public void addExecution( ExecutionContextTest test )
     {
         executionList.add( test );

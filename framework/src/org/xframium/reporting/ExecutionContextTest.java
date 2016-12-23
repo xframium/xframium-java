@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.exception.XFramiumException;
 import org.xframium.exception.XFramiumException.ExceptionType;
@@ -43,6 +44,7 @@ public class ExecutionContextTest
     private Map<String,Object> contextMap = null;
     private String message;
     private String folderName;
+    private Map<String,String> sPMap = new HashMap<String,String>( 10 );
     
     public Map<String,Object> toMap()
     {
@@ -62,6 +64,16 @@ public class ExecutionContextTest
         asMap.put( "sessionId", sessionId );
         asMap.put( "folderName", folderName );
         return asMap;
+    }
+    
+    public void popupateSystemProperties()
+    {
+        sPMap.clear();
+        Properties sP = System.getProperties();
+        for ( Object key : sP.keySet() )
+        {
+            sPMap.put( (String) key, sP.getProperty( (String)key ) ); 
+        }
     }
 
     public String getFolderName()

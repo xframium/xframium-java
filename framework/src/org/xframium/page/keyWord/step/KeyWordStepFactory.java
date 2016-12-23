@@ -43,6 +43,7 @@ import org.xframium.page.keyWord.step.spi.KWSCheckColor;
 import org.xframium.page.keyWord.step.spi.KWSClick;
 import org.xframium.page.keyWord.step.spi.KWSCommand;
 import org.xframium.page.keyWord.step.spi.KWSCompare;
+import org.xframium.page.keyWord.step.spi.KWSConsole;
 import org.xframium.page.keyWord.step.spi.KWSContrastRatio;
 import org.xframium.page.keyWord.step.spi.KWSDevice;
 import org.xframium.page.keyWord.step.spi.KWSDumpState;
@@ -190,6 +191,7 @@ public class KeyWordStepFactory
         addKeyWord( "ENABLED", KWSEnabled.class );
         addKeyWord( "COMMAND", KWSCommand.class );
         addKeyWord( "EMAIL", KWSEmail.class );
+        addKeyWord( "CONSOLE", KWSConsole.class );
     }
 
     /**

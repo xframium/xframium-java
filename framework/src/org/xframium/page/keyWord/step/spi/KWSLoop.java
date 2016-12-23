@@ -27,11 +27,13 @@ import org.xframium.container.SuiteContainer;
 import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
+import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+import org.xframium.page.keyWord.step.SyntheticStep;
 import org.xframium.reporting.ExecutionContextTest;
 
 
@@ -94,21 +96,34 @@ public class KWSLoop extends AbstractKeyWordStep
 					log.debug( "Execution Function " + functionName + " - Iteration " + i + " of " + loopCount );
 				try
 				{
-				
+				    executionContext.startStep( new SyntheticStep( functionName, "CALL2" ), contextMap, dataMap );
 				    if ( sC != null )
 				    {
                         if ( !sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext) )
+                        {
+                            executionContext.completeStep( StepStatus.FAILURE, null );
                             return false;
+                        }
 				    }
                     else
                     {
                         if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext ) )
+                        {
+                            executionContext.completeStep( StepStatus.FAILURE, null );
                             return false;
+                        }
                     }
+				    executionContext.completeStep( StepStatus.SUCCESS, null );
 				}
 				catch( KWSLoopBreak e )
 				{
+				    executionContext.completeStep( StepStatus.SUCCESS, null );
 					return true;
+				}
+				catch( Exception e )
+				{
+				    executionContext.completeStep( StepStatus.FAILURE, e );
+				    throw e;
 				}
 			}
 			
@@ -157,21 +172,34 @@ public class KWSLoop extends AbstractKeyWordStep
 						
 						if ( log.isDebugEnabled() )
 							log.debug( "Execution Function " + functionName + " - with data " + pageData );
-						
+						executionContext.startStep( new SyntheticStep( functionName, "CALL2" ), contextMap, dataMap );
 						if ( sC != null )
 	                    {
 	                        if ( !sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext) )
-	                            return false;
+	                        {
+                                executionContext.completeStep( StepStatus.FAILURE, null );
+                                return false;
+                            }
 	                    }
 	                    else
 	                    {
 	                        if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext ) )
-	                            return false;
+	                        {
+                                executionContext.completeStep( StepStatus.FAILURE, null );
+                                return false;
+                            }
 	                    }
+						executionContext.completeStep( StepStatus.SUCCESS, null );
 					}
 					catch( KWSLoopBreak lb )
 					{
+					    executionContext.completeStep( StepStatus.SUCCESS, null );
 						return true;
+					}
+					catch( Exception e )
+					{
+					    executionContext.completeStep( StepStatus.FAILURE, e );
+					    throw e;
 					}
 				}
 				
@@ -204,21 +232,35 @@ public class KWSLoop extends AbstractKeyWordStep
 					
 					try
 					{
+					    executionContext.startStep( new SyntheticStep( functionName, "CALL2" ), contextMap, dataMap );
 					    if ( sC != null )
 	                    {
 	                        if ( !sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext) )
-	                            return false;
+	                        {
+                                executionContext.completeStep( StepStatus.FAILURE, null );
+                                return false;
+                            }
 	                    }
 	                    else
 	                    {
 	                        if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext ) )
+	                        {
+	                            executionContext.completeStep( StepStatus.FAILURE, null );
 	                            return false;
+	                        }
 	                    }
+					    executionContext.completeStep( StepStatus.SUCCESS, null );
 						
 					}
 					catch( KWSLoopBreak lb )
 					{
+					    executionContext.completeStep( StepStatus.SUCCESS, null );
 						return true;
+					}
+					catch( Exception e )
+					{
+					    executionContext.completeStep( StepStatus.FAILURE, e );
+					    throw e;
 					}
 				}
 			}

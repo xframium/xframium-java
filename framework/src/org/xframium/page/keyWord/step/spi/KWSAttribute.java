@@ -116,6 +116,7 @@ public class KWSAttribute extends AbstractKeyWordStep
 			contextMap.put( getContext(), attributeValue );
 		}
 		
+		
 		return true;
 	}
 

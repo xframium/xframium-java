@@ -34,6 +34,7 @@ import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
+import org.xframium.page.keyWord.step.SyntheticStep;
 import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc
@@ -382,8 +383,10 @@ public class KeyWordTest
                     if ( page == null )
                     {
                         PageManager.instance().setThrowable( new ObjectConfigurationException( step.getSiteName() == null ? PageManager.instance().getSiteName() : step.getSiteName(), step.getPageName(), null ) );
-                        PageManager.instance().addExecutionLog( executionId, deviceName, step.getPageName(), step.getName(), "_" + step.getClass().getSimpleName(), startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE,
-                                PageManager.instance().getThrowable().getMessage(), PageManager.instance().getThrowable(), 0, "", false, new String[] { PageManager.instance().getThrowable().getMessage() } );
+                        
+                        executionContext.startStep( new SyntheticStep( step.getPageName(), "PAGE" ), contextMap, dataMap );
+                        executionContext.completeStep( StepStatus.FAILURE, PageManager.instance().getThrowable() );
+                        
                         stepSuccess = false;
                         return false;
                     }
@@ -398,8 +401,6 @@ public class KeyWordTest
                 if ( log.isWarnEnabled() )
                     log.warn( "***** Step [" + step.getName() + "] Failed" );
 
-                PageManager.instance().addExecutionLog( executionId, deviceName, "", this.getName(), "_Test", startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE, "", null, 0, "", false, new String[] { this.getName() } );
-
                 if ( timed )
                     PageManager.instance().addExecutionTiming( executionId, deviceName, getName(), System.currentTimeMillis() - startTime, StepStatus.FAILURE, description, threshold );
 
@@ -412,9 +413,6 @@ public class KeyWordTest
             }
 
         }
-
-        PageManager.instance().addExecutionLog( executionId, deviceName, "", this.getName(), "Test", startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, 0, "", false, new String[] { this.getName() } );
-
         if ( timed )
             PageManager.instance().addExecutionTiming( executionId, deviceName, getName(), System.currentTimeMillis() - startTime, StepStatus.SUCCESS, description, threshold );
 

@@ -602,7 +602,6 @@ public abstract class AbstractElement implements Element
 		{
 			returnValue = _getAttribute( attributeName );
 			success = true;
-			PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), pageName, elementName, "attribute", System.currentTimeMillis(), System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, getKey(), null, 0, "", false, new String[] { attributeName, returnValue } );
 		}
 		catch( Exception e )
 		{
@@ -632,7 +631,6 @@ public abstract class AbstractElement implements Element
 		{
 			returnValue = _getImage( resolution );
 			success = true;
-			PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), pageName, elementName, "image", System.currentTimeMillis(), System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, getKey(), null, 0, "", false, new String[] { resolution.name() } );
 		}
 		catch( Exception e )
 		{
@@ -667,7 +665,6 @@ public abstract class AbstractElement implements Element
         {
             _setValue( currentValue, setMethod );
             success = true;
-            PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), pageName, elementName, "setValue", System.currentTimeMillis(), System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, getKey(), null, 0, "", false, new String[] { currentValue } );
         }
         catch( Exception e )
         {
@@ -716,7 +713,6 @@ public abstract class AbstractElement implements Element
 			}
 								
 			success = true;
-			PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), pageName, elementName, "click", System.currentTimeMillis(), System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, getKey(), null, 0, "", false,clickArray );
 		}	
 		catch( Exception e )
 		{

@@ -49,7 +49,6 @@ import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.spi.Device;
-import org.xframium.spi.RunDetails;
 import org.xframium.utility.SeleniumSessionManager;
 import com.xframium.serialization.SerializationManager;
 
@@ -177,8 +176,6 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             log.info( "Content: Configuring Content Engine" );
             if ( !configureContent() ) return;
-            
-            DeviceManager.instance().addRunListener( RunDetails.instance() );
             
             log.info( "Property Adapter:  Configuring Property Adapters" );
             if ( !configurePropertyAdapters() ) return;
@@ -360,6 +357,8 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             if ( ExecutionContext.instance().isEnabled() )
             {
                 ExecutionContext.instance().setEndTime( new Date( System.currentTimeMillis() ) );
+                ExecutionContext.instance().popupateSystemProperties();
+                
                 String outputData = "var testData = " + new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ), ExecutionContext.instance(), 0 ) ) + ";";
                 Artifact jsArtifact = new Artifact( "Suite.js", outputData.getBytes() );
                 jsArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
@@ -447,7 +446,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     
     protected void runTest( String outputFolder, Class theTest, SuiteContainer sC )
     {
-        RunDetails.instance().setStartTime();
+
         TestNG testNg = new TestNG( true );
         testNg.setVerbose( 10 );
         testNg.setOutputDirectory( outputFolder + System.getProperty( "file.separator" ) + "testNg" );
