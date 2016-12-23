@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html ng-app="xTest">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
+<script src="http://xframium.org/output/assets/js/ui-bootstrap-tpls-2.1.4.js"></script>
+<script src="http://xframium.org/output/assets/js/angular-ui-tree.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+<script src="http://xframium.org/output/assets/js/angular-chart.js"></script>
+<script src="./History.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link href="http://www.xframium.org/output/assets/css/toolkit-inverse.css" rel="stylesheet">
+<link href="http://www.xframium.org/output/assets/css/application.css" rel="stylesheet">
+<link href="http://www.xframium.org/output/assets/css/angular-ui-tree.css" rel="stylesheet">
+</head>
+<body ng-controller="xTestController" data-ng-init="initialize()">
+    <div class="container">
+        <div class="col-sm-12 content">
+            <div class="dashhead">
+                <span class="pull-right text-muted">{{testData[0].pageData.startTime.dateOnly}} at {{testData[0].pageData.startTime.timeOnly}}</span>
+                <h6 class="dashhead-subtitle">xFramium 1.0.5</h6>
+                <h3 class="dashhead-title">{{testData[0].pageData.suiteName}}</h3>
+                
+            </div>
+        </div>
+        <div class="row" style="margin-top: 20px">
+            <div class="col-sm-8">
+                <h5 class="text-primary" style="margin-bottom: 10px; text-align: center">Execution History</h5>
+                <canvas class="chart chart-line" chart-series="execSeries" chart-data="execData" chart-labels="execLabels" chart-colors="chartColors" ></canvas>
+            </div>
+            <div class="col-sm-4" ng-if="envLabels.length > 2">
+                <h6 class="text-primary" style="margin-bottom: 10px; text-align: center">Environment Coverage</h6>
+                <canvas class="chart chart-radar" chart-series="envSeries" chart-data="envData" chart-labels="envLabels" chart-colors="chartColors"  chart-options="radarChartOptions"></canvas>
+            </div>
+            
+            <div class="col-sm-4" ng-if="envLabels.length < 3">
+                <h6 class="text-primary" style="margin-bottom: 10px; text-align: center">Environment Coverage</h6>
+                <canvas class="chart chart-bar" chart-series="envSeries" chart-data="envData" chart-labels="envLabels" chart-colors="chartColors" ></canvas>
+            </div>
+        </div>
+        
+        <div class="row" style="margin-top: 20px">
+            <div class="col-sm-12">
+                <div class="panel panel-primary">
+                    <div class=panel-heading>
+                        <div class=panel-title>Execution Detail</div>
+                    </div>
+                    <div class=panel-body>
+                        <table class="table table-hover table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>When Executed</th>
+                                    <th style="text-align: center">Duration</th>
+                                    <th style="text-align: center">Tests</th>
+                                    <th style="text-align: center">Passed</th>
+                                    <th style="text-align: center">Failed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="exec in testData">
+                                    <td>
+                                        <a href='file://{{exec.pageData.reportFolder}}/index.html'>{{exec.pageData.startTime.dateTime}}</a>
+                                    </td>
+                                    <td style="text-align: center">{{formatSuiteDuration( exec.pageData )}}</td>
+                                    <td style="text-align: center">{{exec.pageData.summaryData.passed + exec.pageData.summaryData.failed}}</td>
+                                    <td style="text-align: center">{{exec.pageData.summaryData.passed}}</td>
+                                    <td style="text-align: center">{{exec.pageData.summaryData.failed}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var xTest = angular.module('xTest', [ 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.tree', 'chart.js' ]);
+
+    xTest.config([ '$compileProvider', function( $compileProvider )
+    {
+        $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|file|data|chrome-extension):/);
+    } ]);
+
+    xTest.directive('compile', [ '$compile', function( $compile )
+    {
+        return function( scope, element, attrs )
+        {
+            scope.$watch(function( scope )
+            {
+                return scope.$eval(attrs.compile);
+            }, function( value )
+            {
+                element.html(value);
+                $compile(element.contents())(scope);
+            });
+        };
+    } ]);
+
+    xTest.controller('xTestController', function XTestController( $scope, $uibModal )
+    {
+        $scope.radarChartOptions = {
+                scale: {
+                    reverse: true,
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }
+            }
+        
+        $scope.testData = suiteData;
+
+        $scope.summaryData = [];
+        
+        $scope.durationList = [];
+        $scope.passList = [];
+        $scope.failList = [];
+        
+        $scope.envSummary = {};
+
+        $scope.execLabels = [];
+        $scope.execData = [];
+        $scope.execSeries = [ 'Passed', 'Failed', 'Duration' ];
+        
+        $scope.envLabels = [];
+        $scope.envData = [];
+        $scope.envSeries = [ 'Passed', 'Failed' ];
+
+        $scope.initialize = function()
+        {
+            for ( var i = 0; i < $scope.testData.length; i++ ) 
+            {
+                
+                var test = $scope.testData[i].pageData;
+                $scope.durationList.push((parseInt(test.endTime.raw) - parseInt(test.startTime.raw)) / 1000 / 60);
+                $scope.execLabels.push( test.startTime.dateOnly );
+                $scope.summaryData.push( $scope.categorizeData( test ) )
+                test.summaryData = $scope.categorizeData( test );
+                
+                for ( var key in test.summaryData.envSummary )
+                {
+                    
+                    var env = $scope.envSummary[key];
+                    if ( env == null ) {
+                        $scope.envSummary[key] = [];
+                        $scope.envSummary[key] = {
+                            'passed' : 0,
+                            'failed' : 0
+                        };
+                        env = $scope.envSummary[key];
+                    }
+                    
+                    env[ 'passed' ] += test.summaryData.envSummary[key][ 'passed'];
+                    env[ 'failed' ] += test.summaryData.envSummary[key][ 'failed'];
+                }
+            }
+
+            for ( var i = 0; i < $scope.summaryData.length; i++ ) 
+            {
+                $scope.passList.push( $scope.summaryData[ i ].passed );
+                $scope.failList.push( $scope.summaryData[ i ].failed );
+            }
+            
+            var _passList = [];
+            var _failList = [];
+            
+            for ( var key in $scope.envSummary ) 
+            {
+                _passList.push( $scope.envSummary[key][ 'passed' ] );
+                _failList.push( $scope.envSummary[key][ 'failed' ] );
+                $scope.envLabels.push( key );
+            }
+            
+            $scope.envData.push(_passList);
+            $scope.envData.push(_failList);
+            
+            $scope.passList.reverse();
+            $scope.failList.reverse();
+            $scope.durationList.reverse();
+            $scope.execData.push($scope.passList);
+            $scope.execData.push($scope.failList);
+            $scope.execData.push($scope.durationList)
+        }
+        
+        $scope.categorizeData = function( suite )
+        {
+            var returnData = { "passed":0, "failed":0, "ignored":0, "stepsPassed":0, "stepsFailed":0, "stepsIgnored":0, "clouds":{}, "cloudSummary":{}, "envs":{}, "envSummary":{} }
+
+            for ( var i = 0; i < suite.executionSummary.length; i++ ) {
+                var cE = suite.executionSummary[i];
+
+                returnData[ 'stepsPassed' ] += parseInt( cE.passed );
+                returnData[ 'stepsFailed' ] += parseInt( cE.failed );
+                returnData[ 'stepsIgnored' ] += parseInt( cE.ignored );
+                
+                if ( cE.testStatus == 'PASSED' )
+                    returnData[ 'passed' ]++;
+                else if ( cE.testStatus == 'SKIPPED' )
+                    returnData[ 'skipped' ]++;
+                else 
+                    returnData[ 'failed' ]++;
+
+                if ( cE.testStatus != 'SKIPPED' ) 
+                {
+                    var cloud = returnData[ 'clouds' ][cE.cloud.name];
+                    if ( cloud == null ) {
+                        returnData[ 'clouds' ][cE.cloud.name] = [];
+                        cloud = returnData[ 'clouds' ][cE.cloud.name];
+                        returnData[ 'cloudSummary' ][cE.cloud.name] = {
+                            'passed' : 0,
+                            'failed' : 0
+                        };
+                    }
+
+                    cloud.push(cE);
+
+                    var env = returnData[ 'envs' ][cE.device.key];
+                    if ( env == null ) {
+                        returnData[ 'envs' ][cE.device.key] = [];
+                        env = returnData[ 'envs' ][cE.device.key];
+                        returnData[ 'envSummary' ][cE.device.key] = {
+                            'passed' : 0,
+                            'failed' : 0
+                        };
+                    }
+
+                    env.push(cE);
+                    
+                    if ( cE.testStatus == 'PASSED' ) {
+                        returnData[ 'envSummary' ][cE.device.key]['passed'] += 1;
+                        returnData[ 'cloudSummary' ][cE.cloud.name]['passed'] += 1;
+                    }
+                    else if ( cE.testStatus != 'SKIPPED' ) {
+                        returnData[ 'envSummary' ][cE.device.key]['failed'] += 1;
+                        returnData[ 'cloudSummary' ][cE.cloud.name]['failed'] += 1;
+                    }
+                    
+                }
+                
+                
+            }
+            return returnData;
+        }
+        
+        $scope.formatSuiteDuration = function( suite )
+        {
+            if ( suite.endTime == null )
+                return "N/A";
+            var duration = suite.endTime.raw - suite.startTime.raw;
+            var milliseconds = parseInt((duration % 1000) / 100);
+            var seconds = parseInt((duration / 1000) % 60);
+            var minutes = parseInt((duration / (1000 * 60)) % 60);
+            var hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+            return hours + "h " + minutes + "m " + seconds + "s"
+        }
+        
+        $scope.chartColors = [ "#1bc98e", "#ff0000", "#000036" ];
+    });
+</script>
+</html>

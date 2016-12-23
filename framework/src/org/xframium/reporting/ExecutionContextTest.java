@@ -15,6 +15,7 @@ import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.keyWord.step.SyntheticStep;
 import org.xframium.spi.Device;
 
 public class ExecutionContextTest
@@ -285,6 +286,13 @@ public class ExecutionContextTest
     
     public void completeTest( TestStatus testStatus, Throwable testException )
     {
+        if ( stepList == null || stepList.size() == 0 )
+        {
+            startStep( new SyntheticStep( test.getName(), "TEST" ), contextMap, dataMap );
+            completeStep( StepStatus.FAILURE, testException );
+        }
+        
+        
         endTime = new Date( System.currentTimeMillis() );
         this.testStatus = testStatus;
         if ( testException != null )
@@ -292,6 +300,7 @@ public class ExecutionContextTest
         this.testException = testException;
         if ( testStatus.equals( TestStatus.FAILED ) )
             exceptionType = _getExceptionType();
+        
     }
     
     public boolean getStatus()

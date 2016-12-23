@@ -117,6 +117,7 @@ iframe {
                     </div>
                 </div>
             </div>
+            <a hRef="../index.html" class="pull-right" style="margin-right: 10px"><span>Test Suite Execution Detail</span></a>
             <uib-tabset active="active"> 
             <uib-tab heading="Steps" active="true">
             <div ui-tree id="tree-root" class="scrollable" style="max-height: 700px">
@@ -315,6 +316,7 @@ iframe {
             messageText = messageText.replace("{name}", step.step.name);
             messageText = messageText.replace("{subName}", step.step.subName);
             messageText = messageText.replace("{pageName}", step.step.pageName);
+            messageText = messageText.replace("{device}", $scope.testData.device.key);
             for ( var i = 0; i < step.parameterList.length; i++ ) {
                 messageText = messageText.replace("{$p" + (i + 1) + "}", step.parameterList[i]);
             }
@@ -343,6 +345,7 @@ iframe {
                 messageText = messageText.replace("{name}", '<span class="text-warning">' + step.step.name + "</span>");
                 messageText = messageText.replace("{subName}", '<span class="text-info">' + step.step.subName + "</span>");
                 messageText = messageText.replace("{pageName}", '<span class="text-warning">' + step.step.pageName + "</span>");
+                messageText = messageText.replace("{errorMessage}", step.throwable);
                 for ( var i = 0; i < step.parameterList.length; i++ ) {
                     messageText = messageText.replace("{$p" + (i + 1) + "}", '<span class="text-info">' + step.parameterList[i] + "</span>");
                 }
@@ -467,7 +470,8 @@ iframe {
             "CLICK" : "{kw} at the center of {name} on {pageName}",
             "COMMAND" : "Execute the {kw} {name}",
             "EMAIL" : "{name} an {kw}",
-            "CONSOLE" : "Add data to the execution {kw}"
+            "CONSOLE" : "Add data to the execution {kw}",
+            "TEST" : "{errorMessage}"
         };
 
     });

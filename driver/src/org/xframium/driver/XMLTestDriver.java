@@ -68,9 +68,11 @@ public class XMLTestDriver extends AbstractSeleniumTest
             if ( !((DeviceWebDriver) getWebDriver()).isConnected() )
             {
                 ExecutionContextTest executionContextTest = new ExecutionContextTest();
+                executionContextTest.setDevice( getDevice() );
                 executionContextTest.setTest( test );
                 executionContextTest.completeTest( TestStatus.FAILED, new DeviceAcquisitionException( getDevice() ) );
                 testName.setTest( executionContextTest );
+                
 
                 PageManager.instance().setThrowable( new DeviceAcquisitionException( getDevice() ) );
 
@@ -95,6 +97,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
 
                     ExecutionContextTest executionContextTest = new ExecutionContextTest();
                     executionContextTest.setTest( test );
+                    executionContextTest.setDevice( getDevice() );
                     executionContextTest.completeTest( TestStatus.SKIPPED, new FilteredException( "This test is not designed to work on a device with [" + deviceOs + "]  It needs [" + test.getOs() + "]" ) );
                     testName.setTest( executionContextTest );
 

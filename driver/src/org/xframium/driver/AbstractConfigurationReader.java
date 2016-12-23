@@ -38,6 +38,7 @@ import org.xframium.gesture.GestureManager;
 import org.xframium.gesture.device.action.DeviceActionManager;
 import org.xframium.gesture.device.action.spi.perfecto.PerfectoDeviceActionFactory;
 import org.xframium.gesture.factory.spi.PerfectoGestureFactory;
+import org.xframium.history.HistoryWriter;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.rest.bean.factory.BeanManager;
 import org.xframium.integrations.rest.bean.factory.XMLBeanFactory;
@@ -363,6 +364,8 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                 Artifact jsArtifact = new Artifact( "Suite.js", outputData.getBytes() );
                 jsArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
                 
+                new HistoryWriter( DataManager.instance().getReportFolder() ).updateHistory();
+                
                 StringBuilder stringBuffer = new StringBuilder();
                 InputStream inputStream = null;
                 try
@@ -409,9 +412,6 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                 {
                     try { inputStream.close(); } catch( Exception e ) {}
                 }
-                
-                
-                
             }
             
             if( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )
