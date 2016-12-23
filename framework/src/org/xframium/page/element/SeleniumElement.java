@@ -907,7 +907,6 @@ public class SeleniumElement extends AbstractElement
             }
             else if ( webElement.getTagName().equalsIgnoreCase( "UIAPickerWheel" ) )
             {
-                System.out.println( "SETTING PICKER" );
                 try
                 {
                     MorelandWebElement x = (MorelandWebElement) webElement;

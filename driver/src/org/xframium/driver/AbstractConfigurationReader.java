@@ -451,7 +451,6 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         testNg.setVerbose( 10 );
         testNg.setOutputDirectory( outputFolder + System.getProperty( "file.separator" ) + "testNg" );
         testNg.setTestClasses( new Class[] { theTest } );
-        System.out.println( "runtest: " + Thread.currentThread().getName() );
         testNg.run();
 
     }

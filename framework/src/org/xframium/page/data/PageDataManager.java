@@ -135,14 +135,5 @@ public class PageDataManager
     {
     	dataProvider.putRecord( pageData );
     }
-    
-    public static void main( String[] args )
-    {
-        PageDataManager.instance().setPageDataProvider( new XMLPageDataProvider( new File( "C:\\Projects\\Git\\morelandLabs\\customerProjects\\xmlDriven\\allState\\allStateWeb\\allStateWeb-pageData.xml")) );
-        
-        //System.out.println( PageDataManager.instance().getPageData( "searchData" ) );
-        //System.out.println( PageDataManager.instance().getPageData( "searchData", "ADAMRYAN.rangeSelection" ) );
-        System.out.println( PageDataManager.instance().getPageData( "searchData", "ADAMRYAN.rangeSelection.USER_02776.authData" ) );
-        
-    }
+
 }

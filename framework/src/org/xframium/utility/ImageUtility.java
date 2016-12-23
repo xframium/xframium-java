@@ -14,8 +14,6 @@ public class ImageUtility
         
         int differenceCount = 0;
         
-        System.out.println( dimOne.getWidth() + ", " + dimOne.getHeight() );
-        
         if ( dimOne.getWidth() != dimTwo.getWidth() || dimOne.getHeight() != dimTwo.getHeight() )
             return 0;
         else
@@ -31,15 +29,6 @@ public class ImageUtility
         }
         
         return differenceCount / ( dimOne.getWidth() * dimOne.getHeight() );
-        
-    }
-
-    public static void main( String[] args ) throws Exception
-    {
-        BufferedImage one = ImageIO.read( new File( "C:\\Users\\Allen\\git\\xframium-java\\testing\\test-output\\historicalComparison\\Firefox Local\\afterClick-0000.png" ) );
-        BufferedImage two = ImageIO.read( new File( "C:\\Users\\Allen\\git\\xframium-java\\testing\\test-output\\historicalComparison\\Firefox Local\\afterClick-0001.png" ) );
-        
-        System.out.println( compareImages( one, two ) );
         
     }
     

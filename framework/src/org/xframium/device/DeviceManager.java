@@ -642,7 +642,6 @@ public class DeviceManager implements ArtifactListener
                 
                 if ( !deviceRan && currentFailures < currentDevice.getAvailableDevices() * retryCount )
                 {
-                    System.out.println( currentDevice );
                     deviceFound = true;
                     break;
                 }

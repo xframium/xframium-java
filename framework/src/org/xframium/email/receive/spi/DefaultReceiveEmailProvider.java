@@ -58,7 +58,6 @@ public class DefaultReceiveEmailProvider extends AbstractReceiveEmailProvider
 
             for ( int i = 0; i < messageCount; i++ )
             {
-                System.out.println( messages[i].getSubject() );
                 if ( applyFilters( messages[i], messageFilters ) )
                 {
                     messageList.add( messages[i] );

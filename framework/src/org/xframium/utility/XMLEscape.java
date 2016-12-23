@@ -112,26 +112,7 @@ public class XMLEscape
             return null;
         }
     }
-    
-    public static void main( String[] args ) throws Exception
-    {
-        StringBuilder  x = new StringBuilder();
-        
-        int bytesRead = 0;
-        byte[] buffer = new byte[ 512 ];
-        
-        FileInputStream y = new FileInputStream( "C:\\Users\\Allen\\Desktop\\a.xml");
-        while ( ( bytesRead = y.read( buffer ) ) != -1 )
-        {
-            x.append( new String( buffer, 0, bytesRead ) );
-        }
-        
-        System.out.println( toXML( x.toString() ) );
-        
-        
-        
-        
-    }
+
     
     /**
      * Checks if a given xml is a valid format
