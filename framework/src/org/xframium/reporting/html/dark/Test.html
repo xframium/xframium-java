@@ -198,7 +198,7 @@ iframe {
     </div>
 </body>
 <script type="text/ng-template" id="step.html">
-    <div data-nodrag ui-tree-handle  class="tree-node tree-node-content" style="border-radius: 5px; margin-top: 5px; margin-bottom: 5px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;cursor: default" ng-class="{'passStep' : stepDef.stepStatus == 'SUCCESS', 'failStep' : stepDef.stepStatus == 'FAILURE', 'ignoreStep' : stepDef.stepStatus == 'FAILURE_IGNORE'}">
+    <div data-nodrag ui-tree-handle  class="tree-node tree-node-content" style="border-radius: 5px; margin-top: 5px; margin-bottom: 5px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;cursor: default" ng-class="{'passStep' : stepDef.stepStatus == 'SUCCESS', 'failStep' : stepDef.stepStatus == 'FAILURE', 'ignoreStep' : stepDef.stepStatus == 'FAILURE_IGNORED'}">
         <a ng-if="stepDef.stepList.length != 0" data-nodrag ng-click="toggle(this)" style="cursor: default" >
             <span ng-if="stepDef.stepList.length != 0" class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }" style="cursor: default"></span>
         </a>
@@ -231,6 +231,14 @@ iframe {
             <div class="col-md-8" ng-if="selectedStep.throwable != 'null'">
                 <span class="text-danger">{{selectedStep.throwable}}</span>
             </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-2" stype="text-align: center"><a hRef="failureDOM.xml" class="btn btn-primary" type="button" target="_blank">View XML</a></div>
+            <div class="col-md-2" stype="text-align: center"><a hRef="failureDOM.html" class="btn btn-success" type="button" target="_blank">View XML (as HTML)</a></div>
+            <div class="col-md-4"></div>
         </div>
     </div>
 </div>

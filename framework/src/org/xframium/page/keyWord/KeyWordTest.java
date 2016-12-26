@@ -382,10 +382,9 @@ public class KeyWordTest
                     page = PageManager.instance().createPage( KeyWordDriver.instance().getPage(step.getSiteName() != null && step.getSiteName().trim().length() > 0 ? step.getSiteName() : PageManager.instance().getSiteName(), step.getPageName() ), webDriver );
                     if ( page == null )
                     {
-                        PageManager.instance().setThrowable( new ObjectConfigurationException( step.getSiteName() == null ? PageManager.instance().getSiteName() : step.getSiteName(), step.getPageName(), null ) );
                         
                         executionContext.startStep( new SyntheticStep( step.getPageName(), "PAGE" ), contextMap, dataMap );
-                        executionContext.completeStep( StepStatus.FAILURE, PageManager.instance().getThrowable() );
+                        executionContext.completeStep( StepStatus.FAILURE, new ObjectConfigurationException( step.getSiteName() == null ? PageManager.instance().getSiteName() : step.getSiteName(), step.getPageName(), null ) );
                         
                         stepSuccess = false;
                         return false;
@@ -403,9 +402,6 @@ public class KeyWordTest
 
                 if ( timed )
                     PageManager.instance().addExecutionTiming( executionId, deviceName, getName(), System.currentTimeMillis() - startTime, StepStatus.FAILURE, description, threshold );
-
-                if ( PageManager.instance().getThrowable() == null )
-                    PageManager.instance().setThrowable( new ScriptException( step.toError() ) );
 
                 stepSuccess = false;
                 return false;

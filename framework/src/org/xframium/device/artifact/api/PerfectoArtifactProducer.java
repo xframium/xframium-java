@@ -120,7 +120,7 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
         }
         catch (Exception e)
         {
-            log.error( "Error download artifact data", e );
+            log.error( "Error download artifact data - " + e.getMessage());
             return null;
         }
 	}
@@ -202,7 +202,7 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
     				}
     				catch( Exception e )
     				{
-    					log.error( "Error download device log data", e );
+    					log.error( "Error download device log data" + "e.getMessage()" );
     				}
     				return null;
     				
@@ -265,7 +265,7 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 		}
 		catch (Exception e)
 		{
-			log.error( "Error performing GET request", e );
+			log.error( "Error performing GET request - " + e.getMessage() );
 			return null;
 		}
 		finally

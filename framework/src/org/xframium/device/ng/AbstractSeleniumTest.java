@@ -481,7 +481,7 @@ public abstract class AbstractSeleniumTest
                     testName.setTestName( currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() );
 
                 ((TestName) testArgs[0]).setFullName( testArgs[0].toString() );
-                Thread.currentThread().setName( testName.baseTestName + "-->" + connectedDevice.getDevice().toShortString() + " (" + Thread.currentThread().getId() + ")" );
+                Thread.currentThread().setName( testName.baseTestName + "-->" + connectedDevice.getWebDriver().getPopulatedDevice().toShortString() + " (" + Thread.currentThread().getId() + ")" );
             }
         }
         catch ( Exception e )
@@ -703,7 +703,7 @@ public abstract class AbstractSeleniumTest
                                         }
                                         catch ( Exception e )
                                         {
-                                            log.error( "Error acquiring Artifacts", e );
+                                            log.error( "Error acquiring Artifacts " + e.getMessage() );
                                         }
                                     }
                                 }
@@ -748,7 +748,7 @@ public abstract class AbstractSeleniumTest
                                 }
                                 catch ( Exception e )
                                 {
-                                    log.error( "Error acquiring Artifacts - " + e );
+                                    log.error( "Error acquiring Artifacts - " + e.getMessage() );
                                 }
                             }
                         }

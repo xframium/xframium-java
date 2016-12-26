@@ -52,12 +52,21 @@ import com.perfecto.reportium.test.result.TestResultFactory;
 
 public class XMLTestDriver extends AbstractSeleniumTest
 {
+    
+    
     @Test ( dataProvider = "deviceManager")
     public void testDriver( TestName testName ) throws Throwable
     {
         String deviceOs = getDevice().getOs();
         String[] deviceTags = getDevice().getTagNames();
+        
+        CloudDescriptor cD = CloudRegistry.instance().getCloud();
+        if ( getDevice().getCloud() != null && !getDevice().getCloud().trim().isEmpty() )
+            cD = CloudRegistry.instance().getCloud( getDevice().getCloud() );
+        
         boolean returnValue = false;
+
+        ExecutionContextTest executionContextTest = new ExecutionContextTest();
 
         KeyWordTest test = KeyWordDriver.instance().getTest( testName.getTestName().split( "\\." )[0] );
         if ( test == null )
@@ -67,16 +76,12 @@ public class XMLTestDriver extends AbstractSeleniumTest
         {
             if ( !((DeviceWebDriver) getWebDriver()).isConnected() )
             {
-                ExecutionContextTest executionContextTest = new ExecutionContextTest();
                 executionContextTest.setDevice( getDevice() );
+                executionContextTest.setCloud( cD );
                 executionContextTest.setTest( test );
                 executionContextTest.completeTest( TestStatus.FAILED, new DeviceAcquisitionException( getDevice() ) );
                 testName.setTest( executionContextTest );
-                
-
-                PageManager.instance().setThrowable( new DeviceAcquisitionException( getDevice() ) );
-
-                throw PageManager.instance().getThrowable();
+                throw new DeviceAcquisitionException( getDevice() );
             }
 
             if ( test.getOs() != null && deviceOs != null )
@@ -94,16 +99,12 @@ public class XMLTestDriver extends AbstractSeleniumTest
 
                 if ( !osFound )
                 {
-
-                    ExecutionContextTest executionContextTest = new ExecutionContextTest();
                     executionContextTest.setTest( test );
                     executionContextTest.setDevice( getDevice() );
+                    executionContextTest.setCloud( cD );
                     executionContextTest.completeTest( TestStatus.SKIPPED, new FilteredException( "This test is not designed to work on a device with [" + deviceOs + "]  It needs [" + test.getOs() + "]" ) );
                     testName.setTest( executionContextTest );
-
-                    PageManager.instance().setThrowable( new FilteredException( "This test is not designed to work on a device with [" + deviceOs + "]  It needs [" + test.getOs() + "]" ) );
-
-                    throw PageManager.instance().getThrowable();
+                    throw new FilteredException( "This test is not designed to work on a device with [" + deviceOs + "]  It needs [" + test.getOs() + "]" );
                 }
             }
 
@@ -132,13 +133,11 @@ public class XMLTestDriver extends AbstractSeleniumTest
 
                 if ( !tagFound )
                 {
-                    ExecutionContextTest executionContextTest = new ExecutionContextTest();
                     executionContextTest.setTest( test );
+                    executionContextTest.setCloud( cD );
                     executionContextTest.completeTest( TestStatus.SKIPPED, new FilteredException( "This test did not contain the specified tag and will be skipped" ) );
                     testName.setTest( executionContextTest );
-                    PageManager.instance().setThrowable( new FilteredException( "This test did not contain the specified tag and will be skipped" ) );
-
-                    throw PageManager.instance().getThrowable();
+                    throw new FilteredException( "This test did not contain the specified tag and will be skipped" );
                 }
             }
 
@@ -196,7 +195,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
             if ( test.getDescription() != null && !test.getDescription().isEmpty() && getWebDriver() instanceof PropertyProvider )
                 ((PropertyProvider) getWebDriver()).setProperty( "testDescription", test.getDescription() );
 
-            ExecutionContextTest executionContextTest = KeyWordDriver.instance().executeTest( testName.getTestName().split( "\\." )[0], getWebDriver(), null );
+            executionContextTest = KeyWordDriver.instance().executeTest( testName.getTestName().split( "\\." )[0], getWebDriver(), null );
             returnValue = executionContextTest.getStatus();
             testName.setTest( executionContextTest );
         }
@@ -249,15 +248,19 @@ public class XMLTestDriver extends AbstractSeleniumTest
                     {
                         if ( ((ReportiumProvider) getWebDriver()).getReportiumClient() != null )
                         {
-                            ((ReportiumProvider) getWebDriver()).getReportiumClient()
-                                    .testStop( TestResultFactory.createFailure( PageManager.instance().getThrowable() != null ? PageManager.instance().getThrowable().getMessage() : "Test returned false", PageManager.instance().getThrowable() ) );
+                            Throwable currentException = executionContextTest.getStepException();
+
+                            ((ReportiumProvider) getWebDriver()).getReportiumClient().testStop( TestResultFactory.createFailure( currentException != null ? currentException.getMessage() : "Unknown Failure", currentException ) );
+
                         }
                     }
                 }
             }
 
-            if ( PageManager.instance().getThrowable() != null )
-                throw PageManager.instance().getThrowable();
+            Throwable currentException = executionContextTest.getStepException();
+
+            if ( currentException != null )
+                throw currentException;
 
             Assert.assertTrue( returnValue );
         }

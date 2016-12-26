@@ -172,9 +172,6 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             if ( !configureThirdParty() ) return;
             
             
-            
-            
-            
             log.info( "Content: Configuring Content Engine" );
             if ( !configureContent() ) return;
             
@@ -446,9 +443,12 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     
     protected void runTest( String outputFolder, Class theTest, SuiteContainer sC )
     {
-
+        int threadCount = Integer.parseInt( System.getProperty( "xF-ThreadCount", "10" ) );
+        int verboseLevel = Integer.parseInt( System.getProperty( "xF-VerboseLevel", "1" ) );
+        
         TestNG testNg = new TestNG( true );
-        testNg.setVerbose( 10 );
+        testNg.setVerbose( verboseLevel );
+        testNg.setThreadCount( threadCount );
         testNg.setOutputDirectory( outputFolder + System.getProperty( "file.separator" ) + "testNg" );
         testNg.setTestClasses( new Class[] { theTest } );
         testNg.run();

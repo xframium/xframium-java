@@ -33,6 +33,53 @@ public class ExecutionContextStep
         parameterList.add( value );
     }
     
+    
+    public void analyzeCalls( Map<String,Integer[]> callMap )
+    {
+        for ( ExecutionContextStep s : stepList )
+        {
+            if ( "CALL".equals( s.getStep().getKw() ) || "CALL".equals( s.getStep().getKw() ) )
+            {
+                Integer[] passFail = callMap.get( s.getStep().getName() );
+                if ( passFail == null )
+                {
+                    passFail = new Integer[] { 0, 0 };
+                    callMap.put( s.getStep().getName(), passFail );
+                }
+                
+                if ( s.getStepStatus().equals( StepStatus.SUCCESS ) )
+                    passFail[ 0 ]++;
+                else
+                    passFail[ 1 ]++;
+            }
+            
+            s.analyzeCalls( callMap );
+        }
+    }
+    
+    public void analyzeModules( Map<String,Integer[]> callMap )
+    {
+        for ( ExecutionContextStep s : stepList )
+        {
+            if ( "MODULE".equals( s.getStep().getKw() ) )
+            {
+                Integer[] passFail = callMap.get( s.getStep().getName() );
+                if ( passFail == null )
+                {
+                    passFail = new Integer[] { 0, 0 };
+                    callMap.put( s.getStep().getName(), passFail );
+                }
+                
+                if ( s.getStepStatus().equals( StepStatus.SUCCESS ) )
+                    passFail[ 0 ]++;
+                else
+                    passFail[ 1 ]++;
+            }
+            
+            s.analyzeModules( callMap );
+        }
+    }
+    
     public int getStepCount( StepStatus stepStatus )
     {
         int stepCount = 0;
@@ -115,6 +162,17 @@ public class ExecutionContextStep
             {
                 return eS.getExceptionType();
             }
+        }
+        
+        return null;
+    }
+    
+    public Throwable getStepException()
+    {
+        for ( ExecutionContextStep eS : stepList )
+        {
+            if ( eS.getStepException() != null )
+                return eS.getStepException();
         }
         
         return null;

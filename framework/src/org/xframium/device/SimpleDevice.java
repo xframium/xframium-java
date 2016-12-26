@@ -120,13 +120,9 @@ public class SimpleDevice implements Device
 	private void generateEnv()
 	{
 	    StringBuilder stringBuilder = new StringBuilder();
-	    if ( manufacturer != null )
-	    {
-	        stringBuilder.append( manufacturer );
-	        if ( model != null )
-	            stringBuilder.append( " " ).append( model );
-	            
-	    }
+        if ( model != null )
+            stringBuilder.append( " " ).append( model );
+
 	    
 	    if ( os != null )
         {
@@ -141,10 +137,6 @@ public class SimpleDevice implements Device
 	        if ( browserVersion != null )
 	            stringBuilder.append( " " ).append( browserVersion );
 	    }
-	    
-	   
-	    if ( resolution != null )
-	        stringBuilder.append( " (" ).append( resolution ).append( ")" );
 	    
 	    environment = stringBuilder.toString();
 	    

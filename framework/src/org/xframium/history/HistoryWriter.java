@@ -28,7 +28,7 @@ public class HistoryWriter
     
     public static void main( String[] args )
     {
-        new HistoryWriter( new File( "C:\\Projects\\Git\\morelandLabs\\customerProjects\\xmlDriven\\google\\test-output" ) ).updateHistory();
+        new HistoryWriter( new File( "C:\\Users\\Allen\\git\\xframium-java\\testing\\test-output" ) ).updateHistory();
     }
     
     public void updateHistory()

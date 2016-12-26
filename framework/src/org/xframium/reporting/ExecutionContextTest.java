@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import org.xframium.application.ApplicationDescriptor;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.exception.XFramiumException;
 import org.xframium.exception.XFramiumException.ExceptionType;
@@ -46,6 +47,10 @@ public class ExecutionContextTest
     private String message;
     private String folderName;
     private Map<String,String> sPMap = new HashMap<String,String>( 10 );
+    private ApplicationDescriptor aut;
+    
+    private Map<String,Integer[]> callMap = new HashMap<String,Integer[]>( 10 );
+    private Map<String,Integer[]> moduleMap = new HashMap<String,Integer[]>( 10 );
     
     public Map<String,Object> toMap()
     {
@@ -64,6 +69,14 @@ public class ExecutionContextTest
         asMap.put( "device", device );
         asMap.put( "sessionId", sessionId );
         asMap.put( "folderName", folderName );
+        callMap.clear();
+        analyzeCalls( callMap );
+        asMap.put( "callMap", callMap );
+        
+        moduleMap.clear();
+        analyzeModules( moduleMap );
+        asMap.put( "moduleMap", moduleMap );
+        
         return asMap;
     }
     
@@ -75,6 +88,16 @@ public class ExecutionContextTest
         {
             sPMap.put( (String) key, sP.getProperty( (String)key ) ); 
         }
+    }
+
+    public ApplicationDescriptor getAut()
+    {
+        return aut;
+    }
+
+    public void setAut( ApplicationDescriptor aut )
+    {
+        this.aut = aut;
     }
 
     public String getFolderName()
@@ -272,6 +295,52 @@ public class ExecutionContextTest
         
         return stepCount;
     }
+    
+    public void analyzeCalls( Map<String,Integer[]> callMap )
+    {
+        for ( ExecutionContextStep s : stepList )
+        {
+            if ( "CALL".equals( s.getStep().getKw() ) || "CALL2".equals( s.getStep().getKw() ) )
+            {
+                Integer[] passFail = callMap.get( s.getStep().getName() );
+                if ( passFail == null )
+                {
+                    passFail = new Integer[] { 0, 0 };
+                    callMap.put( s.getStep().getName(), passFail );
+                }
+                
+                if ( s.getStepStatus().equals( StepStatus.SUCCESS ) )
+                    passFail[ 0 ]++;
+                else
+                    passFail[ 1 ]++;
+            }
+            
+            s.analyzeCalls( callMap );
+        }
+    }
+    
+    public void analyzeModules( Map<String,Integer[]> callMap )
+    {
+        for ( ExecutionContextStep s : stepList )
+        {
+            if ( "MODULE".equals( s.getStep().getKw() ) )
+            {
+                Integer[] passFail = callMap.get( s.getStep().getName() );
+                if ( passFail == null )
+                {
+                    passFail = new Integer[] { 0, 0 };
+                    callMap.put( s.getStep().getName(), passFail );
+                }
+                
+                if ( s.getStepStatus().equals( StepStatus.SUCCESS ) )
+                    passFail[ 0 ]++;
+                else
+                    passFail[ 1 ]++;
+            }
+            
+            s.analyzeModules( callMap );
+        }
+    }
 
     public void completeStep( StepStatus stepStatus, Throwable throwable )
     {
@@ -331,6 +400,17 @@ public class ExecutionContextTest
             return ( (XFramiumException) testException ).getType();
         
         return null;
+    }
+    
+    public Throwable getStepException()
+    {
+        for ( ExecutionContextStep eS : stepList )
+        {
+            if ( !eS.getStatus() )
+                return eS.getStepException();
+        }
+        
+        return testException;
     }
 
     public Map<String, String> getExecutionParameters()

@@ -106,6 +106,7 @@ public interface KeyWordStep
 	
 	public List<KeyWordToken> getTokenList();
 
+	public String getKw();
 	
 	/**
 	 * Gets the link id.

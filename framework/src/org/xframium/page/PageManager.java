@@ -428,28 +428,6 @@ public class PageManager
         }
     }
 
-    
-    /**
-     * Sets the throwable.
-     *
-     * @param t
-     *            the new throwable
-     */
-    public void setThrowable( Throwable t )
-    {
-        localException.set( t );
-    }
-
-    /**
-     * Gets the throwable.
-     *
-     * @return the throwable
-     */
-    public Throwable getThrowable()
-    {
-        return localException.get();
-    }
-
     /**
      * Gets the execution id.
      *

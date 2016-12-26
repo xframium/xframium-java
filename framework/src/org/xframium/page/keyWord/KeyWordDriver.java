@@ -33,6 +33,7 @@ import org.xframium.container.SuiteContainer;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.DataConfigurationException;
 import org.xframium.exception.FilteredException;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.TestConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
@@ -380,7 +381,7 @@ public class KeyWordDriver
                     }
 
                     if ( pageData == null )
-                        throw new IllegalArgumentException( "Invalid page data value specified.  Ensure that [" + dataProvider + "] exists in your page data definition" );
+                        throw new ScriptConfigurationException( "Invalid page data value specified.  Ensure that [" + dataProvider + "] exists in your page data definition" );
 
                     if ( log.isInfoEnabled() )
                         log.info( "Adding " + dataProvider + " as " + pageData );
@@ -616,11 +617,8 @@ public class KeyWordDriver
             executionContext.startStep( new SyntheticStep( test.getName(), "TEST" ), contextMap, dataMap );
             executionContext.completeStep( StepStatus.FAILURE, e );
             executionContext.completeTest( TestStatus.FAILED, e );
-            
-            if ( PageManager.instance().getThrowable() == null )
-                PageManager.instance().setThrowable( e );
 
-            log.error( "Error executing Test " + testName, PageManager.instance().getThrowable() );
+            log.error( "Error executing Test " + testName, e );
             return executionContext;
         }
         finally
