@@ -206,7 +206,7 @@ iframe {
         <span data-nodrag compile="formatStep(stepDef)" style="cursor: default"></span>
 
         
-        <a hRef="#" ng-click="showError( stepDef )" ng-if="hasExecutionParameter( stepDef, 'SCREENSHOT' )"><span data-nodrag class="glyphicon glyphicon-eye-open pull-right" style="cursor: default" ></span></a>
+        <a hRef="#" ng-click="showError( stepDef )" ng-if="hasExecutionParameter( stepDef, 'SCREENSHOT' ) || ( stepDef.throwable != null && stepDef.throwable != 'null' && stepDef.throwable != '' )"><span data-nodrag class="glyphicon glyphicon-eye-open pull-right" style="cursor: default" ></span></a>
 
     </div>
     <ol data-nodrag ui-tree-nodes="" ng-model="stepDef.stepList" ng-if="stepDef.stepList.length != 0" ng-class="{hidden: collapsed}" >
@@ -236,8 +236,8 @@ iframe {
     <div class="panel-body">
         <div class="row">
             <div class="col-md-4"></div>
-            <div class="col-md-2" stype="text-align: center"><a hRef="failureDOM.xml" class="btn btn-primary" type="button" target="_blank">View XML</a></div>
-            <div class="col-md-2" stype="text-align: center"><a hRef="failureDOM.html" class="btn btn-success" type="button" target="_blank">View XML (as HTML)</a></div>
+            <div class="col-md-2" ng-if="hasExecutionParameter( selectedStep, 'XML' )" stype="text-align: center"><a hRef="file://{{selectedStep.executionParameter.XML}}" class="btn btn-primary" type="button" target="_blank">View XML</a></div>
+            <div class="col-md-2" ng-if="hasExecutionParameter( selectedStep, 'HTML' )"  stype="text-align: center"><a hRef="file://{{selectedStep.executionParameter.HTML}}" class="btn btn-success" type="button" target="_blank">View XML (as HTML)</a></div>
             <div class="col-md-4"></div>
         </div>
     </div>
@@ -469,7 +469,7 @@ iframe {
             "BROWSER" : "Perform {kw} operation as {name}",
             "WINDOW" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use BROWSER)",
             "GET" : "{kw} the value of {name} on {pageName}",
-            "COMPARE" : "{kw} 2 parameter values",
+            "COMPARE" : "{kw} {$p1} to {$p2}",
             "GESTURE" : "Perform a {name} {kw}",
             "STRING2" : "Perform a STRING operation",
             "STRING" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use STRING2)",
@@ -479,7 +479,8 @@ iframe {
             "COMMAND" : "Execute the {kw} {name}",
             "EMAIL" : "{name} an {kw}",
             "CONSOLE" : "Add data to the execution {kw}",
-            "TEST" : "{errorMessage}"
+            "TEST" : "{errorMessage}",
+            "APPLICATION" : "{name} the {$p1} {kw}"
         };
 
     });

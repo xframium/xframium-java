@@ -21,7 +21,9 @@
 package org.xframium.page.element;
 
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -30,7 +32,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
+import org.xframium.application.ApplicationDescriptor;
 import org.xframium.content.ContentManager;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.XFramiumException;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
@@ -46,11 +50,41 @@ public abstract class AbstractElement implements Element
 {
 	
 	private static Pattern CONTENT_KEY_SHORTHAND = Pattern.compile( "!\\{([^\\}]*)\\}" );
-	/** The log. */
     protected Map<String,String> elementProperties;
 	protected Log log = LogFactory.getLog( Element.class );
 	private boolean cacheNative = false;
 
+	protected List<SubElement> subElementList = new ArrayList<SubElement>( 10 );
+	
+	protected SubElement[] getSubElement( ApplicationDescriptor appDesc, String os, DeviceWebDriver webDriver )
+	{
+	    List<SubElement> appList = new ArrayList<SubElement>( 10 );
+	    
+	    for ( SubElement subElement : subElementList )
+	    {
+	        if ( subElement.getVersion() != null && subElement.getVersion().isVersion( appDesc ) )
+	            appList.add( subElement );
+	        else if ( subElement.getVersion() == null )
+	            appList.add( subElement );
+	    }
+	    
+	    List<SubElement> osList = new ArrayList<SubElement>( 10 );
+	    for ( SubElement subElement : appList )
+        {        
+            if ( subElement.getOs() != null && subElement.getOs().contains( os ) )
+                osList.add( subElement );
+            else if ( subElement.getOs() == null )
+                osList.add( subElement );
+        }
+	    
+	    return osList.toArray( new SubElement[ 0 ] );
+	}
+	
+	public void addSubElement( SubElement subElement )
+	{
+	    subElementList.add( subElement );
+	}
+	
 	public boolean isCacheNative()
     {
         return cacheNative;

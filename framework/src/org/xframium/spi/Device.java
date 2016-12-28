@@ -147,6 +147,7 @@ public interface Device
 	 * @return the device name
 	 */
 	String getDeviceName();
+	void setDeviceName( String deviceName );
 	
 	/**
 	 * Checks if is active.

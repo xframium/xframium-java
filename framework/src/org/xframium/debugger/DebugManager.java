@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
+import org.xframium.container.SuiteContainer;
 import org.xframium.debugger.handler.AheadHandler;
 import org.xframium.debugger.handler.ExtractHandler;
 import org.xframium.debugger.handler.ExtractXMLHandler;
@@ -31,6 +32,7 @@ import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.spi.KeyWordPageImpl;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.page.listener.KeyWordListener;
+import org.xframium.reporting.ExecutionContextTest;
 import com.sun.net.httpserver.HttpServer;
 import com.xframium.serialization.SerializationManager;
 import com.xframium.serialization.json.ReflectionSerializer;
@@ -87,7 +89,7 @@ public class DebugManager implements KeyWordListener
     }
 
     @Override
-    public boolean beforeStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+    public boolean beforeStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC )
     {
         String executionId = ((DeviceWebDriver) webDriver).getExecutionId();
         TestContainer testContainer = activeTests.get( executionId );
@@ -116,7 +118,7 @@ public class DebugManager implements KeyWordListener
     }
 
     @Override
-    public void afterStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, StepStatus stepStatus )
+    public void afterStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, StepStatus stepStatus, SuiteContainer sC, ExecutionContextTest eC )
     {
         String executionId = ((DeviceWebDriver) webDriver).getExecutionId();
         TestContainer testContainer = activeTests.get( executionId );
@@ -135,14 +137,14 @@ public class DebugManager implements KeyWordListener
     }
 
     @Override
-    public boolean beforeTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+    public boolean beforeTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC )
     {
         activeTests.put( ((DeviceWebDriver) webDriver).getExecutionId(), new TestContainer( webDriver, keyWordTest, contextMap, dataMap, pageMap ) );
         return true;
     }
 
     @Override
-    public void afterTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass )
+    public void afterTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC )
     {
         String executionId = ((DeviceWebDriver) webDriver).getExecutionId();
         completedTests.put( executionId, activeTests.remove( executionId ) );

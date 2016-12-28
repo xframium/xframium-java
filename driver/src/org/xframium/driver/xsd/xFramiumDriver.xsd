@@ -14,6 +14,7 @@
       <element name="driver" type="tns:xDriver" minOccurs="1" maxOccurs="1" />
       <element name="model" type="tns:xModel" minOccurs="1" maxOccurs="1" />
       <element name="suite" type="tns:xSuite" minOccurs="1" maxOccurs="1" />
+      <element name="dependencies" type="tns:xDependency" minOccurs="0" maxOccurs="1" />
       <element name="content" type="tns:xContent" minOccurs="0" maxOccurs="1" />
       <element name="data" type="tns:xData" minOccurs="0" maxOccurs="1" />
       <element name="proxy" type="tns:xProxy" minOccurs="0" maxOccurs="1" />
@@ -22,9 +23,15 @@
     </sequence>
   </complexType>
   <complexType name="xSecurity">
+    <annotation>
+        <documentation>Defines elements needed for securing the configuration files.</documentation>
+    </annotation>
     <attribute name="secureCloud" type="boolean" use="optional" default="false" />
   </complexType>
   <complexType name="xProxy">
+    <annotation>
+        <documentation>Defines global proxy settings required if the device executing the xFramium tests is behind an outbound proxy</documentation>
+    </annotation>
     <simpleContent>
       <extension base="string">
         <attribute name="proxyHost" type="string" use="optional" />
@@ -33,7 +40,18 @@
       </extension>
     </simpleContent>
   </complexType>
+  <complexType name="xDependency" >
+    <annotation>
+        <documentation>Defines test dependencies for execution of functions on newly acquired devices or before and after each test</documentation>
+    </annotation>
+    <attribute name="beforeDevice" type="string" use="optional" />
+    <attribute name="beforeTest" type="string" use="optional" />
+    <attribute name="afterTest" type="string" use="optional" />
+  </complexType>
   <complexType name="xDevices">
+    <annotation>
+        <documentation>Defines the devices that will be used by this execution.  Each device will execute all of the defined tests.</documentation>
+    </annotation>
     <sequence>
       <element name="device" type="tns:xDevice" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
@@ -55,6 +73,9 @@
     </attribute>
   </complexType>
   <complexType name="xDevice">
+    <annotation>
+        <documentation>Defines one of the devices that will be used by this execution.  Each device will execute all of the defined tests.</documentation>
+    </annotation>
     <sequence>
       <element name="capability" type="tns:xDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
       <element name="objectCapability" type="tns:xObjectDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
@@ -82,6 +103,9 @@
     </attribute>
   </complexType>
   <complexType name="xContent">
+    <annotation>
+        <documentation>Defines the configuration of the content engine.  The content engine allows for dynamic content replacement</documentation>
+    </annotation>
     <attribute name="fileName" type="string" use="optional" />
     <attribute name="provider" use="optional" default="EXCEL">
       <simpleType>
@@ -95,6 +119,9 @@
     </attribute>
   </complexType>
   <complexType name="xData">
+    <annotation>
+        <documentation>Defines the configuration of the test data for data driven testing.</documentation>
+    </annotation>
     <attribute name="fileName" type="string" use="optional" />
     <attribute name="provider" use="optional" default="XML">
       <simpleType>
@@ -108,6 +135,9 @@
     </attribute>
   </complexType>
   <complexType name="xApplication">
+    <annotation>
+        <documentation>Defines the application(s) available for testing.  This will define how an application is installed and launched</documentation>
+    </annotation>
     <sequence>
       <element name="capability" type="tns:xDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
       <element name="objectCapability" type="tns:xObjectDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
@@ -130,8 +160,12 @@
     <attribute name="url" type="string" use="optional" />
     <attribute name="iosInstall" type="string" use="optional" />
     <attribute name="androidInstall" type="string" use="optional" />
+    <attribute name="version" type="double" use="optional" default="0.0" />
   </complexType>
   <complexType name="xDriver">
+    <annotation>
+        <documentation>The root driver configuration defining all of the global configuration elements.</documentation>
+    </annotation>
     <sequence>
       <element name="property" type="tns:xProperty" minOccurs="0" maxOccurs="unbounded" />
       <element name="propertyAdapter" type="tns:xPropertyAdapter" minOccurs="0" maxOccurs="unbounded" />
@@ -161,6 +195,9 @@
     <attribute name="suiteName" type="string" use="optional" />
   </complexType>
   <complexType name="xTag">
+    <annotation>
+        <documentation>Defines a extractor definition used to extract an element from a stored page object</documentation>
+    </annotation>
     <sequence>
       <element name="description" type="tns:xDescription" minOccurs="0" maxOccurs="1" />
     </sequence>
@@ -168,10 +205,16 @@
     <attribute name="descriptor" use="required" />
   </complexType>
   <complexType name="xLibrary">
+    <annotation>
+        <documentation>Defines a third party library integration</documentation>
+    </annotation>
     <attribute name="name" use="required" />
     <attribute name="className" use="required" />
   </complexType>
   <complexType name="xArtifact">
+    <annotation>
+        <documentation>Defines an Artifact that is to be produced during test execution</documentation>
+    </annotation>
     <attribute name="type" use="required">
       <simpleType>
         <restriction base="string">
@@ -195,6 +238,9 @@
     <attribute name="active" type="boolean" use="optional" default="true" />
   </complexType>
   <complexType name="xProperty">
+    <annotation>
+        <documentation>Defines a general property to be used in execution or configuration</documentation>
+    </annotation>
     <simpleContent>
       <extension base="string">
         <attribute name="name" type="string" use="required" />
@@ -202,6 +248,9 @@
     </simpleContent>
   </complexType>
   <complexType name="xPropertyAdapter">
+    <annotation>
+        <documentation>Defines an external proeprty adapter for configuration of third party libraries</documentation>
+    </annotation>
     <simpleContent>
       <extension base="string">
         <attribute name="className" type="string" use="required" />
@@ -209,6 +258,9 @@
     </simpleContent>
   </complexType>
   <complexType name="xDeviceCapability">
+    <annotation>
+        <documentation>Defines a capability for a device</documentation>
+    </annotation>
     <simpleContent>
       <extension base="string">
         <attribute name="name" type="string" use="required" />
@@ -226,6 +278,9 @@
     </simpleContent>
   </complexType>
   <complexType name="xCloud">
+    <annotation>
+        <documentation>Defines the cloud information for a collection of devices</documentation>
+    </annotation>
     <attribute name="provider" use="optional" default="LOCAL">
       <simpleType>
         <restriction base="string">
@@ -252,6 +307,9 @@
     <attribute name="deviceAction" type="string" use="optional" />
   </complexType>
   <complexType name="xPage">
+    <annotation>
+        <documentation>Defines a page object in your object repository</documentation>
+    </annotation>
     <sequence>
       <element name="element" type="tns:xElement" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
@@ -261,9 +319,36 @@
   </complexType>
   <complexType name="xElement">
     <sequence>
+      <element name="element" type="tns:xSimpleElement" minOccurs="0" maxOccurs="unbounded" />
       <element name="parameter" type="tns:xElementParameter" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="name" type="string" use="required" />
+    <attribute name="descriptor" use="required">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="XPATH" />
+          <enumeration value="CLASS" />
+          <enumeration value="CSS" />
+          <enumeration value="ID" />
+          <enumeration value="LINK_TEXT" />
+          <enumeration value="NAME" />
+          <enumeration value="TAG_NAME" />
+          <enumeration value="V_TEXT" />
+          <enumeration value="V_IMAGE" />
+          <enumeration value="HTML" />
+          <enumeration value="PROP" />
+          <enumeration value="COMPLEX" />
+        </restriction>
+      </simpleType>
+    </attribute>
+    <attribute name="value" type="string" use="optional" />
+    <attribute name="contextName" type="string" use="optional" />
+    <attribute name="deviceContext" type="string" use="optional" />
+  </complexType>
+  <complexType name="xSimpleElement">
+    <sequence>
+      <element name="parameter" type="tns:xElementParameter" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
     <attribute name="descriptor" use="required">
       <simpleType>
         <restriction base="string">
@@ -281,14 +366,20 @@
       </simpleType>
     </attribute>
     <attribute name="value" type="string" use="required" />
-    <attribute name="contextName" type="string" use="optional" />
-    <attribute name="deviceContext" type="string" use="optional" />
+    <attribute name="os" type="string" use="optional" />
+    <attribute name="version" type="string" use="optional" />
   </complexType>
   <complexType name="xElementParameter">
+    <annotation>
+        <documentation>Defines an element parameter.  Element parameters are passed to the underlying element implementation during execution</documentation>
+    </annotation>
     <attribute name="name" type="string" use="required" />
     <attribute name="value" type="string" use="required" />
   </complexType>
   <complexType name="xSuite">
+    <annotation>
+        <documentation>Defines all of the tests and functions</documentation>
+    </annotation>
     <sequence>
       <element name="test" type="tns:xTest" minOccurs="0" maxOccurs="unbounded" />
       <element name="function" type="tns:xTest" minOccurs="0" maxOccurs="unbounded" />
@@ -305,6 +396,9 @@
     </attribute>
   </complexType>
   <complexType name="xModel">
+    <annotation>
+        <documentation>Defines your object repository</documentation>
+    </annotation>
     <sequence>
       <element name="page" type="tns:xPage" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
@@ -323,6 +417,9 @@
     <attribute name="siteName" type="string" use="required" />
   </complexType>
   <complexType name="xTest">
+    <annotation>
+        <documentation>Defines a single test or function</documentation>
+    </annotation>
     <sequence>
       <element name="description" type="tns:xDescription" minOccurs="0" maxOccurs="1" />
       <element name="step" type="tns:xStep" minOccurs="0" maxOccurs="unbounded" />
@@ -350,11 +447,16 @@
     <attribute name="os" type="string" use="optional" />
   </complexType>
   <complexType name="xDescription">
+    
     <simpleContent>
       <extension base="string" />
     </simpleContent>
   </complexType>
   <complexType name="xStep">
+  
+    <annotation>
+        <documentation>Defines a single step in your execution</documentation>
+    </annotation>
     <sequence>
       <element name="parameter" type="tns:xParameter" minOccurs="0" maxOccurs="unbounded" />
       <element name="token" type="tns:xToken" minOccurs="0" maxOccurs="unbounded" />
@@ -450,8 +552,12 @@
     <attribute name="device" type="string" use="optional" />
     <attribute name="tagNames" type="string" use="optional" />
     <attribute name="deviceTags" type="string" use="optional" />
+    <attribute name="version" type="string" use="optional" />
   </complexType>
   <complexType name="xToken">
+    <annotation>
+        <documentation>Defines a token value for replaceable tokens</documentation>
+    </annotation>
     <attribute name="type" use="required">
       <simpleType>
         <restriction base="string">
@@ -467,6 +573,9 @@
     <attribute name="name" type="string" use="required" />
   </complexType>
   <complexType name="xParameter">
+    <annotation>
+        <documentation>Defines a parameter value</documentation>
+    </annotation>
     <sequence>
       <element name="token" type="tns:xToken" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
@@ -492,6 +601,9 @@
     <attribute name="name" type="string" use="required" />
   </complexType>
   <complexType name="xCapabilities">
+    <annotation>
+        <documentation>Defines capabilities for a device</documentation>
+    </annotation>
     <sequence>
       <element name="options" type="tns:xOptions" minOccurs="0" maxOccurs="unbounded" />
     </sequence>

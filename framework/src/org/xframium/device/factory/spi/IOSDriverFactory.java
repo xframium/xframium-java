@@ -118,12 +118,17 @@ public class IOSDriverFactory extends AbstractDriverFactory
             {
 			    if ( ( (IOSDriver) webDriver.getNativeDriver() ).isAppInstalled( ApplicationRegistry.instance().getAUT().getAppleIdentifier() ) )
 			    {
-    			    log.warn( "Attempting to start " + ApplicationRegistry.instance().getAUT().getAppleIdentifier() );
-                    CloudActionProvider actionProvider = (CloudActionProvider) Class.forName( CloudActionProvider.class.getPackage().getName() + "." + useCloud.getProvider() + "CloudActionProvider" ).newInstance();
-                    actionProvider.startApp( caps.getCapability( "executionId" ) + "", caps.getCapability( "deviceName" ) + "", ApplicationRegistry.instance().getAUT().getName(), ApplicationRegistry.instance().getAUT().getAppleIdentifier() );
+    			    if ( !useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver ) )
+    			        throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAppleIdentifier() );
 			    }
 			    else
-			        throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAppleIdentifier() );
+			    {
+			        useCloud.getCloudActionProvider().installApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver, false );
+			        if ( !useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver ) )
+                        throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAppleIdentifier() );
+			    }
+			    
+			    webDriver.setAut( ApplicationRegistry.instance().getAUT() );
 			    
 			    String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
 	            webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );

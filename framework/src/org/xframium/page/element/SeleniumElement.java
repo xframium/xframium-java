@@ -60,7 +60,6 @@ import org.xframium.spi.driver.NativeDriverProvider;
 import org.xframium.spi.driver.VisualDriverProvider;
 import org.xframium.utility.XPathGenerator;
 import org.xframium.utility.html.HTMLElementLookup;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -111,6 +110,7 @@ public class SeleniumElement extends AbstractElement
         SeleniumElement element = new SeleniumElement( getBy(), getRawKey(), getElementName(), getPageName(), getContextElement(), locatedElement, index );
         element.setDriver( webDriver );
         element.setDeviceContext( getDeviceContext() );
+        element.subElementList.addAll( subElementList );
         return element;
     }
 
@@ -310,42 +310,59 @@ public class SeleniumElement extends AbstractElement
             else if ( webDriver instanceof ContextAware )
                 ((ContextAware) webDriver).context( getBy().getContext() );
         }
-
-        switch ( getBy() )
+        
+        switch( getBy() )
+        {
+            case COMPLEX:
+                if ( subElementList != null && subElementList.size() > 0 )
+                {
+                    SubElement[] subList = getSubElement( ( (DeviceWebDriver) webDriver ).getAut(), ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getOs(), (DeviceWebDriver) webDriver );
+                    if ( subList.length > 0 )
+                        return _useBy( subList[ 0 ].getBy(), subList[ 0 ].getKey() );
+                }
+                throw new ScriptConfigurationException( "Could not locate a complex element for " + getName() );
+            default:
+                return _useBy( getBy(), getKey() );
+                    
+        }
+    }
+    
+    private By _useBy( BY byType, String keyValue )
+    {
+        switch ( byType )
         {
             case CLASS:
-                return By.className( getKey() );
+                return By.className( keyValue );
 
             case CSS:
-                return By.cssSelector( getKey() );
+                return By.cssSelector( keyValue );
 
             case ID:
-                return By.id( getKey() );
+                return By.id( keyValue );
 
             case LINK_TEXT:
-                return By.linkText( getKey() );
+                return By.linkText( keyValue );
 
             case NAME:
-                return By.name( getKey() );
+                return By.name(keyValue );
 
             case TAG_NAME:
-                return By.tagName( getKey() );
+                return By.tagName( keyValue );
 
             case XPATH:
-                return By.xpath( getKey() );
+                return By.xpath( keyValue );
 
             case V_TEXT:
-                return By.linkText( getKey() );
+                return By.linkText(keyValue );
 
             case HTML:
-                HTMLElementLookup elementLookup = new HTMLElementLookup( getKey() );
+                HTMLElementLookup elementLookup = new HTMLElementLookup( keyValue );
                 return By.xpath( elementLookup.toXPath() );
 
             case PROP:
                 Map<String, String> propertyMap = new HashMap<String, String>( 10 );
                 propertyMap.put( "resource-id", ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
-                return By.xpath( XPathGenerator.generateXPathFromProperty( propertyMap, getKey() ) );
-
+                return By.xpath( XPathGenerator.generateXPathFromProperty( propertyMap, keyValue ) );
             default:
                 return null;
         }
@@ -390,31 +407,31 @@ public class SeleniumElement extends AbstractElement
 
         return false;
     }
-    
+
     public boolean _clickAt( int offsetX, int offsetY )
     {
         WebElement webElement = getElement();
-        
+
         if ( webElement != null )
         {
-        
+
             Dimension elementSize = webElement.getSize();
-            
-            int useX = (int) ((double)elementSize.getWidth() * ((double)offsetX / 100.0 ) );
-            int useY = (int) ((double)elementSize.getHeight() * ((double)offsetY / 100.0 ) );
-            
+
+            int useX = (int) ((double) elementSize.getWidth() * ((double) offsetX / 100.0));
+            int useY = (int) ((double) elementSize.getHeight() * ((double) offsetY / 100.0));
+
             if ( log.isInfoEnabled() )
                 log.info( "Clicking " + useX + "," + useY + " pixels relative to " + getName() );
-            
+
             if ( webDriver instanceof HasInputDevices )
             {
                 new Actions( webDriver ).moveToElement( webElement, useX, useY ).click().build().perform();
                 return true;
             }
-            
+
             return true;
         }
-        
+
         return false;
 
     }
@@ -627,13 +644,13 @@ public class SeleniumElement extends AbstractElement
                 break;
 
             case "UIATEXTFIELD":
-            	returnValue = currentElement.getAttribute( "value" );
-            	break;
-            	
+                returnValue = currentElement.getAttribute( "value" );
+                break;
+
             case "ANDROID.WIDGET.EDITTEXT":
-            	returnValue = currentElement.getAttribute( "text" );
-            	break;
-                
+                returnValue = currentElement.getAttribute( "text" );
+                break;
+
             default:
                 returnValue = currentElement.getText();
                 break;
@@ -922,12 +939,12 @@ public class SeleniumElement extends AbstractElement
 
                 // try
                 // {
-                //     MorelandWebElement x = (MorelandWebElement) webElement;
-                //     ((IOSElement) x.getWebElement()).setValue( currentValue );
+                // MorelandWebElement x = (MorelandWebElement) webElement;
+                // ((IOSElement) x.getWebElement()).setValue( currentValue );
                 // }
                 // catch ( Exception e )
                 // {
-                //     e.printStackTrace();
+                // e.printStackTrace();
                 // }
             }
             else
@@ -981,7 +998,8 @@ public class SeleniumElement extends AbstractElement
 
     }
 
-    private void createPressFromVisual(ImageExecution iExec) {
+    private void createPressFromVisual( ImageExecution iExec )
+    {
         if ( getElementProperties() != null )
         {
             String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript( "mobile:button-text:click", getElementProperties() ) + "";

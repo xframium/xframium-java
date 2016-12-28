@@ -481,7 +481,7 @@ public abstract class AbstractSeleniumTest
                     testName.setTestName( currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() );
 
                 ((TestName) testArgs[0]).setFullName( testArgs[0].toString() );
-                Thread.currentThread().setName( testName.baseTestName + "-->" + connectedDevice.getWebDriver().getPopulatedDevice().toShortString() + " (" + Thread.currentThread().getId() + ")" );
+                Thread.currentThread().setName( testName.baseTestName + "-->" + connectedDevice.getWebDriver().getPopulatedDevice().getEnvironment() + " (" + Thread.currentThread().getId() + ")" );
             }
         }
         catch ( Exception e )

@@ -78,6 +78,40 @@
       <parameter type="CONTEXT" value="existsSingle" />
     </step>
   </test>
+  
+  <test name="xFramium Complex Version Test" active="true" os="WINDOWS">
+    <description>Tests the complex tag type and application version</description>
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="EXISTS" name="versionTest" page="home" context="versionValue" />
+    
+    <step type="COMPARE" name="existsCompare" page="home" tagNames="myTag">
+      <parameter type="STATIC" value="Version 2" />
+      <parameter type="CONTEXT" value="versionValue" />
+    </step>
+
+    <step type="APPLICATION" name="OPEN" page="home" >
+        <parameter type="STATIC" name="Application Name" value="xTest0" />
+    </step>
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="EXISTS" name="versionTest" page="home" context="versionValue" />
+    <step type="COMPARE" name="existsCompare" page="home" tagNames="myTag">
+      <parameter type="STATIC" value="Version 1" />
+      <parameter type="CONTEXT" value="versionValue" />
+    </step>
+    
+    <step type="EXISTS" name="osTest" page="home" context="osValue" />
+    <step type="COMPARE" name="existsCompare" page="home" >
+      <parameter type="STATIC" value="Windows" />
+      <parameter type="CONTEXT" value="osValue" />
+    </step>
+    
+    <step type="EXISTS" name="osTest2" page="home" context="osValue" />
+    <step type="COMPARE" name="existsCompare" page="home" >
+      <parameter type="STATIC" value="Windows" />
+      <parameter type="CONTEXT" value="osValue" />
+    </step>
+    
+  </test>
 
   <test name="xFramium REGEX" active="true">
     <description>Tests that the specified step is ignored for a specific OS type</description>

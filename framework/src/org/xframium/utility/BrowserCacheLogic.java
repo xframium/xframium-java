@@ -90,7 +90,6 @@ public class BrowserCacheLogic
 
             if ( osVer[0] > 8 )
             {
-                driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
                 driver.findElementByXPath("//UIASearchBar").sendKeys("Clear History");
                 driver.findElementByXPath("//*[@label=\"Clear History and Website Data\"]").click();
             }
@@ -177,7 +176,6 @@ public class BrowserCacheLogic
         finally
         {
             switchToContext(driver, currentContext);
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
         }
     }
 
@@ -226,7 +224,6 @@ public class BrowserCacheLogic
                 //
 
                 params.clear();
-                driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
                 switchToContext(driver, "NATIVE_APP");
 
                 //params.put("value", "//*[@resource-id=\"com.android.chrome:id/menu_button\"]");
@@ -312,7 +309,6 @@ public class BrowserCacheLogic
         finally
         {
             switchToContext(driver, currentContext);
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
         }
     }
 

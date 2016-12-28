@@ -1,27 +1,82 @@
  package org.xframium.driver;
 
-import gherkin.parser.Parser;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.xpath.XPathFactory;
 import org.openqa.selenium.Platform;
 import org.xframium.Initializable;
-import org.xframium.application.*;
+import org.xframium.application.ApplicationDescriptor;
+import org.xframium.application.ApplicationVersion;
+import org.xframium.application.CSVApplicationProvider;
+import org.xframium.application.ExcelApplicationProvider;
+import org.xframium.application.SQLApplicationProvider;
+import org.xframium.application.XMLApplicationProvider;
 import org.xframium.artifact.ArtifactType;
-import org.xframium.container.*;
+import org.xframium.container.ApplicationContainer;
+import org.xframium.container.CloudContainer;
+import org.xframium.container.DeviceContainer;
+import org.xframium.container.DriverContainer;
+import org.xframium.container.FavoriteContainer;
+import org.xframium.container.PageContainer;
+import org.xframium.container.SiteContainer;
+import org.xframium.container.SuiteContainer;
+import org.xframium.container.TagContainer;
 import org.xframium.content.ContentManager;
 import org.xframium.content.provider.ExcelContentProvider;
 import org.xframium.content.provider.SQLContentProvider;
 import org.xframium.content.provider.XMLContentProvider;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.SimpleDevice;
-import org.xframium.device.cloud.*;
-import org.xframium.device.data.*;
+import org.xframium.device.cloud.CSVCloudProvider;
+import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.cloud.CloudProvider;
+import org.xframium.device.cloud.EncryptedCloudProvider;
+import org.xframium.device.cloud.ExcelCloudProvider;
+import org.xframium.device.cloud.SQLCloudProvider;
+import org.xframium.device.cloud.XMLCloudProvider;
+import org.xframium.device.data.CSVDataProvider;
 import org.xframium.device.data.DataProvider.DriverType;
+import org.xframium.device.data.ExcelDataProvider;
+import org.xframium.device.data.NamedDataProvider;
+import org.xframium.device.data.SQLDataProvider;
+import org.xframium.device.data.XMLDataProvider;
 import org.xframium.device.data.perfectoMobile.AvailableHandsetValidator;
 import org.xframium.device.data.perfectoMobile.PerfectoMobileDataProvider;
 import org.xframium.device.data.perfectoMobile.PerfectoMobilePluginProvider;
 import org.xframium.device.data.perfectoMobile.ReservedHandsetValidator;
 import org.xframium.device.property.PropertyAdapter;
 import org.xframium.device.proxy.ProxyRegistry;
-import org.xframium.driver.xsd.*;
+import org.xframium.driver.xsd.ObjectFactory;
+import org.xframium.driver.xsd.XArtifact;
+import org.xframium.driver.xsd.XCapabilities;
+import org.xframium.driver.xsd.XDevice;
+import org.xframium.driver.xsd.XDeviceCapability;
+import org.xframium.driver.xsd.XElement;
+import org.xframium.driver.xsd.XElementParameter;
+import org.xframium.driver.xsd.XFramiumRoot;
+import org.xframium.driver.xsd.XLibrary;
+import org.xframium.driver.xsd.XModel;
+import org.xframium.driver.xsd.XObjectDeviceCapability;
+import org.xframium.driver.xsd.XOptions;
+import org.xframium.driver.xsd.XPage;
+import org.xframium.driver.xsd.XParameter;
+import org.xframium.driver.xsd.XProperty;
+import org.xframium.driver.xsd.XPropertyAdapter;
+import org.xframium.driver.xsd.XSimpleElement;
+import org.xframium.driver.xsd.XStep;
+import org.xframium.driver.xsd.XTag;
+import org.xframium.driver.xsd.XTest;
+import org.xframium.driver.xsd.XToken;
 import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.Page;
@@ -32,11 +87,20 @@ import org.xframium.page.data.provider.SQLPageDataProvider;
 import org.xframium.page.data.provider.XMLPageDataProvider;
 import org.xframium.page.element.Element;
 import org.xframium.page.element.ElementFactory;
-import org.xframium.page.element.provider.*;
-import org.xframium.page.keyWord.*;
+import org.xframium.page.element.SubElement;
+import org.xframium.page.element.provider.CSVElementProvider;
+import org.xframium.page.element.provider.ElementProvider;
+import org.xframium.page.element.provider.ExcelElementProvider;
+import org.xframium.page.element.provider.SQLElementProvider;
+import org.xframium.page.element.provider.XMLElementProvider;
+import org.xframium.page.keyWord.KeyWordPage;
+import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
+import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
+import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.KeyWordToken.TokenType;
 import org.xframium.page.keyWord.gherkinExtension.XMLFormatter;
 import org.xframium.page.keyWord.matrixExtension.MatrixTest;
@@ -45,16 +109,7 @@ import org.xframium.page.keyWord.provider.SQLKeyWordProvider;
 import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import org.xframium.spi.Device;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.xpath.XPathFactory;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.*;
+import gherkin.parser.Parser;
 
 public class XMLConfigurationReader extends AbstractConfigurationReader implements ElementProvider
 {
@@ -214,7 +269,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 break;
                 
             case "LOCAL":
-                appContainer.getAppList().add( new ApplicationDescriptor( xRoot.getApplication().getName(), "", xRoot.getApplication().getAppPackage(), xRoot.getApplication().getBundleId(), xRoot.getApplication().getUrl(), xRoot.getApplication().getIosInstall(), xRoot.getApplication().getAndroidInstall(), createCapabilities( xRoot.getApplication().getCapability() ) ) );
+                appContainer.getAppList().add( new ApplicationDescriptor( xRoot.getApplication().getName(), "", xRoot.getApplication().getAppPackage(), xRoot.getApplication().getBundleId(), xRoot.getApplication().getUrl(), xRoot.getApplication().getIosInstall(), xRoot.getApplication().getAndroidInstall(), createCapabilities( xRoot.getApplication().getCapability() ), xRoot.getApplication().getVersion() ) );
                 break;
         }
         appContainer.setApplicationName( xRoot.getApplication().getName() );
@@ -339,6 +394,27 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     {
                         elementDescriptor = new ElementDescriptor( page.getSite() != null && page.getSite().trim().length() > 0 ? page.getSite() : xRoot.getModel().getSiteName(), page.getName(), ele.getName() );
                         currentElement = ElementFactory.instance().createElement( BY.valueOf( ele.getDescriptor() ), ele.getValue(), ele.getName(), page.getName(), ele.getContextName() );
+                        
+                        if ( ele.getElement() != null )
+                        {
+                            //
+                            // Any element can contain sub elements to allow for a finer lookup
+                            //
+                            for ( XSimpleElement sE : ele.getElement() )
+                            {
+                                SubElement subElement = new SubElement( BY.valueOf( sE.getDescriptor() ), sE.getValue(), sE.getOs(), sE.getVersion( ) == null ? null : new ApplicationVersion( sE.getVersion() ) );
+                                currentElement.addSubElement( subElement );
+                                if ( sE.getParameter() != null )
+                                {
+                                    for ( XElementParameter xP : ele.getParameter() )
+                                    {
+                                        subElement.addProperty( xP.getName(), xP.getValue() );
+                                    }
+                                }
+                            }
+                        }
+                        
+                        
                         
                         if ( ele.getDeviceContext() != null && !ele.getDeviceContext().trim().isEmpty() )
                             currentElement.setDeviceContext( ele.getDeviceContext() );
@@ -830,6 +906,13 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         dC.setEmbeddedServer( xRoot.getDriver().isEmbeddedServer() );
         dC.setDriverType( DriverType.valueOf( xRoot.getDriver().getType() ) );
         dC.setDeviceTags( xRoot.getDriver().getDeviceTags() );
+        
+        if ( xRoot.getDependencies() != null )
+        {
+            dC.setBeforeDevice( xRoot.getDependencies().getBeforeDevice() );
+            dC.setBeforeTest( xRoot.getDependencies().getBeforeTest() );
+            dC.setAfterTest( xRoot.getDependencies().getAfterTest() );
+        }
         
         if ( xRoot.getDriver().getExtractors() != null )
         {

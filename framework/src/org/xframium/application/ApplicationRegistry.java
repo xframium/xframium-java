@@ -51,7 +51,7 @@ public class ApplicationRegistry
 	 */
 	private ApplicationRegistry()
 	{
-	    applicationMap.put( "NOOP", new ApplicationDescriptor( "NOOP", "This is the default application type that just opens the phone", "", "", "", "", "", new HashMap<String,Object>( 0 ) ) );
+	    applicationMap.put( "NOOP", new ApplicationDescriptor( "NOOP", "This is the default application type that just opens the phone", "", "", "", "", "", new HashMap<String,Object>( 0 ), 0 ) );
 	}
 	
 	/** The log. */

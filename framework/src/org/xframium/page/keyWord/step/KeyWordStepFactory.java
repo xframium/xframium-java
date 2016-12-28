@@ -32,6 +32,7 @@ import org.xframium.page.keyWord.KeyWordStep.ValidationType;
 import org.xframium.page.keyWord.step.spi.KWSAddDevice;
 import org.xframium.page.keyWord.step.spi.KWSAlert;
 import org.xframium.page.keyWord.step.spi.KWSAlign;
+import org.xframium.page.keyWord.step.spi.KWSApplication;
 import org.xframium.page.keyWord.step.spi.KWSAt;
 import org.xframium.page.keyWord.step.spi.KWSAttribute;
 import org.xframium.page.keyWord.step.spi.KWSBreak;
@@ -192,6 +193,7 @@ public class KeyWordStepFactory
         addKeyWord( "COMMAND", KWSCommand.class );
         addKeyWord( "EMAIL", KWSEmail.class );
         addKeyWord( "CONSOLE", KWSConsole.class );
+        addKeyWord( "APPLICATION", KWSApplication.class );
     }
 
     /**

@@ -30,6 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.DeviceManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.DataConfigurationException;
 import org.xframium.exception.FilteredException;
@@ -154,13 +155,13 @@ public class KeyWordDriver
         stepListenerList.remove( stepListener );
     }
 
-    public boolean notifyBeforeStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+    public boolean notifyBeforeStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC  )
     {
         try
         {
             for ( KeyWordListener k : stepListenerList )
             {
-                if ( !k.beforeStep( webDriver, currentStep, pageObject, contextMap, dataMap, pageMap ) )
+                if ( !k.beforeStep( webDriver, currentStep, pageObject, contextMap, dataMap, pageMap, sC, eC ) )
                     return false;
             }
 
@@ -173,13 +174,13 @@ public class KeyWordDriver
         }
     }
 
-    public void notifyAfterStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, StepStatus stepStatus )
+    public void notifyAfterStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, StepStatus stepStatus, SuiteContainer sC, ExecutionContextTest eC  )
     {
         try
         {
             for ( KeyWordListener k : stepListenerList )
             {
-                k.afterStep( webDriver, currentStep, pageObject, contextMap, dataMap, pageMap, stepStatus );
+                k.afterStep( webDriver, currentStep, pageObject, contextMap, dataMap, pageMap, stepStatus, sC, eC );
             }
         }
         catch ( Exception e )
@@ -190,13 +191,13 @@ public class KeyWordDriver
 
     }
 
-    public boolean notifyBeforeTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+    public boolean notifyBeforeTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC  )
     {
         try
         {
             for ( KeyWordListener k : stepListenerList )
             {
-                if ( !k.beforeTest( webDriver, keyWordTest, contextMap, dataMap, pageMap ) )
+                if ( !k.beforeTest( webDriver, keyWordTest, contextMap, dataMap, pageMap, sC, eC ) )
                     return false;
             }
 
@@ -209,18 +210,18 @@ public class KeyWordDriver
         }
     }
 
-    public void notifyAfterTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass )
+    public void notifyAfterTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC  )
     {
         try
         {
             for ( KeyWordListener k : stepListenerList )
             {
-                k.afterTest( webDriver, keyWordTest, contextMap, dataMap, pageMap, stepPass );
+                k.afterTest( webDriver, keyWordTest, contextMap, dataMap, pageMap, stepPass, sC, eC );
             }
         }
         catch ( Exception e )
         {
-            log.warn( "After Test notification failed", e );
+            log.warn( "After Test notifications failed", e );
         }
     }
 
@@ -336,7 +337,7 @@ public class KeyWordDriver
                 test = inactiveTestMap.get( testName );
 
                 if ( test == null )
-                    throw new IllegalArgumentException( "The function [" + testName + "] does not exist" );
+                    throw new ScriptConfigurationException( "The function [" + testName + "] does not exist" );
             }
         }
 
@@ -500,36 +501,36 @@ public class KeyWordDriver
     public ExecutionContextTest executeTest( String testName, WebDriver webDriver, SuiteContainer sC ) throws Exception
     {
         boolean testStarted = false;
-        boolean returnValue = false;
-        long startTime = System.currentTimeMillis();
+        boolean returnValue = true;
         PageManager.instance().getPageCache().clear();
 
         ExecutionContextTest executionContext = new ExecutionContextTest();
-        
-        if ( log.isDebugEnabled() )
-            log.debug( "Attempting to locate test [" + testName + "]" );
-
-        KeyWordTest test = testMap.get( testName );
-
-        if ( test == null )
-            throw new TestConfigurationException( testName );
-        
-        executionContext.setTest( test );
-        executionContext.setDevice( ( (DeviceWebDriver) webDriver ).getPopulatedDevice() );
-        executionContext.setCloud( ( (DeviceWebDriver) webDriver ).getCloud() );
-        
-
         Map<String, PageData> dataMap = new HashMap<String, PageData>( 10 );
         Map<String, Page> pageMap = new HashMap<String, Page>( 10 );
         Map<String, Object> contextMap = new HashMap<String, Object>( 10 );
+        KeyWordTest test = testMap.get( testName );
         
-        executionContext.setDataMap( dataMap );
-        executionContext.setPageMap( pageMap );
-        executionContext.setContextMap( contextMap );
-        executionContext.setSessionId( ( (DeviceWebDriver) webDriver ).getExecutionId() );
+        logConsole( "Executing [" + testName + "]" );
         
         try
         {
+            
+    
+            if ( test == null )
+                throw new TestConfigurationException( testName );
+            
+            executionContext.setTest( test );
+            executionContext.setDevice( ( (DeviceWebDriver) webDriver ).getPopulatedDevice() );
+            executionContext.setCloud( ( (DeviceWebDriver) webDriver ).getCloud() );
+            
+            executionContext.setDataMap( dataMap );
+            executionContext.setPageMap( pageMap );
+            executionContext.setContextMap( contextMap );
+            executionContext.setSessionId( ( (DeviceWebDriver) webDriver ).getExecutionId() );
+        
+        
+            if ( log.isInfoEnabled() )
+                log.info( Thread.currentThread().getName() + ": Configuring Data Providers" );
             if ( test.getDataProviders() != null )
             {
                 if ( log.isInfoEnabled() )
@@ -584,11 +585,13 @@ public class KeyWordDriver
             //
             // If there was a looped driver, then add that
             //
+            if ( log.isInfoEnabled() )
+                log.info( Thread.currentThread().getName() + ": Configuring Data Drivers" );
             if ( test.getDataDriver() != null && !test.getDataDriver().isEmpty() )
             {
                 String[] testInfo = testName.split( "!" );
                 if ( testInfo.length != 2 )
-                    throw new IllegalArgumentException( "Could not extract data record from " + testName );
+                    throw new ScriptConfigurationException( "Could not extract data record from " + testName );
 
                 dataMap.put( test.getDataDriver(), PageDataManager.instance().getPageData( test.getDataDriver(), testInfo[1] ) );
             }
@@ -598,14 +601,37 @@ public class KeyWordDriver
             //
             testStarted = true;
             
-            if ( !KeyWordDriver.instance().notifyBeforeTest( webDriver, test, contextMap, dataMap, pageMap ) )
+            if ( log.isInfoEnabled() )
+                log.info( Thread.currentThread().getName() + ": Alerting Listeners" );
+            if ( !KeyWordDriver.instance().notifyBeforeTest( webDriver, test, contextMap, dataMap, pageMap, sC, executionContext ) )
             {
                 log.warn( "Test was skipped due to a failed test notification listener" );
                 executionContext.completeTest( TestStatus.SKIPPED, new FilteredException( "Test was skipped due to a failed test notification listener" ) );
                 return executionContext;
             }
             
-            returnValue = test.executeTest( webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+            if ( log.isInfoEnabled() )
+                log.info( Thread.currentThread().getName() + ": Processing Initialization" );
+            if ( DeviceManager.instance().getInitializationName() != null )
+            {
+                KeyWordTest initTest = KeyWordDriver.instance().getTest( DeviceManager.instance().getInitializationName() );
+                if ( initTest != null )
+                {
+                    if ( !DeviceManager.instance().isDeviceInitialized( ( (DeviceWebDriver) webDriver ).getPopulatedDevice() ) )
+                    {
+                        logConsole( "Execution Initialization Method " + DeviceManager.instance().getInitializationName() + " on " + ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getEnvironment() + "(" + ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getDeviceName() + ")" );
+                        executionContext.startStep( new SyntheticStep( "Device Initialization", "CALL2" ), contextMap, dataMap );
+                        returnValue = initTest.executeTest( webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+                        DeviceManager.instance().setDeviceInitialized( ( (DeviceWebDriver) webDriver ).getPopulatedDevice() );
+                        executionContext.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                    }  
+                }
+            }
+            
+            if ( log.isInfoEnabled() )
+                log.info( Thread.currentThread().getName() + ": Executing Test=" + returnValue );
+            if ( returnValue )
+                returnValue = test.executeTest( webDriver, contextMap, dataMap, pageMap, sC, executionContext );
             
             executionContext.completeTest( returnValue ? TestStatus.PASSED : TestStatus.FAILED, null );
 
@@ -624,7 +650,7 @@ public class KeyWordDriver
         finally
         {
             if ( testStarted )
-                KeyWordDriver.instance().notifyAfterTest( webDriver, test, contextMap, dataMap, pageMap, returnValue );
+                KeyWordDriver.instance().notifyAfterTest( webDriver, test, contextMap, dataMap, pageMap, returnValue, sC, executionContext );
             
             for ( String key : dataMap.keySet() )
             {
@@ -633,6 +659,17 @@ public class KeyWordDriver
         }
     }
 
+    private void logConsole( String message )
+    {
+        StringBuilder reportData = new StringBuilder();
+        
+        reportData.append( "**********************************************************************************************************************\r\n" );
+        reportData.append( message ).append( "\r\n" );
+        reportData.append( "**********************************************************************************************************************\r\n" );
+        
+        log.warn( reportData.toString() );
+    }
+    
     /**
      * Gets the test names.
      *
@@ -679,3 +716,4 @@ public class KeyWordDriver
     }
 
 }
+

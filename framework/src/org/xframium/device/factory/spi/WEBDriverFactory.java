@@ -36,6 +36,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.AbstractDriverFactory;
 import org.xframium.device.factory.DeviceWebDriver;
@@ -193,8 +194,8 @@ public class WEBDriverFactory extends AbstractDriverFactory
 
             if ( ApplicationRegistry.instance().getAUT() != null && ApplicationRegistry.instance().getAUT().getUrl() != null && !ApplicationRegistry.instance().getAUT().getUrl().isEmpty() )
             {
-                webDriver.get( ApplicationRegistry.instance().getAUT().getUrl() );
-                
+                useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver );
+                webDriver.setAut( ApplicationRegistry.instance().getAUT() );
                 String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
                 webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );
             }

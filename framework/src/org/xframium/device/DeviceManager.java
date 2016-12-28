@@ -96,8 +96,35 @@ public class DeviceManager implements ArtifactListener
     
     private String[] tagNames;
     
-    private Map <Device,Integer> failureMap = new HashMap<Device,Integer>( 10 );
+    private Map<Device,Integer> failureMap = new HashMap<Device,Integer>( 10 );
     
+    private Map<String,Boolean> initializationMap = new HashMap<String,Boolean>( 10 );
+    
+    private String initializationName;
+    
+    public String getInitializationName()
+    {
+        return initializationName;
+    }
+
+    public void setInitializationName( String initializationName )
+    {
+        this.initializationName = initializationName;
+    }
+
+    public boolean isDeviceInitialized( Device currentDevice )
+    {
+        if ( !initializationMap.containsKey( currentDevice.getDeviceName() ) )
+            return false;
+        
+        return initializationMap.get( currentDevice.getDeviceName() );
+    }
+    
+    public void setDeviceInitialized( Device currentDevice )
+    {
+        initializationMap.put( currentDevice.getDeviceName(), true );
+    }
+
 
     public String[] getTagNames()
     {

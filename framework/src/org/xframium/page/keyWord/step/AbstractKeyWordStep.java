@@ -175,6 +175,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         return breakpoint;
     }
 
+    
+    
     @Override
     public void setBreakpoint( boolean breakpoint )
     {
@@ -614,6 +616,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         if ( overrideName != null && !overrideName.isEmpty() )
             useName = overrideName;
 
+        
+        
         if ( useName.startsWith( Element.CONTEXT_ELEMENT ) )
         {
             if ( Element.CONTEXT_ELEMENT.equals( useName ) )
@@ -850,7 +854,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 //
                 // Listener integrations for individual steps
                 //
-                if ( !KeyWordDriver.instance().notifyBeforeStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap ) )
+                if ( !KeyWordDriver.instance().notifyBeforeStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, sC, executionContext ) )
                 {
                     log.warn( "Test Step was skipped due to a failed step notification listener" );
                     return true;
@@ -881,7 +885,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     }
                 }
 
-                KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE );
+                KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, sC, executionContext );
 
             }
             catch ( KWSLoopBreak lb )
@@ -897,7 +901,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 try
                 {
                     WebDriver altWebDriver = getAltWebDriver();
-                    KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE );
+                    KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, sC, executionContext );
                 }
                 catch ( Exception e2 )
                 {
@@ -1067,7 +1071,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                             if ( PageManager.instance().isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
                                 PerfectoMobile.instance().windTunnel().addPointOfInterest( getExecutionId( webDriver ), getPoi() + "(" + getPageName() + "." + getName() + ")", Status.failure );
                         }
-                        log.error( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed as " + currentError.getMessage() );
+                        log.error( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed as " + currentError );
                         return false;
 
                     case LOG_IGNORE:

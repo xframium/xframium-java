@@ -52,8 +52,6 @@ import com.perfecto.reportium.test.result.TestResultFactory;
 
 public class XMLTestDriver extends AbstractSeleniumTest
 {
-    
-    
     @Test ( dataProvider = "deviceManager")
     public void testDriver( TestName testName ) throws Throwable
     {
@@ -194,7 +192,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
 
             if ( test.getDescription() != null && !test.getDescription().isEmpty() && getWebDriver() instanceof PropertyProvider )
                 ((PropertyProvider) getWebDriver()).setProperty( "testDescription", test.getDescription() );
-
+            
             executionContextTest = KeyWordDriver.instance().executeTest( testName.getTestName().split( "\\." )[0], getWebDriver(), null );
             returnValue = executionContextTest.getStatus();
             testName.setTest( executionContextTest );

@@ -25,21 +25,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
+import org.xframium.application.ApplicationVersion;
 import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.element.Element;
 import org.xframium.page.element.ElementFactory;
+import org.xframium.page.element.SubElement;
 import org.xframium.page.element.provider.xsd.ElementParameter;
 import org.xframium.page.element.provider.xsd.Import;
 import org.xframium.page.element.provider.xsd.ObjectFactory;
 import org.xframium.page.element.provider.xsd.Page;
 import org.xframium.page.element.provider.xsd.RegistryRoot;
+import org.xframium.page.element.provider.xsd.SimpleElement;
 import org.xframium.page.element.provider.xsd.Site;
 
 // TODO: Auto-generated Javadoc
@@ -209,6 +211,26 @@ public class XMLElementProvider extends AbstractElementProvider
 	        {
 	            ElementDescriptor elementDescriptor = new ElementDescriptor( site.getName(), page.getName(), ele.getName() );
 	            Element currentElement = ElementFactory.instance().createElement( BY.valueOf( ele.getDescriptor() ), ele.getValue(), ele.getName(), page.getName(), ele.getContextName() );
+	            
+	            if ( ele.getElement() != null )
+                {
+                    //
+                    // Any element can contain sub elements to allow for a finer lookup
+                    //
+                    for ( SimpleElement sE : ele.getElement() )
+                    {
+                        SubElement subElement = new SubElement( BY.valueOf( sE.getDescriptor() ), sE.getValue(), sE.getOs(), sE.getVersion( ) == null ? null : new ApplicationVersion( sE.getVersion() ) );
+                        currentElement.addSubElement( subElement );
+                        if ( sE.getParameter() != null )
+                        {
+                            for ( ElementParameter xP : ele.getParameter() )
+                            {
+                                subElement.addProperty( xP.getName(), xP.getValue() );
+                            }
+                        }
+                    }
+                }
+	            
 	            
 	            if ( ele.getParameter() != null )
                 {

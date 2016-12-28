@@ -1,11 +1,22 @@
 package org.xframium.device.cloud.action;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.ContextAware;
+import org.openqa.selenium.Keys;
+import org.xframium.application.ApplicationDescriptor;
+import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.SimpleDevice;
 import org.xframium.device.artifact.ArtifactProducer;
 import org.xframium.device.artifact.api.PerfectoArtifactProducer;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.exception.DeviceConfigurationException;
+import org.xframium.exception.DeviceException;
+import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
+import org.xframium.integrations.perfectoMobile.rest.bean.Execution;
 import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
+import org.xframium.page.BY;
 import org.xframium.spi.Device;
 
 public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
@@ -35,6 +46,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
             device.setOsVersion( handSet.getOsVersion() );
             device.setResolution( handSet.getResolution() );
             device.setManufacturer( handSet.getManufacturer() );
+            device.setDeviceName( handSet.getDeviceId() );
             
             ((SimpleDevice) device).setDeviceName( deviceId );
             return true;
@@ -43,6 +55,12 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         {
             return false;
         }
+    }
+    
+    @Override
+    public boolean isDescriptorSupported( BY descriptorType )
+    {
+        return true;
     }
     
     @Override
@@ -89,5 +107,114 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 			return currBrowserName;
 		}
 	}
+
+    @Override
+    public boolean installApplication( String applicationName, DeviceWebDriver webDriver, boolean instrumentApp )
+    {
+        ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
+    
+        Handset localDevice = PerfectoMobile.instance().devices().getDevice( webDriver.getDevice().getDeviceName() );
+        
+        Execution appExec = null;
+        
+        if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
+            appExec = PerfectoMobile.instance().application().install( webDriver.getExecutionId(), webDriver.getDevice().getDeviceName(), appDesc.getIosInstallation(), instrumentApp ? "instrument" : "noinstrument" );
+        else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
+            appExec = PerfectoMobile.instance().application().install( webDriver.getExecutionId(), webDriver.getDevice().getDeviceName(), appDesc.getAndroidInstallation(), instrumentApp ? "instrument" : "noinstrument" );
+        else
+            throw new DeviceConfigurationException( "Could not install application to " + webDriver.getDevice().getEnvironment() + "(" + webDriver.getDevice().getDeviceName() + ")" );
+        
+        if ( appExec != null )
+        {
+            if ( appExec.getStatus().toLowerCase().equals( "success" ) )
+                return true;
+            else
+                throw new DeviceConfigurationException( "Failed to install application " + appDesc.getName() );
+        }
+        else 
+            throw new DeviceConfigurationException( "Failed to install application " + appDesc.getName() );
+        
+    }
+
+    @Override
+    public boolean uninstallApplication( String applicationName, DeviceWebDriver webDriver )
+    {
+        ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
+    
+        Handset localDevice = PerfectoMobile.instance().devices().getDevice( webDriver.getDevice().getDeviceName() );
+        
+        if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
+            PerfectoMobile.instance().application().uninstall( webDriver.getExecutionId(), webDriver.getDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
+        else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
+            PerfectoMobile.instance().application().uninstall( webDriver.getExecutionId(), webDriver.getDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
+        else
+            throw new DeviceException( "Could not uninstall application from " + localDevice.getOs() );
+        return true;
+    }
+
+    @Override
+    public boolean openApplication( String applicationName, DeviceWebDriver webDriver )
+    {
+
+        ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
+        
+        if ( appDesc == null )
+            throw new ScriptConfigurationException( "The Application " + applicationName + " does not exist" );
+    
+        if ( appDesc.isWeb() )
+        {
+            //String selectLinkOpeninNewTab = Keys.chord(Keys.CONTROL,"t");
+            //if ( webDriver.getWindowHandles() != null && webDriver.getWindowHandles().size() > 0 )
+            //    webDriver.findElement(By.tagName("body")).sendKeys(selectLinkOpeninNewTab);
+            
+            webDriver.get( appDesc.getUrl() );
+                
+        }
+        else
+        {
+            Handset localDevice = PerfectoMobile.instance().devices().getDevice( webDriver.getDevice().getDeviceName() );
+            Execution appExec = null;
+            if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
+                appExec = PerfectoMobile.instance().application().open( webDriver.getExecutionId(), webDriver.getDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
+            else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
+                appExec = PerfectoMobile.instance().application().open( webDriver.getExecutionId(), webDriver.getDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
+            else
+                throw new IllegalArgumentException( "Could not install application to " + localDevice.getOs() );
+            
+            if ( appExec != null )
+            {
+                if ( appExec.getStatus().toLowerCase().equals( "success" ) )
+                {
+                    if ( webDriver instanceof ContextAware )
+                        ( ( ContextAware ) webDriver ).context( "NATIVE_APP" );
+                    return true;
+                }
+                else
+                    throw new ScriptException( "Failed to launch application " + appDesc.getName() );
+            }
+            else 
+                throw new ScriptException( "Failed to launch application " + appDesc.getName() );
+            
+            
+        }
+        return true;
+    }
+
+    @Override
+    public boolean closeApplication( String applicationName, DeviceWebDriver webDriver )
+    {
+
+        ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
+    
+        Handset localDevice = PerfectoMobile.instance().devices().getDevice( webDriver.getDevice().getDeviceName() );
+        
+        if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
+            PerfectoMobile.instance().application().close( webDriver.getExecutionId(), webDriver.getDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
+        else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
+            PerfectoMobile.instance().application().close( webDriver.getExecutionId(), webDriver.getDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
+        else
+            log.warn( "Could not close application on " + localDevice.getOs() );
+        return true;
+    }
     
 }

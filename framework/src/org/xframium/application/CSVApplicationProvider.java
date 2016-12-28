@@ -109,7 +109,7 @@ public class CSVApplicationProvider extends AbstractApplicationProvider
 				
 				String[] lineData = currentLine.split( "," );
 				
-				appList.add( new ApplicationDescriptor( lineData[ 0 ], lineData[ 1 ], lineData[ 2 ], lineData[ 3 ], lineData[ 4 ], lineData[ 5 ], lineData[ 6 ], new HashMap<String,Object>( 0 ) ) );
+				appList.add( new ApplicationDescriptor( lineData[ 0 ], lineData[ 1 ], lineData[ 2 ], lineData[ 3 ], lineData[ 4 ], lineData[ 5 ], lineData[ 6 ], new HashMap<String,Object>( 0 ), 0 ) );
 			}
 			
 			return appList;

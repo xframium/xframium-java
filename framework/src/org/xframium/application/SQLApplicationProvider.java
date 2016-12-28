@@ -37,7 +37,7 @@ public class SQLApplicationProvider extends AbstractApplicationProvider
     //
 
     private static final String DEF_QUERY =
-        "SELECT NAME, APP_PACKAGE, BUNDLE_ID, URL, IOS_INSTALL, ANDROID_INSTALL \n" +
+        "SELECT NAME, APP_PACKAGE, BUNDLE_ID, URL, IOS_INSTALL, ANDROID_INSTALL, VERSION \n" +
         "FROM APPLICATIONS";
 
     private static final String DEF_CAP_QUERY =
@@ -128,6 +128,7 @@ public class SQLApplicationProvider extends AbstractApplicationProvider
                 String url = parseString( (String) data[i][3], null, true );
                 String ios_inst = parseString( (String) data[i][4], null, true );
                 String and_inst = parseString( (String) data[i][5], null, true );
+                double version = Double.parseDouble( parseString( (String) data[i][5], "0", true ) );
 
                 HashMap<String,Object> capabilities = new HashMap<String,Object>( 0 );
 
@@ -140,7 +141,7 @@ public class SQLApplicationProvider extends AbstractApplicationProvider
                                                                                                     url,
                                                                                                     and_inst,
                                                                                                     ios_inst,
-                                                                                                    capabilities ));
+                                                                                                    capabilities, version ));
             }
 
             data = SQLUtil.getResults( username, password, url, driver, capQuery, null );

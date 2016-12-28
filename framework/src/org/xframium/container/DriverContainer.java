@@ -20,6 +20,11 @@ public class DriverContainer
     private String testTags = "";
     private String deviceTags = "";
     private String suiteName = "";
+    
+    private String beforeTest;
+    private String afterTest;
+    private String beforeDevice;
+    
     private DriverType driverType;
     private List<TagContainer> extractors = new ArrayList<TagContainer>( 10 );
 
@@ -31,6 +36,36 @@ public class DriverContainer
     
     
     
+    public String getBeforeTest()
+    {
+        return beforeTest;
+    }
+
+    public void setBeforeTest( String beforeTest )
+    {
+        this.beforeTest = beforeTest;
+    }
+
+    public String getAfterTest()
+    {
+        return afterTest;
+    }
+
+    public void setAfterTest( String afterTest )
+    {
+        this.afterTest = afterTest;
+    }
+
+    public String getBeforeDevice()
+    {
+        return beforeDevice;
+    }
+
+    public void setBeforeDevice( String beforeDevice )
+    {
+        this.beforeDevice = beforeDevice;
+    }
+
     public String getDeviceTags()
     {
         return deviceTags;

@@ -50,7 +50,6 @@ public class EXPERITESTDriverFactory extends AbstractDriverFactory
 		try
 		{
 			
-            
             DeviceManager.instance().setCurrentCloud( useCloud );
 			
 			URL hubUrl = new URL( useCloud.getCloudUrl() );

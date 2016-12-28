@@ -2,7 +2,7 @@
 <xFramium xmlns="http://www.xframium.org/xFramiumDriver" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/xFramiumDriver http://www.xframium.org/xsd/xFramiumDriver.xsd">
   <cloud provider="XML" fileName="cloudRegistry.xml" name="saucelabs" />
 
-  <application provider="LOCAL" name="Google Search Test" appPackage="" bundleId="" url="http://xframium.org/testing.html" iosInstall="" androidInstall="" />
+  <application provider="XML" name="xTest" fileName="applicationRegistry.xml" />
 
   <devices provider="LOCAL">
     <device name="Firefox Local" manufacturer="Mozilla" model="Firefox" active="true" availableDevices="1" os="Windows" browserName="firefox" osVersion="8.1" browserVersion="46" cloud="EMBEDDED" />
@@ -13,14 +13,14 @@
         </capabilities>
       </objectCapability>
     </device>
-    <device name="Chrome SauceLabs" manufacturer="Google" model="Chrome" active="true" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" browserVersion="53" cloud="saucelabs" >
+    <device name="Chrome SauceLabs" manufacturer="Google" model="Chrome" active="false" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" browserVersion="53" cloud="saucelabs" >
       <objectCapability name="chrometest">
         <capabilities factoryName="ChromeOptions">
           <options name="arguments">--disable-extensions</options>
         </capabilities>
       </objectCapability>
     </device>
-    <device name="Chrome Perfecto" manufacturer="" model="" active="true" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" browserVersion="53" cloud="perfecto">
+    <device name="Chrome Perfecto" manufacturer="" model="" active="false" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" browserVersion="53" cloud="perfecto">
       <objectCapability name="chrometest">
         <capabilities factoryName="ChromeOptions">
           <options name="arguments">--disable-extensions</options>
@@ -37,14 +37,17 @@
     </device>
     <device name="Samsung S8" manufacturer="Samsung" model="Galaxy S8" os="Android" active="false" availableDevices="1" />
   </devices>
-  <driver type="WEB" outputFolder="test-output" displayResults="true" deviceTags="goodClick,tagTest"> 
+  <driver type="WEB" outputFolder="test-output" displayResults="true" deviceTags="goodClick,tagTest" testNames="xFramium Complex Version Test"> 
     <artifact type="FAILURE_SOURCE" />
     <artifact type="DEVICE_LOG" />
     <artifact type="WCAG_REPORT" />
     <artifact type="EXECUTION_RECORD_HTML" />
+    <artifact type="EXECUTION_RECORD_JSON" />
     <artifact type="CONSOLE_LOG" />
     <artifact type="SAUCE_LABS" />
     <artifact type="REPORTIUM" />
+    <artifact type="EXECUTION_REPORT_HTML" />
+    <artifact type="EXECUTION_REPORT_PDF" />
   </driver>
 
   <model provider="XML" siteName="xTest" fileName="objectRepository/pageElements.xml" />

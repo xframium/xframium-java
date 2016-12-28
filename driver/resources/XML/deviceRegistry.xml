@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<deviceRegistry xmlns="http://www.xframium.org/deviceRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/deviceRegistry http://www.xframium.org/xsd/deviceManagement/deviceRegistry.xsd">
-   <device name="Firefox" browserName="firefox" manufacturer="Mozilla" model="Firefox" os="Windows" active="false" availableDevices="2" />
-   <device name="Samsung S6" manufacturer="Samsung" model="Galaxy S6" os="Android" active="true" availableDevices="2" />
-   <device name="Samsung S5" manufacturer="Samsung" model="Galaxy S5" os="Android" active="true" availableDevices="1" />
-   <device name="iPhone 6" manufacturer="Apple" os="iOS" model="iPhone-6" active="true" availableDevices="2" />
-   <device name="iPhone 5" manufacturer="Apple" os="iOS" model="iPhone-5" active="true" availableDevices="1" />
-   <device name="iPhone 6 Plus" manufacturer="Apple" os="iOS" model="iPhone-6 Plus" active="true" availableDevices="1" />
-</deviceRegistry>
