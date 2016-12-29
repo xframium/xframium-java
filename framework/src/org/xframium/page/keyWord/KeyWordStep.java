@@ -22,8 +22,8 @@ package org.xframium.page.keyWord;
 
 import java.util.List;
 import java.util.Map;
-
 import org.openqa.selenium.WebDriver;
+import org.xframium.application.ApplicationVersion;
 import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
@@ -73,6 +73,10 @@ public interface KeyWordStep
 	public void setDeviceTags( String tagNames );
 	public Object getParameterValue( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap );
 	public String getTokenValue( KeyWordToken token, Map<String, Object> contextMap, Map<String, PageData> dataMap );
+	
+	public ApplicationVersion getVersion();
+	public void setVersion( String appVersion );
+	
 	
 	/**
 	 * Gets the link id.

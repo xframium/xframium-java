@@ -25,7 +25,7 @@ package org.xframium.page;
  */
 public enum StepStatus
 {
-    
+    FILTERED,
     /** The success. */
     SUCCESS,
     

@@ -23,16 +23,16 @@
     </step>
     
     <step type="ATTRIBUTE" name="toggleButton" page="home" >
-      <parameter type="STATIC" value="rgba(38, 90, 136, 1)" />
-      <parameter type="STATIC" value="STYLE.background-color" />
+      <parameter type="STATIC" value="none" />
+      <parameter type="STATIC" value="STYLE.background-image" />
     </step>
     
     <step type="ATTRIBUTE" name="toggleButton" page="home" context="attributeStyleValue">
-      <parameter type="STATIC" value="STYLE.background-color" />
+      <parameter type="STATIC" value="STYLE.background-image" />
     </step>
     
     <step type="COMPARE" name="attributeCompare" page="home">
-      <parameter type="STATIC" value="rgba(38, 90, 136, 1)" />
+      <parameter type="STATIC" value="none" />
       <parameter type="CONTEXT" value="attributeStyleValue" />
     </step>
     

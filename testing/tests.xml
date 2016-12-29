@@ -34,6 +34,7 @@
   </model>
   <test name="xFramium General KeyWord Test" active="true" dataProvider="callTest">
     <description>Tests the general keywords that apply to both Web and Native applications across web and mobile devices</description>
+    <step type="BROWSER" name="MAXIMIZE" page="home" />
     <step type="CALL2" name="kw-exists" page="home" />
     <step type="CALL2" name="kw-alert" page="home" os="Windows,MACOS" active="true" />
     <step type="CALL2" name="kw-align" page="home" />
@@ -109,6 +110,29 @@
     <step type="COMPARE" name="existsCompare" page="home" >
       <parameter type="STATIC" value="Windows" />
       <parameter type="CONTEXT" value="osValue" />
+    </step>
+    
+  </test>
+  
+  <test name="xFramium STEP Complex Version Test" active="true" os="WINDOWS">
+    <description>Tests the complex tag type and application version</description>
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="CLICK" name="toggleButton" page="home" version="xTest0(1.0-1.1)"/>
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home" tagNames="myTag">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+
+    <step type="APPLICATION" name="OPEN" page="home" >
+        <parameter type="STATIC" name="Application Name" value="xTest0" />
+    </step>
+    
+    <step type="CLICK" name="toggleButton" page="home" version="xTest0(1.0-1.1)"/>
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home" tagNames="myTag">
+      <parameter type="STATIC" value="0" />
+      <parameter type="CONTEXT" value="existsSingle" />
     </step>
     
   </test>

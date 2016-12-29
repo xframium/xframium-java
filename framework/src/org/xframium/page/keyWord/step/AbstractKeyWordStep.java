@@ -43,11 +43,13 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.application.ApplicationVersion;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.container.SuiteContainer;
 import org.xframium.content.ContentManager;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.exception.FilteredException;
 import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
@@ -168,6 +170,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     protected String kwImpl;
     protected String kw;
     protected String natualLanguage;
+    protected ApplicationVersion version;
 
     @Override
     public boolean isBreakpoint()
@@ -175,7 +178,18 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         return breakpoint;
     }
 
+    @Override
+    public ApplicationVersion getVersion()
+    {
+        return version;
+    }
     
+    @Override
+    public void setVersion( String appVersion )
+    {
+        if ( appVersion != null )
+            version = new ApplicationVersion( appVersion );
+    }
     
     @Override
     public void setBreakpoint( boolean breakpoint )
@@ -722,142 +736,143 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
         try
         {
-            //
-            // OS Checks to allow for elements to be skipped if the OS did not
-            // match
-            //
-            if ( os != null )
-            {
-                String deviceOs = getDeviceOs( webDriver );
-                if ( deviceOs == null )
-                {
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": A Required OS of [" + os + "] was specified however the OS of the device could not be determined" );
-                    return true;
-                }
-
-                String[] osArray = os.split( "," );
-                boolean osFound = false;
-                for ( String localOs : osArray )
-                {
-                    if ( localOs.toUpperCase().trim().equals( deviceOs.toUpperCase() ) )
-                    {
-                        osFound = true;
-                        break;
-                    }
-                }
-
-                if ( !osFound )
-                {
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": A Required OS in [" + os + "] was specified however the OS of the device was [" + deviceOs.toUpperCase() + "]" );
-                    return true;
-                }
-            }
-
-            if ( browser != null )
-            {
-                String browserName = ((DeviceWebDriver) webDriver).getDevice().getBrowserName();
-                if ( browserName == null )
-                {
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": A Required Browser of [" + browser + "] was specified however the Browser of the device could not be determined" );
-                    return true;
-                }
-
-                String[] browserArray = browser.split( "," );
-                boolean browserFound = false;
-                for ( String localBrowser : browserArray )
-                {
-                    if ( localBrowser.toUpperCase().trim().equals( browserName.toUpperCase() ) )
-                    {
-                        browserFound = true;
-                        break;
-                    }
-                }
-
-                if ( !browserFound )
-                {
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": A Required Browser in [" + browser + "] was specified however the Browser of the device was [" + browserName.toUpperCase() + "]" );
-                    return true;
-                }
-            }
-
-            //
-            // Device tagging implementation
-            //
-            if ( deviceTags != null && deviceTags.length > 0 && PageManager.instance().getDeviceTag( webDriver ) != null && PageManager.instance().getDeviceTag( webDriver ).length > 0 )
-            {
-                boolean tagFound = false;
-                for ( String localTag : deviceTags )
-                {
-                    for ( String deviceTag : PageManager.instance().getDeviceTag( webDriver ) )
-                    {
-                        if ( localTag.toUpperCase().trim().equals( deviceTag.toUpperCase() ) )
-                        {
-                            tagFound = true;
-                            break;
-                        }
-                    }
-                    if ( tagFound )
-                        break;
-                }
-
-                if ( !tagFound )
-                {
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": This step was ignored as the tag was not specified" );
-                    return true;
-                }
-            }
-
-            //
-            // Check for tag names
-            //
-            if ( tagNames != null && tagNames.length > 0 && PageManager.instance().getTagNames() != null && PageManager.instance().getTagNames().length > 0 )
-            {
-                boolean tagEnabled = false;
-                for ( String tagName : tagNames )
-                {
-                    for ( String useTag : PageManager.instance().getTagNames() )
-                    {
-                        if ( tagName.equals( useTag ) )
-                        {
-                            tagEnabled = true;
-                            break;
-                        }
-                    }
-
-                    if ( tagEnabled )
-                        break;
-                }
-
-                if ( !tagEnabled )
-                {
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": This required a tag that was not enabled for this test run" );
-                    return true;
-                }
-            }
-
-            if ( log.isInfoEnabled() )
-                log.info( Thread.currentThread().getName() + ": Executing Step " + name + "(" + getClass().getSimpleName() + ")" + (linkId != null ? " linked to " + linkId : "") );
-
             Exception stepException = null;
+            
+        
+            
 
-            boolean caughtException = false;
             try
             {
+                executionContext.startStep( this, contextMap, dataMap );
+                //
+                // OS Checks to allow for elements to be skipped if the OS did not
+                // match
+                //
+                if ( os != null )
+                {
+                    String deviceOs = getDeviceOs( webDriver );
+                    if ( deviceOs == null )
+                    {
+                        throw new FilteredException( "A Required OS of [" + os + "] was specified however the OS of the device could not be determined" );
+                    }
+    
+                    String[] osArray = os.split( "," );
+                    boolean osFound = false;
+                    for ( String localOs : osArray )
+                    {
+                        if ( localOs.toUpperCase().trim().equals( deviceOs.toUpperCase() ) )
+                        {
+                            osFound = true;
+                            break;
+                        }
+                    }
+    
+                    if ( !osFound )
+                    {
+                        throw new FilteredException( "A Required OS in [" + os + "] was specified however the OS of the device was [" + deviceOs.toUpperCase() + "]" );
+                    }
+                }
+    
+                if ( browser != null )
+                {
+                    String browserName = ((DeviceWebDriver) webDriver).getDevice().getBrowserName();
+                    if ( browserName == null )
+                    {
+                        throw new FilteredException( "A Required Browser of [" + browser + "] was specified however the Browser of the device could not be determined" );
+                    }
+    
+                    String[] browserArray = browser.split( "," );
+                    boolean browserFound = false;
+                    for ( String localBrowser : browserArray )
+                    {
+                        if ( localBrowser.toUpperCase().trim().equals( browserName.toUpperCase() ) )
+                        {
+                            browserFound = true;
+                            break;
+                        }
+                    }
+    
+                    if ( !browserFound )
+                    {
+                        throw new FilteredException( "A Required Browser in [" + browser + "] was specified however the Browser of the device was [" + browserName.toUpperCase() + "]" );
+                    }
+                }
+    
+                //
+                // Device tagging implementation
+                //
+                if ( deviceTags != null && deviceTags.length > 0 && PageManager.instance().getDeviceTag( webDriver ) != null && PageManager.instance().getDeviceTag( webDriver ).length > 0 )
+                {
+                    boolean tagFound = false;
+                    for ( String localTag : deviceTags )
+                    {
+                        for ( String deviceTag : PageManager.instance().getDeviceTag( webDriver ) )
+                        {
+                            if ( localTag.toUpperCase().trim().equals( deviceTag.toUpperCase() ) )
+                            {
+                                tagFound = true;
+                                break;
+                            }
+                        }
+                        if ( tagFound )
+                            break;
+                    }
+    
+                    if ( !tagFound )
+                    {
+                        throw new FilteredException( "This step was ignored as the tag was not specified" );
+                    }
+                }
+    
+                //
+                // Check for tag names
+                //
+                if ( tagNames != null && tagNames.length > 0 && PageManager.instance().getTagNames() != null && PageManager.instance().getTagNames().length > 0 )
+                {
+                    boolean tagEnabled = false;
+                    for ( String tagName : tagNames )
+                    {
+                        for ( String useTag : PageManager.instance().getTagNames() )
+                        {
+                            if ( tagName.equals( useTag ) )
+                            {
+                                tagEnabled = true;
+                                break;
+                            }
+                        }
+    
+                        if ( tagEnabled )
+                            break;
+                    }
+    
+                    if ( !tagEnabled )
+                    {
+                        throw new FilteredException( "This required a tag that was not enabled for this test run" );
+                    }
+                }
+                
+                //
+                // Validate the version
+                //
+                if ( version != null )
+                {
+                    if ( !version.isVersion( ((DeviceWebDriver) webDriver).getAut() ) )
+                    {
+                        throw new FilteredException( "This required an application version of " + version.toString() );
+                    }
+                }
+    
+                if ( log.isInfoEnabled() )
+                    log.info( Thread.currentThread().getName() + ": Executing Step " + name + "(" + getClass().getSimpleName() + ")" + (linkId != null ? " linked to " + linkId : "") );
+    
+                
                 WebDriver altWebDriver = getAltWebDriver();
-
                 //
                 // Listener integrations for individual steps
                 //
                 if ( !KeyWordDriver.instance().notifyBeforeStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, sC, executionContext ) )
                 {
-                    log.warn( "Test Step was skipped due to a failed step notification listener" );
-                    return true;
+                    throw new FilteredException( "Test Step was skipped due to a failed step notification listener" );
                 }
 
                 if ( ((DeviceWebDriver) webDriver).getCloud().getProvider().equals( "PERFECTO" ) )
@@ -871,7 +886,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     }
                 }
 
-                executionContext.startStep( this, contextMap, dataMap );
+                
                 returnValue = _executeStep( pageObject, ((altWebDriver != null) ? altWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext );
 
                 //
@@ -893,15 +908,29 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 executionContext.completeStep( StepStatus.SUCCESS, null );
                 throw lb;
             }
-            catch ( Exception e )
+            catch ( FilteredException e )
             {
-                caughtException = true;
                 stepException = e;
                 returnValue = false;
                 try
                 {
                     WebDriver altWebDriver = getAltWebDriver();
-                    KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, sC, executionContext );
+                    KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, StepStatus.SUCCESS, sC, executionContext );
+                }
+                catch ( Exception e2 )
+                {
+
+                }
+
+            }
+            catch ( Exception e )
+            {
+                stepException = e;
+                returnValue = false;
+                try
+                {
+                    WebDriver altWebDriver = getAltWebDriver();
+                    KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, StepStatus.FAILURE, sC, executionContext );
                 }
                 catch ( Exception e2 )
                 {
@@ -961,42 +990,45 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             //
             if ( !fork && getStepList() != null && !getStepList().isEmpty() && !returnValue )
             {
-                for ( KeyWordStep parentStep : getStepList() )
+                if ( stepException == null && !(stepException instanceof FilteredException) )
                 {
-                    if ( parentStep instanceof KWSElse && !parentStep.getStepList().isEmpty() )
+                    for ( KeyWordStep parentStep : getStepList() )
                     {
-                        for ( KeyWordStep step : parentStep.getStepList() )
+                        if ( parentStep instanceof KWSElse && !parentStep.getStepList().isEmpty() )
                         {
-                            boolean subReturnValue = false;
-                            try
+                            for ( KeyWordStep step : parentStep.getStepList() )
                             {
-                                subReturnValue = step.executeStep( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
-                            }
-                            catch ( KWSLoopBreak e )
-                            {
-                                executionContext.completeStep( StepStatus.SUCCESS, null );
-                                throw e;
-                            }
-                            catch ( Exception e )
-                            {
-                                stepException = e;
-                                subReturnValue = false;
-                                log.debug( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " encoundered error: ", e );
-                            }
-
-                            if ( step.isInverse() )
-                            {
-                                subReturnValue = !subReturnValue;
-                            }
-
-                            if ( !subReturnValue )
-                            {
-                                returnValue = false;
-                                if ( step.getFailure().equals( StepStatus.FAILURE_IGNORED ) )
-                                    subFailure = false;
-                                else
-                                    subFailure = true;
-                                break;
+                                boolean subReturnValue = false;
+                                try
+                                {
+                                    subReturnValue = step.executeStep( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+                                }
+                                catch ( KWSLoopBreak e )
+                                {
+                                    executionContext.completeStep( StepStatus.SUCCESS, null );
+                                    throw e;
+                                }
+                                catch ( Exception e )
+                                {
+                                    stepException = e;
+                                    subReturnValue = false;
+                                    log.debug( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " encoundered error: ", e );
+                                }
+    
+                                if ( step.isInverse() )
+                                {
+                                    subReturnValue = !subReturnValue;
+                                }
+    
+                                if ( !subReturnValue )
+                                {
+                                    returnValue = false;
+                                    if ( step.getFailure().equals( StepStatus.FAILURE_IGNORED ) )
+                                        subFailure = false;
+                                    else
+                                        subFailure = true;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -1007,24 +1039,32 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
             if ( !returnValue )
             {
-                switch ( sFailure )
+                if ( stepException != null && stepException instanceof FilteredException )
                 {
-                    case ERROR:
-                        stepStatus = StepStatus.FAILURE;
-                        if ( stepException == null )
-                            stepException = new ScriptConfigurationException( kwName + " has failed to complete" );
-
-                        break;
-
-                    case IGNORE:
-                        stepStatus = StepStatus.FAILURE_IGNORED;
-                        stepException = null;
-                        break;
-
-                    case LOG_IGNORE:
-                        stepStatus = StepStatus.FAILURE_IGNORED;
-                        if ( stepException == null )
-                            stepException = new ScriptConfigurationException( kwName + " has failed to complete" );
+                    stepStatus = StepStatus.FILTERED;
+                    returnValue = true;
+                }
+                else
+                {
+                    switch ( sFailure )
+                    {
+                        case ERROR:
+                            stepStatus = StepStatus.FAILURE;
+                            if ( stepException == null )
+                                stepException = new ScriptConfigurationException( kwName + " has failed to complete" );
+    
+                            break;
+    
+                        case IGNORE:
+                            stepStatus = StepStatus.FAILURE_IGNORED;
+                            stepException = null;
+                            break;
+    
+                        case LOG_IGNORE:
+                            stepStatus = StepStatus.FAILURE_IGNORED;
+                            if ( stepException == null )
+                                stepException = new ScriptConfigurationException( kwName + " has failed to complete" );
+                    }
                 }
             }
 
