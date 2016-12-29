@@ -69,8 +69,16 @@ public class KWSExecJS extends AbstractKeyWordStep
         {
             throw new ScriptException( "Web driver (" + webDriver.getClass().getName() + ") doesn't support Javascript execution" );
         }
-		
-        Object result = ((JavascriptExecutor) webDriver).executeScript( (String) script );
+		Object result = "";
+        
+        try
+        {
+            result = ((JavascriptExecutor) webDriver).executeScript( (String) script );
+        }
+        catch( Exception e )
+        {
+            log.info( "JavaScript call failed with " + e.getMessage() );
+        }
 		
         if (( result instanceof String ) &&
             ( !validateData( result + "" )) )

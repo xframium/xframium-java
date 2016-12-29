@@ -1071,7 +1071,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                             if ( PageManager.instance().isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
                                 PerfectoMobile.instance().windTunnel().addPointOfInterest( getExecutionId( webDriver ), getPoi() + "(" + getPageName() + "." + getName() + ")", Status.failure );
                         }
-                        log.error( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed as " + currentError );
+                        log.error( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed", currentError );
                         return false;
 
                     case LOG_IGNORE:

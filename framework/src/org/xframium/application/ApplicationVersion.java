@@ -12,9 +12,17 @@ public class ApplicationVersion
     private Map<String,Double[]> versionMap = new HashMap<String,Double[]>( 20 );
     private static Pattern APP_VERSION = Pattern.compile( "([^\\(]*)\\(([^\\)]*)\\),*" );
     private static Log log = LogFactory.getLog( ApplicationVersion.class );
+    
+    private String versionDescriptor;
+    
+    public String toString()
+    {
+        return versionDescriptor;
+    }
+    
     public ApplicationVersion( String versionDescriptor )
     {
-        
+        this.versionDescriptor = versionDescriptor;
         try
         {
             if ( log.isDebugEnabled() )

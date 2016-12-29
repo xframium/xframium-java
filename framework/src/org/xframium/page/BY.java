@@ -116,6 +116,7 @@ public enum BY
 	    byList.add( V_IMAGE );
 	    byList.add( HTML );
 	    byList.add( PROP );
+	    byList.add( COMPLEX );
 	    return byList;
 	}
 	
