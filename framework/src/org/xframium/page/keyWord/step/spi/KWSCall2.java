@@ -79,6 +79,8 @@ public class KWSCall2 extends AbstractKeyWordStep
 		Map<String,String> localContextMap = new HashMap<String,String>( 20 );
 		boolean returnValue = false;
 		
+		String functionName = getName();
+		
 		if ( log.isDebugEnabled() )
 			log.debug( "Execution Function " + getName() );
 		
@@ -105,6 +107,10 @@ public class KWSCall2 extends AbstractKeyWordStep
 									dataMap.put( dpArray[0], pageData );
 							}
 						}
+						else if ( param.getName().equals( "FUNCTION_NAME") )
+						{
+						    functionName = getParameterValue( param, contextMap, dataMap ) + "";
+						}
 						else
 						{
 							//
@@ -118,9 +124,9 @@ public class KWSCall2 extends AbstractKeyWordStep
 			}
 			
 			if ( sC != null )
-				returnValue = sC.getTest( getName() ).executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext);
+				returnValue = sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext);
 			else
-				returnValue = KeyWordDriver.instance().executionFunction( getName(), webDriver, dataMap, pageMap, contextMap, sC, executionContext );
+				returnValue = KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext );
 		}
 		finally
 		{
