@@ -334,7 +334,7 @@ public class DeviceManager implements ArtifactListener
     private Log log = LogFactory.getLog( DeviceManager.class );
 	
     /** The manager lock. */
-    private Lock managerLock = new XFramiumLock();
+    private Lock managerLock = new ReentrantLock();
 	
     /** The device map. */
     private Map<String, Device> deviceMap = new HashMap<String, Device>( 20 );

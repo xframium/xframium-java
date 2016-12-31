@@ -5,8 +5,8 @@
   <application provider="XML" name="xTest" fileName="applicationRegistry.xml" />
 
   <devices provider="LOCAL">
-    <device name="Firefox Local" manufacturer="Mozilla" model="Firefox" active="true" availableDevices="5" os="Windows" browserName="firefox" osVersion="8.1" browserVersion="46" cloud="EMBEDDED" />
-    <device name="Chrome Local" manufacturer="Google" model="Chrome" active="true" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" cloud="EMBEDDED" >
+    <device name="Firefox Local" manufacturer="Mozilla" model="Firefox" active="true" availableDevices="3" os="Windows" browserName="firefox" osVersion="8.1" browserVersion="46" cloud="EMBEDDED" />
+    <device name="Chrome Local" manufacturer="Google" model="Chrome" active="true" availableDevices="3" os="Windows" browserName="chrome" osVersion="8.1" cloud="EMBEDDED" >
       <objectCapability name="chrometest">
         <capabilities factoryName="ChromeOptions">
           <options name="arguments">--disable-extensions</options>
@@ -37,7 +37,8 @@
     </device>
     <device name="Samsung S8" manufacturer="Samsung" model="Galaxy S8" os="Android" active="false" availableDevices="1" />
   </devices>
-  <driver type="WEB" outputFolder="test-output" displayResults="true" deviceTags="goodClick,tagTest" testNames="xFramium STEP Complex Version Test" > 
+  <driver type="WEB" outputFolder="test-output" displayResults="true" deviceTags="goodClick,tagTest"> 
+    <property name="xFramium General KeyWord Test.count">3</property>
     <artifact type="FAILURE_SOURCE" />
     <artifact type="DEVICE_LOG" />
     <artifact type="WCAG_REPORT" />

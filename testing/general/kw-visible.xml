@@ -12,7 +12,7 @@
     <step type="EXISTS" name="deleteButton" page="home"  />
     
     <step type="VISIBLE" name="deleteButton" page="home" inverse="true" />
-    <step type="CLICK" name="aOpen" page="home" wait="1000" />
+    <step type="CLICK" name="aOpen" page="home" wait="2000" />
     <step type="VISIBLE" name="deleteButton" page="home" />
     <step type="CLICK" name="aOpen" page="home" wait="1000" />
     <step type="VISIBLE" name="deleteButton" page="home" inverse="true" />
