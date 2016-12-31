@@ -81,6 +81,8 @@ public class KeyWordTest
     private String[] contentKeys;
     
     private String[] deviceTags;
+    
+    private int count;
 
     /** The step list. */
     private List<KeyWordStep> stepList = new ArrayList<KeyWordStep>( 10 );
@@ -111,7 +113,7 @@ public class KeyWordTest
      * @param contentKeys
      *            the content keys
      */
-    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys, String deviceTags, Map<String,String> overrideMap )
+    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys, String deviceTags, Map<String,String> overrideMap, int count )
     {
         this.name = name;
         this.active = Boolean.parseBoolean( getValue( name, "active", active + "", overrideMap ) );
@@ -160,6 +162,8 @@ public class KeyWordTest
         value = getValue( name, "deviceTags", deviceTags, overrideMap );
         if ( value != null && !value.trim().isEmpty() )
             this.deviceTags = value.split( "," );
+        
+        this.count = Integer.parseInt( getValue( name, "count", count + "", overrideMap ) );
     }
     
     private String getValue( String testName, String attributeName, String attributeValue, Map<String,String> overrideMap )
@@ -173,23 +177,18 @@ public class KeyWordTest
             return attributeValue;
     }
 
-    /**
-     * Copy test.
-     *
-     * @param testName
-     *            the test name
-     * @return the key word test
-     */
-    public KeyWordTest copyTest( String testName )
+    
+    
+    public int getCount()
     {
-        KeyWordTest newTest = new KeyWordTest( testName, active, null, dataDriver, timed, linkId, os, threshold, description, null, null, null, null );
-        newTest.dataProviders = dataProviders;
-        newTest.stepList = stepList;
-        newTest.testTags = testTags;
-        newTest.contentKeys = contentKeys;
-        newTest.deviceTags = deviceTags;
-        return newTest;
+        return count;
     }
+
+    public void setCount( int count )
+    {
+        this.count = count;
+    }
+
 
     public String[] getDeviceTags()
     {

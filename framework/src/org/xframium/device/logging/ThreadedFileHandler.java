@@ -44,7 +44,7 @@ public class ThreadedFileHandler extends Handler
         setFormatter( new SimpleFormatter() );
         
         LogManager.getLogManager().getLogger( "" ).addHandler( this );
-        LogManager.getLogManager().getLogger( "" ).setLevel( baseLevel );
+        //LogManager.getLogManager().getLogger( "" ).setLevel( baseLevel );
         //if ( LogManager.getLogManager().getLogger( X_NAMESPACE ) != null )
         //{
 	    //    LogManager.getLogManager().getLogger( X_NAMESPACE ).setLevel( baseLevel );

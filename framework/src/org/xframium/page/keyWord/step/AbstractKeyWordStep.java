@@ -990,7 +990,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             //
             if ( !fork && getStepList() != null && !getStepList().isEmpty() && !returnValue )
             {
-                if ( stepException == null && !(stepException instanceof FilteredException) )
+                if ( stepException == null || !(stepException instanceof FilteredException) )
                 {
                     for ( KeyWordStep parentStep : getStepList() )
                     {

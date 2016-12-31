@@ -604,8 +604,28 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         
         if ( deviceList != null )
         {
-            for ( Device d : deviceList )
-                dC.addDevice( d );
+            String deviceOverride = configProperties.get( "deviceOverrides" );
+            if ( deviceOverride != null )
+            {
+                Map<String,Boolean> deviceMap = new HashMap<String,Boolean>( 10 );
+                String[] overrideArray = deviceOverride.split( "," );
+                for ( String override : overrideArray )
+                    deviceMap.put( override, true );
+                
+                for ( Device d : deviceList )
+                {
+                    if ( deviceMap.containsKey( d.getKey() ) )
+                    {
+                        d.setActive( true );
+                        dC.addDevice( d );
+                    }
+                }
+            }
+            else
+            {
+                for ( Device d : deviceList )
+                    dC.addDevice( d );
+            }
         }
         
         return dC;
@@ -801,38 +821,10 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     else if ( test.getType().equals( "XML" ) )
                     {
                         KeyWordTest currentTest = parseTest( test, "test" );
-                        
-                        if ( currentTest.getDataDriver() != null && !currentTest.getDataDriver().isEmpty() && parseDataIterators )
-                        {
-                            PageData[] pageData = pdp.getRecords( currentTest.getDataDriver() );
-                            if (pageData == null)
-                            {
-                                log.warn( "Specified Data Driver [" + currentTest.getDataDriver() + "] could not be located. Make sure it exists and it was populated prior to initializing your keyword factory" );
-                                if ( currentTest.isActive() )
-                                    sC.addActiveTest( currentTest );
-                                else
-                                    sC.addInactiveTest( currentTest );
-                            }
-                            else
-                            {
-                                String testName = currentTest.getName();
-    
-                                for (PageData record : pageData)
-                                {
-                                    if ( currentTest.isActive() )
-                                        sC.addActiveTest( currentTest.copyTest( testName + "!" + record.getName() ) );
-                                    else
-                                        sC.addInactiveTest( currentTest.copyTest( testName + "!" + record.getName() ) );
-                                }
-                            }
-                        }
+                        if ( currentTest.isActive() )
+                            sC.addActiveTest( currentTest );
                         else
-                        {
-                            if ( currentTest.isActive() )
-                                sC.addActiveTest( currentTest );
-                            else
-                                sC.addInactiveTest( currentTest );
-                        }
+                            sC.addInactiveTest( currentTest );
                     }
                 }
                 
@@ -883,29 +875,33 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         return sC;
     }
     
+    
+    
     @Override
-    public DriverContainer configureDriver()
+    public DriverContainer configureDriver(Map<String, String> customConfig)
     {
         DriverContainer dC = new DriverContainer();
         
-
-        String personaNames = xRoot.getDriver().getPersonas();
+        if ( customConfig != null )
+            configProperties.putAll( customConfig );
+        
+        String personaNames = getValue( "driver.personas", xRoot.getDriver().getPersonas(), configProperties ) ;
         if ( personaNames != null && !personaNames.isEmpty() )
             dC.setPerfectoPersonas( personaNames );
         
-        dC.setDisplayReport( xRoot.getDriver().isDisplayResults() );
+        dC.setDisplayReport( Boolean.parseBoolean( getValue( "driver.displayResults", xRoot.getDriver().isDisplayResults() + "", configProperties ) ) );
         dC.setSmartCaching( xRoot.getDriver().isCachingEnabled() );
         if ( xRoot.getSecurity() != null )
         {
             dC.setSecureCloud( xRoot.getSecurity().isSecureCloud() );
         }
 
-        dC.setStepTags( xRoot.getDriver().getStepTags() );
+        dC.setStepTags( getValue( "driver.stepTags", xRoot.getDriver().getStepTags(), configProperties ) );
 
         dC.getPropertyMap().putAll( configProperties );
         dC.setEmbeddedServer( xRoot.getDriver().isEmbeddedServer() );
         dC.setDriverType( DriverType.valueOf( xRoot.getDriver().getType() ) );
-        dC.setDeviceTags( xRoot.getDriver().getDeviceTags() );
+        dC.setDeviceTags( getValue( "driver.deviceTags", xRoot.getDriver().getDeviceTags(), configProperties ) );
         
         if ( xRoot.getDependencies() != null )
         {
@@ -942,10 +938,10 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         //
         // Extract any named tests
         //
-        dC.setTestNames( xRoot.getDriver().getTestNames() );
-        dC.setTestTags( xRoot.getDriver().getTagNames() );
+        dC.setTestNames( getValue( "driver.testNames", xRoot.getDriver().getTestNames(), configProperties ) );
+        dC.setTestTags( getValue( "driver.tagNames", xRoot.getDriver().getTagNames(), configProperties ) );
         dC.setDryRun( xRoot.getDriver().isDryRun() );
-        dC.setSuiteName( xRoot.getDriver().getSuiteName() );
+        dC.setSuiteName( getValue( "driver.suiteName", xRoot.getDriver().getSuiteName(), configProperties ) );
 
         return dC;
     }
@@ -981,7 +977,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      */
     private KeyWordTest parseTest( XTest xTest, String typeName )
     { 
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount() );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
 

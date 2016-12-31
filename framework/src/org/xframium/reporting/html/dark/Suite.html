@@ -65,7 +65,7 @@
                                 <tbody>
                                     <tr ng-repeat="exec in suiteData.executionSummary | filter:filterTestsBy">
                                         <td>
-                                            <a href='{{exec.folderName}}/index.html'>{{exec.name}}</a>
+                                            <a href='{{escapeFolderName(exec.folderName)}}/index.html'>{{exec.name}}</a>
                                         </td>
                                         <td>{{exec.device.environment}}</td>
                                         <td>{{formatTestDuration( exec )}}</td>
@@ -187,6 +187,11 @@
             return hours + "h " + minutes + "m " + seconds + "s"
         }
 
+        $scope.escapeFolderName = function( folderName )
+        {
+            return folderName.replace( '#', '%23' );   
+        }
+        
         $scope.initialize = function()
         {
             $scope.categorizeData();

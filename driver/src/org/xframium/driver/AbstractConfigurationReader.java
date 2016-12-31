@@ -69,6 +69,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     protected File configFolder;
     protected boolean dryRun = false;
     protected boolean displayResults = true;
+    
     private SuiteContainer suiteContainer;
 
     public abstract boolean readFile( InputStream inputStream );
@@ -97,14 +98,38 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
 
     protected abstract boolean configurePropertyAdapters();
 
-    public abstract DriverContainer configureDriver();
+    public abstract DriverContainer configureDriver( Map<String, String> customConfig );
 
     public abstract FavoriteContainer configureFavorites();
 
     protected abstract boolean _executeTest( SuiteContainer sC ) throws Exception;
 
     @Override
-    public void readConfiguration( File configFile, boolean runTest )
+    public void readConfiguration( File configurationFile, boolean runTest )
+    {
+        readConfiguration( configurationFile, runTest, null );
+        
+    }
+    
+    private String suiteName;
+    public String getSuiteName()
+    {
+        return suiteName;
+    }
+    
+    
+    protected String getValue( String keyName, String attributeValue, Map<String,String> overrideMap )
+    {
+        if ( System.getProperty( keyName ) != null )
+            return System.getProperty( keyName );
+        if ( overrideMap.containsKey( keyName ) )
+            return overrideMap.get( keyName );
+        else
+            return attributeValue;
+    }
+    
+    @Override
+    public void readConfiguration( File configFile, boolean runTest, Map<String, String> customConfig )
     {
         configFolder = configFile.getParentFile();
         
@@ -116,8 +141,8 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         try
         {
             log.info( "Driver: Configuring Driver" );
-            final DriverContainer driverC = configureDriver();
-            
+            final DriverContainer driverC = configureDriver( customConfig );
+            suiteName = driverC.getSuiteName();
             
             DeviceManager.instance().setInitializationName( driverC.getBeforeDevice() );
             
@@ -561,10 +586,6 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         {
             log.fatal( "Error executing Tests", e );
         }
-        finally
-        {
-            CloudRegistry.instance().shutdown();
-        }
 
         return true;
     }
@@ -585,7 +606,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     protected void runTest( String outputFolder, Class theTest, SuiteContainer sC )
     {
         int threadCount = Integer.parseInt( System.getProperty( "xF-ThreadCount", "10" ) );
-        int verboseLevel = Integer.parseInt( System.getProperty( "xF-VerboseLevel", "1" ) );
+        int verboseLevel = Integer.parseInt( System.getProperty( "xF-VerboseLevel", "10" ) );
 
         TestNG testNg = new TestNG( true );
         testNg.setVerbose( verboseLevel );

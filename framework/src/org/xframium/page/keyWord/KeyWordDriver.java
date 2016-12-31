@@ -32,6 +32,7 @@ import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.device.ng.TestName;
 import org.xframium.exception.DataConfigurationException;
 import org.xframium.exception.FilteredException;
 import org.xframium.exception.ScriptConfigurationException;
@@ -498,7 +499,7 @@ public class KeyWordDriver
      * @throws Exception
      *             the exception
      */
-    public ExecutionContextTest executeTest( String testName, WebDriver webDriver, SuiteContainer sC ) throws Exception
+    public ExecutionContextTest executeTest( TestName testName, WebDriver webDriver, SuiteContainer sC ) throws Exception
     {
         boolean testStarted = false;
         boolean returnValue = true;
@@ -508,7 +509,7 @@ public class KeyWordDriver
         Map<String, PageData> dataMap = new HashMap<String, PageData>( 10 );
         Map<String, Page> pageMap = new HashMap<String, Page>( 10 );
         Map<String, Object> contextMap = new HashMap<String, Object>( 10 );
-        KeyWordTest test = testMap.get( testName );
+        KeyWordTest test = testMap.get( testName.getRawName() );
         
         logConsole( "Executing [" + testName + "]" );
         
@@ -517,7 +518,7 @@ public class KeyWordDriver
             
     
             if ( test == null )
-                throw new TestConfigurationException( testName );
+                throw new TestConfigurationException( testName.getTestName() );
             
             executionContext.setTest( test );
             executionContext.setDevice( ( (DeviceWebDriver) webDriver ).getPopulatedDevice() );
@@ -527,7 +528,7 @@ public class KeyWordDriver
             executionContext.setPageMap( pageMap );
             executionContext.setContextMap( contextMap );
             executionContext.setSessionId( ( (DeviceWebDriver) webDriver ).getExecutionId() );
-        
+            executionContext.setTestName( testName.getTestName() );
         
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Configuring Data Providers" );
@@ -587,13 +588,9 @@ public class KeyWordDriver
             //
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Configuring Data Drivers" );
-            if ( test.getDataDriver() != null && !test.getDataDriver().isEmpty() )
+            if ( testName.getDataDriven() != null )
             {
-                String[] testInfo = testName.split( "!" );
-                if ( testInfo.length != 2 )
-                    throw new ScriptConfigurationException( "Could not extract data record from " + testName );
-
-                dataMap.put( test.getDataDriver(), PageDataManager.instance().getPageData( test.getDataDriver(), testInfo[1] ) );
+                dataMap.put( test.getDataDriver(), testName.getDataDriven() );
             }
 
             //

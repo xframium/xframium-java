@@ -262,7 +262,6 @@ public class KeyWordStepFactory
         if ( kwImpl == null )
         {
             log.error( "Unknown KeyWord [" + type + "]" );
-            System.exit( -1 );
         }
         try
         {

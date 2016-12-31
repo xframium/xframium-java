@@ -21,9 +21,48 @@
 package org.xframium.driver;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.reporting.ExecutionContext;
 public class TestDriver
 {
-
+    private List<SuiteListener> listenerList = new ArrayList<SuiteListener>(3);
+    
+    public void addSuiteListener( SuiteListener suiteListener )
+    {
+        listenerList.add( suiteListener );
+    }
+    
+    public void execute( File configFile, Map<String,String> customConfig )
+    {
+        try
+        {
+            
+            ConfigurationReader configReader = null;
+            if ( configFile.getName().toLowerCase().endsWith( ".txt" ) )
+            {
+                configReader = new TXTConfigurationReader();
+            }
+            else if ( configFile.getName().toLowerCase().endsWith( ".xml" ) )
+            {
+                configReader = new XMLConfigurationReader();
+            }
+            
+            for ( SuiteListener l : listenerList )
+                l.beforeSuite( null, configFile );
+            
+            configReader.readConfiguration( configFile, true, customConfig );
+            
+            for ( SuiteListener l : listenerList )
+                l.afterSuite( configReader.getSuiteName(), configFile, ExecutionContext.instance().getReportFolder() );
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace();
+        }
+    }
     
     public static void main( String[] args )
     {
@@ -39,22 +78,10 @@ public class TestDriver
             System.err.println( "[" + configFile.getAbsolutePath() + "] could not be located" );
             System.exit( -1 );
         }
-        try
-        {
-            if ( configFile.getName().toLowerCase().endsWith( ".txt" ) )
-            {
-                new TXTConfigurationReader().readConfiguration( configFile, true );
-            }
-            else if ( configFile.getName().toLowerCase().endsWith( ".xml" ) )
-            {
-                new XMLConfigurationReader().readConfiguration( configFile, true );
-            }
-        }
-        catch( Exception e )
-        {
-            e.printStackTrace();
-        }
-                
+        
+        new TestDriver().execute( configFile, null );
+        
+        CloudRegistry.instance().shutdown();
     }
 
     

@@ -32,6 +32,12 @@ public class ExecutionContext
     {
         return singleton;
     }
+    
+    public void clear()
+    {
+        sPMap.clear();
+        executionSummary.clear();
+    }
 
     private transient List<ExecutionContextTest> executionList = new ArrayList<ExecutionContextTest>( 10 );
 

@@ -107,6 +107,8 @@ public class DeviceManager implements ArtifactListener
         return initializationName;
     }
 
+    
+    
     public void setInitializationName( String initializationName )
     {
         this.initializationName = initializationName;
@@ -332,7 +334,7 @@ public class DeviceManager implements ArtifactListener
     private Log log = LogFactory.getLog( DeviceManager.class );
 	
     /** The manager lock. */
-    private Lock managerLock = new ReentrantLock();
+    private Lock managerLock = new XFramiumLock();
 	
     /** The device map. */
     private Map<String, Device> deviceMap = new HashMap<String, Device>( 20 );
@@ -361,6 +363,19 @@ public class DeviceManager implements ArtifactListener
     /** The dry run. */
     private boolean dryRun = false;
 
+    public void clear()
+    {
+        propertyAdapterList.clear();
+        if ( configurationProperties != null )
+            configurationProperties.clear();
+        selectedDevice = null;
+        holdList.clear();
+        tagNames = null;
+        failureMap.clear();
+        initializationMap.clear();
+        analyticsMap.clear();
+        activeRuns.clear();
+    }
 	
 	
     public Map<String, DeviceAnalytics> getAnalyticsMap()
@@ -653,7 +668,7 @@ public class DeviceManager implements ArtifactListener
             if (log.isDebugEnabled())
                 log.debug( Thread.currentThread().getName() + ": Acquiring Device Manager Lock" );
             managerLock.lock();
-            
+
             //
             // Validate that a device remains that is active and has NOT run the current test yet
             //
@@ -665,7 +680,15 @@ public class DeviceManager implements ArtifactListener
                 if ( deviceFailures != null )
                     currentFailures = deviceFailures;
                 
-                boolean deviceRan = analyticsMap.get( currentDevice.getKey() ).hasRun( runKey ) || activeRuns.containsKey( currentDevice.getKey() + "." + runKey );
+                boolean deviceRan = false;
+                try
+                {
+                    deviceRan = analyticsMap.get( currentDevice.getKey() ).hasRun( runKey ) || activeRuns.containsKey( currentDevice.getKey() + "." + runKey );
+                }
+                catch( Exception e )
+                {
+                    e.printStackTrace();
+                }
                 
                 if ( !deviceRan && currentFailures < currentDevice.getAvailableDevices() * retryCount )
                 {
@@ -680,6 +703,7 @@ public class DeviceManager implements ArtifactListener
                 try { managerLock.unlock(); } catch( Exception e ) {}
                 break;
             }
+
              
 		
             try

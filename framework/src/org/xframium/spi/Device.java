@@ -67,6 +67,8 @@ public interface Device
 	String getModel();
 	public void setModel( String model );
 	
+	
+	
 	/**
 	 * Gets the os.
 	 *
@@ -155,6 +157,7 @@ public interface Device
 	 * @return true, if is active
 	 */
 	boolean isActive();
+	void setActive( boolean active );
 	
 	String getCloud();
 }

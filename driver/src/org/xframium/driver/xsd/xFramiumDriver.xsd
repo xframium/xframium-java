@@ -439,12 +439,13 @@
     <attribute name="tagNames" type="string" use="optional" />
     <attribute name="linkId" type="string" use="optional" />
     <attribute name="timed" type="boolean" use="optional" default="false" />
-    <attribute name="threshold" type="integer" use="optional" default="0" />
+    <attribute name="threshold" type="int" use="optional" default="0" />
     <attribute name="active" type="boolean" use="optional" default="true" />
     <attribute name="browser" type="string" use="optional" />
     <attribute name="contentKeys" type="string" use="optional" />
     <attribute name="deviceTags" type="string" use="optional" />
     <attribute name="os" type="string" use="optional" />
+    <attribute name="count" type="int" use="optional" default="0" />
   </complexType>
   <complexType name="xDescription">
     
@@ -515,6 +516,7 @@
           <enumeration value="ENABLED" />
           <enumeration value="COMMAND" />
           <enumeration value="EMAIL" />
+          <enumeration value="APPLICATION" />
         </restriction>
       </simpleType>
     </attribute>

@@ -108,14 +108,14 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
             }
             else
             {
-                DefaultPageData pageData = new DefaultPageData( currentScenario.getName(), namePosition == -1 ? "" : e.getCells().get( namePosition ), true );
-                for ( int i=0; i<e.getCells().size(); i++ )
-                {
-                    pageData.addValue( columnNames[ i ], e.getCells().get( i ) );
-                }
-                addRecord( pageData );
-                
-                scenarioList.add( currentScenario.copyTest( currentScenario.getName() + "!" + pageData.getName() ) );
+//                DefaultPageData pageData = new DefaultPageData( currentScenario.getName(), namePosition == -1 ? "" : e.getCells().get( namePosition ), true );
+//                for ( int i=0; i<e.getCells().size(); i++ )
+//                {
+//                    pageData.addValue( columnNames[ i ], e.getCells().get( i ) );
+//                }
+//                addRecord( pageData );
+//                
+//                scenarioList.add( currentScenario.copyTest( currentScenario.getName() + "!" + pageData.getName() ) );
             }
         }
     }
@@ -140,7 +140,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
             tagNames = tagNames.substring( 0, tagNames.length() - 1 );
         }
         
-        this.currentScenario = new KeyWordTest( xTest.getName(), true, null, null, false, null, null, 0, xTest.getDescription(), tagNames, null, null, configProperties );
+        this.currentScenario = new KeyWordTest( xTest.getName(), true, null, null, false, null, null, 0, xTest.getDescription(), tagNames, null, null, configProperties, 0 );
 
         for ( KeyWordStep xStep : backgroundSteps )
             this.currentScenario.addStep( xStep );
@@ -162,7 +162,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
             tagNames = tagNames.substring( 0, tagNames.length() - 1 );
         }
         
-        this.currentScenario = new KeyWordTest( xTest.getName(), true, null, xTest.getName(), false, null, null, 0, xTest.getDescription(), tagNames, null, null, configProperties );
+        this.currentScenario = new KeyWordTest( xTest.getName(), true, null, xTest.getName(), false, null, null, 0, xTest.getDescription(), tagNames, null, null, configProperties, 0 );
 
         for ( KeyWordStep xStep : backgroundSteps )
             this.currentScenario.addStep( xStep );

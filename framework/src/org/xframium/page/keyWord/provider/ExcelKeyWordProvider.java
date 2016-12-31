@@ -130,7 +130,6 @@ public class ExcelKeyWordProvider implements KeyWordProvider
 			catch (Exception e)
 			{
 				log.fatal( "Could not read from " + fileName, e );
-				System.exit( -1 );
 			}
 		}
 		return sC;

@@ -31,6 +31,7 @@ public class ExecutionContextTest
     
     private ExceptionType exceptionType;
     private KeyWordTest test;
+    private String testName;
     private CloudDescriptor cloudDescriptor;
     private Device device;
     private Date startTime = new Date( System.currentTimeMillis() );
@@ -57,7 +58,7 @@ public class ExecutionContextTest
         Map<String,Object> asMap = new HashMap<String,Object>( 20 );
         
         asMap.put( "exceptionType", exceptionType );
-        asMap.put( "name", test.getName() );
+        asMap.put( "name", testName );
         asMap.put( "startTime", startTime );
         asMap.put( "endTime", endTime );
         asMap.put( "testStatus", testStatus );
@@ -80,6 +81,22 @@ public class ExecutionContextTest
         return asMap;
     }
     
+    
+    
+    public String getTestName()
+    {
+        return testName;
+    }
+
+
+
+    public void setTestName( String testName )
+    {
+        this.testName = testName;
+    }
+
+
+
     public void popupateSystemProperties()
     {
         sPMap.clear();

@@ -116,8 +116,15 @@ public class SimpleDevice implements Device
 	{
 		return active;
 	}
+	
+	
 
-	private void generateEnv()
+	public void setActive( boolean active )
+    {
+        this.active = active;
+    }
+
+    private void generateEnv()
 	{
 	    StringBuilder stringBuilder = new StringBuilder();
         if ( model != null )
@@ -126,7 +133,8 @@ public class SimpleDevice implements Device
 	    
 	    if ( os != null )
         {
-            stringBuilder.append( " / " ).append( os );
+	        if ( model != null )
+	            stringBuilder.append( " / " ).append( os );
             if ( osVersion != null )
                 stringBuilder.append( " " ).append( osVersion );
         }

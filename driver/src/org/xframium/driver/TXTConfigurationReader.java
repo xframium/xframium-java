@@ -3,6 +3,7 @@ package org.xframium.driver;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -440,8 +441,28 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
         
         if ( deviceList != null )
         {
-            for ( Device d : deviceList )
-                dC.addDevice( d );
+            String deviceOverride = configProperties.get( "deviceOverrides" );
+            if ( deviceOverride != null )
+            {
+                Map<String,Boolean> deviceMap = new HashMap<String,Boolean>( 10 );
+                String[] overrideArray = deviceOverride.split( "," );
+                for ( String override : overrideArray )
+                    deviceMap.put( override, true );
+                
+                for ( Device d : deviceList )
+                {
+                    if ( deviceMap.containsKey( d.getKey() ) )
+                    {
+                        d.setActive( true );
+                        dC.addDevice( d );
+                    }
+                }
+            }
+            else
+            {
+                for ( Device d : deviceList )
+                    dC.addDevice( d );
+            }
         }
 
         return dC;
@@ -515,10 +536,13 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     }
     
     @Override
-    public DriverContainer configureDriver()
+    public DriverContainer configureDriver(Map<String, String> customConfig)
     {
         DriverContainer dC = new DriverContainer();
 
+        if ( customConfig != null )
+            configProperties.putAll( customConfig );
+        
         String personaNames = configProperties.get( "driver.personas" );
         if ( personaNames != null && !personaNames.isEmpty() )
             dC.setPerfectoPersonas( personaNames );

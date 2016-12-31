@@ -141,7 +141,6 @@ public class XMLKeyWordProvider implements KeyWordProvider
 			catch (Exception e)
 			{
 				log.fatal( "Could not read from " + fileName, e );
-				System.exit( -1 );
 			}
 		}
 		
@@ -181,44 +180,10 @@ public class XMLKeyWordProvider implements KeyWordProvider
 			        
 			        KeyWordTest currentTest = parseTest( test, "test" );
 			        
-			        if (currentTest.getDataDriver() != null && !currentTest.getDataDriver().isEmpty() && parseDataIterators)
-                    {
-			            PageData[] pageData = null;
-			            try
-			            {
-			                pageData = PageDataManager.instance().getRecords( currentTest.getDataDriver() );
-			            }
-			            catch( Exception e )
-			            {
-			                
-			            }
-                        if (pageData == null)
-                        {
-                            if ( currentTest.isActive() )
-                                sC.addActiveTest( currentTest );
-                            else
-                                sC.addInactiveTest( currentTest );
-                        }
-                        else
-                        {
-                            String testName = currentTest.getName();
-
-                            for (PageData record : pageData)
-                            {
-                                if ( currentTest.isActive() )
-                                    sC.addActiveTest( currentTest.copyTest( testName + "!" + record.getName() ) );
-                                else
-                                    sC.addInactiveTest( currentTest.copyTest( testName + "!" + record.getName() ) );
-                            }
-                        }
-                    }
+                    if ( currentTest.isActive() )
+                        sC.addActiveTest( currentTest );
                     else
-                    {
-                        if ( currentTest.isActive() )
-                            sC.addActiveTest( currentTest );
-                        else
-                            sC.addInactiveTest( currentTest );
-                    }
+                        sC.addInactiveTest( currentTest );
 			        
 			    }
 			}
@@ -349,7 +314,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 */
 	private KeyWordTest parseTest( Test xTest, String typeName )
 	{
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount() );
 		
         
 		KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );

@@ -117,6 +117,15 @@ public class KWSExecWS extends AbstractKeyWordStep
                     contextMap.put( context_name, value );
                 }
             }
+            
+            if ( !validateData( data.get( "_PAYLOAD" ) + "" ) )
+                throw new ScriptException( "EXISTS Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + data.get( "_PAYLOAD" ) + "]" );
+            
+            if ( getContext() != null )
+            {
+                contextMap.put( getContext(), data.get( "_PAYLOAD" ) );
+            }
+            
         }
         catch( Throwable e )
         {
