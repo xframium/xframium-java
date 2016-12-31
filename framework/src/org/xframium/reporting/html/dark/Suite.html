@@ -46,9 +46,10 @@
                             <div class=panel-title>
                                 <div class="row">
                                     <div class="col-sm-4">Execution Detail {{formatSuiteDuration()}}</div>
-                                    <div class="col-sm-7 input-group" >
+                                    <div class="col-sm-8 input-group" style="padding-right: 10px">
                                         <span class="input-group-addon" id="basic-addon2"></span>
                                         <input type="text" class="form-control" placeholder="Execution Filter" aria-describedby="basic-addon2" ng-model="filterTestsBy">
+                                        <span class="input-group-addon" id="basic-addon2" ng-if="suiteData.gridUrl != 'null'"><a hRef="{{suiteData.gridUrl}}" ><span class="glyphicon glyphicon-th"></span></a></span>
                                     </div>
                                 </div>
                             </div>

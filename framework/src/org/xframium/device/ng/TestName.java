@@ -33,6 +33,11 @@ public class TestName
         return dataDriven;
     }
 
+    public String toString()
+    {
+        return testName;
+    }
+    
     public void setDataDriven( PageData dataDriven )
     {
         this.dataDriven = dataDriven;

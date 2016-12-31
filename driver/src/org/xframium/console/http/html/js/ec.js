@@ -50,6 +50,13 @@ xConsole
                     {
                         scope.toggle();
                     }
+                    
+                    $scope.getElapsed = function( value )
+                    {
+                        console.log( value.startTime );
+                        console.log( value.stopTime );
+                        return (value.stopTime - value.startTime);
+                    }
 
                     $scope.getTotal = function( test )
                     {

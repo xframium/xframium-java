@@ -80,6 +80,8 @@ public enum ArtifactType
     REPORTIUM( ArtifactTime.NOOP, 19, "REPORTIUM", "Perfeto reporting integrations" ),
     
     EXECUTION_RECORD_JSON( ArtifactTime.NOOP, 20, "EXECUTION_RECORD_HTML", "xFramium JSON Report" ),
+    
+    GRID_REPORT( ArtifactTime.NOOP, 21, "GRID_REPORT", "xFramium GRID Report" ),
     ;
     
     /** The time. */
@@ -108,6 +110,7 @@ public enum ArtifactType
         supportedList.add( ArtifactType.DEBUGGER );
         supportedList.add( ArtifactType.SAUCE_LABS );
         supportedList.add( ArtifactType.REPORTIUM );
+        supportedList.add( ArtifactType.GRID_REPORT );
 
         return supportedList;
     }

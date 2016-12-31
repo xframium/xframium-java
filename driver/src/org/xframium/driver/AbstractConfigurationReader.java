@@ -2,11 +2,13 @@ package org.xframium.driver;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -32,7 +34,6 @@ import org.xframium.device.artifact.Artifact;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
-import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.logging.ThreadedFileHandler;
 import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.device.proxy.ProxyRegistry;
@@ -513,10 +514,20 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
 
             _executeTest( sC == null ? suiteContainer : sC );
 
+            if ( DataManager.instance().isArtifactEnabled( ArtifactType.GRID_REPORT ) )
+            {
+                generateGridReport( ExecutionContext.instance().getReportFolder() );
+            }
+            
             if ( ExecutionContext.instance().isEnabled() )
             {
                 ExecutionContext.instance().setEndTime( new Date( System.currentTimeMillis() ) );
                 ExecutionContext.instance().popupateSystemProperties();
+                
+                if ( DataManager.instance().isArtifactEnabled( ArtifactType.GRID_REPORT ) )
+                {
+                    ExecutionContext.instance().setGridUrl( "grid.html" );
+                }
 
                 String outputData = "var testData = " + new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ), ExecutionContext.instance(), 0 ) ) + ";";
                 Artifact jsArtifact = new Artifact( "Suite.js", outputData.getBytes() );
@@ -578,6 +589,9 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                 }
             }
 
+            
+            
+            
             if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )
                 DebugManager.instance().shutDown();
 
@@ -590,6 +604,91 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         return true;
     }
 
+    public static boolean generateGridReport( File rootFolder )
+    {
+        File artifactFolder = new File( rootFolder, "artifacts" );
+        
+        File[] fileList = artifactFolder.listFiles( new GRIDFileFilter() );
+        
+        Map<String,List<String>> fileMap = new HashMap<String,List<String>>( 20 );
+        
+        for ( File file : fileList )
+        {
+            String[] fileParts = file.getName().split( "-" );
+            List<String> gridList = fileMap.get( fileParts[ 1 ] );
+            if ( gridList == null )
+            {
+                gridList = new ArrayList<String>( 10 );
+                fileMap.put( fileParts[ 1 ], gridList );
+            }
+            
+            gridList.add( file.getName() );
+        }
+        
+        String outputData = "var testData = " + new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ), fileMap, 0 ) ) + ";";
+        System.out.println( outputData );
+        Artifact jsArtifact = new Artifact( "Grid.js", outputData.getBytes() );
+        jsArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
+        
+        StringBuilder stringBuffer = new StringBuilder();
+        InputStream inputStream = null;
+        try
+        {
+            if ( System.getProperty( "reportTemplateFolder" ) == null )
+            {
+                if ( System.getProperty( "reportTemplate" ) == null )
+                    inputStream = ClassLoader.getSystemResourceAsStream( "org/xframium/reporting/html/dark/Grid.html" );
+                else
+                    inputStream = ClassLoader.getSystemResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/Grid.html" );
+            }
+            else
+                inputStream = new FileInputStream( new File( System.getProperty( "reportTemplateFolder" ), "Grid.html" ) );
+
+            int bytesRead = 0;
+            byte[] buffer = new byte[512];
+
+            while ( (bytesRead = inputStream.read( buffer )) > 0 )
+            {
+                stringBuffer.append( new String( buffer, 0, bytesRead ) );
+            }
+
+            Artifact indexArtifact = new Artifact( "grid.html", stringBuffer.toString().getBytes() );
+            indexArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            try
+            {
+                inputStream.close();
+            }
+            catch ( Exception e )
+            {
+            }
+        }
+        
+        return true;
+    }
+    
+    public static void main( String[] args )
+    {
+        generateGridReport( new File( "C:\\Users\\Allen\\git\\xframium-java\\testing\\test-output\\12-31_08-10-31-203" ) );
+    }
+    
+    private static class GRIDFileFilter implements FileFilter
+    {
+
+        @Override
+        public boolean accept( File pathname )
+        {
+            return pathname.getName().startsWith( "grid" );
+        }
+        
+    }
+    
     protected File findFile( File rootFolder, File useFile )
     {
         if ( useFile.exists() || useFile.isAbsolute() )
@@ -606,7 +705,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     protected void runTest( String outputFolder, Class theTest, SuiteContainer sC )
     {
         int threadCount = Integer.parseInt( System.getProperty( "xF-ThreadCount", "10" ) );
-        int verboseLevel = Integer.parseInt( System.getProperty( "xF-VerboseLevel", "10" ) );
+        int verboseLevel = Integer.parseInt( System.getProperty( "xF-VerboseLevel", "1" ) );
 
         TestNG testNg = new TestNG( true );
         testNg.setVerbose( verboseLevel );

@@ -137,7 +137,7 @@ public class SAUCELABSCloudActionProvider extends AbstractCloudActionProvider
                 
         }
         
-        return false;
+        return true;
     }
 
     @Override

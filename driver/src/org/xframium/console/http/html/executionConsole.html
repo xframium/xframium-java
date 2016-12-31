@@ -9,11 +9,9 @@
 <script src="./js/selection-model.min.js"></script>
 <script src="./js/ecServices.js"></script>
 <script src="./js/angular-ui-tree.js"></script>
-<link href="./css/bootstrap-select.min.css" rel="stylesheet">
-<link href="./css/angular-ui-tree.css" rel="stylesheet">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
+<link href="./css/angular-ui-tree.css" rel="stylesheet">
 <meta charset="ISO-8859-1">
 <title>xFramium Execution Console</title>
 <!-- Latest compiled and minified CSS -->
@@ -186,7 +184,7 @@ html, body {
                                         <li data-nodrag ui-tree-node ng-repeat="(key, value) in test.executions" ng-class="{'activeTest': value.testStatus == 'null', 'passedTest': value.testStatus == 'PASSED', 'failedTest': value.testStatus == 'FAILED'}" style="border-radius: 5px; margin-top: 1px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default; border-style: inset; border-width: thin" uib-tooltip="{{value.fullTestName}}")>
                                             <span style="font-weight: bold;">{{value.stepCount}}</span> steps executed on <span style="font-weight: bold;">{{value.device.environment}}</span>
                                             <span ng-if="value.testStatus == 'null'" class="testRunning pull-right" style="margin-right: 10px; margin-top: 2px"></span>
-                                            <span ng-if="value.testStatus != 'null'" class="pull-right" style="margin-right: 10px">{{value.stopTime-value.startTime}} milliseconds</span>
+                                            <span ng-if="value.testStatus != 'null'" class="pull-right" style="margin-right: 10px">{{getElapsed( value )}} milliseconds</span>
                                             
                                         </li>
                                     </ol>
@@ -217,7 +215,7 @@ html, body {
                                     <div ui-tree-handle class="tree-node tree-node-content" ng-class="{'activeTest': device.active, 'inactiveTest': !device.active}" style="border-radius: 5px; margin-top: 1px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default">
                                         <div class="row">
                                             <div class="col-sm-1" style="text-align: center; padding-top: 2px"><input type="checkbox" ng-model="device.active" /></div>
-                                            <div class="col-sm-11" style="padding-top: 3px; padding-left: 0px">{{device.environment}}</div>
+                                            <div class="col-sm-11" style="padding-top: 3px; padding-left: 0px">{{device.environment}} ({{device.cloud}})</div>
                                         </div>
                                     </div>
                                 </li>

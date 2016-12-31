@@ -19,6 +19,7 @@ public class ExecutionContext
     private String suiteName;
     private Date startTime;
     private Date endTime;
+    private String gridUrl;
     
     private List<Map<String, Object>> executionSummary = new ArrayList<Map<String, Object>>( 10 );
     private Map<String,String> sPMap = new HashMap<String,String>( 10 );
@@ -51,6 +52,18 @@ public class ExecutionContext
         }
     }
     
+    
+    
+    public String getGridUrl()
+    {
+        return gridUrl;
+    }
+
+    public void setGridUrl( String gridUrl )
+    {
+        this.gridUrl = gridUrl;
+    }
+
     public void addExecution( ExecutionContextTest test )
     {
         executionList.add( test );
