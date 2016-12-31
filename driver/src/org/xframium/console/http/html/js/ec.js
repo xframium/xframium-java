@@ -352,7 +352,7 @@ xConsole
                                 
                                 testNames += test.name;
                                 
-                                if ( test.count > 1 )
+                                if ( test.count > 0 )
                                     configData[ test.name + '.count' ] = test.count;
                             }
                             
