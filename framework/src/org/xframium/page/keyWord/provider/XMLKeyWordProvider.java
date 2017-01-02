@@ -36,7 +36,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
-import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordParameter;
@@ -56,6 +55,7 @@ import org.xframium.page.keyWord.provider.xsd.RegistryRoot;
 import org.xframium.page.keyWord.provider.xsd.Step;
 import org.xframium.page.keyWord.provider.xsd.Test;
 import org.xframium.page.keyWord.provider.xsd.Token;
+import org.xframium.page.keyWord.provider.xsd.XFunction;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import gherkin.parser.Parser;
 
@@ -178,7 +178,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
                         continue;
                     }
 			        
-			        KeyWordTest currentTest = parseTest( test, "test" );
+			        KeyWordTest currentTest = parseTest( test );
 			        
                     if ( currentTest.isActive() )
                         sC.addActiveTest( currentTest );
@@ -190,14 +190,14 @@ public class XMLKeyWordProvider implements KeyWordProvider
 
 			if (readFunctions)
 			{
-			    for( Test test : rRoot.getFunction() )
+			    for( XFunction test : rRoot.getFunction() )
                 {
                     if ( sC.testExists( test.getName() ) )
                     {
                         log.warn( "The function [" + test.getName() + "] is already defined and will not be added again" );
                         continue;
                     }
-                    sC.addFunction( parseTest( test, "function" ) );
+                    sC.addFunction( parseFunction( test ) );
                 }
 			}
 
@@ -312,12 +312,12 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 * @param typeName the type name
 	 * @return the key word test
 	 */
-	private KeyWordTest parseTest( Test xTest, String typeName )
+	private KeyWordTest parseTest( Test xTest )
 	{
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount(), null, null, null );
 		
         
-		KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
+		KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
 
 		for (KeyWordStep step : steps)
 		{
@@ -326,6 +326,21 @@ public class XMLKeyWordProvider implements KeyWordProvider
 
 		return test;
 	}
+	
+	private KeyWordTest parseFunction( XFunction xTest)
+    {
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), null, false, xTest.getLinkId(), null, 0, xTest.getDescription() != null ? xTest.getDescription().getValue() : null, null, null, null, configProperties, 1, xTest.getPage(), xTest.getOutput(), xTest.getMode() );
+        
+        
+        KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
+
+        for (KeyWordStep step : steps)
+        {
+            test.addStep( step );
+        }
+
+        return test;
+    }
 
 	/**
 	 * Parses the steps.
@@ -335,7 +350,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 * @param typeName the type name
 	 * @return the key word step[]
 	 */
-	private KeyWordStep[] parseSteps( List<Step> xSteps, String testName, String typeName )
+	private KeyWordStep[] parseSteps( List<Step> xSteps, String testName )
 	{
 
 		if (log.isDebugEnabled())
@@ -352,10 +367,10 @@ public class XMLKeyWordProvider implements KeyWordProvider
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
                                                                                  (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties, xStep.getVersion() );
 		    
-		    parseParameters( xStep.getParameter(), testName, xStep.getName(), typeName, step );
-		    parseTokens( xStep.getToken(), testName, xStep.getName(), typeName, step );
+		    parseParameters( xStep.getParameter(), testName, xStep.getName(), step );
+		    parseTokens( xStep.getToken(), testName, xStep.getName(), step );
 		    
-		    step.addAllSteps( parseSteps( xStep.getStep(), testName, typeName ) );
+		    step.addAllSteps( parseSteps( xStep.getStep(), testName ) );
 		    stepList.add( step );
 		}
 
@@ -372,7 +387,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 * @param parentStep the parent step
 	 * @return the key word parameter[]
 	 */
-	private void parseParameters( List<Parameter> pList, String testName, String stepName, String typeName, KeyWordStep parentStep )
+	private void parseParameters( List<Parameter> pList, String testName, String stepName, KeyWordStep parentStep )
 	{
 	    if (log.isDebugEnabled())
             log.debug( "Extracted " + pList.size() + " Parameters" );
@@ -474,7 +489,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 * @param parentStep the parent step
 	 * @return the key word token[]
 	 */
-	private void parseTokens( List<Token> tList, String testName, String stepName, String typeName, KeyWordStep parentStep )
+	private void parseTokens( List<Token> tList, String testName, String stepName, KeyWordStep parentStep )
 	{
 	    if (log.isDebugEnabled())
             log.debug( "Extracted " + tList + " Tokens" );

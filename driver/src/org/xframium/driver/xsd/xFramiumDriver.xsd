@@ -382,7 +382,7 @@
     </annotation>
     <sequence>
       <element name="test" type="tns:xTest" minOccurs="0" maxOccurs="unbounded" />
-      <element name="function" type="tns:xTest" minOccurs="0" maxOccurs="unbounded" />
+      <element name="function" type="tns:xFunction" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="fileName" type="string" use="optional" />
     <attribute name="provider" use="optional" default="LOCAL">
@@ -418,7 +418,7 @@
   </complexType>
   <complexType name="xTest">
     <annotation>
-        <documentation>Defines a single test or function</documentation>
+        <documentation>Defines a single test</documentation>
     </annotation>
     <sequence>
       <element name="description" type="tns:xDescription" minOccurs="0" maxOccurs="1" />
@@ -447,6 +447,31 @@
     <attribute name="os" type="string" use="optional" />
     <attribute name="count" type="int" use="optional" default="0" />
   </complexType>
+  
+  <complexType name="xFunction">
+    <annotation>
+        <documentation>Defines a single function</documentation>
+    </annotation>
+    <sequence>
+      <element name="description" type="tns:xDescription" minOccurs="0" maxOccurs="1" />
+      <element name="step" type="tns:xStep" minOccurs="1" maxOccurs="unbounded" />
+    </sequence>
+    <attribute name="name" type="string" use="required" />
+    <attribute name="dataProvider" type="string" use="optional" />
+    <attribute name="linkId" type="string" use="optional" />
+    <attribute name="active" type="boolean" use="optional" default="true" />
+    <attribute name="mode" use="optional" default="function">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="function" />
+          <enumeration value="module" />
+        </restriction>
+      </simpleType>
+    </attribute>
+    <attribute name="page" type="string" use="optional" />
+    <attribute name="output" type="string" use="optional" />
+  </complexType>
+  
   <complexType name="xDescription">
     
     <simpleContent>

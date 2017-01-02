@@ -88,9 +88,6 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
     private Map<String,ExecutionContainer> syncMap = new HashMap<String,ExecutionContainer>( 25 );
     private Map<String,ExecutionContainer> executionMap = new HashMap<String,ExecutionContainer>( 25 );
     
-    
-    
-    
     public static ExecutionConsole instance()
     {
         return singleton;

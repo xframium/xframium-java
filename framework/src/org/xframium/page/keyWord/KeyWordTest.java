@@ -82,6 +82,10 @@ public class KeyWordTest
     
     private String[] deviceTags;
     
+    private String inputPage;
+    private String[] outputPages;
+    private String mode = "function";
+    
     private int count;
 
     /** The step list. */
@@ -113,7 +117,7 @@ public class KeyWordTest
      * @param contentKeys
      *            the content keys
      */
-    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys, String deviceTags, Map<String,String> overrideMap, int count )
+    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys, String deviceTags, Map<String,String> overrideMap, int count, String inputPage, String outputPages, String mode )
     {
         this.name = name;
         this.active = Boolean.parseBoolean( getValue( name, "active", active + "", overrideMap ) );
@@ -164,8 +168,61 @@ public class KeyWordTest
             this.deviceTags = value.split( "," );
         
         this.count = Integer.parseInt( getValue( name, "count", count + "", overrideMap ) );
+        
+        setMode( mode );
+        setInputPage( inputPage );
+        setOutputPages( outputPages );
     }
     
+    
+    
+    public String getInputPage()
+    {
+        return inputPage;
+    }
+
+
+
+    public void setInputPage( String inputPage )
+    {
+        this.inputPage = inputPage;
+    }
+
+
+
+    public String[] getOutputPages()
+    {
+        return outputPages;
+    }
+
+
+    public void setOutputPages( String outputPages )
+    {
+        if ( outputPages != null )
+            this.outputPages = outputPages.split( "," );
+    }
+
+    public void setOutputPages( String[] outputPages )
+    {
+        this.outputPages = outputPages;
+    }
+
+
+
+    public String getMode()
+    {
+        return mode;
+    }
+
+
+
+    public void setMode( String mode )
+    {
+        this.mode = mode;
+    }
+
+
+
     private String getValue( String testName, String attributeName, String attributeValue, Map<String,String> overrideMap )
     {
         String keyName = testName + "." + attributeName;

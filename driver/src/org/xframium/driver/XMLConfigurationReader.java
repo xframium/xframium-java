@@ -64,6 +64,7 @@ import org.xframium.driver.xsd.XDeviceCapability;
 import org.xframium.driver.xsd.XElement;
 import org.xframium.driver.xsd.XElementParameter;
 import org.xframium.driver.xsd.XFramiumRoot;
+import org.xframium.driver.xsd.XFunction;
 import org.xframium.driver.xsd.XLibrary;
 import org.xframium.driver.xsd.XModel;
 import org.xframium.driver.xsd.XObjectDeviceCapability;
@@ -80,7 +81,6 @@ import org.xframium.driver.xsd.XToken;
 import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.Page;
-import org.xframium.page.data.PageData;
 import org.xframium.page.data.provider.ExcelPageDataProvider;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.data.provider.SQLPageDataProvider;
@@ -825,7 +825,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     }
                     else if ( test.getType().equals( "XML" ) )
                     {
-                        KeyWordTest currentTest = parseTest( test, "test" );
+                        KeyWordTest currentTest = parseTest( test );
                         if ( currentTest.isActive() )
                             sC.addActiveTest( currentTest );
                         else
@@ -833,7 +833,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     }
                 }
                 
-                for( XTest test : xRoot.getSuite().getFunction() )
+                for( XFunction test : xRoot.getSuite().getFunction() )
                 {
                     if ( sC.testExists( test.getName() ) )
                     {
@@ -841,7 +841,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                         continue;
                     }
                     
-                    sC.addFunction( parseTest( test, "function" ) );
+                    sC.addFunction( parseFunction( test ) );
                 }
                 break;
                 
@@ -980,11 +980,23 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      * @param typeName the type name
      * @return the key word test
      */
-    private KeyWordTest parseTest( XTest xTest, String typeName )
+    private KeyWordTest parseTest( XTest xTest )
     { 
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount(), null, null, null );
         
-        KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
+        KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
+
+        for (KeyWordStep step : steps)
+            test.addStep( step );
+
+        return test;
+    }
+    
+    private KeyWordTest parseFunction( XFunction xTest )
+    { 
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), null, false, xTest.getLinkId(), null, 0, xTest.getDescription() != null ? xTest.getDescription().getValue() : null, null, null, null, configProperties, 1, xTest.getPage(), xTest.getOutput(), xTest.getMode() );
+        
+        KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
 
         for (KeyWordStep step : steps)
             test.addStep( step );
@@ -1000,7 +1012,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      * @param typeName the type name
      * @return the key word step[]
      */
-    private KeyWordStep[] parseSteps( List<XStep> xSteps, String testName, String typeName )
+    private KeyWordStep[] parseSteps( List<XStep> xSteps, String testName )
     {
 
         if (log.isDebugEnabled())
@@ -1016,10 +1028,10 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
                                                                                  (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties, xStep.getVersion() );
             
-            parseParameters( xStep.getParameter(), testName, xStep.getName(), typeName, step );
-            parseTokens( xStep.getToken(), testName, xStep.getName(), typeName, step );
+            parseParameters( xStep.getParameter(), testName, xStep.getName(), step );
+            parseTokens( xStep.getToken(), testName, xStep.getName(), step );
             
-            step.addAllSteps( parseSteps( xStep.getStep(), testName, typeName ) );
+            step.addAllSteps( parseSteps( xStep.getStep(), testName ) );
             stepList.add( step );
         }
 
@@ -1036,7 +1048,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      * @param parentStep the parent step
      * @return the key word parameter[]
      */
-    private void parseParameters( List<XParameter> pList, String testName, String stepName, String typeName, KeyWordStep parentStep )
+    private void parseParameters( List<XParameter> pList, String testName, String stepName, KeyWordStep parentStep )
     {
         if (log.isDebugEnabled())
             log.debug( "Extracted " + pList.size() + " Parameters" );
@@ -1129,7 +1141,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      * @param parentStep the parent step
      * @return the key word token[]
      */
-    private void parseTokens( List<XToken> tList, String testName, String stepName, String typeName, KeyWordStep parentStep )
+    private void parseTokens( List<XToken> tList, String testName, String stepName, KeyWordStep parentStep )
     {
         if (log.isDebugEnabled())
             log.debug( "Extracted " + tList + " Tokens" );
