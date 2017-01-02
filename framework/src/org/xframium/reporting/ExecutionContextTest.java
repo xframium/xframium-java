@@ -361,6 +361,8 @@ public class ExecutionContextTest
 
     public void completeStep( StepStatus stepStatus, Throwable throwable )
     {
+        if ( currentStep == null )
+            return;
         currentStep.setEndTime( System.currentTimeMillis() );
         currentStep.setStepStatus( stepStatus );
         currentStep.setThrowable( throwable );

@@ -291,14 +291,24 @@ public abstract class AbstractSeleniumTest
             finalList.addAll( rawList );
         
         Object[][] newArray = null;
+        
+        newArray = new Object[(finalList.size()==0 ? 1 : finalList.size()) * deviceList.size()][1];
 
-        newArray = new Object[finalList.size() * deviceList.size()][1];
-
-        for ( int i = 0; i < finalList.size(); ++i )
+        
+        if  ( finalList.size() > 0 )
         {
-            for ( int j = 0; j < deviceList.size(); j++ )
-
-                newArray[i * deviceList.size() + j][0] = finalList.get( i );
+            for ( int i = 0; i < finalList.size(); ++i )
+            {
+                for ( int j = 0; j < deviceList.size(); j++ )
+    
+                    newArray[i * deviceList.size() + j][0] = finalList.get( i );
+            }
+        }
+        else
+        {
+            for ( int i = 0; i < deviceList.size(); i++ )
+                
+                newArray[i][0] = new TestName();
         }
 
         return newArray;
@@ -519,63 +529,7 @@ public abstract class AbstractSeleniumTest
         }
     }
 
-    protected void configureFramework( CloudProvider cloudProvider, String cloudName, org.xframium.device.data.DataProvider dataProvider, ApplicationProvider applicationProvider, String AUT, ElementProvider elementProvider, String siteName,
-            String reportFolder, ArtifactType[] artifactList )
-    {
-        //
-        // Configure Cloud
-        //
-        List<CloudDescriptor> cloudData = cloudProvider.readData();
-        for ( CloudDescriptor c : cloudData )
-            CloudRegistry.instance().addCloudDescriptor( c );
-
-        CloudRegistry.instance().setCloud( cloudName );
-
-        //
-        // Configure Devices
-        //
-        for ( Device x : dataProvider.readData() )
-        {
-            if ( x.isActive() )
-                DeviceManager.instance().registerDevice( x );
-            else
-                DeviceManager.instance().registerInactiveDevice( x );
-        }
-
-        GestureManager.instance().setGestureFactory( new PerfectoGestureFactory() );
-
-        //
-        // Configure Applications
-        //
-        for ( ApplicationDescriptor a : applicationProvider.readData() )
-            ApplicationRegistry.instance().addApplicationDescriptor( a );
-        ApplicationRegistry.instance().setAUT( AUT );
-
-        //
-        // Configure the driver and load the devices
-        //
-        DataManager.instance().setReportFolder( new File( reportFolder ) );
-        DataManager.instance().setAutomaticDownloads( artifactList );
-        DataManager.instance().readData( dataProvider );
-
-        //
-        // Configure the object repository
-        //
-        PageManager.instance().setSiteName( siteName );
-        PageManager.instance().registerExecutionListener( new LoggingExecutionListener() );
-        PageManager.instance().setElementProvider( elementProvider );
-
-        //
-        // Configure the thread logger to separate test case log files
-        //
-        ThreadedFileHandler threadedHandler = new ThreadedFileHandler();
-        threadedHandler.configureHandler( Level.INFO );
-
-        //
-        // The RunDetail singleton can be registered to track all runs for the
-        // consolidated output report
-        //
-    }
+    
 
     private void cleanUpConnectedDevice( String name, ConnectedDevice device, Method currentMethod, Object[] testArgs, ITestResult testResult )
     {

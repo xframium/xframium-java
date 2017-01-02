@@ -590,8 +590,6 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             }
 
             
-            
-            
             if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )
                 DebugManager.instance().shutDown();
 
