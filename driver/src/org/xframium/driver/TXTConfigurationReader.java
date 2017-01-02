@@ -456,6 +456,11 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                         d.setActive( true );
                         dC.addDevice( d );
                     }
+                    else
+                    {
+                        d.setActive( false );
+                        dC.addDevice( d );
+                    }
                 }
             }
             else

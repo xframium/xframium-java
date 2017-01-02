@@ -619,6 +619,11 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                         d.setActive( true );
                         dC.addDevice( d );
                     }
+                    else
+                    {
+                        d.setActive( false );
+                        dC.addDevice( d );
+                    }
                 }
             }
             else

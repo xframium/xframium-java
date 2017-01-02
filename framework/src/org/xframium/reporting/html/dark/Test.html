@@ -77,7 +77,7 @@ iframe {
         <div class="col-sm-12 content">
             <div class="dashhead">
                 <span class="pull-right text-muted">{{testData.startTime.dateOnly}} at {{testData.startTime.timeOnly}}</span>
-                <h6 class="dashhead-subtitle">xFramium 1.0.5</h6>
+                <h6 class="dashhead-subtitle">xFramium 1.0.7</h6>
                 <h3 class="dashhead-title">{{testData.test.name}}</h3>
                 <h6>{{testData.device.environment}} on {{testData.cloudDescriptor.hostName}} ({{testData.cloudDescriptor.provider.name}})</h6>
             </div>
@@ -335,6 +335,8 @@ iframe {
             for ( var i = 0; i < step.parameterList.length; i++ ) {
                 messageText = messageText.replace("{$p" + (i + 1) + "}", step.parameterList[i]);
             }
+            
+            
 
             return messageText;
         }
@@ -365,6 +367,12 @@ iframe {
                     messageText = messageText.replace("{$p" + (i + 1) + "}", '<span class="text-info">' + step.parameterList[i] + "</span>");
                 }
             }
+            
+            if ( step.step.device != 'null' && step.step.device != '' && step.step.device != null)
+            {
+                messageText += '<span> on the alternate device <span class="text-primary">' + step.step.device + '</span></span>';
+            }
+     
             return messageText;
         }
 
@@ -447,7 +455,7 @@ iframe {
             "CALL" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use CALL2)",
             "CALL2" : "CALL the function named {name}",
             "SET" : "{kw} the value of {name} on {pageName} to {$p1}",
-            "ADD_DEVICE" : "{kw} to the current test",
+            "ADD_DEVICE" : "Add a {$p1} device to the current test",
             "WAIT_FOR" : "{kw} for {name} on {pageName} to be {subName}",
             "NAVIGATE" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use BROWSER)",
             "LOOP" : "Execute {$p2} in a {kw}",
