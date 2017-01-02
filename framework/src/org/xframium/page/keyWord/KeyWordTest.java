@@ -86,6 +86,10 @@ public class KeyWordTest
     private String[] outputPages;
     private String mode = "function";
     
+    private List<KeyWordParameter> expectedParameters = new ArrayList<KeyWordParameter>( 5 );
+    
+    
+    
     private int count;
 
     /** The step list. */
@@ -174,14 +178,20 @@ public class KeyWordTest
         setOutputPages( outputPages );
     }
     
-    
-    
+    public List<KeyWordParameter> getExpectedParameters()
+    {
+        return expectedParameters;
+    }
+
+    public void setExpectedParameters( List<KeyWordParameter> expectedParameters )
+    {
+        this.expectedParameters = expectedParameters;
+    }
+
     public String getInputPage()
     {
         return inputPage;
     }
-
-
 
     public void setInputPage( String inputPage )
     {

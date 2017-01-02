@@ -984,6 +984,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     { 
         KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount(), null, null, null );
         
+        
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
 
         for (KeyWordStep step : steps)
@@ -995,6 +996,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     private KeyWordTest parseFunction( XFunction xTest )
     { 
         KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), null, false, xTest.getLinkId(), null, 0, xTest.getDescription() != null ? xTest.getDescription().getValue() : null, null, null, null, configProperties, 1, xTest.getPage(), xTest.getOutput(), xTest.getMode() );
+        test.getExpectedParameters().addAll( parseParameters( xTest.getParameter() ) );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
 
@@ -1028,7 +1030,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
                                                                                  (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties, xStep.getVersion() );
             
-            parseParameters( xStep.getParameter(), testName, xStep.getName(), step );
+            step.getParameterList().addAll( parseParameters( xStep.getParameter() ) );
             parseTokens( xStep.getToken(), testName, xStep.getName(), step );
             
             step.addAllSteps( parseSteps( xStep.getStep(), testName ) );
@@ -1048,12 +1050,13 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      * @param parentStep the parent step
      * @return the key word parameter[]
      */
-    private void parseParameters( List<XParameter> pList, String testName, String stepName, KeyWordStep parentStep )
+    private List<KeyWordParameter> parseParameters( List<XParameter> pList )
     {
         if (log.isDebugEnabled())
             log.debug( "Extracted " + pList.size() + " Parameters" );
         
-
+        List<KeyWordParameter> kList = new ArrayList<KeyWordParameter>( 10 );
+        
         for ( XParameter p : pList )
         {
             KeyWordParameter kp = new KeyWordParameter( ParameterType.valueOf( p.getType() ), p.getValue(), null, null );
@@ -1099,8 +1102,10 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 }  
             }
             
-            parentStep.addParameter( kp );
+            kList.add( kp );
         }
+        
+        return kList;
     }
     
     private String readIFile( InputStream inputStream )

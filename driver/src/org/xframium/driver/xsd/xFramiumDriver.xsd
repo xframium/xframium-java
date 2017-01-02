@@ -454,6 +454,7 @@
     </annotation>
     <sequence>
       <element name="description" type="tns:xDescription" minOccurs="0" maxOccurs="1" />
+      <element name="parameter" type="tns:xParameter" minOccurs="0" maxOccurs="unbounded" />
       <element name="step" type="tns:xStep" minOccurs="1" maxOccurs="unbounded" />
     </sequence>
     <attribute name="name" type="string" use="required" />
