@@ -24,12 +24,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
 import org.openqa.selenium.WebDriver;
-import org.xframium.device.data.DataManager;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.services.Repositories.RepositoryType;
-import org.xframium.spi.RunDetails;
+import org.xframium.reporting.ExecutionContext;
 
 
 // TODO: Auto-generated Javadoc
@@ -61,7 +60,7 @@ public class DownloadFileAction extends AbstractDefaultAction implements DeviceA
 		if ( parameterList.size() > 1 )
 			destinationFolderPath = System.getProperty("user.dir") + File.separator + (String) parameterList.get( 1 );
 		else
-			destinationFolderPath = DataManager.instance().getReportFolder() + File.separator + RunDetails.instance().getRootFolder();
+			destinationFolderPath = ExecutionContext.instance().getReportFolder().getAbsolutePath();
 				
 		// Download the file from repository to local
 		byte[] imageData;

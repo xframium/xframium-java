@@ -100,14 +100,14 @@ public class Artifact
 		this.artifactName = artifactName;
 	}
 
-	/**
-	 * Write to disk.
-	 *
-	 * @param rootFolder the root folder
-	 */
 	public void writeToDisk( File rootFolder )
 	{
-		this.fileName = new File( rootFolder, artifactName );
+	    writeToDisk( rootFolder, artifactName );
+	}
+	
+	public void writeToDisk( File rootFolder, String useName )
+	{
+		this.fileName = new File( rootFolder, useName );
 		
 		if ( !this.fileName.getParentFile().exists() )
 			this.fileName.getParentFile().mkdirs();
@@ -134,6 +134,8 @@ public class Artifact
 		}
 		
 	}
+	
+	
 	
 	
 }

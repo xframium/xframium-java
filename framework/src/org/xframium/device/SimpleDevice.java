@@ -116,21 +116,25 @@ public class SimpleDevice implements Device
 	{
 		return active;
 	}
+	
+	
 
-	private void generateEnv()
+	public void setActive( boolean active )
+    {
+        this.active = active;
+    }
+
+    private void generateEnv()
 	{
 	    StringBuilder stringBuilder = new StringBuilder();
-	    if ( manufacturer != null )
-	    {
-	        stringBuilder.append( manufacturer );
-	        if ( model != null )
-	            stringBuilder.append( " " ).append( model );
-	            
-	    }
+        if ( model != null )
+            stringBuilder.append( " " ).append( model );
+
 	    
 	    if ( os != null )
         {
-            stringBuilder.append( " / " ).append( os );
+	        if ( model != null )
+	            stringBuilder.append( " / " ).append( os );
             if ( osVersion != null )
                 stringBuilder.append( " " ).append( osVersion );
         }
@@ -141,10 +145,6 @@ public class SimpleDevice implements Device
 	        if ( browserVersion != null )
 	            stringBuilder.append( " " ).append( browserVersion );
 	    }
-	    
-	   
-	    if ( resolution != null )
-	        stringBuilder.append( " (" ).append( resolution ).append( ")" );
 	    
 	    environment = stringBuilder.toString();
 	    

@@ -20,15 +20,36 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import javax.imageio.ImageIO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.xframium.application.ApplicationRegistry;
+import org.xframium.application.ApplicationVersion;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.container.SuiteContainer;
 import org.xframium.content.ContentManager;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.exception.FilteredException;
 import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
@@ -49,14 +70,11 @@ import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.step.spi.KWSElse;
 import org.xframium.page.keyWord.step.spi.KWSLoopBreak;
+import org.xframium.reporting.ExecutionContext;
+import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.driver.ReportiumProvider;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import org.xframium.utility.ImageUtility;
+import org.xframium.utility.XMLEscape;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -64,6 +82,8 @@ import java.util.Random;
  */
 public abstract class AbstractKeyWordStep implements KeyWordStep
 {
+    private static NumberFormat numberFormat = new DecimalFormat( "0000" );
+
     public AbstractKeyWordStep()
     {
         kwImpl = getClass().getName();
@@ -71,15 +91,13 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         natualLanguage = PageManager.instance().getFormattedMessage( getClass().getSimpleName() );
         category = "Other";
     }
-    
-    
-    
+
     /** The name. */
     private String name;
 
     /** The page name. */
     private String pageName;
-    
+
     private String siteName;
 
     /** The active. */
@@ -90,15 +108,15 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
     /** The timed. */
     private boolean timed;
-    
+
     private boolean startAt;
-    
+
     private boolean breakpoint;
-    
+
     protected String category;
-    
+
     protected boolean orMapping = true;
-    
+
     private static Random numberGenerator = new Random();
 
     /** The s failure. */
@@ -142,62 +160,80 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
     /** The device. */
     private String device;
-    
+
     private String[] tagNames;
     private String[] deviceTags;
-    
+
     protected String kwName = "N/A";
     protected String kwDescription;
     protected String kwHelp;
     protected String kwImpl;
     protected String kw;
     protected String natualLanguage;
-    
+    protected ApplicationVersion version;
+
     @Override
     public boolean isBreakpoint()
     {
-        // TODO Auto-generated method stub
-        return false;
+        return breakpoint;
     }
 
-
-
+    @Override
+    public ApplicationVersion getVersion()
+    {
+        return version;
+    }
+    
+    @Override
+    public void setVersion( String appVersion )
+    {
+        if ( appVersion != null )
+            version = new ApplicationVersion( appVersion );
+    }
+    
     @Override
     public void setBreakpoint( boolean breakpoint )
     {
-        // TODO Auto-generated method stub
-        
+        this.breakpoint = breakpoint;
     }
-    
+
+    @Override
+    public String getKw()
+    {
+        // TODO Auto-generated method stub
+        return kw;
+    }
+
     protected void scroll( Direction scrollDirection, WebDriver webDriver )
     {
-    	
-    	int randomNumber = numberGenerator.nextInt( 45 );
-    	
-    	Gesture currentGesture = null;
-		switch ( scrollDirection  )
+        //
+        // This is randomized to ensure that we are not swiping from an area
+        // that does not allow a swipe
+        //
+        int randomNumber = numberGenerator.nextInt( 45 );
+
+        Gesture currentGesture = null;
+        switch ( scrollDirection )
         {
             case DOWN:
-            	currentGesture = GestureManager.instance().createSwipe( new Point( 50, randomNumber ), new Point( 50, 45+randomNumber ) );
-            	break;
+                currentGesture = GestureManager.instance().createSwipe( new Point( 50, randomNumber ), new Point( 50, 45 + randomNumber ) );
+                break;
 
             case LEFT:
-            	currentGesture = GestureManager.instance().createSwipe( new Point( randomNumber, 50 ), new Point( 45+randomNumber, 50 ) );
-            	break;
+                currentGesture = GestureManager.instance().createSwipe( new Point( randomNumber, 50 ), new Point( 45 + randomNumber, 50 ) );
+                break;
 
             case RIGHT:
-            	currentGesture = GestureManager.instance().createSwipe( new Point( 45+randomNumber, 50 ), new Point( randomNumber, 50 ) );
-            	break;
+                currentGesture = GestureManager.instance().createSwipe( new Point( 45 + randomNumber, 50 ), new Point( randomNumber, 50 ) );
+                break;
 
             case UP:
-            	currentGesture = GestureManager.instance().createSwipe( new Point( 50, 45+randomNumber ), new Point( 50, randomNumber ) );
-            	break;
+                currentGesture = GestureManager.instance().createSwipe( new Point( 50, 45 + randomNumber ), new Point( 50, randomNumber ) );
+                break;
         }
-		
-		currentGesture.executeGesture( webDriver );
-    }
 
-    
+        currentGesture.executeGesture( webDriver );
+    }
 
     @Override
     public void setTagNames( String tagNames )
@@ -207,7 +243,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             this.tagNames = tagNames.split( "," );
         }
     }
-    
+
     public void setDeviceTags( String deviceTags )
     {
         if ( deviceTags != null && !deviceTags.isEmpty() )
@@ -215,36 +251,26 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             this.deviceTags = deviceTags.split( "," );
         }
     }
-    
-    
-    
+
     public String getSiteName()
     {
         return siteName;
     }
-
-
 
     public void setSiteName( String siteName )
     {
         this.siteName = siteName;
     }
 
-
-
     public boolean isStartAt()
     {
         return startAt;
     }
 
-
-
     public void setStartAt( boolean startAt )
     {
         this.startAt = startAt;
     }
-
-
 
     /*
      * (non-Javadoc)
@@ -309,12 +335,15 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      *            the data map
      * @param pageMap
      *            TODO
-     * @param sC TODO
+     * @param sC
+     *            TODO
+     * @param executionContext
+     *            TODO
      * @return true, if successful
      * @throws Exception
      *             the exception
      */
-    protected abstract boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception;
+    protected abstract boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception;
 
     /**
      * Creates the point.
@@ -372,12 +401,16 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      * @see com.perfectoMobile.page.keyWord.KeyWordStep#getBrowser()
      */
     @Override
-    public String getBrowser() { return browser; }
+    public String getBrowser()
+    {
+        return browser;
+    }
 
     /*
      * (non-Javadoc)
      * 
-     * @see com.perfectoMobile.page.keyWord.KeyWordStep#setBrowser(java.lang.String)
+     * @see
+     * com.perfectoMobile.page.keyWord.KeyWordStep#setBrowser(java.lang.String)
      */
     @Override
     public void setBrowser( String browser )
@@ -406,6 +439,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     {
         this.os = os != null ? os.toUpperCase() : os;
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -596,6 +630,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         if ( overrideName != null && !overrideName.isEmpty() )
             useName = overrideName;
 
+        
+        
         if ( useName.startsWith( Element.CONTEXT_ELEMENT ) )
         {
             if ( Element.CONTEXT_ELEMENT.equals( useName ) )
@@ -630,7 +666,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     log.error( Thread.currentThread().getName() + ": **** COULD NOT LOCATE ELEMENT [" + elementDescriptor.toString() + "]  Make sure your Page Name and Element Name are spelled correctly and that they have been defined" );
                     return null;
                 }
-                
+
                 myElement.setDriver( webDriver );
 
                 for ( KeyWordToken token : tokenList )
@@ -651,12 +687,12 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             {
                 if ( log.isInfoEnabled() )
                     log.info( Thread.currentThread().getName() + ": Cloning Element " + useName + " on page " + pageName );
-                
+
                 ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance().getSiteName(), pageName, useName );
                 Element originalElement = pageObject.getElement( elementDescriptor ).cloneElement();
                 if ( originalElement == null )
                     throw new ObjectConfigurationException( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance().getSiteName(), pageName, useName );
-                
+
                 Element clonedElement = originalElement.cloneElement();
                 clonedElement.setDriver( webDriver );
 
@@ -678,7 +714,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     elt.setCacheNative( true );
                     return elt;
                 }
-                catch( NullPointerException e )
+                catch ( NullPointerException e )
                 {
                     throw new ObjectConfigurationException( siteName == null ? PageManager.instance().getSiteName() : siteName, pageName, useName );
                 }
@@ -693,165 +729,166 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      * perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map,
      * java.util.Map)
      */
-    public boolean executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception
+    public boolean executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception
     {
-        PageManager.instance().setThrowable( null );
         long startTime = System.currentTimeMillis();
+        boolean returnValue = false;
 
         try
         {
-            //
-            // OS Checks to allow for elements to be skipped if the OS did not
-            // match
-            //
-            if ( os != null )
-            {
-                String deviceOs = getDeviceOs( webDriver );
-                if ( deviceOs == null )
-                {
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": A Required OS of [" + os + "] was specified however the OS of the device could not be determined" );
-                    return true;
-                }
-                
-                String[] osArray = os.split( "," );
-                boolean osFound = false;
-                for ( String localOs : osArray )
-                {
-                    if ( localOs.toUpperCase().trim().equals( deviceOs.toUpperCase() ) )
-                    {
-                        osFound = true;
-                        break;
-                    }
-                }
-                
-                if ( !osFound )
-                {
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": A Required OS in [" + os + "] was specified however the OS of the device was [" + deviceOs.toUpperCase() + "]" );
-                    return true;
-                }
-            }
-
-            if ( browser != null )
-            {
-                String browserName = ((DeviceWebDriver) webDriver).getDevice().getBrowserName();
-                if ( browserName == null )
-                {
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": A Required Browser of [" + browser + "] was specified however the Browser of the device could not be determined" );
-                    return true;
-                }
-
-                String[] browserArray = browser.split( "," );
-                boolean browserFound = false;
-                for ( String localBrowser : browserArray )
-                {
-                    if ( localBrowser.toUpperCase().trim().equals( browserName.toUpperCase() ) )
-                    {
-                        browserFound = true;
-                        break;
-                    }
-                }
-
-                if ( !browserFound )
-                {
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": A Required Browser in [" + browser + "] was specified however the Browser of the device was [" + browserName.toUpperCase() + "]" );
-                    return true;
-                }
-            }
-            
-            //
-            // Device tagging implementation
-            //
-            if ( deviceTags != null && deviceTags.length > 0 && PageManager.instance().getDeviceTag( webDriver ) != null && PageManager.instance().getDeviceTag( webDriver ).length > 0 )
-            {
-                boolean tagFound = false;
-                for ( String localTag : deviceTags )
-                {
-                    for ( String deviceTag : PageManager.instance().getDeviceTag( webDriver ) )
-                    {
-                        if ( localTag.toUpperCase().trim().equals( deviceTag.toUpperCase() ) )
-                        {
-                            tagFound = true;
-                            break;
-                        }
-                    }
-                    if ( tagFound )
-                        break;
-                }
-                
-                if ( !tagFound )
-                {
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": This step was ignored as the tag was not specified" );
-                    return true;
-                }
-            }
-
-            //
-            // Check for tag names
-            //
-            if ( tagNames != null && tagNames.length > 0 && PageManager.instance().getTagNames() != null && PageManager.instance().getTagNames().length > 0 )
-            {
-                boolean tagEnabled = false;
-                for ( String tagName : tagNames )
-                {
-                    for ( String useTag : PageManager.instance().getTagNames() )
-                    {
-                        if ( tagName.equals( useTag ) )
-                        {
-                            tagEnabled = true;
-                            break;
-                        }
-                    }
-                    
-                    if ( tagEnabled )
-                        break;
-                }
-                
-                
-                if ( !tagEnabled )
-                {
-                    if ( log.isInfoEnabled() )
-                        log.info( Thread.currentThread().getName() + ": This required a tag that was not enabled for this test run" );
-                    return true;
-                }
-            }
-
-            if ( log.isInfoEnabled() )
-                log.info( Thread.currentThread().getName() + ": Executing Step " + name + "(" + getClass().getSimpleName() + ")" + (linkId != null ? " linked to " + linkId : "") );
-
             Exception stepException = null;
-            boolean returnValue = false;
-            boolean caughtException = false;
+            
+        
+            
+
             try
             {
-                WebDriver altWebDriver = getAltWebDriver();
+                executionContext.startStep( this, contextMap, dataMap );
+                //
+                // OS Checks to allow for elements to be skipped if the OS did not
+                // match
+                //
+                if ( os != null )
+                {
+                    String deviceOs = getDeviceOs( webDriver );
+                    if ( deviceOs == null )
+                    {
+                        throw new FilteredException( "A Required OS of [" + os + "] was specified however the OS of the device could not be determined" );
+                    }
+    
+                    String[] osArray = os.split( "," );
+                    boolean osFound = false;
+                    for ( String localOs : osArray )
+                    {
+                        if ( localOs.toUpperCase().trim().equals( deviceOs.toUpperCase() ) )
+                        {
+                            osFound = true;
+                            break;
+                        }
+                    }
+    
+                    if ( !osFound )
+                    {
+                        throw new FilteredException( "A Required OS in [" + os + "] was specified however the OS of the device was [" + deviceOs.toUpperCase() + "]" );
+                    }
+                }
+    
+                if ( browser != null )
+                {
+                    String browserName = ((DeviceWebDriver) webDriver).getDevice().getBrowserName();
+                    if ( browserName == null )
+                    {
+                        throw new FilteredException( "A Required Browser of [" + browser + "] was specified however the Browser of the device could not be determined" );
+                    }
+    
+                    String[] browserArray = browser.split( "," );
+                    boolean browserFound = false;
+                    for ( String localBrowser : browserArray )
+                    {
+                        if ( localBrowser.toUpperCase().trim().equals( browserName.toUpperCase() ) )
+                        {
+                            browserFound = true;
+                            break;
+                        }
+                    }
+    
+                    if ( !browserFound )
+                    {
+                        throw new FilteredException( "A Required Browser in [" + browser + "] was specified however the Browser of the device was [" + browserName.toUpperCase() + "]" );
+                    }
+                }
+    
+                //
+                // Device tagging implementation
+                //
+                if ( deviceTags != null && deviceTags.length > 0 && PageManager.instance().getDeviceTag( webDriver ) != null && PageManager.instance().getDeviceTag( webDriver ).length > 0 )
+                {
+                    boolean tagFound = false;
+                    for ( String localTag : deviceTags )
+                    {
+                        for ( String deviceTag : PageManager.instance().getDeviceTag( webDriver ) )
+                        {
+                            if ( localTag.toUpperCase().trim().equals( deviceTag.toUpperCase() ) )
+                            {
+                                tagFound = true;
+                                break;
+                            }
+                        }
+                        if ( tagFound )
+                            break;
+                    }
+    
+                    if ( !tagFound )
+                    {
+                        throw new FilteredException( "This step was ignored as the tag was not specified" );
+                    }
+                }
+    
+                //
+                // Check for tag names
+                //
+                if ( tagNames != null && tagNames.length > 0 && PageManager.instance().getTagNames() != null && PageManager.instance().getTagNames().length > 0 )
+                {
+                    boolean tagEnabled = false;
+                    for ( String tagName : tagNames )
+                    {
+                        for ( String useTag : PageManager.instance().getTagNames() )
+                        {
+                            if ( tagName.equals( useTag ) )
+                            {
+                                tagEnabled = true;
+                                break;
+                            }
+                        }
+    
+                        if ( tagEnabled )
+                            break;
+                    }
+    
+                    if ( !tagEnabled )
+                    {
+                        throw new FilteredException( "This required a tag that was not enabled for this test run" );
+                    }
+                }
                 
+                //
+                // Validate the version
+                //
+                if ( version != null )
+                {
+                    if ( !version.isVersion( ((DeviceWebDriver) webDriver).getAut() ) )
+                    {
+                        throw new FilteredException( "This required an application version of " + version.toString() );
+                    }
+                }
+    
+                if ( log.isInfoEnabled() )
+                    log.info( Thread.currentThread().getName() + ": Executing Step " + name + "(" + getClass().getSimpleName() + ")" + (linkId != null ? " linked to " + linkId : "") );
+    
+                
+                WebDriver altWebDriver = getAltWebDriver();
                 //
                 // Listener integrations for individual steps
                 //
-                if ( !KeyWordDriver.instance().notifyBeforeStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap ) )
+                if ( !KeyWordDriver.instance().notifyBeforeStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, sC, executionContext ) )
                 {
-                    log.warn( "Test Step was skipped due to a failed step notification listener" );
-                    return true;
+                    throw new FilteredException( "Test Step was skipped due to a failed step notification listener" );
                 }
-                
-                if ( ( (DeviceWebDriver) webDriver ).getCloud().getProvider().equals( "PERFECTO" ) )
+
+                if ( ((DeviceWebDriver) webDriver).getCloud().getProvider().equals( "PERFECTO" ) )
                 {
-                    if( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
+                    if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
                     {
-                        if ( ( (ReportiumProvider) webDriver ).getReportiumClient() != null )
+                        if ( ((ReportiumProvider) webDriver).getReportiumClient() != null )
                         {
-                            ( (ReportiumProvider) webDriver ).getReportiumClient().testStep( getPageName() + "." + getName() + " (" + getClass().getSimpleName() + ")" );
+                            ((ReportiumProvider) webDriver).getReportiumClient().testStep( getPageName() + "." + getName() + " (" + getClass().getSimpleName() + ")" );
                         }
                     }
                 }
+
                 
-                returnValue = _executeStep( pageObject, ((altWebDriver != null) ? altWebDriver : webDriver), contextMap, dataMap, pageMap, sC );
-                
+                returnValue = _executeStep( pageObject, ((altWebDriver != null) ? altWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext );
+
                 //
                 // If threshold was specified then make sure we cam in under it
                 //
@@ -862,31 +899,46 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         throw new ScriptException( "The current step failed to complete in the defined threshold. Expected[" + threshold + "ms] but it took [" + (System.currentTimeMillis() - startTime) + "ms]" );
                     }
                 }
-                
-                KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE );
-                
+
+                KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, sC, executionContext );
+
             }
             catch ( KWSLoopBreak lb )
             {
+                executionContext.completeStep( StepStatus.SUCCESS, null );
                 throw lb;
             }
-            catch ( Exception e )
+            catch ( FilteredException e )
             {
-                caughtException = true;
                 stepException = e;
                 returnValue = false;
                 try
                 {
                     WebDriver altWebDriver = getAltWebDriver();
-                    KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE );
+                    KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, StepStatus.SUCCESS, sC, executionContext );
                 }
-                catch( Exception e2 )
+                catch ( Exception e2 )
                 {
-                    
+
+                }
+
+            }
+            catch ( Exception e )
+            {
+                stepException = e;
+                returnValue = false;
+                try
+                {
+                    WebDriver altWebDriver = getAltWebDriver();
+                    KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, StepStatus.FAILURE, sC, executionContext );
+                }
+                catch ( Exception e2 )
+                {
+
                 }
                 log.error( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed " );
                 log.debug( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed ", e );
-                
+
             }
 
             if ( inverse )
@@ -906,10 +958,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         continue;
                     try
                     {
-                        subReturnValue = step.executeStep( pageObject, webDriver, contextMap, dataMap, pageMap, sC );
+                        subReturnValue = step.executeStep( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
                     }
                     catch ( KWSLoopBreak e )
                     {
+                        executionContext.completeStep( StepStatus.SUCCESS, null );
                         throw e;
                     }
                     catch ( Exception e )
@@ -918,11 +971,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         subReturnValue = false;
                         log.debug( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " encoundered error: ", e );
                     }
-
-                    //if ( step.isInverse() )
-                    //{
-                    //    subReturnValue = !subReturnValue;
-                    //}
 
                     if ( !subReturnValue )
                     {
@@ -936,57 +984,104 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
                 }
             }
-            
+
             //
             // Special case for the ELSE clause if found
             //
             if ( !fork && getStepList() != null && !getStepList().isEmpty() && !returnValue )
             {
-                for ( KeyWordStep parentStep : getStepList() )
+                if ( stepException == null || !(stepException instanceof FilteredException) )
                 {
-                    if ( parentStep instanceof KWSElse && !parentStep.getStepList().isEmpty() )
+                    for ( KeyWordStep parentStep : getStepList() )
                     {
-                        for ( KeyWordStep step : parentStep.getStepList() )
+                        if ( parentStep instanceof KWSElse && !parentStep.getStepList().isEmpty() )
                         {
-                            boolean subReturnValue = false;
-                            try
+                            for ( KeyWordStep step : parentStep.getStepList() )
                             {
-                                subReturnValue = step.executeStep( pageObject, webDriver, contextMap, dataMap, pageMap, sC );
-                            }
-                            catch ( KWSLoopBreak e )
-                            {
-                                throw e;
-                            }
-                            catch ( Exception e )
-                            {
-                                stepException = e;
-                                subReturnValue = false;
-                                log.debug( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " encoundered error: ", e );
-                            }
+                                boolean subReturnValue = false;
+                                try
+                                {
+                                    subReturnValue = step.executeStep( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+                                }
+                                catch ( KWSLoopBreak e )
+                                {
+                                    executionContext.completeStep( StepStatus.SUCCESS, null );
+                                    throw e;
+                                }
+                                catch ( Exception e )
+                                {
+                                    stepException = e;
+                                    subReturnValue = false;
+                                    log.debug( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " encoundered error: ", e );
+                                }
     
-                            if ( step.isInverse() )
-                            {
-                                subReturnValue = !subReturnValue;
-                            }
+                                if ( step.isInverse() )
+                                {
+                                    subReturnValue = !subReturnValue;
+                                }
     
-                            if ( !subReturnValue )
-                            {
-                                returnValue = false;
-                                if ( step.getFailure().equals( StepStatus.FAILURE_IGNORED ) )
-                                    subFailure = false;
-                                else
-                                    subFailure = true;
-                                break;
+                                if ( !subReturnValue )
+                                {
+                                    returnValue = false;
+                                    if ( step.getFailure().equals( StepStatus.FAILURE_IGNORED ) )
+                                        subFailure = false;
+                                    else
+                                        subFailure = true;
+                                    break;
+                                }
                             }
                         }
                     }
                 }
             }
 
+            StepStatus stepStatus = StepStatus.SUCCESS;
+
+            if ( !returnValue )
+            {
+                if ( stepException != null && stepException instanceof FilteredException )
+                {
+                    stepStatus = StepStatus.FILTERED;
+                    returnValue = true;
+                }
+                else
+                {
+                    switch ( sFailure )
+                    {
+                        case ERROR:
+                            stepStatus = StepStatus.FAILURE;
+                            if ( stepException == null )
+                                stepException = new ScriptConfigurationException( kwName + " has failed to complete" );
+    
+                            break;
+    
+                        case IGNORE:
+                            stepStatus = StepStatus.FAILURE_IGNORED;
+                            stepException = null;
+                            break;
+    
+                        case LOG_IGNORE:
+                            stepStatus = StepStatus.FAILURE_IGNORED;
+                            if ( stepException == null )
+                                stepException = new ScriptConfigurationException( kwName + " has failed to complete" );
+                    }
+                }
+            }
+
+            try
+            {
+                if ( !returnValue )
+                    dumpState( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+            }
+            catch ( Exception e )
+            {
+                e.printStackTrace();
+            }
+
+            executionContext.completeStep( stepStatus, stepException );
+
             if ( isRecordable() )
             {
-                PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), getName(), getClass().getSimpleName(), startTime, System.currentTimeMillis() - startTime,
-                        returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, "", null, getThreshold(), getDescription(), false, null );
                 if ( isTimed() )
                     PageManager.instance().addExecutionTiming( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName() + "." + getName() + "." + getClass().getSimpleName(), System.currentTimeMillis() - startTime,
                             returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, description, threshold );
@@ -997,17 +1092,17 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
             if ( !returnValue )
             {
+                Throwable currentError = executionContext.getStepException();
                 switch ( sFailure )
                 {
                     case ERROR:
-                        if ( PageManager.instance().getThrowable() == null )
+
+                        if ( currentError == null )
                         {
                             if ( stepException == null )
-                                stepException = new ScriptConfigurationException( toError() );
-
-                            PageManager.instance().setThrowable( stepException );
-                            PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), getName(), "_" + getClass().getSimpleName(), startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE,
-                                    stepException.getMessage(), stepException, getThreshold(), getDescription(), false, new String[] { stepException.getMessage() } );
+                                stepException = new ScriptException( toError() );
+                            
+                            currentError = stepException;
 
                             if ( isTimed() )
                                 PageManager.instance().addExecutionTiming( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName() + "." + getName() + "." + getClass().getSimpleName(), System.currentTimeMillis() - startTime,
@@ -1016,21 +1111,17 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                             if ( PageManager.instance().isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
                                 PerfectoMobile.instance().windTunnel().addPointOfInterest( getExecutionId( webDriver ), getPoi() + "(" + getPageName() + "." + getName() + ")", Status.failure );
                         }
-                        log.error( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed as " + PageManager.instance().getThrowable().getMessage() );
+                        log.error( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed", currentError );
                         return false;
 
                     case LOG_IGNORE:
                         log.warn( Thread.currentThread().getName() + ": Step " + name + " failed but was marked to log and ignore" );
 
                     case IGNORE:
-                        if ( PageManager.instance().getThrowable() == null )
+                        if ( currentError == null )
                         {
                             if ( stepException == null )
-                                stepException = new IllegalArgumentException( toError() );
-
-                            PageManager.instance().setThrowable( stepException );
-                            PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName(), getName(), "_" + getClass().getSimpleName(), startTime, System.currentTimeMillis() - startTime,
-                                    StepStatus.FAILURE_IGNORED, stepException.getMessage(), stepException, getThreshold(), getDescription(), false, new String[] { stepException.getMessage() } );
+                                stepException = new ScriptConfigurationException( toError() );
 
                             if ( isTimed() )
                                 PageManager.instance().addExecutionTiming( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName() + "." + getName() + "." + getClass().getSimpleName(), System.currentTimeMillis() - startTime,
@@ -1040,7 +1131,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                                 PerfectoMobile.instance().windTunnel().addPointOfInterest( getExecutionId( webDriver ), getPoi() + "(" + getPageName() + "." + getName() + ")", Status.failure );
                         }
 
-                        return !subFailure;
+                        returnValue = !subFailure;
 
                 }
             }
@@ -1054,6 +1145,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         }
         finally
         {
+
             if ( waitTime > 0 )
             {
                 try
@@ -1109,15 +1201,15 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     {
         return parameterList;
     }
-    
+
     protected KeyWordParameter getParameter( String parameterName )
     {
-    	for ( KeyWordParameter p : parameterList )
-    	{
-    		if ( parameterName.equals( p.getName() ) )
-    			return p;
-    	}
-    	return null;
+        for ( KeyWordParameter p : parameterList )
+        {
+            if ( parameterName.equals( p.getName() ) )
+                return p;
+        }
+        return null;
     }
 
     /**
@@ -1249,8 +1341,10 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     /**
      * Gets the page data.
      *
-     * @param recordIdentifier the record identifier
-     * @param dataMap the data map
+     * @param recordIdentifier
+     *            the record identifier
+     * @param dataMap
+     *            the data map
      * @return the page data
      */
     private PageData getPageData( String recordIdentifier, Map<String, PageData> dataMap )
@@ -1260,13 +1354,13 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         //
         int dotPosition = recordIdentifier.lastIndexOf( "." );
         String tableName = recordIdentifier.substring( 0, dotPosition );
-        
+
         PageData pageData = dataMap.get( tableName );
         if ( pageData != null )
             return pageData;
-        
+
         String[] tableParts = tableName.split( "\\." );
-        
+
         for ( String currentTable : tableParts )
         {
             if ( pageData != null )
@@ -1274,7 +1368,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 List<PageData> dataList = pageData.getPageData( currentTable );
                 if ( dataList == null || dataList.isEmpty() )
                     log.error( "Could not locate " + currentTable + " in " + recordIdentifier );
-                
+
                 pageData = dataList.get( 0 );
             }
             else
@@ -1284,10 +1378,10 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     log.error( "Could not locate " + currentTable + " in " + recordIdentifier );
             }
         }
-        
+
         return pageData;
     }
-    
+
     /**
      * Gets the parameter value.
      *
@@ -1299,8 +1393,10 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      *            the data map
      * @return the parameter value
      */
-    public Object getParameterValue( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap )
+    public String getParameterValue( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap )
     {
+        if ( param == null )
+            return null;
         String returnValue;
         switch ( param.getType() )
         {
@@ -1313,7 +1409,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 break;
 
             case PROPERTY:
-                returnValue =  System.getProperty( param.getValue(), "" );
+                returnValue = System.getProperty( param.getValue(), "" );
                 break;
 
             case CONTENT:
@@ -1339,9 +1435,9 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
             case FILE:
                 returnValue = param.getValue();
-                
+
                 break;
-                
+
             default:
                 throw new ScriptConfigurationException( Thread.currentThread().getName() + ": Unknown Parameter Type [" + param.getValue() + "]" );
         }
@@ -1351,17 +1447,14 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             {
                 if ( log.isDebugEnabled() )
                     log.debug( "Applying token " + token.getName() );
-                
+
                 returnValue = returnValue.replace( "{" + token.getName() + "}", getTokenValue( token, contextMap, dataMap ) );
             }
         }
-        
+
         return returnValue;
     }
 
-    
-    
-    
     /**
      * Gets the parameter value.
      *
@@ -1698,7 +1791,9 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         this.validationType = validationType;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.perfectoMobile.page.keyWord.KeyWordStep#getWait()
      */
     public long getWait()
@@ -1706,7 +1801,9 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         return waitTime;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.perfectoMobile.page.keyWord.KeyWordStep#setWait(long)
      */
     public void setWait( long waitAfter )
@@ -1740,5 +1837,195 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         }
 
         return rtn;
+    }
+
+    protected void dumpState( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
+    {
+        String checkPointName = null;
+        int historicalCount = -1;
+        int deviationPercentage = -1;
+
+        File checkPointFolder = null;
+
+        checkPointName = getParameterValue( getParameter( "checkPointName" ), contextMap, dataMap );
+        if ( checkPointName != null )
+        {
+            checkPointFolder = new File( DataManager.instance().getReportFolder(), "historicalComparison" );
+            checkPointFolder = new File( checkPointFolder, ((DeviceWebDriver) webDriver).getDevice().getKey() );
+
+            String hCount = getParameterValue( getParameter( "historicalCount" ), contextMap, dataMap );
+            if ( hCount != null )
+            {
+                historicalCount = Integer.parseInt( hCount );
+
+                String dP = getParameterValue( getParameter( "deviationPercentage" ), contextMap, dataMap );
+                if ( dP != null )
+                    deviationPercentage = Integer.parseInt( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" );
+            }
+        }
+
+        File rootFolder = ExecutionContext.instance().getReportFolder();
+        File useFolder = new File( rootFolder, "artifacts" );
+        useFolder.mkdirs();
+
+        File screenFile = null;
+        File domFile = null;
+        ;
+
+        if ( webDriver instanceof TakesScreenshot )
+        {
+            OutputStream os = null;
+            try
+            {
+                byte[] screenShot = ((TakesScreenshot) webDriver).getScreenshotAs( OutputType.BYTES );
+                if ( checkPointName != null )
+                    screenFile = new File( useFolder, "grid-" + checkPointName.replace( "-", "_" ) + "-" + ((DeviceWebDriver) webDriver).getDevice().getKey() + ".png" );
+                else
+                    screenFile = File.createTempFile( "state", ".png", useFolder );
+
+                contextMap.put( "_SCREENSHOT", screenFile.getAbsolutePath() );
+                executionContext.getStep().addExecutionParameter( "SCREENSHOT", screenFile.getPath() );
+                screenFile.getParentFile().mkdirs();
+                os = new BufferedOutputStream( new FileOutputStream( screenFile ) );
+                os.write( screenShot );
+                os.flush();
+                os.close();
+
+                if ( checkPointFolder != null )
+                {
+                    //
+                    // Dump state as historical
+                    //
+                    checkPointFolder.mkdirs();
+
+                    if ( historicalCount >= 0 )
+                    {
+                        List<File> historicalFiles = Arrays.asList( checkPointFolder.listFiles( new CheckPointFiles( checkPointName + "-" ) ) );
+                        Collections.sort( historicalFiles );
+                        Collections.reverse( historicalFiles );
+
+                        if ( historicalFiles.size() >= historicalCount )
+                            historicalFiles.get( 0 ).delete();
+
+                        for ( File file : historicalFiles )
+                        {
+                            String[] fileParts = file.getName().split( "\\." );
+                            int fileNumber = Integer.parseInt( fileParts[0].substring( checkPointName.length() + 1 ) );
+
+                            file.renameTo( new File( file.getParentFile(), checkPointName + "-" + numberFormat.format( fileNumber + 1 ) + ".png" ) );
+                        }
+
+                        os = new BufferedOutputStream( new FileOutputStream( new File( checkPointFolder, checkPointName + "-0000.png" ) ) );
+                    }
+                    else
+                        os = new BufferedOutputStream( new FileOutputStream( new File( checkPointFolder, checkPointName + ".png" ) ) );
+
+                    os.write( screenShot );
+                    os.flush();
+                    os.close();
+
+                    if ( deviationPercentage >= 0 )
+                    {
+                        //
+                        // Compare with the last image
+                        //
+                        File newFile = new File( checkPointFolder, checkPointName + "-0000.png" );
+                        File previousFile = new File( checkPointFolder, checkPointName + "-0001.png" );
+
+                        if ( newFile.exists() && previousFile.exists() )
+                        {
+                            double computedDeviation = (ImageUtility.compareImages( ImageIO.read( newFile ), ImageIO.read( previousFile ) ) * 100);
+
+                            if ( computedDeviation > deviationPercentage )
+                                throw new ScriptException( "Historical image comparison failed.  Expected a maximum difference of [" + deviationPercentage + "] but found [" + computedDeviation + "]" );
+                        }
+                    }
+                }
+            }
+            catch ( ScriptException xe )
+            {
+                throw xe;
+            }
+            catch ( Exception e )
+            {
+                e.printStackTrace();
+                throw new ScriptException( "Error taking screenshot" );
+            }
+            finally
+            {
+                if ( os != null )
+                    try
+                    {
+                        os.close();
+                    }
+                    catch ( Exception e )
+                    {
+                    }
+            }
+        }
+
+        FileOutputStream outputStream = null;
+        try
+        {
+            File xmlFile = File.createTempFile( "dom-", ".xml", useFolder );
+            domFile = new File( xmlFile.getParentFile(), xmlFile.getName().replace( ".xml", ".html" ) );
+
+            contextMap.put( "_DOM_XML", xmlFile.getAbsolutePath() );
+            contextMap.put( "_DOM_HTML", domFile.getAbsolutePath() );
+
+            executionContext.getStep().addExecutionParameter( "XML", xmlFile.getPath() );
+            executionContext.getStep().addExecutionParameter( "HTML", domFile.getPath() );
+
+            String pageSource = webDriver.getPageSource();
+            outputStream = new FileOutputStream( xmlFile );
+            if ( ApplicationRegistry.instance().getAUT() == null || ApplicationRegistry.instance().getAUT().isWeb() )
+                outputStream.write( XMLEscape.toXML( pageSource ).getBytes() );
+            else
+                outputStream.write( XMLEscape.toHTML( pageSource ).getBytes() );
+
+            outputStream.flush();
+            outputStream.close();
+
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append( "<html><head><link href=\"http://www.xframium.org/output/assets/css/prism.css\" rel=\"stylesheet\"><script src=\"http://www.xframium.org/output/assets/js/prism.js\"></script>" );
+            stringBuilder.append( "</script></head><body><pre class\"line-numbers\"><code class=\"language-markup\">" + pageSource.replace( "<", "&lt;" ).replace( ">", "&gt;" ).replace( "\t", "  " ) + "</code></pre></body></html>" );
+
+            outputStream = new FileOutputStream( domFile );
+            outputStream.write( stringBuilder.toString().getBytes() );
+            outputStream.flush();
+            outputStream.close();
+        }
+        catch ( Exception e )
+        {
+            log.warn( "Could not write to output file", e );
+            throw new ScriptException( "Error capturing device source" );
+        }
+        finally
+        {
+            if ( outputStream != null )
+                try
+                {
+                    outputStream.close();
+                }
+                catch ( Exception e )
+                {
+                }
+        }
+    }
+
+    private class CheckPointFiles implements FilenameFilter
+    {
+        private String checkPointName;
+
+        public CheckPointFiles( String checkPointName )
+        {
+            this.checkPointName = checkPointName;
+        }
+
+        @Override
+        public boolean accept( File dir, String name )
+        {
+            return (name.startsWith( checkPointName ));
+        }
     }
 }

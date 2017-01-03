@@ -11,8 +11,8 @@
 
   <function name="kw-call" >
     
-    <step type="CALL" name="callDataChange" page="home" >
-      <parameter type="STATIC" value="changedCallTest=callTest" />
+    <step type="CALL2" name="callDataChange" page="home" >
+      <parameter name="OVERRIDE" type="STATIC" value="changedCallTest=callTest" />
     </step>
 
   </function>

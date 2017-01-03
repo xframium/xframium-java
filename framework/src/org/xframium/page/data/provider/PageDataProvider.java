@@ -21,7 +21,6 @@
 package org.xframium.page.data.provider;
 
 import java.util.List;
-
 import org.xframium.page.data.PageData;
 
 // TODO: Auto-generated Javadoc
@@ -70,10 +69,14 @@ public interface PageDataProvider
 	
 	public void addRecordType( String typeName, boolean lockRecords );
 	public void addRecord( PageData pageData );
-	
+
 	/**
 	 * Get list of all record types
 	 * @return List of record types
 	 */
 	public List<String> getRecordTypes();
+	
+	public void addOverride( String originalName, String newName );
+    public void addOverride( String nvPair );
+    public void addOverrides( String pairList );
 }

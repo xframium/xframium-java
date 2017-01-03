@@ -120,6 +120,7 @@ public interface Element
 	public void addElementProperty( String name, String value );
     public Map<String,String> getElementProperties();
     public String getElementProperty( String name );
+    public void addSubElement( SubElement subElement );
 	
 	public BY getBy();
 	
@@ -290,6 +291,7 @@ public interface Element
 	 * @return the context
 	 */
 	public Element getContext();
+	public String getRawKey();
 	
 	/**
 	 * Sets the context.

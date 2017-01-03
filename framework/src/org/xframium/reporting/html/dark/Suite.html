@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html ng-app="xTest">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
+<script src="http://xframium.org/output/assets/js/ui-bootstrap-tpls-2.1.4.js"></script>
+<script src="http://xframium.org/output/assets/js/angular-ui-tree.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+<script src="http://xframium.org/output/assets/js/angular-chart.js"></script>
+<script src="./Suite.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link href="http://www.xframium.org/output/assets/css/toolkit-inverse.css" rel="stylesheet">
+<link href="http://www.xframium.org/output/assets/css/application.css" rel="stylesheet">
+<link href="http://www.xframium.org/output/assets/css/angular-ui-tree.css" rel="stylesheet">
+</head>
+<body ng-controller="xTestController" data-ng-init="initialize()">
+    <div class="container">
+        <div class="col-sm-12 content">
+            <div class="dashhead">
+                <span class="pull-right text-muted">{{suiteData.startTime.dateOnly}} at {{suiteData.startTime.timeOnly}}</span>
+                <h6 class="dashhead-subtitle">xFramium 1.0.7</h6>
+                <h3 class="dashhead-title">{{suiteData.suiteName}}</h3>
+                <h6>Test Suite Execution Summary</h6>
+            </div>
+            <div class="row" style="margin-top: 10px">
+                <div class="col-sm-2">
+                    <canvas class="chart chart-doughnut" chart-data="executionData" chart-labels="executionLabels" chart-options="chartOptions" chart-colors="chartColors"></canvas>
+                    <h5 class="text-primary text-muted" style="margin-top: 10px; text-align: center">Test Breakdown</h5>
+                    <canvas class="chart chart-doughnut" chart-data="stepData" chart-labels="stepLabels" chart-options="chartOptions" chart-colors="chartColors" style="margin-top: 30px"></canvas>
+                    <h5 class="text-primary text-muted" style="margin-top: 10px; text-align: center">Step Breakdown</h5>
+                </div>
+                <div class="col-sm-10">
+                    <h4 class="text-primary" style="margin-bottom: 10px; text-align: center">Environment Coverage</h4>
+                    <canvas class="chart chart-bar" chart-series="envSeries" chart-data="envData" chart-labels="envLabels" chart-options="barChartOptions" chart-colors="radarChartColors"></canvas>
+
+                </div>
+            </div>
+            
+            <a hRef="../index.html" class="pull-right" style="margin-bottom: 10px; margin-right: 10px"><span>Execution History</span></a>
+            <div class="row" style="margin-top: 20px">
+                <div class="col-sm-12">
+                    <div class="panel panel-primary">
+                        <div class=panel-heading>
+                            <div class=panel-title>
+                                <div class="row">
+                                    <div class="col-sm-4">Execution Detail {{formatSuiteDuration()}}</div>
+                                    <div class="col-sm-8 input-group" style="padding-right: 10px">
+                                        <span class="input-group-addon" id="basic-addon2"></span>
+                                        <input type="text" class="form-control" placeholder="Execution Filter" aria-describedby="basic-addon2" ng-model="filterTestsBy">
+                                        <span class="input-group-addon" id="basic-addon2" ng-if="suiteData.gridUrl != 'null'"><a hRef="{{suiteData.gridUrl}}" ><span class="glyphicon glyphicon-th"></span></a></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=panel-body>
+                            <table class="table table-hover table-condensed">
+                                <tr>
+                                    <th width="40%" style="text-align: center">Test</th>
+                                    <th width="40%" style="text-align: center">Environment</th>
+                                    <th width="10%" style="text-align: center">Duration</th>
+                                    <th width="10%" style="text-align: center">Steps</th>
+                                    <th style="text-align: center">Status</th>
+                                </tr>
+                                <tbody>
+                                    <tr ng-repeat="exec in suiteData.executionSummary | filter:filterTestsBy">
+                                        <td>
+                                            <a href='{{escapeFolderName(exec.folderName)}}/index.html'>{{exec.name}}</a>
+                                        </td>
+                                        <td>{{exec.device.environment}}</td>
+                                        <td>{{formatTestDuration( exec )}}</td>
+                                        <td style="text-align: center">{{exec.total}}</td>
+                                        <td style="padding-top: 2px;" align="center">
+                                            <span class="label label-danger" ng-if="exec.testStatus=='FAILED'">{{exec.exceptionType}}</span>
+                                            <span class="label label-warning" ng-if="exec.testStatus=='SKIPPED'">Skipped</span>
+                                            <span class="label label-success" ng-if="exec.testStatus=='PASSED'">Passed</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 10px">
+                <div class="col-sm-12">
+                    <h4 class="text-primary" style="margin-bottom: 10px; text-align: center">Function Efficiency</h4>
+                    <canvas class="chart chart-radar" chart-labels="functionSeries" chart-data="functionData" chart-colors="functionChartColors"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var xTest = angular.module('xTest', [ 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.tree', 'chart.js' ]);
+
+    xTest.config([ '$compileProvider', function( $compileProvider )
+    {
+        $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|file|data|chrome-extension):/);
+    } ]);
+
+    xTest.directive('compile', [ '$compile', function( $compile )
+    {
+        return function( scope, element, attrs )
+        {
+            scope.$watch(function( scope )
+            {
+                return scope.$eval(attrs.compile);
+            }, function( value )
+            {
+                element.html(value);
+                $compile(element.contents())(scope);
+            });
+        };
+    } ]);
+
+    xTest.controller('xTestController', function XTestController( $scope, $uibModal )
+    {
+        $scope.suiteData = testData.pageData;
+
+        $scope.executionLabels = [];
+        $scope.executionData = [];
+
+        $scope.stepLabels = [];
+        $scope.stepData = [];
+        $scope.filterTestsBy;
+        $scope.envLabels = [];
+        $scope.envData = [];
+        $scope.envSeries = [ 'Passed', 'Failed' ];
+
+        $scope.cloudLabels = [];
+        $scope.cloudData = [];
+        
+        $scope.functionSeries = [];
+        $scope.functionData = [];
+
+        $scope.chartOptions = {
+            "cutoutPercentage" : 70,
+            "animation.animateRotate" : true,
+        }
+        
+        $scope.barChartOptions = {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+
+        $scope.cloudMap = {};
+        $scope.cloudSummaryMap = {};
+        $scope.environmentMap = {};
+        $scope.environmentSummaryMap = {};
+        $scope.passed = 0;
+        $scope.failed = {};
+        $scope.skipped = 0;
+        $scope.stepsPassed = 0;
+        $scope.stepsFailed = 0;
+        $scope.stepsIgnored = 0;
+        $scope.chartColors = [];
+
+        $scope.functionMap = {};
+        
+        $scope.formatTestDuration = function( test )
+        {
+            var duration = test.endTime.raw - test.startTime.raw;
+            var milliseconds = parseInt((duration % 1000) / 100);
+            var seconds = parseInt((duration / 1000) % 60);
+            var minutes = parseInt((duration / (1000 * 60)) % 60);
+            var hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+            return hours + "h " + minutes + "m " + seconds + "s"
+        }
+
+        $scope.formatSuiteDuration = function()
+        {
+            if ( $scope.suiteData.endTime == null )
+                return "N/A";
+            var duration = $scope.suiteData.endTime.raw - $scope.suiteData.startTime.raw;
+            var milliseconds = parseInt((duration % 1000) / 100);
+            var seconds = parseInt((duration / 1000) % 60);
+            var minutes = parseInt((duration / (1000 * 60)) % 60);
+            var hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+            return hours + "h " + minutes + "m " + seconds + "s"
+        }
+
+        $scope.escapeFolderName = function( folderName )
+        {
+            return folderName.replace( '#', '%23' );   
+        }
+        
+        $scope.initialize = function()
+        {
+            $scope.categorizeData();
+        }
+
+        $scope.categorizeData = function()
+        {
+            for ( var i = 0; i < $scope.suiteData.executionSummary.length; i++ ) {
+                var cE = $scope.suiteData.executionSummary[i];
+                $scope.stepsPassed += parseInt( cE.passed );
+                $scope.stepsFailed += parseInt( cE.failed );
+                $scope.stepsIgnored += parseInt( cE.ignored );
+                
+                for ( var key in cE.callMap )
+                {
+                    var functionData = $scope.functionMap[key];
+                    if ( functionData == null ) {
+                        $scope.functionMap[key] = {
+                                'passed' : 0,
+                                'failed' : 0
+                            };
+                        functionData = $scope.functionMap[key];
+                    }
+                    
+                    functionData[ 'passed' ] += parseInt( cE.callMap[ key ][ 0 ] );
+                    functionData[ 'failed' ] += parseInt( cE.callMap[ key ][ 1 ] );
+                }
+                
+                if ( cE.testStatus == 'PASSED' )
+                    $scope.passed++;
+                else if ( cE.testStatus == 'SKIPPED' )
+                    $scope.skipped++;
+                else {
+                    if ( cE.exceptionType == 'null' ) {
+                        var count = $scope.failed['OTHER'];
+                        if ( count == null )
+                            count = 0;
+                        count++;
+                        $scope.failed['OTHER'] = count;
+                    }
+                    else {
+                        var count = $scope.failed[cE.exceptionType];
+                        if ( count == null )
+                            count = 0;
+
+                        count++;
+                        $scope.failed[cE.exceptionType] = count;
+                    }
+                }
+
+                if ( cE.testStatus != 'SKIPPED' ) 
+                {
+                    var cloud = $scope.cloudMap[cE.cloud.name];
+                    if ( cloud == null ) {
+                        $scope.cloudMap[cE.cloud.name] = [];
+                        cloud = $scope.cloudMap[cE.cloud.name];
+                        $scope.cloudSummaryMap[cE.cloud.name] = {
+                            'passed' : 0,
+                            'failed' : 0
+                        };
+                    }
+
+                    cloud.push(cE);
+
+                    var env = $scope.environmentMap[cE.device.environment];
+                    if ( env == null ) {
+                        $scope.environmentMap[cE.device.environment] = [];
+                        env = $scope.environmentMap[cE.device.environment];
+                        $scope.environmentSummaryMap[cE.device.environment] = {
+                            'passed' : 0,
+                            'failed' : 0
+                        };
+                    }
+
+                    env.push(cE);
+                    if ( cE.testStatus == 'PASSED' ) {
+                        $scope.environmentSummaryMap[cE.device.environment]['passed'] += 1;
+                        $scope.cloudSummaryMap[cE.cloud.name]['passed'] += 1;
+                    }
+                    else if ( cE.testStatus != 'SKIPPED' ) {
+                        $scope.environmentSummaryMap[cE.device.environment]['failed'] += 1;
+                        $scope.cloudSummaryMap[cE.cloud.name]['failed'] += 1;
+                    }
+                }
+            }
+            
+            $scope.stepLabels = [ "Passed", "Ignored", "Failed"];
+            $scope.stepData.push( $scope.stepsPassed );
+            $scope.stepData.push( $scope.stepsIgnored );
+            $scope.stepData.push( $scope.stepsFailed );
+            
+            
+            var envPassed = [];
+            var envFailed = [];
+            
+            for ( var key in $scope.environmentSummaryMap ) 
+            {
+                if ( key != 'undefined' )
+                {
+                    $scope.envLabels.push(key);
+                    envPassed.push($scope.environmentSummaryMap[key]['passed']);
+                    envFailed.push($scope.environmentSummaryMap[key]['failed']);
+                }
+            }
+
+            $scope.envData.push(envPassed);
+            $scope.envData.push(envFailed);
+
+            var cloudPassed = [];
+            var cloudFailed = [];
+            for ( var key in $scope.cloudSummaryMap ) 
+            {
+                $scope.cloudLabels.push(key);
+                cloudPassed.push($scope.cloudSummaryMap[key]['passed']);
+                cloudFailed.push($scope.cloudSummaryMap[key]['failed']);
+            }
+
+            $scope.cloudData.push(cloudPassed);
+            $scope.cloudData.push(cloudFailed);
+
+            // Configure execution Chart
+            $scope.executionLabels = [ 'Passed', 'Ignored' ];
+            $scope.executionData = [ $scope.passed, $scope.skipped ];
+            for ( var key in $scope.failed ) {
+                $scope.executionLabels.push(key);
+                $scope.executionData.push($scope.failed[key]);
+            }
+
+            for ( var i = 0; i < $scope.executionLabels.length; i++ ) {
+                $scope.chartColors.push($scope.colorMap[$scope.executionLabels[i]]);
+                if ( $scope.executionLabels[i] == 'CONFIGURATION' )
+                    $scope.executionLabels[i] = 'Config Issues';
+                else if ( $scope.executionLabels[i] == 'SCRIPT' )
+                    $scope.executionLabels[i] = 'Script Issues';
+                else if ( $scope.executionLabels[i] == 'CLOUD' )
+                    $scope.executionLabels[i] = 'Device Issues';
+            }
+
+            console.log( $scope.functionMap );
+            var functionFail = [];
+            var functionTotal = [];
+            for ( var key in $scope.functionMap )
+            {
+                
+                $scope.functionSeries.push( key );
+                functionFail.push( $scope.functionMap[ key ][ 'failed' ] );
+                functionTotal.push( $scope.functionMap[ key ][ 'failed' ] + $scope.functionMap[ key ][ 'passed' ] );
+                
+            }
+            
+            $scope.functionData.push( functionTotal );
+            $scope.functionData.push( functionFail );
+            
+            console.log( $scope.functionSeries );
+            console.log( $scope.functionData );
+            // Configure environment Chart
+
+        }
+        
+        $scope.radarChartColors = [ "#1bc98e", "#ff3333" ];
+
+        $scope.functionChartColors = [ "#3385ff", "#ff0000" ];
+        
+        $scope.colorMap = {
+            "Passed" : "#1bc98e",
+            "Ignored" : "#e4d836",
+            "CONFIGURATION" : "#ff3333",
+            "SCRIPT" : "#ff0000",
+            "CLOUD" : "#800000",
+            "OTHER" : "#4d0000"
+        }
+
+    });
+</script>
+</html>

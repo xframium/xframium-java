@@ -30,22 +30,6 @@ public class DefaultReceiveEmailProvider extends AbstractReceiveEmailProvider
     private static final String DEFAULT_FOLDER_NAME = "INBOX";
     private static final int MAX_MESSAGES = 50;
 
-    public static void main( String[] args )
-    {
-        DefaultReceiveEmailProvider x = new DefaultReceiveEmailProvider();
-
-        Map<String, String> propertyMap = new HashMap<String, String>( 20 );
-
-        propertyMap.put( "mail.pop3.host", "pop.gmail.com" );
-        propertyMap.put( "mail.pop3.port", "995" );
-        propertyMap.put( "mail.pop3.starttls.enable", "true" );
-        propertyMap.put( USER_NAME, "nolan.a.geary@gmail.com" );
-        propertyMap.put( PASSWORD, "bD046879" );
-        propertyMap.put( PROTOCOL, "pop3s" );
-
-        x.getEmail( "pop.gmail.com", null, propertyMap );
-    }
-
     public MessageWrapper _getEmail( String hostName, MessageFilter[] messageFilters, Map<String, String> propertyMap )
     {
         Properties mailProps = new Properties();
@@ -74,7 +58,6 @@ public class DefaultReceiveEmailProvider extends AbstractReceiveEmailProvider
 
             for ( int i = 0; i < messageCount; i++ )
             {
-                System.out.println( messages[i].getSubject() );
                 if ( applyFilters( messages[i], messageFilters ) )
                 {
                     messageList.add( messages[i] );

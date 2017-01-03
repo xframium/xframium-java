@@ -71,8 +71,6 @@ public class SQLUtil
                                   url,
                                   driver );
 
-            System.out.println( "Executing " + query );
-            
             pstmt = conn.prepareStatement( query );
 
             if ( params != null )

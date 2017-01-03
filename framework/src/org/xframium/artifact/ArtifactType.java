@@ -63,7 +63,7 @@ public enum ArtifactType
     /** The device log. */
     CONSOLE_LOG( ArtifactTime.AFTER_TEST, 11, "CONSOLE_LOG", "Extract the console log of the test runner" ),
     
-    EXECUTION_RECORD_HTML( ArtifactTime.AFTER_TEST, 12, "EXECUTION_RECORD_HTML", "xFramium HTML Report" ),
+    EXECUTION_RECORD_HTML( ArtifactTime.NOOP, 12, "EXECUTION_RECORD_HTML", "xFramium HTML Report" ),
     
     EXECUTION_RECORD_CSV( ArtifactTime.AFTER_TEST, 13, "EXECUTION_RECORD_CSV", "xFramium CSV Report" ),
     
@@ -77,7 +77,12 @@ public enum ArtifactType
     
     SAUCE_LABS( ArtifactTime.NOOP, 18, "SAUCE_LABS", "SauceLabs reporting integrations" ),
     
-    REPORTIUM( ArtifactTime.NOOP, 19, "REPORTIUM", "Perfeto reporting integrations" );
+    REPORTIUM( ArtifactTime.NOOP, 19, "REPORTIUM", "Perfeto reporting integrations" ),
+    
+    EXECUTION_RECORD_JSON( ArtifactTime.NOOP, 20, "EXECUTION_RECORD_HTML", "xFramium JSON Report" ),
+    
+    GRID_REPORT( ArtifactTime.NOOP, 21, "GRID_REPORT", "xFramium GRID Report" ),
+    ;
     
     /** The time. */
     private ArtifactTime time;
@@ -105,6 +110,7 @@ public enum ArtifactType
         supportedList.add( ArtifactType.DEBUGGER );
         supportedList.add( ArtifactType.SAUCE_LABS );
         supportedList.add( ArtifactType.REPORTIUM );
+        supportedList.add( ArtifactType.GRID_REPORT );
 
         return supportedList;
     }

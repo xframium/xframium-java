@@ -22,11 +22,12 @@ package org.xframium.page.keyWord;
 
 import java.util.List;
 import java.util.Map;
-
 import org.openqa.selenium.WebDriver;
+import org.xframium.application.ApplicationVersion;
 import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
+import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -73,6 +74,10 @@ public interface KeyWordStep
 	public Object getParameterValue( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap );
 	public String getTokenValue( KeyWordToken token, Map<String, Object> contextMap, Map<String, PageData> dataMap );
 	
+	public ApplicationVersion getVersion();
+	public void setVersion( String appVersion );
+	
+	
 	/**
 	 * Gets the link id.
 	 *
@@ -105,6 +110,7 @@ public interface KeyWordStep
 	
 	public List<KeyWordToken> getTokenList();
 
+	public String getKw();
 	
 	/**
 	 * Gets the link id.
@@ -292,10 +298,11 @@ public interface KeyWordStep
 	 * @param contextMap            the context map
 	 * @param dataMap            the data map
 	 * @param pageMap the page map
+	 * @param exeuctionContext TODO
 	 * @return true, if successful
 	 * @throws Exception the exception
 	 */
-	public boolean executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String,Page> pageMap, SuiteContainer sC ) throws Exception;
+	public boolean executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String,Page> pageMap, SuiteContainer sC, ExecutionContextTest exeuctionContext ) throws Exception;
 	
 	/**
 	 * To error.

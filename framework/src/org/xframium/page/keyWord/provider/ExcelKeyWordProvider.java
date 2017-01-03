@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -54,6 +55,7 @@ public class ExcelKeyWordProvider implements KeyWordProvider
 	
 	/** The resource name. */
 	private String resourceName;
+	private Map<String,String> configProperties;
 
 
 	/**
@@ -62,10 +64,11 @@ public class ExcelKeyWordProvider implements KeyWordProvider
 	 * @param fileName
 	 *            the file name
 	 */
-	public ExcelKeyWordProvider( File fileName )
+	public ExcelKeyWordProvider( File fileName, Map<String,String> configProperties )
 	{
 		this.fileName = fileName;
 		rootFolder = fileName.getParentFile();
+		this.configProperties = configProperties;
 	}
 
 	/**
@@ -74,11 +77,12 @@ public class ExcelKeyWordProvider implements KeyWordProvider
 	 * @param resourceName
 	 *            the resource name
 	 */
-	public ExcelKeyWordProvider( String resourceName )
+	public ExcelKeyWordProvider( String resourceName, Map<String,String> configProperties )
 	{
 		this.resourceName = resourceName;
 		this.fileName = new File(".");
 		rootFolder = fileName.getParentFile();
+		this.configProperties = configProperties;
 	}
 	
 	private String getCellValue( XSSFCell cell )
@@ -126,7 +130,6 @@ public class ExcelKeyWordProvider implements KeyWordProvider
 			catch (Exception e)
 			{
 				log.fatal( "Could not read from " + fileName, e );
-				System.exit( -1 );
 			}
 		}
 		return sC;
@@ -215,13 +218,13 @@ public class ExcelKeyWordProvider implements KeyWordProvider
             for ( MatrixTest currentTest : testList )
             {
                 if ( currentTest.getType().toLowerCase().equals( "function" ) )
-                    sC.addFunction( currentTest.createTest() );
+                    sC.addFunction( currentTest.createTest(configProperties) );
                 else
                 {
                     if ( currentTest.isActive() )
-                        sC.addActiveTest( currentTest.createTest() );
+                        sC.addActiveTest( currentTest.createTest(configProperties) );
                     else
-                        sC.addInactiveTest( currentTest.createTest() );
+                        sC.addInactiveTest( currentTest.createTest(configProperties) );
                 }
             }
         }

@@ -2,10 +2,15 @@ package org.xframium.driver;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import org.apache.commons.logging.Log;
@@ -25,56 +30,107 @@ import org.xframium.container.SuiteContainer;
 import org.xframium.debugger.DebugManager;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
+import org.xframium.device.artifact.Artifact;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.logging.ThreadedFileHandler;
 import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.device.proxy.ProxyRegistry;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.gesture.GestureManager;
 import org.xframium.gesture.device.action.DeviceActionManager;
 import org.xframium.gesture.device.action.spi.perfecto.PerfectoDeviceActionFactory;
 import org.xframium.gesture.factory.spi.PerfectoGestureFactory;
+import org.xframium.history.HistoryWriter;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.rest.bean.factory.BeanManager;
 import org.xframium.integrations.rest.bean.factory.XMLBeanFactory;
+import org.xframium.page.Page;
 import org.xframium.page.PageManager;
+import org.xframium.page.StepStatus;
+import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.keyWord.step.SyntheticStep;
+import org.xframium.page.listener.KeyWordListener;
+import org.xframium.reporting.ExecutionContext;
+import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
-import org.xframium.spi.RunDetails;
 import org.xframium.utility.SeleniumSessionManager;
+import com.xframium.serialization.SerializationManager;
 
 public abstract class AbstractConfigurationReader implements ConfigurationReader
 {
-    protected Log log = LogFactory.getLog(ConfigurationReader.class);
+    protected Log log = LogFactory.getLog( ConfigurationReader.class );
     protected File configFolder;
     protected boolean dryRun = false;
     protected boolean displayResults = true;
-    private SuiteContainer suiteContainer;
     
+    private SuiteContainer suiteContainer;
+
     public abstract boolean readFile( InputStream inputStream );
+
     public abstract boolean readFile( File configFile );
+
     public abstract CloudContainer configureCloud( boolean secured );
+
     protected abstract boolean configureProxy();
+
     public abstract ApplicationContainer configureApplication();
+
     protected abstract boolean configureThirdParty();
-    public abstract SuiteContainer configureTestCases( PageDataProvider pdp, boolean parseDataIterators);
+
+    public abstract SuiteContainer configureTestCases( PageDataProvider pdp, boolean parseDataIterators );
+
     public abstract boolean configureArtifacts( DriverContainer driverContainer );
+
     public abstract ElementProvider configurePageManagement( SuiteContainer sC );
+
     public abstract PageDataProvider configureData();
-    protected abstract boolean configureContent();
+
+    public abstract boolean configureContent();
+
     public abstract DeviceContainer configureDevice();
+
     protected abstract boolean configurePropertyAdapters();
-    public abstract DriverContainer configureDriver();
+
+    public abstract DriverContainer configureDriver( Map<String, String> customConfig );
+
     public abstract FavoriteContainer configureFavorites();
+
     protected abstract boolean _executeTest( SuiteContainer sC ) throws Exception;
+
+    @Override
+    public void readConfiguration( File configurationFile, boolean runTest )
+    {
+        readConfiguration( configurationFile, runTest, null );
+        
+    }
+    
+    private String suiteName;
+    public String getSuiteName()
+    {
+        return suiteName;
+    }
+    
+    
+    protected String getValue( String keyName, String attributeValue, Map<String,String> overrideMap )
+    {
+        if ( System.getProperty( keyName ) != null )
+            return System.getProperty( keyName );
+        if ( overrideMap.containsKey( keyName ) )
+            return overrideMap.get( keyName );
+        else
+            return attributeValue;
+    }
     
     @Override
-    public void readConfiguration( File configFile, boolean runTest )
+    public void readConfiguration( File configFile, boolean runTest, Map<String, String> customConfig )
     {
         configFolder = configFile.getParentFile();
         
@@ -86,7 +142,119 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         try
         {
             log.info( "Driver: Configuring Driver" );
-            DriverContainer driverC = configureDriver();
+            final DriverContainer driverC = configureDriver( customConfig );
+            suiteName = driverC.getSuiteName();
+            
+            DeviceManager.instance().setInitializationName( driverC.getBeforeDevice() );
+            
+            if ( driverC.getBeforeTest() != null  )
+            {
+                KeyWordDriver.instance().addStepListener( new KeyWordListener()
+                {
+                    @Override
+                    public boolean beforeTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC )
+                    {
+                        boolean returnValue = false;
+                        try
+                        {
+                            eC.startStep( new SyntheticStep( "Test Initialization", "CALL2" ), contextMap, dataMap );
+                            
+                            KeyWordTest kTest = KeyWordDriver.instance().getTest( driverC.getBeforeTest() );
+                            if ( kTest != null )
+                            {
+                                 returnValue = kTest.executeTest( webDriver, contextMap, dataMap, pageMap, sC, eC );
+                                 eC.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                            }
+                            else
+                            {
+                                returnValue = false;
+                                eC.completeStep( StepStatus.FAILURE, new ScriptConfigurationException( "Could not locate pre-test function [" + driverC.getBeforeTest() + "]" ) );
+                            }
+                        }
+                        catch( Exception e )
+                        {
+                            eC.completeStep( StepStatus.FAILURE, e );
+                            return false;
+                        }
+                        
+                        return returnValue;
+                    }
+                    
+                    @Override
+                    public boolean beforeStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC )
+                    {
+                        // TODO Auto-generated method stub
+                        return true;
+                    }
+                    
+                    @Override
+                    public void afterTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC )
+                    {
+                        // TODO Auto-generated method stub
+                        
+                    }
+                    
+                    @Override
+                    public void afterStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, StepStatus stepStatus, SuiteContainer sC, ExecutionContextTest eC )
+                    {
+                        // TODO Auto-generated method stub
+                        
+                    }
+                });
+            }
+            
+            if ( driverC.getAfterTest() != null  )
+            {
+                KeyWordDriver.instance().addStepListener( new KeyWordListener()
+                {
+                    @Override
+                    public boolean beforeTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC )
+                    {
+                       return true;
+                    }
+                    
+                    @Override
+                    public boolean beforeStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC )
+                    {
+                        // TODO Auto-generated method stub
+                        return true;
+                    }
+                    
+                    @Override
+                    public void afterTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC )
+                    {
+                        boolean returnValue = false;
+                        try
+                        {
+                            eC.startStep( new SyntheticStep( "Test Initialization", "CALL2" ), contextMap, dataMap );
+                            
+                            KeyWordTest kTest = KeyWordDriver.instance().getTest( driverC.getBeforeTest() );
+                            if ( kTest != null )
+                            {
+                                 returnValue = kTest.executeTest( webDriver, contextMap, dataMap, pageMap, sC, eC );
+                                 eC.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                            }
+                            else
+                            {
+                                eC.completeStep( StepStatus.FAILURE, new ScriptConfigurationException( "Could not locate pre-test function [" + driverC.getBeforeTest() + "]" ) );
+                            }
+                        }
+                        catch( Exception e )
+                        {
+                            eC.completeStep( StepStatus.FAILURE, e );
+                        }
+                        
+                        
+                    }
+                    
+                    @Override
+                    public void afterStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, StepStatus stepStatus, SuiteContainer sC, ExecutionContextTest eC )
+                    {
+                        // TODO Auto-generated method stub
+                        
+                    }
+                });
+            }
             
             log.info( "Cloud: Configuring Cloud Registry" );
             CloudContainer cC = configureCloud( driverC.isSecureCloud() );
@@ -166,13 +334,8 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             if ( !configureThirdParty() ) return;
             
             
-            
-            
-            
             log.info( "Content: Configuring Content Engine" );
             if ( !configureContent() ) return;
-            
-            DeviceManager.instance().addRunListener( RunDetails.instance() );
             
             log.info( "Property Adapter:  Configuring Property Adapters" );
             if ( !configurePropertyAdapters() ) return;
@@ -320,7 +483,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             if ( driverC.isEmbeddedServer() )
                 CloudRegistry.instance().startEmbeddedCloud();
             
-            RunDetails.instance().setTestName( (driverC.getSuiteName() != null && !driverC.getSuiteName().isEmpty()) ? driverC.getSuiteName() : ApplicationRegistry.instance().getAUT().getName() );
+            ExecutionContext.instance().setSuiteName( (driverC.getSuiteName() != null && !driverC.getSuiteName().isEmpty()) ? driverC.getSuiteName() : ApplicationRegistry.instance().getAUT().getName() );
             
             if ( runTest )
                 executeTest( sC );
@@ -332,14 +495,14 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             e.printStackTrace();
         }
     }
-    
+
     public boolean executeTest( SuiteContainer sC )
     {
         log.info( "Go: Executing Tests" );
-        
+        ExecutionContext.instance().isEnabled();
         try
         {
-            if( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )
+            if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )
             {
                 String debuggerHost = System.getProperty( "X_DEBUGGER_HOST" );
                 if ( debuggerHost == null )
@@ -348,62 +511,205 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                 }
                 DebugManager.instance().launchBrowser( debuggerHost, 8870 );
             }
-            
+
             _executeTest( sC == null ? suiteContainer : sC );
-            
-            if( DataManager.instance().isArtifactEnabled( ArtifactType.EXECUTION_RECORD_HTML ) )
+
+            if ( DataManager.instance().isArtifactEnabled( ArtifactType.GRID_REPORT ) )
             {
-            	RunDetails.instance().writeHTMLIndex( DataManager.instance().getReportFolder(), true );
-            	
-                File htmlFile = RunDetails.instance().getIndex( DataManager.instance().getReportFolder() );
-                try
-                {
-                    Desktop.getDesktop().browse( htmlFile.toURI() );
-                }
-                catch( Exception e )
-                {
-                    e.printStackTrace();
-                }
+                generateGridReport( ExecutionContext.instance().getReportFolder() );
             }
             
-            if( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )
+            if ( ExecutionContext.instance().isEnabled() )
+            {
+                ExecutionContext.instance().setEndTime( new Date( System.currentTimeMillis() ) );
+                ExecutionContext.instance().popupateSystemProperties();
+                
+                if ( DataManager.instance().isArtifactEnabled( ArtifactType.GRID_REPORT ) )
+                {
+                    ExecutionContext.instance().setGridUrl( "grid.html" );
+                }
+
+                String outputData = "var testData = " + new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ), ExecutionContext.instance(), 0 ) ) + ";";
+                Artifact jsArtifact = new Artifact( "Suite.js", outputData.getBytes() );
+                jsArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
+
+                new HistoryWriter( DataManager.instance().getReportFolder() ).updateHistory();
+
+                StringBuilder stringBuffer = new StringBuilder();
+                InputStream inputStream = null;
+                try
+                {
+                    if ( System.getProperty( "reportTemplateFolder" ) == null )
+                    {
+                        if ( System.getProperty( "reportTemplate" ) == null )
+                            inputStream = ClassLoader.getSystemResourceAsStream( "org/xframium/reporting/html/dark/Suite.html" );
+                        else
+                            inputStream = ClassLoader.getSystemResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/Suite.html" );
+                    }
+                    else
+                        inputStream = new FileInputStream( new File( System.getProperty( "reportTemplateFolder" ), "Suite.html" ) );
+
+                    int bytesRead = 0;
+                    byte[] buffer = new byte[512];
+
+                    while ( (bytesRead = inputStream.read( buffer )) > 0 )
+                    {
+                        stringBuffer.append( new String( buffer, 0, bytesRead ) );
+                    }
+
+                    Artifact indexArtifact = new Artifact( "index.html", stringBuffer.toString().getBytes() );
+                    indexArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
+
+                    File htmlFile = new File( ExecutionContext.instance().getReportFolder(), "index.html" );
+
+                    try
+                    {
+                        if ( htmlFile.exists() )
+                            Desktop.getDesktop().browse( htmlFile.toURI() );
+                    }
+                    catch ( Exception e )
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                catch ( Exception e )
+                {
+                    log.error( "Error generating INDEX", e );
+
+                }
+                finally
+                {
+                    try
+                    {
+                        inputStream.close();
+                    }
+                    catch ( Exception e )
+                    {
+                    }
+                }
+            }
+
+            
+            if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )
                 DebugManager.instance().shutDown();
 
         }
-        catch( Exception e )
+        catch ( Exception e )
         {
             log.fatal( "Error executing Tests", e );
         }
+
+        return true;
+    }
+
+    public static boolean generateGridReport( File rootFolder )
+    {
+        File artifactFolder = new File( rootFolder, "artifacts" );
+        
+        File[] fileList = artifactFolder.listFiles( new GRIDFileFilter() );
+        
+        Map<String,List<String>> fileMap = new HashMap<String,List<String>>( 20 );
+        
+        for ( File file : fileList )
+        {
+            String[] fileParts = file.getName().split( "-" );
+            List<String> gridList = fileMap.get( fileParts[ 1 ] );
+            if ( gridList == null )
+            {
+                gridList = new ArrayList<String>( 10 );
+                fileMap.put( fileParts[ 1 ], gridList );
+            }
+            
+            gridList.add( file.getName() );
+        }
+        
+        String outputData = "var testData = " + new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ), fileMap, 0 ) ) + ";";
+        System.out.println( outputData );
+        Artifact jsArtifact = new Artifact( "Grid.js", outputData.getBytes() );
+        jsArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
+        
+        StringBuilder stringBuffer = new StringBuilder();
+        InputStream inputStream = null;
+        try
+        {
+            if ( System.getProperty( "reportTemplateFolder" ) == null )
+            {
+                if ( System.getProperty( "reportTemplate" ) == null )
+                    inputStream = ClassLoader.getSystemResourceAsStream( "org/xframium/reporting/html/dark/Grid.html" );
+                else
+                    inputStream = ClassLoader.getSystemResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/Grid.html" );
+            }
+            else
+                inputStream = new FileInputStream( new File( System.getProperty( "reportTemplateFolder" ), "Grid.html" ) );
+
+            int bytesRead = 0;
+            byte[] buffer = new byte[512];
+
+            while ( (bytesRead = inputStream.read( buffer )) > 0 )
+            {
+                stringBuffer.append( new String( buffer, 0, bytesRead ) );
+            }
+
+            Artifact indexArtifact = new Artifact( "grid.html", stringBuffer.toString().getBytes() );
+            indexArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
         finally
         {
-            CloudRegistry.instance().shutdown();
+            try
+            {
+                inputStream.close();
+            }
+            catch ( Exception e )
+            {
+            }
         }
         
         return true;
     }
     
+    public static void main( String[] args )
+    {
+        generateGridReport( new File( "C:\\Users\\Allen\\git\\xframium-java\\testing\\test-output\\12-31_08-10-31-203" ) );
+    }
+    
+    private static class GRIDFileFilter implements FileFilter
+    {
+
+        @Override
+        public boolean accept( File pathname )
+        {
+            return pathname.getName().startsWith( "grid" );
+        }
+        
+    }
     
     protected File findFile( File rootFolder, File useFile )
     {
         if ( useFile.exists() || useFile.isAbsolute() )
             return useFile;
-        
+
         File myFile = new File( rootFolder, useFile.getPath() );
         if ( myFile.exists() )
             return myFile;
-        
+
         throw new IllegalArgumentException( "Could not find " + useFile.getName() + " at " + useFile.getPath() + " or " + myFile.getAbsolutePath() );
-        
+
     }
-    
+
     protected void runTest( String outputFolder, Class theTest, SuiteContainer sC )
     {
-        RunDetails.instance().setStartTime();
+        int threadCount = Integer.parseInt( System.getProperty( "xF-ThreadCount", "10" ) );
+        int verboseLevel = Integer.parseInt( System.getProperty( "xF-VerboseLevel", "1" ) );
+
         TestNG testNg = new TestNG( true );
-        testNg.setVerbose( 10 );
+        testNg.setVerbose( verboseLevel );
+        testNg.setThreadCount( threadCount );
         testNg.setOutputDirectory( outputFolder + System.getProperty( "file.separator" ) + "testNg" );
         testNg.setTestClasses( new Class[] { theTest } );
-        System.out.println( "runtest: " + Thread.currentThread().getName() );
         testNg.run();
 
     }

@@ -1,14 +1,14 @@
 package org.xframium.page.keyWord.matrixExtension;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
 import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class MatrixStep
 {
@@ -39,6 +39,7 @@ public class MatrixStep
     private boolean startAt;
     private String deviceTags;
     private String siteName;
+    private String version;
     
 
     public MatrixStep( String stepDefinition )
@@ -54,9 +55,9 @@ public class MatrixStep
         parseStep();
     }
     
-    public KeyWordStep createStep()
+    public KeyWordStep createStep( Map<String,String> configProperties )
     {
-        KeyWordStep kStep = KeyWordStepFactory.instance().createStep( name, pageName, active, type, linkId, timed, failureMode, inverse, os, browser, poi, threshold, "", wait, context, validationDetail, device, vType, tagNames, startAt, false, deviceTags, siteName );
+        KeyWordStep kStep = KeyWordStepFactory.instance().createStep( name, pageName, active, type, linkId, timed, failureMode, inverse, os, browser, poi, threshold, "", wait, context, validationDetail, device, vType, tagNames, startAt, false, deviceTags, siteName, configProperties, version );
         if ( parameterArray != null )
         {
             List<KeyWordParameter> parameterList = parameterArray.getParameters();
@@ -228,6 +229,9 @@ public class MatrixStep
                     break;
                 case 23:
                     browser = parseString( stepArray[ i ], null, false );
+                    break;
+                case 24:
+                    version = parseString( stepArray[ i ], null, false );
                     break;
             }
         }

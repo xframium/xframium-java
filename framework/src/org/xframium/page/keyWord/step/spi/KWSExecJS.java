@@ -29,6 +29,7 @@ import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -48,7 +49,7 @@ public class KWSExecJS extends AbstractKeyWordStep
      * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
      */
     @Override
-    public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
+    public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
     {
         if ( pageObject == null )
         {
@@ -68,8 +69,16 @@ public class KWSExecJS extends AbstractKeyWordStep
         {
             throw new ScriptException( "Web driver (" + webDriver.getClass().getName() + ") doesn't support Javascript execution" );
         }
-		
-        Object result = ((JavascriptExecutor) webDriver).executeScript( (String) script );
+		Object result = "";
+        
+        try
+        {
+            result = ((JavascriptExecutor) webDriver).executeScript( (String) script );
+        }
+        catch( Exception e )
+        {
+            log.info( "JavaScript call failed with " + e.getMessage() );
+        }
 		
         if (( result instanceof String ) &&
             ( !validateData( result + "" )) )

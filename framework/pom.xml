@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.xframium</groupId>
   <artifactId>xframium-java</artifactId>
-  <version>1.0.7-SNAPSHOT</version>
+  <version>1.0.8-SNAPSHOT</version>
   <name>xframium-java</name>
   <repositories>
     <repository>
@@ -222,7 +222,7 @@
     <dependency>
       <groupId>com.xframium</groupId>
       <artifactId>xframium-serialization</artifactId>
-      <version>2.0.4</version>
+      <version>2.0.5</version>
     </dependency>
     <dependency>
       <groupId>com.experitest</groupId>

@@ -79,8 +79,6 @@ public class WINDOWSDriverFactory extends AbstractDriverFactory
 			
 			Capabilities caps = ( (IOSDriver) webDriver.getWebDriver() ).getCapabilities();
 			
-			System.out.println( caps );
-			
 			webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
 			webDriver.setDeviceName( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
             webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );

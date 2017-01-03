@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html ng-app="xTest">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
+<script src="http://xframium.org/output/assets/js/ui-bootstrap-tpls-2.1.4.js"></script>
+<script src="http://xframium.org/output/assets/js/angular-ui-tree.js"></script>
+<script src="./Test.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link href="http://www.xframium.org/output/assets/css/toolkit-inverse.css" rel="stylesheet">
+<link href="http://www.xframium.org/output/assets/css/application.css" rel="stylesheet">
+<link href="http://www.xframium.org/output/assets/css/angular-ui-tree.css" rel="stylesheet">
+<style>
+iframe {
+	background-color: #eaeae1;
+}
+
+.abscenter {
+	margin: auto;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+.textOutline {
+	text-shadow: -1px -1px 0 #999999, 1px -1px 0 #999999, -1px 1px 0 #999999,
+		1px 1px 0 #999999;
+	color: rgb(255, 255, 255);
+}
+
+.pass {
+	color: #1bc98e;
+}
+
+.fail {
+	color: #e64759;
+}
+
+.pageName {
+	color: #e4d836;
+}
+
+.elementName {
+	color: #e4d836;
+}
+
+.passStep {
+	background-color: rgba(27, 201, 142, 0.2)
+}
+
+.ignoreStep {
+	background-color: rgba(228, 216, 54, 0.2)
+}
+
+.failStep {
+	background-color: rgba(230, 71, 89, 0.2)
+}
+
+.linkStep {
+	background-color: rgba(28, 168, 221, 0.2)
+}
+
+.filteredStep {
+    background-color: rgba(204, 0, 204, 0.2);
+    text-decoration: line-through;
+    
+}
+
+</style>
+</head>
+<body ng-controller="xTestController" data-ng-init="initialize()">
+    <div class="container">
+        <div class="col-sm-12 content">
+            <div class="dashhead">
+                <span class="pull-right text-muted">{{testData.startTime.dateOnly}} at {{testData.startTime.timeOnly}}</span>
+                <h6 class="dashhead-subtitle">xFramium 1.0.7</h6>
+                <h3 class="dashhead-title">{{testData.test.name}}</h3>
+                <h6>{{testData.device.environment}} on {{testData.cloudDescriptor.hostName}} ({{testData.cloudDescriptor.provider.name}})</h6>
+            </div>
+            <div class="row statcards" style="margin-top: 15px">
+                <div class="col-sm-1 m-b"></div>
+                <div class="col-sm-2 m-b">
+                    <div class="statcard statcard-success">
+                        <div class="p-a">
+                            <span class="statcard-desc textOutline">Passed</span>
+                            <h4 class="statcard-number textOutline">{{passed}}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 m-b">
+                    <div class="statcard statcard-warning">
+                        <div class="p-a">
+                            <span class="statcard-desc textOutline">Ignored</span>
+                            <h4 class="statcard-number textOutline">{{ignored}}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 m-b">
+                    <div class="statcard statcard-danger">
+                        <div class="p-a">
+                            <span class="statcard-desc textOutline">Failed</span>
+                            <h4 class="statcard-number textOutline">{{failed}}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 m-b">
+                    <div class="statcard statcard-primary">
+                        <div class="p-a">
+                            <span class="statcard-desc textOutline">Total Steps</span>
+                            <h4 class="statcard-number textOutline">{{total}}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2 m-b">
+                    <div class="statcard statcard-info">
+                        <div class="p-a">
+                            <span class="statcard-desc textOutline">Duration</span>
+                            <h4 class="statcard-number textOutline">{{formattedDuration}}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a hRef="../index.html" class="pull-right" style="margin-right: 10px"><span>Test Suite Execution Detail</span></a>
+            <uib-tabset active="active"> 
+            <uib-tab heading="Steps" active="true">
+            <div ui-tree id="tree-root" class="scrollable" style="max-height: 700px">
+                <ol ui-tree-nodes ng-model="testData.stepList">
+                    <li ui-tree-node ng-repeat="stepDef in testData.stepList" ng-include="'step.html'" collapsed="true"></li>
+                </ol>
+            </div>
+            </uib-tab> 
+            <uib-tab heading="{{artifactTabs[ key ]}}" ng-repeat="(key,value) in testData.executionParameters" ng-if="artifactTabs[ key ] != null"> 
+                <iframe src="{{testData.executionParameters[ key + '_FILE' ]}}" frameborder="0" height="500" width="100%">
+                </iframe> 
+            </uib-tab> 
+            <uib-tab heading="Links" active="true">
+            <div ui-tree id="tree-root" class="scrollable" style="max-height: 700px">
+                <ol ui-tree-nodes ng-model="links">
+                    <li ui-tree-node ng-repeat="(key, value) in links" ng-if="testData.executionParameters[ key ] != null">
+                        <div data-nodrag ui-tree-handle class="tree-node tree-node-content linkStep"
+                            style="border-radius: 5px; margin-top: 5px; margin-bottom: 5px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; cursor: default">
+                            <a target="_blank" hRef="{{testData.executionParameters[ key ]}}" style="margin-left: 15px">
+                                <span data-nodrag style="cursor: default; color: white">{{value}}</span>
+                            </a>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+            </uib-tab> 
+            <uib-tab heading="Data" active="true" ng-if="!angular.equals( {}, testData.dataMap )">
+            <div ui-tree id="tree-root" class="scrollable">
+                <ol ui-tree-nodes ng-model="links">
+                    <li ui-tree-node ng-repeat="(key,value) in testData.dataMap" >
+                        <div data-nodrag ui-tree-handle class="tree-node tree-node-content linkStep" style="border-radius: 5px; margin-top: 5px; margin-bottom: 5px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; cursor: default">
+                            <a ng-if="!angular.equals( {}, value.recordMap )" data-nodrag ng-click="toggle(this)" style="cursor: default" >
+                                <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }" style="cursor: default"></span>
+                            </a>
+                            <span data-nodrag ng-if="angular.equals( {}, value.recordMap )" style="margin-left: 15px"></span>
+                            <span data-nodrag style="cursor: default; color: white">{{value.recordName}} <span style="font-weight: normal;">extracted from</span> {{key}}</span>
+
+                        </div>
+                        <ol data-nodrag ui-tree-nodes="" ng-model="value.recordMap" ng-if="!angular.equals( {}, value.recordMap )" ng-class="{hidden: collapsed}" >
+                            <li data-nodrag ui-tree-node ng-repeat="(key2, value2) in value.recordMap" style="cursor: default">
+                                <div data-nodrag ui-tree-handle class="tree-node tree-node-content passStep" style="border-radius: 5px; margin-top: 5px; margin-bottom: 5px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; cursor: default">
+                                    <span style="font-weight: normal;">The value for </span><span data-nodrag style="cursor: default; color: white">{{key2}}</span> <span style="font-weight: normal;"> is </span> <span data-nodrag style="cursor: default; color: white">{{value2}}</span>
+                                </div>
+                            </li>
+                        </ol>
+                    </li>
+                </ol>
+            </div>
+            </uib-tab>
+            <uib-tab heading="Pages" active="true" ng-if="!angular.equals( {}, testData.pageMap )">
+            <div ui-tree id="tree-root" class="scrollable">
+                <ol ui-tree-nodes ng-model="links">
+                    <li ui-tree-node ng-repeat="(key,value) in testData.pageMap" >
+                        <div data-nodrag ui-tree-handle class="tree-node tree-node-content linkStep" style="border-radius: 5px; margin-top: 5px; margin-bottom: 5px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; cursor: default">
+                            <span data-nodrag style="cursor: default; color: white" style="margin-left: 15px">{{key}}</span>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+            </uib-tab> 
+            <uib-tab heading="Environment" active="true" ng-if="!angular.equals( {}, testData.sPMap )">
+                <div ui-tree id="tree-root" class="scrollable">
+                    <ol ui-tree-nodes ng-model="testData.sPMap">
+                        <li ui-tree-node ng-repeat="(key,value) in testData.sPMap">
+                            <div data-nodrag ui-tree-handle class="tree-node tree-node-content linkStep" style="border-radius: 5px; margin-top: 5px; margin-bottom: 5px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; cursor: default">
+                                <span data-nodrag style="cursor: default; color: white">{{key}}</span>
+    
+                            </div>
+
+                            <span data-nodrag style="cursor: default; color: white; margin-left: 25px">{{value}}</span>
+                                    
+                        </li>
+                    </ol>
+                </div>
+            </uib-tab> 
+            </uib-tabset>
+        </div>
+    </div>
+</body>
+<script type="text/ng-template" id="step.html">
+    <div data-nodrag ui-tree-handle  class="tree-node tree-node-content" style="border-radius: 5px; margin-top: 5px; margin-bottom: 5px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;cursor: default" ng-class="{'filteredStep text-muted' : stepDef.stepStatus == 'FILTERED','passStep' : stepDef.stepStatus == 'SUCCESS', 'failStep' : stepDef.stepStatus == 'FAILURE', 'ignoreStep' : stepDef.stepStatus == 'FAILURE_IGNORED'}">
+        <a ng-if="stepDef.stepList.length != 0" data-nodrag ng-click="toggle(this)" style="cursor: default" >
+            <span ng-if="stepDef.stepList.length != 0" class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }" style="cursor: default"></span>
+        </a>
+        <span data-nodrag ng-if="stepDef.stepList.length == 0" style="margin-left: 15px"></span>
+        <span data-nodrag compile="formatStep(stepDef)" style="cursor: default"></span>
+
+        
+        <a hRef="#" ng-click="showError( stepDef )" ng-if="hasExecutionParameter( stepDef, 'SCREENSHOT' ) || ( stepDef.throwable != null && stepDef.throwable != 'null' && stepDef.throwable != '' )"><span data-nodrag class="glyphicon glyphicon-eye-open pull-right" style="cursor: default" ></span></a>
+
+    </div>
+    <ol data-nodrag ui-tree-nodes="" ng-model="stepDef.stepList" ng-if="stepDef.stepList.length != 0" ng-class="{hidden: collapsed}" >
+        <li data-nodrag ui-tree-node ng-repeat="stepDef in stepDef.stepList" ng-include="'step.html'"  style="cursor: default" collapsed="true"></li>
+    </ol>
+</script>
+<script type="text/ng-template" id="errorDetail.html">
+<div class="panel panel-info" style="margin-bottom: 0px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{formatStepText(selectedStep)}}
+            <a href="#" ng-click="cancelElement()">
+                <span class="pull-right glyphicon glyphicon-remove-sign"></span>
+            </a>
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4">
+                <img width="100%" src="file://{{selectedStep.executionParameter.SCREENSHOT}}" class="img-rounded" />
+            </div>
+            <div class="col-md-8" ng-if="selectedStep.throwable != 'null'">
+                <span class="text-danger">{{selectedStep.throwable}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-2" ng-if="hasExecutionParameter( selectedStep, 'XML' )" stype="text-align: center"><a hRef="file://{{selectedStep.executionParameter.XML}}" class="btn btn-primary" type="button" target="_blank">View XML</a></div>
+            <div class="col-md-2" ng-if="hasExecutionParameter( selectedStep, 'HTML' )"  stype="text-align: center"><a hRef="file://{{selectedStep.executionParameter.HTML}}" class="btn btn-success" type="button" target="_blank">View XML (as HTML)</a></div>
+            <div class="col-md-4"></div>
+        </div>
+    </div>
+</div>
+</script>
+<script>
+    var xTest = angular.module('xTest', [ 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.tree' ]);
+
+    xTest.config([ '$compileProvider', function( $compileProvider )
+    {
+        $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|file|data|chrome-extension):/);
+    } ]);
+
+    xTest.directive('compile', [ '$compile', function( $compile )
+    {
+        return function( scope, element, attrs )
+        {
+            scope.$watch(function( scope )
+            {
+                return scope.$eval(attrs.compile);
+            }, function( value )
+            {
+                element.html(value);
+                $compile(element.contents())(scope);
+            });
+        };
+    } ]);
+
+    xTest.controller('xTestController', function XTestController( $scope, $uibModal )
+    {
+        $scope.testData = testData.pageData;
+        $scope.passed = 0;
+        $scope.failed = 0;
+        $scope.ignored = 0;
+        $scope.total = 0;
+        $scope.duration = 0;
+        $scope.formattedDuration = 0;
+        $scope.selectedStep;
+
+        $scope.hasExecutionParameter = function( step, parameterName )
+        {
+            return step.executionParameter[parameterName] != null;
+        }
+
+        $scope.cancelElement = function()
+        {
+            $scope.elementModalInstance.close();
+        };
+
+        $scope.showError = function( step )
+        {
+            $scope.selectedStep = step;
+            $scope.errorTitle = $scope.formatStep(step);
+
+            $scope.elementModalInstance = $uibModal.open({
+                animation : true,
+                ariaLabelledBy : 'modal-title',
+                ariaDescribedBy : 'modal-body',
+                templateUrl : 'errorDetail.html',
+                scope : $scope,
+                size : 'lg',
+
+            });
+        }
+
+        $scope.getPassed = function()
+        {
+            var totalPassed = 0;
+            for ( var i = 0; i < $scope.testData.stepList.length; i++ ) {
+                totalPassed += $scope._getByStatus($scope.testData.stepList[i], 'SUCCESS');
+            }
+
+            return totalPassed;
+        }
+
+        $scope.formatStepText = function( step )
+        {
+            var messageText = $scope.stepMessages[step.step.kw];
+
+            if ( messageText == null )
+                messageText = $scope.stepMessages['DEFAULT'];
+
+            messageText = messageText.replace("{kw}", step.step.kw);
+            messageText = messageText.replace("{name}", step.step.name);
+            messageText = messageText.replace("{subName}", step.step.subName);
+            messageText = messageText.replace("{pageName}", step.step.pageName);
+            messageText = messageText.replace("{device}", $scope.testData.device.key);
+            for ( var i = 0; i < step.parameterList.length; i++ ) {
+                messageText = messageText.replace("{$p" + (i + 1) + "}", step.parameterList[i]);
+            }
+            
+            
+
+            return messageText;
+        }
+
+        $scope.formatStep = function( step )
+        {
+            var messageText = $scope.stepMessages[step.step.kw];
+
+            if ( messageText == null )
+                messageText = $scope.stepMessages['DEFAULT'];
+
+            if ( step.step.kw == 'REPORT' )
+            {
+                messageText = '<span class="text-warning">' + step.step.name + "</span><br/>";
+                for ( var i = 0; i < step.parameterList.length; i++ ) 
+                {
+                    messageText += '<span class="text-info" style="margin-left: 30px">' + step.parameterList[i] + "</span><br/>";        
+                }
+            }
+            else
+            {
+                messageText = messageText.replace("{kw}", step.step.kw);
+                messageText = messageText.replace("{name}", '<span class="text-warning">' + step.step.name + "</span>");
+                messageText = messageText.replace("{subName}", '<span class="text-info">' + step.step.subName + "</span>");
+                messageText = messageText.replace("{pageName}", '<span class="text-warning">' + step.step.pageName + "</span>");
+                messageText = messageText.replace("{errorMessage}", step.throwable);
+                for ( var i = 0; i < step.parameterList.length; i++ ) {
+                    messageText = messageText.replace("{$p" + (i + 1) + "}", '<span class="text-info">' + step.parameterList[i] + "</span>");
+                }
+            }
+            
+            if ( step.step.device != 'null' && step.step.device != '' && step.step.device != null)
+            {
+                messageText += '<span> on the alternate device <span class="text-primary">' + step.step.device + '</span></span>';
+            }
+     
+            return messageText;
+        }
+
+        $scope.getStepDuration = function( step )
+        {
+            return step.endTime.raw - step.startTime.raw;
+        }
+
+        $scope.getFailed = function()
+        {
+            var total = 0;
+            for ( var i = 0; i < $scope.testData.stepList.length; i++ ) {
+                total += $scope._getByStatus($scope.testData.stepList[i], 'FAILURE');
+            }
+
+            return total;
+        }
+
+        $scope.getIgnored = function()
+        {
+            var total = 0;
+            for ( var i = 0; i < $scope.testData.stepList.length; i++ ) {
+                total += $scope._getByStatus($scope.testData.stepList[i], 'FAILURE_IGNORED');
+            }
+
+            return total;
+        }
+
+        $scope._getByStatus = function( currentStep, status )
+        {
+            var total = 0;
+            if ( currentStep.stepStatus == status || status == null )
+                total += 1;
+            for ( var i = 0; i < currentStep.stepList.length; i++ ) {
+                total += $scope._getByStatus(currentStep.stepList[i]);
+            }
+
+            return total;
+        }
+
+        $scope.initialize = function()
+        {
+            $scope.passed = $scope.getPassed();
+            $scope.failed = $scope.getFailed();
+            $scope.ignored = $scope.getIgnored();
+            $scope.total = $scope.passed + $scope.failed + $scope.ignored;
+            console.log($scope.testData.endTime.raw);
+            $scope.duration = $scope.testData.endTime.raw - $scope.testData.startTime.raw;
+            $scope.formattedDuration = $scope.createDuration($scope.duration);
+
+        }
+
+        $scope.createDuration = function( duration )
+        {
+            var milliseconds = parseInt((duration % 1000) / 100);
+            var seconds = parseInt((duration / 1000) % 60);
+            var minutes = parseInt((duration / (1000 * 60)) % 60);
+            var hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+            return hours + "h " + minutes + "m " + seconds + "s"
+        }
+
+        $scope.artifactTabs = {
+            "DEVICE_LOG" : "Device Log",
+            "CONSOLE_LOG" : "Console Log",
+            "WCAG_REPORT" : "WCAG Report"
+        }
+
+        $scope.links = {
+            "EXECUTION_REPORT_PDF" : "Perfecto Legacy Execution Report (PDF)",
+            "EXECUTION_REPORT" : "Perfecto Legacy Execution Report (PDF)",
+            "EXECUTION_REPORT_CSV" : "Perfecto Legacy Execution Report (CSV)",
+            "EXECUTION_REPORT_XML" : "Perfecto Legacy Execution Report (XML)",
+            "EXECUTION_REPORT_HTML" : "Perfecto Legacy Execution Report (HTML)",
+            "SAUCELABS" : "SauceLabs Report",
+            "REPORTIUM" : "Perfecto Execution Report"
+        }
+
+        $scope.stepMessages = {
+            "CALL" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use CALL2)",
+            "CALL2" : "CALL the function named {name}",
+            "SET" : "{kw} the value of {name} on {pageName} to {$p1}",
+            "ADD_DEVICE" : "Add a {$p1} device to the current test",
+            "WAIT_FOR" : "{kw} for {name} on {pageName} to be {subName}",
+            "NAVIGATE" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use BROWSER)",
+            "LOOP" : "Execute {$p2} in a {kw}",
+            "STATE" : "Extract the {kw} of the application",
+            "STATE" : "Call the {kw} {name}",
+            "ALERT" : "{name} to a web-based {kw} ",
+            "VISIBLE" : "Is {name} {kw} on {pageName}",
+            "ALIGN" : "Do controls {kw} with {name} on {pageName}",
+            "SET_CONTENT_KEY" : "{kw} to a {$p1}",
+            "BREAK" : "{kw} out of a loop",
+            "VERIFY_COLOR" : "{kw} of {name} on {pageName}",
+            "ELSE" : "Execute the {kw} if the parent step fails",
+            "EXECWS" : "{kw} a WebService call and analyze the results",
+            "WAIT" : "{kw} for the specifed time",
+            "HAS_FOCUS" : "Does {name} {kw} on {pageName}",
+            "ATTRIBUTE" : "Get the {kw} {$p1} from {name} on {pageName}",
+            "EXISTS" : "Does {name} {kw} on {pageName}",
+            "ENABLED" : "Is {name} {kw} on {pageName}",
+            "IS_ENABLED" : "Is {name} {kw} on {pageName}",
+            "VERIFY_CONTRAST" : "{kw} of {name} on {pageName}",
+            "MOUSE" : "Perform a {$p1} {kw} action at {name} on {pageName}",
+            "DEVICE" : "Perform a {name} {kw} action",
+            "MATH" : "Perform a {kw} {name} operation",
+            "REPORT" : "Add a message to the {kw}",
+            "EXECJS" : "{kw} on the web pages",
+            "CACHE" : "Enable/Disable the {kw} subsystem",
+            "BROWSER" : "Perform {kw} operation as {name}",
+            "WINDOW" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use BROWSER)",
+            "GET" : "{kw} the value of {name} on {pageName}",
+            "COMPARE" : "{kw} {$p1} to {$p2}",
+            "GESTURE" : "Perform a {name} {kw}",
+            "STRING2" : "Perform a STRING operation",
+            "STRING" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use STRING2)",
+            "VISUAL" : "Perform a {name} {kw} operation",
+            "DEFAULT" : "{kw} - Unmapped keyword",
+            "CLICK" : "{kw} at the center of {name} on {pageName}",
+            "COMMAND" : "Execute the {kw} {name}",
+            "EMAIL" : "{name} an {kw}",
+            "CONSOLE" : "Add data to the execution {kw}",
+            "TEST" : "{errorMessage}",
+            "APPLICATION" : "{name} the {$p1} {kw}",
+            "FUNCTION" : "Execution the native {kw} {name} on {pageName}"
+        };
+
+    });
+</script>
+</html>

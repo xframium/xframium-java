@@ -20,29 +20,44 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.provider;
 
-import gherkin.parser.Parser;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Unmarshaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
-import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
-import org.xframium.page.keyWord.*;
+import org.xframium.page.keyWord.KeyWordPage;
+import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
+import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
+import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.KeyWordToken.TokenType;
 import org.xframium.page.keyWord.gherkinExtension.XMLFormatter;
-import org.xframium.page.keyWord.provider.xsd.*;
+import org.xframium.page.keyWord.provider.xsd.Import;
+import org.xframium.page.keyWord.provider.xsd.Model;
+import org.xframium.page.keyWord.provider.xsd.ObjectFactory;
+import org.xframium.page.keyWord.provider.xsd.Parameter;
+import org.xframium.page.keyWord.provider.xsd.RegistryRoot;
+import org.xframium.page.keyWord.provider.xsd.Step;
+import org.xframium.page.keyWord.provider.xsd.Test;
+import org.xframium.page.keyWord.provider.xsd.Token;
+import org.xframium.page.keyWord.provider.xsd.XFunction;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
-import java.io.*;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import gherkin.parser.Parser;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -62,6 +77,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	/** The resource name. */
 	private String resourceName;
 	private byte[] resourceData;
+	private Map<String,String> configProperties;
 
 	/**
 	 * Instantiates a new XML key word provider.
@@ -69,10 +85,11 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 * @param fileName
 	 *            the file name
 	 */
-	public XMLKeyWordProvider( File fileName )
+	public XMLKeyWordProvider( File fileName, Map<String,String> configProperties )
 	{
 		this.fileName = fileName;
 		rootFolder = fileName.getParentFile();
+		this.configProperties = configProperties;
 	}
 
 	/**
@@ -81,14 +98,16 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 * @param resourceName
 	 *            the resource name
 	 */
-	public XMLKeyWordProvider( String resourceName )
+	public XMLKeyWordProvider( String resourceName, Map<String,String> configProperties )
 	{
 		this.resourceName = resourceName;
+		this.configProperties = configProperties;
 	}
 	
-	public XMLKeyWordProvider( byte[] resourceData )
+	public XMLKeyWordProvider( byte[] resourceData, Map<String,String> configProperties )
     {
         this.resourceData = resourceData;
+        this.configProperties = configProperties;
     }
 
 	/*
@@ -122,7 +141,6 @@ public class XMLKeyWordProvider implements KeyWordProvider
 			catch (Exception e)
 			{
 				log.fatal( "Could not read from " + fileName, e );
-				System.exit( -1 );
 			}
 		}
 		
@@ -160,60 +178,26 @@ public class XMLKeyWordProvider implements KeyWordProvider
                         continue;
                     }
 			        
-			        KeyWordTest currentTest = parseTest( test, "test" );
+			        KeyWordTest currentTest = parseTest( test );
 			        
-			        if (currentTest.getDataDriver() != null && !currentTest.getDataDriver().isEmpty() && parseDataIterators)
-                    {
-			            PageData[] pageData = null;
-			            try
-			            {
-			                pageData = PageDataManager.instance().getRecords( currentTest.getDataDriver() );
-			            }
-			            catch( Exception e )
-			            {
-			                
-			            }
-                        if (pageData == null)
-                        {
-                            if ( currentTest.isActive() )
-                                sC.addActiveTest( currentTest );
-                            else
-                                sC.addInactiveTest( currentTest );
-                        }
-                        else
-                        {
-                            String testName = currentTest.getName();
-
-                            for (PageData record : pageData)
-                            {
-                                if ( currentTest.isActive() )
-                                    sC.addActiveTest( currentTest.copyTest( testName + "!" + record.getName() ) );
-                                else
-                                    sC.addInactiveTest( currentTest.copyTest( testName + "!" + record.getName() ) );
-                            }
-                        }
-                    }
+                    if ( currentTest.isActive() )
+                        sC.addActiveTest( currentTest );
                     else
-                    {
-                        if ( currentTest.isActive() )
-                            sC.addActiveTest( currentTest );
-                        else
-                            sC.addInactiveTest( currentTest );
-                    }
+                        sC.addInactiveTest( currentTest );
 			        
 			    }
 			}
 
 			if (readFunctions)
 			{
-			    for( Test test : rRoot.getFunction() )
+			    for( XFunction test : rRoot.getFunction() )
                 {
                     if ( sC.testExists( test.getName() ) )
                     {
                         log.warn( "The function [" + test.getName() + "] is already defined and will not be added again" );
                         continue;
                     }
-                    sC.addFunction( parseTest( test, "function" ) );
+                    sC.addFunction( parseFunction( test ) );
                 }
 			}
 
@@ -264,7 +248,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	            }
 	            else if ( imp.getFileName().toLowerCase().endsWith( ".bdd" ) )
 	            {
-	                Parser bddParser = new Parser( new XMLFormatter( PageDataManager.instance().getDataProvider() ) );
+	                Parser bddParser = new Parser( new XMLFormatter( PageDataManager.instance().getDataProvider(), configProperties ) );
 	                
 	                byte[] buffer = new byte[512];
 	                int bytesRead = 0;
@@ -328,12 +312,12 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 * @param typeName the type name
 	 * @return the key word test
 	 */
-	private KeyWordTest parseTest( Test xTest, String typeName )
+	private KeyWordTest parseTest( Test xTest )
 	{
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold().intValue(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount(), null, null, null );
 		
         
-		KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName(), typeName );
+		KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
 
 		for (KeyWordStep step : steps)
 		{
@@ -342,6 +326,21 @@ public class XMLKeyWordProvider implements KeyWordProvider
 
 		return test;
 	}
+	
+	private KeyWordTest parseFunction( XFunction xTest)
+    {
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), null, false, xTest.getLinkId(), null, 0, xTest.getDescription() != null ? xTest.getDescription().getValue() : null, null, null, null, configProperties, 1, xTest.getPage(), xTest.getOutput(), xTest.getMode() );
+        test.getExpectedParameters().addAll( parseParameters( xTest.getParameter() ) );
+        
+        KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
+
+        for (KeyWordStep step : steps)
+        {
+            test.addStep( step );
+        }
+
+        return test;
+    }
 
 	/**
 	 * Parses the steps.
@@ -351,7 +350,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 * @param typeName the type name
 	 * @return the key word step[]
 	 */
-	private KeyWordStep[] parseSteps( List<Step> xSteps, String testName, String typeName )
+	private KeyWordStep[] parseSteps( List<Step> xSteps, String testName )
 	{
 
 		if (log.isDebugEnabled())
@@ -366,12 +365,12 @@ public class XMLKeyWordProvider implements KeyWordProvider
                                                                                  xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
                                                                                  xStep.getOs(), xStep.getBrowser(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
-                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite() );
+                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties, xStep.getVersion() );
 		    
-		    parseParameters( xStep.getParameter(), testName, xStep.getName(), typeName, step );
-		    parseTokens( xStep.getToken(), testName, xStep.getName(), typeName, step );
+		    step.getParameterList().addAll( parseParameters( xStep.getParameter() ) );
+		    parseTokens( xStep.getToken(), testName, xStep.getName(), step );
 		    
-		    step.addAllSteps( parseSteps( xStep.getStep(), testName, typeName ) );
+		    step.addAllSteps( parseSteps( xStep.getStep(), testName ) );
 		    stepList.add( step );
 		}
 
@@ -388,12 +387,13 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 * @param parentStep the parent step
 	 * @return the key word parameter[]
 	 */
-	private void parseParameters( List<Parameter> pList, String testName, String stepName, String typeName, KeyWordStep parentStep )
+	private List<KeyWordParameter> parseParameters( List<Parameter> pList )
 	{
 	    if (log.isDebugEnabled())
             log.debug( "Extracted " + pList.size() + " Parameters" );
 	    
-
+	    List<KeyWordParameter> kList = new ArrayList<KeyWordParameter>( 10 );
+	    
 	    for ( Parameter p : pList )
 	    {
 	        ParameterType ptype = ParameterType.valueOf( p.getType() );
@@ -448,8 +448,10 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	            } 
 	        }
 	        
-	        parentStep.addParameter( kp );
+	        kList.add( kp );
 	    }
+	    
+	    return kList;
 	}
 	
 	private String readFile( InputStream inputStream )
@@ -490,7 +492,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 * @param parentStep the parent step
 	 * @return the key word token[]
 	 */
-	private void parseTokens( List<Token> tList, String testName, String stepName, String typeName, KeyWordStep parentStep )
+	private void parseTokens( List<Token> tList, String testName, String stepName, KeyWordStep parentStep )
 	{
 	    if (log.isDebugEnabled())
             log.debug( "Extracted " + tList + " Tokens" );

@@ -25,6 +25,26 @@
       
       <element name="_testingTwo" descriptor="ID" value="_testingTwo" />
       <element name="testingTwoFrame" descriptor="ID" value="testingTwoFrame" />
+      
+      <element name="versionTest" descriptor="COMPLEX">
+        <element value="//*[@id='V1']" descriptor="XPATH" version="xTest(1.0)" />
+        <element value="//*[@id='V2']" descriptor="XPATH" version="xTest(1.0-*)" />
+        <element value="//*[@id='V1']" descriptor="XPATH" version="xTest0(1.0)" />
+        <element value="//*[@id='V2']" descriptor="XPATH" version="xTest0(1.0-*)" />
+      </element>
+      
+      <element name="osTest" descriptor="COMPLEX">
+        <element value="//*[@id='IOS']" descriptor="XPATH" version="xTest0(1.0)" os="IOS" />
+        <element value="//*[@id='ANDROID']" descriptor="XPATH" version="xTest0(1.0)" os="ANDROID" />
+        <element value="//*[@id='WINDOWS']" descriptor="XPATH" version="xTest0(1.0)" os="WINDOWS" />
+      </element>
+      
+      <element name="osTest2" descriptor="COMPLEX">
+        <element value="//*[@id='IOS']" descriptor="XPATH" os="IOS" />
+        <element value="//*[@id='ANDROID']" descriptor="XPATH" os="ANDROID" />
+        <element value="//*[@id='WINDOWS']" descriptor="XPATH" os="WINDOWS" />
+      </element>
+      
     </page>
   </site>
 </elementDefinition>

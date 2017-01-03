@@ -21,13 +21,20 @@
 package org.xframium.page.element;
 
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
+import org.xframium.application.ApplicationDescriptor;
+import org.xframium.content.ContentManager;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.XFramiumException;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
@@ -42,12 +49,42 @@ import org.xframium.page.StepStatus;
 public abstract class AbstractElement implements Element
 {
 	
-	
-	/** The log. */
+	private static Pattern CONTENT_KEY_SHORTHAND = Pattern.compile( "!\\{([^\\}]*)\\}" );
     protected Map<String,String> elementProperties;
 	protected Log log = LogFactory.getLog( Element.class );
 	private boolean cacheNative = false;
 
+	protected List<SubElement> subElementList = new ArrayList<SubElement>( 10 );
+	
+	protected SubElement[] getSubElement( ApplicationDescriptor appDesc, String os, DeviceWebDriver webDriver )
+	{
+	    List<SubElement> appList = new ArrayList<SubElement>( 10 );
+	    
+	    for ( SubElement subElement : subElementList )
+	    {
+	        if ( subElement.getVersion() != null && subElement.getVersion().isVersion( appDesc ) )
+	            appList.add( subElement );
+	        else if ( subElement.getVersion() == null )
+	            appList.add( subElement );
+	    }
+	    
+	    List<SubElement> osList = new ArrayList<SubElement>( 10 );
+	    for ( SubElement subElement : appList )
+        {        
+            if ( subElement.getOs() != null && subElement.getOs().contains( os ) )
+                osList.add( subElement );
+            else if ( subElement.getOs() == null )
+                osList.add( subElement );
+        }
+	    
+	    return osList.toArray( new SubElement[ 0 ] );
+	}
+	
+	public void addSubElement( SubElement subElement )
+	{
+	    subElementList.add( subElement );
+	}
+	
 	public boolean isCacheNative()
     {
         return cacheNative;
@@ -341,6 +378,23 @@ public abstract class AbstractElement implements Element
 	{
 		if ( !tokensApplied )
 		{
+		    //
+		    // Content key shortcuts first
+		    //
+		    Matcher matcher = CONTENT_KEY_SHORTHAND.matcher( elementKey );
+		    
+		    while ( matcher.find() )
+		    {
+		        String contentKey = matcher.group( 1 );
+		        String replacementValue = ContentManager.instance().getContentValue( contentKey );
+		        
+		        if ( replacementValue != null )
+		            elementKey = elementKey.replace( "!{" + contentKey + "}", replacementValue );
+		    }
+		    
+		    //
+		    // Now, do token replacement
+		    //
 			if ( tokenMap != null && !tokenMap.isEmpty() )
 			{
 				String newKey = elementKey;
@@ -582,7 +636,6 @@ public abstract class AbstractElement implements Element
 		{
 			returnValue = _getAttribute( attributeName );
 			success = true;
-			PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), pageName, elementName, "attribute", System.currentTimeMillis(), System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, getKey(), null, 0, "", false, new String[] { attributeName, returnValue } );
 		}
 		catch( Exception e )
 		{
@@ -612,7 +665,6 @@ public abstract class AbstractElement implements Element
 		{
 			returnValue = _getImage( resolution );
 			success = true;
-			PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), pageName, elementName, "image", System.currentTimeMillis(), System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, getKey(), null, 0, "", false, new String[] { resolution.name() } );
 		}
 		catch( Exception e )
 		{
@@ -647,7 +699,6 @@ public abstract class AbstractElement implements Element
         {
             _setValue( currentValue, setMethod );
             success = true;
-            PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), pageName, elementName, "setValue", System.currentTimeMillis(), System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, getKey(), null, 0, "", false, new String[] { currentValue } );
         }
         catch( Exception e )
         {
@@ -696,7 +747,6 @@ public abstract class AbstractElement implements Element
 			}
 								
 			success = true;
-			PageManager.instance().addExecutionLog( getExecutionId(), getDeviceName(), pageName, elementName, "click", System.currentTimeMillis(), System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, getKey(), null, 0, "", false,clickArray );
 		}	
 		catch( Exception e )
 		{

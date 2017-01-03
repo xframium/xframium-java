@@ -4,7 +4,6 @@ public abstract class XFramiumException extends RuntimeException
 {
     public enum ExceptionType
     {
-        APPLICATION,
         CONFIGURATION,
         SCRIPT,
         CLOUD,

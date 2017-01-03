@@ -37,6 +37,7 @@ import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.page.keyWord.step.spi.KWSMath.MATH_TYPE;
+import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.driver.NativeDriverProvider;
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +117,7 @@ public class KWSBrowser extends AbstractKeyWordStep
      * java.util.Map)
      */
     @Override
-    public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception
+    public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception
     {
         if ( log.isDebugEnabled() )
             log.debug( "Execution Function " + getName() );

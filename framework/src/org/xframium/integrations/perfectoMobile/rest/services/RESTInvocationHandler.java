@@ -21,13 +21,13 @@
 package org.xframium.integrations.perfectoMobile.rest.services;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +35,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.exception.DeviceException;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.NameOverride;
 import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.Operation;
@@ -183,33 +184,47 @@ public class RESTInvocationHandler implements InvocationHandler
 		if ( log.isInfoEnabled() )
 			log.info( "Submitting REST call as " + urlBuilder.toString() );
 		
-		if ( method.getReturnType().isAssignableFrom( byte[].class ) )
-		{
-			//
-			// Byte Array is a special case that is not wrapped in XML
-			//
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			byte[] buffer = new byte[ 512 ];
-			int bytesRead= 0;
-			InputStream inputStream = currentUrl.openStream();
-			
-			while ( ( bytesRead = inputStream.read( buffer ) ) > 0 )
-			{
-				outputStream.write( buffer, 0, bytesRead );
-			}
-			
-			return outputStream.toByteArray();
-		}
-		
+		InputStream inputStream = null;
 		try
-		{
-			Bean newBean = BeanManager.instance().createBean( method.getReturnType(), currentUrl.openStream() );
+        {
+    		if ( method.getReturnType().isAssignableFrom( byte[].class ) )
+    		{
+    			//
+    			// Byte Array is a special case that is not wrapped in XML
+    			//
+    			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    			byte[] buffer = new byte[ 512 ];
+    			int bytesRead= 0;
+    			
+    			URLConnection currentConnection = currentUrl.openConnection();
+    			currentConnection.setReadTimeout( 300000 );
+    			currentConnection.setConnectTimeout( 30000 );
+    			
+    			inputStream = currentConnection.getInputStream();
+    			
+    			while ( ( bytesRead = inputStream.read( buffer ) ) > 0 )
+    			{
+    				outputStream.write( buffer, 0, bytesRead );
+    			}
+    			
+    			return outputStream.toByteArray();
+    		}
+		
+		
+		    URLConnection currentConnection = currentUrl.openConnection();
+            currentConnection.setReadTimeout( 300000 );
+            currentConnection.setConnectTimeout( 30000 );
+            inputStream = currentConnection.getInputStream();
+			Bean newBean = BeanManager.instance().createBean( method.getReturnType(), inputStream );
 			return newBean;
 		}
-		catch( IOException e )
+		catch( Exception e )
 		{
-			log.error( "Could not connect to the cloud instance - Verify your user name, password and Cloud URL", e );
-			return null;
+			throw new DeviceException( "Could not execute device action due to [" + e.getMessage() + "]" );
+		}
+		finally
+		{
+		    try { inputStream.close(); } catch( Exception e ){}
 		}
 		
 		

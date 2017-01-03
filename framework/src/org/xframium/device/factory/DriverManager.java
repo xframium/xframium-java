@@ -63,6 +63,7 @@ public class DriverManager
 	private Map<String,DriverFactory> driverMap = new HashMap<String,DriverFactory>( 20 );
 	
 	
+	
 	/**
 	 * Gets the driver factory.
 	 *

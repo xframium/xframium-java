@@ -61,6 +61,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	private List<PageDataContainer> pC = new ArrayList<PageDataContainer>( 10 );
 	private Map<String,PageDataContainer> allRecordMap = new HashMap<String,PageDataContainer>( 10 );
 
+	private Map<String,String> overrideMap = new HashMap<String,String>( 20 ); 
 	
 	/**
 	 * Populate trees.
@@ -74,6 +75,34 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	    }
 	}
 	
+	public void addOverride( String originalName, String newName )
+	{
+	    overrideMap.put( newName, originalName );
+	}
+	
+	public void addOverride( String nvPair )
+    {
+	    String[] pair = nvPair.split( "=" );
+        overrideMap.put( pair[ 0 ], pair[ 1 ] );
+    }
+	
+	public void addOverrides( String pairList )
+    {
+	    String [] overrideList = pairList.split( "," );
+	    for ( String nvPair : overrideList )
+	        addOverride( nvPair );
+    }
+	
+	private String getRecordType( String recordType )
+	{
+	    String useType = overrideMap.get( recordType );
+	    
+	    if ( useType == null || useType.trim().isEmpty() )
+	        useType = recordType;
+	    
+	    return useType;
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.data.provider.PageDataProvider#getRecord(java.lang.String)
 	 */
@@ -82,7 +111,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	{
 		try
 		{
-			Deque<PageData> dataList = recordMap.get( recordType ).getRecordList();
+			Deque<PageData> dataList = recordMap.get( getRecordType( recordType ) ).getRecordList();
 			
 			if ( dataList instanceof LinkedBlockingDeque )
 				return ( (LinkedBlockingDeque<PageData>) dataList ).pollFirst( waitTimeOut, TimeUnit.SECONDS );
@@ -95,7 +124,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 		}
 		catch( Exception e )
 		{
-			log.error( "Error acquiring page data [" + recordType + "] - " + e.getMessage() );
+			log.error( "Error acquiring page data [" + getRecordType( recordType ) + "] - " + e.getMessage() );
 			return null;
 		}
 	}
@@ -105,7 +134,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	 */
 	public PageData getRecord( String recordType, String recordId )
 	{
-	    return (PageData) _getRecord( recordType, recordId );
+	    return (PageData) _getRecord( getRecordType( recordType ), recordId );
 	}
 	
 	private Object _getRecord( String recordType, String recordId )
@@ -114,7 +143,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
         {
             String[] fieldArray = recordId.split( "\\." );
             
-            List<PageData> dataList = (List<PageData>) recordMap.get( recordType );
+            List<PageData> dataList = (List<PageData>) recordMap.get( getRecordType( recordType ) );
             
             for ( PageData p : dataList )
             {
@@ -134,7 +163,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
         }
         else
         {
-            return idMap.get( recordType + "." + recordId );
+            return idMap.get( getRecordType( recordType ) + "." + recordId );
         }
 	}
 	
@@ -149,9 +178,11 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	        
 	        Deque<PageData> dataList = recordMap.get( fieldArray[ 0 ] ).getRecordList();
             
+	        String useType = getRecordType( fieldArray[ 0 ] );
+	        
             for ( PageData p : dataList )
             {
-                if ( p.getName().equals( fieldArray[ 0 ] ) )
+                if ( p.getName().equals( useType ) )
                 {
                     String newName = recordType.substring( recordType.indexOf( "." ) + 1 );
                     

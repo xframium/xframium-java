@@ -10,7 +10,7 @@
 
 
   <function name="kw-else" active="true">
-    
+    <step type="STATE" name="dumpState" page="home" />
     <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
     <step type="COMPARE" name="existsCompare" page="home" failureMode="IGNORE">
       <parameter type="STATIC" value="0" />

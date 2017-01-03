@@ -6,4 +6,6 @@ import org.apache.commons.logging.LogFactory;
 public abstract class AbstractCloudActionProvider implements CloudActionProvider
 {
     protected Log log = LogFactory.getLog( CloudActionProvider.class );
+    
+    
 }

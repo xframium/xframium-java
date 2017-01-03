@@ -2,66 +2,77 @@
 <?xml-stylesheet type="text/xsl" href="http://xframium.org/xsl/xs3p.xsl"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.xframium.org/testRegistry" xmlns:tns="http://www.xframium.org/testRegistry" elementFormDefault="qualified">
   <annotation>
-    <documentation xml:lang="en">
-      xFramium Test Registry Definition
+    <documentation xml:lang="en"> xFramium Test Registry Definition
     </documentation>
   </annotation>
-
   <element name="suite" type="tns:RegistryRoot" />
-
   <complexType name="RegistryRoot">
     <sequence>
       <element name="import" type="tns:Import" minOccurs="0" maxOccurs="unbounded" />
       <element name="model" type="tns:Model" minOccurs="0" maxOccurs="1" />
       <element name="test" type="tns:Test" minOccurs="0" maxOccurs="unbounded" />
-      <element name="function" type="tns:Test" minOccurs="0" maxOccurs="unbounded" />
+      <element name="function" type="tns:xFunction" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
   </complexType>
-
   <complexType name="Import">
     <attribute name="fileName" type="string" use="required" />
     <attribute name="includeTests" type="boolean" use="optional" default="true" />
     <attribute name="includeFunctions" type="boolean" use="optional" default="true" />
   </complexType>
-
   <complexType name="Model">
     <sequence>
       <element name="page" type="tns:Page" minOccurs="1" maxOccurs="unbounded" />
     </sequence>
   </complexType>
-
   <complexType name="Page">
     <attribute name="site" type="string" use="optional" />
     <attribute name="name" type="string" use="required" />
     <attribute name="class" type="string" use="optional" />
   </complexType>
-
   <complexType name="Test">
-
     <sequence>
       <element name="description" type="tns:Description" minOccurs="0" maxOccurs="1" />
       <element name="step" type="tns:Step" minOccurs="1" maxOccurs="unbounded" />
     </sequence>
-
     <attribute name="name" type="string" use="required" />
     <attribute name="dataDriver" type="string" use="optional" />
     <attribute name="dataProvider" type="string" use="optional" />
     <attribute name="tagNames" type="string" use="optional" />
     <attribute name="linkId" type="string" use="optional" />
     <attribute name="timed" type="boolean" use="optional" default="false" />
-    <attribute name="threshold" type="integer" use="optional" default="0" />
+    <attribute name="threshold" type="int" use="optional" default="0" />
     <attribute name="active" type="boolean" use="optional" default="true" />
     <attribute name="os" type="string" use="optional" />
     <attribute name="contentKeys" type="string" use="optional" />
     <attribute name="deviceTags" type="string" use="optional" />
+    <attribute name="count" type="int" use="optional" default="0" />
   </complexType>
-
+  <complexType name="xFunction">
+    <sequence>
+      <element name="description" type="tns:Description" minOccurs="0" maxOccurs="1" />
+      <element name="parameter" type="tns:Parameter" minOccurs="0" maxOccurs="unbounded" />
+      <element name="step" type="tns:Step" minOccurs="1" maxOccurs="unbounded" />
+    </sequence>
+    <attribute name="name" type="string" use="required" />
+    <attribute name="dataProvider" type="string" use="optional" />
+    <attribute name="linkId" type="string" use="optional" />
+    <attribute name="active" type="boolean" use="optional" default="true" />
+    <attribute name="mode" use="optional" default="function">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="function" />
+          <enumeration value="module" />
+        </restriction>
+      </simpleType>
+    </attribute>
+    <attribute name="page" type="string" use="optional" />
+    <attribute name="output" type="string" use="optional" />
+  </complexType>
   <complexType name="Description">
     <simpleContent>
       <extension base="string" />
     </simpleContent>
   </complexType>
-
   <complexType name="Step">
     <sequence>
       <element name="parameter" type="tns:Parameter" minOccurs="0" maxOccurs="unbounded" />
@@ -121,6 +132,7 @@
           <enumeration value="ENABLED" />
           <enumeration value="COMMAND" />
           <enumeration value="EMAIL" />
+          <enumeration value="APPLICATION" />
         </restriction>
       </simpleType>
     </attribute>
@@ -144,7 +156,6 @@
         </restriction>
       </simpleType>
     </attribute>
-
     <attribute name="validation" type="string" use="optional" />
     <attribute name="validationType" use="optional">
       <simpleType>
@@ -159,8 +170,8 @@
     <attribute name="device" type="string" use="optional" />
     <attribute name="tagNames" type="string" use="optional" />
     <attribute name="deviceTags" type="string" use="optional" />
+    <attribute name="version" type="string" use="optional" />
   </complexType>
-
   <complexType name="Token">
     <attribute name="type" use="optional">
       <simpleType>
@@ -176,7 +187,6 @@
     <attribute name="value" type="string" use="required" />
     <attribute name="name" type="string" use="required" />
   </complexType>
-
   <complexType name="Parameter">
     <sequence>
       <element name="token" type="tns:Token" minOccurs="0" maxOccurs="unbounded" />
@@ -197,7 +207,4 @@
     <attribute name="name" type="string" use="optional" />
     <attribute name="usage" type="string" use="optional" />
   </complexType>
-
-
-
 </schema>

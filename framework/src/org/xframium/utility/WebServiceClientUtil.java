@@ -81,7 +81,7 @@ public class WebServiceClientUtil
         try
         {
             Responce result = makeCall( callDetails );
-
+            rtn.put( "_PAYLOAD", result.getPayload() );
             processResult( result, responceDetails, rtn );
         }
         catch ( Throwable e )

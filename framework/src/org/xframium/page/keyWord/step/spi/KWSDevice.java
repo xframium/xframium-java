@@ -32,6 +32,7 @@ import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+import org.xframium.reporting.ExecutionContextTest;
 
 
 
@@ -58,7 +59,7 @@ public class KWSDevice extends AbstractKeyWordStep
 	 * java.util.Map)
 	 */
 	@Override
-	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
+	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
 		long startTime = System.currentTimeMillis();
 		if ( log.isDebugEnabled() )

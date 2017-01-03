@@ -39,6 +39,10 @@ public class ElementDescriptor
 	/** The element name. */
 	private String elementName;
 	
+	private String os;
+	
+	
+	
 	
 	/**
 	 * Instantiates a new element descriptor.

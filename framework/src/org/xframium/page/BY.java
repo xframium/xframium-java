@@ -61,7 +61,9 @@ public enum BY
 	HTML( 9, "HTML", "Uses the UFT WebElement format to locate elements in a tree" ),
 	
 	/** The html. */
-    PROP( 10, "PROP", "A simple proeprty based locator working only on attributes of a tag" );
+    PROP( 10, "PROP", "A simple proeprty based locator working only on attributes of a tag" ),
+    
+    COMPLEX( 11, "COMPLEX", "A combination of multiple lookup types with additional attributes for fine grained control");
 	
 	/** The id. */
 	private int id;
@@ -114,6 +116,7 @@ public enum BY
 	    byList.add( V_IMAGE );
 	    byList.add( HTML );
 	    byList.add( PROP );
+	    byList.add( COMPLEX );
 	    return byList;
 	}
 	

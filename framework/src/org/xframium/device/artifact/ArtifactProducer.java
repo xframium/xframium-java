@@ -27,6 +27,7 @@ import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.ConnectedDevice;
+import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -45,7 +46,7 @@ public interface ArtifactProducer
 	 * @param connectedDevice the connected device
 	 * @return the artifact
 	 */
-	public Artifact getArtifact( WebDriver webDriver, ArtifactType aType, ConnectedDevice connectedDevice, String testName, boolean success );
+	public Artifact getArtifact( WebDriver webDriver, ArtifactType aType, ConnectedDevice connectedDevice, String testName, boolean success, ExecutionContextTest test );
 	
 	/**
 	 * Gets the artifact.
@@ -56,5 +57,5 @@ public interface ArtifactProducer
 	 * @param connectedDevice the connected device
 	 * @return the artifact
 	 */
-	public Artifact getArtifact( WebDriver webDriver, ArtifactType aType, Map<String,String> parameterMap, ConnectedDevice connectedDevice, String testName, boolean success );
+	public Artifact getArtifact( WebDriver webDriver, ArtifactType aType, Map<String,String> parameterMap, ConnectedDevice connectedDevice, String testName, boolean success, ExecutionContextTest test );
 }

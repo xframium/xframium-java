@@ -1,5 +1,6 @@
 package org.xframium.page.keyWord.matrixExtension;
 
+import java.util.Map;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordTest;
 
@@ -21,6 +22,7 @@ public class MatrixTest
     private String type;
     private String contentKeys;
     private String deviceTags;
+    private int count;
 
     public MatrixTest( String testDefinition )
     {
@@ -90,18 +92,18 @@ public class MatrixTest
             stepArray = new MatrixStepArray( stepDefinition );
     }
     
-    public KeyWordTest createTest()
+    public KeyWordTest createTest( Map<String,String> configProperties )
     {
-        KeyWordTest kTest = new KeyWordTest( name, active, dataProvider, dataDriver, timed, linkId, os, threshold, description, tagNames, contentKeys, deviceTags );
+        KeyWordTest kTest = new KeyWordTest( name, active, dataProvider, dataDriver, timed, linkId, os, threshold, description, tagNames, contentKeys, deviceTags, configProperties, count, null, null, null );
         
         int currentPosition = 0;
         
         while( currentPosition < stepArray.getStepList().size() )
         {
             MatrixStep currentStep = stepArray.getStepList().get( currentPosition++ );
-            KeyWordStep kStep = currentStep.createStep();
+            KeyWordStep kStep = currentStep.createStep( configProperties );
             if ( currentStep.getLevel() != null && !currentStep.getLevel().isEmpty() )
-                addSteps( kStep, currentPosition );
+                addSteps( kStep, currentPosition, configProperties );
             
             kTest.addStep( kStep );
         }
@@ -109,18 +111,18 @@ public class MatrixTest
         return kTest;
     }
     
-    private String addSteps( KeyWordStep parentStep, int currentPosition )
+    private String addSteps( KeyWordStep parentStep, int currentPosition, Map<String,String> configProperties  )
     {
         while( currentPosition < stepArray.getStepList().size() )
         {
             MatrixStep currentStep = stepArray.getStepList().get( currentPosition++ );
-            KeyWordStep kStep = currentStep.createStep();
+            KeyWordStep kStep = currentStep.createStep(configProperties);
             parentStep.addStep( kStep );
             if ( currentStep.getLevel() != null )
             {
                 if ( currentStep.getLevel().equals( ">>" ) )
                 {
-                    String returnValue = addSteps( kStep, currentPosition );
+                    String returnValue = addSteps( kStep, currentPosition, configProperties );
                     if ( returnValue != null && returnValue.startsWith( "<<" ) )
                         return currentStep.getLevel().substring( 2 );
                 }
@@ -219,6 +221,9 @@ public class MatrixTest
                     
                 case 13:
                     deviceTags = parseString( testArray[i], null );
+                    break;
+                case 14:
+                    count = parseInt( testArray[i], 0 );
                     break;
 
             }

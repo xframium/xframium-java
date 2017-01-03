@@ -88,6 +88,8 @@ public class ApplicationDescriptor
 
 	private AppType appType;
 	
+	private double version;
+	
 	/**
 	 * Gets the capabilities.
 	 *
@@ -106,7 +108,18 @@ public class ApplicationDescriptor
 		this.capabilities = capabilities;
 	}
 
-	/**
+
+	public double getVersion()
+    {
+        return version;
+    }
+
+    public void setVersion( double version )
+    {
+        this.version = version;
+    }
+
+    /**
 	 * Gets the ios installation.
 	 *
 	 * @return the ios installation
@@ -116,6 +129,7 @@ public class ApplicationDescriptor
 		return iosInstallation;
 	}
 
+	
 	/**
 	 * Sets the ios installation.
 	 *
@@ -192,7 +206,7 @@ public class ApplicationDescriptor
 	 * @param androidInstallation the android installation
 	 * @param capabilities the capabilities
 	 */
-	public ApplicationDescriptor( String name, String description, String androidIdentifier, String appleIdentifier, String url, String iosInstallation, String androidInstallation, Map<String,Object> capabilities )
+	public ApplicationDescriptor( String name, String description, String androidIdentifier, String appleIdentifier, String url, String iosInstallation, String androidInstallation, Map<String,Object> capabilities, double appVersion )
 	{
 		super();
 		this.name = name;
@@ -203,6 +217,8 @@ public class ApplicationDescriptor
 		this.iosInstallation = iosInstallation;
 		this.androidInstallation = androidInstallation;
 		this.capabilities = capabilities;
+		this.version = appVersion;
+		
 		_setAppType();
 	}
 	

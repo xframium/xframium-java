@@ -28,6 +28,7 @@ import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+import org.xframium.reporting.ExecutionContextTest;
 
 
 
@@ -54,7 +55,7 @@ public class KWSReport extends AbstractKeyWordStep
 	 * java.util.Map)
 	 */
 	@Override
-	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
+	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
 	    long startTime = System.currentTimeMillis();
 		if ( log.isDebugEnabled() )
@@ -67,8 +68,8 @@ public class KWSReport extends AbstractKeyWordStep
 		for ( int i=0; i<getParameterList().size(); i++ )
 		    reportData.append( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) ).append( "\t" );
 		
-		PageManager.instance().addExecutionLog( getExecutionId( webDriver ), getDeviceName( webDriver ), "", "", reportData.toString(), startTime, System.currentTimeMillis() - startTime, StepStatus.REPORT, "", null, getThreshold(), getDescription(), false, null );
-		
+		executionContext.getStep().addExecutionParameter( "REPORT_ENTRY", reportData.toString() );
+
 		return true;
 	}
 	

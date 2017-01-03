@@ -1,19 +1,30 @@
 package org.xframium.page.keyWord.gherkinExtension;
 
-import gherkin.formatter.Formatter;
-import gherkin.formatter.model.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.xframium.page.PageManager;
 import org.xframium.page.data.DefaultPageData;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.provider.AbstractPageDataProvider;
 import org.xframium.page.data.provider.PageDataProvider;
-import org.xframium.page.keyWord.*;
+import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordPage;
+import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
+import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
+import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
-
-import java.util.ArrayList;
-import java.util.List;
+import gherkin.formatter.Formatter;
+import gherkin.formatter.model.Background;
+import gherkin.formatter.model.Examples;
+import gherkin.formatter.model.ExamplesTableRow;
+import gherkin.formatter.model.Feature;
+import gherkin.formatter.model.Scenario;
+import gherkin.formatter.model.ScenarioOutline;
+import gherkin.formatter.model.Step;
+import gherkin.formatter.model.Tag;
 
 public class XMLFormatter extends AbstractPageDataProvider implements Formatter
 {
@@ -22,6 +33,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
     private KeyWordTest currentScenario;
     private PageDataProvider pageDataProvider;
     private Section currentSection = Section.FEATURE;
+    private Map<String,String> configProperties;
     
     private enum Section
     {
@@ -31,9 +43,10 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
         OUTLINE,
     }
     
-    public XMLFormatter( PageDataProvider pageDataProvider )
+    public XMLFormatter( PageDataProvider pageDataProvider, Map<String,String> configProperties )
     {
         this.pageDataProvider = pageDataProvider;
+        this.configProperties = configProperties;
     }
     
     @Override
@@ -95,14 +108,14 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
             }
             else
             {
-                DefaultPageData pageData = new DefaultPageData( currentScenario.getName(), namePosition == -1 ? "" : e.getCells().get( namePosition ), true );
-                for ( int i=0; i<e.getCells().size(); i++ )
-                {
-                    pageData.addValue( columnNames[ i ], e.getCells().get( i ) );
-                }
-                addRecord( pageData );
-                
-                scenarioList.add( currentScenario.copyTest( currentScenario.getName() + "!" + pageData.getName() ) );
+//                DefaultPageData pageData = new DefaultPageData( currentScenario.getName(), namePosition == -1 ? "" : e.getCells().get( namePosition ), true );
+//                for ( int i=0; i<e.getCells().size(); i++ )
+//                {
+//                    pageData.addValue( columnNames[ i ], e.getCells().get( i ) );
+//                }
+//                addRecord( pageData );
+//                
+//                scenarioList.add( currentScenario.copyTest( currentScenario.getName() + "!" + pageData.getName() ) );
             }
         }
     }
@@ -127,7 +140,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
             tagNames = tagNames.substring( 0, tagNames.length() - 1 );
         }
         
-        this.currentScenario = new KeyWordTest( xTest.getName(), true, null, null, false, null, null, 0, xTest.getDescription(), tagNames, null, null );
+        this.currentScenario = new KeyWordTest( xTest.getName(), true, null, null, false, null, null, 0, xTest.getDescription(), tagNames, null, null, configProperties, 0, null, null, null );
 
         for ( KeyWordStep xStep : backgroundSteps )
             this.currentScenario.addStep( xStep );
@@ -149,7 +162,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
             tagNames = tagNames.substring( 0, tagNames.length() - 1 );
         }
         
-        this.currentScenario = new KeyWordTest( xTest.getName(), true, null, xTest.getName(), false, null, null, 0, xTest.getDescription(), tagNames, null, null );
+        this.currentScenario = new KeyWordTest( xTest.getName(), true, null, xTest.getName(), false, null, null, 0, xTest.getDescription(), tagNames, null, null, configProperties, 0, null, null, null );
 
         for ( KeyWordStep xStep : backgroundSteps )
             this.currentScenario.addStep( xStep );
@@ -168,7 +181,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
     public void step( Step xStep )
     {
         
-        KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), "bdd", true, "CALL", "", false, StepFailure.ERROR, false, null, null, null, 0, "", 0, "", null, null, null, null, false, false, null, null );
+        KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), "bdd", true, "CALL", "", false, StepFailure.ERROR, false, null, null, null, 0, "", 0, "", null, null, null, null, false, false, null, null, configProperties, null );
          
         switch( currentSection )
         {

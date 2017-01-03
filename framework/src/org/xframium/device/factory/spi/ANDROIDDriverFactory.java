@@ -117,14 +117,17 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
             {
 			    if ( ( (AndroidDriver) webDriver.getNativeDriver() ).isAppInstalled( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() ) )
                 {
-                    log.warn( "Attempting to start " + ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
-                    CloudActionProvider actionProvider = (CloudActionProvider) Class.forName( CloudActionProvider.class.getPackage().getName() + "." + useCloud.getProvider() + "CloudActionProvider" ).newInstance();
-                    actionProvider.startApp( caps.getCapability( "executionId" ) + "", caps.getCapability( "deviceName" ) + "", ApplicationRegistry.instance().getAUT().getName(), ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
+                    if ( !useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver ) )
+                        throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
                 }
                 else
                 {
-                    throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
+                    useCloud.getCloudActionProvider().installApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver, false );
+                    if ( !useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver ) )
+                        throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
                 }
+			    
+			    webDriver.setAut( ApplicationRegistry.instance().getAUT() );
 			    
 			    String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
 	            webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );

@@ -31,6 +31,7 @@ import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+import org.xframium.reporting.ExecutionContextTest;
 
 public class KWSAt extends AbstractKeyWordStep
 {
@@ -50,7 +51,7 @@ public class KWSAt extends AbstractKeyWordStep
      * java.util.Map)
      */
     @Override
-    public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC )
+    public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
     {
         if ( pageObject == null )
             throw new ScriptConfigurationException( "There was no Page Object defined" );

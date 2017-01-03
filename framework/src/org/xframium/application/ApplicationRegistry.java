@@ -51,7 +51,7 @@ public class ApplicationRegistry
 	 */
 	private ApplicationRegistry()
 	{
-
+	    applicationMap.put( "NOOP", new ApplicationDescriptor( "NOOP", "This is the default application type that just opens the phone", "", "", "", "", "", new HashMap<String,Object>( 0 ), 0 ) );
 	}
 	
 	/** The log. */
@@ -84,7 +84,7 @@ public class ApplicationRegistry
 	public void setApplicationProvider( ApplicationProvider applicationProvider )
 	{
 		this.applicationProvider = applicationProvider;
-		applicationMap.put( "NOOP", new ApplicationDescriptor( "NOOP", "This is the default application type that just opens the phone", "", "", "", "", "", new HashMap<String,Object>( 0 ) ) );
+		
 		for ( ApplicationDescriptor a : applicationProvider.readData() )
 		    addApplicationDescriptor( a );
 	}
@@ -129,8 +129,6 @@ public class ApplicationRegistry
 	 */
 	public ApplicationDescriptor getAUT()
 	{
-		if ( aut == null && !applicationMap.isEmpty() )
-			aut = applicationMap.values().toArray( new ApplicationDescriptor[ 0 ])[ 0 ];
 		return aut;
 	}
 	

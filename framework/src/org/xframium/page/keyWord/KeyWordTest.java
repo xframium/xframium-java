@@ -21,9 +21,9 @@
 package org.xframium.page.keyWord;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
@@ -34,6 +34,8 @@ import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
+import org.xframium.page.keyWord.step.SyntheticStep;
+import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -79,6 +81,16 @@ public class KeyWordTest
     private String[] contentKeys;
     
     private String[] deviceTags;
+    
+    private String inputPage;
+    private String[] outputPages;
+    private String mode = "function";
+    
+    private List<KeyWordParameter> expectedParameters = new ArrayList<KeyWordParameter>( 5 );
+    
+    
+    
+    private int count;
 
     /** The step list. */
     private List<KeyWordStep> stepList = new ArrayList<KeyWordStep>( 10 );
@@ -109,50 +121,141 @@ public class KeyWordTest
      * @param contentKeys
      *            the content keys
      */
-    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys, String deviceTags )
+    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys, String deviceTags, Map<String,String> overrideMap, int count, String inputPage, String outputPages, String mode )
     {
         this.name = name;
-        this.active = active;
-        if ( dataProviders != null )
-            this.dataProviders = dataProviders.split( "," );
-        this.dataDriver = dataDriver;
-        this.timed = timed;
-        this.linkId = linkId;
-        this.os = os;
-        this.threshold = threshold;
-        this.description = description;
+        this.active = Boolean.parseBoolean( getValue( name, "active", active + "", overrideMap ) );
         
-        if ( testTags != null )
-            this.testTags = testTags.split( "," );
+        String dP = getValue( name, "dataProvider", dataProviders, overrideMap );
+        
+        if ( dP != null )
+            this.dataProviders = dP.split( "," );
+        this.dataDriver = getValue( name, "dataDriver", dataDriver, overrideMap );
+        this.timed = Boolean.parseBoolean( getValue( name, "timed", timed + "", overrideMap ) );
+        this.linkId = getValue( name, "linkId", linkId, overrideMap );
+        this.os = getValue( name, "os", os, overrideMap );
+        
+        if ( threshold > 0 )
+        {
+            String thresholdModifier = overrideMap.get( "thresholdModifier" );
+            if ( thresholdModifier != null )
+            {
+                double modifierPercent = ( Integer.parseInt( thresholdModifier ) / 100.0 );
+                double modifierValue = Math.abs( modifierPercent ) * (double) threshold;
+                
+                if ( modifierPercent > 0 )
+                    this.threshold = threshold + (int)modifierValue;
+                else
+                    this.threshold = threshold - (int)modifierValue;
+            }
+        }
+        else
+            this.threshold = threshold;
+        
+        this.description = getValue( name, "description", description, overrideMap );
+        
+        String value = getValue( name, "testTags", testTags, overrideMap );
+        
+        if ( value != null )
+            this.testTags = value.split( "," );
         else
             this.testTags = new String[] { "" };
 
-        if ( contentKeys != null )
-            this.contentKeys = contentKeys.split( "\\|" );
+        value = getValue( name, "contentKeys", contentKeys, overrideMap );
+        if ( value != null )
+            this.contentKeys = value.split( "\\|" );
         else
             this.contentKeys = new String[] { "" };
         
-        if ( deviceTags != null && !deviceTags.trim().isEmpty() )
-            this.deviceTags = deviceTags.split( "," );
+        value = getValue( name, "deviceTags", deviceTags, overrideMap );
+        if ( value != null && !value.trim().isEmpty() )
+            this.deviceTags = value.split( "," );
+        
+        this.count = Integer.parseInt( getValue( name, "count", count + "", overrideMap ) );
+        
+        setMode( mode );
+        setInputPage( inputPage );
+        setOutputPages( outputPages );
+    }
+    
+    public List<KeyWordParameter> getExpectedParameters()
+    {
+        return expectedParameters;
     }
 
-    /**
-     * Copy test.
-     *
-     * @param testName
-     *            the test name
-     * @return the key word test
-     */
-    public KeyWordTest copyTest( String testName )
+    public void setExpectedParameters( List<KeyWordParameter> expectedParameters )
     {
-        KeyWordTest newTest = new KeyWordTest( testName, active, null, dataDriver, timed, linkId, os, threshold, description, null, null, null );
-        newTest.dataProviders = dataProviders;
-        newTest.stepList = stepList;
-        newTest.testTags = testTags;
-        newTest.contentKeys = contentKeys;
-        newTest.deviceTags = deviceTags;
-        return newTest;
+        this.expectedParameters = expectedParameters;
     }
+
+    public String getInputPage()
+    {
+        return inputPage;
+    }
+
+    public void setInputPage( String inputPage )
+    {
+        this.inputPage = inputPage;
+    }
+
+
+
+    public String[] getOutputPages()
+    {
+        return outputPages;
+    }
+
+
+    public void setOutputPages( String outputPages )
+    {
+        if ( outputPages != null )
+            this.outputPages = outputPages.split( "," );
+    }
+
+    public void setOutputPages( String[] outputPages )
+    {
+        this.outputPages = outputPages;
+    }
+
+
+
+    public String getMode()
+    {
+        return mode;
+    }
+
+
+
+    public void setMode( String mode )
+    {
+        this.mode = mode;
+    }
+
+
+
+    private String getValue( String testName, String attributeName, String attributeValue, Map<String,String> overrideMap )
+    {
+        String keyName = testName + "." + attributeName;
+        if ( System.getProperty( keyName ) != null )
+            return System.getProperty( keyName );
+        if ( overrideMap.containsKey( keyName ) )
+            return overrideMap.get( keyName );
+        else
+            return attributeValue;
+    }
+
+    
+    
+    public int getCount()
+    {
+        return count;
+    }
+
+    public void setCount( int count )
+    {
+        this.count = count;
+    }
+
 
     public String[] getDeviceTags()
     {
@@ -241,6 +344,13 @@ public class KeyWordTest
         return sBuilder.toString();
     }
 
+    @Override
+    public String toString()
+    {
+        return "KeyWordTest [name=" + name + ", active=" + active + ", dataProviders=" + Arrays.toString( dataProviders ) + ", dataDriver=" + dataDriver + ", timed=" + timed + ", linkId=" + linkId + ", os=" + os + ", description=" + description
+                + ", threshold=" + threshold + ", testTags=" + Arrays.toString( testTags ) + ", contentKeys=" + Arrays.toString( contentKeys ) + ", deviceTags=" + Arrays.toString( deviceTags ) + "]";
+    }
+
     /**
      * Gets the name.
      *
@@ -297,7 +407,7 @@ public class KeyWordTest
      * @throws Exception
      *             the exception
      */
-    public boolean executeTest( WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception
+    public boolean executeTest( WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception
     {
         boolean stepSuccess = true;
         
@@ -338,9 +448,10 @@ public class KeyWordTest
                     page = PageManager.instance().createPage( KeyWordDriver.instance().getPage(step.getSiteName() != null && step.getSiteName().trim().length() > 0 ? step.getSiteName() : PageManager.instance().getSiteName(), step.getPageName() ), webDriver );
                     if ( page == null )
                     {
-                        PageManager.instance().setThrowable( new ObjectConfigurationException( step.getSiteName() == null ? PageManager.instance().getSiteName() : step.getSiteName(), step.getPageName(), null ) );
-                        PageManager.instance().addExecutionLog( executionId, deviceName, step.getPageName(), step.getName(), "_" + step.getClass().getSimpleName(), startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE,
-                                PageManager.instance().getThrowable().getMessage(), PageManager.instance().getThrowable(), 0, "", false, new String[] { PageManager.instance().getThrowable().getMessage() } );
+                        
+                        executionContext.startStep( new SyntheticStep( step.getPageName(), "PAGE" ), contextMap, dataMap );
+                        executionContext.completeStep( StepStatus.FAILURE, new ObjectConfigurationException( step.getSiteName() == null ? PageManager.instance().getSiteName() : step.getSiteName(), step.getPageName(), null ) );
+                        
                         stepSuccess = false;
                         return false;
                     }
@@ -348,20 +459,15 @@ public class KeyWordTest
                 }
             }
 
-            stepSuccess = step.executeStep( page, webDriver, contextMap, dataMap, pageMap, sC );
+            stepSuccess = step.executeStep( page, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
 
             if ( !stepSuccess )
             {
                 if ( log.isWarnEnabled() )
                     log.warn( "***** Step [" + step.getName() + "] Failed" );
 
-                PageManager.instance().addExecutionLog( executionId, deviceName, "", this.getName(), "_Test", startTime, System.currentTimeMillis() - startTime, StepStatus.FAILURE, "", null, 0, "", false, new String[] { this.getName() } );
-
                 if ( timed )
                     PageManager.instance().addExecutionTiming( executionId, deviceName, getName(), System.currentTimeMillis() - startTime, StepStatus.FAILURE, description, threshold );
-
-                if ( PageManager.instance().getThrowable() == null )
-                    PageManager.instance().setThrowable( new ScriptException( step.toError() ) );
 
                 stepSuccess = false;
                 return false;
@@ -369,9 +475,6 @@ public class KeyWordTest
             }
 
         }
-
-        PageManager.instance().addExecutionLog( executionId, deviceName, "", this.getName(), "Test", startTime, System.currentTimeMillis() - startTime, StepStatus.SUCCESS, "", null, 0, "", false, new String[] { this.getName() } );
-
         if ( timed )
             PageManager.instance().addExecutionTiming( executionId, deviceName, getName(), System.currentTimeMillis() - startTime, StepStatus.SUCCESS, description, threshold );
 

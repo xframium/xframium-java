@@ -49,7 +49,7 @@ public class StepContainer
     
                 if ( tokenMap != null && !tokenMap.isEmpty() )
                 {
-                    fullElement = pageElement.getKey();
+                    fullElement = pageElement.getRawKey();
                     for ( String tokenName : tokenMap.keySet() )
                     {
                         if ( tokenMap.get( tokenName ) != null)

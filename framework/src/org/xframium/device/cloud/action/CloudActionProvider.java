@@ -2,6 +2,7 @@ package org.xframium.device.cloud.action;
 
 import org.xframium.device.artifact.ArtifactProducer;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.page.BY;
 import org.xframium.spi.Device;
 
 public interface CloudActionProvider
@@ -14,4 +15,11 @@ public interface CloudActionProvider
     public String getExecutionId( DeviceWebDriver webDriver );
     public String getCloudPlatformName(Device device);
     public String getCloudBrowserName(String currBrowserName);
+    
+    public boolean installApplication( String applicationName, DeviceWebDriver webDriver, boolean instrumentApp );
+    public boolean uninstallApplication( String applicationName, DeviceWebDriver webDriver );
+    public boolean openApplication( String applicationName, DeviceWebDriver webDriver );
+    public boolean closeApplication( String applicationName, DeviceWebDriver webDriver );
+    public boolean isDescriptorSupported( BY descriptorType );
+    
 }

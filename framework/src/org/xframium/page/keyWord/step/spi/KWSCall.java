@@ -28,6 +28,7 @@ import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -63,7 +64,7 @@ public class KWSCall extends AbstractKeyWordStep
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
 	 */
 	@Override
-	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC ) throws Exception
+	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception
 	{
 		if ( log.isDebugEnabled() )
 			log.debug( "Execution Function " + getName() );
@@ -84,9 +85,9 @@ public class KWSCall extends AbstractKeyWordStep
 		}
 		
 		if ( sC != null )
-			return sC.getTest( getName() ).executeTest(webDriver, contextMap, dataMap, pageMap, sC);
+			return sC.getTest( getName() ).executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext );
 		else
-			return KeyWordDriver.instance().executionFunction( getName(), webDriver, dataMap, pageMap, sC );
+			return KeyWordDriver.instance().executionFunction( getName(), webDriver, dataMap, pageMap, contextMap, sC, executionContext );
 	}
 	
 	public boolean isRecordable()

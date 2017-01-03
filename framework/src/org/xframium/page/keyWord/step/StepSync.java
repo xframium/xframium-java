@@ -33,6 +33,7 @@ import org.xframium.page.PageManager;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordStep;
+import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -62,6 +63,8 @@ public class StepSync
 	/** The steps successful. */
 	private boolean stepsSuccessful = false;
 	
+	private ExecutionContextTest executionContext;
+	
 	/** The step threads. */
 	private List<StepThread> stepThreads = new ArrayList<StepThread>( 10 );
 	
@@ -74,12 +77,13 @@ public class StepSync
 	 * @param pageMap the page map
 	 * @param stepArray the step array
 	 */
-	public StepSync( WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, KeyWordStep[] stepArray )
+	public StepSync( WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, KeyWordStep[] stepArray, ExecutionContextTest executionContext )
     {
         this.webDriver = webDriver;
         this.contextMap = contextMap;
         this.dataMap = dataMap;
         this.pageMap = pageMap;
+        this.executionContext = executionContext;
 
         for ( KeyWordStep step : stepArray )
         {
@@ -179,7 +183,7 @@ public class StepSync
 	                }
 	            }
 	            
-	            if ( !step.executeStep( page, webDriver, contextMap, dataMap, pageMap, null ) )
+	            if ( !step.executeStep( page, webDriver, contextMap, dataMap, pageMap, null, executionContext ) )
 	            {
 	                if ( log.isWarnEnabled() )
                         log.warn( "***** Step [" + step.getName() + "] Failed" );

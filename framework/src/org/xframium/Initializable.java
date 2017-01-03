@@ -20,7 +20,7 @@
  *******************************************************************************/
 package org.xframium;
 
-import java.util.Properties;
+import java.util.Map;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -28,12 +28,12 @@ import java.util.Properties;
  */
 public interface Initializable
 {
-	public static final String VERSION = "1.0.5";
+	public static final String VERSION = "1.0.7";
 	/**
 	 * Initialize.
 	 *
 	 * @param propertyPrefix the property prefix
 	 * @param propertyMap the property map
 	 */
-	public void initialize( String propertyPrefix, Properties propertyMap );
+	public void initialize( String propertyPrefix, Map<String,String> propertyMap );
 }

@@ -59,7 +59,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xframium.application.ApplicationRegistry;
+import org.xframium.application.ApplicationDescriptor;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
@@ -68,6 +68,7 @@ import org.xframium.device.artifact.ArtifactProducer;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.interrupt.DeviceInterrupt;
 import org.xframium.device.interrupt.DeviceInterruptThread;
+import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
 import org.xframium.spi.PropertyProvider;
 import org.xframium.spi.driver.CachingDriver;
@@ -83,7 +84,8 @@ import io.appium.java_client.AppiumDriver;
 /**
  * The Class DeviceWebDriver.
  */
-public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptExecutor, ContextAware, ExecuteMethod, ArtifactProducer, NativeDriverProvider, PropertyProvider, TakesScreenshot, DeviceProvider, HasInputDevices, CachingDriver, ReportiumProvider
+public class DeviceWebDriver
+        implements HasCapabilities, WebDriver, JavascriptExecutor, ContextAware, ExecuteMethod, ArtifactProducer, NativeDriverProvider, PropertyProvider, TakesScreenshot, DeviceProvider, HasInputDevices, CachingDriver, ReportiumProvider
 {
 
     private List<DeviceInterrupt> interruptList;
@@ -109,7 +111,19 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
     private Device currentDevice;
     private Device populatedDevice;
     private CloudDescriptor cloud;
-    
+
+    private ApplicationDescriptor aut;
+
+    public ApplicationDescriptor getAut()
+    {
+        return aut;
+    }
+
+    public void setAut( ApplicationDescriptor aut )
+    {
+        this.aut = aut;
+    }
+
     public CloudDescriptor getCloud()
     {
         return cloud;
@@ -180,8 +194,8 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
 
     /** The Constant WIND_TUNNEL. */
     private static final String WIND_TUNNEL = "WIND_TUNNEL";
-    
-    private Map<String,String> propertyMap = new HashMap<String,String>( 20 );
+
+    private Map<String, String> propertyMap = new HashMap<String, String>( 20 );
 
     /*
      * (non-Javadoc)
@@ -202,10 +216,11 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
 
         if ( pageSource != null )
         {
-            //if ( ApplicationRegistry.instance().getAUT() != null || ApplicationRegistry.instance().getAUT().isWeb() )
-            //    return XMLEscape.toHTML( pageSource );
-            //else
-                return XMLEscape.toXML( pageSource );
+            // if ( ApplicationRegistry.instance().getAUT() != null ||
+            // ApplicationRegistry.instance().getAUT().isWeb() )
+            // return XMLEscape.toHTML( pageSource );
+            // else
+            return XMLEscape.toXML( pageSource );
         }
         else
             return "";
@@ -227,7 +242,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
         {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            
+
             InputStreamReader streamReader = new InputStreamReader( new ByteArrayInputStream( pageSource.getBytes() ), "UTF-8" );
             InputSource inputSource = new InputSource( streamReader );
             inputSource.setEncoding( "UTF-8" );
@@ -259,7 +274,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
         this.cachingEnabled = cachingEnabled;
         this.currentDevice = currentDevice;
     }
-    
+
     public boolean isConnected()
     {
         return webDriver != null;
@@ -570,7 +585,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
         {
             return webDriver.getWindowHandle();
         }
-        catch( Exception e )
+        catch ( Exception e )
         {
             return null;
         }
@@ -654,9 +669,9 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
      */
     public String getContext()
     {
-        if ( currentContext != null || !contextSwitchSupported  )
+        if ( currentContext != null || !contextSwitchSupported )
             return currentContext;
-        
+
         currentContext = _getContext();
 
         return currentContext;
@@ -738,7 +753,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
      * com.perfectoMobile.device.artifact.ArtifactProducer.ArtifactType,
      * com.perfectoMobile.device.ConnectedDevice)
      */
-    public Artifact getArtifact( WebDriver webDriver, ArtifactType aType, ConnectedDevice connectedDevice, String testName, boolean success )
+    public Artifact getArtifact( WebDriver webDriver, ArtifactType aType, ConnectedDevice connectedDevice, String testName, boolean success, ExecutionContextTest test )
     {
         if ( artifactProducer != null )
         {
@@ -747,7 +762,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
             parameterMap.put( REPORT_KEY, reportKey );
             parameterMap.put( DEVICE_NAME, deviceName );
             parameterMap.put( WIND_TUNNEL, windTunnelReport );
-            return artifactProducer.getArtifact( webDriver, aType, parameterMap, connectedDevice, testName, success );
+            return artifactProducer.getArtifact( webDriver, aType, parameterMap, connectedDevice, testName, success, test );
         }
         else
             return null;
@@ -761,7 +776,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
      * com.perfectoMobile.device.artifact.ArtifactProducer.ArtifactType,
      * java.util.Map, com.perfectoMobile.device.ConnectedDevice)
      */
-    public Artifact getArtifact( WebDriver webDriver, ArtifactType aType, Map<String, String> parameterMap, ConnectedDevice connectedDevice, String testName, boolean success )
+    public Artifact getArtifact( WebDriver webDriver, ArtifactType aType, Map<String, String> parameterMap, ConnectedDevice connectedDevice, String testName, boolean success, ExecutionContextTest test )
     {
         if ( artifactProducer != null )
         {
@@ -773,7 +788,7 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
             parameterMap.put( DEVICE_NAME, deviceName );
             parameterMap.put( WIND_TUNNEL, windTunnelReport );
 
-            return artifactProducer.getArtifact( webDriver, aType, parameterMap, connectedDevice, testName, success );
+            return artifactProducer.getArtifact( webDriver, aType, parameterMap, connectedDevice, testName, success, test );
         }
         else
             return null;
@@ -788,10 +803,10 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
     public String getProperty( String propertyName )
     {
         String returnValue = propertyMap.get( propertyName );
-        
+
         if ( returnValue != null )
             return returnValue;
-        
+
         switch ( propertyName )
         {
             case EXECUTION_ID:
@@ -806,13 +821,13 @@ public class DeviceWebDriver implements HasCapabilities, WebDriver, JavascriptEx
         }
         return null;
     }
-    
+
     @Override
     public void setProperty( String name, String value )
     {
         if ( name != null && value != null )
             propertyMap.put( name, value );
-        
+
     }
 
     /*

@@ -34,34 +34,35 @@
   </model>
   <test name="xFramium General KeyWord Test" active="true" dataProvider="callTest">
     <description>Tests the general keywords that apply to both Web and Native applications across web and mobile devices</description>
-    <step type="CALL" name="kw-exists" page="home" />
-    <step type="CALL" name="kw-alert" page="home" os="Windows,MACOS" active="true" />
-    <step type="CALL" name="kw-align" page="home" />
-    <step type="CALL" name="kw-attribute" page="home" />
-    <step type="CALL" name="kw-cache" page="home" />
-    <step type="CALL" name="kw-call" page="home" />
-    <step type="CALL" name="kw-checkcolor" page="home" os="Windows,MACOS" />
-    <step type="CALL" name="kw-click" page="home" />
-    <step type="CALL" name="kw-compare" page="home" />
-    <step type="CALL" name="kw-checkcontrast" page="home" os="Windows,MACOS" />
-    <step type="CALL" name="kw-dumpstate" page="home" />
-    <step type="CALL" name="kw-else" page="home" />
-    <step type="CALL" name="kw-execjs" page="home" os="Windows,MACOS" />
-    <step type="CALL" name="kw-focus" page="home" active="false" />
-    <step type="CALL" name="kw-loop" page="home" />
-    <step type="CALL" name="kw-mouse" page="home" os="Windows,MACOS" />
-    <step type="CALL" name="kw-navigate" page="home" />
-    <step type="CALL" name="kw-operator" page="home" />
-    <step type="CALL" name="kw-report" page="home" />
-    <step type="CALL" name="kw-set" page="home" />
-    <step type="CALL" name="kw-string" page="home" />
-    <step type="CALL" name="kw-get" page="home" />
-    <step type="CALL" name="kw-visible" page="home" />
-    <step type="CALL" name="kw-wait" page="home" />
-    <step type="CALL" name="kw-waitfor" page="home" />
-    <step type="CALL" name="kw-window" page="home" />
-    <step type="CALL" name="kw-browser" page="home" />
-    <step type="CALL" name="kw-execws" page="home" />
+    <step type="BROWSER" name="MAXIMIZE" page="home" />
+    <step type="CALL2" name="kw-exists" page="home" />
+    <step type="CALL2" name="kw-alert" page="home" os="Windows,MACOS" active="true" />
+    <step type="CALL2" name="kw-align" page="home" />
+    <step type="CALL2" name="kw-attribute" page="home" />
+    <step type="CALL2" name="kw-cache" page="home" />
+    <step type="CALL2" name="kw-call" page="home" />
+    <step type="CALL2" name="kw-checkcolor" page="home" os="Windows,MACOS" />
+    <step type="CALL2" name="kw-click" page="home" />
+    <step type="CALL2" name="kw-compare" page="home" />
+    <step type="CALL2" name="kw-checkcontrast" page="home" os="Windows,MACOS" />
+    <step type="CALL2" name="kw-dumpstate" page="home" />
+    <step type="CALL2" name="kw-else" page="home" />
+    <step type="CALL2" name="kw-execjs" page="home" os="Windows,MACOS" />
+    <step type="CALL2" name="kw-focus" page="home" active="false" />
+    <step type="CALL2" name="kw-loop" page="home" />
+    <step type="CALL2" name="kw-mouse" page="home" os="Windows,MACOS" />
+    <step type="CALL2" name="kw-navigate" page="home" />
+    <step type="CALL2" name="kw-operator" page="home" />
+    <step type="CALL2" name="kw-report" page="home" />
+    <step type="CALL2" name="kw-set" page="home" />
+    <step type="CALL2" name="kw-string" page="home" />
+    <step type="CALL2" name="kw-get" page="home" />
+    <step type="CALL2" name="kw-visible" page="home" />
+    <step type="CALL2" name="kw-wait" page="home" />
+    <step type="CALL2" name="kw-waitfor" page="home" />
+    <step type="CALL2" name="kw-window" page="home" />
+    <step type="CALL2" name="kw-browser" page="home" />
+    <step type="CALL2" name="kw-execws" page="home" />
   </test>
   
   <test name="xFramium Step Tags" active="true">
@@ -77,6 +78,63 @@
       <parameter type="STATIC" value="1" />
       <parameter type="CONTEXT" value="existsSingle" />
     </step>
+  </test>
+  
+  <test name="xFramium Complex Version Test" active="true" os="WINDOWS">
+    <description>Tests the complex tag type and application version</description>
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="EXISTS" name="versionTest" page="home" context="versionValue" />
+    
+    <step type="COMPARE" name="existsCompare" page="home" tagNames="myTag">
+      <parameter type="STATIC" value="Version 2" />
+      <parameter type="CONTEXT" value="versionValue" />
+    </step>
+
+    <step type="APPLICATION" name="OPEN" page="home" >
+        <parameter type="STATIC" name="Application Name" value="xTest0" />
+    </step>
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="EXISTS" name="versionTest" page="home" context="versionValue" />
+    <step type="COMPARE" name="existsCompare" page="home" tagNames="myTag">
+      <parameter type="STATIC" value="Version 1" />
+      <parameter type="CONTEXT" value="versionValue" />
+    </step>
+    
+    <step type="EXISTS" name="osTest" page="home" context="osValue" />
+    <step type="COMPARE" name="existsCompare" page="home" >
+      <parameter type="STATIC" value="Windows" />
+      <parameter type="CONTEXT" value="osValue" />
+    </step>
+    
+    <step type="EXISTS" name="osTest2" page="home" context="osValue" />
+    <step type="COMPARE" name="existsCompare" page="home" >
+      <parameter type="STATIC" value="Windows" />
+      <parameter type="CONTEXT" value="osValue" />
+    </step>
+    
+  </test>
+  
+  <test name="xFramium STEP Complex Version Test" active="true" os="WINDOWS">
+    <description>Tests the complex tag type and application version</description>
+    <step type="EXISTS" name="toggleButton" page="home" />
+    <step type="CLICK" name="toggleButton" page="home" version="xTest0(1.0-1.1)"/>
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home" tagNames="myTag">
+      <parameter type="STATIC" value="1" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+
+    <step type="APPLICATION" name="OPEN" page="home" >
+        <parameter type="STATIC" name="Application Name" value="xTest0" />
+    </step>
+    
+    <step type="CLICK" name="toggleButton" page="home" version="xTest0(1.0-1.1)"/>
+    <step type="EXISTS" name="toggleValue" page="home" context="existsSingle" />
+    <step type="COMPARE" name="existsCompare" page="home" tagNames="myTag">
+      <parameter type="STATIC" value="0" />
+      <parameter type="CONTEXT" value="existsSingle" />
+    </step>
+    
   </test>
 
   <test name="xFramium REGEX" active="true">

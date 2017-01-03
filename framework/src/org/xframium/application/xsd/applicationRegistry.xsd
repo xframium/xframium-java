@@ -1,78 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="http://xframium.org/xsl/xs3p.xsl"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.xframium.org/applicationRegistry" xmlns:tns="http://www.xframium.org/applicationRegistry" elementFormDefault="qualified">
-	<annotation>
-		<documentation xml:lang="en">
-			xFramium Application Registry Definition
-		</documentation>
-	</annotation>
-
-	<element name="applicationRegistry" type="tns:RegistryRoot" />
-
-	<complexType name="RegistryRoot">
-		<sequence>
-			<element name="application" type="tns:Application" minOccurs="1" maxOccurs="unbounded" />
-		</sequence>
-	</complexType>
-
-	<complexType name="Application">
-		<sequence>
-			<element name="capability" type="tns:DeviceCapability" minOccurs="0" maxOccurs="unbounded" />
-			<element name="objectCapability" type="tns:ObjectDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
-		</sequence>
-		<attribute name="name" type="string" use="required" />
-		<attribute name="appPackage" type="string" use="optional" />
-		<attribute name="bundleId" type="string" use="optional" />
-		<attribute name="url" type="string" use="optional" />
-		<attribute name="iosInstall" type="string" use="optional" />
-		<attribute name="androidInstall" type="string" use="optional" />
-	</complexType>
-
-	<complexType name="DeviceCapability">
-		<simpleContent>
-			<extension base="string">
-				<attribute name="name" type="string" use="required" />
-				<attribute name="class" default="STRING">
-					<simpleType>
-						<restriction base="string">
-							<enumeration value="BOOLEAN" />
-							<enumeration value="PLATFORM" />
-							<enumeration value="STRING" />
-						</restriction>
-					</simpleType>
-				</attribute>
-			</extension>
-		</simpleContent>
-	</complexType>
-
-	<!-- ObjectDeviceCapability is required whtne the Capability Class is Object  -->
-	<complexType name="ObjectDeviceCapability">
-		<sequence>
-			<element name="capabilities" type="tns:Capabilities" minOccurs="0" maxOccurs="unbounded" />
-		</sequence>
-		<attribute name="name" type="string" use="required" />
-	</complexType>
-
-	<complexType name="Capabilities">
-		<sequence>
-			<element name="options" type="tns:Options" minOccurs="0" maxOccurs="unbounded" />
-		</sequence>
-		<attribute name="factoryName" use="required">
-			<simpleType>
-				<restriction base="string">
-					<enumeration value="ChromeOptions" />
-					<enumeration value="FirefoxProfile"/>
-			</restriction>
-			</simpleType>
-		</attribute>
-	</complexType>
-	
-	<complexType name="Options">
-		<simpleContent>
-			<extension base="string">
-				<attribute name="name" type="string" use="required" />
-				<attribute name="key" type="string" use="optional" />
-			</extension>
-		</simpleContent>
-	</complexType>
+  <annotation>
+    <documentation xml:lang="en"> xFramium Application Registry Definition
+    </documentation>
+  </annotation>
+  <element name="applicationRegistry" type="tns:RegistryRoot" />
+  <complexType name="RegistryRoot">
+    <sequence>
+      <element name="application" type="tns:Application" minOccurs="1" maxOccurs="unbounded" />
+    </sequence>
+  </complexType>
+  <complexType name="Application">
+    <sequence>
+      <element name="capability" type="tns:DeviceCapability" minOccurs="0" maxOccurs="unbounded" />
+      <element name="objectCapability" type="tns:ObjectDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+    <attribute name="name" type="string" use="required" />
+    <attribute name="appPackage" type="string" use="optional" />
+    <attribute name="bundleId" type="string" use="optional" />
+    <attribute name="url" type="string" use="optional" />
+    <attribute name="iosInstall" type="string" use="optional" />
+    <attribute name="androidInstall" type="string" use="optional" />
+    <attribute name="version" type="double" use="optional" default="0.0" />
+  </complexType>
+  <complexType name="DeviceCapability">
+    <simpleContent>
+      <extension base="string">
+        <attribute name="name" type="string" use="required" />
+        <attribute name="class" default="STRING">
+          <simpleType>
+            <restriction base="string">
+              <enumeration value="BOOLEAN" />
+              <enumeration value="PLATFORM" />
+              <enumeration value="STRING" />
+            </restriction>
+          </simpleType>
+        </attribute>
+      </extension>
+    </simpleContent>
+  </complexType>
+  <!-- ObjectDeviceCapability is required whtne the Capability Class is Object -->
+  <complexType name="ObjectDeviceCapability">
+    <sequence>
+      <element name="capabilities" type="tns:Capabilities" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+    <attribute name="name" type="string" use="required" />
+  </complexType>
+  <complexType name="Capabilities">
+    <sequence>
+      <element name="options" type="tns:Options" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+    <attribute name="factoryName" use="required">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="ChromeOptions" />
+          <enumeration value="FirefoxProfile" />
+        </restriction>
+      </simpleType>
+    </attribute>
+  </complexType>
+  <complexType name="Options">
+    <simpleContent>
+      <extension base="string">
+        <attribute name="name" type="string" use="required" />
+        <attribute name="key" type="string" use="optional" />
+      </extension>
+    </simpleContent>
+  </complexType>
 </schema>

@@ -5,6 +5,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.device.artifact.ArtifactProducer;
 import org.xframium.device.artifact.api.SeleniumArtifactProducer;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.page.BY;
 import org.xframium.spi.Device;
 import eu.bitwalker.useragentutils.UserAgent;
 
@@ -13,6 +14,18 @@ public class WINDOWSCloudActionProvider extends AbstractCloudActionProvider
 	/** The Constant PLATFORM_NAME. */
 	public static final String PLATFORM_NAME = "platformName";
 	
+	@Override
+    public boolean isDescriptorSupported( BY descriptorType )
+    {
+        switch( descriptorType )
+        {
+            case V_IMAGE:
+            case V_TEXT:
+                return false;
+            default:
+                return true;
+        }
+    }
 	
 	@Override
     public boolean startApp( String executionId, String deviceId, String appName, String appIdentifier )
@@ -75,6 +88,34 @@ public class WINDOWSCloudActionProvider extends AbstractCloudActionProvider
 			return currBrowserName;
 		}
 	}
+
+    @Override
+    public boolean installApplication( String applicationName, DeviceWebDriver webDriver, boolean instrumentApp )
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean uninstallApplication( String applicationName, DeviceWebDriver webDriver )
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean openApplication( String applicationName, DeviceWebDriver webDriver )
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean closeApplication( String applicationName, DeviceWebDriver webDriver )
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
     
 	
     

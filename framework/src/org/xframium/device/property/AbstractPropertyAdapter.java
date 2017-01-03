@@ -20,14 +20,14 @@
  *******************************************************************************/
 package org.xframium.device.property;
 
-import java.util.Properties;
+import java.util.Map;
 
 public abstract class AbstractPropertyAdapter implements PropertyAdapter
 {
 
-    protected int getIntProperty( Properties configurationProperties, String keyName, int defaultValue )
+    protected int getIntProperty( Map<String,String> configurationProperties, String keyName, int defaultValue )
     {
-        String value = configurationProperties.getProperty( keyName );
+        String value = configurationProperties.get( keyName );
         if ( value != null )
         {
             try

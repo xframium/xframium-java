@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html ng-app="xConsole">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
+<script src="./js/ui-bootstrap-tpls-2.1.4.js"></script>
+<script src="./js/ec.js"></script>
+<script src="./js/selection-model.min.js"></script>
+<script src="./js/ecServices.js"></script>
+<script src="./js/angular-ui-tree.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link href="./css/angular-ui-tree.css" rel="stylesheet">
+<meta charset="ISO-8859-1">
+<title>xFramium Execution Console</title>
+<!-- Latest compiled and minified CSS -->
+<style>
+.fill {
+	min-height: 100%;
+	height: 100%;
+}
+
+.scrollable {
+	overflow: auto;
+}
+
+html, body {
+	height: 100%;
+	font-size: 12px;
+}
+
+.activeTest {
+    background-color: rgba(28, 168, 221, 0.2)
+}
+
+.tagName {
+    background-color: rgba(255, 102, 0, 0.2)
+}
+
+.inactiveTest {
+    background-color: rgba(255,255,255,1);
+    font-weight: 100;
+}
+
+.passedTest {
+    background-color: rgba(27, 201, 142, 0.2)
+}
+
+.failedTest {
+    background-color: rgba(230, 71, 89, 0.2)
+}
+
+.systemProcessing {
+	border: 12px solid #99ccff;
+	border-radius: 50%;
+	border-top: 12px solid blue;
+	border-right: 12px solid green;
+	border-bottom: 12px solid red;
+	border-left: 12px solid orange;
+	width: 128px;
+	height: 128px;
+	-webkit-animation: spin 2s linear infinite;
+	animation: spin 2s linear infinite;
+}
+
+.testRunning {
+    border: 2px solid #99ccff;
+    border-radius: 50%;
+    border-top: 2px solid blue;
+    border-right: 2px solid green;
+    border-bottom: 2px solid red;
+    border-left: 2px solid orange;
+    width: 16px;
+    height: 16px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.blinking {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {  
+  50% { opacity: 0; }
+}
+
+</style>
+</head>
+<body ng-controller="xFramiumConsole" data-ng-init="initialize()">
+    <div class="container-fluid">
+        <nav class="navbar navbar-default">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-left">
+                    <li class="dropdown" uib-dropdown>
+                        <a hRef="#" uib-dropdown-toggle role="button" aria-expanded="false">
+                            File
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+                            <li>
+                                <a href="#" ng-click="openFolderBrowser()">Open Suite</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <a class="navbar-brand navbar-right" " href="#">xFramium Execution Console {{globalConfig.suiteName}}</a>
+            </div>
+        </nav>
+        <div class="row" ng-if="testList == null || testList.length == 0">
+            <h1 style="text-align: center">xFramium Execution Console</h1>
+            <h3 style="text-align: center">Open a driver configuration file to get started</h3>
+        </div>
+        <div class="row" ng-if="testList != null && testList.length > 0">
+
+            <div class="col-md-8">
+                <div class="panel panel-info" style="margin-bottom: 0px;">
+                    <nav class="navbar navbar-default" style="margin-bottom: 0px">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                        </div>
+                        <a class="navbar-brand navbar-default" href="#">{{getActive()}} Active Test Cases<span ng-click="executeTest()" ng-if="getActive() > 0 && executionStatus == 'idle'" style="margin-left: 15px;" class="glyphicon glyphicon-play text-success"></span><span ng-if="executionStatus == 'running'" class="testRunning pull-right" style="margin-left: 15px; margin-top: 4px"></span></a>
+                        <a class="navbar-default" href="#" style="font-size: 24px"></a>
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="dropdown" uib-dropdown>
+                                    <a hRef="#" uib-dropdown-toggle role="button" aria-expanded="false">
+                                        Select
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+                                        <li role="menuitem">
+                                            <a ng-click="setActive( true )">All</a>
+                                        </li>
+                                        <li role="menuitem">
+                                            <a ng-click="setActive( false )">None</a>
+                                        </li>
+                                        <li role="menuitem" ng-repeat="tag in tagList">
+                                            <a ng-click="selectByTag( tag )">#{{tag}}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <div class="panel-body">
+                        <div ui-tree id="tree-root" class="scrollable" style="max-height: 768px">
+                            <ol ui-tree-nodes ng-model="testList">
+                                <li data-nodrag ui-tree-node ng-repeat="test in testList" collapsed="true" ng-class="{'activeTest': test.active, 'inactiveTest': !test.active}" style="border-radius: 5px; margin-top: 5px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default; border-style: outset; border-width: thin">
+                                    <div ui-tree-handle class="tree-node tree-node-content" >
+                                        <a ng-if="getTotal( test ) > 0" data-nodrag ng-click="toggle(this)" style="cursor: default" ><span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }" style="cursor: default"></span></a>
+                                        <span ng-if="getTotal( test ) == 0" style="cursor: default; margin-left: 16px"></span>
+                                        <span style="margin-left: 5px; margin-right: 5px"><input type="checkbox" ng-model="test.active" /></span>
+                                        <span>{{test.name}}</span>
+                                        <span ng-if="getTotal( test ) > 0" style="margin-left: 15px;">
+                                            (<span class="text-success">{{getPassed( test )}}</span>, <span class="text-danger" ng-class="{'blinking': getFailed( test ) > 0}">{{getFailed( test )}}</span>, <span class="text-primary">{{getExecuting( test )}}</span>)
+                                        </span>
+                                        <span class="pull-right"><a hRef="#" ng-click="test.count=test.count-1"><span class="glyphicon glyphicon-minus text-danger" style="margin-right: 10px"></span></a>{{test.count}}<a hRef="#" ng-click="test.count=test.count+1"><span class="glyphicon glyphicon-plus text-success" style="margin-left: 10px"></span></a></span>
+                                    </div>
+                                    <ol ui-tree-nodes ng-model="test.executions" ng-class="{hidden: collapsed}" >
+                                        <li data-nodrag ui-tree-node ng-repeat="(key, value) in test.executions" ng-class="{'activeTest': value.testStatus == 'null', 'passedTest': value.testStatus == 'PASSED', 'failedTest': value.testStatus == 'FAILED'}" style="border-radius: 5px; margin-top: 1px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default; border-style: inset; border-width: thin" uib-tooltip="{{value.fullTestName}}")>
+                                            <span style="font-weight: bold;">{{value.stepCount}}</span> steps executed on <span style="font-weight: bold;">{{value.device.environment}}</span>
+                                            <span ng-if="value.testStatus == 'null'" class="testRunning pull-right" style="margin-right: 10px; margin-top: 2px"></span>
+                                            <span ng-if="value.testStatus != 'null'" class="pull-right" style="margin-right: 10px">{{getElapsed( value )}} milliseconds</span>
+                                            
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info" style="margin-bottom: 0px;">
+                    <nav class="navbar navbar-default" style="margin-bottom: 0px">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                        </div>
+                        <a class="navbar-brand navbar-default" href="#" style="font-size: 12px">Available Environments</a>
+                        
+                    </nav>
+                    <div class="panel-body">
+                        <div ui-tree id="tree-root" class="scrollable" style="max-height: 768px">
+                            <ol ui-tree-nodes ng-model="deviceList">
+                                <li data-nodrag ui-tree-node ng-repeat="device in deviceList">
+                                    <div ui-tree-handle class="tree-node tree-node-content" ng-class="{'activeTest': device.active, 'inactiveTest': !device.active}" style="border-radius: 5px; margin-top: 1px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default">
+                                        <div class="row">
+                                            <div class="col-sm-1" style="text-align: center; padding-top: 2px"><input type="checkbox" ng-model="device.active" /></div>
+                                            <div class="col-sm-11" style="padding-top: 3px; padding-left: 0px">{{device.environment}} ({{device.cloud}})</div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/ng-template" id="errorDetail.html">
+            <div class="panel panel-info" style="margin-bottom: 0px;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Error Detail<a href="#" ng-click="cancelElement()"><span class="pull-right glyphicon glyphicon-remove-sign" ></span></a></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="text-danger">The command failed!</label>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 10px">
+                            <div class="col-md-12">
+                                <span class="text-danger">{{currentError}}</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+            </div>
+        </script>
+    <script type="text/ng-template" id="folderBrowser.html">
+            <div class="panel panel-info" style="margin-bottom: 0px;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Select your Driver Configuration file<a href="#" ng-click="cancel()"><span class="pull-right glyphicon glyphicon-remove-sign" ></span></a></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>{{currentFolder}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="list-group scrollable" style="max-height: 350px">
+                                    <a class="list-group-item" hRef="#" ng-click="getFiles(currentFolder, '..')"><span class="glyphicon glyphicon-level-up" style="margin-right: 5px" ></span>..</a>
+                                    <a class="list-group-item" hRef="#" ng-click="getFiles(currentFolder, f.leafName)" ng-repeat="f in currentFolderFiles"><span ng-if="f.file == true" style="margin-right: 5px" class="glyphicon glyphicon-open-file"></span><span ng-if="f.folder == true" class="glyphicon glyphicon-folder-open" style="margin-right: 5px" ></span>{{f.leafName}}<span ng-if="f.folder == true" class="badge">{{f.fileCount}}</span></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Recent Files...</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="list-group scrollable">
+                                    <a class="list-group-item" hRef="#" ng-click="getFiles('', f)" ng-repeat="f in recentFiles track by $index"><span style="margin-right: 5px" class="glyphicon glyphicon-heart text-danger"></span>{{f}}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </script>
+    <script type="text/ng-template" id="htmlView.html">
+            <div class="panel panel-info" style="margin-bottom: 0px;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">XML Source code<a href="#" ng-click="cancelHtml()"><span class="pull-right glyphicon glyphicon-remove-sign" ></span></a></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+<div class="col-md-12 scrollable" style="max-height: 550px"><pre><code class="language-markup" prism>{{htmlData}}</code></pre></div>
+                        </div>
+
+                    </div>
+            </div>
+        </script>
+    <script type="text/ng-template" id="waiting.html">
+            <div class="row">
+                <div class="col-md-3" style="margin-top: 15px; margin-bottom: 15px; margin-left: 15px">
+                    <div class="systemProcessing"></div>
+                </div>
+                <div class="col-md-8" style="margin-top: 40px">
+                    <h2 class="text-info">Processing Request...</h2>        
+                </div>
+            </div>
+            
+        </script>
+</body>
+</html>
