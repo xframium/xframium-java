@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+<function name="kw-string" mode="function" threshold="0" active="true">
+<description>null</description>
+<step name="colorCheck" site="xTest" page="home" type="STRING" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="trimmedValue">
+<parameter type="STATIC" name="null" value="trim"/>
+</step>
+<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="Test Color"/>
+<parameter type="CONTEXT" name="null" value="trimmedValue"/>
+</step>
+<step name="colorCheck" site="xTest" page="home" type="STRING" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="upperValue">
+<parameter type="CONTEXT" name="null" value="trimmedValue"/>
+<parameter type="STATIC" name="null" value="upper"/>
+</step>
+<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="TEST COLOR"/>
+<parameter type="CONTEXT" name="null" value="upperValue"/>
+</step>
+<step name="colorCheck" site="xTest" page="home" type="STRING" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="lowerValue">
+<parameter type="CONTEXT" name="null" value="upperValue"/>
+<parameter type="STATIC" name="null" value="lower"/>
+</step>
+<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="test color"/>
+<parameter type="CONTEXT" name="null" value="lowerValue"/>
+</step>
+<step name="colorCheck" site="xTest" page="home" type="STRING" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="decimalValue">
+<parameter type="STATIC" name="null" value="123.9999999"/>
+<parameter type="STATIC" name="null" value="decimal"/>
+<parameter type="STATIC" name="null" value="#.##"/>
+</step>
+<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="123.99"/>
+<parameter type="CONTEXT" name="null" value="decimalValue"/>
+</step>
+<step name="colorCheck" site="xTest" page="home" type="STRING" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="lowerValue">
+<parameter type="STATIC" name="null" value="lower"/>
+<parameter type="CONTEXT" name="null" value="contains"/>
+<parameter type="STATIC" name="null" value="my lower back"/>
+</step>
+</function>
+</suite>

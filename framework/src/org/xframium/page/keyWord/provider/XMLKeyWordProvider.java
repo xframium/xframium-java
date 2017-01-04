@@ -215,11 +215,19 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	private File findFile( File useFile )
     {
         if ( useFile.exists() || useFile.isAbsolute() )
+        {
+            if (log.isInfoEnabled())
+                log.info( "Found file at [" + useFile.getAbsolutePath() + "]" );
             return useFile;
+        }
         
         File myFile = new File( rootFolder, useFile.getPath() );
         if ( myFile.exists() )
+        {
+            if (log.isInfoEnabled())
+                log.info( "Found file at [" + myFile.getAbsolutePath() + "]" );
             return myFile;
+        }
         
         throw new IllegalArgumentException( "Could not find " + useFile.getName() + " at " + useFile.getPath() + " or " + myFile.getAbsolutePath() );
         
@@ -237,7 +245,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	        try
 	        {
 	            if (log.isInfoEnabled())
-                    log.info( "Attempting to import file [" + Paths.get(".").toAbsolutePath().normalize().toString() + imp.getFileName() + "]" );
+                    log.info( "Attempting to import file [" + imp.getFileName() + "]" );
 	            if ( imp.getFileName().toLowerCase().endsWith( ".xml" ) )
 	            {
 	                InputStream inputStream = ClassLoader.getSystemResourceAsStream( imp.getFileName() );
@@ -314,7 +322,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 */
 	private KeyWordTest parseTest( Test xTest )
 	{
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount(), null, null, null );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount(), null, null, null, null );
 		
         
 		KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
@@ -329,7 +337,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	
 	private KeyWordTest parseFunction( XFunction xTest)
     {
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), null, false, xTest.getLinkId(), null, 0, xTest.getDescription() != null ? xTest.getDescription().getValue() : null, null, null, null, configProperties, 1, xTest.getPage(), xTest.getOutput(), xTest.getMode() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), null, false, xTest.getLinkId(), null, 0, xTest.getDescription() != null ? xTest.getDescription().getValue() : null, null, null, null, configProperties, 1, xTest.getInputPage(), xTest.getOutputPage(), xTest.getMode(), xTest.getOperations() );
         test.getExpectedParameters().addAll( parseParameters( xTest.getParameter() ) );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );

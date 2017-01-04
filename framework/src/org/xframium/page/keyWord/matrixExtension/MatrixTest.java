@@ -94,7 +94,7 @@ public class MatrixTest
     
     public KeyWordTest createTest( Map<String,String> configProperties )
     {
-        KeyWordTest kTest = new KeyWordTest( name, active, dataProvider, dataDriver, timed, linkId, os, threshold, description, tagNames, contentKeys, deviceTags, configProperties, count, null, null, null );
+        KeyWordTest kTest = new KeyWordTest( name, active, dataProvider, dataDriver, timed, linkId, os, threshold, description, tagNames, contentKeys, deviceTags, configProperties, count, null, null, null, null );
         
         int currentPosition = 0;
         

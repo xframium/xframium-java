@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+<function name="kw-browser" inputPage="xTest.home" outputPage="xTest.home" mode="function" threshold="0" active="true">
+<description></description>
+<step name="GET_TITLE" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="xFramium Testing"/>
+</step>
+<step name="GET_URL" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="http://xframium.org/testing.html"/>
+</step>
+<step name="_testingTwo" site="xTest" page="home" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="SWITCH_BY_TITLE" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="xFramium Second Page"/>
+</step>
+<step name="GET_TITLE" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="xFramium Second Page"/>
+</step>
+<step name="GET_URL" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="http://xframium.org/testing2.html"/>
+</step>
+<step name="SWITCH_BY_URL" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="http://xframium.org/testing.html"/>
+</step>
+<step name="GET_TITLE" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="xFramium Testing"/>
+</step>
+<step name="GET_URL" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="http://xframium.org/testing.html"/>
+</step>
+<step name="SWITCH_BY_URL" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="http://xframium.org/testing2.html"/>
+</step>
+<step name="GET_TITLE" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="xFramium Second Page"/>
+</step>
+<step name="GET_URL" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="http://xframium.org/testing2.html"/>
+</step>
+<step name="SWITCH_BY_URL" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="http://xframium.org/testing.html"/>
+</step>
+<step name="SWITCH_NAMED_FRAME" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="frameName"/>
+</step>
+<step name="screenTwo" site="xTest" page="page two" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="PARENT_FRAME" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="screenTwo" site="xTest" page="page two" type="EXISTS" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR"/>
+<step name="SWITCH_TO_ELEMENT.testingTwoFrame" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="screenTwo" site="xTest" page="page two" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="PARENT_FRAME" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="screenTwo" site="xTest" page="page two" type="EXISTS" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR"/>
+<step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="toggleValue" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="existsSingle"/>
+<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="1"/>
+<parameter type="CONTEXT" name="null" value="existsSingle"/>
+</step>
+<step name="toggleButton" site="xTest" page="home" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="toggleValue" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="existsSingle"/>
+<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="0"/>
+<parameter type="CONTEXT" name="null" value="existsSingle"/>
+</step>
+<step name="REFRESH" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="toggleValue" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="existsSingle"/>
+<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="1"/>
+<parameter type="CONTEXT" name="null" value="existsSingle"/>
+</step>
+<step name="testingTwo" site="xTest" page="home" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="screenTwo" site="xTest" page="page two" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="BACK" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="testingTwo" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="FORWARD" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="screenTwo" site="xTest" page="page two" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="BACK" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="REFRESH" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value=""/>
+</step>
+</function>
+</suite>

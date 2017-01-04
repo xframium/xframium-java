@@ -954,6 +954,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 boolean subReturnValue = false;
                 for ( KeyWordStep step : getStepList() )
                 {
+                    if ( !step.isActive() )
+                        continue;
                     if ( step instanceof KWSElse )
                         continue;
                     try
@@ -998,6 +1000,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         {
                             for ( KeyWordStep step : parentStep.getStepList() )
                             {
+                                if ( !step.isActive() )
+                                    continue;
                                 boolean subReturnValue = false;
                                 try
                                 {

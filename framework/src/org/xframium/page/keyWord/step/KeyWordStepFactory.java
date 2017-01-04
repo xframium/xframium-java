@@ -60,6 +60,7 @@ import org.xframium.page.keyWord.step.spi.KWSFunction;
 import org.xframium.page.keyWord.step.spi.KWSGesture;
 import org.xframium.page.keyWord.step.spi.KWSLoop;
 import org.xframium.page.keyWord.step.spi.KWSMath;
+import org.xframium.page.keyWord.step.spi.KWSModule;
 import org.xframium.page.keyWord.step.spi.KWSMouse;
 import org.xframium.page.keyWord.step.spi.KWSNavigate;
 import org.xframium.page.keyWord.step.spi.KWSOperator;
@@ -147,6 +148,7 @@ public class KeyWordStepFactory
     {
         addKeyWord( "CALL", KWSCall.class );
         addKeyWord( "CALL2", KWSCall2.class );
+        addKeyWord( "MODULE", KWSModule.class );
         addKeyWord( "CLICK", KWSClick.class );
         addKeyWord( "EXISTS", KWSExists.class );
         addKeyWord( "FUNCTION", KWSFunction.class );

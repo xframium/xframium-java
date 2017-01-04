@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+<test name="xFramium GRID dumpstate" dataProvider="callTest" timed="false" threshold="0" active="true">
+<description>Tests that the specified step is ignored for a specific OS type</description>
+<step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="toggleValue" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="existsSingle"/>
+<step name="dumpState" site="xTest" page="home" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="checkPointName" value="testingOne"/>
+</step>
+<step name="toggleButton" site="xTest" page="home" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="dumpState" site="xTest" page="home" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="checkPointName" value="testingOneA"/>
+</step>
+<step name="OPEN" site="xTest" page="home" type="APPLICATION" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Application Name" value="xTest1"/>
+</step>
+<step name="dumpState" site="xTest" page="home" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="checkPointName" value="testingTwo"/>
+</step>
+</test>
+</suite>
