@@ -22,7 +22,6 @@
       <url>ftp://www.xframium.org</url>
     </repository>
   </distributionManagement>
-  
   <build>
     <extensions>
       <extension>
@@ -39,26 +38,23 @@
         <filtering>false</filtering>
       </resource>
     </resources>
-    
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.3.1</version>
         <configuration>
-            <archive>
-                <manifestEntries>
-                    <Built-By>Moreland Labs, Ltd.</Built-By>
-                    <Permissions>all-permissions</Permissions>
-                    <Implementation-Title>xFramium</Implementation-Title>
-                    <Implementation-Version>Pallas (1.0.7)</Implementation-Version>
-                    <Implementation-Vendor>Moreland Labs, Ltd.</Implementation-Vendor>
-                </manifestEntries>
-                
-            </archive>
+          <archive>
+            <manifestEntries>
+              <Built-By>Moreland Labs, Ltd.</Built-By>
+              <Permissions>all-permissions</Permissions>
+              <Implementation-Title>xFramium</Implementation-Title>
+              <Implementation-Version>Pallas (1.0.7)</Implementation-Version>
+              <Implementation-Vendor>Moreland Labs, Ltd.</Implementation-Vendor>
+            </manifestEntries>
+          </archive>
           <outputDirectory>jnlp</outputDirectory>
         </configuration>
-        
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

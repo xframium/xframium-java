@@ -124,6 +124,7 @@
         <jar href="lib/xframium-java-1.0.8-SNAPSHOT.jar"/>
         <jar href="lib/xframium-serialization-2.0.5.jar"/>
         <jar href="lib/xml-apis-1.4.01.jar"/>
+        <jar href="lib/xmlbeans-2.6.0.jar"/>
         <jar href="xframium-driver-1.0.8-SNAPSHOT.jar"/>
     </resources>
     <application-desc main-class="org.xframium.console.http.ExecutionConsole"/>
