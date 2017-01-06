@@ -1149,7 +1149,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         }
         finally
         {
-
             if ( waitTime > 0 )
             {
                 try

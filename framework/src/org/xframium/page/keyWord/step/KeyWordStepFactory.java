@@ -311,9 +311,10 @@ public class KeyWordStepFactory
                     else
                         returnValue.setWait( waitTime - (int)modifierValue );
                 }
+                else
+                    returnValue.setWait( waitTime );
             }
-            else
-                returnValue.setWait( waitTime );
+            
             
             returnValue.setValidation( validation );
             returnValue.setValidationType( validationType );

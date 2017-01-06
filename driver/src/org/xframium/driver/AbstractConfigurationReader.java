@@ -542,9 +542,9 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                     if ( System.getProperty( "reportTemplateFolder" ) == null )
                     {
                         if ( System.getProperty( "reportTemplate" ) == null )
-                            inputStream = ClassLoader.getSystemResourceAsStream( "org/xframium/reporting/html/dark/Suite.html" );
+                            inputStream = this.getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/dark/Suite.html" );
                         else
-                            inputStream = ClassLoader.getSystemResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/Suite.html" );
+                            inputStream = this.getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/Suite.html" );
                     }
                     else
                         inputStream = new FileInputStream( new File( System.getProperty( "reportTemplateFolder" ), "Suite.html" ) );
@@ -602,11 +602,14 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         return true;
     }
 
-    public static boolean generateGridReport( File rootFolder )
+    public boolean generateGridReport( File rootFolder )
     {
         File artifactFolder = new File( rootFolder, "artifacts" );
         
         File[] fileList = artifactFolder.listFiles( new GRIDFileFilter() );
+        
+        if ( fileList == null )
+            return true;
         
         Map<String,List<String>> fileMap = new HashMap<String,List<String>>( 20 );
         
@@ -624,7 +627,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         }
         
         String outputData = "var testData = " + new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ), fileMap, 0 ) ) + ";";
-        System.out.println( outputData );
+        
         Artifact jsArtifact = new Artifact( "Grid.js", outputData.getBytes() );
         jsArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
         
@@ -635,9 +638,9 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             if ( System.getProperty( "reportTemplateFolder" ) == null )
             {
                 if ( System.getProperty( "reportTemplate" ) == null )
-                    inputStream = ClassLoader.getSystemResourceAsStream( "org/xframium/reporting/html/dark/Grid.html" );
+                    inputStream = getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/dark/Grid.html" );
                 else
-                    inputStream = ClassLoader.getSystemResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/Grid.html" );
+                    inputStream = getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/Grid.html" );
             }
             else
                 inputStream = new FileInputStream( new File( System.getProperty( "reportTemplateFolder" ), "Grid.html" ) );
@@ -670,12 +673,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         
         return true;
     }
-    
-    public static void main( String[] args )
-    {
-        generateGridReport( new File( "C:\\Users\\Allen\\git\\xframium-java\\testing\\test-output\\12-31_08-10-31-203" ) );
-    }
-    
+
     private static class GRIDFileFilter implements FileFilter
     {
 

@@ -283,6 +283,7 @@ public abstract class AbstractSeleniumTest
                     testName.setIteration( tN.getIteration() );
                     testName.setContentKey( tN.getContentKey() );
                     testName.setPersonaName( tK.getKey() );
+                    testName.setDataDriven( tN.getDataDriven() );
                     finalList.add( testName );
                 }
             }

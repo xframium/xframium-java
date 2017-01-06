@@ -248,7 +248,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
                     log.info( "Attempting to import file [" + imp.getFileName() + "]" );
 	            if ( imp.getFileName().toLowerCase().endsWith( ".xml" ) )
 	            {
-	                InputStream inputStream = ClassLoader.getSystemResourceAsStream( imp.getFileName() );
+	                InputStream inputStream = getClass().getClassLoader().getResourceAsStream( imp.getFileName() );
 	                if ( inputStream == null )
 	                    readElements( sC, new FileInputStream( findFile( new File( imp.getFileName() ) ) ), imp.isIncludeTests(), imp.isIncludeFunctions(), parseDataIterators );
 	                else

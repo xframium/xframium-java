@@ -16,7 +16,9 @@ public class OpenFile extends ECHandler
 	    {
     		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     		
-    		InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream( "org/xframium/console/http/html/" + httpExchange.getRequestURI().toString() );
+    		System.out.println( "Getting [" + "org/xframium/console/http/html/" + httpExchange.getRequestURI().toString() + "]" );
+    		
+    		InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream( "org/xframium/console/http/html" + httpExchange.getRequestURI().toString() );
     		
     		byte[] buffer = new byte[512];
     		int bytesRead = 0;

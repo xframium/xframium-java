@@ -139,6 +139,7 @@ public class CloudRegistry
         {
 	        if ( serverStarted )
 	            return;
+
 	        serverStarted = true;
             _server = new SeleniumServer( new StandaloneConfiguration() );
             _server.boot();

@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.xframium.application.ApplicationVersion;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.console.ExecutionContainer;
 import org.xframium.console.http.handler.spi.ExecuteTest;
+import org.xframium.console.http.handler.spi.KillSwitch;
 import org.xframium.console.http.handler.spi.ListFolder;
 import org.xframium.console.http.handler.spi.OpenConsole;
 import org.xframium.console.http.handler.spi.OpenFile;
@@ -176,6 +178,20 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
         KeyWordDriver.instance().addStepListener( this );
     }
     
+    private void createServer( String ipAddress, int portNumber ) throws Exception
+    {
+        httpServer = HttpServer.create( new InetSocketAddress( ipAddress, portNumber ), 1000 );
+        httpServer.createContext( "/executionConsole", new OpenConsole() );
+        httpServer.createContext( "/js", new OpenFile() );
+        httpServer.createContext( "/css", new OpenFile() );
+        httpServer.createContext( "/executionConsole/open", new OpenSuite() );
+        httpServer.createContext( "/executionConsole/folderList", new ListFolder() );
+        httpServer.createContext( "/executionConsole/executeTest", new ExecuteTest() );
+        httpServer.createContext( "/executionConsole/status", new TestStatus() );
+        httpServer.createContext( "/executionConsole/kill", new KillSwitch() );
+        httpServer.start();
+    }
+    
     public void startUp( String ipAddress, int portNumber )
     {
         try
@@ -183,16 +199,20 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
             if ( httpServer != null )
                 httpServer.stop( 0 );
             
-            httpServer = HttpServer.create( new InetSocketAddress( ipAddress, portNumber ), 1000 );
-            httpServer.createContext( "/executionConsole", new OpenConsole() );
-            httpServer.createContext( "/js", new OpenFile() );
-            httpServer.createContext( "/css", new OpenFile() );
-            httpServer.createContext( "/executionConsole/open", new OpenSuite() );
-            httpServer.createContext( "/executionConsole/folderList", new ListFolder() );
-            httpServer.createContext( "/executionConsole/executeTest", new ExecuteTest() );
-            httpServer.createContext( "/executionConsole/status", new TestStatus() );
-
-            httpServer.start();
+            
+            try
+            {
+                createServer( ipAddress, portNumber );
+            }
+            catch( Exception e )
+            {
+                URL killUrl = new URL( "http://" + ipAddress + ":" + portNumber + "/executionConsole/kill" );
+                try { killUrl.openStream(); } catch( Exception e2 ) {}
+                Thread.sleep( 5000 );
+                createServer( ipAddress, portNumber );
+                
+            }
+                
             
             Thread.sleep( 500 );
             
@@ -209,8 +229,6 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
     {
         httpServer.stop( 0 );
     }
-
-    
     
     @Override
     public boolean beforeStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC )

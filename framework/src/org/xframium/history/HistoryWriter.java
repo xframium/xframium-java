@@ -95,9 +95,9 @@ public class HistoryWriter
                 if ( System.getProperty( "reportTemplateFolder" ) == null )
                 {
                     if ( System.getProperty( "reportTemplate" ) == null )
-                        inputStream = ClassLoader.getSystemResourceAsStream( "org/xframium/reporting/html/dark/History.html" );
+                        inputStream = this.getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/dark/History.html" );
                     else
-                        inputStream = ClassLoader.getSystemResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/History.html" );
+                        inputStream = this.getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/History.html" );
                 }
                 else
                     inputStream = new FileInputStream( new File(  System.getProperty( "reportTemplateFolder" ), "History.html" ) );
