@@ -32,6 +32,7 @@ xConsole
                     $scope.currentFolder;
                     $scope.currentFile;
                     $scope.currentFolderFiles = [];
+                    $scope.filterTestsBy;
                     
                     $scope.testList = [];
                     $scope.recentFiles = [];

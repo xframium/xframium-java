@@ -213,7 +213,7 @@ public class KeyWordStepFactory
 
         stepMap.put( keyWord.toUpperCase(), kwImpl );
         classMap.put( kwImpl, keyWord );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( kwImpl, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( kwImpl, new ReflectionSerializer() );
     }
 
     /**
