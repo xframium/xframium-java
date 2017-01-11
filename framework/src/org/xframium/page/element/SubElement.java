@@ -17,7 +17,8 @@ public class SubElement
     {
         this.by = by;
         this.key = key;
-        this.os = os;
+        if ( os != null )
+            this.os = os;
         this.version = version;
     }
     

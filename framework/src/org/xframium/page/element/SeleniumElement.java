@@ -316,7 +316,7 @@ public class SeleniumElement extends AbstractElement
             case COMPLEX:
                 if ( subElementList != null && subElementList.size() > 0 )
                 {
-                    SubElement[] subList = getSubElement( ( (DeviceWebDriver) webDriver ).getAut(), ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getOs(), (DeviceWebDriver) webDriver );
+                    SubElement[] subList = getSubElement( ( (DeviceWebDriver) webDriver ).getAut(), ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getOs().toUpperCase(), (DeviceWebDriver) webDriver );
                     if ( subList.length > 0 )
                         return _useBy( subList[ 0 ].getBy(), subList[ 0 ].getKey() );
                 }
@@ -361,7 +361,7 @@ public class SeleniumElement extends AbstractElement
 
             case PROP:
                 Map<String, String> propertyMap = new HashMap<String, String>( 10 );
-                propertyMap.put( "resource-id", ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
+                propertyMap.put( "resource-id", ( (DeviceWebDriver) webDriver ).getAut().getAndroidIdentifier() );
                 return By.xpath( XPathGenerator.generateXPathFromProperty( propertyMap, keyValue ) );
             default:
                 return null;

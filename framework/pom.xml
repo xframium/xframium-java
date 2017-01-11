@@ -200,11 +200,6 @@
       <version>1.1.4</version>
     </dependency>
     <dependency>
-      <groupId>com.perfecto.reporting-sdk</groupId>
-      <artifactId>reportium-testng</artifactId>
-      <version>1.1.4</version>
-    </dependency>
-    <dependency>
       <groupId>com.perfectomobile</groupId>
       <artifactId>pm-webdriver</artifactId>
       <version>9.2.0.1</version>

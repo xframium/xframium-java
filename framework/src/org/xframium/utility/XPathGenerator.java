@@ -67,7 +67,7 @@ public class XPathGenerator
         
         for ( String myOr : ors )
         {
-            xpathBuilder.append( "/*" );
+            xpathBuilder.append( "//*" );
             String[] ands = myOr.split( AMP );
             
             for ( int i=0; i<ands.length; i++ )
