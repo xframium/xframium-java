@@ -32,6 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.WebDriver;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.content.ContentManager;
 import org.xframium.device.factory.DeviceWebDriver;
@@ -379,41 +380,47 @@ public abstract class AbstractElement implements Element
 	public String getKey()
 	{
 		if ( !tokensApplied )
-		{
-		    //
-		    // Content key shortcuts first
-		    //
-		    Matcher matcher = CONTENT_KEY_SHORTHAND.matcher( elementKey );
-		    
-		    while ( matcher.find() )
-		    {
-		        String contentKey = matcher.group( 1 );
-		        String replacementValue = ContentManager.instance().getContentValue( contentKey );
-		        
-		        if ( replacementValue != null )
-		            elementKey = elementKey.replace( "!{" + contentKey + "}", replacementValue );
-		    }
-		    
-		    //
-		    // Now, do token replacement
-		    //
-			if ( tokenMap != null && !tokenMap.isEmpty() )
-			{
-				String newKey = elementKey;
-				for ( String tokenName : tokenMap.keySet() )
-				{
-				    if ( tokenMap.get( tokenName ) != null)
-				        newKey = newKey.replace( "{" + tokenName + "}", tokenMap.get( tokenName ) );
-				    else
-				        log.warn( "Token [" + tokenName + " was null" );
-				}
-				elementKey = newKey;
-			}
-			
+		{ 
+		    elementKey = applyToken( elementKey );
 			tokensApplied = true;
 		}
 		
 		return elementKey;
+	}
+	
+	protected String applyToken( String keyValue )
+	{
+	    //
+        // Content key shortcuts first
+        //
+        Matcher matcher = CONTENT_KEY_SHORTHAND.matcher( keyValue );
+        
+        while ( matcher.find() )
+        {
+            String contentKey = matcher.group( 1 );
+            String replacementValue = ContentManager.instance().getContentValue( contentKey );
+            
+            if ( replacementValue != null )
+                keyValue = keyValue.replace( "!{" + contentKey + "}", replacementValue );
+        }
+        
+        //
+        // Now, do token replacement
+        //
+        if ( tokenMap != null && !tokenMap.isEmpty() )
+        {
+            String newKey = keyValue;
+            for ( String tokenName : tokenMap.keySet() )
+            {
+                if ( tokenMap.get( tokenName ) != null)
+                    newKey = newKey.replace( "{" + tokenName + "}", tokenMap.get( tokenName ) );
+                else
+                    log.warn( "Token [" + tokenName + " was null" );
+            }
+            keyValue = newKey;
+        }
+        
+        return keyValue;
 	}
 	
 	public String getRawKey()
@@ -689,12 +696,16 @@ public abstract class AbstractElement implements Element
 	@Override
 	public void setValue( String currentValue )
 	{
+	    
 		setValue( currentValue, SetMethod.DEFAULT );
 	}
 	
 	@Override
 	public void setValue( String currentValue, SetMethod setMethod )
 	{
+	    
+	    
+	    
 	    long startTime = System.currentTimeMillis();
         boolean success = false;
         try
