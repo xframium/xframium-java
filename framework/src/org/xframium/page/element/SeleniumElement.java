@@ -318,9 +318,19 @@ public class SeleniumElement extends AbstractElement
                 {
                     SubElement[] subList = getSubElement( ( (DeviceWebDriver) webDriver ).getAut(), ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getOs(), (DeviceWebDriver) webDriver );
                     if ( subList.length > 0 )
+                    {
                         return _useBy( subList[ 0 ].getBy(), subList[ 0 ].getKey() );
+                    }
+                    else
+                    {
+                        throw new ScriptConfigurationException( "Could not locate sub-element for " +
+                                                                getName() + "( " + ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getOs() + " )");
+                    }
                 }
-                throw new ScriptConfigurationException( "Could not locate a complex element for " + getName() );
+                else
+                {
+                    throw new ScriptConfigurationException( "No sub-elements for " + getName() );
+                }
             default:
                 return _useBy( getBy(), getKey() );
                     
