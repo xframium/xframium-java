@@ -73,6 +73,8 @@ public abstract class AbstractElement implements Element
         {        
             if ( subElement.getOs() != null && subElement.getOs().contains( os ) )
                 osList.add( subElement );
+            else if ( subElement.getOs() != null && subElement.getOs().equalsIgnoreCase( os ))
+                osList.add( subElement );
             else if ( subElement.getOs() == null )
                 osList.add( subElement );
         }
