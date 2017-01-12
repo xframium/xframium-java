@@ -224,7 +224,6 @@ public class KeyWordTest
 
     public void setOperationList( String operationList )
     {
-        System.out.println( operationList );
         if ( operationList != null && !operationList.trim().isEmpty() )
             this.operationList = operationList.split( "," );
     }

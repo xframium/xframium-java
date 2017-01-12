@@ -14,7 +14,6 @@ public class SubElement
     private String key;
     private String os;
     private ApplicationVersion version;
-    private boolean tokensApplied = false;
     
     public SubElement( BY by, String key, String os, ApplicationVersion version )
     {
