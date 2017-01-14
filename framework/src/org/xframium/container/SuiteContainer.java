@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.xframium.flow.xsd.ModuleRegistry;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.keyWord.KeyWordTest;
@@ -70,10 +71,23 @@ public class SuiteContainer
     private List<KeyWordTest> testList = new ArrayList<KeyWordTest>(10);
     private List<KeyWordTest> inactiveTestList = new ArrayList<KeyWordTest>(10);
     private List<KeyWordTest> functionList = new ArrayList<KeyWordTest>(10);
+    private ModuleRegistry moduleRegistry;
     private PageDataProvider dataProvider;
     
     private String siteName;
     
+    
+    
+    public ModuleRegistry getModuleRegistry()
+    {
+        return moduleRegistry;
+    }
+
+    public void setModuleRegistry( ModuleRegistry moduleRegistry )
+    {
+        this.moduleRegistry = moduleRegistry;
+    }
+
     public String getSiteName()
     {
         return siteName;

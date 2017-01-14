@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="http://xframium.org/xsl/xs3p.xsl"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.xframium.org/moduleFlow" xmlns:tns="http://www.xframium.org/moduleFlow" elementFormDefault="qualified">
+  <annotation>
+    <documentation xml:lang="en">QA Cloud Module Flow
+    </documentation>
+  </annotation>
+  <element name="moduleRegistry" type="tns:ModuleRegistry" />
+  <complexType name="ModuleRegistry">
+    <sequence>
+      <element name="module" type="tns:Module" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+    <attribute name="suiteName" type="string" use="required" />
+  </complexType>
+  
+  <complexType name="Module">
+    <sequence>
+      <element name="elements" type="tns:Elements" minOccurs="0" maxOccurs="1" />
+      <element name="operations" type="tns:Operations" minOccurs="0" maxOccurs="1" />
+    </sequence>
+    <attribute name="name" type="string" use="required" />
+  </complexType>
+  
+  <complexType name="Elements">
+    <sequence>
+      <element name="element" type="tns:Element" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+  </complexType>
+  
+  <complexType name="Element">
+    <attribute name="name" type="string" use="required" />
+    <attribute name="classification" type="string" use="required" />
+  </complexType>
+  
+  <complexType name="Operations">
+    <sequence>
+      <element name="operation" type="tns:Operation" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+  </complexType>
+  
+  <complexType name="Operation">
+    <sequence>
+      <element name="initiator" type="tns:Initiator" minOccurs="0" maxOccurs="unbounded" />
+      <element name="validator" type="tns:Validator" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+    <attribute name="name" type="string" use="required" />
+    <attribute name="module" type="string" use="required" />
+    
+  </complexType>
+  
+  <complexType name="Initiator">
+    <attribute name="element" type="string" use="required" />
+    <attribute name="action" type="string" use="required" />
+  </complexType>
+  
+  <complexType name="Validator">
+    <attribute name="element" type="string" use="required" />
+    <attribute name="action" type="string" use="required" />
+  </complexType>
+</schema>

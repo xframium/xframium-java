@@ -15,24 +15,21 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * Defines the configuration of the content engine.  The content engine allows for dynamic content replacement
+ * Defines the application flow using xFramium application flow management
  * 
- * <p>Java class for xContent complex type.
+ * <p>Java class for xFlow complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="xContent"&gt;
+ * &lt;complexType name="xFlow"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;attribute name="fileName" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
- *       &lt;attribute name="provider" default="EXCEL"&gt;
+ *       &lt;attribute name="fileName" use="required" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="provider" use="required"&gt;
  *         &lt;simpleType&gt;
  *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
  *             &lt;enumeration value="XML"/&gt;
- *             &lt;enumeration value="SQL"/&gt;
- *             &lt;enumeration value="CSV"/&gt;
- *             &lt;enumeration value="EXCEL"/&gt;
  *           &lt;/restriction&gt;
  *         &lt;/simpleType&gt;
  *       &lt;/attribute&gt;
@@ -44,12 +41,12 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "xContent")
-public class XContent {
+@XmlType(name = "xFlow")
+public class XFlow {
 
-    @XmlAttribute(name = "fileName")
+    @XmlAttribute(name = "fileName", required = true)
     protected String fileName;
-    @XmlAttribute(name = "provider")
+    @XmlAttribute(name = "provider", required = true)
     protected String provider;
 
     /**
@@ -85,11 +82,7 @@ public class XContent {
      *     
      */
     public String getProvider() {
-        if (provider == null) {
-            return "EXCEL";
-        } else {
-            return provider;
-        }
+        return provider;
     }
 
     /**

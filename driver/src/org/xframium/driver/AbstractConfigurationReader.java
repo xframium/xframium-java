@@ -38,6 +38,7 @@ import org.xframium.device.logging.ThreadedFileHandler;
 import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.device.proxy.ProxyRegistry;
 import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.flow.xsd.ModuleRegistry;
 import org.xframium.gesture.GestureManager;
 import org.xframium.gesture.device.action.DeviceActionManager;
 import org.xframium.gesture.device.action.spi.perfecto.PerfectoDeviceActionFactory;
@@ -90,6 +91,8 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     public abstract boolean configureArtifacts( DriverContainer driverContainer );
 
     public abstract ElementProvider configurePageManagement( SuiteContainer sC );
+    
+    public abstract boolean configureFlowManagement( SuiteContainer sC );
 
     public abstract PageDataProvider configureData();
 
@@ -350,6 +353,9 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             if ( sC == null ) 
                 return;
+            
+            log.info( "Flow Management: Configuring Flow Management" );
+            configureFlowManagement( sC );
             
             log.info( "Page: Configuring Object Repository" );
             ElementProvider eP = configurePageManagement( sC );

@@ -115,6 +115,12 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     }
     
     @Override
+    public boolean configureFlowManagement( SuiteContainer sC )
+    {
+        return true;
+    }
+    
+    @Override
     public FavoriteContainer configureFavorites()
     {
         String favorites = configProperties.get( "favorites" );

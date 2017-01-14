@@ -78,6 +78,8 @@ import org.xframium.driver.xsd.XStep;
 import org.xframium.driver.xsd.XTag;
 import org.xframium.driver.xsd.XTest;
 import org.xframium.driver.xsd.XToken;
+import org.xframium.flow.FlowProvider;
+import org.xframium.flow.XMLFlowProvider;
 import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.Page;
@@ -880,7 +882,18 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         return sC;
     }
     
-    
+    @Override
+    public boolean configureFlowManagement( SuiteContainer sC )
+    {
+        if ( xRoot.getSuite().getFlow() != null )
+        {
+            FlowProvider flowProvider = new XMLFlowProvider();
+            sC.setModuleRegistry( flowProvider.getFlow( findFile( configFolder, new File( xRoot.getSuite().getFlow().getFileName() ) ) ) );
+        }
+        
+        return true;
+        
+    }
     
     @Override
     public DriverContainer configureDriver(Map<String, String> customConfig)

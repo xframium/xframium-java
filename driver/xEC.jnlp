@@ -13,6 +13,7 @@
         <desktop/><!-- create desktop shortcut -->
         <menu submenu="xFramium"/> <!-- create menu item for this app -->
         </shortcut>
+        <update check="always" policy="prompt-update" />
     </information>
     <security>
         <all-permissions/>

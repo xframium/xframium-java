@@ -381,6 +381,7 @@
         <documentation>Defines all of the tests and functions</documentation>
     </annotation>
     <sequence>
+      <element name="flow" type="tns:xFlow" minOccurs="0" maxOccurs="1" />
       <element name="test" type="tns:xTest" minOccurs="0" maxOccurs="unbounded" />
       <element name="function" type="tns:xFunction" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
@@ -395,6 +396,21 @@
       </simpleType>
     </attribute>
   </complexType>
+  
+  <complexType name="xFlow">
+    <annotation>
+        <documentation>Defines the application flow using xFramium application flow management</documentation>
+    </annotation>
+    <attribute name="fileName" type="string" use="required" />
+    <attribute name="provider" use="required" >
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="XML" />
+        </restriction>
+      </simpleType>
+    </attribute>
+  </complexType>
+  
   <complexType name="xModel">
     <annotation>
         <documentation>Defines your object repository</documentation>

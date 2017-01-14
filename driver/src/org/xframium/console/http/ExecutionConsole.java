@@ -99,7 +99,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
     {
         try
         {
-            ExecutionConsole.instance().startUp( "127.0.0.1", 8145 );
+            ExecutionConsole.instance().startUp( "0.0.0.0", 8145 );
         }
         catch( Exception e )
         {
@@ -206,7 +206,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
             }
             catch( Exception e )
             {
-                URL killUrl = new URL( "http://" + ipAddress + ":" + portNumber + "/executionConsole/kill" );
+                URL killUrl = new URL( "http://127.0.0.1:" + portNumber + "/executionConsole/kill" );
                 try { killUrl.openStream(); } catch( Exception e2 ) {}
                 Thread.sleep( 5000 );
                 createServer( ipAddress, portNumber );
@@ -216,7 +216,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
             
             Thread.sleep( 500 );
             
-            Desktop.getDesktop().browse( new URI( "http://" + ipAddress + ":" + portNumber + "/executionConsole") );
+            Desktop.getDesktop().browse( new URI( "http://127.0.0.1:" + portNumber + "/executionConsole") );
 
         }
         catch ( Exception e )
