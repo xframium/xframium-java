@@ -858,7 +858,7 @@ public class SeleniumElement extends AbstractElement
             }
             catch ( Exception e )
             {
-                log.error( Thread.currentThread().getName() + ": Could not locate " + useBy() );
+                log.error( Thread.currentThread().getName() + ": Could not locate " + useBy(), e );
                 throw new ObjectIdentificationException( getBy(), useBy() );
             }
         }
