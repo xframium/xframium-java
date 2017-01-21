@@ -113,16 +113,16 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
     {
         ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
     
-        Handset localDevice = PerfectoMobile.instance().devices().getDevice( webDriver.getDevice().getDeviceName() );
+        Handset localDevice = PerfectoMobile.instance().devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
         
         Execution appExec = null;
         
         if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
-            appExec = PerfectoMobile.instance().application().install( webDriver.getExecutionId(), webDriver.getDevice().getDeviceName(), appDesc.getIosInstallation(), instrumentApp ? "instrument" : "noinstrument" );
+            appExec = PerfectoMobile.instance().application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getIosInstallation(), instrumentApp ? "instrument" : "noinstrument" );
         else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-            appExec = PerfectoMobile.instance().application().install( webDriver.getExecutionId(), webDriver.getDevice().getDeviceName(), appDesc.getAndroidInstallation(), instrumentApp ? "instrument" : "noinstrument" );
+            appExec = PerfectoMobile.instance().application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getAndroidInstallation(), instrumentApp ? "instrument" : "noinstrument" );
         else
-            throw new DeviceConfigurationException( "Could not install application to " + webDriver.getDevice().getEnvironment() + "(" + webDriver.getDevice().getDeviceName() + ")" );
+            throw new DeviceConfigurationException( "Could not install application to " + webDriver.getPopulatedDevice().getEnvironment() + "(" + webDriver.getDevice().getDeviceName() + ")" );
         
         if ( appExec != null )
         {
@@ -141,12 +141,12 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
     {
         ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
     
-        Handset localDevice = PerfectoMobile.instance().devices().getDevice( webDriver.getDevice().getDeviceName() );
+        Handset localDevice = PerfectoMobile.instance().devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
         
         if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
-            PerfectoMobile.instance().application().uninstall( webDriver.getExecutionId(), webDriver.getDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
+            PerfectoMobile.instance().application().uninstall( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
         else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-            PerfectoMobile.instance().application().uninstall( webDriver.getExecutionId(), webDriver.getDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
+            PerfectoMobile.instance().application().uninstall( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
         else
             throw new DeviceException( "Could not uninstall application from " + localDevice.getOs() );
         return true;
@@ -172,12 +172,12 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         }
         else
         {
-            Handset localDevice = PerfectoMobile.instance().devices().getDevice( webDriver.getDevice().getDeviceName() );
+            Handset localDevice = PerfectoMobile.instance().devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
             Execution appExec = null;
             if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
-                appExec = PerfectoMobile.instance().application().open( webDriver.getExecutionId(), webDriver.getDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
+                appExec = PerfectoMobile.instance().application().open( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
             else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-                appExec = PerfectoMobile.instance().application().open( webDriver.getExecutionId(), webDriver.getDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
+                appExec = PerfectoMobile.instance().application().open( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
             else
                 throw new IllegalArgumentException( "Could not install application to " + localDevice.getOs() );
             
@@ -206,12 +206,12 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 
         ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
     
-        Handset localDevice = PerfectoMobile.instance().devices().getDevice( webDriver.getDevice().getDeviceName() );
+        Handset localDevice = PerfectoMobile.instance().devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
         
         if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
-            PerfectoMobile.instance().application().close( webDriver.getExecutionId(), webDriver.getDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
+            PerfectoMobile.instance().application().close( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
         else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-            PerfectoMobile.instance().application().close( webDriver.getExecutionId(), webDriver.getDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
+            PerfectoMobile.instance().application().close( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
         else
             log.warn( "Could not close application on " + localDevice.getOs() );
         return true;

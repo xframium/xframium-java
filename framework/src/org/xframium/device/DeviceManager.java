@@ -375,6 +375,10 @@ public class DeviceManager implements ArtifactListener
         initializationMap.clear();
         analyticsMap.clear();
         activeRuns.clear();
+        deviceMap.clear();
+        deviceList.clear();
+        failureMap.clear();
+        initializationMap.clear();
     }
 	
 	

@@ -36,7 +36,7 @@ import org.xframium.reporting.ExecutionContextTest;
 import com.sun.net.httpserver.HttpServer;
 import com.xframium.serialization.SerializationManager;
 import com.xframium.serialization.json.ReflectionSerializer;
-import com.xframium.serialization.xml.MapSerializer;
+import com.xframium.serialization.json.MapSerializer;
 
 @SuppressWarnings ( "restriction")
 public class DebugManager implements KeyWordListener

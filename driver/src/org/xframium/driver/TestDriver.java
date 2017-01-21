@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.reporting.ExecutionContext;
 public class TestDriver
@@ -39,7 +40,7 @@ public class TestDriver
     {
         try
         {
-            
+            DeviceManager.instance().clear();
             ConfigurationReader configReader = null;
             if ( configFile.getName().toLowerCase().endsWith( ".txt" ) )
             {

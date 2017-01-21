@@ -98,7 +98,13 @@ public class KeyWordDriver
      */
     public void loadTests( SuiteContainer sC )
     {
-
+        testList.clear();
+        testMap.clear();
+        inactiveTestMap.clear();
+        functionMap.clear();
+        pageMap.clear();
+        tagMap.clear();
+        
         for ( KeyWordTest t : sC.getActiveTestList() )
         {
             addTest( t );
