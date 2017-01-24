@@ -144,13 +144,25 @@ public class ContentManager
     	
     	if ( contentData != null )
     	{
+            String rtn = null;
+            
     		if ( keyName != null )
-    			return contentData.getValue( keyName );
+                {
+                    rtn = contentData.getValue( keyName );
+                }
+    		else if ( indexNumber >= 0 )
+                {
+                    rtn = contentData.getValue( indexNumber );
+                }
+                else
+                {
+                    rtn = contentData.getValue();
+                }
+
+                if ( log.isInfoEnabled() )
+                    log.info( "Extracting [" + rtn + "] for [" + contentKey + "]" );
     		
-    		if ( indexNumber >= 0 )
-    			return contentData.getValue( indexNumber );
-    		
-    		return contentData.getValue();
+    		return rtn;
     	}
     	else
     	{
