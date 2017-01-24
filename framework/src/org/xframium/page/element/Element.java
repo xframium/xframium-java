@@ -117,6 +117,9 @@ public interface Element
         }
     }
 	
+	public String getClassification();
+    public void setClassification( String classification );
+	
 	public void addElementProperty( String name, String value );
     public Map<String,String> getElementProperties();
     public String getElementProperty( String name );

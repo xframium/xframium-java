@@ -57,6 +57,7 @@ import org.xframium.device.data.perfectoMobile.ReservedHandsetValidator;
 import org.xframium.device.property.PropertyAdapter;
 import org.xframium.device.proxy.ProxyRegistry;
 import org.xframium.driver.xsd.ObjectFactory;
+import org.xframium.driver.xsd.XActivity;
 import org.xframium.driver.xsd.XArtifact;
 import org.xframium.driver.xsd.XCapabilities;
 import org.xframium.driver.xsd.XDevice;
@@ -65,6 +66,7 @@ import org.xframium.driver.xsd.XElement;
 import org.xframium.driver.xsd.XElementParameter;
 import org.xframium.driver.xsd.XFramiumRoot;
 import org.xframium.driver.xsd.XFunction;
+import org.xframium.driver.xsd.XInitiator;
 import org.xframium.driver.xsd.XLibrary;
 import org.xframium.driver.xsd.XModel;
 import org.xframium.driver.xsd.XObjectDeviceCapability;
@@ -78,11 +80,13 @@ import org.xframium.driver.xsd.XStep;
 import org.xframium.driver.xsd.XTag;
 import org.xframium.driver.xsd.XTest;
 import org.xframium.driver.xsd.XToken;
-import org.xframium.flow.FlowProvider;
-import org.xframium.flow.XMLFlowProvider;
+import org.xframium.driver.xsd.XValidator;
 import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.Page;
+import org.xframium.page.activity.ActivityInitiator;
+import org.xframium.page.activity.ActivityValidator;
+import org.xframium.page.activity.PageActivity;
 import org.xframium.page.data.provider.ExcelPageDataProvider;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.data.provider.SQLPageDataProvider;
@@ -458,6 +462,25 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                         }
                         
                         elementsRead = elementsRead & elementRead;
+                    }
+                    if ( page.getActivity() != null )
+                    {
+                        for( XActivity activity : page.getActivity() )
+                        {
+                            PageActivity pageActivity = new PageActivity( activity.getName(), activity.getPage() );
+                            
+                            if ( activity.getInitiator() != null )
+                            {
+                                for ( XInitiator initiator : activity.getInitiator() )
+                                    pageActivity.getInitiatorList().add( new ActivityInitiator( initiator.getElement(), initiator.getAction() ) );
+                            }
+                            
+                            if ( activity.getValidator() != null )
+                            {
+                                for ( XValidator validator : activity.getValidator() )
+                                    pageActivity.getValidatorList().add( new ActivityValidator( validator.getElement(), validator.getAction() ) );
+                            }
+                        }
                     }
                 }
                 
@@ -880,19 +903,6 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         if ( sC != null )
             sC.setDataProvider( pdp );
         return sC;
-    }
-    
-    @Override
-    public boolean configureFlowManagement( SuiteContainer sC )
-    {
-        if ( xRoot.getSuite().getFlow() != null )
-        {
-            FlowProvider flowProvider = new XMLFlowProvider();
-            sC.setModuleRegistry( flowProvider.getFlow( findFile( configFolder, new File( xRoot.getSuite().getFlow().getFileName() ) ) ) );
-        }
-        
-        return true;
-        
     }
     
     @Override

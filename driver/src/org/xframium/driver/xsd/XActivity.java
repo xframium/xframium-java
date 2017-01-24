@@ -17,23 +17,20 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * Defines a page object in your object repository
- * 
- * <p>Java class for xPage complex type.
+ * <p>Java class for xActivity complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="xPage"&gt;
+ * &lt;complexType name="xActivity"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="activity" type="{http://www.xframium.org/xFramiumDriver}xActivity" maxOccurs="unbounded" minOccurs="0"/&gt;
- *         &lt;element name="element" type="{http://www.xframium.org/xFramiumDriver}xElement" maxOccurs="unbounded" minOccurs="0"/&gt;
+ *         &lt;element name="initiator" type="{http://www.xframium.org/xFramiumDriver}xInitiator" maxOccurs="unbounded" minOccurs="0"/&gt;
+ *         &lt;element name="validator" type="{http://www.xframium.org/xFramiumDriver}xValidator" maxOccurs="unbounded" minOccurs="0"/&gt;
  *       &lt;/sequence&gt;
- *       &lt;attribute name="site" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
- *       &lt;attribute name="class" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="page" use="required" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
@@ -42,101 +39,75 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "xPage", propOrder = {
-    "activity",
-    "element"
+@XmlType(name = "xActivity", propOrder = {
+    "initiator",
+    "validator"
 })
-public class XPage {
+public class XActivity {
 
-    protected List<XActivity> activity;
-    protected List<XElement> element;
-    @XmlAttribute(name = "site")
-    protected String site;
+    protected List<XInitiator> initiator;
+    protected List<XValidator> validator;
     @XmlAttribute(name = "name", required = true)
     protected String name;
-    @XmlAttribute(name = "class")
-    protected String clazz;
+    @XmlAttribute(name = "page", required = true)
+    protected String page;
 
     /**
-     * Gets the value of the activity property.
+     * Gets the value of the initiator property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the activity property.
+     * This is why there is not a <CODE>set</CODE> method for the initiator property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getActivity().add(newItem);
+     *    getInitiator().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link XActivity }
+     * {@link XInitiator }
      * 
      * 
      */
-    public List<XActivity> getActivity() {
-        if (activity == null) {
-            activity = new ArrayList<XActivity>();
+    public List<XInitiator> getInitiator() {
+        if (initiator == null) {
+            initiator = new ArrayList<XInitiator>();
         }
-        return this.activity;
+        return this.initiator;
     }
 
     /**
-     * Gets the value of the element property.
+     * Gets the value of the validator property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the element property.
+     * This is why there is not a <CODE>set</CODE> method for the validator property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getElement().add(newItem);
+     *    getValidator().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link XElement }
+     * {@link XValidator }
      * 
      * 
      */
-    public List<XElement> getElement() {
-        if (element == null) {
-            element = new ArrayList<XElement>();
+    public List<XValidator> getValidator() {
+        if (validator == null) {
+            validator = new ArrayList<XValidator>();
         }
-        return this.element;
-    }
-
-    /**
-     * Gets the value of the site property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getSite() {
-        return site;
-    }
-
-    /**
-     * Sets the value of the site property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setSite(String value) {
-        this.site = value;
+        return this.validator;
     }
 
     /**
@@ -164,27 +135,27 @@ public class XPage {
     }
 
     /**
-     * Gets the value of the clazz property.
+     * Gets the value of the page property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getClazz() {
-        return clazz;
+    public String getPage() {
+        return page;
     }
 
     /**
-     * Sets the value of the clazz property.
+     * Sets the value of the page property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setClazz(String value) {
-        this.clazz = value;
+    public void setPage(String value) {
+        this.page = value;
     }
 
 }

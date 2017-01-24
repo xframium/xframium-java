@@ -33,16 +33,22 @@ import javax.xml.bind.Unmarshaller;
 import org.xframium.application.ApplicationVersion;
 import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
+import org.xframium.page.activity.ActivityInitiator;
+import org.xframium.page.activity.ActivityValidator;
+import org.xframium.page.activity.PageActivity;
 import org.xframium.page.element.Element;
 import org.xframium.page.element.ElementFactory;
 import org.xframium.page.element.SubElement;
+import org.xframium.page.element.provider.xsd.Activity;
 import org.xframium.page.element.provider.xsd.ElementParameter;
 import org.xframium.page.element.provider.xsd.Import;
+import org.xframium.page.element.provider.xsd.Initiator;
 import org.xframium.page.element.provider.xsd.ObjectFactory;
 import org.xframium.page.element.provider.xsd.Page;
 import org.xframium.page.element.provider.xsd.RegistryRoot;
 import org.xframium.page.element.provider.xsd.SimpleElement;
 import org.xframium.page.element.provider.xsd.Site;
+import org.xframium.page.element.provider.xsd.Validator;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -243,12 +249,29 @@ public class XMLElementProvider extends AbstractElementProvider
 	            if ( ele.getDeviceContext() != null )
 	                currentElement.setDeviceContext( ele.getDeviceContext() );
 	            
-	            //if (log.isDebugEnabled())
-	            //    log.debug( "Adding XML Element using [" + elementDescriptor.toString() + "] as [" + currentElement + "]" );
-	            
 	            elementsRead = elementsRead & validateElement( elementDescriptor, currentElement );
 	            
 	            elementMap.put(elementDescriptor.toString(), currentElement );
+	        }
+	        
+	        for( Activity activity : page.getActivity() )
+	        {
+	            PageActivity pageActivity = new PageActivity( activity.getName(), activity.getPage() );
+	            
+	            if ( activity.getInitiator() != null )
+	            {
+	                for ( Initiator initiator : activity.getInitiator() )
+	                    pageActivity.getInitiatorList().add( new ActivityInitiator( initiator.getElement(), initiator.getAction() ) );
+	            }
+	            
+	            if ( activity.getValidator() != null )
+                {
+                    for ( Validator validator : activity.getValidator() )
+                        pageActivity.getValidatorList().add( new ActivityValidator( validator.getElement(), validator.getAction() ) );
+                }
+	            
+	            addActivity( site.getName(), page.getName(), pageActivity );
+	            
 	        }
 	    }
 	    

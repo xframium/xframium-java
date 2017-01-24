@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-  <test name="xFramium Complex Version Test" tagNames="performance,test" timed="false" threshold="0" active="true" os="WINDOWS">
-    <description>Tests the complex tag type and application version</description>
-    <step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" />
-    <step name="versionTest" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="versionValue" />
-    <step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" tagNames="myTag">
-      <parameter type="STATIC" name="null" value="Version 2" />
-      <parameter type="CONTEXT" name="null" value="versionValue" />
-    </step>
-    <step name="OPEN" site="xTest" page="home" type="APPLICATION" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Application Name" value="xTest0" />
-    </step>
-    <step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" />
-    <step name="versionTest" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="versionValue" />
-    <step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" tagNames="myTag">
-      <parameter type="STATIC" name="null" value="Version 1" />
-      <parameter type="CONTEXT" name="null" value="versionValue" />
-    </step>
-    <step name="osTest" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="osValue" />
-    <step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="null" value="Windows" />
-      <parameter type="CONTEXT" name="null" value="osValue" />
-    </step>
-    <step name="osTest2" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="osValue" />
-    <step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="null" value="Windows" />
-      <parameter type="CONTEXT" name="null" value="osValue" />
-    </step>
-  </test>
+<test name="xFramium Complex Version Test" tagNames="performance,test" timed="false" threshold="0" active="true" os="WINDOWS">
+<description>Tests the complex tag type and application version</description>
+<step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="versionTest" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="versionValue"/>
+<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" tagNames="myTag">
+<parameter type="STATIC" name="null" value="Version 2"/>
+<parameter type="CONTEXT" name="null" value="versionValue"/>
+</step>
+<step name="OPEN" site="xTest" page="home" type="APPLICATION" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Application Name" value="xTest0"/>
+</step>
+<step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="versionTest" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="versionValue"/>
+<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" tagNames="myTag">
+<parameter type="STATIC" name="null" value="Version 1"/>
+<parameter type="CONTEXT" name="null" value="versionValue"/>
+</step>
+<step name="osTest" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="osValue"/>
+<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="Windows"/>
+<parameter type="CONTEXT" name="null" value="osValue"/>
+</step>
+<step name="osTest2" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="osValue"/>
+<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="Windows"/>
+<parameter type="CONTEXT" name="null" value="osValue"/>
+</step>
+</test>
 </suite>

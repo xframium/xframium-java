@@ -5,4 +5,4 @@
  * @author Allen
  *
  */
-package org.xframium.flow;
+package org.xframium.page.activity;
