@@ -3,16 +3,16 @@
 <function name="kw-align" operations="kw-attribute,kw-browser" inputPage="xTest.home" mode="module" threshold="0" active="true">
 <description>Test the alignment of elements on the screen</description>
 <parameter type="STATIC" name="alignOne" value=""/>
-<step name="toggleButton" site="xTest" page="home" type="ALIGN" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="toggleButton" site="xTest" page="home" type="ALIGN" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="LEFT=toggleValue"/>
 </step>
-<step name="confirmValue" site="xTest" page="home" type="ALIGN" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="confirmValue" site="xTest" page="home" type="ALIGN" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="RIGHT=promptValue"/>
 </step>
-<step name="confirmValue" site="xTest" page="home" type="ALIGN" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="confirmValue" site="xTest" page="home" type="ALIGN" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="RIGHT=promptValue(50)"/>
 </step>
-<step name="alertButton" site="xTest" page="home" type="ALIGN" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="alertButton" site="xTest" page="home" type="ALIGN" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="TOP=confirmButton"/>
 <parameter type="STATIC" name="null" value="BOTTOM=confirmButton"/>
 </step>

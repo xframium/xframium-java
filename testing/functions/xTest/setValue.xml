@@ -2,7 +2,7 @@
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
 <function name="setValue" mode="function" threshold="0" active="true">
 <description>null</description>
-<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="DATA" name="null" value="dataLoop.value"/>
 </step>
 </function>

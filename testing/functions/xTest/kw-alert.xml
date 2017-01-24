@@ -2,30 +2,30 @@
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
 <function name="kw-alert" mode="module" threshold="0" active="true">
 <description></description>
-<step name="alertButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
-<step name="alertButton" site="xTest" page="home" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
-<step name="ACCEPT" site="xTest" page="home" type="ALERT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="alertValue"/>
-<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="alertButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR"/>
+<step name="alertButton" site="xTest" page="home" type="CLICK" active="true" threshold="0" wait="0" failureMode="ERROR"/>
+<step name="ACCEPT" site="xTest" page="home" type="ALERT" active="true" threshold="0" wait="0" failureMode="ERROR" context="alertValue"/>
+<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="Alert Message"/>
 <parameter type="CONTEXT" name="null" value="alertValue"/>
 </step>
-<step name="confirmButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
-<step name="confirmButton" site="xTest" page="home" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
-<step name="ACCEPT" site="xTest" page="home" type="ALERT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
-<step name="confirmValue" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="confirmButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR"/>
+<step name="confirmButton" site="xTest" page="home" type="CLICK" active="true" threshold="0" wait="0" failureMode="ERROR"/>
+<step name="ACCEPT" site="xTest" page="home" type="ALERT" active="true" threshold="0" wait="0" failureMode="ERROR"/>
+<step name="confirmValue" site="xTest" page="home" type="GET" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="true"/>
 </step>
-<step name="confirmButton" site="xTest" page="home" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
-<step name="DISMISS" site="xTest" page="home" type="ALERT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
-<step name="confirmValue" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="confirmButton" site="xTest" page="home" type="CLICK" active="true" threshold="0" wait="0" failureMode="ERROR"/>
+<step name="DISMISS" site="xTest" page="home" type="ALERT" active="true" threshold="0" wait="0" failureMode="ERROR"/>
+<step name="confirmValue" site="xTest" page="home" type="GET" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="false"/>
 </step>
-<step name="promptButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
-<step name="promptButton" site="xTest" page="home" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
-<step name="SEND_KEYS" site="xTest" page="home" type="ALERT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="promptButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR"/>
+<step name="promptButton" site="xTest" page="home" type="CLICK" active="true" threshold="0" wait="0" failureMode="ERROR"/>
+<step name="SEND_KEYS" site="xTest" page="home" type="ALERT" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="CONTEXT" name="null" value="alertValue"/>
 </step>
-<step name="promptValue" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="promptValue" site="xTest" page="home" type="GET" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="CONTEXT" name="null" value="alertValue"/>
 </step>
 </function>

@@ -2,59 +2,59 @@
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
 <function name="kw-loop" mode="function" threshold="0" active="true">
 <description>null</description>
-<step name="data based loop" site="xTest" page="home" type="LOOP" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="data based loop" site="xTest" page="home" type="LOOP" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="data{dataLoop}"/>
 <parameter type="STATIC" name="null" value="setValue"/>
 </step>
-<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="three"/>
 <parameter type="STATIC" name="null" value="value"/>
 </step>
-<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value=""/>
 </step>
-<step name="data based loop" site="xTest" page="home" type="LOOP" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="data based loop" site="xTest" page="home" type="LOOP" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="data{parentData.one.childRecord.childOne.loopData}"/>
 <parameter type="STATIC" name="null" value="setValue"/>
 </step>
-<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="three"/>
 <parameter type="STATIC" name="null" value="value"/>
 </step>
-<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value=""/>
 </step>
-<step name="data based loop with break" site="xTest" page="home" type="LOOP" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="data based loop with break" site="xTest" page="home" type="LOOP" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="data{dataLoop}"/>
 <parameter type="STATIC" name="null" value="setValueWithBreak"/>
 </step>
-<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="two"/>
 <parameter type="STATIC" name="null" value="value"/>
 </step>
-<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value=""/>
 </step>
-<step name="element list based loop" site="xTest" page="home" type="LOOP" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="element list based loop" site="xTest" page="home" type="LOOP" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="elementList"/>
 <parameter type="STATIC" name="null" value="setValueFromElement"/>
 </step>
-<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="Value Three"/>
 <parameter type="STATIC" name="null" value="value"/>
 </step>
-<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value=""/>
 </step>
-<step name="numerical based loop" site="xTest" page="home" type="LOOP" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="numerical based loop" site="xTest" page="home" type="LOOP" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="3"/>
 <parameter type="STATIC" name="null" value="setValueFromNumericIndex"/>
 </step>
-<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="3"/>
 <parameter type="STATIC" name="null" value="value"/>
 </step>
-<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value=""/>
 </step>
 </function>

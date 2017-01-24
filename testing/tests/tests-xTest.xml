@@ -13,5 +13,6 @@
   <import fileName="./xTest/xFramium Dump State Historical Test.xml" />
   <import fileName="./xTest/xFramium device tag Step Filter.xml" />
   <import fileName="./xTest/xFramium Module Test.xml" />
+  <import fileName="./xTest/xFramium Perfecto VISUAL Keyword Tests.xml" />
   <import fileName="../functions/functions-xTest.xml" />
 </suite>

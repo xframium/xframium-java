@@ -39,5 +39,7 @@
 <element value="//*[@id='ANDROID']" descriptor="XPATH" os="ANDROID"/>
 <element value="//*[@id='WINDOWS']" descriptor="XPATH" os="WINDOWS"/>
 </element>
+    <element name="Accordian Image" value="PRIVATE:/testingImage.png" descriptor="V_IMAGE"/>
+    <element name="TOGGLE Text" value="Toggle Value" descriptor="V_TEXT"/>
   </page>
 </site></elementDefinition>

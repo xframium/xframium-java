@@ -2,71 +2,71 @@
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
 <function name="kw-window" mode="function" threshold="0" active="true">
 <description>null</description>
-<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="GET_TITLE"/>
 <parameter type="STATIC" name="null" value="xFramium Testing"/>
 </step>
-<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="GET_URL"/>
 <parameter type="STATIC" name="null" value="http://xframium.org/testing.html"/>
 </step>
-<step name="_testingTwo" site="xTest" page="home" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
-<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="_testingTwo" site="xTest" page="home" type="CLICK" active="true" threshold="0" wait="0" failureMode="ERROR"/>
+<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="BY_WINTITLE"/>
 <parameter type="STATIC" name="null" value="xFramium Second Page"/>
 </step>
-<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="GET_TITLE"/>
 <parameter type="STATIC" name="null" value="xFramium Second Page"/>
 </step>
-<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="GET_URL"/>
 <parameter type="STATIC" name="null" value="http://xframium.org/testing2.html"/>
 </step>
-<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="BY_WINURL"/>
 <parameter type="STATIC" name="null" value="http://xframium.org/testing.html"/>
 </step>
-<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="GET_TITLE"/>
 <parameter type="STATIC" name="null" value="xFramium Testing"/>
 </step>
-<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="GET_URL"/>
 <parameter type="STATIC" name="null" value="http://xframium.org/testing.html"/>
 </step>
-<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="BY_WINURL"/>
 <parameter type="STATIC" name="null" value="http://xframium.org/testing2.html"/>
 </step>
-<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="GET_TITLE"/>
 <parameter type="STATIC" name="null" value="xFramium Second Page"/>
 </step>
-<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="GET_URL"/>
 <parameter type="STATIC" name="null" value="http://xframium.org/testing2.html"/>
 </step>
-<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="BY_WINURL"/>
 <parameter type="STATIC" name="null" value="http://xframium.org/testing.html"/>
 </step>
-<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="BY_FRAME"/>
 <parameter type="STATIC" name="null" value="frameName"/>
 </step>
-<step name="screenTwo" site="xTest" page="page two" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
-<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="screenTwo" site="xTest" page="page two" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR"/>
+<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="BY_PARENTFRAME"/>
 </step>
-<step name="screenTwo" site="xTest" page="page two" type="EXISTS" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR"/>
-<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="screenTwo" site="xTest" page="page two" type="EXISTS" active="true" threshold="0" inverse="true" wait="0" failureMode="ERROR"/>
+<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="BY_ELEMENT"/>
 </step>
-<step name="screenTwo" site="xTest" page="page two" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
-<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="screenTwo" site="xTest" page="page two" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR"/>
+<step name="testingTwoFrame" site="xTest" page="home" type="WINDOW" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="BY_PARENTFRAME"/>
 </step>
-<step name="screenTwo" site="xTest" page="page two" type="EXISTS" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR"/>
+<step name="screenTwo" site="xTest" page="page two" type="EXISTS" active="true" threshold="0" inverse="true" wait="0" failureMode="ERROR"/>
 </function>
 </suite>

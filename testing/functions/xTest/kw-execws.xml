@@ -2,7 +2,7 @@
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
 <function name="kw-execws" mode="function" threshold="0" active="true">
 <description>null</description>
-<step name="SOAP Call" site="xTest" page="Home" type="EXECWS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="soap">
+<step name="SOAP Call" site="xTest" page="Home" type="EXECWS" active="true" threshold="0" wait="0" failureMode="ERROR" context="soap">
 <parameter type="STATIC" name="url" value="http://www.webservicex.net/FinanceService.asmx"/>
 <parameter type="STATIC" name="method" value="POST"/>
 <parameter type="STATIC" name="media-type" value="text/xml"/>
@@ -15,14 +15,14 @@
 <parameter type="STATIC" name="type" value="xml"/>
 <parameter type="STATIC" name="var1" value="//APRResult"/>
 </step>
-<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="CONTEXT" name="null" value="soap_var1"/>
 </step>
-<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="536.82162301213975"/>
 <parameter type="STATIC" name="null" value="value"/>
 </step>
-<step name="REST Call" site="xTest" page="Home" type="EXECWS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="rest">
+<step name="REST Call" site="xTest" page="Home" type="EXECWS" active="true" threshold="0" wait="0" failureMode="ERROR" context="rest">
 <parameter type="STATIC" name="url" value="http://www.webservicex.net/FinanceService.asmx/APR?LoanAmount={loanAmount}&amp;ExtraCost={extraCost}&amp;InterestRate={interestRate}&amp;Months={months}"><token type="STATIC" name="loanAmount" value="100000"/>
 <token type="STATIC" name="extraCost" value="15000"/>
 <token type="STATIC" name="interestRate" value="5"/>
@@ -34,10 +34,10 @@
 <parameter type="STATIC" name="type" value="xml"/>
 <parameter type="STATIC" name="var1" value="//double"/>
 </step>
-<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="CONTEXT" name="null" value="rest_var1"/>
 </step>
-<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="null" value="617.34486646396078"/>
 <parameter type="STATIC" name="null" value="value"/>
 </step>

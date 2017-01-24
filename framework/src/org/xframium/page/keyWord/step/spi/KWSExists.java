@@ -24,8 +24,8 @@ import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.exception.ScriptException;
-import org.xframium.gesture.GestureManager;
 import org.xframium.gesture.Gesture.Direction;
+import org.xframium.page.BY;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
@@ -97,23 +97,26 @@ public class KWSExists extends AbstractKeyWordStep
             returnValue = currentElement.isPresent();
         }
 
-        if ( !validateData( currentElement.getValue() + "" ) )
-            throw new ScriptException( "EXISTS Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + currentElement.getValue() + "]" );
-        
-        if ( getContext() != null )
+        if ( !currentElement.getBy().equals( BY.V_IMAGE ) && !currentElement.getBy().equals( BY.V_IMAGE ) )
         {
-            int elementCount = currentElement.getCount();
-
-            if ( elementCount > 1 )
+            if ( !validateData( currentElement.getValue() + "" ) )
+                throw new ScriptException( "EXISTS Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + currentElement.getValue() + "]" );
+            
+            if ( getContext() != null )
             {
+                int elementCount = currentElement.getCount();
+    
+                if ( elementCount > 1 )
+                {
+                    if ( log.isDebugEnabled() )
+                        log.debug( "Setting Context Data to [" + currentElement.getValue() + "] for [" + getContext() + "]" );
+                    contextMap.put( getContext() + "_count", elementCount + "" );
+                }
+    
                 if ( log.isDebugEnabled() )
                     log.debug( "Setting Context Data to [" + currentElement.getValue() + "] for [" + getContext() + "]" );
-                contextMap.put( getContext() + "_count", elementCount + "" );
+                contextMap.put( getContext(), currentElement.getValue() );
             }
-
-            if ( log.isDebugEnabled() )
-                log.debug( "Setting Context Data to [" + currentElement.getValue() + "] for [" + getContext() + "]" );
-            contextMap.put( getContext(), currentElement.getValue() );
         }
 
         return returnValue;
