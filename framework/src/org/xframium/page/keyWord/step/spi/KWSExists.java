@@ -97,7 +97,7 @@ public class KWSExists extends AbstractKeyWordStep
             returnValue = currentElement.isPresent();
         }
 
-        if ( !currentElement.getBy().equals( BY.V_IMAGE ) && !currentElement.getBy().equals( BY.V_IMAGE ) )
+        if ( !currentElement.getBy().equals( BY.V_IMAGE ) && !currentElement.getBy().equals( BY.V_TEXT ) )
         {
             if ( !validateData( currentElement.getValue() + "" ) )
                 throw new ScriptException( "EXISTS Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + currentElement.getValue() + "]" );
