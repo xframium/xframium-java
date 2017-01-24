@@ -133,7 +133,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
                 {
                     executionContextTest.setTest( test );
                     executionContextTest.setCloud( cD );
-                    executionContextTest.completeTest( TestStatus.SKIPPED, new FilteredException( "This test did not contain the specified tag and will be skipped" ) );
+                    executionContextTest.completeTest( TestStatus.SKIPPED, new FilteredException( "This test did not contain the specified device tag and will be skipped" ) );
                     testName.setTest( executionContextTest );
                     throw new FilteredException( "This test did not contain the specified tag and will be skipped" );
                 }
