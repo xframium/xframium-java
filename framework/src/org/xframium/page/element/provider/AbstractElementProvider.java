@@ -30,8 +30,8 @@ import org.apache.commons.logging.LogFactory;
 import org.xframium.container.PageContainer;
 import org.xframium.container.SiteContainer;
 import org.xframium.page.ElementDescriptor;
+import org.xframium.page.activity.PageActivity;
 import org.xframium.page.element.Element;
-import org.xframium.page.keyWord.KeyWordDriver;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -83,6 +83,22 @@ public abstract class AbstractElementProvider implements ElementProvider
     public void setInitialized( boolean initialized )
     {
         this.initialized = initialized;
+    }
+    
+    protected void addActivity( String siteName, String pageName, PageActivity pageActivity )
+    {
+        SiteContainer siteContainer = siteTree.get( siteName );
+        
+        if ( siteContainer == null )
+        {
+            siteContainer = new SiteContainer( siteName );
+            siteTree.put( siteContainer.getSiteName(), siteContainer );
+            siteList.add( siteContainer );
+        }
+        
+        siteContainer.getPage( pageName ).getActivityList().add( pageActivity );
+        
+        
     }
 
     /**

@@ -262,13 +262,27 @@ public abstract class AbstractElement implements Element
 	
 	private String deviceContext;
 	
+	private String classification;
+	
 	/** The token map. */
 	private Map<String,String> tokenMap = null;
 	
 	/** The tokens applied. */
 	private boolean tokensApplied = false;
 
-	public String getName()
+	
+	
+	public String getClassification()
+    {
+        return classification;
+    }
+
+    public void setClassification( String classification )
+    {
+        this.classification = classification;
+    }
+
+    public String getName()
 	{
 	    return elementName;
 	}

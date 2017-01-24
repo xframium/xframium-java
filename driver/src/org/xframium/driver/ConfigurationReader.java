@@ -30,5 +30,4 @@ public interface ConfigurationReader
     public FavoriteContainer configureFavorites();
     public boolean configureContent();
     public String getSuiteName();
-    public boolean configureFlowManagement( SuiteContainer sC );
 }
