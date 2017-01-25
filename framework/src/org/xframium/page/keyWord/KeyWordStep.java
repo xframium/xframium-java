@@ -76,6 +76,7 @@ public interface KeyWordStep
 	
 	public ApplicationVersion getVersion();
 	public void setVersion( String appVersion );
+	public boolean isOrMapping();
 	
 	
 	/**

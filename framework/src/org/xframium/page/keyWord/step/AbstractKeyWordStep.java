@@ -172,6 +172,13 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     protected String natualLanguage;
     protected ApplicationVersion version;
 
+    
+    
+    public boolean isOrMapping()
+    {
+        return orMapping;
+    }
+
     @Override
     public boolean isBreakpoint()
     {
