@@ -105,6 +105,23 @@ xConsole
                         return i;
                     }
                     
+                    $scope.incrementAll = function()
+                    {
+                        for ( var j = 0; j < $scope.testList.length; j++ ) 
+                        {
+                            $scope.testList[ j ].count++;
+                        }
+                    }
+                    
+                    $scope.decrementAll = function()
+                    {
+                        for ( var j = 0; j < $scope.testList.length; j++ ) 
+                        {
+                            if ( $scope.testList[ j ].count > 1 )
+                                $scope.testList[ j ].count--;
+                        }
+                    }
+                    
                     $scope.getActive = function()
                     {
                         var i = 0;
