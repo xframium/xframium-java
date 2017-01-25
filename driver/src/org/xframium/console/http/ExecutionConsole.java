@@ -23,6 +23,7 @@ import org.xframium.console.http.handler.spi.KillSwitch;
 import org.xframium.console.http.handler.spi.ListFolder;
 import org.xframium.console.http.handler.spi.OpenConsole;
 import org.xframium.console.http.handler.spi.OpenFile;
+import org.xframium.console.http.handler.spi.OpenHTML;
 //import org.xframium.console.http.handler.spi.OpenHTML;
 import org.xframium.console.http.handler.spi.OpenSuite;
 import org.xframium.console.http.handler.spi.TestStatus;
@@ -191,7 +192,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
         httpServer.createContext( "/executionConsole/executeTest", new ExecuteTest() );
         httpServer.createContext( "/executionConsole/status", new TestStatus() );
         httpServer.createContext( "/executionConsole/kill", new KillSwitch() );
-        //httpServer.createContext( "/html", new OpenHTML() );
+        httpServer.createContext( "/html", new OpenHTML() );
         httpServer.start();
     }
     
