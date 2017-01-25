@@ -49,7 +49,7 @@ public class ExecutionContextStep
                 
                 if ( s.getStepStatus().equals( StepStatus.SUCCESS ) )
                     passFail[ 0 ]++;
-                else
+                else if ( s.getStepStatus().equals( StepStatus.FAILURE ) )
                     passFail[ 1 ]++;
                 
 
@@ -63,7 +63,7 @@ public class ExecutionContextStep
                 
                 if ( s.getStepStatus().equals( StepStatus.SUCCESS ) )
                     eU.setPassCount( eU.getPassCount() + 1 );
-                else
+                else if ( s.getStepStatus().equals( StepStatus.FAILURE ) )
                     eU.setFailCount( eU.getFailCount() + 1 );
             }
             
