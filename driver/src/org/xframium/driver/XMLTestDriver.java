@@ -36,6 +36,7 @@ import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.device.ng.TestName;
 import org.xframium.exception.DeviceAcquisitionException;
 import org.xframium.exception.FilteredException;
+import org.xframium.exception.FlowException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.integrations.sauceLabs.rest.SauceREST;
 import org.xframium.page.PageManager;
@@ -192,10 +193,11 @@ public class XMLTestDriver extends AbstractSeleniumTest
 
             if ( test.getDescription() != null && !test.getDescription().isEmpty() && getWebDriver() instanceof PropertyProvider )
                 ((PropertyProvider) getWebDriver()).setProperty( "testDescription", test.getDescription() );
-            
+
             executionContextTest = KeyWordDriver.instance().executeTest( testName, getWebDriver(), null );
             returnValue = executionContextTest.getStatus();
             testName.setTest( executionContextTest );
+
         }
         finally
         {

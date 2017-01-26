@@ -14,5 +14,4 @@
 <capability name="platform" class="STRING">ANDROID</capability>
 </device>
 <device os="Android" model="Galaxy S8" manufacturer="Samsung" availableDevices="1" driverType="WEB" name=" Galaxy S8 / Android"/>
-<device driverType="WEB" name="New Device" cloud="saucelabs" active="true"/>
 </deviceRegistry>
