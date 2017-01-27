@@ -50,7 +50,7 @@
 <step name="PARENT_FRAME" site="xTest" page="home" type="BROWSER" active="true" threshold="0" wait="0" failureMode="ERROR"/>
 <step name="screenTwo" site="xTest" page="page two" type="EXISTS" active="true" threshold="0" inverse="true" wait="0" failureMode="ERROR"/>
 <step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR"/>
-<step name="toggleValue" site="xTest" page="home" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR" />
+<step name="toggleValue" site="xTest" page="home" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR"/>
 <step name="toggleButton" site="xTest" page="home" type="CLICK" active="true" threshold="0" wait="0" failureMode="ERROR"/>
 <step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR"/>
 <step name="toggleValue" site="xTest" page="home" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR"/>

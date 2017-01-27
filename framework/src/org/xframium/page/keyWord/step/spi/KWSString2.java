@@ -22,6 +22,7 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,8 @@ import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
-import org.xframium.page.keyWord.step.spi.KWSBrowser.SwitchType;
 import org.xframium.reporting.ExecutionContextTest;
+import org.xframium.utility.DateUtility;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -44,6 +45,7 @@ import org.xframium.reporting.ExecutionContextTest;
 public class KWSString2 extends AbstractKeyWordStep
 {
     private static final String FORMAT = "Decimal Format";
+    private static final String _FORMAT = "Format";
     private static final String O_VALUE = "Original Value";
     private static final String REGEX = "Regex";
     private static final String VALUE = "Value";
@@ -69,7 +71,8 @@ public class KWSString2 extends AbstractKeyWordStep
         REGEX( 5, "REGEX", "Validate with regular Expressions" ), 
         CONTAINS( 6, "CONTAINS", "Find a string in a string" ), 
         CONCAT( 7, "CONCAT", "Add all strings together" ), 
-        SUBSTR( 8, "SUBSTR","Extract a portion of the string" )
+        SUBSTR( 8, "SUBSTR","Extract a portion of the string" ),
+        DATE( 9, "DATE","Convert a date" )
         ;
 
         public List<OperationType> getSupported()
@@ -83,6 +86,7 @@ public class KWSString2 extends AbstractKeyWordStep
             supportedList.add( OperationType.CONTAINS );
             supportedList.add( OperationType.CONCAT );
             supportedList.add( OperationType.SUBSTR );
+            supportedList.add( OperationType.DATE );
             return supportedList;
         }
 
@@ -114,7 +118,7 @@ public class KWSString2 extends AbstractKeyWordStep
         String operationName = getName();
         int paramCount = getParameterList().size();
 
-        originalValue = getParameterValue( getParameter( O_VALUE ), contextMap, dataMap ) + "";
+        originalValue = getParameterValue( getParameter( O_VALUE ), contextMap, dataMap );
 
         String newValue = null;
 
@@ -130,17 +134,22 @@ public class KWSString2 extends AbstractKeyWordStep
 
             case DECIMAL:
                 
-                DecimalFormat decimalFormat = new DecimalFormat( getParameterValue( getParameter( FORMAT ), contextMap, dataMap ) + "" );
+                DecimalFormat decimalFormat = new DecimalFormat( getParameterValue( getParameter( FORMAT ), contextMap, dataMap ) );
                 decimalFormat.setRoundingMode( RoundingMode.DOWN );
                 newValue = decimalFormat.format( Double.parseDouble( originalValue ) );
                 break;
 
+            case DATE:
+                validateParameters( new String[] { O_VALUE, _FORMAT } );
+                newValue = new SimpleDateFormat( getParameterValue( getParameter( _FORMAT ), contextMap, dataMap ) ).format( DateUtility.instance().parseDate( originalValue ) );
+                break;
+                
             case UPPER:
                 newValue = originalValue.toUpperCase();
                 break;
 
             case REGEX:
-                String regex = getParameterValue( getParameter( REGEX ), contextMap, dataMap ) + "";
+                String regex = getParameterValue( getParameter( REGEX ), contextMap, dataMap );
                 Pattern regexPattern = Pattern.compile( regex );
                
                 if ( log.isInfoEnabled() )
@@ -166,7 +175,7 @@ public class KWSString2 extends AbstractKeyWordStep
                 break;
                 
             case CONTAINS:
-                String expectedValue = getParameterValue( getParameter( VALUE ), contextMap, dataMap ) + "";
+                String expectedValue = getParameterValue( getParameter( VALUE ), contextMap, dataMap );
 
                 if ( expectedValue.isEmpty() )
                 {
@@ -184,31 +193,31 @@ public class KWSString2 extends AbstractKeyWordStep
                 break;
 
             case CONCAT:
-                StringBuilder buff = new StringBuilder( originalValue );
+                StringBuilder buff = new StringBuilder();
                 for( int i = 0; i < paramCount; ++i )
                 {
-                    buff.append( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "" );
+                    buff.append( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) );
                 }
                 newValue = buff.toString();
                 break;
 
             case SUBSTR:
 
-                int beginIndex = getInt( getParameterValue( getParameter( BEGIN ), contextMap, dataMap ) + "" );
-                int endIndex = getInt( getParameterValue( getParameter( END ), contextMap, dataMap ) + "" );
+                int beginIndex = getInt( getParameterValue( getParameter( BEGIN ), contextMap, dataMap ) );
+                int endIndex = getInt( getParameterValue( getParameter( END ), contextMap, dataMap ) );
 
                 newValue = originalValue.substring( beginIndex, endIndex );
 
                 if ( getParameter( VALUE ) != null )
                 {
-                    String compareTo = getParameterValue( getParameter( COMPARE ), contextMap, dataMap ) + "";
+                    String compareTo = getParameterValue( getParameter( COMPARE ), contextMap, dataMap );
                     rtn = newValue.equals( compareTo );
                 }
                 
                 break;
         }
 
-        if ( !validateData( newValue + "" ) )
+        if ( !validateData( newValue ) )
             throw new IllegalStateException( "STRING Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + newValue + "]" );
 
         if ( getContext() != null )

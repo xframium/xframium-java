@@ -30,7 +30,7 @@
 <parameter type="STATIC" name="Domain" value="xframium.org"/>
 </step>
 <step name="EMAIL_ADDRESS" site="xTest" page="home" type="RANDOM" active="true" threshold="0" wait="0" failureMode="ERROR" context="R_EMAIL_2"/>
-<step name="Undefined" site="xTest" page="home" type="REPORT" active="true" threshold="0" wait="0">
+<step name="Undefined" site="xTest" page="home" type="REPORT" active="true" threshold="0" wait="0" failureMode="ERROR">
 <parameter type="CONTEXT" name="Item One" value="R_WORD"/>
 <parameter type="CONTEXT" name="new parameter" value="R_NUMBER"/>
 <parameter type="CONTEXT" name="new parameter" value="R_TEXT"/>
