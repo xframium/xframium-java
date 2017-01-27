@@ -766,24 +766,20 @@ public abstract class AbstractElement implements Element
 		clickArray[1]=waitval;
 		try
 		{
-			if (clickCount == 1) {
-				_click();			
-			} else if (clickCount > 1) {
-				_mouseDoubleClick();
-//				new Actions( webDriver ).doubleClick( webElement ).build().perform();
-			}
+
+		    if ( clickCount == 2 )
+		        _mouseDoubleClick();
+		    else
+		    for ( int i=0; i<clickCount; i++ )
+		        _click();
+
 								
 			success = true;
 		}	
 		catch( Exception e )
 		{
 			if(e instanceof XFramiumException)
-				try {
-					throw e;
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+			    throw e;
 			else
 				throw new ScriptConfigurationException( e.getMessage() );
 		}

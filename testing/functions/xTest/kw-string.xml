@@ -44,6 +44,12 @@
       <parameter type="CONTEXT" name="new parameter" value="newDate" />
       <parameter type="STATIC" name="new parameter" value="12/25/2014" />
     </step>
+    <step name="DATE" site="xTest" page="home" type="STRING2" active="true" threshold="0" wait="0" context="newDate2">
+      <parameter type="STATIC" name="Format" value="MM/dd/yyyy" />
+    </step>
+    <step name="REPORT" site="xTest" page="home" type="REPORT" active="true" threshold="0" wait="0" >
+      <parameter type="CONTEXT" name="newDate2" value="newDate2" />
+    </step>
     <step name="CONCAT" site="xTest" page="home" type="STRING2" active="true" threshold="0" wait="0" context="fullString">
       <parameter type="STATIC" name="new parameter" value="Stuck" />
       <parameter type="STATIC" name="new parameter" value="---" />

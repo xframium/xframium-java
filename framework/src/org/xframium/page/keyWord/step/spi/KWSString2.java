@@ -24,6 +24,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -140,8 +141,12 @@ public class KWSString2 extends AbstractKeyWordStep
                 break;
 
             case DATE:
-                validateParameters( new String[] { O_VALUE, _FORMAT } );
-                newValue = new SimpleDateFormat( getParameterValue( getParameter( _FORMAT ), contextMap, dataMap ) ).format( DateUtility.instance().parseDate( originalValue ) );
+                validateParameters( new String[] { _FORMAT } );
+                if ( getParameter( O_VALUE ) == null )
+                    newValue = new SimpleDateFormat( getParameterValue( getParameter( _FORMAT ), contextMap, dataMap ) ).format( new Date( System.currentTimeMillis() ) );
+                else
+                    newValue = new SimpleDateFormat( getParameterValue( getParameter( _FORMAT ), contextMap, dataMap ) ).format( DateUtility.instance().parseDate( originalValue ) );
+                
                 break;
                 
             case UPPER:
