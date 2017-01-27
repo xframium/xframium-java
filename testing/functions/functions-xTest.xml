@@ -37,4 +37,5 @@
   <import fileName="../functions/xTest/kw-browser.xml" />
   <import fileName="../functions/xTest/kw-execws.xml" />
   <import fileName="../functions/xTest/kw-visual.xml" />
+  <import fileName="../functions/xTest/kw-flow.xml" />
 </suite>

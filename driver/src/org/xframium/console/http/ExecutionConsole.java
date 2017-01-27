@@ -72,6 +72,7 @@ import org.xframium.page.keyWord.step.spi.KWSClick;
 import org.xframium.page.keyWord.step.spi.KWSMath.MATH_TYPE;
 import org.xframium.page.keyWord.step.spi.KWSString2.OperationType;
 import org.xframium.page.listener.KeyWordListener;
+import org.xframium.reporting.ElementUsage;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
@@ -176,6 +177,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( SubElement.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ApplicationVersion.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ExecutionContainer.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ElementUsage.class, new ReflectionSerializer() );
         KeyWordDriver.instance().addStepListener( this );
     }
     

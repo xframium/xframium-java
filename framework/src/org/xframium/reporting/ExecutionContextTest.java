@@ -1,11 +1,14 @@
 package org.xframium.reporting;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.exception.XFramiumException;
@@ -51,7 +54,20 @@ public class ExecutionContextTest
     private ApplicationDescriptor aut;
     
     private Map<String,Integer[]> callMap = new HashMap<String,Integer[]>( 10 );
-    private Map<String,Integer[]> moduleMap = new HashMap<String,Integer[]>( 10 );
+    private Map<String,Integer[]> pageUsageMap = new HashMap<String,Integer[]>( 10 );
+    private Map<String,ElementUsage> elementUsageMap = new TreeMap<String,ElementUsage>( );
+    private List<ElementUsage> elementUsage = new ArrayList<ElementUsage>( 10 );
+
+    
+    private class FailureComparator implements Comparator<ElementUsage>
+    {
+
+        @Override
+        public int compare( ElementUsage o1, ElementUsage o2 )
+        {
+            return Integer.compare( o2.getFailCount(), o1.getFailCount() );
+        }
+    }
     
     public Map<String,Object> toMap()
     {
@@ -72,11 +88,19 @@ public class ExecutionContextTest
         asMap.put( "folderName", folderName );
         callMap.clear();
         analyzeCalls( callMap );
-        asMap.put( "callMap", callMap );
         
-        moduleMap.clear();
-        analyzeModules( moduleMap );
-        asMap.put( "moduleMap", moduleMap );
+        pageUsageMap.clear();
+        elementUsageMap.clear();
+        analyzePageElements( pageUsageMap, elementUsageMap );
+        
+        asMap.put( "callMap", callMap );
+        asMap.put( "pageUsageMap", pageUsageMap );
+        
+        elementUsage.clear();
+        elementUsage.addAll( elementUsageMap.values() );
+        Collections.sort( elementUsage, new FailureComparator() );
+        asMap.put( "elementUsage", elementUsage );
+        asMap.put( "elementUsageMap", elementUsageMap );
         
         return asMap;
     }
@@ -313,6 +337,43 @@ public class ExecutionContextTest
         return stepCount;
     }
     
+    public void analyzePageElements( Map<String,Integer[]> pageMap, Map<String,ElementUsage> elementMap )
+    {
+        for ( ExecutionContextStep s : stepList )
+        {
+            if ( s.getStep().isOrMapping() )
+            {
+                String keyName = s.getStep().getSiteName() + "." + s.getStep().getPageName();
+                Integer[] passFail = pageMap.get( keyName );
+                if ( passFail == null )
+                {
+                    passFail = new Integer[] { 0, 0 };
+                    pageMap.put( keyName, passFail );
+                }
+                
+                if ( s.getStepStatus().equals( StepStatus.SUCCESS ) )
+                    passFail[ 0 ]++;
+                else if ( s.getStepStatus().equals( StepStatus.FAILURE ) )
+                    passFail[ 1 ]++;
+                
+                keyName = s.getStep().getSiteName() + "." + s.getStep().getPageName() + "." + s.getStep().getName();
+                ElementUsage eU = elementMap.get( keyName );
+                if ( eU == null )
+                {
+                    eU = new ElementUsage( s.getStep().getSiteName(), s.getStep().getPageName(), s.getStep().getName() );
+                    elementMap.put( keyName, eU );
+                }
+                
+                if ( s.getStepStatus().equals( StepStatus.SUCCESS ) )
+                    eU.setPassCount( eU.getPassCount() + 1 );
+                else if ( s.getStepStatus().equals( StepStatus.FAILURE ) )
+                    eU.setFailCount( eU.getFailCount() + 1 );
+            }
+            
+            s.analyzePageElements( pageMap, elementMap );
+        }
+    }
+    
     public void analyzeCalls( Map<String,Integer[]> callMap )
     {
         for ( ExecutionContextStep s : stepList )
@@ -333,29 +394,6 @@ public class ExecutionContextTest
             }
             
             s.analyzeCalls( callMap );
-        }
-    }
-    
-    public void analyzeModules( Map<String,Integer[]> callMap )
-    {
-        for ( ExecutionContextStep s : stepList )
-        {
-            if ( "MODULE".equals( s.getStep().getKw() ) )
-            {
-                Integer[] passFail = callMap.get( s.getStep().getName() );
-                if ( passFail == null )
-                {
-                    passFail = new Integer[] { 0, 0 };
-                    callMap.put( s.getStep().getName(), passFail );
-                }
-                
-                if ( s.getStepStatus().equals( StepStatus.SUCCESS ) )
-                    passFail[ 0 ]++;
-                else
-                    passFail[ 1 ]++;
-            }
-            
-            s.analyzeModules( callMap );
         }
     }
 

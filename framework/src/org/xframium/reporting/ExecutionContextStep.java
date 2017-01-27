@@ -33,6 +33,43 @@ public class ExecutionContextStep
         parameterList.add( value );
     }
     
+    public void analyzePageElements( Map<String,Integer[]> pageMap, Map<String,ElementUsage> elementMap )
+    {
+        for ( ExecutionContextStep s : stepList )
+        {
+            if ( s.getStep().isOrMapping() )
+            {
+                String keyName = s.getStep().getSiteName() + "." + s.getStep().getPageName();
+                Integer[] passFail = pageMap.get( keyName );
+                if ( passFail == null )
+                {
+                    passFail = new Integer[] { 0, 0 };
+                    pageMap.put( keyName, passFail );
+                }
+                
+                if ( s.getStepStatus().equals( StepStatus.SUCCESS ) )
+                    passFail[ 0 ]++;
+                else if ( s.getStepStatus().equals( StepStatus.FAILURE ) )
+                    passFail[ 1 ]++;
+                
+
+                keyName = s.getStep().getSiteName() + "." + s.getStep().getPageName() + "." + s.getStep().getName();
+                ElementUsage eU = elementMap.get( keyName );
+                if ( eU == null )
+                {
+                    eU = new ElementUsage( s.getStep().getSiteName(), s.getStep().getPageName(), s.getStep().getName() );
+                    elementMap.put( keyName, eU );
+                }
+                
+                if ( s.getStepStatus().equals( StepStatus.SUCCESS ) )
+                    eU.setPassCount( eU.getPassCount() + 1 );
+                else if ( s.getStepStatus().equals( StepStatus.FAILURE ) )
+                    eU.setFailCount( eU.getFailCount() + 1 );
+            }
+            
+            s.analyzePageElements( pageMap, elementMap );
+        }
+    }
     
     public void analyzeCalls( Map<String,Integer[]> callMap )
     {
@@ -54,29 +91,6 @@ public class ExecutionContextStep
             }
             
             s.analyzeCalls( callMap );
-        }
-    }
-    
-    public void analyzeModules( Map<String,Integer[]> callMap )
-    {
-        for ( ExecutionContextStep s : stepList )
-        {
-            if ( "MODULE".equals( s.getStep().getKw() ) )
-            {
-                Integer[] passFail = callMap.get( s.getStep().getName() );
-                if ( passFail == null )
-                {
-                    passFail = new Integer[] { 0, 0 };
-                    callMap.put( s.getStep().getName(), passFail );
-                }
-                
-                if ( s.getStepStatus().equals( StepStatus.SUCCESS ) )
-                    passFail[ 0 ]++;
-                else
-                    passFail[ 1 ]++;
-            }
-            
-            s.analyzeModules( callMap );
         }
     }
     

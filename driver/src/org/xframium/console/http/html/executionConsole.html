@@ -155,7 +155,7 @@ html, body {
                                     <input type="text" class="form-control" placeholder="Test Filter" aria-describedby="basic-addon2" ng-model="filterTestsBy">
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-2" style="text-align: right">
                                 <div class="btn-group" uib-dropdown>
                                     <button id="split-button" type="button" class="btn btn-default">Available Tags</button>
                                     <button type="button" class="btn btn-default" uib-dropdown-toggle>
@@ -177,7 +177,12 @@ html, body {
                         </div>
                         <div ui-tree id="tree-root" class="scrollable" style="max-height: 768px">
                             <ol ui-tree-nodes ng-model="testList">
-                                <li data-nodrag ui-tree-node ng-repeat="test in testList | filter:filterTestsBy | orderBy: 'name'" collapsed="true" ng-class="{'activeTest': test.active, 'inactiveTest': !test.active}" style="border-radius: 5px; margin-top: 5px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default; border-style: outset; border-width: thin">
+                                <li data-nodrag ui-tree-node collapsed="true" style="border-radius: 5px; margin-top: 5px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 6px; cursor: default;">
+                                    <div ui-tree-handle class="tree-node tree-node-content" >
+                                        <span class="pull-right"><a hRef="#" ng-click="decrementAll()"><span class="glyphicon glyphicon-minus text-danger" style="margin-right: 10px"></span></a>#<a hRef="#" ng-click="incrementAll()"><span class="glyphicon glyphicon-plus text-success" style="margin-left: 10px"></span></a></span>
+                                    </div>
+                                </li>
+                                <li data-nodrag ui-tree-node ng-repeat="test in testList | filter:filterTestsBy | orderBy: 'name'" collapsed="true" ng-class="{'activeTest': test.active, 'inactiveTest': !test.active}" style="border-radius: 5px; margin-top: 5px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default;  border-style: outset; border-width: thin">
                                     <div ui-tree-handle class="tree-node tree-node-content" >
                                         <a ng-if="getTotal( test ) > 0" data-nodrag ng-click="toggle(this)" style="cursor: default" ><span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }" style="cursor: default"></span></a>
                                         <span ng-if="getTotal( test ) == 0" style="cursor: default; margin-left: 16px"></span>

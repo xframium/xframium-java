@@ -50,6 +50,7 @@ import org.xframium.content.ContentManager;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.FilteredException;
+import org.xframium.exception.FlowException;
 import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
@@ -171,6 +172,13 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     protected String kw;
     protected String natualLanguage;
     protected ApplicationVersion version;
+
+    
+    
+    public boolean isOrMapping()
+    {
+        return orMapping;
+    }
 
     @Override
     public boolean isBreakpoint()
@@ -908,6 +916,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 executionContext.completeStep( StepStatus.SUCCESS, null );
                 throw lb;
             }
+            catch ( FlowException lb )
+            {
+                executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                throw lb;
+            }
             catch ( FilteredException e )
             {
                 stepException = e;
@@ -967,6 +980,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         executionContext.completeStep( StepStatus.SUCCESS, null );
                         throw e;
                     }
+                    catch ( FlowException lb )
+                    {
+                        executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                        throw lb;
+                    }
                     catch ( Exception e )
                     {
                         stepException = e;
@@ -1011,6 +1029,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                                 {
                                     executionContext.completeStep( StepStatus.SUCCESS, null );
                                     throw e;
+                                }
+                                catch ( FlowException lb )
+                                {
+                                    executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                                    throw lb;
                                 }
                                 catch ( Exception e )
                                 {
@@ -1145,6 +1168,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         }
         catch ( KWSLoopBreak lb )
         {
+            throw lb;
+        }
+        catch ( FlowException lb )
+        {
+            executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
             throw lb;
         }
         finally

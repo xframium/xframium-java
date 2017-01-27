@@ -28,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.exception.FlowException;
 import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
@@ -469,7 +470,14 @@ public class KeyWordTest
                 }
             }
 
-            stepSuccess = step.executeStep( page, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+            try
+            {
+                stepSuccess = step.executeStep( page, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+            }
+            catch ( FlowException lb )
+            {
+                throw lb;
+            }
 
             if ( !stepSuccess )
             {

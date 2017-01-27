@@ -54,6 +54,7 @@ import org.xframium.page.keyWord.step.spi.KWSEnabled;
 import org.xframium.page.keyWord.step.spi.KWSExecJS;
 import org.xframium.page.keyWord.step.spi.KWSExecWS;
 import org.xframium.page.keyWord.step.spi.KWSExists;
+import org.xframium.page.keyWord.step.spi.KWSFlow;
 import org.xframium.page.keyWord.step.spi.KWSFocus;
 import org.xframium.page.keyWord.step.spi.KWSFork;
 import org.xframium.page.keyWord.step.spi.KWSFunction;
@@ -196,6 +197,7 @@ public class KeyWordStepFactory
         addKeyWord( "EMAIL", KWSEmail.class );
         addKeyWord( "CONSOLE", KWSConsole.class );
         addKeyWord( "APPLICATION", KWSApplication.class );
+        addKeyWord( "FLOW", KWSFlow.class );
     }
 
     /**

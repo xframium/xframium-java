@@ -89,6 +89,33 @@
                     <canvas class="chart chart-radar" chart-labels="functionSeries" chart-data="functionData" chart-colors="functionChartColors"></canvas>
                 </div>
             </div>
+            <div class="row" style="margin-top: 10px">
+                <div class="col-sm-8">
+                    <h4 class="text-primary" style="margin-bottom: 10px; text-align: center">Page Efficiency</h4>
+                    <canvas class="chart chart-radar" chart-labels="pageUsageSeries" chart-data="pageUsageData" chart-colors="pageUsageChartColors"></canvas>
+                </div>
+                <div class="col-sm-4">
+                    <h4 class="text-primary" style="margin-bottom: 10px; text-align: center">Element Efficiency</h4>
+                    <table class="table table-hover table-condensed">
+                        <tr>
+                            <th width="30%" style="text-align: center">Site</th>
+                            <th width="30%" style="text-align: center">Page</th>
+                            <th width="30%" style="text-align: center">Element</th>
+                            <th width="5%" style="text-align: center">Pass</th>
+                            <th width="5%" style="text-align: center">Fail</th>
+                        </tr>
+                        <tbody>
+                            <tr ng-repeat="( key, value ) in elementUsageMap | orderObjectBy: 'failCount': true" ng-class="{'text-danger' : value.failCount > 0, 'text-success' : value.failCount == 0}">
+                                <td>{{value.siteName}}</td>
+                                <td>{{value.pageName}}</td>
+                                <td>{{value.elementName}}</td>
+                                <td>{{value.passCount}}</td>
+                                <td>{{value.failCount}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </body>
@@ -114,6 +141,20 @@
             });
         };
     } ]);
+    
+    xTest.filter('orderObjectBy', function() {
+        return function(items, field, reverse) {
+            var filtered = [];
+            angular.forEach(items, function(item) {
+              filtered.push(item);
+            });
+            filtered.sort(function (a, b) {
+              return (a[field] > b[field] ? 1 : -1);
+            });
+            if(reverse) filtered.reverse();
+            return filtered;
+          };
+        });
 
     xTest.controller('xTestController', function XTestController( $scope, $uibModal )
     {
@@ -134,6 +175,9 @@
         
         $scope.functionSeries = [];
         $scope.functionData = [];
+        
+        $scope.pageUsageSeries = [];
+        $scope.pageUsageData = [];
 
         $scope.chartOptions = {
             "cutoutPercentage" : 70,
@@ -163,6 +207,8 @@
         $scope.chartColors = [];
 
         $scope.functionMap = {};
+        $scope.pageUsageMap = {};
+        $scope.elementUsageMap = {};
         
         $scope.formatTestDuration = function( test )
         {
@@ -220,6 +266,41 @@
                     functionData[ 'passed' ] += parseInt( cE.callMap[ key ][ 0 ] );
                     functionData[ 'failed' ] += parseInt( cE.callMap[ key ][ 1 ] );
                 }
+                
+                for ( var key in cE.pageUsageMap )
+                {
+                    var pD = $scope.pageUsageMap[key];
+                    if ( pD == null ) {
+                        $scope.pageUsageMap[key] = {
+                                'passed' : 0,
+                                'failed' : 0
+                            };
+                        pD = $scope.pageUsageMap[key];
+                    }
+                    
+                    pD[ 'passed' ] += parseInt( cE.pageUsageMap[ key ][ 0 ] );
+                    pD[ 'failed' ] += parseInt( cE.pageUsageMap[ key ][ 1 ] );
+                }
+                
+                for ( var key in cE.elementUsageMap )
+                {
+                    var pD = $scope.elementUsageMap[key];
+                    if ( pD == null ) {
+                        $scope.elementUsageMap[key] = {
+                            "failCount": 0,
+                            "siteName": cE.elementUsageMap[ key ].siteName,
+                            "pageName": cE.elementUsageMap[ key ].pageName,
+                            "passCount": 0,
+                            "elementName": cE.elementUsageMap[ key ].elementName
+                            };
+                        pD = $scope.elementUsageMap[key];
+                    }
+                    
+                    pD.failCount += parseInt( cE.elementUsageMap[ key ].failCount );
+                    pD.passCount += parseInt( cE.elementUsageMap[ key ].passCount );
+                }
+                
+                console.log( $scope.elementUsageMap)
                 
                 if ( cE.testStatus == 'PASSED' )
                     $scope.passed++;
@@ -331,7 +412,6 @@
                     $scope.executionLabels[i] = 'Device Issues';
             }
 
-            console.log( $scope.functionMap );
             var functionFail = [];
             var functionTotal = [];
             for ( var key in $scope.functionMap )
@@ -346,15 +426,27 @@
             $scope.functionData.push( functionTotal );
             $scope.functionData.push( functionFail );
             
-            console.log( $scope.functionSeries );
-            console.log( $scope.functionData );
-            // Configure environment Chart
+            
+            var pageUsageFail = [];
+            var pageUsageTotal = [];
+            for ( var key in $scope.pageUsageMap )
+            {
+                
+                $scope.pageUsageSeries.push( key );
+                pageUsageFail.push( $scope.pageUsageMap[ key ][ 'failed' ] );
+                pageUsageTotal.push( $scope.pageUsageMap[ key ][ 'failed' ] + $scope.pageUsageMap[ key ][ 'passed' ] );
+                
+            }
+            
+            $scope.pageUsageData.push( pageUsageTotal );
+            $scope.pageUsageData.push( pageUsageFail );
 
         }
         
         $scope.radarChartColors = [ "#1bc98e", "#ff3333" ];
 
         $scope.functionChartColors = [ "#3385ff", "#ff0000" ];
+        $scope.pageUsageChartColors = [ "#3385ff", "#ff0000" ];
         
         $scope.colorMap = {
             "Passed" : "#1bc98e",
