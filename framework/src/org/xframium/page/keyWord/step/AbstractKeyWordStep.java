@@ -173,7 +173,21 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     protected String natualLanguage;
     protected ApplicationVersion version;
 
-    
+    protected boolean validateParameters( String[] parameterNames )
+    {
+        for ( String pName : parameterNames )
+        {
+            if ( getParameter( pName ) == null )
+            {
+                String params = "";
+                for ( String pName2 : parameterNames )
+                    params += pName2 + ", ";
+                throw new ScriptConfigurationException( "The following parameters must be specified for " + kw + " [" + params + "]" );
+            }
+        }
+        
+        return true;
+    }
     
     public boolean isOrMapping()
     {

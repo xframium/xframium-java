@@ -65,6 +65,7 @@ import org.xframium.page.keyWord.step.spi.KWSModule;
 import org.xframium.page.keyWord.step.spi.KWSMouse;
 import org.xframium.page.keyWord.step.spi.KWSNavigate;
 import org.xframium.page.keyWord.step.spi.KWSOperator;
+import org.xframium.page.keyWord.step.spi.KWSRandom;
 import org.xframium.page.keyWord.step.spi.KWSReport;
 import org.xframium.page.keyWord.step.spi.KWSReturn;
 import org.xframium.page.keyWord.step.spi.KWSSQL;
@@ -198,6 +199,7 @@ public class KeyWordStepFactory
         addKeyWord( "CONSOLE", KWSConsole.class );
         addKeyWord( "APPLICATION", KWSApplication.class );
         addKeyWord( "FLOW", KWSFlow.class );
+        addKeyWord( "RANDOM", KWSRandom.class );
     }
 
     /**
