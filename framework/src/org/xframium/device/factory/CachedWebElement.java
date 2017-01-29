@@ -204,7 +204,10 @@ public class CachedWebElement implements WebElement, CachedElement
 			
 			x=getAttribute( "x" );
 			y=getAttribute( "y" );
-			return new Point( Integer.parseInt( x ), Integer.parseInt( y ) );
+			if ( x != null && y != null )
+			    return new Point( Integer.parseInt( x ), Integer.parseInt( y ) );
+			else
+			    return new Point( 0, 0 );
 		}
 		catch( Exception e )
 		{
@@ -224,7 +227,10 @@ public class CachedWebElement implements WebElement, CachedElement
 			
 			height=getAttribute( "height" );
 			width=getAttribute( "width" );
-			return new Dimension( Integer.parseInt( width ), Integer.parseInt( height ) );
+			if ( height != null && width != null )
+			    return new Dimension( Integer.parseInt( width ), Integer.parseInt( height ) );
+			else
+			    return new Dimension( 0, 0 );
 		}
 		catch( Exception e )
 		{
