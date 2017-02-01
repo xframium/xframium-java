@@ -217,12 +217,6 @@ public class XMLPageDataProvider extends AbstractPageDataProvider
 		if ( activeNode != null )
 			active = Boolean.parseBoolean( activeNode.getNodeValue() );
 		
-		if ( !active )
-		{
-			if (log.isDebugEnabled())
-				log.debug( "Record [" + recordName + "] is being ignored as it is inactive" );
-			return;
-		}
 		
 		if (log.isDebugEnabled())
 			log.debug( "Extracted Record [" + recordName + "]" );

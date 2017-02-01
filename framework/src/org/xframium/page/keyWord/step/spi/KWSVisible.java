@@ -73,7 +73,9 @@ public class KWSVisible extends AbstractKeyWordStep
 			return false;
 		}
 		else
+		{
 			return getElement( pageObject, contextMap, webDriver, dataMap ).isVisible();
+		}
 	}
 	
 	/* (non-Javadoc)

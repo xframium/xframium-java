@@ -1020,9 +1020,9 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             }
 
             //
-            // Special case for the ELSE clause if found
+            // Special case for the ELSE clause if found - we ignore else on a sub failure
             //
-            if ( !fork && getStepList() != null && !getStepList().isEmpty() && !returnValue )
+            if ( !fork && getStepList() != null && !getStepList().isEmpty() && !returnValue && !subFailure  )
             {
                 if ( stepException == null || !(stepException instanceof FilteredException) )
                 {
@@ -1054,11 +1054,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                                     stepException = e;
                                     subReturnValue = false;
                                     log.debug( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " encoundered error: ", e );
-                                }
-    
-                                if ( step.isInverse() )
-                                {
-                                    subReturnValue = !subReturnValue;
                                 }
     
                                 if ( !subReturnValue )
@@ -1247,7 +1242,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         return parameterList;
     }
 
-    protected KeyWordParameter getParameter( String parameterName )
+    public KeyWordParameter getParameter( String parameterName )
     {
         for ( KeyWordParameter p : parameterList )
         {

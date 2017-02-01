@@ -60,6 +60,18 @@ public class PageContainer
         this.activityList = activityList;
     }
     
+    public String toString()
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append( "Page Name: " ).append( pageName ).append( "\r\n" );
+        stringBuilder.append( "Class Name: " ).append( className ).append( "\r\n" );
+        
+        for ( Element e : elementList )
+            stringBuilder.append( "\t" ).append( e.getName() ).append( "[" ).append( e.getBy().name() ).append( "]: " ).append( e.getKey() ).append( "\r\n" );
+        
+        return stringBuilder.toString();
+        
+    }
     
     
     

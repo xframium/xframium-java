@@ -191,7 +191,7 @@ public class ApplicationDescriptor
 	
 	public boolean isWeb()
 	{
-	    return url != null && !url.isEmpty();
+	    return url != null && !url.trim().isEmpty();
 	}
 	
 	/**

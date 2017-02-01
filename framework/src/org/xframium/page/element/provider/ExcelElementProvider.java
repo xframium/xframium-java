@@ -55,6 +55,14 @@ public class ExcelElementProvider extends AbstractElementProvider
 	private String tabNames;
 	
 	
+	public static void main( String[] args )
+    {
+        ElementProvider e = new ExcelElementProvider( new File( "C:\\Users\\Allen\\Downloads\\pageElements_5.xlsx" ), "mSTAR_5.1" );
+        System.out.println( e.getSiteList() );
+        
+        System.out.println( e.getElement( new ElementDescriptor( "mSTAR_5.1", "Common Elements", "SHARE_BUTTON" ) ) );
+    }
+	
 	/**
 	 * Instantiates a new CSV element provider.
 	 *
