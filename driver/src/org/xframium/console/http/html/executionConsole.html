@@ -22,6 +22,7 @@
 }
 
 .scrollable {
+
 	overflow: auto;
 }
 
@@ -177,7 +178,7 @@ html, body {
                         </div>
                         <div ui-tree id="tree-root" class="scrollable" style="max-height: 768px">
                             <ol ui-tree-nodes ng-model="testList">
-                                <li data-nodrag ui-tree-node collapsed="true" style="border-radius: 5px; margin-top: 5px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 6px; cursor: default;">
+                                <li data-nodrag ui-tree-node collapsed="true" style="border-radius: 5px; margin-top: 5px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 6px; cursor: default; margin-left: 0px; margin-right: 0px;">
                                     <div ui-tree-handle class="tree-node tree-node-content" >
                                         <span class="pull-right"><a hRef="#" ng-click="decrementAll()"><span class="glyphicon glyphicon-minus text-danger" style="margin-right: 10px"></span></a>#<a hRef="#" ng-click="incrementAll()"><span class="glyphicon glyphicon-plus text-success" style="margin-left: 10px"></span></a></span>
                                     </div>
@@ -215,26 +216,19 @@ html, body {
                     
                 </div>
                 <div class="panel panel-info" style="margin-bottom: 0px;" ng-if="executionStatus == 'idle'">
-                    <nav class="navbar navbar-default" style="margin-bottom: 0px">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                        </div>
-                        <a class="navbar-brand navbar-default" href="#" style="font-size: 12px">Available Environments</a>
-                        
-                    </nav>
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Available Environments
+                        </h3>
+                    </div>
                     <div class="panel-body">
-                        <div ui-tree id="tree-root" class="scrollable" style="max-height: 768px">
+                        <div ui-tree id="tree-root">
                             <ol ui-tree-nodes ng-model="deviceList">
-                                <li data-nodrag ui-tree-node ng-repeat="device in deviceList">
-                                    <div ui-tree-handle class="tree-node tree-node-content" ng-class="{'activeTest': device.active, 'inactiveTest': !device.active}" style="border-radius: 5px; margin-top: 1px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default">
+                                <li data-nodrag ui-tree-node ng-repeat="device in deviceList" ng-class="{'bg-success': device.active, 'bg-warning': !device.active}" style="border-radius: 5px; margin-top: 5px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default;  border-style: outset; border-width: thin">
+                                    <div ui-tree-handle class="tree-node tree-node-content">
                                         <div class="row">
-                                            <div class="col-sm-1" style="text-align: center; padding-top: 2px"><input type="checkbox" ng-model="device.active" /></div>
-                                            <div class="col-sm-11" style="padding-top: 3px; padding-left: 0px">{{device.environment}} ({{device.cloud}})</div>
+                                            <div class="col-sm-1" style="text-align: center; margin-top: 2px"><input type="checkbox" ng-model="device.active" /></div>
+                                            <div class="col-sm-11" style="margin-top: 3px; margin-left: 0px">{{device.environment}} ({{device.cloud}})</div>
                                         </div>
                                     </div>
                                 </li>

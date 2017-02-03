@@ -150,7 +150,6 @@ public class KeyWordStepFactory
     {
         addKeyWord( "CALL", KWSCall.class );
         addKeyWord( "CALL2", KWSCall2.class );
-        addKeyWord( "MODULE", KWSModule.class );
         addKeyWord( "CLICK", KWSClick.class );
         addKeyWord( "EXISTS", KWSExists.class );
         addKeyWord( "FUNCTION", KWSFunction.class );
@@ -192,7 +191,6 @@ public class KeyWordStepFactory
         addKeyWord( "VISUAL", KWSVisual.class );
         addKeyWord( "SET_CONTENT_KEY", KWSSetContentKey.class );
         addKeyWord( "BROWSER", KWSBrowser.class );
-        addKeyWord( "IS_ENABLED", KWSEnabled.class );
         addKeyWord( "ENABLED", KWSEnabled.class );
         addKeyWord( "COMMAND", KWSCommand.class );
         addKeyWord( "EMAIL", KWSEmail.class );

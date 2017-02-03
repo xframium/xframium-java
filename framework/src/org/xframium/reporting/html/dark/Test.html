@@ -212,8 +212,8 @@ iframe {
         <span data-nodrag ng-if="stepDef.stepList.length == 0" style="margin-left: 15px"></span>
         <span data-nodrag compile="formatStep(stepDef)" style="cursor: default"></span>
 
-        
-        <a hRef="#" ng-click="showError( stepDef )" ng-if="hasExecutionParameter( stepDef, 'SCREENSHOT' ) || ( stepDef.throwable != null && stepDef.throwable != 'null' && stepDef.throwable != '' )"><span data-nodrag class="glyphicon glyphicon-eye-open pull-right" style="cursor: default" ></span></a>
+        <a hRef="#" ng-click="showError( stepDef )" ng-if="hasExecutionParameter( stepDef, 'SCREENSHOT' ) || ( stepDef.throwable != null && stepDef.throwable != 'null' && stepDef.throwable != '' )"><span data-nodrag class="glyphicon glyphicon-eye-open text-danger" style="cursor: default; margin-left: 15px" ></span></a>
+        <span data-nodrag class="pull-right" style="cursor: default; font-weight: 200">{{(stepDef.endTime.raw - stepDef.startTime.raw )}} ms</span>
 
     </div>
     <ol data-nodrag ui-tree-nodes="" ng-model="stepDef.stepList" ng-if="stepDef.stepList.length != 0" ng-class="{hidden: collapsed}" >
