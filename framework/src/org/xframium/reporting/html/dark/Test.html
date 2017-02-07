@@ -212,8 +212,8 @@ iframe {
         <span data-nodrag ng-if="stepDef.stepList.length == 0" style="margin-left: 15px"></span>
         <span data-nodrag compile="formatStep(stepDef)" style="cursor: default"></span>
 
-        
-        <a hRef="#" ng-click="showError( stepDef )" ng-if="hasExecutionParameter( stepDef, 'SCREENSHOT' ) || ( stepDef.throwable != null && stepDef.throwable != 'null' && stepDef.throwable != '' )"><span data-nodrag class="glyphicon glyphicon-eye-open pull-right" style="cursor: default" ></span></a>
+        <a hRef="#" ng-click="showError( stepDef )" ng-if="hasExecutionParameter( stepDef, 'SCREENSHOT' ) || ( stepDef.throwable != null && stepDef.throwable != 'null' && stepDef.throwable != '' )"><span data-nodrag class="glyphicon glyphicon-eye-open text-danger" style="cursor: default; margin-left: 15px" ></span></a>
+        <span data-nodrag class="pull-right" style="cursor: default; font-weight: 200">{{(stepDef.endTime.raw - stepDef.startTime.raw )}} ms</span>
 
     </div>
     <ol data-nodrag ui-tree-nodes="" ng-model="stepDef.stepList" ng-if="stepDef.stepList.length != 0" ng-class="{hidden: collapsed}" >
@@ -279,6 +279,7 @@ iframe {
         $scope.passed = 0;
         $scope.failed = 0;
         $scope.ignored = 0;
+        $scope.filtered = 0;
         $scope.total = 0;
         $scope.duration = 0;
         $scope.formattedDuration = 0;
@@ -403,12 +404,14 @@ iframe {
 
         $scope._getByStatus = function( currentStep, status )
         {
+
             var total = 0;
             if ( currentStep.stepStatus == status || status == null )
                 total += 1;
             for ( var i = 0; i < currentStep.stepList.length; i++ ) {
-                total += $scope._getByStatus(currentStep.stepList[i]);
+                total += $scope._getByStatus(currentStep.stepList[i], status);
             }
+            
 
             return total;
         }
@@ -454,6 +457,7 @@ iframe {
         $scope.stepMessages = {
             "CALL" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use CALL2)",
             "CALL2" : "CALL the function named {name}",
+            "MODULE" : "Execute the {kw} named {name}",
             "SET" : "{kw} the value of {name} on {pageName} to {$p1}",
             "ADD_DEVICE" : "Add a {$p1} device to the current test",
             "WAIT_FOR" : "{kw} for {name} on {pageName} to be {subName}",
@@ -487,7 +491,7 @@ iframe {
             "GET" : "{kw} the value of {name} on {pageName}",
             "COMPARE" : "{kw} {$p1} to {$p2}",
             "GESTURE" : "Perform a {name} {kw}",
-            "STRING2" : "Perform a STRING operation",
+            "STRING2" : "Perform a {name} operation on a STRING",
             "STRING" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use STRING2)",
             "VISUAL" : "Perform a {name} {kw} operation",
             "DEFAULT" : "{kw} - Unmapped keyword",
@@ -497,6 +501,8 @@ iframe {
             "CONSOLE" : "Add data to the execution {kw}",
             "TEST" : "{errorMessage}",
             "APPLICATION" : "{name} the {$p1} {kw}",
+            "FLOW" : "Managing the {kw} of the test by calling {name}",
+            "RANDOM" : "Generate a {kw} {name}",
             "FUNCTION" : "Execution the native {kw} {name} on {pageName}"
         };
 

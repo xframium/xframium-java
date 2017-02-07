@@ -27,6 +27,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
@@ -65,6 +66,7 @@ public class OpenApplicationAction extends AbstractDefaultAction implements Devi
     		    webDriver.findElement(By.tagName("body")).sendKeys(selectLinkOpeninNewTab);
     		
     		webDriver.get( appDesc.getUrl() );
+    		( (DeviceWebDriver) webDriver ).setAut( ApplicationRegistry.instance().getApplication( applicationName ) );
     		    
 		}
 		else
@@ -84,6 +86,8 @@ public class OpenApplicationAction extends AbstractDefaultAction implements Devi
     		    {
     		        if ( webDriver instanceof ContextAware )
     	                ( ( ContextAware ) webDriver ).context( "NATIVE_APP" );
+    		        
+    		        ( (DeviceWebDriver) webDriver ).setAut( ApplicationRegistry.instance().getApplication( applicationName ) );
     		        return true;
     		    }
     		    else

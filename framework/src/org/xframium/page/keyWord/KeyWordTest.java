@@ -28,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.exception.FlowException;
 import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
@@ -83,7 +84,8 @@ public class KeyWordTest
     private String[] deviceTags;
     
     private String inputPage;
-    private String[] outputPages;
+    private String outputPage;
+    private String[] operationList;
     private String mode = "function";
     
     private List<KeyWordParameter> expectedParameters = new ArrayList<KeyWordParameter>( 5 );
@@ -121,7 +123,7 @@ public class KeyWordTest
      * @param contentKeys
      *            the content keys
      */
-    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys, String deviceTags, Map<String,String> overrideMap, int count, String inputPage, String outputPages, String mode )
+    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys, String deviceTags, Map<String,String> overrideMap, int count, String inputPage, String outputPages, String mode, String operationList )
     {
         this.name = name;
         this.active = Boolean.parseBoolean( getValue( name, "active", active + "", overrideMap ) );
@@ -175,7 +177,8 @@ public class KeyWordTest
         
         setMode( mode );
         setInputPage( inputPage );
-        setOutputPages( outputPages );
+        setOutputPage( outputPages );
+        setOperationList( operationList );
     }
     
     public List<KeyWordParameter> getExpectedParameters()
@@ -200,25 +203,32 @@ public class KeyWordTest
 
 
 
-    public String[] getOutputPages()
+    public String getOutputPage()
     {
-        return outputPages;
+        return outputPage;
     }
 
-
-    public void setOutputPages( String outputPages )
+    public void setOutputPage( String outputPage )
     {
-        if ( outputPages != null )
-            this.outputPages = outputPages.split( "," );
+        this.outputPage = outputPage;
     }
 
-    public void setOutputPages( String[] outputPages )
+    public String[] getOperationList()
     {
-        this.outputPages = outputPages;
+        return operationList;
     }
 
+    public void setOperationList( String[] operationList )
+    {
+        this.operationList = operationList;
+    }
 
-
+    public void setOperationList( String operationList )
+    {
+        if ( operationList != null && !operationList.trim().isEmpty() )
+            this.operationList = operationList.split( "," );
+    }
+    
     public String getMode()
     {
         return mode;
@@ -292,19 +302,17 @@ public class KeyWordTest
      */
     public void addStep( KeyWordStep step )
     {
-        if ( step.isActive() )
+        if ( log.isDebugEnabled() )
+            log.debug( "Adding Step [" + step.getName() + "] to [" + name + "]" );
+        
+        if ( step.isStartAt() )
         {
-            if ( log.isDebugEnabled() )
-                log.debug( "Adding Step [" + step.getName() + "] to [" + name + "]" );
-            
-            if ( step.isStartAt() )
-            {
-                log.warn( "Clearing steps out of " + getName() + " as the startAt flag was set" );
-                stepList.clear();
-            }
-            
-            stepList.add( step );
+            log.warn( "Clearing steps out of " + getName() + " as the startAt flag was set" );
+            for ( KeyWordStep kS : stepList )
+                kS.setActive( false );
         }
+        
+        stepList.add( step );
     }
     
 
@@ -424,6 +432,9 @@ public class KeyWordTest
 
         for ( KeyWordStep step : stepList )
         {
+            if ( !step.isActive() )
+                continue;
+            
             if ( log.isDebugEnabled() )
                 log.debug( "Executing Step [" + step.getName() + "]" );
 
@@ -459,7 +470,14 @@ public class KeyWordTest
                 }
             }
 
-            stepSuccess = step.executeStep( page, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+            try
+            {
+                stepSuccess = step.executeStep( page, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+            }
+            catch ( FlowException lb )
+            {
+                throw lb;
+            }
 
             if ( !stepSuccess )
             {

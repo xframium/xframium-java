@@ -32,6 +32,7 @@ xConsole
                     $scope.currentFolder;
                     $scope.currentFile;
                     $scope.currentFolderFiles = [];
+                    $scope.filterTestsBy;
                     
                     $scope.testList = [];
                     $scope.recentFiles = [];
@@ -45,7 +46,14 @@ xConsole
                    
                     $scope.executionStatus = 'idle';
                    
-                 
+                    $scope.getHtml = function( record )
+                    {
+                        var fileName = record.rootFolder.replace( /\\/g, '/' ) + "/" + record.folderName.replace( /\\/g, '/' ) + "/index.html";
+                    
+                        xConsoleService.getHtml( fileName ).then(function( returnValue )
+                        {});
+                    }
+                    
                     $scope.toggle = function( scope )
                     {
                         scope.toggle();
@@ -53,8 +61,6 @@ xConsole
                     
                     $scope.getElapsed = function( value )
                     {
-                        console.log( value.startTime );
-                        console.log( value.stopTime );
                         return (value.stopTime - value.startTime);
                     }
 
@@ -97,6 +103,23 @@ xConsole
                         }
                         
                         return i;
+                    }
+                    
+                    $scope.incrementAll = function()
+                    {
+                        for ( var j = 0; j < $scope.testList.length; j++ ) 
+                        {
+                            $scope.testList[ j ].count++;
+                        }
+                    }
+                    
+                    $scope.decrementAll = function()
+                    {
+                        for ( var j = 0; j < $scope.testList.length; j++ ) 
+                        {
+                            if ( $scope.testList[ j ].count > 1 )
+                                $scope.testList[ j ].count--;
+                        }
                     }
                     
                     $scope.getActive = function()
@@ -148,7 +171,6 @@ xConsole
                             for ( var x=0; x<returnValue.pageData.test.length; x++ )
                             {
                                 var cE = returnValue.pageData.test[ x ];
-                                console.log( cE );
                                 
                                 for ( var i=0; i<$scope.testList.length; i++ )
                                 {
@@ -159,6 +181,9 @@ xConsole
                                         {
                                             lE.stepCount = cE.stepCount;
                                             lE.testStatus = cE.testStatus;
+                                            lE.startTime = cE.startTime;
+                                            lE.stopTime = cE.stopTime;
+                                            lE.folderName = cE.folderName;
                                         }
                                         else
                                         {

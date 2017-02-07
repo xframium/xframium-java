@@ -283,6 +283,7 @@ public abstract class AbstractSeleniumTest
                     testName.setIteration( tN.getIteration() );
                     testName.setContentKey( tN.getContentKey() );
                     testName.setPersonaName( tK.getKey() );
+                    testName.setDataDriven( tN.getDataDriven() );
                     finalList.add( testName );
                 }
             }
@@ -388,7 +389,7 @@ public abstract class AbstractSeleniumTest
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Device acquired for " + currentMethod.getName() );
 
-            if ( connectedDevice.getWebDriver() != null && connectedDevice.getWebDriver().isConnected() )
+            if ( connectedDevice != null && connectedDevice.getWebDriver() != null && connectedDevice.getWebDriver().isConnected() )
             {
                 try
                 {
@@ -488,6 +489,9 @@ public abstract class AbstractSeleniumTest
             threadContext.set( null );
             Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null);
 
+            if ( map.get( TestName.DEFAULT ) == null )
+                return;
+            
             if ( map.get( TestName.DEFAULT ).getWebDriver().isConnected() )
             {
                 try

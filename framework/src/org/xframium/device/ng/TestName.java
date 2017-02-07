@@ -200,8 +200,7 @@ public class TestName
             return;
         String useTest = baseTestName;
 
-        if ( personaName != null && !personaName.isEmpty() )
-            useTest = useTest + " using " + personaName;
+        
 
         if ( contentKey != null && !contentKey.isEmpty() )
             useTest = useTest + " {" + contentKey + "}";
@@ -210,10 +209,13 @@ public class TestName
             useTest = useTest + " [" + testContext + "]";
         
         if ( dataDriven != null  )
-            useTest = useTest + " " + dataDriven.getName() + ")";
+            useTest = useTest + " (" + dataDriven.getName() + ")";
         
         if ( iteration> 0 )
             useTest = useTest + " #" + iteration;
+        
+        if ( personaName != null && !personaName.isEmpty() )
+            useTest = useTest + " using " + personaName;
 
         this.testName = useTest;
         

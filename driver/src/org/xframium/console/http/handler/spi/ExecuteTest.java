@@ -32,7 +32,6 @@ public class ExecuteTest extends ECHandler
             
             final Map<String, String> queryMap = queryToMap( httpExchange.getRequestURI().getQuery() );
 
-            queryMap.put( "driver.displayResults", "false" );
             final File configFile = new File( queryMap.get( "fileName" ) );
             
             new Thread( new Runnable()

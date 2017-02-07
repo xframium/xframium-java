@@ -22,6 +22,7 @@
 }
 
 .scrollable {
+
 	overflow: auto;
 }
 
@@ -110,66 +111,79 @@ html, body {
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-left">
-                    <li class="dropdown" uib-dropdown>
-                        <a hRef="#" uib-dropdown-toggle role="button" aria-expanded="false">
-                            File
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-                            <li>
-                                <a href="#" ng-click="openFolderBrowser()">Open Suite</a>
-                            </li>
-                        </ul>
-                    </li>
+                    <div class="btn-toolbar navbar-btn">
+                        <div class="btn-group">
+                            <div class="btn btn-default" uib-tooltip="Open Test Suite" tooltip-popup-delay="500" tooltip-placement="bottom"><span class="glyphicon glyphicon-floppy-open text-primary" ng-click="openFolderBrowser()"></span></div>
+                        </div>
+    
+                        <div class="btn-group" ng-if="getActive() > 0 && executionStatus == 'idle'">
+                            <div ng-if="executionStatus == 'idle'" ng-click="executeTest()" class="btn btn-default" uib-tooltip="Start Execution" tooltip-popup-delay="500" tooltip-placement="bottom"><span class="glyphicon glyphicon-play text-success" ></span></div>
+                            <div ng-if="executionStatus != 'idle'" class="btn btn-default" uib-tooltip="Start Execution" tooltip-popup-delay="500" tooltip-placement="bottom"><span class="glyphicon glyphicon-stop text-danger"></span></div>
+                        </div>
+                        
+                        <div class="btn-group"  ng-if="globalConfig == null">
+                            <div class="btn btn-primary" style="margin-left: 25px"><span class="glyphicon glyphicon-arrow-left"></span> Open an existing test suite to get started</div>
+                        </div>
+                        
+                    </div>
+
                 </ul>
-                <a class="navbar-brand navbar-right" " href="#">xFramium Execution Console {{globalConfig.suiteName}}</a>
+                <a class="navbar-brand navbar-right" href="#"><img src="/images/xframium.png" width="24"></a>
+                <a class="navbar-brand navbar-right" href="#" style="color: #337ab7">{{globalConfig.suiteName}}</a>
+                
             </div>
         </nav>
-        <div class="row" ng-if="testList == null || testList.length == 0">
-            <h1 style="text-align: center">xFramium Execution Console</h1>
-            <h3 style="text-align: center">Open a driver configuration file to get started</h3>
+        <div class="row" ng-if="globalConfig == null">
+            <div class="col-md-12" style="text-align: center">
+                <img class="img-rounded" src="/images/xframium.png" height="100%" />
+            </div>
         </div>
+
         <div class="row" ng-if="testList != null && testList.length > 0">
 
             <div class="col-md-8">
                 <div class="panel panel-info" style="margin-bottom: 0px;">
-                    <nav class="navbar navbar-default" style="margin-bottom: 0px">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                        </div>
-                        <a class="navbar-brand navbar-default" href="#">{{getActive()}} Active Test Cases<span ng-click="executeTest()" ng-if="getActive() > 0 && executionStatus == 'idle'" style="margin-left: 15px;" class="glyphicon glyphicon-play text-success"></span><span ng-if="executionStatus == 'running'" class="testRunning pull-right" style="margin-left: 15px; margin-top: 4px"></span></a>
-                        <a class="navbar-default" href="#" style="font-size: 24px"></a>
-                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                            <ul class="nav navbar-nav navbar-right">
-                                <li class="dropdown" uib-dropdown>
-                                    <a hRef="#" uib-dropdown-toggle role="button" aria-expanded="false">
-                                        Select
-                                        <span class="caret"></span>
-                                    </a>
-                                    <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" ng-class="'text-success' : getActive() > 0, 'text-danger' : getActive() == 0">
+                            {{getActive()}} Active Test Cases
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="input-group" style="margin-bottom: 3px">
+                                    <span class="input-group-addon" id="basic-addon2"></span>
+                                    <input type="text" class="form-control" placeholder="Test Filter" aria-describedby="basic-addon2" ng-model="filterTestsBy">
+                                </div>
+                            </div>
+                            <div class="col-md-2" style="text-align: right">
+                                <div class="btn-group" uib-dropdown>
+                                    <button id="split-button" type="button" class="btn btn-default">Available Tags</button>
+                                    <button type="button" class="btn btn-default" uib-dropdown-toggle>
+                                        <span class="caret"></span> <span class="sr-only"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
                                         <li role="menuitem">
                                             <a ng-click="setActive( true )">All</a>
                                         </li>
                                         <li role="menuitem">
                                             <a ng-click="setActive( false )">None</a>
                                         </li>
-                                        <li role="menuitem" ng-repeat="tag in tagList">
+                                        <li role="menuitem" ng-repeat="tag in tagList | orderBy:tag">
                                             <a ng-click="selectByTag( tag )">#{{tag}}</a>
                                         </li>
                                     </ul>
-                                </li>
-                            </ul>
+                                </div>
+                            </div>
                         </div>
-                    </nav>
-                    <div class="panel-body">
                         <div ui-tree id="tree-root" class="scrollable" style="max-height: 768px">
                             <ol ui-tree-nodes ng-model="testList">
-                                <li data-nodrag ui-tree-node ng-repeat="test in testList" collapsed="true" ng-class="{'activeTest': test.active, 'inactiveTest': !test.active}" style="border-radius: 5px; margin-top: 5px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default; border-style: outset; border-width: thin">
+                                <li data-nodrag ui-tree-node collapsed="true" style="border-radius: 5px; margin-top: 5px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 6px; cursor: default; margin-left: 0px; margin-right: 0px;">
+                                    <div ui-tree-handle class="tree-node tree-node-content" >
+                                        <span class="pull-right"><a hRef="#" ng-click="decrementAll()"><span class="glyphicon glyphicon-minus text-danger" style="margin-right: 10px"></span></a>#<a hRef="#" ng-click="incrementAll()"><span class="glyphicon glyphicon-plus text-success" style="margin-left: 10px"></span></a></span>
+                                    </div>
+                                </li>
+                                <li data-nodrag ui-tree-node ng-repeat="test in testList | filter:filterTestsBy | orderBy: 'name'" collapsed="true" ng-class="{'activeTest': test.active, 'inactiveTest': !test.active}" style="border-radius: 5px; margin-top: 5px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default;  border-style: outset; border-width: thin">
                                     <div ui-tree-handle class="tree-node tree-node-content" >
                                         <a ng-if="getTotal( test ) > 0" data-nodrag ng-click="toggle(this)" style="cursor: default" ><span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }" style="cursor: default"></span></a>
                                         <span ng-if="getTotal( test ) == 0" style="cursor: default; margin-left: 16px"></span>
@@ -181,8 +195,9 @@ html, body {
                                         <span class="pull-right"><a hRef="#" ng-click="test.count=test.count-1"><span class="glyphicon glyphicon-minus text-danger" style="margin-right: 10px"></span></a>{{test.count}}<a hRef="#" ng-click="test.count=test.count+1"><span class="glyphicon glyphicon-plus text-success" style="margin-left: 10px"></span></a></span>
                                     </div>
                                     <ol ui-tree-nodes ng-model="test.executions" ng-class="{hidden: collapsed}" >
-                                        <li data-nodrag ui-tree-node ng-repeat="(key, value) in test.executions" ng-class="{'activeTest': value.testStatus == 'null', 'passedTest': value.testStatus == 'PASSED', 'failedTest': value.testStatus == 'FAILED'}" style="border-radius: 5px; margin-top: 1px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default; border-style: inset; border-width: thin" uib-tooltip="{{value.fullTestName}}")>
+                                        <li data-nodrag ui-tree-node ng-repeat="(key, value) in test.executions" ng-class="{'activeTest': value.testStatus == 'null', 'passedTest': value.testStatus == 'PASSED', 'failedTest': value.testStatus == 'FAILED'}" style="border-radius: 5px; margin-top: 1px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default; border-style: inset; border-width: thin" uib-tooltip="{{value.fullTestName}}">
                                             <span style="font-weight: bold;">{{value.stepCount}}</span> steps executed on <span style="font-weight: bold;">{{value.device.environment}}</span>
+                                            <a ng-if="value.testStatus != 'null'" style="margin-left: 10px" ng-click="getHtml( value )"><span class="glyphicon glyphicon-eye-open"></span></a>
                                             <span ng-if="value.testStatus == 'null'" class="testRunning pull-right" style="margin-right: 10px; margin-top: 2px"></span>
                                             <span ng-if="value.testStatus != 'null'" class="pull-right" style="margin-right: 10px">{{getElapsed( value )}} milliseconds</span>
                                             
@@ -195,27 +210,25 @@ html, body {
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="panel panel-info" style="margin-bottom: 0px;">
-                    <nav class="navbar navbar-default" style="margin-bottom: 0px">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                        </div>
-                        <a class="navbar-brand navbar-default" href="#" style="font-size: 12px">Available Environments</a>
-                        
-                    </nav>
+                <div class="panel panel-info" style="margin-bottom: 0px; padding-top: 25px; text-align: center" ng-if="executionStatus == 'running'">
+                    <div class="systemProcessing" style="display: inline-block;"></div>
+                    <h3 class="text-primary">Tests Executing...</h3>
+                    
+                </div>
+                <div class="panel panel-info" style="margin-bottom: 0px;" ng-if="executionStatus == 'idle'">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Available Environments
+                        </h3>
+                    </div>
                     <div class="panel-body">
-                        <div ui-tree id="tree-root" class="scrollable" style="max-height: 768px">
+                        <div ui-tree id="tree-root">
                             <ol ui-tree-nodes ng-model="deviceList">
-                                <li data-nodrag ui-tree-node ng-repeat="device in deviceList">
-                                    <div ui-tree-handle class="tree-node tree-node-content" ng-class="{'activeTest': device.active, 'inactiveTest': !device.active}" style="border-radius: 5px; margin-top: 1px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default">
+                                <li data-nodrag ui-tree-node ng-repeat="device in deviceList" ng-class="{'bg-success': device.active, 'bg-warning': !device.active}" style="border-radius: 5px; margin-top: 5px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default;  border-style: outset; border-width: thin">
+                                    <div ui-tree-handle class="tree-node tree-node-content">
                                         <div class="row">
-                                            <div class="col-sm-1" style="text-align: center; padding-top: 2px"><input type="checkbox" ng-model="device.active" /></div>
-                                            <div class="col-sm-11" style="padding-top: 3px; padding-left: 0px">{{device.environment}} ({{device.cloud}})</div>
+                                            <div class="col-sm-1" style="text-align: center; margin-top: 2px"><input type="checkbox" ng-model="device.active" /></div>
+                                            <div class="col-sm-11" style="margin-top: 3px; margin-left: 0px">{{device.environment}} ({{device.cloud}})</div>
                                         </div>
                                     </div>
                                 </li>

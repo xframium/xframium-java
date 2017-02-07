@@ -73,7 +73,7 @@ public class SuiteContainer
     private PageDataProvider dataProvider;
     
     private String siteName;
-    
+
     public String getSiteName()
     {
         return siteName;

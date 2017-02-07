@@ -88,6 +88,7 @@ public class DeviceWebDriver
         implements HasCapabilities, WebDriver, JavascriptExecutor, ContextAware, ExecuteMethod, ArtifactProducer, NativeDriverProvider, PropertyProvider, TakesScreenshot, DeviceProvider, HasInputDevices, CachingDriver, ReportiumProvider
 {
 
+    
     private List<DeviceInterrupt> interruptList;
 
     private DeviceInterruptThread diThread = null;
@@ -111,6 +112,7 @@ public class DeviceWebDriver
     private Device currentDevice;
     private Device populatedDevice;
     private CloudDescriptor cloud;
+    private boolean syntheticConnection;
 
     private ApplicationDescriptor aut;
 
@@ -236,8 +238,11 @@ public class DeviceWebDriver
 
         if ( log.isInfoEnabled() )
             log.info( Thread.currentThread().getName() + ": Caching page data" );
-        String pageSource = getPageSource();
-
+        readXML( getPageSource() );
+    }
+    
+    public void readXML( String pageSource )
+    {
         try
         {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -273,6 +278,15 @@ public class DeviceWebDriver
         this.webDriver = webDriver;
         this.cachingEnabled = cachingEnabled;
         this.currentDevice = currentDevice;
+        this.syntheticConnection = false;
+    }
+    
+    public DeviceWebDriver( String xmlData, Device currentDevice )
+    {
+        this.cachingEnabled = true;
+        readXML( xmlData );
+        this.currentDevice = currentDevice;
+        this.syntheticConnection = true;
     }
 
     public boolean isConnected()
@@ -471,8 +485,13 @@ public class DeviceWebDriver
             catch ( Exception e )
             {
                 log.warn( "Error reading from cache " + e.getMessage() );
-                cachingEnabled = false;
-                cachedDocument = null;
+                if ( !syntheticConnection )
+                {
+                    cachingEnabled = false;
+                    cachedDocument = null;
+                }
+                else
+                    return null;
             }
         }
 

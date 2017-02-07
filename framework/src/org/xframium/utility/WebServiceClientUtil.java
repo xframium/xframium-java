@@ -86,7 +86,8 @@ public class WebServiceClientUtil
         }
         catch ( Throwable e )
         {
-            throw new IllegalStateException( "Call failed with:", e );
+            log.warn( "Web Service Call Failed", e );
+            throw new ScriptException( "Call failed with: " + e.getMessage() );
         }
 
         return rtn;

@@ -4,6 +4,7 @@ xConsole.service("xConsoleService", function($http, $location) {
 		getSupportedArtifacts : getSupportedArtifacts,
 		getFiles : getFiles,
 		executeTest : executeTest,
+		getHtml : getHtml,
 		checkStatus : checkStatus
 	});
 	
@@ -89,6 +90,17 @@ xConsole.service("xConsoleService", function($http, $location) {
 
 		return request.then(handleSuccess, handleError);
 	};
+	
+	function getHtml(fileName) {
+
+        var request = $http({
+            method : "get",
+            url : "/html",
+            params : { "fileName" : cleanString( fileName ) }
+        });
+
+        return request.then(handleSuccess, handleError);
+    };
 	
 	
 

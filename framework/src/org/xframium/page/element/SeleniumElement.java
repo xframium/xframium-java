@@ -20,22 +20,32 @@
  *******************************************************************************/
 package org.xframium.page.element;
 
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.ios.IOSElement;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import javax.imageio.ImageIO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.ContextAware;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.factory.MorelandWebElement;
@@ -53,21 +63,14 @@ import org.xframium.integrations.perfectoMobile.rest.services.Repositories.Repos
 import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.PageManager;
-import org.xframium.page.StepStatus;
 import org.xframium.spi.PropertyProvider;
-import org.xframium.spi.driver.CachedElement;
+import org.xframium.spi.driver.CachingDriver;
 import org.xframium.spi.driver.NativeDriverProvider;
 import org.xframium.spi.driver.VisualDriverProvider;
 import org.xframium.utility.XPathGenerator;
 import org.xframium.utility.html.HTMLElementLookup;
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.ios.IOSElement;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -316,11 +319,21 @@ public class SeleniumElement extends AbstractElement
             case COMPLEX:
                 if ( subElementList != null && subElementList.size() > 0 )
                 {
-                    SubElement[] subList = getSubElement( ( (DeviceWebDriver) webDriver ).getAut(), ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getOs(), (DeviceWebDriver) webDriver );
+                    SubElement[] subList = getSubElement( ( (DeviceWebDriver) webDriver ).getAut(), ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getOs().toUpperCase(), (DeviceWebDriver) webDriver );
                     if ( subList.length > 0 )
-                        return _useBy( subList[ 0 ].getBy(), subList[ 0 ].getKey() );
+                    {
+                        return _useBy( subList[ 0 ].getBy(), applyToken( subList[ 0 ].getKey() ) );
+                    }
+                    else
+                    {
+                        throw new ScriptConfigurationException( "Could not locate sub-element for " +
+                                                                getName() + "( " + ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getOs() + " )");
+                    }
                 }
-                throw new ScriptConfigurationException( "Could not locate a complex element for " + getName() );
+                else
+                {
+                    throw new ScriptConfigurationException( "No sub-elements for " + getName() );
+                }
             default:
                 return _useBy( getBy(), getKey() );
                     
@@ -361,7 +374,7 @@ public class SeleniumElement extends AbstractElement
 
             case PROP:
                 Map<String, String> propertyMap = new HashMap<String, String>( 10 );
-                propertyMap.put( "resource-id", ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
+                propertyMap.put( "resource-id", ( (DeviceWebDriver) webDriver ).getAut().getAndroidIdentifier() );
                 return By.xpath( XPathGenerator.generateXPathFromProperty( propertyMap, keyValue ) );
             default:
                 return null;
@@ -625,7 +638,6 @@ public class SeleniumElement extends AbstractElement
     @Override
     protected String _getValue()
     {
-        long startTime = System.currentTimeMillis();
         WebElement currentElement = getElement();
 
         String returnValue = null;
@@ -846,7 +858,7 @@ public class SeleniumElement extends AbstractElement
             }
             catch ( Exception e )
             {
-                log.error( Thread.currentThread().getName() + ": Could not locate " + useBy() );
+                log.error( Thread.currentThread().getName() + ": Could not locate " + useBy(), e );
                 throw new ObjectIdentificationException( getBy(), useBy() );
             }
         }
@@ -861,8 +873,20 @@ public class SeleniumElement extends AbstractElement
     @Override
     protected void _setValue( String currentValue, SetMethod setMethod )
     {
+        boolean enableCache = false;
+        if ( webDriver instanceof CachingDriver )
+        {
+            if ( ( (CachingDriver) webDriver ).isCachingEnabled() )
+            {
+                ( (CachingDriver) webDriver ).setCachingEnabled( false );
+                enableCache = true;
+            }
+        }
+        
+        try
+        {
         WebElement webElement = getElement();
-
+        
         if ( "V_TEXT".equals( getBy().name().toUpperCase() ) )
         {
             if ( getElementProperties() != null )
@@ -936,16 +960,6 @@ public class SeleniumElement extends AbstractElement
                     MorelandWebElement x = (MorelandWebElement) webElement;
                     ((IOSElement) x.getWebElement()).setValue( currentValue );
                 }
-
-                // try
-                // {
-                // MorelandWebElement x = (MorelandWebElement) webElement;
-                // ((IOSElement) x.getWebElement()).setValue( currentValue );
-                // }
-                // catch ( Exception e )
-                // {
-                // e.printStackTrace();
-                // }
             }
             else
             {
@@ -975,6 +989,12 @@ public class SeleniumElement extends AbstractElement
                 }
             }
         }
+        }
+        finally
+        {
+            if ( enableCache )
+                ( (CachingDriver) webDriver ).setCachingEnabled( true );
+        }
     }
 
     /*
@@ -985,16 +1005,33 @@ public class SeleniumElement extends AbstractElement
     @Override
     protected void _click()
     {
-        if ( "V_TEXT".equals( getBy().name().toUpperCase() ) )
+        boolean enableCache = false;
+        if ( webDriver instanceof CachingDriver )
         {
-            createPressFromVisual( PerfectoMobile.instance().imaging().textExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, 50 ) );
+            if ( ( (CachingDriver) webDriver ).isCachingEnabled() )
+            {
+                ( (CachingDriver) webDriver ).setCachingEnabled( false );
+                enableCache = true;
+            }
         }
-        else if ( "V_IMAGE".equals( getBy().name().toUpperCase() ) )
+        try
         {
-            createPressFromVisual( PerfectoMobile.instance().imaging().imageExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, MatchMode.bounded ) );
+            if ( "V_TEXT".equals( getBy().name().toUpperCase() ) )
+            {
+                createPressFromVisual( PerfectoMobile.instance().imaging().textExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, 50 ) );
+            }
+            else if ( "V_IMAGE".equals( getBy().name().toUpperCase() ) )
+            {
+                createPressFromVisual( PerfectoMobile.instance().imaging().imageExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, MatchMode.bounded ) );
+            }
+            else
+                getElement().click();
         }
-        else
-            getElement().click();
+        finally
+        {
+            if ( enableCache )
+                ( (CachingDriver) webDriver ).setCachingEnabled( true );
+        }
 
     }
 

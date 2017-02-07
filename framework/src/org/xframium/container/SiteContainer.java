@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.KeyWordPage;
 
 public class SiteContainer implements Iterable<PageContainer>
@@ -54,6 +55,19 @@ public class SiteContainer implements Iterable<PageContainer>
     public Iterator<PageContainer> iterator()
     {
         return pageList.iterator();
+    }
+    
+    public String toString()
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append( "Site Name: " ).append( siteName ).append( "\r\n" );
+        
+        for ( PageContainer p : pageList )
+            stringBuilder.append( p.toString() ).append( "\r\n" );
+        
+        
+        return stringBuilder.toString();
+        
     }
     
     

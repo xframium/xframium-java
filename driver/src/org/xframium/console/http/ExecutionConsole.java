@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,9 +19,11 @@ import org.xframium.application.ApplicationVersion;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.console.ExecutionContainer;
 import org.xframium.console.http.handler.spi.ExecuteTest;
+import org.xframium.console.http.handler.spi.KillSwitch;
 import org.xframium.console.http.handler.spi.ListFolder;
 import org.xframium.console.http.handler.spi.OpenConsole;
 import org.xframium.console.http.handler.spi.OpenFile;
+import org.xframium.console.http.handler.spi.OpenHTML;
 import org.xframium.console.http.handler.spi.OpenSuite;
 import org.xframium.console.http.handler.spi.TestStatus;
 import org.xframium.container.ApplicationContainer;
@@ -69,6 +72,7 @@ import org.xframium.page.keyWord.step.spi.KWSClick;
 import org.xframium.page.keyWord.step.spi.KWSMath.MATH_TYPE;
 import org.xframium.page.keyWord.step.spi.KWSString2.OperationType;
 import org.xframium.page.listener.KeyWordListener;
+import org.xframium.reporting.ElementUsage;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
@@ -97,7 +101,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
     {
         try
         {
-            ExecutionConsole.instance().startUp( "127.0.0.1", 8145 );
+            ExecutionConsole.instance().startUp( "0.0.0.0", 8145 );
         }
         catch( Exception e )
         {
@@ -173,7 +177,24 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( SubElement.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ApplicationVersion.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ExecutionContainer.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ElementUsage.class, new ReflectionSerializer() );
         KeyWordDriver.instance().addStepListener( this );
+    }
+    
+    private void createServer( String ipAddress, int portNumber ) throws Exception
+    {
+        httpServer = HttpServer.create( new InetSocketAddress( ipAddress, portNumber ), 1000 );
+        httpServer.createContext( "/executionConsole", new OpenConsole() );
+        httpServer.createContext( "/js", new OpenFile() );
+        httpServer.createContext( "/css", new OpenFile() );
+        httpServer.createContext( "/images", new OpenFile() );
+        httpServer.createContext( "/executionConsole/open", new OpenSuite() );
+        httpServer.createContext( "/executionConsole/folderList", new ListFolder() );
+        httpServer.createContext( "/executionConsole/executeTest", new ExecuteTest() );
+        httpServer.createContext( "/executionConsole/status", new TestStatus() );
+        httpServer.createContext( "/executionConsole/kill", new KillSwitch() );
+        httpServer.createContext( "/html", new OpenHTML() );
+        httpServer.start();
     }
     
     public void startUp( String ipAddress, int portNumber )
@@ -183,20 +204,24 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
             if ( httpServer != null )
                 httpServer.stop( 0 );
             
-            httpServer = HttpServer.create( new InetSocketAddress( ipAddress, portNumber ), 1000 );
-            httpServer.createContext( "/executionConsole", new OpenConsole() );
-            httpServer.createContext( "/js", new OpenFile() );
-            httpServer.createContext( "/css", new OpenFile() );
-            httpServer.createContext( "/executionConsole/open", new OpenSuite() );
-            httpServer.createContext( "/executionConsole/folderList", new ListFolder() );
-            httpServer.createContext( "/executionConsole/executeTest", new ExecuteTest() );
-            httpServer.createContext( "/executionConsole/status", new TestStatus() );
-
-            httpServer.start();
+            
+            try
+            {
+                createServer( ipAddress, portNumber );
+            }
+            catch( Exception e )
+            {
+                URL killUrl = new URL( "http://127.0.0.1:" + portNumber + "/executionConsole/kill" );
+                try { killUrl.openStream(); } catch( Exception e2 ) {}
+                Thread.sleep( 5000 );
+                createServer( ipAddress, portNumber );
+                
+            }
+                
             
             Thread.sleep( 500 );
             
-            Desktop.getDesktop().browse( new URI( "http://" + ipAddress + ":" + portNumber + "/executionConsole") );
+            Desktop.getDesktop().browse( new URI( "http://127.0.0.1:" + portNumber + "/executionConsole") );
 
         }
         catch ( Exception e )
@@ -209,8 +234,6 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
     {
         httpServer.stop( 0 );
     }
-
-    
     
     @Override
     public boolean beforeStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC )

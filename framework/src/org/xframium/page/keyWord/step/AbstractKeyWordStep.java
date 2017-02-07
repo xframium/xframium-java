@@ -50,6 +50,7 @@ import org.xframium.content.ContentManager;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.FilteredException;
+import org.xframium.exception.FlowException;
 import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
@@ -171,6 +172,27 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     protected String kw;
     protected String natualLanguage;
     protected ApplicationVersion version;
+
+    protected boolean validateParameters( String[] parameterNames )
+    {
+        for ( String pName : parameterNames )
+        {
+            if ( getParameter( pName ) == null )
+            {
+                String params = "";
+                for ( String pName2 : parameterNames )
+                    params += pName2 + ", ";
+                throw new ScriptConfigurationException( "The following parameters must be specified for " + kw + " [" + params + "]" );
+            }
+        }
+        
+        return true;
+    }
+    
+    public boolean isOrMapping()
+    {
+        return orMapping;
+    }
 
     @Override
     public boolean isBreakpoint()
@@ -908,6 +930,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 executionContext.completeStep( StepStatus.SUCCESS, null );
                 throw lb;
             }
+            catch ( FlowException lb )
+            {
+                executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                throw lb;
+            }
             catch ( FilteredException e )
             {
                 stepException = e;
@@ -954,6 +981,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 boolean subReturnValue = false;
                 for ( KeyWordStep step : getStepList() )
                 {
+                    if ( !step.isActive() )
+                        continue;
                     if ( step instanceof KWSElse )
                         continue;
                     try
@@ -964,6 +993,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     {
                         executionContext.completeStep( StepStatus.SUCCESS, null );
                         throw e;
+                    }
+                    catch ( FlowException lb )
+                    {
+                        executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                        throw lb;
                     }
                     catch ( Exception e )
                     {
@@ -986,9 +1020,9 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             }
 
             //
-            // Special case for the ELSE clause if found
+            // Special case for the ELSE clause if found - we ignore else on a sub failure
             //
-            if ( !fork && getStepList() != null && !getStepList().isEmpty() && !returnValue )
+            if ( !fork && getStepList() != null && !getStepList().isEmpty() && !returnValue && !subFailure  )
             {
                 if ( stepException == null || !(stepException instanceof FilteredException) )
                 {
@@ -998,6 +1032,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         {
                             for ( KeyWordStep step : parentStep.getStepList() )
                             {
+                                if ( !step.isActive() )
+                                    continue;
                                 boolean subReturnValue = false;
                                 try
                                 {
@@ -1008,16 +1044,16 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                                     executionContext.completeStep( StepStatus.SUCCESS, null );
                                     throw e;
                                 }
+                                catch ( FlowException lb )
+                                {
+                                    executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                                    throw lb;
+                                }
                                 catch ( Exception e )
                                 {
                                     stepException = e;
                                     subReturnValue = false;
                                     log.debug( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " encoundered error: ", e );
-                                }
-    
-                                if ( step.isInverse() )
-                                {
-                                    subReturnValue = !subReturnValue;
                                 }
     
                                 if ( !subReturnValue )
@@ -1143,9 +1179,13 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         {
             throw lb;
         }
+        catch ( FlowException lb )
+        {
+            executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+            throw lb;
+        }
         finally
         {
-
             if ( waitTime > 0 )
             {
                 try
@@ -1202,7 +1242,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         return parameterList;
     }
 
-    protected KeyWordParameter getParameter( String parameterName )
+    public KeyWordParameter getParameter( String parameterName )
     {
         for ( KeyWordParameter p : parameterList )
         {

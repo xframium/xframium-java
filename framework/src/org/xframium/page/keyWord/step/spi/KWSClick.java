@@ -59,21 +59,48 @@ public class KWSClick extends AbstractKeyWordStep
 			throw new ScriptConfigurationException( "There was no Page Object defined");
 		
 		if(getParameterList().size() == 0){
-			getElement( pageObject, contextMap, webDriver, dataMap ).click();
-		} 
-		else if(getParameterList().size() == 1)
-		{	
-			String clicks = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
-			int intClicks = Integer.parseInt(clicks);
-			getElement( pageObject, contextMap, webDriver, dataMap ).click(intClicks,250);
+            getElement( pageObject, contextMap, webDriver, dataMap ).click();
+        } 
+		else if ( getParameter( "Count" ) != null )
+		{
+		    getElement( pageObject, contextMap, webDriver, dataMap ).click( Integer.parseInt( getParameterValue( getParameter( "Count" ), contextMap, dataMap ) ),250);
+		    return true;
 		}
-		else {	
-			String clicks = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
-			String waitTime = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-			int intClicks = Integer.parseInt(clicks);
-			int intwaitTime =Integer.parseInt(waitTime);			
-			getElement( pageObject, contextMap, webDriver, dataMap ).click(intClicks,intwaitTime);
-		}	
+		else if ( getParameter( "Length" ) != null )
+        {
+		    getElement( pageObject, contextMap, webDriver, dataMap ).press();
+		    try { Thread.sleep( Long.parseLong( getParameterValue( getParameter( "Length" ), contextMap, dataMap ) ) ); } catch( Exception e ) {}
+		    getElement( pageObject, contextMap, webDriver, dataMap ).release();
+            return true;
+        }
+		
+		else if ( getParameter( "OffSet" ) != null )
+        {
+		    String[] offSet = getParameterValue( getParameter( "Offset" ), contextMap, dataMap ).replace( "%", "").split( "," );
+		    
+            getElement( pageObject, contextMap, webDriver, dataMap ).clickAt( Integer.parseInt( offSet[ 0 ] ), Integer.parseInt( offSet[ 1 ] ) );
+            return true;
+        }
+		
+		else
+		{
+		    //
+		    // LEGACY click operations
+		    //
+		    if(getParameterList().size() == 1)
+    		{	
+    			String clicks = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+    			int intClicks = Integer.parseInt(clicks);
+    			getElement( pageObject, contextMap, webDriver, dataMap ).click(intClicks,250);
+    		}
+    		else {	
+    			String clicks = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+    			String waitTime = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+    			int intClicks = Integer.parseInt(clicks);
+    			int intwaitTime =Integer.parseInt(waitTime);			
+    			getElement( pageObject, contextMap, webDriver, dataMap ).click(intClicks,intwaitTime);
+    		}	
+		}
 		return true;
 	}
 

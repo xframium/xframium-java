@@ -311,12 +311,34 @@
         <documentation>Defines a page object in your object repository</documentation>
     </annotation>
     <sequence>
+      <element name="activity" type="tns:xActivity" minOccurs="0" maxOccurs="unbounded" />
       <element name="element" type="tns:xElement" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="site" type="string" use="optional" />
     <attribute name="name" type="string" use="required" />
     <attribute name="class" type="string" use="optional" />
   </complexType>
+  
+  <complexType name="xActivity">
+    <sequence>
+      <element name="initiator" type="tns:xInitiator" minOccurs="0" maxOccurs="unbounded" />
+      <element name="validator" type="tns:xValidator" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+    <attribute name="name" type="string" use="required" />
+    <attribute name="page" type="string" use="required" />
+    
+  </complexType>
+  
+  <complexType name="xInitiator">
+    <attribute name="element" type="string" use="required" />
+    <attribute name="action" type="string" use="required" />
+  </complexType>
+  
+  <complexType name="xValidator">
+    <attribute name="element" type="string" use="required" />
+    <attribute name="action" type="string" use="required" />
+  </complexType>
+  
   <complexType name="xElement">
     <sequence>
       <element name="element" type="tns:xSimpleElement" minOccurs="0" maxOccurs="unbounded" />
@@ -326,6 +348,7 @@
     <attribute name="descriptor" use="required">
       <simpleType>
         <restriction base="string">
+          <enumeration value="UNDEFINED" />
           <enumeration value="XPATH" />
           <enumeration value="CLASS" />
           <enumeration value="CSS" />
@@ -344,6 +367,7 @@
     <attribute name="value" type="string" use="optional" />
     <attribute name="contextName" type="string" use="optional" />
     <attribute name="deviceContext" type="string" use="optional" />
+    <attribute name="classification" type="string" use="optional" default="Field" />
   </complexType>
   <complexType name="xSimpleElement">
     <sequence>
@@ -381,6 +405,7 @@
         <documentation>Defines all of the tests and functions</documentation>
     </annotation>
     <sequence>
+      <element name="flow" type="tns:xFlow" minOccurs="0" maxOccurs="1" />
       <element name="test" type="tns:xTest" minOccurs="0" maxOccurs="unbounded" />
       <element name="function" type="tns:xFunction" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
@@ -395,6 +420,21 @@
       </simpleType>
     </attribute>
   </complexType>
+  
+  <complexType name="xFlow">
+    <annotation>
+        <documentation>Defines the application flow using xFramium application flow management</documentation>
+    </annotation>
+    <attribute name="fileName" type="string" use="required" />
+    <attribute name="provider" use="required" >
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="XML" />
+        </restriction>
+      </simpleType>
+    </attribute>
+  </complexType>
+  
   <complexType name="xModel">
     <annotation>
         <documentation>Defines your object repository</documentation>
@@ -469,8 +509,9 @@
         </restriction>
       </simpleType>
     </attribute>
-    <attribute name="page" type="string" use="optional" />
-    <attribute name="output" type="string" use="optional" />
+    <attribute name="inputPage" type="string" use="optional" />
+    <attribute name="outputPage" type="string" use="optional" />
+    <attribute name="operations" type="string" use="optional" />
   </complexType>
   
   <complexType name="xDescription">

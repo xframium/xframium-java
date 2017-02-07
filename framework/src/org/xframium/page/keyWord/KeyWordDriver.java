@@ -35,6 +35,7 @@ import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.ng.TestName;
 import org.xframium.exception.DataConfigurationException;
 import org.xframium.exception.FilteredException;
+import org.xframium.exception.FlowException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.TestConfigurationException;
 import org.xframium.page.Page;
@@ -98,7 +99,13 @@ public class KeyWordDriver
      */
     public void loadTests( SuiteContainer sC )
     {
-
+        testList.clear();
+        testMap.clear();
+        inactiveTestMap.clear();
+        functionMap.clear();
+        pageMap.clear();
+        tagMap.clear();
+        
         for ( KeyWordTest t : sC.getActiveTestList() )
         {
             addTest( t );
@@ -634,6 +641,24 @@ public class KeyWordDriver
 
             return executionContext;
 
+        }
+        catch( FlowException e )
+        {
+            if ( !e.isSuccess() )
+            {
+                executionContext.startStep( new SyntheticStep( test.getName(), "TEST" ), contextMap, dataMap );
+                executionContext.completeStep( StepStatus.FAILURE, e );
+                executionContext.completeTest( TestStatus.FAILED, e );
+   
+                log.error( "Error executing Test " + testName, e );
+                
+            }
+            else
+            {
+                executionContext.completeStep( StepStatus.SUCCESS, null );
+                executionContext.completeTest( TestStatus.PASSED, null );
+            }
+            return executionContext;
         }
         catch ( Throwable e )
         {

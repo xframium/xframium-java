@@ -54,15 +54,18 @@ import org.xframium.page.keyWord.step.spi.KWSEnabled;
 import org.xframium.page.keyWord.step.spi.KWSExecJS;
 import org.xframium.page.keyWord.step.spi.KWSExecWS;
 import org.xframium.page.keyWord.step.spi.KWSExists;
+import org.xframium.page.keyWord.step.spi.KWSFlow;
 import org.xframium.page.keyWord.step.spi.KWSFocus;
 import org.xframium.page.keyWord.step.spi.KWSFork;
 import org.xframium.page.keyWord.step.spi.KWSFunction;
 import org.xframium.page.keyWord.step.spi.KWSGesture;
 import org.xframium.page.keyWord.step.spi.KWSLoop;
 import org.xframium.page.keyWord.step.spi.KWSMath;
+import org.xframium.page.keyWord.step.spi.KWSModule;
 import org.xframium.page.keyWord.step.spi.KWSMouse;
 import org.xframium.page.keyWord.step.spi.KWSNavigate;
 import org.xframium.page.keyWord.step.spi.KWSOperator;
+import org.xframium.page.keyWord.step.spi.KWSRandom;
 import org.xframium.page.keyWord.step.spi.KWSReport;
 import org.xframium.page.keyWord.step.spi.KWSReturn;
 import org.xframium.page.keyWord.step.spi.KWSSQL;
@@ -188,12 +191,13 @@ public class KeyWordStepFactory
         addKeyWord( "VISUAL", KWSVisual.class );
         addKeyWord( "SET_CONTENT_KEY", KWSSetContentKey.class );
         addKeyWord( "BROWSER", KWSBrowser.class );
-        addKeyWord( "IS_ENABLED", KWSEnabled.class );
         addKeyWord( "ENABLED", KWSEnabled.class );
         addKeyWord( "COMMAND", KWSCommand.class );
         addKeyWord( "EMAIL", KWSEmail.class );
         addKeyWord( "CONSOLE", KWSConsole.class );
         addKeyWord( "APPLICATION", KWSApplication.class );
+        addKeyWord( "FLOW", KWSFlow.class );
+        addKeyWord( "RANDOM", KWSRandom.class );
     }
 
     /**
@@ -211,7 +215,7 @@ public class KeyWordStepFactory
 
         stepMap.put( keyWord.toUpperCase(), kwImpl );
         classMap.put( kwImpl, keyWord );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( kwImpl, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( kwImpl, new ReflectionSerializer() );
     }
 
     /**
@@ -309,9 +313,10 @@ public class KeyWordStepFactory
                     else
                         returnValue.setWait( waitTime - (int)modifierValue );
                 }
+                else
+                    returnValue.setWait( waitTime );
             }
-            else
-                returnValue.setWait( waitTime );
+            
             
             returnValue.setValidation( validation );
             returnValue.setValidationType( validationType );

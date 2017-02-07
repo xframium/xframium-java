@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+<function name="kw-math" mode="function" threshold="0" active="true">
+<description>null</description>
+<step name="add" site="xTest" page="home" type="MATH" active="true" threshold="0" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="=100"/>
+<parameter type="STATIC" name="null" value="75"/>
+<parameter type="STATIC" name="null" value="25"/>
+</step>
+<step name="subtract" site="xTest" page="home" type="MATH" active="true" threshold="0" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="null" value="=50"/>
+<parameter type="STATIC" name="null" value="75"/>
+<parameter type="STATIC" name="null" value="25"/>
+</step>
+</function>
+</suite>

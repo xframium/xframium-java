@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="xFramium Launcher" default="default" basedir=".">
+	<taskdef resource="net/sf/antcontrib/antlib.xml" />
+	<property name="distRoot" value="${basedir}${file.separator}jnlp" />
+	<property name="libRoot" value="${basedir}${file.separator}jnlp${file.separator}lib" />
+	<property name="projectName" value="xEC" />
+	<property name="projectTitle" value="xEC" />
+
+	<target name="default">
+		<antcall target="package" />
+	</target>
+
+	
+	
+	<target name="package">
+		<mkdir dir="${distRoot}" />
+		<mkdir dir="${distRoot}${file.separator}lib" />
+
+		<copy todir="${distRoot}${file.separator}lib">
+			<fileset dir="${libRoot}">
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+
+		<manifest file="MANIFEST.MF">
+			<attribute name="Built-By" value="Moreland Labs, Ltd." />
+			<attribute name="Permissions" value="all-permissions" />
+			<attribute name="Implementation-Title" value="xFramium" />
+			<attribute name="Implementation-Version" value="Pallas (1.0.7)" />
+			<attribute name="Implementation-Vendor" value="Moreland Labs, Ltd." />
+		</manifest>
+
+		<for param="jarFile">
+            <path>
+                <fileset dir="${distRoot}" includes="*.jar" />
+            </path>
+            <sequential>
+                <echo message="Reorganizing @{jarFile}" />
+                <delete dir="${distRoot}${file.separator}TEMP"/>
+                <mkdir dir="${distRoot}${file.separator}TEMP" />
+                
+                <unzip src="@{jarFile}" dest="${distRoot}${file.separator}TEMP" />
+                <jar destfile="@{jarFile}" basedir="${distRoot}${file.separator}TEMP" duplicate="preserve" manifest="MANIFEST.MF"/>
+                    
+                <echo message="Repacking @{jarFile}" />
+                <exec executable="pack200">
+                    <arg value="--repack" />
+                    <arg value="@{jarFile}" />
+                </exec>
+                
+                <echo message="Signing @{jarFile}" />
+                <signjar jar="@{jarFile}" keystore="c:/projects/git/morelandlabs/internal/xframium" alias="xframium-code" storepass="xframium" />
+
+                <echo message="PACKing @{jarFile}" />
+                <exec executable="pack200">
+                    <arg value="@{jarFile}.pack.gz" />
+                    <arg value="@{jarFile}" />
+                </exec>
+                
+            </sequential>
+        </for>
+		
+		<for param="jarFile">
+			<path>
+				<fileset dir="${libRoot}" includes="xfram*.jar" />
+			</path>
+			<sequential>
+				<echo message="Reorganizing @{jarFile}" />
+				<delete dir="${distRoot}${file.separator}TEMP"/>
+				<mkdir dir="${distRoot}${file.separator}TEMP" />
+				
+				<unzip src="@{jarFile}" dest="${distRoot}${file.separator}TEMP" />
+				<jar destfile="@{jarFile}" basedir="${distRoot}${file.separator}TEMP" duplicate="preserve"/>
+					
+				<echo message="Repacking @{jarFile}" />
+				<exec executable="pack200">
+				    <arg value="--repack" />
+					<arg value="@{jarFile}" />
+				</exec>
+				
+				<echo message="Signing @{jarFile}" />
+				<signjar jar="@{jarFile}" keystore="c:/projects/git/morelandlabs/internal/xframium" alias="xframium-code" storepass="xframium" />
+
+				<echo message="PACKing @{jarFile}" />
+				<exec executable="pack200">
+                    <arg value="@{jarFile}.pack.gz" />
+					<arg value="@{jarFile}" />
+                </exec>
+				
+			</sequential>
+		</for>
+
+	</target>
+
+
+
+</project>

@@ -2,7 +2,9 @@ package org.xframium.page.element;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
 import org.xframium.application.ApplicationVersion;
+import org.xframium.content.ContentManager;
 import org.xframium.page.BY;
 
 public class SubElement
@@ -17,7 +19,8 @@ public class SubElement
     {
         this.by = by;
         this.key = key;
-        this.os = os;
+        if ( os != null )
+            this.os = os.toUpperCase();
         this.version = version;
     }
     
@@ -42,6 +45,7 @@ public class SubElement
     {
         this.elementProperties = elementProperties;
     }
+    
     public String getKey()
     {
         return key;

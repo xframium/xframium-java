@@ -134,9 +134,9 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
     	    if ( System.getProperty( "reportTemplateFolder" ) == null )
             {
                 if ( System.getProperty( "reportTemplate" ) == null )
-                    inputStream = ClassLoader.getSystemResourceAsStream( "org/xframium/reporting/html/dark/Test.html" );
+                    inputStream = getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/dark/Test.html" );
                 else
-                    inputStream = ClassLoader.getSystemResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/Test.html" );
+                    inputStream = getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/Test.html" );
             }
             else
                 inputStream = new FileInputStream( new File(  System.getProperty( "reportTemplateFolder" ), "Test.html" ) );

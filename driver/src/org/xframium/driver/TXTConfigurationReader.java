@@ -77,7 +77,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     private static final String[] OPT_DRIVER = new String[] { "driver.suiteName", "driver.modelQuery", "driver.testSuiteQuery", "driver.testCaseQuery" };
     private static final String[] JDBC = new String[] { "jdbc.username", "jdbc.password", "jdbc.url", "jdbc.driverClassName" };
     
-    private Map<String,String> configProperties;
+    private Map<String,String> configProperties = new HashMap<String,String>(20);
     
     @Override
     public boolean readFile( File configFile )

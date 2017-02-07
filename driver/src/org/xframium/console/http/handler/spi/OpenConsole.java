@@ -18,7 +18,7 @@ public class OpenConsole extends ECHandler
 	        
     		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     		
-    		InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream( "org/xframium/console/http/html/executionConsole.html" );
+    		InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream( "org/xframium/console/http/html/executionConsole.html" );
     		
     		byte[] buffer = new byte[512];
     		int bytesRead = 0;

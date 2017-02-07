@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
@@ -158,13 +159,13 @@ public class KWSExecWS extends AbstractKeyWordStep
         {
             KeyWordParameter param = params.next();
 
-            if (( param.getUsage() == null ) ||
+            if (( param.getUsage() != null ) &&
                 ( !INPUT.equalsIgnoreCase( param.getUsage() )))
             {
                 continue;
             }
 
-            switch( param.getName() )
+            switch( param.getName().toLowerCase() )
             {
                 case TOKEN_URL:
                 {
@@ -256,7 +257,7 @@ public class KWSExecWS extends AbstractKeyWordStep
                   ( callDetails.getMediaType() == null )))
             errorMsg = "Payload or media type token is missing for a call of type post";                          
 
-        throw new IllegalStateException( errorMsg );
+        throw new ScriptConfigurationException( errorMsg );
     }
 
     private WebServiceClientUtil.ResponceDetails loadResponceDetails( List<KeyWordParameter> paramList )

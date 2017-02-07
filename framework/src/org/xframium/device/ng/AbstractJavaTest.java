@@ -67,7 +67,7 @@ public abstract class AbstractJavaTest extends AbstractSeleniumTest
         ExecutionContextTest eC = new ExecutionContextTest();
         eC.setTestName( currentMethod.getName() );
         
-        KeyWordTest kwt = new KeyWordTest( currentMethod.getName(), true, null, null, false, null, null, 0, currentMethod.getName() + " from " + currentMethod.getClass().getName(), null, null, null, null, 0, null, null, null );
+        KeyWordTest kwt = new KeyWordTest( currentMethod.getName(), true, null, null, false, null, null, 0, currentMethod.getName() + " from " + currentMethod.getClass().getName(), null, null, null, null, 0, null, null, null, null );
         eC.setTest( kwt );
         eC.setAut( ApplicationRegistry.instance().getAUT() );
         eC.setCloud( CloudRegistry.instance().getCloud() );

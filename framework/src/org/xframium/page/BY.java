@@ -29,6 +29,7 @@ import java.util.List;
  */
 public enum BY
 {
+    UNDEFINED( 999, "UNDEFINED", "An element descriptor that has yet to be defined.  You need to define your descriptor type and value before execution" ),
 	
 	/** The xpath. */
 	XPATH( 0, "XPATH", "XPath is a syntax for defining parts of an XML document. XPath uses path expressions to navigate XML documents and locate elements" ),

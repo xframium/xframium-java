@@ -37,7 +37,10 @@ public class StepContainer
         this.parameterList = parameterList;
         this.tokenList = tokenList;
         
-        this.pageElement = this.pageObject.getElement( step.getPageName(), step.getName() );
+        if ( this.pageObject != null )
+            this.pageElement = this.pageObject.getElement( step.getPageName(), step.getName() );
+        else
+            this.pageElement = null;
         try
         {
             if ( this.pageElement != null )
