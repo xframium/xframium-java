@@ -116,7 +116,7 @@ public class KWSCheckColor extends AbstractKeyWordStep
 			percentDeviation = Integer.parseInt( getParameterValue( getParameterList().get( 3 ), contextMap, dataMap ) + "" );
 		}
 		
-		BufferedImage elementValue = (BufferedImage)getElement( pageObject, contextMap, webDriver, dataMap ).getImage( resolution );
+		BufferedImage elementValue = (BufferedImage)getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getImage( resolution );
 		String imagePath = null;
 		if ( elementValue != null )
 			imagePath = PageManager.instance().writeImage( elementValue, fileKey + "-" + getName() + ".png" );

@@ -56,7 +56,7 @@ public class KWSAt extends AbstractKeyWordStep
         if ( pageObject == null )
             throw new ScriptConfigurationException( "There was no Page Object defined" );
 
-        Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap ).cloneElement();
+        Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).cloneElement();
         currentElement.setCacheNative( true );
         Point at = ((WebElement) currentElement.getNative()).getLocation();
         Dimension size = ((WebElement) currentElement.getNative()).getSize();

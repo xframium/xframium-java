@@ -9,6 +9,8 @@ import org.xframium.device.artifact.api.SeleniumArtifactProducer;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.BY;
+import org.xframium.page.element.Element;
+import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
 import eu.bitwalker.useragentutils.UserAgent;
 
@@ -143,6 +145,29 @@ public class SELENIUMCloudActionProvider extends AbstractCloudActionProvider
         // TODO Auto-generated method stub
         return false;
     }
+
+    @Override
+    public String startTimer( DeviceWebDriver webDriver, Element element, ExecutionContextTest executionContext )
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean getSupportedTimers( DeviceWebDriver webDriver, String timerId, ExecutionContextTest executionContext, String type )
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void stopTimer( DeviceWebDriver webDriver, String timerId, ExecutionContextTest executionContext )
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+
     
 	
     

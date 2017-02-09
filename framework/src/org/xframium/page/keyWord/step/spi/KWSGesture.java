@@ -64,7 +64,7 @@ public class KWSGesture extends AbstractKeyWordStep
 		String[] gestureName = getName().split( "\\." );
 		if ( gestureName.length == 2 )
 		{
-			Element gestureElement = getElement( pageObject, contextMap, webDriver, dataMap, gestureName[ 1 ] );
+			Element gestureElement = getElement( pageObject, contextMap, webDriver, dataMap, gestureName[ 1 ], executionContext );
 			if ( gestureElement != null )
 				webElement = (WebElement)gestureElement.getNative();
 		}

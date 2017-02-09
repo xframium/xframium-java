@@ -654,16 +654,19 @@ public abstract class AbstractSeleniumTest
                         test.addExecutionParameter( "PERFECTO_WT", wtUrl );
 
                     //
-                    // Perfecto Wind Tunnel
+                    // Saucelabs integration
                     //
-                    if ( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) && cloudProvider.equals( "SAUCELABS" ) )
-                        test.addExecutionParameter( "SAUCELABS", "https://saucelabs.com/beta/tests/" + test.getSessionId() + "/commands#0" );
-
-                    if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) && ((DeviceWebDriver) webDriver).isConnected() && cloudProvider.equals( "PERFECTO" ) )
+                    if ( test != null )
                     {
-                        if ( ((ReportiumProvider) webDriver).getReportiumClient() != null )
+                        if ( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) && cloudProvider.equals( "SAUCELABS" ) )
+                            test.addExecutionParameter( "SAUCELABS", "https://saucelabs.com/beta/tests/" + test.getSessionId() + "/commands#0" );
+    
+                        if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) && ((DeviceWebDriver) webDriver).isConnected() && cloudProvider.equals( "PERFECTO" ) )
                         {
-                            test.addExecutionParameter( "SAUCELABS", ((ReportiumProvider) webDriver).getReportiumClient().getReportUrl() );
+                            if ( ((ReportiumProvider) webDriver).getReportiumClient() != null )
+                            {
+                                test.addExecutionParameter( "SAUCELABS", ((ReportiumProvider) webDriver).getReportiumClient().getReportUrl() );
+                            }
                         }
                     }
 

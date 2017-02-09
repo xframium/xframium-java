@@ -1,8 +1,6 @@
 package org.xframium.device.cloud.action;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.ContextAware;
-import org.openqa.selenium.Keys;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.SimpleDevice;
@@ -16,14 +14,55 @@ import org.xframium.exception.ScriptException;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.bean.Execution;
 import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
+import org.xframium.integrations.perfectoMobile.rest.services.WindTunnel.TimerPolicy;
 import org.xframium.page.BY;
+import org.xframium.page.element.Element;
+import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
 
 public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 {
 	/** The Constant PLATFORM_NAME. */
-	public static final String PLATFORM_NAME = "platformName"; 	
+	public static final String PLATFORM_NAME = "platformName";
+	
+	private String createTimerId( Element element )
+	{
+	    StringBuilder stringBuilder = new StringBuilder();
+	    stringBuilder.append( element.getPageName() ).append( "." ).append( element.getName() );
+	    return stringBuilder.toString();
+	}
 
+	@Override
+	public boolean getSupportedTimers( DeviceWebDriver webDriver, String timerId, ExecutionContextTest executionContext, String type )
+	{
+	    if( timerId == null )
+	        return false;
+	    
+	    executionContext.getStep().addTiming( (type != null && !type.isEmpty()) ? "ux." + type : "ux", PerfectoMobile.instance().windTunnel().getTimer( webDriver.getExecutionId(), timerId, "ux", "milliseconds" ).getReturnValue() );
+	    executionContext.getStep().addTiming( (type != null && !type.isEmpty()) ? "device." + type : "device", PerfectoMobile.instance().windTunnel().getTimer( webDriver.getExecutionId(), timerId, "device", "milliseconds" ).getReturnValue() );
+	    executionContext.getStep().addTiming( (type != null && !type.isEmpty()) ? "system." + type : "system", PerfectoMobile.instance().windTunnel().getTimer( webDriver.getExecutionId(), timerId, "system", "milliseconds" ).getReturnValue() );
+	    executionContext.getStep().addTiming( (type != null && !type.isEmpty()) ? "elapsed." + type : "elapsed", PerfectoMobile.instance().windTunnel().getTimer( webDriver.getExecutionId(), timerId, "elapsed", "milliseconds" ).getReturnValue() );
+	    stopTimer( webDriver, timerId, executionContext );
+	    return true;
+	}
+	
+	@Override
+	public String startTimer( DeviceWebDriver webDriver, Element element, ExecutionContextTest executionContext )
+	{
+	    String timerId = createTimerId( element );
+	    PerfectoMobile.instance().windTunnel().startTimer( webDriver.getExecutionId(), timerId, TimerPolicy.reset ).getReturnValue();
+	    executionContext.setTimerName( timerId );
+	    return timerId;
+	}
+	
+	@Override
+	public void stopTimer( DeviceWebDriver webDriver, String timerId, ExecutionContextTest executionContext )
+	{
+	    PerfectoMobile.instance().windTunnel().stopTimer( webDriver.getExecutionId(), timerId );
+	    executionContext.clearTimer();
+
+	}
+	
 	
 	@Override
     public boolean startApp( String executionId, String deviceId, String appName, String appIdentifier )

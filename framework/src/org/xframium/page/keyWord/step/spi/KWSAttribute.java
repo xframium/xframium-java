@@ -88,18 +88,18 @@ public class KWSAttribute extends AbstractKeyWordStep
 		{
 		    String attributeName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
 		    if ( attributeName.toLowerCase().startsWith( STYLE ) )
-		        attributeValue = getElement( pageObject, contextMap, webDriver, dataMap ).getStyle( attributeName.substring( STYLE.length() ) );
+		        attributeValue = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getStyle( attributeName.substring( STYLE.length() ) );
 		    else
-		        attributeValue = getElement( pageObject, contextMap, webDriver, dataMap ).getAttribute( attributeName );
+		        attributeValue = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getAttribute( attributeName );
 			
 		}
 		else
 		{
 		    String attributeName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
             if ( attributeName.toLowerCase().startsWith( STYLE ) )
-                attributeValue = getElement( pageObject, contextMap, webDriver, dataMap ).getStyle( attributeName.substring( STYLE.length() ) );
+                attributeValue = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getStyle( attributeName.substring( STYLE.length() ) );
             else
-                attributeValue = getElement( pageObject, contextMap, webDriver, dataMap ).getAttribute( attributeName );
+                attributeValue = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getAttribute( attributeName );
             
 			compareTo = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
 			if ( !attributeValue.equals( compareTo ) )

@@ -2,13 +2,13 @@
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
 <function name="setValueWithBreak" mode="function" threshold="0" active="true">
 <description>null</description>
-<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" wait="0" failureMode="ERROR">
-<parameter type="DATA" name="null" value="dataLoop.value"/>
+<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="DATA" value="dataLoop.value"/>
 </step>
-<step name="isTwo" site="xTest" page="home" type="COMPARE" active="true" threshold="0" wait="0" failureMode="IGNORE">
-<parameter type="DATA" name="null" value="dataLoop.value"/>
-<parameter type="STATIC" name="null" value="two"/>
-<step name="two was found" site="xTest" page="home" type="BREAK" active="true" threshold="0" wait="0" failureMode="ERROR"/>
+<step name="isTwo" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
+<parameter type="DATA" value="dataLoop.value"/>
+<parameter type="STATIC" value="two"/>
+<step name="two was found" site="xTest" page="home" type="BREAK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
 </step>
 </function>
 </suite>

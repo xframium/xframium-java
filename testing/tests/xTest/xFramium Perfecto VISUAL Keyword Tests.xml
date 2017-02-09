@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-<test name="xFramium Perfecto VISUAL Keyword Tests" threshold="0" active="true">
+<test name="xFramium Perfecto VISUAL Keyword Tests" tagNames="Visual" deviceTags="Perfecto" timed="false" threshold="0" active="true">
 <description>Test the Perfecto VISUAL keywords</description>
-<step name="NAVIGATE" site="xTest" page="home" type="BROWSER" active="true" threshold="0" wait="0" failureMode="ERROR">
+<step name="NAVIGATE" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="The URL to navigate to" value="http://www.xframium.org/testing.html"/>
 </step>
-<step name="Accordian Image" site="xTest" page="home" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR"/>
-<step name="TOGGLE Text" site="xTest" page="home" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR"/>
-<step name="toggleValue" site="xTest" page="home" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR" context="vClick"/>
-<step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" wait="0" failureMode="ERROR">
+<step name="Accordian Image" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="TOGGLE Text" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="toggleValue" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="vClick"/>
+<step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="new parameter" value="1"/>
 <parameter type="CONTEXT" name="new parameter" value="vClick"/>
 </step>
-<step name="BUTTON" site="xTest" page="home" type="VISUAL" active="true" threshold="0" wait="0" failureMode="ERROR">
+<step name="BUTTON" site="xTest" page="home" type="VISUAL" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="Label" value="label=Toggle Value"/>
 <parameter type="STATIC" name="Label" value="screen.top=5%"/>
 <parameter type="STATIC" name="Label" value="screen.height=25%"/>
 <parameter type="STATIC" name="Label" value="screen.left=1%"/>
 <parameter type="STATIC" name="Label" value="screen.width=25%"/>
 </step>
-<step name="toggleValue" site="xTest" page="home" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR" context="vClick"/>
-<step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" wait="0" failureMode="ERROR">
+<step name="toggleValue" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="vClick"/>
+<step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="new parameter" value="0"/>
 <parameter type="CONTEXT" name="new parameter" value="vClick"/>
 </step>
-<step name="SET" site="xTest" page="home" type="VISUAL" active="true" threshold="0" wait="0" failureMode="ERROR">
+<step name="SET" site="xTest" page="home" type="VISUAL" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="Label" value="label=Toggle Value"/>
 <parameter type="STATIC" name="Value" value="text=123"/>
 <parameter type="STATIC" name="Label" value="screen.top=1%"/>
@@ -34,7 +34,7 @@
 <parameter type="STATIC" name="label.direction" value="right"/>
 <parameter type="STATIC" name="label.offset" value="10%"/>
 </step>
-<step name="focusId" site="xTest" page="home" type="GET" active="true" threshold="0" wait="0" failureMode="ERROR">
+<step name="focusId" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
 <parameter type="STATIC" name="new parameter" value="123"/>
 </step>
 </test>

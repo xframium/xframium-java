@@ -53,6 +53,8 @@ public class ExecutionContextTest
     private Map<String,String> sPMap = new HashMap<String,String>( 10 );
     private ApplicationDescriptor aut;
     
+    private String timerName;
+    
     private Map<String,Integer[]> callMap = new HashMap<String,Integer[]>( 10 );
     private Map<String,Integer[]> pageUsageMap = new HashMap<String,Integer[]>( 10 );
     private Map<String,ElementUsage> elementUsageMap = new TreeMap<String,ElementUsage>( );
@@ -105,7 +107,20 @@ public class ExecutionContextTest
         return asMap;
     }
     
+    public String getTimerName()
+    {
+        return timerName;
+    }
     
+    public void setTimerName( String timerName )
+    {
+        this.timerName = timerName;
+    }
+    
+    public void clearTimer()
+    {
+        this.timerName = null;
+    }
     
     public String getTestName()
     {

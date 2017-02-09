@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
+<site name="Settings">
+  <page name="Home" class="org.xframium.page.keyWord.KeyWordPage">
+    <element name="Wi-Fi" value="//UIATableCell[@name='Wi-Fi']" descriptor="XPATH"/>
+    <element name="Bluetooth" value="//UIATableCell[@name='Bluetooth']" descriptor="XPATH"/>
+    <element name="Cellular" value="//UIATableCell[@name='Cellular']" descriptor="XPATH"/>
+    <element name="Personal Hotspot" value="//UIATableCell[@name='Personal Hotspot']" descriptor="XPATH"/>
+    <element name="Notifications" value="//UIATableCell[@name='Notifications']" descriptor="XPATH"/>
+    <element name="Control Center" value="//UIATableCell[@name='Control Center']" descriptor="XPATH"/>
+    <element name="Do Not Disturb" value="//UIATableCell[@name='Do Not Disturb']" descriptor="XPATH"/>
+    <element name="General" value="//UIATableCell[@name='General']" descriptor="XPATH"/>
+    <element name="Wallpaper" value="//UIATableCell[@name='Wallpaper']" descriptor="XPATH"/>
+    <element name="Sounds" value="//UIATableCell[@name='Sounds']" descriptor="XPATH"/>
+    <element name="Siri" value="//UIATableCell[@name='Siri']" descriptor="XPATH"/>
+    <element name="Battery" value="//UIATableCell[@name='Battery']" descriptor="XPATH"/>
+    <element name="Privacy" value="//UIATableCell[@name='Privacy']" descriptor="XPATH"/>
+    <element name="Mail" value="//UIATableCell[@name='Mail']" descriptor="XPATH"/>
+    <element name="Contacts" value="//UIATableCell[@name='Contacts']" descriptor="XPATH"/>
+    <element name="Calendar" value="//UIATableCell[@name='Calendar']" descriptor="XPATH"/>
+    <element name="Notes" value="//UIATableCell[@name='Notes']" descriptor="XPATH"/>
+    <element name="Reminders" value="//UIATableCell[@name='Reminders']" descriptor="XPATH"/>
+    <element name="Phone" value="//UIATableCell[@name='Phone']" descriptor="XPATH"/>
+    <element name="Messages" value="//UIATableCell[@name='Messages']" descriptor="XPATH"/>
+    <element name="FaceTime" value="//UIATableCell[@name='FaceTime']" descriptor="XPATH"/>
+    <element name="Maps" value="//UIATableCell[@name='Maps']" descriptor="XPATH"/>
+    <element name="Compass" value="//UIATableCell[@name='Compass']" descriptor="XPATH"/>
+    <element name="Safari" value="//UIATableCell[@name='Safari']" descriptor="XPATH"/>
+    <element name="News" value="//UIATableCell[@name='News']" descriptor="XPATH"/>
+    <element name="Music" value="//UIATableCell[@name='Music']" descriptor="XPATH"/>
+    <element name="Videos" value="//UIATableCell[@name='Videos']" descriptor="XPATH"/>
+    <element name="iBooks" value="//UIATableCell[@name='iBooks']" descriptor="XPATH"/>
+    <element name="Podcasts" value="//UIATableCell[@name='Podcasts']" descriptor="XPATH"/>
+    <element name="Game Center" value="//UIATableCell[@name='Game Center']" descriptor="XPATH"/>
+    <element name="Twitter" value="//UIATableCell[@name='Twitter']" descriptor="XPATH"/>
+    <element name="Facebook" value="//UIATableCell[@name='Facebook']" descriptor="XPATH"/>
+    <element name="Flickr" value="//UIATableCell[@name='Flickr']" descriptor="XPATH"/>
+    <element name="Vimeo" value="//UIATableCell[@name='Vimeo']" descriptor="XPATH"/>
+    <element name="Developer" value="//UIATableCell[@name='Developer']" descriptor="XPATH"/>
+    <element name="PMConfigManager" value="//UIATableCell[@name='PMConfigManager']" descriptor="XPATH"/>
+    <element name="Airplane Mode" value="//UIASwitch[@name='Airplane Mode']" descriptor="XPATH"/>
+  </page>
+</site></elementDefinition>

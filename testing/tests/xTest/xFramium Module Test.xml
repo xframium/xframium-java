@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-<test name="xFramium Module Test" threshold="0" active="true">
+<test name="xFramium Module Test" timed="false" threshold="0" active="true">
 <description>A test of the module sub system</description>
-<step name="kw-click" site="xTest" page="home" type="CALL2" active="true" threshold="0" wait="0" failureMode="ERROR"/>
+<step name="kw-click" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
 </test>
 </suite>

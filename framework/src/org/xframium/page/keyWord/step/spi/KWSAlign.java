@@ -74,8 +74,8 @@ public class KWSAlign extends AbstractKeyWordStep
 		        elementName = elementName.substring( 0, elementName.indexOf( "(" ) );
 		    }
 		    
-		    Element baseElement = getElement( pageObject, contextMap, webDriver, dataMap );
-		    Element compareElement = getElement( pageObject, contextMap, webDriver, dataMap, elementName );
+		    Element baseElement = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
+		    Element compareElement = getElement( pageObject, contextMap, webDriver, dataMap, elementName, executionContext );
 		    int actualDeviation = 0;
 		    
 		    switch ( align )

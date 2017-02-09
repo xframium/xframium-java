@@ -24,6 +24,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,8 @@ public class KWSString2 extends AbstractKeyWordStep
     private static final String BEGIN = "Begin";
     private static final String END = "End";
     private static final String COMPARE = "Compare To";
+    private static final String ADD_DAYS = "Add Days";
+    private static final String SUBTRACT_DAYS = "Subtract Days";
     
     public KWSString2()
     {
@@ -142,10 +145,31 @@ public class KWSString2 extends AbstractKeyWordStep
 
             case DATE:
                 validateParameters( new String[] { _FORMAT } );
+                
+                Date useDate = null;
+                
                 if ( getParameter( O_VALUE ) == null )
-                    newValue = new SimpleDateFormat( getParameterValue( getParameter( _FORMAT ), contextMap, dataMap ) ).format( new Date( System.currentTimeMillis() ) );
+                    useDate = new Date( System.currentTimeMillis() );
                 else
-                    newValue = new SimpleDateFormat( getParameterValue( getParameter( _FORMAT ), contextMap, dataMap ) ).format( DateUtility.instance().parseDate( originalValue ) );
+                    useDate = DateUtility.instance().parseDate( originalValue );
+
+                if ( getParameter( ADD_DAYS ) != null )
+                {
+                    Calendar useCalendar = Calendar.getInstance();
+                    useCalendar.setTime( useDate );
+                    useCalendar.add( Calendar.DATE, Integer.parseInt( getParameterValue( getParameter( ADD_DAYS ), contextMap, dataMap ) ) );
+                    useDate = useCalendar.getTime();
+                }
+                
+                if ( getParameter( SUBTRACT_DAYS ) != null )
+                {
+                    Calendar useCalendar = Calendar.getInstance();
+                    useCalendar.setTime( useDate );
+                    useCalendar.add( Calendar.DATE, 0 - Integer.parseInt( getParameterValue( getParameter( SUBTRACT_DAYS ), contextMap, dataMap ) ) );
+                    useDate = useCalendar.getTime();
+                }
+                
+                newValue = new SimpleDateFormat( getParameterValue( getParameter( _FORMAT ), contextMap, dataMap ) ).format( useDate );
                 
                 break;
                 

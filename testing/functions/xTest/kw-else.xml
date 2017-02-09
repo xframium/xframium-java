@@ -2,19 +2,19 @@
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
 <function name="kw-else" mode="function" threshold="0" active="true">
 <description>null</description>
-<step name="dumpState" site="xTest" page="home" type="STATE" active="true" threshold="0" wait="0" failureMode="ERROR"/>
-<step name="toggleValue" site="xTest" page="home" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR" context="existsSingle"/>
-<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" wait="0" failureMode="IGNORE">
-<parameter type="STATIC" name="null" value="0"/>
-<parameter type="CONTEXT" name="null" value="existsSingle"/>
-<step name="elseCondition" site="xTest" page="home" type="ELSE" active="true" threshold="0" wait="0" failureMode="ERROR">
-<step name="toggleButton" site="xTest" page="home" type="CLICK" active="true" threshold="0" wait="0" failureMode="ERROR"/>
+<step name="dumpState" site="xTest" page="home" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="toggleValue" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="existsSingle"/>
+<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
+<parameter type="STATIC" value="0"/>
+<parameter type="CONTEXT" value="existsSingle"/>
+<step name="elseCondition" site="xTest" page="home" type="ELSE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="toggleButton" site="xTest" page="home" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
 </step>
 </step>
-<step name="toggleValue" site="xTest" page="home" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR" context="existsSingle"/>
-<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" wait="0" failureMode="ERROR">
-<parameter type="STATIC" name="null" value="0"/>
-<parameter type="CONTEXT" name="null" value="existsSingle"/>
+<step name="toggleValue" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="existsSingle"/>
+<step name="existsCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="0"/>
+<parameter type="CONTEXT" value="existsSingle"/>
 </step>
 </function>
 </suite>

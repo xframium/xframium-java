@@ -113,7 +113,7 @@ html, body {
                 <ul class="nav navbar-nav navbar-left">
                     <div class="btn-toolbar navbar-btn">
                         <div class="btn-group">
-                            <div class="btn btn-default" uib-tooltip="Open Test Suite" tooltip-popup-delay="500" tooltip-placement="bottom"><span class="glyphicon glyphicon-floppy-open text-primary" ng-click="openFolderBrowser()"></span></div>
+                            <div ng-click="openFolderBrowser()" class="btn btn-default" uib-tooltip="Open Test Suite" tooltip-popup-delay="500" tooltip-placement="bottom"><span class="glyphicon glyphicon-floppy-open text-primary" ></span></div>
                         </div>
     
                         <div class="btn-group" ng-if="getActive() > 0 && executionStatus == 'idle'">
@@ -144,7 +144,7 @@ html, body {
             <div class="col-md-8">
                 <div class="panel panel-info" style="margin-bottom: 0px;">
                     <div class="panel-heading">
-                        <h3 class="panel-title" ng-class="'text-success' : getActive() > 0, 'text-danger' : getActive() == 0">
+                        <h3 class="panel-title" ng-class="'text-success' : (getActive() > 0), 'text-danger' : (getActive() == 0)">
                             {{getActive()}} Active Test Cases
                         </h3>
                     </div>
@@ -222,13 +222,40 @@ html, body {
                         </h3>
                     </div>
                     <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="input-group" style="margin-bottom: 3px">
+                                    <span class="input-group-addon" id="basic-addon2"></span>
+                                    <input type="text" class="form-control" placeholder="Environment Filter" aria-describedby="basic-addon2" ng-model="filterDevicesBy">
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="text-align: right">
+                                <div class="btn-group" uib-dropdown>
+                                    <button id="split-button" type="button" class="btn btn-default">Device Tags</button>
+                                    <button type="button" class="btn btn-default" uib-dropdown-toggle>
+                                        <span class="caret"></span> <span class="sr-only"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                                        <li role="menuitem">
+                                            <a ng-click="setDeviceActive( true )">All</a>
+                                        </li>
+                                        <li role="menuitem">
+                                            <a ng-click="setDeviceActive( false )">None</a>
+                                        </li>
+                                        <li role="menuitem" ng-repeat="tag in deviceTagList | orderBy:tag">
+                                            <a ng-click="selectDeviceByTag( tag )">#{{tag}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                         <div ui-tree id="tree-root">
                             <ol ui-tree-nodes ng-model="deviceList">
-                                <li data-nodrag ui-tree-node ng-repeat="device in deviceList" ng-class="{'bg-success': device.active, 'bg-warning': !device.active}" style="border-radius: 5px; margin-top: 5px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default;  border-style: outset; border-width: thin">
-                                    <div ui-tree-handle class="tree-node tree-node-content">
+                                <li data-nodrag ui-tree-node ng-repeat="device in deviceList | filter:filterDevicesBy | orderBy: 'key'" ng-class="{'bg-success': device.active, 'bg-warning': !device.active}" style="border-radius: 5px; margin-top: 5px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default;  border-style: outset; border-width: thin">
+                                    <div ui-tree-handle class="tree-node tree-node-content" uib-tooltip="{{device.environment}}({{device.cloud}})" tooltip-popup-delay="500">
                                         <div class="row">
                                             <div class="col-sm-1" style="text-align: center; margin-top: 2px"><input type="checkbox" ng-model="device.active" /></div>
-                                            <div class="col-sm-11" style="margin-top: 3px; margin-left: 0px">{{device.environment}} ({{device.cloud}})</div>
+                                            <div class="col-sm-11" style="margin-top: 3px; margin-left: 0px" >{{device.key}}</div>
                                         </div>
                                     </div>
                                 </li>

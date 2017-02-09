@@ -68,7 +68,7 @@ public class KWSSet extends AbstractKeyWordStep
 		if ( log.isInfoEnabled() )
 			log.info( "Attmepting to set " + getName() + " to [" + newValue + "]" );
 
-		Element elt = getElement( pageObject, contextMap, webDriver, dataMap );
+		Element elt = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
 		if(option == null)
 		{
 			elt.setValue( newValue);

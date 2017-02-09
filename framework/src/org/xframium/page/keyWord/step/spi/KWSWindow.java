@@ -163,7 +163,7 @@ public class KWSWindow extends AbstractKeyWordStep
 			break;
 
 		case BY_ELEMENT:
-			Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap );
+			Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
 			if ( currentElement == null )
 			{
 				log.warn( "Attempting to switch to frame identified by " + getName() + " that does not exist" );

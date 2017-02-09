@@ -18,6 +18,8 @@
     <element name="focusId" value="focusId" descriptor="ID"/>
     <element name="testingTwo" value="testingTwo" descriptor="ID"/>
     <element name="selectBox" value="selectBox" descriptor="ID"/>
+    <element name="bsSelectUL" value="//button[@id='bsDropdownButton']/following-sibling::ul[1]" descriptor="XPATH"/>
+    <element name="bsSelectValue" value="bsDropdownButton" descriptor="ID"/>
     <element name="aOpen" value="//div[@id='aOpen']//a" descriptor="XPATH"/>
     <element name="deleteButton" value="deleteButton" descriptor="ID"/>
     <element name="_testingTwo" value="_testingTwo" descriptor="ID"/>

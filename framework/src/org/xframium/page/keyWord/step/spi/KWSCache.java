@@ -25,6 +25,7 @@ import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
+import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.driver.CachingDriver;
@@ -61,15 +62,22 @@ public class KWSCache extends AbstractKeyWordStep
 		
 		if ( webDriver instanceof CachingDriver )
 		{
+		    KeyWordParameter enabled = getParameter( "Enabled" );
+		    
+		    boolean toState = !( (CachingDriver) webDriver ).isCachingEnabled();
+		    
+		    if ( enabled != null )
+		        toState = Boolean.parseBoolean( getParameterValue( enabled, contextMap, dataMap ) );
+		    
 		    if ( log.isInfoEnabled() )
 		    {
-    		    if ( ( (CachingDriver) webDriver ).isCachingEnabled() )
-        		    log.info( Thread.currentThread().getName() + ": Disabling Caching" );
+    		    if ( toState )
+        		    log.info( Thread.currentThread().getName() + ": Enabling Caching" );
     		    else
-    		        log.info( Thread.currentThread().getName() + ": Enabling Caching" );
+    		        log.info( Thread.currentThread().getName() + ": Disabling Caching" );
 		    }
 		    
-		    ((CachingDriver) webDriver).setCachingEnabled( !( (CachingDriver) webDriver ).isCachingEnabled() );
+		    ((CachingDriver) webDriver).setCachingEnabled( toState );
 		    
 		}
 		

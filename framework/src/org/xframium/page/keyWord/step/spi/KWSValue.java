@@ -52,7 +52,7 @@ public class KWSValue extends AbstractKeyWordStep
 		if ( pageObject == null )
 			throw new ScriptConfigurationException( "Page Object was not defined" );
 
-		String elementValue = getElement( pageObject, contextMap, webDriver, dataMap ).getValue();
+		String elementValue = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getValue();
 		
 		if ( getParameterList().size() == 1 )
 		{

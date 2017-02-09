@@ -124,7 +124,7 @@ public class KWSBrowser extends AbstractKeyWordStep
 
         if ( getName().toUpperCase().startsWith( SwitchType.SWITCH_TO_ELEMENT.name ) )
         {
-            Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap, getName().split( "\\." )[1] );
+            Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap, getName().split( "\\." )[1], executionContext );
             if ( currentElement == null )
             {
                 log.warn( "Attempting to switch to frame identified by " + getName() + " that does not exist" );

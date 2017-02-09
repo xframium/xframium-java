@@ -15,6 +15,7 @@ public class ExecutionContextStep
     private KeyWordStep step;
     private Date startTime = new Date(System.currentTimeMillis());
     private Date endTime;
+    private Map<String,Long> timingMap = new HashMap<String,Long>(20);
     private List<ExecutionContextStep> stepList = new ArrayList<ExecutionContextStep>( 10 );
     private transient ExecutionContextStep parentStep;
     private StepStatus stepStatus;
@@ -31,6 +32,16 @@ public class ExecutionContextStep
     public void addParameterValue( String value )
     {
         parameterList.add( value );
+    }
+    
+    public void addTiming( String type, long timing )
+    {
+        timingMap.put( type, timing );
+    }
+    
+    public Long getTiming( String type )
+    {
+        return timingMap.get( type );
     }
     
     public void analyzePageElements( Map<String,Integer[]> pageMap, Map<String,ElementUsage> elementMap )
@@ -241,7 +252,8 @@ public class ExecutionContextStep
 
     public void setEndTime( long endTime )
     {
-        this.endTime = new Date( endTime );
+        if ( endTime != 0 )
+            this.endTime = new Date( endTime );
     }
 
     public List<ExecutionContextStep> getStepList()

@@ -31,6 +31,7 @@ import org.openqa.selenium.Point;
 import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
 import org.xframium.page.BY;
+import org.xframium.reporting.ExecutionContextTest;
 
 
 // TODO: Auto-generated Javadoc
@@ -54,7 +55,9 @@ public interface Element
         DEFAULT,
         SINGLE,
     	MULTISELECT,
-    	VALIDATE;
+    	VALIDATE,
+    	BY_VALUE,
+    	BY_VISIBLE_TEXT;
     }
 	
 	/**
@@ -116,6 +119,12 @@ public interface Element
             return wList;
         }
     }
+	
+	public void setExecutionContext( ExecutionContextTest executionContext );
+    public ExecutionContextTest getExecutionContext();
+	
+	public String getElementName();
+    public String getPageName();
 	
 	public String getClassification();
     public void setClassification( String classification );

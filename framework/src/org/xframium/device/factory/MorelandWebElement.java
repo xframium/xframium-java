@@ -161,22 +161,29 @@ public class MorelandWebElement implements WebElement, Locatable
 		return webElement.isDisplayed();
 	}
 
+	private Point cachedLocation = null;
+	
 	/* (non-Javadoc)
 	 * @see org.openqa.selenium.WebElement#getLocation()
 	 */
 	@Override
 	public Point getLocation()
 	{
-		return webElement.getLocation();
+	    if ( cachedLocation == null )
+	        cachedLocation = webElement.getLocation();
+		return cachedLocation;
 	}
 
+	private Dimension cachedSize = null;
 	/* (non-Javadoc)
 	 * @see org.openqa.selenium.WebElement#getSize()
 	 */
 	@Override
 	public Dimension getSize()
 	{
-		return webElement.getSize();
+	    if ( cachedSize == null )
+	        cachedSize = webElement.getSize();
+		return cachedSize;
 	}
 
 	/* (non-Javadoc)
@@ -188,11 +195,17 @@ public class MorelandWebElement implements WebElement, Locatable
 		return webElement.getCssValue( propertyName );
 	}
 
+	private Coordinates cachedCoordinates = null;
     @Override
     public Coordinates getCoordinates()
     {
         if ( webElement instanceof Locatable )
-            return ( (Locatable) webElement ).getCoordinates();
+        {
+            if ( cachedCoordinates == null )
+                cachedCoordinates = ( (Locatable) webElement ).getCoordinates();
+        
+            return cachedCoordinates;
+        }
         else
             return null;
     }

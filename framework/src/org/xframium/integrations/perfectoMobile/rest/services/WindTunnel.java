@@ -21,6 +21,7 @@
 package org.xframium.integrations.perfectoMobile.rest.services;
 
 import org.xframium.integrations.perfectoMobile.rest.bean.Execution;
+import org.xframium.integrations.perfectoMobile.rest.bean.Response;
 import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.ServiceDescriptor;
 
 // TODO: Auto-generated Javadoc
@@ -166,6 +167,10 @@ public interface WindTunnel extends PerfectoService
 	@Operation( operationName="command" )
 	@PerfectoCommand( commandName="timer", subCommandName = "start" )
 	public Execution startTimer( @ResourceID String executionId, @Parameter( name="timerId" ) String timerId, @Parameter( name="initPolicy" ) TimerPolicy initPolicy );
+	
+	@Operation( operationName="command" )
+    @PerfectoCommand( commandName="timer", subCommandName = "info" )
+    public Response getTimer( @ResourceID String executionId, @Parameter( name="timerId" ) String timerId, @Parameter( name="timerType" ) String timerType,  @Parameter( name="units" ) String timeUnits );
 	
 	/**
 	 * Stop timer.

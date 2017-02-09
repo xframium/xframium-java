@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
+<site name="Settings">
+  <page name="General" class="org.xframium.page.keyWord.KeyWordPage">
+    <element name="About" value="//UIATableCell[@name='About']" descriptor="XPATH"/>
+    <element name="Software Update" value="//UIATableCell[@name='Software Update']" descriptor="XPATH"/>
+    <element name="Spotlight Search" value="//UIATableCell[@name='Spotlight Search']" descriptor="XPATH"/>
+    <element name="Handoff" value="//UIATableCell[@name='Handoff']" descriptor="XPATH"/>
+    <element name="CarPlay" value="//UIATableCell[@name='CarPlay']" descriptor="XPATH"/>
+    <element name="Accessibility" value="//UIATableCell[@name='Accessibility']" descriptor="XPATH"/>
+    <element name="Background App Refresh" value="//UIATableCell[@name='Background App Refresh']" descriptor="XPATH"/>
+    <element name="Restrictions" value="//UIATableCell[@name='Restrictions']" descriptor="XPATH"/>
+    <element name="Date and Time" value="//UIATableCell[contains( @name, 'Time' )]" descriptor="XPATH"/>
+    <element name="Keyboard" value="//UIATableCell[@name='Keyboard']" descriptor="XPATH"/>
+    <element name="Language and Region" value="//UIATableCell[contains( @name, 'Language')]" descriptor="XPATH"/>
+    <element name="Dictionary" value="//UIATableCell[@name='Dictionary']" descriptor="XPATH"/>
+    <element name="iTunes Wi-Fi Sync" value="//UIATableCell[@name='iTunes Wi-Fi Sync']" descriptor="XPATH"/>
+    <element name="VPN" value="//UIATableCell[@name='VPN']" descriptor="XPATH"/>
+    <element name="Device Management" value="//UIATableCell[contains( @name, 'Device Management' )]" descriptor="XPATH"/>
+    <element name="Regulatory" value="//UIATableCell[@name='Regulatory']" descriptor="XPATH"/>
+    <element name="Reset" value="//UIATableCell[@name='Reset']" descriptor="XPATH"/>
+    <element name="Settings" value="//UIAButton[@name='Settings']" descriptor="XPATH"/>
+    <element name="Back" value="//UIAButton[@name='Back']" descriptor="XPATH"/>
+  </page>
+</site></elementDefinition>
