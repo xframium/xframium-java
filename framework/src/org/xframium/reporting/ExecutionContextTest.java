@@ -52,6 +52,7 @@ public class ExecutionContextTest
     private String folderName;
     private Map<String,String> sPMap = new HashMap<String,String>( 10 );
     private ApplicationDescriptor aut;
+    private StringBuilder csvOutput = new StringBuilder();
     
     private String timerName;
     
@@ -69,6 +70,28 @@ public class ExecutionContextTest
         {
             return Integer.compare( o2.getFailCount(), o1.getFailCount() );
         }
+    }
+    
+    public void addToCSV( String line )
+    {
+        csvOutput.append( line ).append( "\r\n" );
+    }
+    
+    public void addToCSV( String[] line )
+    {
+        for ( int i=0; i<line.length; i++ )
+        {
+            csvOutput.append( line[i] );
+            if ( csvOutput.length() < (i - 1) )
+                csvOutput.append( "," );
+        }
+        
+        csvOutput.append( "\r\n" );
+    }
+    
+    public String getCSVReport()
+    {
+        return csvOutput.toString();
     }
     
     public Map<String,Object> toMap()

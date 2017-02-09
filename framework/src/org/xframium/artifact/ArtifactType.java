@@ -82,6 +82,7 @@ public enum ArtifactType
     EXECUTION_RECORD_JSON( ArtifactTime.NOOP, 20, "EXECUTION_RECORD_HTML", "xFramium JSON Report" ),
     
     GRID_REPORT( ArtifactTime.NOOP, 21, "GRID_REPORT", "xFramium GRID Report" ),
+    CSV_REPORT_DATA( ArtifactTime.AFTER_TEST, 22, "CSV_REPORT_DATA", "xFramium CSV Report compiled from REPORT steps" ),
     ;
     
     /** The time. */

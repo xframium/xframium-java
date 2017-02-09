@@ -1,47 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
-<site name="xTest">
-  <page name="home" class="org.xframium.page.keyWord.KeyWordPage">
-    <element name="toggleButtonWeb" value="//button[text()='Toggle Value']" descriptor="XPATH"/>
-    <element name="toggleButtonNative" value="//button[text()='Toggle Value']" descriptor="XPATH"/>
-    <element name="toggleButton" value="//button[text()='Toggle Value']" descriptor="XPATH"/>
-    <element name="toggleValue" value="singleModel" descriptor="ID"/>
-    <element name="elementList" value="#elementList>pre" descriptor="CSS"/>
-    <element name="alertButton" value="//button[text()='Alert Button']" descriptor="XPATH"/>
-    <element name="confirmButton" value="//button[text()='Confirm Button']" descriptor="XPATH"/>
-    <element name="promptButton" value="//button[text()='Prompt Button']" descriptor="XPATH"/>
-    <element name="confirmValue" value="confirmValue" descriptor="ID"/>
-    <element name="promptValue" value="promptValue" descriptor="ID"/>
-    <element name="colorCheck" value="colorCheck" descriptor="ID"/>
-    <element name="colorContrastAA" value="colorContrastAA" descriptor="ID"/>
-    <element name="colorContrast" value="colorContrast" descriptor="ID"/>
-    <element name="focusId" value="focusId" descriptor="ID"/>
-    <element name="testingTwo" value="testingTwo" descriptor="ID"/>
-    <element name="selectBox" value="selectBox" descriptor="ID"/>
-    <element name="bsSelectUL" value="//button[@id='bsDropdownButton']/following-sibling::ul[1]" descriptor="XPATH"/>
-    <element name="bsSelectValue" value="bsDropdownButton" descriptor="ID"/>
-    <element name="aOpen" value="//div[@id='aOpen']//a" descriptor="XPATH"/>
-    <element name="deleteButton" value="deleteButton" descriptor="ID"/>
-    <element name="_testingTwo" value="_testingTwo" descriptor="ID"/>
-    <element name="testingTwoFrame" value="testingTwoFrame" descriptor="ID"/>
-    <element name="versionTest" descriptor="COMPLEX">
-<element value="//*[@id='V1']" descriptor="XPATH" version="xTest(1.0)"/>
-<element value="//*[@id='V2']" descriptor="V_IMAGE" version="xTest(1.0-1.1)"/>
-<element value="//*[@id='V3']" descriptor="XPATH" version="xTest(1.0-1.2)"/>
-<element value="//*[@id='V1']" descriptor="XPATH" version="xTest0(1.0)"/>
-<element value="//*[@id='V2']" descriptor="XPATH" version="xTest0(1.0-*)"/>
-</element>
-    <element name="osTest" descriptor="COMPLEX">
-<element value="//*[@id='IOS']" descriptor="XPATH" version="xTest0(1.0)" os="IOS"/>
-<element value="//*[@id='ANDROID']" descriptor="XPATH" version="xTest0(1.0)" os="ANDROID"/>
-<element value="//*[@id='WINDOWS']" descriptor="XPATH" version="xTest0(1.0)" os="WINDOWS"/>
-</element>
-    <element name="osTest2" descriptor="COMPLEX">
-<element value="//*[@id='IOS']" descriptor="XPATH" os="IOS"/>
-<element value="//*[@id='ANDROID']" descriptor="XPATH" os="ANDROID"/>
-<element value="//*[@id='WINDOWS']" descriptor="XPATH" os="WINDOWS"/>
-</element>
-    <element name="Accordian Image" value="PRIVATE:/testingImage.png" descriptor="V_IMAGE"/>
-    <element name="TOGGLE Text" value="Toggle Value" descriptor="V_TEXT"/>
-  </page>
-</site></elementDefinition>
+  <site name="xTest">
+    <page name="home" class="org.xframium.page.keyWord.KeyWordPage">
+      <element name="toggleButtonWeb" value="//button[text()='Toggle Value']" descriptor="XPATH" />
+      <element name="toggleButtonNative" value="//button[text()='Toggle Value']" descriptor="XPATH" />
+      <element name="toggleButton" value="//button[text()='Toggle Value']" descriptor="XPATH" />
+      <element name="toggleValue" value="singleModel" descriptor="ID" />
+      <element name="elementList" value="#elementList>pre" descriptor="CSS" />
+      <element name="alertButton" value="//button[text()='Alert Button']" descriptor="XPATH" />
+      <element name="confirmButton" value="//button[text()='Confirm Button']" descriptor="XPATH" />
+      <element name="promptButton" value="//button[text()='Prompt Button']" descriptor="XPATH" />
+      <element name="confirmValue" value="confirmValue" descriptor="ID" />
+      <element name="promptValue" value="promptValue" descriptor="ID" />
+      <element name="colorCheck" value="colorCheck" descriptor="ID" />
+      <element name="colorContrastAA" value="colorContrastAA" descriptor="ID" />
+      <element name="colorContrast" value="colorContrast" descriptor="ID" />
+      <element name="focusId" value="focusId" descriptor="ID" />
+      <element name="testingTwo" value="testingTwo" descriptor="ID" />
+      <element name="selectBox" value="selectBox" descriptor="ID" />
+      <element name="bsSelectUL" value="//button[@id='bsDropdownButton']/following-sibling::ul[1]" descriptor="XPATH" />
+      <element name="bsSelectValue" value="bsDropdownButton" descriptor="ID" />
+      <element name="aOpen" value="//div[@id='aOpen']//a" descriptor="XPATH" />
+      <element name="deleteButton" value="deleteButton" descriptor="ID" />
+      <element name="_testingTwo" value="_testingTwo" descriptor="ID" />
+      <element name="testingTwoFrame" value="testingTwoFrame" descriptor="ID" />
+      <element name="versionTest" descriptor="COMPLEX">
+        <element value="//*[@id='V1']" descriptor="XPATH" version="xTest(1.0)" />
+        <element value="//*[@id='V2']" descriptor="V_IMAGE" version="xTest(1.0-1.1)" />
+        <element value="//*[@id='V3']" descriptor="XPATH" version="xTest(1.0-1.2)" />
+        <element value="//*[@id='V1']" descriptor="XPATH" version="xTest0(1.0)" />
+        <element value="//*[@id='V2']" descriptor="XPATH" version="xTest0(1.0-*)" />
+      </element>
+      <element name="osTest" descriptor="COMPLEX">
+        <element value="//*[@id='IOS']" descriptor="XPATH" version="xTest0(1.0)" os="IOS" />
+        <element value="//*[@id='ANDROID']" descriptor="XPATH" version="xTest0(1.0)" os="ANDROID" />
+        <element value="//*[@id='WINDOWS']" descriptor="XPATH" version="xTest0(1.0)" os="WINDOWS" />
+      </element>
+      <element name="osTest2" descriptor="COMPLEX">
+        <element value="//*[@id='IOS']" descriptor="XPATH" os="IOS" />
+        <element value="//*[@id='ANDROID']" descriptor="XPATH" os="ANDROID" />
+        <element value="//*[@id='WINDOWS']" descriptor="XPATH" os="WINDOWS" />
+      </element>
+      <element name="Accordian Image" value="PRIVATE:/testingImage.png" descriptor="V_IMAGE" />
+      <element name="TOGGLE Text" value="Toggle Value" descriptor="V_TEXT" />
+    </page>
+  </site>
+</elementDefinition>

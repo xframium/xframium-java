@@ -167,6 +167,11 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         return new Artifact( rootFolder + "index.html", stringBuffer.toString().getBytes() );
 	}
 	
+	protected Artifact generateCSVReport( String rootFolder, ExecutionContextTest executionContext )
+	{
+	    return new Artifact( rootFolder + "index.html", executionContext.getCSVReport().getBytes() );
+	}
+	
 	protected Artifact generateWCAG( Device device, String testName, String rootFolder )
 	{
 	    StringBuilder wcagBuffer = new StringBuilder();

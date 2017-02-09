@@ -111,6 +111,9 @@ public class SauceLabsArtifactProducer extends AbstractArtifactProducer
 	    
     		switch (aType)
     		{
+    		    case CSV_REPORT_DATA:
+                    return generateCSVReport( rootFolder, test );
+    		    
     			case EXECUTION_DEFINITION:
     				StringBuilder defBuilder = new StringBuilder();
     				defBuilder.append( "DATE=" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "\r\n");

@@ -99,6 +99,9 @@ public class SeleniumArtifactProducer extends AbstractArtifactProducer
             switch ( aType )
             {
 
+                case CSV_REPORT_DATA:
+                    return generateCSVReport( rootFolder, test );
+                
                 case FAILURE_SOURCE:
                     return new Artifact( rootFolder + "failureDOM.xml", webDriver.getPageSource().getBytes() );
 
