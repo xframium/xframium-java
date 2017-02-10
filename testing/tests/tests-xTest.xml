@@ -23,7 +23,7 @@
   <import fileName="./xTest/Verify Color Test.xml" />
   <import fileName="./xTest/Verify Contrast Test.xml" />
   <import fileName="./xTest/Click Test.xml" />
-  <import fileName="./xTest/Compare Test.xml" />
+  <import fileName="./xTest/LEGACY Compare Test.xml" />
   <import fileName="./xTest/State Test.xml" />
   <import fileName="./xTest/Else Test.xml" />
   <import fileName="./xTest/JS Test.xml" />
@@ -47,5 +47,6 @@
   <import fileName="./xTest/Wait For Test.xml" />
   <import fileName="./xTest/Window Keyword.xml" />
   <import fileName="./xTest/Perfecto SET Test.xml" />
+  <import fileName="./xTest/Comparison Test.xml" />
   <import fileName="../functions/functions-xTest.xml" />
 </suite>

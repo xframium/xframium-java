@@ -39,4 +39,5 @@
   <import fileName="../functions/xTest/kw-visual.xml" />
   <import fileName="../functions/xTest/kw-flow.xml" />
   <import fileName="../functions/xTest/kw-random.xml" />
+  <import fileName="../functions/xTest/kw-compare2.xml" />
 </suite>
