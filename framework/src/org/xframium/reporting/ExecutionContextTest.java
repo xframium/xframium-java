@@ -82,7 +82,7 @@ public class ExecutionContextTest
         for ( int i=0; i<line.length; i++ )
         {
             csvOutput.append( line[i] );
-            if ( csvOutput.length() < (i - 1) )
+            if ( i < csvOutput.length() - 1 )
                 csvOutput.append( "," );
         }
         

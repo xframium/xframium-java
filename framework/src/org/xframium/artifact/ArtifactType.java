@@ -82,7 +82,7 @@ public enum ArtifactType
     EXECUTION_RECORD_JSON( ArtifactTime.NOOP, 20, "EXECUTION_RECORD_HTML", "xFramium JSON Report" ),
     
     GRID_REPORT( ArtifactTime.NOOP, 21, "GRID_REPORT", "xFramium GRID Report" ),
-    CSV_REPORT_DATA( ArtifactTime.AFTER_TEST, 22, "CSV_REPORT_DATA", "xFramium CSV Report compiled from REPORT steps" ),
+    ADD_TO_CSV( ArtifactTime.AFTER_TEST, 22, "CSV_REPORT_DATA", "xFramium CSV Report compiled from REPORT steps" ),
     ;
     
     /** The time. */
@@ -112,6 +112,7 @@ public enum ArtifactType
         supportedList.add( ArtifactType.SAUCE_LABS );
         supportedList.add( ArtifactType.REPORTIUM );
         supportedList.add( ArtifactType.GRID_REPORT );
+        supportedList.add( ArtifactType.ADD_TO_CSV );
 
         return supportedList;
     }

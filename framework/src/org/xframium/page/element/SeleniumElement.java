@@ -328,7 +328,12 @@ public class SeleniumElement extends AbstractElement
                     SubElement[] subList = getSubElement( ( (DeviceWebDriver) webDriver ).getAut(), ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getOs().toUpperCase(), (DeviceWebDriver) webDriver );
                     if ( subList.length > 0 )
                     {
-                        return _useBy( subList[ 0 ].getBy(), applyToken( subList[ 0 ].getKey() ) );
+                        By foundBy = _useBy( subList[ 0 ].getBy(), applyToken( subList[ 0 ].getKey() ) );
+                        
+                        if ( foundBy == null )
+                            throw new ScriptConfigurationException( "Could not locate sub-element for " + getName() + "( " + ( (DeviceWebDriver) webDriver ).getAut().getName() + " " + ( (DeviceWebDriver) webDriver ).getAut().getVersion() + " )");
+                        
+                        return foundBy; 
                     }
                     else
                     {

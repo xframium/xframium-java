@@ -99,7 +99,7 @@ public class SeleniumArtifactProducer extends AbstractArtifactProducer
             switch ( aType )
             {
 
-                case CSV_REPORT_DATA:
+                case ADD_TO_CSV:
                     return generateCSVReport( rootFolder, test );
                 
                 case FAILURE_SOURCE:

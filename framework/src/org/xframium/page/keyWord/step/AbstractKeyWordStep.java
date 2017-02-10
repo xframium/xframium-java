@@ -1123,6 +1123,16 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             if ( isTimed() )
                 recordTimings( (DeviceWebDriver)webDriver, executionContext, System.currentTimeMillis(), returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE );
             
+            try
+            {
+                if ( !returnValue )
+                    dumpState( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+            }
+            catch ( Exception e )
+            {
+                e.printStackTrace();
+            }
+            
             executionContext.completeStep( stepStatus, stepException );
 
             if ( PageManager.instance().isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
@@ -1135,15 +1145,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 {
                     case ERROR:
 
-                        try
-                        {
-                            if ( !returnValue )
-                                dumpState( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
-                        }
-                        catch ( Exception e )
-                        {
-                            e.printStackTrace();
-                        }
                         
                         if ( currentError == null )
                         {
@@ -1163,16 +1164,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
                     case LOG_IGNORE:
                         log.warn( Thread.currentThread().getName() + ": Step " + name + " failed but was marked to log and ignore" );
-                        
-                        try
-                        {
-                            if ( !returnValue )
-                                dumpState( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
-                        }
-                        catch ( Exception e )
-                        {
-                            e.printStackTrace();
-                        }
 
                     case IGNORE:
                         if ( currentError == null )

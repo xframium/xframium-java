@@ -20,14 +20,17 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
-import org.openqa.selenium.Alert;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.security.UserAndPassword;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.factory.MorelandWebElement;
 import org.xframium.exception.ScriptConfigurationException;
@@ -36,13 +39,8 @@ import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
-import org.xframium.page.keyWord.step.spi.KWSMath.MATH_TYPE;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.driver.NativeDriverProvider;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -69,7 +67,12 @@ public class KWSBrowser extends AbstractKeyWordStep
                         "Close the current window" ), SWITCH_TO_ELEMENT( 8, "SWITCH_TO_ELEMENT", "Switch to the frame by element" ), MAXIMIZE( 9, "MAXIMIZE", "Maximize the current window" ), GET_TITLE( 11, "GET_TITLE",
                                 "Get the title of the current window" ), GET_URL( 12, "GET_URL", "Get the URL of the current window" ), FORWARD( 13, "FORWARD", "Click the forward button" ), BACK( 14, "BACK", "Click the back button" ), REFRESH( 15,
                                         "REFRESH", "Click the refresh button" ), NAVIGATE( 16, "NAVIGATE", "Navigate to the supplied URL" ), SWITCH_WIN_INDEX( 17, "SWITCH_WIN_INDEX", "Switch to the numbered window" ), DELETE_COOKIE( 18, "DELETE_COOKIE",
-                                                "Delete the named cookie" ), GET_COOKIE( 19, "GET_COOKIE", "Switch to the numbered window" ), ADD_COOKIE( 20, "ADD_COOOKIE", "Switch to the numbered window" );
+                                                "Delete the named cookie" ), GET_COOKIE( 19, "GET_COOKIE", "Switch to the numbered window" ), ADD_COOKIE( 20, "ADD_COOOKIE", "Switch to the numbered window" ),
+        SCROLL_UP( 21, "SCROLL_UP", "Scroll up on a page by the specified number of pixels" ),
+        SCROLL_DOWN( 22, "SCROLL_DOWN", "Scroll down on a page by the specified number of pixels" ),
+        PAGE_UP( 23, "PAGE_UP", "Scroll up be the specified number of pages" ),
+        PAGE_DOWN( 24, "PAGE_DOWN", "Scroll down be the specified number of pages" );
+        
 
         public List<SwitchType> getSupported()
         {
@@ -93,6 +96,10 @@ public class KWSBrowser extends AbstractKeyWordStep
             supportedList.add( SwitchType.DELETE_COOKIE );
             supportedList.add( SwitchType.GET_COOKIE );
             supportedList.add( SwitchType.ADD_COOKIE );
+            supportedList.add( SwitchType.SCROLL_UP );
+            supportedList.add( SwitchType.SCROLL_DOWN );
+            supportedList.add( SwitchType.PAGE_UP );
+            supportedList.add( SwitchType.PAGE_DOWN );
             return supportedList;
         }
 
@@ -319,6 +326,42 @@ public class KWSBrowser extends AbstractKeyWordStep
 
                     break;
 
+                case PAGE_DOWN:
+                    int pageDown = 1;
+                    if ( getParameter( "Page Count" ) != null )
+                        pageDown = Integer.parseInt( getParameterValue( getParameter( "Page Count" ), contextMap, dataMap ) );
+                    
+                    if ( webDriver instanceof JavascriptExecutor )
+                        ( (JavascriptExecutor) webDriver ).executeScript( "window.scrollBy( 0, (window.innerHeight * " + pageDown + "));" );
+                    break;
+                    
+                case PAGE_UP:
+                    int pageUp = 1;
+                    if ( getParameter( "Page Count" ) != null )
+                        pageUp = Integer.parseInt( getParameterValue( getParameter( "Page Count" ), contextMap, dataMap ) );
+                    
+                    if ( webDriver instanceof JavascriptExecutor )
+                        ( (JavascriptExecutor) webDriver ).executeScript( "window.scrollBy( 0, -(window.innerHeight * " + pageUp + "));" );
+                    break;
+                    
+                case SCROLL_DOWN:
+                    int scrollDown = 250;
+                    if ( getParameter( "Scroll Size" ) != null )
+                        scrollDown = Integer.parseInt( getParameterValue( getParameter( "Scroll Size" ), contextMap, dataMap ) );
+                    
+                    if ( webDriver instanceof JavascriptExecutor )
+                        ( (JavascriptExecutor) webDriver ).executeScript( "window.scrollBy( 0, " + scrollDown + ");" );
+                    break;
+                    
+                case SCROLL_UP:
+                    int scrollUp = 250;
+                    if ( getParameter( "Scroll Size" ) != null )
+                        scrollUp = Integer.parseInt( getParameterValue( getParameter( "Scroll Size" ), contextMap, dataMap ) );
+                    
+                    if ( webDriver instanceof JavascriptExecutor )
+                        ( (JavascriptExecutor) webDriver ).executeScript( "window.scrollBy( 0, -" + scrollUp + ");" );
+                    break;
+                    
                 default:
 
                     throw new ScriptConfigurationException( "Unknown Window Operation Type " + getName() );

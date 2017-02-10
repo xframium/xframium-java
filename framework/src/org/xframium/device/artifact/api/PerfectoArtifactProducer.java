@@ -138,7 +138,7 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 	    
     		switch (aType)
     		{
-    		    case CSV_REPORT_DATA:
+    		    case ADD_TO_CSV:
                     return generateCSVReport( rootFolder, test );
     		    
     			case EXECUTION_DEFINITION:
