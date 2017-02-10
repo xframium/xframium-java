@@ -26,10 +26,9 @@
       <element name="testingTwoFrame" value="testingTwoFrame" descriptor="ID" />
       <element name="versionTest" descriptor="COMPLEX">
         <element value="//*[@id='V1']" descriptor="XPATH" version="xTest(1.0)" />
-        <element value="//*[@id='V2']" descriptor="V_IMAGE" version="xTest(1.0-1.1)" />
-        <element value="//*[@id='V3']" descriptor="XPATH" version="xTest(1.0-1.2)" />
+        <element value="//*[@id='V2']" descriptor="XPATH" version="xTest(1.1-1.2)" />
         <element value="//*[@id='V1']" descriptor="XPATH" version="xTest0(1.0)" />
-        <element value="//*[@id='V2']" descriptor="XPATH" version="xTest0(1.0-*)" />
+        <element value="//*[@id='V2']" descriptor="XPATH" version="xTest0(1.1-*)" />
       </element>
       <element name="osTest" descriptor="COMPLEX">
         <element value="//*[@id='IOS']" descriptor="XPATH" version="xTest0(1.0)" os="IOS" />

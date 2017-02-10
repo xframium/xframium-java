@@ -7,7 +7,7 @@
   <devices provider="XML" fileName="deviceRegistry.xml">
     
   </devices>
-  <driver type="WEB" outputFolder="test-output" displayResults="true" deviceTags="perfecto" suiteName="xTest" embeddedServer="true" testNames="SET Test"> 
+  <driver type="WEB" outputFolder="test-output" displayResults="true" deviceTags="perfecto" suiteName="xTest" embeddedServer="true" testNames="Perfecto SET Test"> 
     
     <property name="xFramium General KeyWord Test.count">3</property>
     <property name="selenium.timeouts.implicitWait">5000</property>
@@ -23,6 +23,7 @@
     <artifact type="EXECUTION_REPORT_HTML" />
     <artifact type="EXECUTION_REPORT_PDF" />
     <artifact type="GRID_REPORT"/>
+    <artifact type="ADD_TO_CSV"/>
     
   </driver>
 
