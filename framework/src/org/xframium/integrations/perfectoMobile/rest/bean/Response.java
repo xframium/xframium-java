@@ -45,7 +45,7 @@ public class Response extends AbstractBean
 	private String reason;
 	
 	@FieldDescriptor ( )
-    private long returnValue;
+    private Long returnValue;
 
 
     public String getExecutionId()
@@ -78,12 +78,12 @@ public class Response extends AbstractBean
         this.reason = reason;
     }
 
-    public long getReturnValue()
+    public Long getReturnValue()
     {
         return returnValue;
     }
 
-    public void setReturnValue( long returnValue )
+    public void setReturnValue( Long returnValue )
     {
         this.returnValue = returnValue;
     }

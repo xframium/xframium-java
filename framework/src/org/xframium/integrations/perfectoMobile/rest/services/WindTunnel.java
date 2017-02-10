@@ -170,7 +170,7 @@ public interface WindTunnel extends PerfectoService
 	
 	@Operation( operationName="command" )
     @PerfectoCommand( commandName="timer", subCommandName = "info" )
-    public Response getTimer( @ResourceID String executionId, @Parameter( name="timerId" ) String timerId, @Parameter( name="timerType" ) String timerType,  @Parameter( name="units" ) String timeUnits );
+    public Response getTimer( @ResourceID String executionId, @Parameter( name="timerId" ) String timerId, @Parameter( name="type" ) String timerType,  @Parameter( name="units" ) String timeUnits );
 	
 	/**
 	 * Stop timer.
