@@ -213,8 +213,35 @@ html, body {
                 <div class="panel panel-info" style="margin-bottom: 0px; padding-top: 25px; text-align: center" ng-if="executionStatus == 'running'">
                     <div class="systemProcessing" style="display: inline-block;"></div>
                     <h3 class="text-primary">Tests Executing...</h3>
-                    
                 </div>
+                
+                <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 25px;" ng-if="executionStatus == 'running'">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Thread Status
+                        </h3>
+                    </div>
+                    <div ui-tree id="tree-root">
+                        <ol ui-tree-nodes ng-model="threadList">
+                            <li data-nodrag ui-tree-node ng-repeat="thread in threadList | filter:filterDevicesBy | orderBy: 'key'" style="border-radius: 5px; margin-top: 5px; margin-bottom: 1px; padding-top: 2px; padding-bottom: 2px; padding-left: 5px; padding-right: 5px; cursor: default;  border-style: outset; border-width: thin" collapsed="true">
+                                <div ui-tree-handle class="tree-node tree-node-content">
+                                    <a data-nodrag ng-click="toggle(this)" style="cursor: default" ><span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }" style="cursor: default"></span></a>
+                                    <span class="text-danger small">{{thread.description}}</span>
+                                    <span class="pull-right"><img src="images/{{thread.threadState}}.png" height="16" /></span>
+                                </div>
+                                
+                                <ol ui-tree-nodes ng-model="thread.stackTrace" ng-class="{hidden: collapsed}">
+                                    <li data-nodrag ui-tree-node ng-repeat="s in thread.stackTrace" >
+                                        <div ui-tree-handle class="tree-node tree-node-content">
+                                            <span style="margin-left: 10px">{{s}}</span>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                
                 <div class="panel panel-info" style="margin-bottom: 0px;" ng-if="executionStatus == 'idle'">
                     <div class="panel-heading">
                         <h3 class="panel-title">

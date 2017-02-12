@@ -43,7 +43,10 @@ xConsole
                     $scope.tagList = [];
                     $scope.deviceTagList = [];
                     
+                    $scope.threadList = [];
+                    
                     $scope.intervalPromise;
+                    $scope.intervalThreadPromise;
                    
                     $scope.executionStatus = 'idle';
                    
@@ -173,16 +176,29 @@ xConsole
                         }
                     }
 
+                    $scope.checkThreadStatus = function()
+                    {
+                        xConsoleService.checkThreadStatus().then(function( returnValue )
+                        {
+                            $scope.threadList = returnValue.pageData;
+                        });
+                    }
+                    
                     $scope.checkStatus = function()
                     {
                         xConsoleService.checkStatus().then(function( returnValue )
                         {
                             if ( returnValue == null )
+                            {
                                 $interval.cancel($scope.intervalPromise);
+                                $interval.cancel($scope.intervalThreadPromise);
+                            }
                             
                             if ( !returnValue.pageData.status )
                             {
                                 $interval.cancel($scope.intervalPromise);
+                                $interval.cancel($scope.intervalThreadPromise);
+                                
                                 $scope.executionStatus = 'idle';
                             }
                             
@@ -422,6 +438,10 @@ xConsole
                             $scope.intervalPromise = $interval(function() {
                                 $scope.checkStatus();
                             }, 1000);
+                            
+                            $scope.intervalThreadPromise = $interval(function() {
+                                $scope.checkThreadStatus();
+                            }, 3000);
                         });
                     }
 

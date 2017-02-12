@@ -7,7 +7,7 @@
   <devices provider="XML" fileName="deviceRegistry.xml">
     
   </devices>
-  <driver type="WEB" outputFolder="test-output" displayResults="true" deviceTags="perfecto" suiteName="xTest" embeddedServer="true" testNames="Perfecto SET Test"> 
+  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" testNames="Alert Test,Align Test"> 
     
     <property name="xFramium General KeyWord Test.count">3</property>
     <property name="selenium.timeouts.implicitWait">5000</property>

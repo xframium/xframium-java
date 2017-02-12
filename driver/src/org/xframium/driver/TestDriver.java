@@ -38,6 +38,8 @@ public class TestDriver
     
     public void execute( File configFile, Map<String,String> customConfig )
     {
+        System.setProperty( "selenium.LOGGER.level", "WARNING" );
+        System.setProperty( "selenium.LOGGER", "c:\\projects\\selenium.log" );
         try
         {
             DeviceManager.instance().clear();

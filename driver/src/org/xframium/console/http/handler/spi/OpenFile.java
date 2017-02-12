@@ -33,7 +33,6 @@ public class OpenFile extends ECHandler
 	    }
 	    catch( Exception e )
 	    {
-	        e.printStackTrace();
 	        return e.getMessage().getBytes();
 	    }
 	}

@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 import org.testng.Assert;
+import org.testng.ITestContext;
 import org.testng.annotations.Test;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactType;
@@ -33,10 +34,12 @@ import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.ng.AbstractSeleniumTest;
+import org.xframium.device.ng.TestContainer;
 import org.xframium.device.ng.TestName;
+import org.xframium.device.ng.TestPackage;
 import org.xframium.exception.DeviceAcquisitionException;
+import org.xframium.exception.DeviceException;
 import org.xframium.exception.FilteredException;
-import org.xframium.exception.FlowException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.integrations.sauceLabs.rest.SauceREST;
 import org.xframium.page.PageManager;
@@ -54,22 +57,35 @@ import com.perfecto.reportium.test.result.TestResultFactory;
 public class XMLTestDriver extends AbstractSeleniumTest
 {
     @Test ( dataProvider = "deviceManager")
-    public void testDriver( TestName testName ) throws Throwable
+    public void testDriver( TestContainer testContainer, ITestContext testContext ) throws Throwable
     {
-        String deviceOs = getDevice().getOs();
-        String[] deviceTags = getDevice().getTagNames();
+        TestPackage testPackage = (TestPackage) testContext.getAttribute( "testPackage" );
+        TestName testName = testPackage.getTestName();
+        
+        KeyWordTest test = KeyWordDriver.instance().getTest( testName.getRawName() );
+        if ( test == null )
+            throw new ScriptConfigurationException( "The Test Name " + testName.getRawName() + " does not exist" );
+        
+        ExecutionContextTest executionContextTest = new ExecutionContextTest();
         
         CloudDescriptor cD = CloudRegistry.instance().getCloud();
         if ( getDevice().getCloud() != null && !getDevice().getCloud().trim().isEmpty() )
             cD = CloudRegistry.instance().getCloud( getDevice().getCloud() );
         
+        if ( !testPackage.getConnectedDevice().getWebDriver().isConnected() )
+        {
+            executionContextTest.setTest( test );
+            executionContextTest.setDevice( getDevice() );
+            executionContextTest.setCloud( cD );
+            executionContextTest.completeTest( TestStatus.FAILED, new DeviceException( "Could not connect to " + testPackage.getDevice() ) );
+            testName.setTest( executionContextTest );
+            throw new DeviceException( "Could not connect to " + testPackage.getDevice() );
+        }
+        
+        String deviceOs = testPackage.getDevice().getOs();
+        String[] deviceTags = testPackage.getDevice().getTagNames();
+        
         boolean returnValue = false;
-
-        ExecutionContextTest executionContextTest = new ExecutionContextTest();
-
-        KeyWordTest test = KeyWordDriver.instance().getTest( testName.getRawName() );
-        if ( test == null )
-            throw new ScriptConfigurationException( "The Test Name " + testName.getRawName() + " does not exist" );
 
         try
         {

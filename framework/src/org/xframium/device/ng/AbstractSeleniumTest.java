@@ -29,18 +29,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
-import org.xframium.application.ApplicationDescriptor;
-import org.xframium.application.ApplicationProvider;
-import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactTime;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.content.ContentManager;
@@ -49,20 +47,13 @@ import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.Artifact;
 import org.xframium.device.artifact.ArtifactProducer;
 import org.xframium.device.cloud.CloudDescriptor;
-import org.xframium.device.cloud.CloudProvider;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
-import org.xframium.device.logging.ThreadedFileHandler;
-import org.xframium.gesture.GestureManager;
-import org.xframium.gesture.factory.spi.PerfectoGestureFactory;
-import org.xframium.page.PageManager;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
-import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordTest;
-import org.xframium.page.listener.LoggingExecutionListener;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
@@ -85,12 +76,6 @@ public abstract class AbstractSeleniumTest
     private static ThreadLocal<TestContext> threadContext = new ThreadLocal<TestContext>();
 
     /** The name of the default device **/
-    
-
-    /**
-     * The Class TestName.
-     */
-    
 
     /**
      * Gets the device data.
@@ -98,59 +83,59 @@ public abstract class AbstractSeleniumTest
      * @return the device data
      */
     @DataProvider ( name = "deviceManager", parallel = true)
-    public Object[][] getDeviceData()
+    public Object[][] getDeviceData( ITestContext testContext )
     {
         List<Device> deviceList = DeviceManager.instance().getDevices();
 
-        return getDeviceData( deviceList );
+        return getDeviceData( deviceList, testContext );
     }
 
     private enum KeyType
     {
-        PERSONA,
-        CONTENT,
-        ITERATION,
-        TEST
+        PERSONA, CONTENT, ITERATION, TEST
     }
-    
+
     private class TestKey
     {
         private String key;
         private KeyType type;
-        
+
         public TestKey( String key, KeyType type )
         {
             super();
             this.key = key;
             this.type = type;
         }
+
         public String getKey()
         {
             return key;
         }
+
         public void setKey( String key )
         {
             this.key = key;
         }
+
         public KeyType getType()
         {
             return type;
         }
+
         public void setType( KeyType type )
         {
             this.type = type;
         }
-        
-        
+
     }
-    
-    public Object[][] getDeviceData( List<Device> deviceList )
+
+    public Object[][] getDeviceData( List<Device> deviceList, ITestContext testContext )
     {
         List<TestName> rawList = new ArrayList<TestName>( 10 );
         List<TestName> finalList = new ArrayList<TestName>( 10 );
         List<TestKey> personaList = new ArrayList<TestKey>( 10 );
         List<TestKey> testList = new ArrayList<TestKey>( 10 );
-        
+
         if ( DataManager.instance().getPersonas() != null && DataManager.instance().getPersonas().length > 0 )
         {
             for ( String pN : DataManager.instance().getPersonas() )
@@ -160,14 +145,14 @@ public abstract class AbstractSeleniumTest
         if ( DataManager.instance().getTests() != null && DataManager.instance().getTests().length > 0 )
         {
             for ( String pN : DataManager.instance().getTests() )
-            {        
+            {
                 testList.add( new TestKey( pN, KeyType.TEST ) );
             }
         }
         else
         {
             for ( String pN : KeyWordDriver.instance().getTestNames() )
-            {        
+            {
                 testList.add( new TestKey( pN, KeyType.TEST ) );
             }
         }
@@ -181,7 +166,7 @@ public abstract class AbstractSeleniumTest
                 {
                     if ( kT.getCount() > 1 )
                     {
-                        for ( int i=0; i<kT.getCount(); i++ )
+                        for ( int i = 0; i < kT.getCount(); i++ )
                         {
                             if ( kT.getDataDriver() != null && kT.getDataDriver().trim().length() > 0 )
                             {
@@ -189,7 +174,7 @@ public abstract class AbstractSeleniumTest
                                 for ( PageData pD : pageData )
                                 {
                                     TestName testName = new TestName( tK.getKey() );
-                                    testName.setIteration( i+1 );
+                                    testName.setIteration( i + 1 );
                                     testName.setTestContext( contentKey );
                                     testName.setDataDriven( pD );
                                     rawList.add( testName );
@@ -198,7 +183,7 @@ public abstract class AbstractSeleniumTest
                             else
                             {
                                 TestName testName = new TestName( tK.getKey() );
-                                testName.setIteration( i+1 );
+                                testName.setIteration( i + 1 );
                                 testName.setTestContext( contentKey );
                                 rawList.add( testName );
                             }
@@ -230,7 +215,7 @@ public abstract class AbstractSeleniumTest
             {
                 if ( kT.getCount() > 1 )
                 {
-                    for ( int i=0; i<kT.getCount(); i++ )
+                    for ( int i = 0; i < kT.getCount(); i++ )
                     {
                         if ( kT.getDataDriver() != null && kT.getDataDriver().trim().length() > 0 )
                         {
@@ -272,7 +257,6 @@ public abstract class AbstractSeleniumTest
             }
         }
 
-        
         if ( personaList.size() > 0 )
         {
             for ( TestKey tK : personaList )
@@ -290,29 +274,45 @@ public abstract class AbstractSeleniumTest
         }
         else
             finalList.addAll( rawList );
-        
-        Object[][] newArray = null;
-        
-        newArray = new Object[(finalList.size()==0 ? 1 : finalList.size()) * deviceList.size()][1];
 
-        
-        if  ( finalList.size() > 0 )
+        TestName[] newArray = null;
+
+        newArray = new TestName[(finalList.size() == 0 ? 1 : finalList.size()) * deviceList.size()];
+
+        if ( finalList.size() > 0 )
         {
             for ( int i = 0; i < finalList.size(); ++i )
             {
                 for ( int j = 0; j < deviceList.size(); j++ )
-    
-                    newArray[i * deviceList.size() + j][0] = finalList.get( i );
+
+                    newArray[i * deviceList.size() + j] = finalList.get( i );
             }
         }
         else
         {
             for ( int i = 0; i < deviceList.size(); i++ )
-                
-                newArray[i][0] = new TestName();
+
+                newArray[i] = new TestName();
         }
 
-        return newArray;
+        List<Device> fullDeviceList = new ArrayList<Device>( 10 );
+        for ( Device d : deviceList )
+        {
+            for ( int i = 0; i < d.getAvailableDevices(); i++ )
+                fullDeviceList.add( d.cloneDevice() );
+        }
+
+        log.warn( "Thread count configuration as " + fullDeviceList.size() );
+        testContext.getSuite().getXmlSuite().setDataProviderThreadCount( fullDeviceList.size() );
+        testContext.getSuite().getXmlSuite().setThreadCount( fullDeviceList.size() );
+
+        TestContainer testContainer = new TestContainer( newArray, fullDeviceList.toArray( new Device[0] ) );
+
+        Object[][] returnArray = new Object[newArray.length][1];
+        for ( int i = 0; i < returnArray.length; i++ )
+            returnArray[i][0] = testContainer;
+
+        return returnArray;
     }
 
     /**
@@ -363,11 +363,18 @@ public abstract class AbstractSeleniumTest
      *            the test args
      */
     @BeforeMethod ( alwaysRun = true)
-    public void beforeMethod( Method currentMethod, Object[] testArgs )
+    public void beforeMethod( Method currentMethod, Object[] testArgs, ITestContext testContext )
     {
         try
         {
-            TestName testName = ((TestName) testArgs[0]);
+            TestContainer tC = ((TestContainer) testArgs[0]);
+
+            TestPackage testPackage = tC.getTestPackage( currentMethod, true );
+
+            testContext.setAttribute( "testPackage", testPackage );
+
+            TestName testName = testPackage.getTestName();
+            ConnectedDevice connectedDevice = testPackage.getConnectedDevice();
 
             String contentKey = testName.getContentKey();
 
@@ -380,14 +387,18 @@ public abstract class AbstractSeleniumTest
                 ContentManager.instance().setCurrentContentKey( null );
             }
 
-            Thread.currentThread().setName( "Device Acquisition --> " + Thread.currentThread().getId() );
-            if ( log.isInfoEnabled() )
-                log.info( Thread.currentThread().getName() + ": Attempting to acquire device for " + currentMethod.getName() );
+            if ( connectedDevice != null )
+            {
+                putConnectedDevice( TestName.DEFAULT, connectedDevice );
 
-            ConnectedDevice connectedDevice = DeviceManager.instance().getDevice( currentMethod, testName.getTestName(), true, testName.getPersonaName() );
+                if ( testName.getTestName() == null || testName.getTestName().isEmpty() )
+                    testName.setTestName( currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() );
 
-            if ( log.isInfoEnabled() )
-                log.info( Thread.currentThread().getName() + ": Device acquired for " + currentMethod.getName() );
+                testName.setFullName( testArgs[0].toString() );
+
+                if ( log.isInfoEnabled() )
+                    log.info( Thread.currentThread().getName() + ": acquired for " + currentMethod.getName() );
+            }
 
             if ( connectedDevice != null && connectedDevice.getWebDriver() != null && connectedDevice.getWebDriver().isConnected() )
             {
@@ -407,18 +418,6 @@ public abstract class AbstractSeleniumTest
             ctx.testArgs = testArgs;
 
             threadContext.set( ctx );
-
-            if ( connectedDevice != null )
-            {
-
-                putConnectedDevice( TestName.DEFAULT, connectedDevice );
-
-                if ( testName.getTestName() == null || testName.getTestName().isEmpty() )
-                    testName.setTestName( currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() );
-
-                ((TestName) testArgs[0]).setFullName( testArgs[0].toString() );
-                Thread.currentThread().setName( testName.getRawName() + "-->" + connectedDevice.getWebDriver().getPopulatedDevice().getEnvironment() + " (" + Thread.currentThread().getId() + ")" );
-            }
         }
         catch ( Exception e )
         {
@@ -480,19 +479,18 @@ public abstract class AbstractSeleniumTest
      *            the test result
      */
     @AfterMethod ( alwaysRun = true)
-    public void afterMethod( Method currentMethod, Object[] testArgs, ITestResult testResult )
+    public void afterMethod( Method currentMethod, Object[] testArgs, ITestResult testResult, ITestContext testContext )
     {
         try
         {
-
             HashMap<String, ConnectedDevice> map = getDevicesToCleanUp();
             threadContext.set( null );
             Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null);
 
             if ( map.get( TestName.DEFAULT ) == null )
                 return;
-            
-            if ( map.get( TestName.DEFAULT ).getWebDriver().isConnected() )
+
+            if ( map.get( TestName.DEFAULT ).getWebDriver() != null && map.get( TestName.DEFAULT ).getWebDriver().isConnected() )
             {
                 try
                 {
@@ -511,16 +509,13 @@ public abstract class AbstractSeleniumTest
                 String name = keys.next();
                 ConnectedDevice device = map.get( name );
 
-                cleanUpConnectedDevice( name, device, currentMethod, testArgs, testResult );
+                cleanUpConnectedDevice( name, device, currentMethod, testArgs, testResult, testContext, (TestContainer) testArgs[0] );
             }
 
-            //
-            // Write out the index file for all tests
-            //
             try
             {
                 DeviceManager.instance().clearAllArtifacts();
-                Thread.currentThread().setName( "Idle Thread (" + Thread.currentThread().getId() + ")" );
+                Thread.currentThread().setName( "xF-Idle Thread" );
             }
             catch ( Exception e )
             {
@@ -533,23 +528,24 @@ public abstract class AbstractSeleniumTest
         }
     }
 
-    
-
-    private void cleanUpConnectedDevice( String name, ConnectedDevice device, Method currentMethod, Object[] testArgs, ITestResult testResult )
+    private void cleanUpConnectedDevice( String name, ConnectedDevice device, Method currentMethod, Object[] testArgs, ITestResult testResult, ITestContext testContext, TestContainer testContainer )
     {
         WebDriver webDriver = device.getWebDriver();
         Device currentDevice = device.getDevice();
         ExecutionContextTest test = null;
+        TestPackage testPackage = (TestPackage) testContext.getAttribute( "testPackage" );
+        TestName testName = testPackage.getTestName();
 
         try
         {
             if ( webDriver != null )
             {
-                String runKey = ((TestName.DEFAULT.equals( name )) ? ((TestName) testArgs[0]).getTestName() : ((TestName) testArgs[0]).getTestName() + "-" + name);
+
+                String runKey = ((TestName.DEFAULT.equals( name )) ? testName.getTestName() : testName.getTestName() + "-" + name);
 
                 if ( TestName.DEFAULT.equals( name ) )
                 {
-                    test = ((TestName) testArgs[0]).getTest();
+                    test = testName.getTest();
                 }
 
                 File rootFolder = ExecutionContext.instance().getReportFolder();
@@ -586,7 +582,7 @@ public abstract class AbstractSeleniumTest
                                         }
                                         catch ( Exception e )
                                         {
-                                            log.error( "Error acquiring Artifacts " + e.getMessage() );
+                                            log.error( "Error acquiring Artifacts ", e );
                                         }
                                     }
                                 }
@@ -631,12 +627,12 @@ public abstract class AbstractSeleniumTest
                                 }
                                 catch ( Exception e )
                                 {
-                                    log.error( "Error acquiring Artifacts - " + e.getMessage() );
+                                    log.error( "Error acquiring Artifacts ", e );
                                 }
                             }
                         }
                     }
-                    
+
                     //
                     // Cloud specific artifacts
                     //
@@ -644,13 +640,12 @@ public abstract class AbstractSeleniumTest
                     if ( device.getDevice().getCloud() != null && !device.getDevice().getCloud().isEmpty() )
                         currentCloud = CloudRegistry.instance().getCloud( device.getDevice().getCloud() );
                     String cloudProvider = currentCloud.getProvider();
-                    
-                    
+
                     //
                     // Perfecto Wind Tunnel
                     //
                     String wtUrl = ((DeviceWebDriver) webDriver).getWindTunnelReport();
-                    if ( cloudProvider.equals( "PERFECTO" ) && wtUrl != null && !wtUrl.isEmpty() )
+                    if ( test != null && cloudProvider.equals( "PERFECTO" ) && wtUrl != null && !wtUrl.isEmpty() )
                         test.addExecutionParameter( "PERFECTO_WT", wtUrl );
 
                     //
@@ -660,7 +655,7 @@ public abstract class AbstractSeleniumTest
                     {
                         if ( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) && cloudProvider.equals( "SAUCELABS" ) )
                             test.addExecutionParameter( "SAUCELABS", "https://saucelabs.com/beta/tests/" + test.getSessionId() + "/commands#0" );
-    
+
                         if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) && ((DeviceWebDriver) webDriver).isConnected() && cloudProvider.equals( "PERFECTO" ) )
                         {
                             if ( ((ReportiumProvider) webDriver).getReportiumClient() != null )
@@ -672,7 +667,6 @@ public abstract class AbstractSeleniumTest
 
                     if ( test != null )
                     {
-
                         try
                         {
                             test.popupateSystemProperties();
@@ -689,19 +683,16 @@ public abstract class AbstractSeleniumTest
                         {
                             log.error( "Error acquiring Artifacts - " + e );
                         }
-
                     }
-
                 }
-
             }
 
             if ( currentDevice != null )
             {
                 if ( webDriver instanceof DeviceWebDriver )
-                    DeviceManager.instance().addRun( ((DeviceWebDriver) webDriver).getPopulatedDevice(), currentMethod, ((TestName) testArgs[0]).getTestName(), testResult.isSuccess(), device.getPersona() );
+                    DeviceManager.instance().addRun( ((DeviceWebDriver) webDriver).getPopulatedDevice(), testPackage, testContainer, testResult.isSuccess() );
                 else
-                    DeviceManager.instance().addRun( currentDevice, currentMethod, ((TestName) testArgs[0]).getTestName(), testResult.isSuccess(), device.getPersona() );
+                    DeviceManager.instance().addRun( currentDevice, testPackage, testContainer, testResult.isSuccess() );
             }
         }
         finally
@@ -714,8 +705,8 @@ public abstract class AbstractSeleniumTest
             {
             }
 
-            if ( currentDevice != null )
-                DeviceManager.instance().releaseDevice( currentDevice );
+            if ( currentDevice != null && TestName.DEFAULT.equals( name ) )
+                testContainer.returnDevice( currentDevice );
 
             if ( test != null && TestName.DEFAULT.equals( name ) )
             {

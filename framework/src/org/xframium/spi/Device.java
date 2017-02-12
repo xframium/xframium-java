@@ -29,6 +29,8 @@ import java.util.concurrent.Semaphore;
  */
 public interface Device
 {
+    public Device cloneDevice();
+    
     /**
      * The name of the device capability that allows configuration of locale.
      **/
@@ -121,13 +123,6 @@ public interface Device
 	 * @return the key
 	 */
 	String getKey();
-	
-	/**
-	 * Gets the lock.
-	 *
-	 * @return the lock
-	 */
-	Semaphore getLock();
 	
 	/**
 	 * Gets the driver type.

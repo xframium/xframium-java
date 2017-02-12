@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deviceRegistry xsi:schemaLocation="http://www.xframium.org/deviceRegistry http://www.xframium.org/xsd/deviceManagement/deviceRegistry.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.xframium.org/deviceRegistry">
-<device browserVersion="46" browserName="firefox" os="Windows" osVersion="8.1" model="Firefox" manufacturer="Mozilla" availableDevices="6" driverType="WEB" name="Firefox Windows 8.1 firefox 46" cloud="EMBEDDED" active="true"/>
-<device browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="3" driverType="WEB" name="Chrome Windows 8.1 chrome" cloud="EMBEDDED" active="false"/>
-<device browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="3" driverType="WEB" name="Chrome Windows 8.1 chrome" cloud="EMBEDDED" active="false"/>
-<device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Chrome Windows 8.1 chrome 53" cloud="saucelabs" active="false"/>
-<device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Chrome Windows 8.1 chrome 53" cloud="saucelabs" active="false"/>
-<device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" tagNames="Perfecto" availableDevices="1" driverType="WEB" name="Windows 8.1 chrome 53" cloud="perfecto" active="false"/>
-<device os="iOS" model="iPhone-7" tagNames="Perfecto" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="iPhone-7 iOS" cloud="perfecto" active="true"/>
-<device os="iOS" model="iPhone-7 Plus" tagNames="Perfecto" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="iPhone-7 Plus iOS" cloud="perfecto" active="true"/>
-<device os="iOS" model="iPhone-6 Plus" tagNames="Perfecto" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="iPhone-6 Plus iOS" cloud="perfecto" active="true"/>
-<device browserName="internet explorer" os="Windows" osVersion="8.1" model="IE" manufacturer="Microsoft" availableDevices="1" driverType="WEB" name="IE Windows 8.1 internet explorer" cloud="EMBEDDED" active="false"/>
-<device browserName="Chrome" os="Android" model="Galaxy S6" tagNames="Perfecto" manufacturer="Samsung" availableDevices="1" driverType="WEB" name="Galaxy S6 Android Chrome" cloud="perfecto" active="false"/>
-<device browserName="Browser" os="Android" osVersion="4.4" model="Galaxy S6" manufacturer="Samsung" availableDevices="1" driverType="WEB" name="Galaxy S6 Android 4.4 Browser" cloud="saucelabs" active="false"><capability name="deviceName" class="STRING">Google Nexus 7 HD Emulator</capability>
-<capability name="appiumVersion" class="STRING">1.5.3</capability>
-<capability name="platform" class="STRING">ANDROID</capability>
-</device>
-<device os="Android" model="Galaxy S8" manufacturer="Samsung" availableDevices="1" driverType="WEB" name="Galaxy S8 Android" cloud="saucelabs" active="false"/>
+  <device browserVersion="46" browserName="firefox" os="Windows" osVersion="8.1" model="Firefox" manufacturer="Mozilla" availableDevices="3" driverType="WEB" name="Firefox Windows 8.1 firefox 46" cloud="EMBEDDED" active="false">
+    <objectCapability name="FirefoxProfile">
+      <capabilities factoryName="FirefoxProfile">
+        <options name="preferences" key="log">{level: warn}</options>
+      </capabilities>
+    </objectCapability>
+  </device>
+  <device browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="3" driverType="WEB" name="Chrome Local Run" cloud="EMBEDDED" active="false" />
+  <device browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="3" driverType="WEB" name="Chrome Local" cloud="EMBEDDED" active="false" />
+  <device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Chrome SauceLabs" cloud="saucelabs" active="false" />
+  <device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Chrome SauceLabs Run" cloud="saucelabs" active="false" />
+  <device os="iOS" model="iPhone-7" tagNames="Perfecto" manufacturer="Apple" availableDevices="1" driverType="WEB" name="iPhone-7 iOS" cloud="perfecto" active="false" />
+  <device os="iOS" model="iPhone-7 Plus" tagNames="Perfecto" manufacturer="Apple" availableDevices="1" driverType="WEB" name="iPhone-7 Plus iOS" cloud="perfecto" active="false" />
+  <device os="iOS" model="iPhone.*" tagNames="Perfecto" manufacturer="Apple" availableDevices="3" driverType="WEB" name="iPhone-6 Plus iOS" cloud="perfecto" active="false" />
+  <device browserName="internet explorer" os="Windows" osVersion="8.1" model="IE" manufacturer="Microsoft" availableDevices="1" driverType="WEB" name="IE Windows 8.1 internet explorer" cloud="EMBEDDED" active="false" />
+  <device browserName="Chrome" os="Android" model="Galaxy.*" tagNames="Perfecto" manufacturer="Samsung" availableDevices="3" driverType="WEB" name="Galaxy S6 Android Chrome" cloud="perfecto" active="false" />
+  <device browserName="Browser" os="Android" osVersion="4.4" model="Galaxy S6" manufacturer="Samsung" availableDevices="1" driverType="WEB" name="Galaxy S6 Android 4.4 Browser" cloud="saucelabs" active="false">
+    <capability name="deviceName" class="STRING">Google Nexus 7 HD Emulator</capability>
+    <capability name="appiumVersion" class="STRING">1.5.3</capability>
+    <capability name="platform" class="STRING">ANDROID</capability>
+  </device>
+  <device os="Android" model="Galaxy S8" manufacturer="Samsung" availableDevices="1" driverType="WEB" name="Galaxy S8 Android" cloud="saucelabs" active="true" />
 </deviceRegistry>

@@ -26,6 +26,7 @@ import org.xframium.console.http.handler.spi.OpenFile;
 import org.xframium.console.http.handler.spi.OpenHTML;
 import org.xframium.console.http.handler.spi.OpenSuite;
 import org.xframium.console.http.handler.spi.TestStatus;
+import org.xframium.console.http.handler.spi.ThreadStatus;
 import org.xframium.container.ApplicationContainer;
 import org.xframium.container.CloudContainer;
 import org.xframium.container.DeviceContainer;
@@ -37,6 +38,7 @@ import org.xframium.container.PageContainer;
 import org.xframium.container.SiteContainer;
 import org.xframium.container.SuiteContainer;
 import org.xframium.container.TagContainer;
+import org.xframium.container.ThreadContainer;
 import org.xframium.device.DeviceCap;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
@@ -115,7 +117,11 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
         {
             syncMap.put( eContain.getSessionId(), eContain );
         }
+        
+
+        
     }
+
     
     public List<ExecutionContainer> drainSync()
     {
@@ -178,6 +184,8 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ApplicationVersion.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ExecutionContainer.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ElementUsage.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ThreadContainer.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( Thread.State.class, new ReflectionSerializer() );
         KeyWordDriver.instance().addStepListener( this );
     }
     
@@ -192,6 +200,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
         httpServer.createContext( "/executionConsole/folderList", new ListFolder() );
         httpServer.createContext( "/executionConsole/executeTest", new ExecuteTest() );
         httpServer.createContext( "/executionConsole/status", new TestStatus() );
+        httpServer.createContext( "/executionConsole/threadStatus", new ThreadStatus() );
         httpServer.createContext( "/executionConsole/kill", new KillSwitch() );
         httpServer.createContext( "/html", new OpenHTML() );
         httpServer.start();
@@ -247,8 +256,11 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
     public void afterStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, StepStatus stepStatus, SuiteContainer sC, ExecutionContextTest eC )
     {
         String executionId = ( (DeviceWebDriver) webDriver ).getExecutionId();
-        executionMap.get( executionId ).setStepCount( executionMap.get( executionId ).getStepCount()+1 );
-        addSync( executionMap.get( executionId ) );
+        if ( executionMap.get( executionId ) != null )
+        {
+            executionMap.get( executionId ).setStepCount( executionMap.get( executionId ).getStepCount()+1 );
+            addSync( executionMap.get( executionId ) );
+        }
     }
 
     @Override

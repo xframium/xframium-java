@@ -27,6 +27,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.logging.Level;
+import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -59,10 +60,10 @@ public abstract class AbstractJavaTest extends AbstractSeleniumTest
 {
 
     @BeforeMethod ( alwaysRun = true)
-    public void beforeMethod( Method currentMethod, Object[] testArgs )
+    public void beforeMethod( Method currentMethod, Object[] testArgs, ITestContext testContext )
     {
-        super.beforeMethod( currentMethod, testArgs );
-        TestName testName = ((TestName) testArgs[0]);
+        super.beforeMethod( currentMethod, testArgs, testContext );
+        TestName testName = (TestName) testContext.getAttribute( "testName" );
         
         ExecutionContextTest eC = new ExecutionContextTest();
         eC.setTestName( currentMethod.getName() );
@@ -96,9 +97,9 @@ public abstract class AbstractJavaTest extends AbstractSeleniumTest
      *            the test result
      */
     @AfterMethod ( alwaysRun = true)
-    public void afterMethod( Method currentMethod, Object[] testArgs, ITestResult testResult )
+    public void afterMethod( Method currentMethod, Object[] testArgs, ITestResult testResult, ITestContext testContext )
     {
-        super.afterMethod( currentMethod, testArgs, testResult );
+        super.afterMethod( currentMethod, testArgs, testResult, testContext );
     }
 
     protected void configureFramework( CloudProvider cloudProvider, String cloudName, org.xframium.device.data.DataProvider dataProvider, ApplicationProvider applicationProvider, String AUT, ElementProvider elementProvider, String siteName,

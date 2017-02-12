@@ -82,7 +82,17 @@ public class SimpleDevice implements Device
 	private String cloud;
 	private List<String> tagNames = new ArrayList<String>( 5 );
 	
-	
+	public Device cloneDevice()
+	{
+	    SimpleDevice simpleDevice = new SimpleDevice( key, manufacturer, model, os, osVersion, browserName, browserVersion, availableDevices, driverType, active, deviceName );
+	    simpleDevice.resolution = this.resolution;
+	    simpleDevice.environment = this.environment;
+	    simpleDevice.cloud = this.cloud;
+	    simpleDevice.tagNames.addAll( this.tagNames );
+	    simpleDevice.capabilities.putAll( this.capabilities );
+	    simpleDevice.capList.addAll( this.capList );
+	    return simpleDevice;
+	}
 	
 	public String getCloud()
     {
