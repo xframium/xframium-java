@@ -13,6 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
+import org.xframium.Initializable;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationDescriptor.AppType;
 import org.xframium.application.ApplicationVersion;
@@ -103,6 +104,10 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
     {
         try
         {
+            System.out.println( "***************************************************************************************" );
+            System.out.println( "*****                     xFramium version " + Initializable.VERSION + "                        *****" );
+            System.out.println( "***************************************************************************************" );
+            
             ExecutionConsole.instance().startUp( "0.0.0.0", 8145 );
         }
         catch( Exception e )

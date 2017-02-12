@@ -302,16 +302,29 @@ public abstract class AbstractSeleniumTest
                 fullDeviceList.add( d.cloneDevice() );
         }
 
-        log.warn( "Thread count configuration as " + fullDeviceList.size() );
-        testContext.getSuite().getXmlSuite().setDataProviderThreadCount( fullDeviceList.size() );
-        testContext.getSuite().getXmlSuite().setThreadCount( fullDeviceList.size() );
+        log.warn( "Preparing to execute " + newArray.length + " tests" );
+        
+        
+        try
+        {
+            testContext.getSuite().getXmlSuite().setDataProviderThreadCount( fullDeviceList.size() );
+            log.warn( "Thread count configured as " + fullDeviceList.size() );
+        }
+        catch( Exception e )
+        {
+            System.setProperty( "dataproviderthreadcount", fullDeviceList.size() + "" );
+            log.warn( "Thread count configured as " + fullDeviceList.size() + " via system property" );
+        }
 
         TestContainer testContainer = new TestContainer( newArray, fullDeviceList.toArray( new Device[0] ) );
 
+        
         Object[][] returnArray = new Object[newArray.length][1];
         for ( int i = 0; i < returnArray.length; i++ )
             returnArray[i][0] = testContainer;
 
+        log.warn( "Data Prepared" );
+        
         return returnArray;
     }
 
