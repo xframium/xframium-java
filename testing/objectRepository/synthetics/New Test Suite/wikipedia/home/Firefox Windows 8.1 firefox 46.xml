@@ -1,0 +1,1426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html class="js-enabled" lang="mul">
+<head>
+    <meta charset="utf-8" />
+    <title>Wikipedia</title>
+    <meta name="description" content="Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and hosted by the Wikimedia Foundation." />
+    <!--[if gt IE 7]-->
+    <script>/*<![CDATA[*/document.documentElement.className = document.documentElement.className.replace( /(^|\s)no-js(\s|$)/, "$1js-enabled$2" );/*]]>*/</script>
+    <!--[endif]-->
+    <!--[if lt IE 7]><meta http-equiv="imagetoolbar" content="no"><![endif]-->
+    <meta name="viewport" content="initial-scale=1,user-scalable=yes" />
+    <link rel="apple-touch-icon" href="/static/apple-touch/wikipedia.png" />
+    <link rel="shortcut icon" href="/static/favicon/wikipedia.ico" />
+    <link rel="license" href="//creativecommons.org/licenses/by-sa/3.0/" />
+    <style>/*<![CDATA[*/img,legend{border:0}legend,td,th{padding:0}html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block;vertical-align:baseline}audio:not([controls]){display:none;height:0}[hidden],template{display:none}a{background-color:transparent}a:active,a:hover{outline:0}abbr[title]{border-bottom:1px dotted}b,optgroup,strong{font-weight:700}dfn{font-style:italic}h1{font-size:2em;margin:.67em 0}mark{background:#ff0;color:#000}small{font-size:85%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sup{top:-.5em}sub{bottom:-.25em}svg:not(:root){overflow:hidden}figure{margin:1em 40px}hr{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box}pre,textarea{overflow:auto}code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}.pure-button,input{line-height:normal}button{overflow:visible}button,select{text-transform:none}button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer}button[disabled],html input[disabled]{cursor:default}button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}input[type=checkbox],input[type=radio]{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0}input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{height:auto}input[type=search]{-webkit-appearance:none;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box}input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration{-webkit-appearance:none}input[type=search]:focus{outline-offset:-2px}fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}table{border-collapse:collapse;border-spacing:0}.hidden,[hidden]{display:none!important}.pure-img{max-width:100%;height:auto;display:block}.pure-button{display:inline-block;zoom:1;white-space:nowrap;text-align:center;cursor:pointer;-webkit-user-drag:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;background-color:#f8f9fa;color:#222;position:relative;min-height:1.2em;min-width:1em;margin:.1em 0;border:1px solid #a2a9b1;-moz-border-radius:2px;border-radius:2px;padding:.5em 1em;font-family:inherit;font-size:inherit;font-weight:700;text-decoration:none;vertical-align:top;-webkit-transition:background .1s ease,color .1s ease,border-color .1s ease,-webkit-box-shadow .1s ease;-moz-transition:background .1s ease,color .1s ease,border-color .1s ease,box-shadow .1s ease,-moz-box-shadow .1s ease;transition:background .1s ease,color .1s ease,border-color .1s ease,box-shadow .1s ease;transition:background .1s ease,color .1s ease,border-color .1s ease,box-shadow .1s ease,-webkit-box-shadow .1s ease,-moz-box-shadow .1s ease}.pure-button::-moz-focus-inner{padding:0;border:0}.pure-button-hover,.pure-button:hover{background-color:#fff;color:#444;border-color:#a2a9b1}.pure-button-active,.pure-button:active{background-color:#d9d9d9;color:#000;border-color:#72777d}.pure-button:focus{border-color:#36c;-webkit-box-shadow:inset 0 0 0 1px #36c;-moz-box-shadow:inset 0 0 0 1px #36c;box-shadow:inset 0 0 0 1px #36c;outline:0}.pure-button-disabled,.pure-button-disabled:active,.pure-button-disabled:focus,.pure-button-disabled:hover,.pure-button[disabled]{color:#fff;background:#ddd;border:1px solid #ddd;outline:0;cursor:default;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}.pure-button-hidden{display:none}.pure-button-primary{color:#fff}.pure-button-destructive{color:#d33}.pure-button-destructive:hover{background-color:#73100a;background-color:rgba(209,29,19,.1);border-color:#73100a;border-color:rgba(115,16,10,.5)}.pure-button-destructive:active{color:#873636;border-color:#873636;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}.pure-button-destructive:focus{-webkit-box-shadow:inset 0 0 0 1px #d33;-moz-box-shadow:inset 0 0 0 1px #d33;box-shadow:inset 0 0 0 1px #d33;border-color:#d33}.pure-button-primary-destructive{color:#fff;background-color:#d33;border-color:#d33}.pure-button-primary-destructive:hover{background:#e53939;border-color:#e53939}.pure-button-primary-destructive:active{color:#fff;background-color:#73100a;border-color:#73100a;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}.pure-button-primary-destructive:focus{-webkit-box-shadow:inset 0 0 0 1px #fff;-moz-box-shadow:inset 0 0 0 1px #fff;box-shadow:inset 0 0 0 1px #fff;border-color:#d33}.pure-button-progressive{color:#36c}.pure-button-progressive:hover{background-color:#447ff5;border-color:#447ff5}.pure-button-progressive:active{color:#2a4b8d;border-color:#2a4b8d;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}.pure-button-progressive:focus{-webkit-box-shadow:inset 0 0 0 1px #36c;-moz-box-shadow:inset 0 0 0 1px #36c;box-shadow:inset 0 0 0 1px #36c;border-color:#36c}.pure-button-primary-progressive{background-color:#36c;border-color:#36c;color:#fff}.pure-button-primary-progressive:hover{background:#447ff5;border-color:#447ff5}.pure-button-primary-progressive:active{color:#fff;background-color:#2a4b8d;border-color:#2a4b8d;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}.pure-button-primary-progressive:focus{-webkit-box-shadow:inset 0 0 0 1px #fff;-moz-box-shadow:inset 0 0 0 1px #fff;box-shadow:inset 0 0 0 1px #fff;border-color:#36c}.button-xsmall{font-size:70%}.button-small{font-size:85%}.button-large{font-size:110%}.button-xlarge{font-size:125%}.pure-form input[type=url],.pure-form input[type=date],.pure-form input[type=month],.pure-form input[type=time],.pure-form input[type=datetime],.pure-form input[type=datetime-local],.pure-form input[type=week],.pure-form input[type=tel],.pure-form input[type=color],.pure-form input[type=number],.pure-form input[type=search],.pure-form input[type=text],.pure-form input[type=password],.pure-form input[type=email],.pure-form select,.pure-form textarea{background-color:#fff;display:inline-block;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;border:1px solid #a2a9b1;-moz-border-radius:2px;border-radius:2px;padding:.5em;-webkit-box-shadow:inset 0 0 0 1px #fff;-moz-box-shadow:inset 0 0 0 1px #fff;box-shadow:inset 0 0 0 1px #fff;vertical-align:middle}.pure-form input:not([type]){padding:.5em .6em;display:inline-block;border:1px solid #a2a9b1;-moz-border-radius:4px;border-radius:4px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}.pure-form input[type=color]{padding:.2em .5em}.pure-form input[type=url]:focus,.pure-form input[type=date]:focus,.pure-form input[type=month]:focus,.pure-form input[type=time]:focus,.pure-form input[type=datetime]:focus,.pure-form input[type=datetime-local]:focus,.pure-form input[type=week]:focus,.pure-form input[type=tel]:focus,.pure-form input[type=color]:focus,.pure-form input[type=number]:focus,.pure-form input[type=search]:focus,.pure-form input[type=text]:focus,.pure-form input[type=password]:focus,.pure-form input[type=email]:focus,.pure-form select:focus,.pure-form textarea:focus{outline:0;border-color:#36c;-webkit-box-shadow:inset 0 0 0 1px #36c;-moz-box-shadow:inset 0 0 0 1px #36c;box-shadow:inset 0 0 0 1px #36c}.pure-form input:not([type]):focus{outline:0;border-color:#36c}.pure-form input[type=file]:focus,.pure-form input[type=checkbox]:focus,.pure-form input[type=radio]:focus{outline:#36c auto 1px}.pure-form .pure-checkbox,.pure-form .pure-radio{margin:.5em 0;display:block}.pure-form input[type=url][disabled],.pure-form input[type=date][disabled],.pure-form input[type=month][disabled],.pure-form input[type=time][disabled],.pure-form input[type=datetime][disabled],.pure-form input[type=datetime-local][disabled],.pure-form input[type=week][disabled],.pure-form input[type=tel][disabled],.pure-form input[type=color][disabled],.pure-form input[type=number][disabled],.pure-form input[type=search][disabled],.pure-form input[type=text][disabled],.pure-form input[type=password][disabled],.pure-form input[type=email][disabled],.pure-form select[disabled],.pure-form textarea[disabled]{cursor:default;background-color:#eaeded;color:#72777d}.pure-form input:not([type])[disabled]{cursor:default;background-color:#eaeded;color:#cad2d3}.pure-form input[readonly],.pure-form select[readonly],.pure-form textarea[readonly]{background-color:#eee;color:#777;border-color:#ccc}.pure-form input:focus:invalid,.pure-form select:focus:invalid,.pure-form textarea:focus:invalid{color:#b94a48;border-color:#e9322d}.pure-form input[type=file]:focus:invalid:focus,.pure-form input[type=checkbox]:focus:invalid:focus,.pure-form input[type=radio]:focus:invalid:focus{outline-color:#e9322d}.pure-form select{height:2.25em;border:1px solid #a2a9b1;background-color:#fff}.pure-form select[multiple]{height:auto}.pure-form label{margin:.5em 0 .2em}.pure-form fieldset{margin:0;padding:.35em 0 .75em;border:0}.pure-form legend{display:block;width:100%;padding:.3em 0;margin-bottom:.3em;color:#222}.pure-form-stacked input[type=url],.pure-form-stacked input[type=date],.pure-form-stacked input[type=month],.pure-form-stacked input[type=time],.pure-form-stacked input[type=datetime],.pure-form-stacked input[type=datetime-local],.pure-form-stacked input[type=week],.pure-form-stacked input[type=tel],.pure-form-stacked input[type=color],.pure-form-stacked input[type=file],.pure-form-stacked input[type=number],.pure-form-stacked input[type=search],.pure-form-stacked input[type=text],.pure-form-stacked input[type=password],.pure-form-stacked input[type=email],.pure-form-stacked label,.pure-form-stacked select,.pure-form-stacked textarea{display:block;margin:.25em 0}.pure-form-stacked input:not([type]){display:block;margin:.25em 0}.pure-form-aligned .pure-help-inline,.pure-form-aligned input,.pure-form-aligned select,.pure-form-aligned textarea,.pure-form-message-inline{display:inline-block;*display:inline;*zoom:1;vertical-align:middle}.pure-form-aligned textarea{vertical-align:top}.pure-form-aligned .pure-control-group{margin-bottom:.5em}.pure-form-aligned .pure-control-group label{text-align:right;display:inline-block;vertical-align:middle;width:10em;margin:0 1em 0 0}.pure-form-aligned .pure-controls{margin:1.5em 0 0 11em}.pure-form .pure-input-rounded,.pure-form input.pure-input-rounded{-moz-border-radius:2em;border-radius:2em;padding:.5em 1em}.pure-form .pure-group fieldset{margin-bottom:10px}.pure-form .pure-group input,.pure-form .pure-group textarea{display:block;padding:10px;margin:0 0 -1px;-moz-border-radius:0;border-radius:0;position:relative;top:-1px}.pure-form .pure-group input:focus,.pure-form .pure-group textarea:focus{z-index:3}.pure-form .pure-group input:first-child,.pure-form .pure-group textarea:first-child{top:1px;-moz-border-radius:4px 4px 0 0;border-radius:4px 4px 0 0;margin:0}.pure-form .pure-group input:first-child:last-child,.pure-form .pure-group textarea:first-child:last-child{top:1px;-moz-border-radius:4px;border-radius:4px;margin:0}.pure-form .pure-group input:last-child,.pure-form .pure-group textarea:last-child{top:-2px;-moz-border-radius:0 0 4px 4px;border-radius:0 0 4px 4px;margin:0}.pure-form .pure-group button{margin:.35em 0}.pure-form .pure-input-1{width:100%}.pure-form .pure-input-3-4{width:75%}.pure-form .pure-input-2-3{width:66%}.pure-form .pure-input-1-2{width:50%}.pure-form .pure-input-1-3{width:33%}.pure-form .pure-input-1-4{width:25%}.pure-form .pure-help-inline,.pure-form-message-inline{display:inline-block;padding-left:.3em;color:#666;vertical-align:middle;font-size:.875em}.pure-form-message{display:block;color:#666;font-size:.875em}@media only screen and (max-width:480px){.pure-form button[type=submit]{margin:.7em 0 0}.pure-form input:not([type]),.pure-form input[type=url],.pure-form input[type=date],.pure-form input[type=month],.pure-form input[type=time],.pure-form input[type=datetime],.pure-form input[type=datetime-local],.pure-form input[type=week],.pure-form input[type=tel],.pure-form input[type=color],.pure-form input[type=number],.pure-form input[type=search],.pure-form input[type=text],.pure-form input[type=password],.pure-form input[type=email],.pure-form label{margin-bottom:.3em;display:block}.pure-group input:not([type]),.pure-group input[type=url],.pure-group input[type=date],.pure-group input[type=month],.pure-group input[type=time],.pure-group input[type=datetime],.pure-group input[type=datetime-local],.pure-group input[type=week],.pure-group input[type=tel],.pure-group input[type=color],.pure-group input[type=number],.pure-group input[type=search],.pure-group input[type=text],.pure-group input[type=password],.pure-group input[type=email]{margin-bottom:0}.pure-form-aligned .pure-control-group label{margin-bottom:.3em;text-align:left;display:block;width:100%}.pure-form-aligned .pure-controls{margin:1.5em 0 0}.pure-form .pure-help-inline,.pure-form-message,.pure-form-message-inline{display:block;font-size:.75em;padding:.2em 0 .8em}}.search-container{float:none;margin:35.2px auto 1.5em;margin:2.2rem auto 1.5em;max-width:95%;padding:.3em;text-align:center;vertical-align:middle;width:540px}#searchInput{padding:8px;padding:.5rem;font-size:16px;font-size:1rem;line-height:25.6px;line-height:1.6rem;width:100%;padding-right:102.4px;padding-right:6.4rem;height:43.2px;height:2.7rem}.search-container button{padding:8px 16px;padding:.5rem 1rem;vertical-align:middle;margin:0;line-height:25.6px;line-height:1.6rem;font-size:16px;font-size:1rem;z-index:2}.search-container .sprite-icons-search-icon{display:inline-block;vertical-align:middle}.search-container input[type=search]::-webkit-search-cancel-button,.search-container input[type=search]::-webkit-search-decoration,.search-container input[type=search]::-webkit-search-results-button,.search-container input[type=search]::-webkit-search-results-decoration{-webkit-appearance:none}.search-container input::-webkit-calendar-picker-indicator{display:none}#search{-webkit-appearance:none;-moz-border-radius:0;border-radius:0}.search-container .search-input{display:inline-block;width:73%;position:relative;vertical-align:top;margin-right:8px;margin-right:.5rem}.suggestion-link,.suggestions-dropdown{width:100%;-webkit-box-sizing:border-box;-moz-box-sizing:border-box}.search-container .sprite-icons-arrow-down{display:inline-block;vertical-align:middle;position:absolute;top:6px;right:6.5px;margin:0}@media only screen and (max-width:480px){.search-container .pure-form fieldset{margin-left:5px;margin-right:80px}.search-container .search-input{margin-left:5px;margin-right:-70px;margin-bottom:0;width:100%}.search-container .pure-form button{float:right;padding:8px 16px;padding:.5rem 1rem;right:-70px;margin:0}.search-container{margin-top:.2em}}.suggestions-dropdown{position:absolute;left:0;z-index:2;background-color:#fff;padding:0;margin:0;list-style-type:none;text-align:left;border:1px solid #ccc;border-top:0;box-sizing:border-box;display:inline-block}.suggestion-link.active,.suggestion-thumbnail{background-color:#eee}.suggestion-link{color:inherit;display:block;position:relative;min-height:70px;box-sizing:border-box;border-bottom:1px solid #eee;padding:10px 10px 10px 85px;text-decoration:none;white-space:normal}.lang-list-container,.styled-select select{-moz-box-sizing:border-box;overflow:hidden;-webkit-box-sizing:border-box}a.suggestion-link:hover{color:#0645ad;text-decoration:none}.suggestion-highlight,a:hover{text-decoration:underline}a.suggestion-link:active,a.suggestion-link:focus{white-space:normal;outline:0}.suggestion-thumbnail{width:70px;height:100%;position:absolute;left:0;top:0;-webkit-background-size:cover;-moz-background-size:cover;background-size:cover;background-position:center center;background-repeat:no-repeat;background-image:url(portal/wikipedia.org/assets/img/noimage.png);background-image:-webkit-linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0)),url(data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2056%2056%22%20enable-background%3D%22new%200%200%2056%2056%22%3E%0A%20%20%20%20%3Cpath%20fill%3D%22%23eee%22%20d%3D%22M0%200h56v56h-56z%22%2F%3E%0A%20%20%20%20%3Cpath%20fill%3D%22%23999%22%20d%3D%22M36.4%2013.5h-18.6v24.9c0%201.4.9%202.3%202.3%202.3h18.7v-25c.1-1.4-1-2.2-2.4-2.2zm-6.2%203.5h5.1v6.4h-5.1v-6.4zm-8.8%200h6v1.8h-6v-1.8zm0%204.6h6v1.8h-6v-1.8zm0%2015.5v-1.8h13.8v1.8h-13.8zm13.8-4.5h-13.8v-1.8h13.8v1.8zm0-4.7h-13.8v-1.8h13.8v1.8z%22%2F%3E%0A%3C%2Fsvg%3E%0A);background-image:-webkit-linear-gradient(transparent,transparent),url(portal/wikipedia.org/assets/img/noimage.svg) !ie;background-image:-webkit-gradient(linear,left top,left bottom,from(rgba(0,0,0,0)),to(rgba(0,0,0,0))),url(data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2056%2056%22%20enable-background%3D%22new%200%200%2056%2056%22%3E%0A%20%20%20%20%3Cpath%20fill%3D%22%23eee%22%20d%3D%22M0%200h56v56h-56z%22%2F%3E%0A%20%20%20%20%3Cpath%20fill%3D%22%23999%22%20d%3D%22M36.4%2013.5h-18.6v24.9c0%201.4.9%202.3%202.3%202.3h18.7v-25c.1-1.4-1-2.2-2.4-2.2zm-6.2%203.5h5.1v6.4h-5.1v-6.4zm-8.8%200h6v1.8h-6v-1.8zm0%204.6h6v1.8h-6v-1.8zm0%2015.5v-1.8h13.8v1.8h-13.8zm13.8-4.5h-13.8v-1.8h13.8v1.8zm0-4.7h-13.8v-1.8h13.8v1.8z%22%2F%3E%0A%3C%2Fsvg%3E%0A);background-image:-moz-linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0)),url(data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2056%2056%22%20enable-background%3D%22new%200%200%2056%2056%22%3E%0A%20%20%20%20%3Cpath%20fill%3D%22%23eee%22%20d%3D%22M0%200h56v56h-56z%22%2F%3E%0A%20%20%20%20%3Cpath%20fill%3D%22%23999%22%20d%3D%22M36.4%2013.5h-18.6v24.9c0%201.4.9%202.3%202.3%202.3h18.7v-25c.1-1.4-1-2.2-2.4-2.2zm-6.2%203.5h5.1v6.4h-5.1v-6.4zm-8.8%200h6v1.8h-6v-1.8zm0%204.6h6v1.8h-6v-1.8zm0%2015.5v-1.8h13.8v1.8h-13.8zm13.8-4.5h-13.8v-1.8h13.8v1.8zm0-4.7h-13.8v-1.8h13.8v1.8z%22%2F%3E%0A%3C%2Fsvg%3E%0A);background-image:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0)),url(data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2056%2056%22%20enable-background%3D%22new%200%200%2056%2056%22%3E%0A%20%20%20%20%3Cpath%20fill%3D%22%23eee%22%20d%3D%22M0%200h56v56h-56z%22%2F%3E%0A%20%20%20%20%3Cpath%20fill%3D%22%23999%22%20d%3D%22M36.4%2013.5h-18.6v24.9c0%201.4.9%202.3%202.3%202.3h18.7v-25c.1-1.4-1-2.2-2.4-2.2zm-6.2%203.5h5.1v6.4h-5.1v-6.4zm-8.8%200h6v1.8h-6v-1.8zm0%204.6h6v1.8h-6v-1.8zm0%2015.5v-1.8h13.8v1.8h-13.8zm13.8-4.5h-13.8v-1.8h13.8v1.8zm0-4.7h-13.8v-1.8h13.8v1.8z%22%2F%3E%0A%3C%2Fsvg%3E%0A);background-image:-webkit-gradient(linear,left top,left bottom,from(transparent),to(transparent)),url(portal/wikipedia.org/assets/img/noimage.svg) !ie;background-image:-moz-linear-gradient(transparent,transparent),url(portal/wikipedia.org/assets/img/noimage.svg) !ie;background-image:linear-gradient(transparent,transparent),url(portal/wikipedia.org/assets/img/noimage.svg) !ie;background-image:-o-linear-gradient(transparent,transparent),url(portal/wikipedia.org/assets/img/noimage.png)}.suggestion-title{font-size:1.2em;line-height:1.2em;margin:0 0 .5em;color:#555}.suggestion-highlight{font-style:normal}.suggestion-description{font-size:1em;line-height:1.1em;margin:0;color:#666}.search-form{position:relative}.styled-select{display:none;position:absolute;top:10px;bottom:12px;right:12px;height:24px;max-width:95px;padding:0;margin:0;-moz-border-radius:3px;border-radius:3px}.styled-select:hover{background-color:#f8f9fa}.styled-select .hide-arrow{right:32px;max-width:68px;height:24px;padding:0;overflow:hidden;text-align:right}.styled-select select{border:0;box-sizing:border-box;display:inline;height:24px;max-width:110px;min-width:110px;width:110px;line-height:19.5px;background:0 0;-webkit-appearance:none;text-indent:.01px;text-overflow:'';-o-appearance:none!important;opacity:0;-moz-appearance:none;appearance:none;outline:0;cursor:pointer}.search-container .styled-select.no-js .js-langpicker-label,.styled-select-active-helper{display:none}.styled-select.no-js{width:95px}.styled-select.no-js select{margin:0;padding:0 24px 0 8px;color:#54595d;opacity:1}.styled-select.no-js .hide-arrow{width:68px}.styled-select.js-enabled .hide-arrow{padding:0 24px 0 8px}.styled-select.js-enabled select{position:absolute;width:100%;height:100%;background:0 0;border:0;left:0;top:0;z-index:1;margin:0;padding:0 24px 0 0;color:transparent;color:rgba(255,255,255,0)}.styled-select.js-enabled select option{color:#54595d}.styled-select.js-enabled select:hover{background-color:transparent}.styled-select.js-enabled select:focus+.styled-select-active-helper{display:block;width:100%;height:100%;position:absolute;z-index:0;outline:#36c solid 1px;top:0;left:0}.search-container .js-langpicker-label{display:inline-block;color:#54595d;line-height:24px;font-size:12.8px;font-size:.8rem;text-transform:uppercase;margin:0}.styled-select select:hover{background-color:#f8f9fa}.styled-select select::-ms-expand{display:none}.styled-select select:focus{outline:0;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}@-moz-document url-prefix(){.styled-select select{width:110%}}.footer{margin:0 auto;padding:41.6px 1em 1em;padding:2.6rem 1em 1em;font-size:12.8px;font-size:.8rem}.footer:after,.footer:before{content:' ';display:table}.footer:after{clear:both}.footer a,.footer a:focus{white-space:normal}.footer-sidebar{width:30%;float:left;clear:left;margin-bottom:32px;margin-bottom:2rem;vertical-align:top}.central-featured,.central-featured-logo-wrapper,img{vertical-align:middle}.footer-sidebar-content{position:relative;max-width:350px;margin:0 auto}.footer-sidebar-icon{position:absolute;top:0;left:8px;left:.5rem}.footer-sidebar-text{position:relative;color:#54595d;margin:0;padding-left:60px;padding-right:20px}.privacy-policy-links{margin-top:1em}.privacy-policy-links a{display:block}.other-projects{width:70%;display:inline-block}.other-project{position:relative;width:33%;height:90px;float:left}.other-project-link{display:inline-block;min-height:50px}.other-project-icon{position:absolute;display:block;width:50px;top:0;left:0;text-align:center}.other-project .sprite-project-logos{display:inline-block}.other-project-text{margin-left:60px;margin-right:20px}.other-project-tagline,.other-project-title{display:block}.other-project-tagline{color:#54595d;font-size:.95em}@media screen and (max-width:768px){.footer-sidebar,.other-projects{width:100%}.footer{padding-top:1em;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;-moz-box-orient:vertical;-moz-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.footer .footer-sidebar{-webkit-box-ordinal-group:1;-moz-box-ordinal-group:1;-webkit-order:1;-ms-flex-order:1;order:1}.footer .other-projects{-webkit-box-ordinal-group:2;-moz-box-ordinal-group:2;-webkit-order:2;-ms-flex-order:2;order:2}.footer .app-badges{-webkit-box-ordinal-group:3;-moz-box-ordinal-group:3;-webkit-order:3;-ms-flex-order:3;order:3}.footer-sidebar-icon{position:relative;display:block;margin:0 auto 1em;left:0}.footer-sidebar-content{max-width:none}.footer-sidebar-text{margin:0;padding:0;text-align:center}.privacy-policy-links a{display:inline-block;margin:0 .5em}.other-project{width:33%}}.site-license{margin:0;text-align:center;color:#54595d}@media screen and (max-width:480px){.footer{padding:9.6px .5em 1em;padding:.6rem .5em 1em}.other-project{width:50%}}@media screen and (max-width:320px){.other-project-text{margin-left:55px;margin-right:5px;font-size:.9em}}body{background-color:#fff;font:13px/1.5 sans-serif;margin:.3em 0}a,a:active,a:focus{unicode-bidi:embed;white-space:nowrap;outline:0;color:#36c;text-decoration:none}.bookshelf,.langlist>ul>li a{white-space:normal}a:focus{outline:#36c solid 1px}hr{clear:both;height:0;border:0;border-bottom:1px solid #aaa;margin:.2em 1em}.central-textlogo{margin:1em 0 .5em;text-align:center;font-size:30px;line-height:110%;font-family:'Linux Libertine','Hoefler Text',Georgia,'Times New Roman',Times,serif;font-weight:400;padding:10px 0;-moz-font-feature-settings:"ss05=1";-moz-font-feature-settings:"ss05";-webkit-font-feature-settings:"ss05";-ms-font-feature-settings:"ss05";font-feature-settings:"ss05"}.central-featured{position:relative;text-align:center;max-width:100%;width:42em;margin:0 auto}.central-featured-lang{position:absolute;width:12em}.central-featured-lang .link-box{display:block;padding:0;text-decoration:none;white-space:normal}.central-featured-lang .link-box:hover strong{text-decoration:underline}.central-featured-lang .link-box em,.central-featured-lang .link-box small{color:#000;text-decoration:none}.central-featured-lang strong{font-size:larger}.central-featured-lang em{font-style:italic}.central-featured-lang .emNonItalicLang{font-style:normal}.lang1{top:0;right:60%}.lang2{top:0;left:60%}.lang3{top:20%;right:70%}.lang4{top:20%;left:70%}.lang5{top:40%;right:72%}.lang6{top:40%;left:72%}.lang7{top:60%;right:70%}.lang8{top:60%;left:70%}.lang9{top:80%;right:60%}.lang10{top:80%;left:60%}.bookshelf-container{width:100%;font-size:13px;font-weight:700;line-height:20px}.bookshelf-container .text{padding:0 .5em}.bookshelf{display:block}.bookshelf-container .bookend{display:inline-block;vertical-align:top}.langlist-tiny{margin:.5em 3em 3em}.langlist-others{margin:0 3em 2em;font-weight:700}.hlist ul{margin:0;padding:0}.hlist li,.hlist ul ul{display:inline}.hlist li:before{content:" &#38;#183; ";font-weight:700}.hlist li:first-child:before{content:none}.hlist li>ul:before{content:"\00a0("}.hlist li>ul:after{content:") "}@media print{body{background-color:transparent}a{color:#000!important;background:0 0!important;padding:0!important}a:link,a:visited{color:#520;background:0 0}img{border:0}}@media all and (max-width:480px){.central-textlogo{line-height:normal;padding:0;margin:0;height:70px;text-align:center;position:relative}.central-textlogo img{height:35px;width:auto;margin-top:22.5px}.central-featured{width:auto;height:auto;padding-top:2em;text-align:left;font-size:.8em;margin-top:4em}.central-featured-logo{right:0;left:.8em;top:-70px;margin-top:-4em;width:70px;position:absolute}.central-featured-lang{right:auto;top:auto;position:relative;left:auto;text-align:left;margin-left:1em;display:block;float:left;width:40%;height:5em}.language-search,.search-container label{display:none}.search-container{margin-top:0;height:6em;position:absolute;top:5em;left:0;right:0;max-width:100%;width:auto;padding:0;text-align:left}.search-form #searchInput{max-width:40%;vertical-align:middle}.search-form .formBtn{max-width:25%;vertical-align:middle}form fieldset{margin:0;border-left:0;border-right:0}.bookshelf{width:auto;left:auto;overflow:hidden;text-align:left}.bookshelf-container .bookend{width:40px!important}.bookshelf-container .bookend:last-child{display:none}.langlist a{word-wrap:break-word;white-space:normal}.langlist{font-size:.7em}.bookshelf-container,.langlist{margin:1em 1em 0;text-align:left;width:auto}hr{margin-top:.5em}}.bookshelf,.lang-list-button-wrapper{text-align:center}@media all and (max-width:375px){.central-textlogo{left:84px;display:inline-block}}@media all and (max-width:240px){.central-featured-lang{width:100%}.central-textlogo img{width:100px;height:auto}}@media (-webkit-min-device-pixel-ratio:1.5),(min--moz-device-pixel-ratio:1.5),(min-resolution:1.5dppx),(min-resolution:144dpi){.bookshelf-container .bookend{-webkit-background-size:40px auto;-moz-background-size:40px auto;background-size:40px auto}}@media (-webkit-min-device-pixel-ratio:2),(min--moz-device-pixel-ratio:2),(min-resolution:2dppx),(min-resolution:192dpi){.bookshelf-container .bookend{-webkit-background-size:40px auto;-moz-background-size:40px auto;background-size:40px auto}}@media (min--moz-device-pixel-ratio:2),(-webkit-min-device-pixel-ratio:2),(min-resolution:2dppx),(min-resolution:192dpi){#footer,.search-form fieldset{border-width:.5px}hr{border-bottom-width:.5px}}@supports (-webkit-marquee-style:slide){#footer,.search-form fieldset{border-width:1px}hr{border-bottom-width:1px}}.formBtn{background-color:#fff;border:1px solid #e4e4e4;-moz-border-radius:4px;border-radius:4px;border-top:1px solid #e8e8e8;border-bottom:1px solid #cecece;font-size:11px;padding:1px 8px;margin-left:.3em;vertical-align:top}.formBtn .sprite-icons-search_icon{display:inline-block;vertical-align:middle}.formBtn:focus{background-color:silver;outline:0}.formBtn:active{background-color:#b0b0b0}.lang-list-button,.lang-list-container{background-color:#f8f9fa;position:relative}#langsearch-input{padding:1px 2px;font-size:11px;vertical-align:top}.js-enabled #js-localized-slogan,.js-enabled .central-featured,.js-enabled .jsl10n{visibility:hidden}.jsl10n-visible .jsl10n{visibility:visible}.search-container{margin-top:0}.central-featured{height:25em}.central-featured-logo-wrapper{line-height:24em}.central-featured-lang strong{display:block}.localized-slogan{font-size:16px;display:block;-webkit-font-feature-settings:normal;-moz-font-feature-settings:normal;font-feature-settings:normal;font-variant:normal;font-weight:400;margin-bottom:-20px;font-family:'Linux Libertine','Times New Roman',serif}@media all and (max-width:480px){.central-textlogo img{margin-top:8px}.localized-slogan{margin-left:18px}.search-container{margin-top:0}}hr{border-color:#c8ccd1}.lang-list-container{margin:-16px auto 48px;margin:-1rem auto 3rem;box-sizing:border-box;max-height:0;width:80%;-webkit-transition:max-height .5s ease-out,visibility .5s ease-in 1s;-moz-transition:max-height .5s ease-out,visibility .5s ease-in 1s;transition:max-height .5s ease-out,visibility .5s ease-in 1s}.js-enabled .lang-list-container{visibility:hidden}.lang-list-active .lang-list-container,.no-js .lang-list-container{visibility:visible;max-height:10000px;-webkit-transition:max-height 1s ease-in .2s,visibility 1s ease-in 0s;-moz-transition:max-height 1s ease-in .2s,visibility 1s ease-in 0s;transition:max-height 1s ease-in .2s,visibility 1s ease-in 0s}.no-js .lang-list-button{outline-color:#fff}.lang-list-button{display:inline;padding:.5em 1em;margin:0 auto;color:#36c;font-size:12.8px;font-size:.8rem;line-height:1;font-weight:400;z-index:1;border:1px solid #a2a9b1;-moz-border-radius:2px;border-radius:2px;outline:#fff solid 16px;outline:#fff solid 1rem;-webkit-transition:outline-width 50ms ease-in .5s;-moz-transition:outline-width 50ms ease-in .5s;transition:outline-width 50ms ease-in .5s}.lang-list-button:hover{background-color:#fff;border-color:#a2a9b1}.lang-list-button:focus{border-color:#36c;-webkit-box-shadow:inset 0 0 0 1px #36c;-moz-box-shadow:inset 0 0 0 1px #36c;box-shadow:inset 0 0 0 1px #36c}.lang-list-active .lang-list-button{background-color:#fff;border-color:#72777d;outline:#fff solid 1px;-webkit-transition-delay:0s;-moz-transition-delay:0s;transition-delay:0s}.lang-list-button-text{vertical-align:middle;padding:0 .5em}.lang-list-button i{display:inline-block;vertical-align:middle}.no-js .lang-list-border,.no-js .lang-list-button{display:none}.lang-list-border{display:block;margin:-16px auto 16px;margin:-1rem auto 1rem;position:relative;max-width:460px;width:80%;height:1px;background-color:#c8ccd1;-webkit-transition:max-width .2s ease-out .4s;-moz-transition:max-width .2s ease-out .4s;transition:max-width .2s ease-out .4s}.app-badges,.bookshelf span{background-color:#f8f9fa}.lang-list-active .lang-list-border{max-width:85%;-webkit-transition-delay:0s;-moz-transition-delay:0s;transition-delay:0s}.no-js .lang-list-content{padding:0}.lang-list-content{position:relative;width:100%;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:16px 16px 0;padding:1rem 1rem 0}.sprite-icons-arrow-down-blue{-webkit-transition:-webkit-transform .2s ease-out;-moz-transition:transform .2s ease-out,-moz-transform .2s ease-out;transition:transform .2s ease-out;transition:transform .2s ease-out,-webkit-transform .2s ease-out,-moz-transform .2s ease-out}.lang-list-active .sprite-icons-arrow-down-blue{-webkit-transform:rotate(180deg);-moz-transform:rotate(180deg);-ms-transform:rotate(180deg);transform:rotate(180deg)}.bookshelf-container{margin:24px 0 16px;margin:1.5rem 0 1rem;display:block;overflow:visible;height:1px}.bookshelf{border-top:1px solid #c8ccd1;-webkit-box-shadow:0 -1px 0 #fff;-moz-box-shadow:0 -1px 0 #fff;box-shadow:0 -1px 0 #fff}.bookshelf span{position:relative;top:-11.2px;top:-.7rem;font-weight:400}.langlist{text-align:left;width:auto;margin:16px 0;margin:1rem 0}.langlist-large{font-size:inherit}.langlist>ul{-webkit-column-width:7rem;-moz-column-width:7rem;column-width:7rem}.langlist>ul>li{display:block;line-height:1.7;-webkit-column-break-inside:avoid;page-break-inside:avoid;break-inside:avoid}.no-js .langlist>ul{text-align:center;list-style-type:circle}.no-js .langlist>ul>li{display:inline-block;padding:0 8px;padding:0 .5rem}.langlist>ul>li:before{content:none}.langlist-others>ul{-webkit-column-count:1;-moz-column-count:1;column-count:1;text-align:center}.langlist-others>ul li{display:inline}.langlist-others>ul li:before{content:" &#38;#183; "}.langlist-others>ul li:first-child:before{content:none}@media all and (max-width:480px){.langlist{font-size:inherit}.lang-list-container{width:auto;margin-left:8px;margin-left:.5rem;margin-right:8px;margin-right:.5rem}.bookshelf{overflow:visible}.central-featured{height:auto}.central-featured:after{visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0}.central-featured-lang{font-size:12.8px;font-size:.8rem;width:33%;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin:0;padding:0 16px;padding:0 1rem;text-align:center}.central-featured-lang strong{font-size:12.8px;font-size:.8rem}}@media all and (max-width:375px){.central-featured-lang{font-size:11.2px;font-size:.7rem}}.app-badges .footer-sidebar-text{padding-top:8px;padding-top:.5rem;padding-bottom:8px;padding-bottom:.5rem}.app-badges .footer-sidebar-icon{top:8px;top:.5rem}.app-badges ul{margin:0;padding:0;list-style-type:none}@media screen and (max-width:768px){.app-badges .footer-sidebar-content{max-width:350px;text-align:center}.app-badges .footer-sidebar-icon{display:inline-block;position:relative;margin:0;top:-3px;left:0;vertical-align:middle;-webkit-transform:scale(.7);-moz-transform:scale(.7);-ms-transform:scale(.7);transform:scale(.7)}.app-badge{float:left;width:49%}.app-badge-android a,.app-badge-ios a{display:block}.app-badge-ios{border-right:1px solid}.app-badge-fulllist{width:100%;margin:1.5em 0 .5em}}.bookshelf-container .bookend,.otherprojects-icon{*zoom:1;*display:inline}#search-container-pab1.search-container #searchInput{*padding:0;*line-height:2.5em;*text-indent:1em;*width:95%;*position:relative;*top:-2px}.suggestion-item{*width:auto}.central-featured-logo{*display:inline-block;*line-height:26em;*top:6em;*position:absolute;*left:13.5em}#search-input,.search-container button{*display:inline}#searchInput{*padding:8px 0 0 8px;*width:90%;*height:34px}.langlist ul{*text-align:center}.langlist ul li{*display:inline!important;*padding-left:5px;*padding-right:5px}/*]]>*/</style>
+    <style>/*<![CDATA[*/.sprite-icons{background-image:url(portal/wikipedia.org/assets/img/sprite-icons.png?27378e2bb51199321b32dd1ac3f5cd755adc21a5)}@media (-webkit-min-device-pixel-ratio:1.5),(min-resolution:144dpi){.sprite-icons{background-image:url(portal/wikipedia.org/assets/img/sprite-icons@1.5x.png?8b4adbf1a17a5d1b55e73aa53a5e859294cfe718);background-size:23px 55px}}@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi){.sprite-icons{background-image:url(portal/wikipedia.org/assets/img/sprite-icons@2x.png?896c2ebd1d3ad62927487d7ab07fa88213d5bfe8);background-size:23px 55px}}.sprite-icons-arrow-down-blue{background-position:0 0;width:9px;height:5px}.sprite-icons-arrow-down{background-position:0 -5px;width:12px;height:12px}.sprite-icons-translate-icon{background-position:0 -17px;width:23px;height:18px}.sprite-icons-search-icon{background-position:0 -35px;width:20px;height:20px}.sprite-project-logos{background-image:url(portal/wikipedia.org/assets/img/sprite-project-logos.png?dea6426c061216dfcba1d2d57d33f4ee315df1c2)}@media (-webkit-min-device-pixel-ratio:1.5),(min-resolution:144dpi){.sprite-project-logos{background-image:url(portal/wikipedia.org/assets/img/sprite-project-logos@1.5x.png?c7e7dd97044bf399e9b7d70d147c0f35c42c4aa8);background-size:47px 504px}}@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi){.sprite-project-logos{background-image:url(portal/wikipedia.org/assets/img/sprite-project-logos@2x.png?601e923fc4b474342bb07cedd9ecf7ec11da36d4);background-size:47px 504px}}.sprite-project-logos-Wikinews-logo_sister{background-position:0 0;width:47px;height:26px}.sprite-project-logos-Wikidata-logo_sister{background-position:0 -26px;width:47px;height:27px}.sprite-project-logos-Wikiversity-logo_sister{background-position:0 -52px;width:35px;height:28px}.sprite-project-logos-Wiktionary-logo_sister{background-position:0 -80px;width:35px;height:35px}.sprite-project-logos-Wikibooks-logo_sister{background-position:0 -115px;width:35px;height:35px}.sprite-project-logos-Wikivoyage-logo_sister{background-position:0 -150px;width:35px;height:35px}.sprite-project-logos-Meta-logo_sister{background-position:0 -185px;width:35px;height:35px}.sprite-project-logos-MediaWiki-logo_sister{background-position:0 -220px;width:47px;height:36px}.sprite-project-logos-Wikisource-logo_sister{background-position:0 -256px;width:35px;height:37px}.sprite-project-logos-Wikimedia-logo-grey{background-position:0 -292px;width:40px;height:41px}.sprite-project-logos-Wikispecies-logo_sister{background-position:0 -333px;width:35px;height:41px}.sprite-project-logos-Wikiquote-logo_sister{background-position:0 -374px;width:35px;height:42px}.sprite-project-logos-Wikipedia_app_tile{background-position:0 -415px;width:42px;height:42px}.sprite-project-logos-Commons-logo_sister{background-position:0 -457px;width:35px;height:47px}/*]]>*/</style>
+  </head>
+<body id="www-wikipedia-org" class="jsl10n-visible">
+    <h1 class="central-textlogo" style="font-variant: small-caps" alt="WikipediA" title="Wikipedia">
+      <img src="portal/wikipedia.org/assets/img/Wikipedia_wordmark.png" srcset="portal/wikipedia.org/assets/img/Wikipedia_wordmark@1.5x.png 1.5x, portal/wikipedia.org/assets/img/Wikipedia_wordmark@2x.png 2x" alt="WikipediA" title="Wikipedia" height="30" width="174" />
+      <strong id="js-localized-slogan" class="localized-slogan" style="visibility: visible;">The Free Encyclopedia</strong>
+    </h1>
+    <!-- container div for the central logo and the links to the most viewed language editions -->
+    <div class="central-featured" data-el-section="primary links" style="visibility: visible;">
+      <!-- logo -->
+      <div class="central-featured-logo-wrapper">
+        <img class="central-featured-logo" src="portal/wikipedia.org/assets/img/Wikipedia-logo-v2.png" srcset="portal/wikipedia.org/assets/img/Wikipedia-logo-v2@1.5x.png 1.5x, portal/wikipedia.org/assets/img/Wikipedia-logo-v2@2x.png 2x" alt="Wikipedia Logo" width="200" />
+      </div>
+      <!-- Rankings from http://stats.wikimedia.org/EN/Sitemap.htm -->
+      <!-- Article counts from http://meta.wikimedia.org/wiki/List_of_Wikipedias/Table -->
+      <!-- #1. en.wikipedia.org - 1 889 918 000 views/day -->
+      <div class="central-featured-lang lang1" lang="en">
+        <a id="js-link-box-en" href="//en.wikipedia.org/" title="English &#38;#151; Wikipedia &#38;#151; The Free Encyclopedia" class="link-box" data-slogan="The Free Encyclopedia">
+          <strong>English</strong>
+          <small>5&#38;#160;323&#38;#160;000+ articles</small>
+        </a>
+      </div>
+      <!-- #2. ja.wikipedia.org - 245 461 000 views/day -->
+      <div class="central-featured-lang lang2" lang="ja">
+        <a id="js-link-box-ja" href="//ja.wikipedia.org/" title="Nihongo &#38;#151; ??????? &#38;#151; ???????" class="link-box" data-slogan="???????">
+          <strong>???</strong>
+          <small>1&#38;#160;044&#38;#160;000+ ??</small>
+        </a>
+      </div>
+      <!-- #3. de.wikipedia.org - 242 897 000 views/day -->
+      <div class="central-featured-lang lang3" lang="de">
+        <a id="js-link-box-de" href="//de.wikipedia.org/" title="Deutsch &#38;#151; Wikipedia &#38;#151; Die freie Enzyklop&#38;#228;die" class="link-box" data-slogan="Die freie Enzyklop&#38;#228;die">
+          <strong>Deutsch</strong>
+          <small>2&#38;#160;016&#38;#160;000+ Artikel</small>
+        </a>
+      </div>
+      <!-- #4. es.wikipedia.org - 205 891 000 views/day -->
+      <div class="central-featured-lang lang4" lang="es">
+        <a id="js-link-box-es" href="//es.wikipedia.org/" title="Espa&#38;#241;ol &#38;#151; Wikipedia &#38;#151; La enciclopedia libre" class="link-box" data-slogan="La enciclopedia libre">
+          <strong>Espa&#38;#241;ol</strong>
+          <small>1&#38;#160;306&#38;#160;000+ art&#38;#237;culos</small>
+        </a>
+      </div>
+      <!-- #5. ru.wikipedia.org - 202 769 000 views/day -->
+      <div class="central-featured-lang lang5" lang="ru">
+        <a id="js-link-box-ru" href="//ru.wikipedia.org/" title="Russkiy &#38;#151; ????????? &#38;#151; ????????? ????????????" class="link-box" data-slogan="????????? ????????????">
+          <strong>???????</strong>
+          <small>1&#38;#160;363&#38;#160;000+ ??????</small>
+        </a>
+      </div>
+      <!-- #6. fr.wikipedia.org - 175 356 000 views/day -->
+      <div class="central-featured-lang lang6" lang="fr">
+        <a id="js-link-box-fr" href="//fr.wikipedia.org/" title="Fran&#38;#231;ais &#38;#151; Wikip&#38;#233;dia &#38;#151; L&#38;#146;encyclop&#38;#233;die libre" class="link-box" data-slogan="L&#38;#146;encyclop&#38;#233;die libre">
+          <strong>Fran&#38;#231;ais</strong>
+          <small>1&#38;#160;829&#38;#160;000+ articles</small>
+        </a>
+      </div>
+      <!-- #7. it.wikipedia.org - 123 071 000 views/day -->
+      <div class="central-featured-lang lang7" lang="it">
+        <a id="js-link-box-it" href="//it.wikipedia.org/" title="Italiano &#38;#151; Wikipedia &#38;#151; L&#38;#146;enciclopedia libera" class="link-box" data-slogan="L&#38;#146;enciclopedia libera">
+          <strong>Italiano</strong>
+          <small>1&#38;#160;323&#38;#160;000+ voci</small>
+        </a>
+      </div>
+      <!-- #8. zh.wikipedia.org - 82 184 000 views/day -->
+      <div class="central-featured-lang lang8" lang="zh">
+        <a id="js-link-box-zh" href="//zh.wikipedia.org/" title="Zh?ngw&#38;#233;n &#38;#151; ???? &#38;#151; ???????" class="link-box" data-converttitle-hans="Zh?ngw&#38;#233;n &#38;#151; ???? &#38;#151; ???????" data-slogan="???????">
+          <strong>??</strong>
+          <small>
+            918&#38;#160;000+
+            <span data-convert-hans="??" id="zh_art">??</span>
+          </small>
+        </a>
+      </div>
+      <!-- #9. pt.wikipedia.org - 63 488 000 views/day -->
+      <div class="central-featured-lang lang9" lang="pt">
+        <a id="js-link-box-pt" href="//pt.wikipedia.org/" title="Portugu&#38;#234;s &#38;#151; Wikip&#38;#233;dia &#38;#151; A enciclop&#38;#233;dia livre" class="link-box" data-slogan="A enciclop&#38;#233;dia livre">
+          <strong>Portugu&#38;#234;s</strong>
+          <small>951&#38;#160;000+ artigos</small>
+        </a>
+      </div>
+      <!-- #10. pl.wikipedia.org - 61 087 000 views/day -->
+      <div class="central-featured-lang lang10" lang="pl">
+        <a id="js-link-box-pl" href="//pl.wikipedia.org/" title="Polski &#38;#151; Wikipedia &#38;#151; Wolna encyklopedia" class="link-box" data-slogan="Wolna encyklopedia">
+          <strong>Polski</strong>
+          <small>1&#38;#160;201&#38;#160;000+ hase?</small>
+        </a>
+      </div>
+    </div>
+    <!-- Search form -->
+    <div class="search-container">
+      <form class="pure-form" id="search-form" action="//www.wikipedia.org/search-redirect.php" data-el-section="search">
+        <fieldset>
+          <!-- search-redirect.php is project-independent, requires a family -->
+          <input name="family" value="wikipedia" type="hidden" />
+          <input id="hiddenLanguageInput" name="language" value="en" type="hidden" />
+          <div class="search-input" id="search-input">
+            <input id="searchInput" name="search" size="20" autofocus="autofocus" accesskey="F" dir="auto" results="10" autocomplete="off" list="suggestions" style="padding-right: 64px;" type="search" />
+            <div class="styled-select js-enabled">
+              <div class="hide-arrow">
+                <label for="language" id="jsLangLabel" class="js-langpicker-label">en</label>
+                <select id="searchLanguage" name="language">
+                  <!-- 100,000+ content pages, sorted by romanization -->
+                  <option value="ar" lang="ar">???????</option>
+                  <!-- Al-?Arab?yah -->
+                  <option value="az" lang="az">Az?rbaycanca</option>
+                  <option value="bg" lang="bg">?????????</option>
+                  <!-- B?lgarski -->
+                  <option value="nan" lang="nan">B&#38;#226;n-l&#38;#226;m-g&#38;#250; / H?-l&#38;#243;-o?</option>
+                  <option value="be" lang="be">?????????? (???????????)</option>
+                  <!-- Belaruskaya (Akademichnaya) -->
+                  <option value="ca" lang="ca">Catal&#38;#224;</option>
+                  <option value="cs" lang="cs">?e&#38;#154;tina</option>
+                  <option value="da" lang="da">Dansk</option>
+                  <option value="de" lang="de">Deutsch</option>
+                  <option value="et" lang="et">Eesti</option>
+                  <option value="el" lang="el">????????</option>
+                  <!-- Ell?nik&#38;#225; -->
+                  <option value="en" selected="selected" lang="en">English</option>
+                  <!-- English -->
+                  <option value="es" lang="es">Espa&#38;#241;ol</option>
+                  <option value="eo" lang="eo">Esperanto</option>
+                  <option value="eu" lang="eu">Euskara</option>
+                  <option value="fa" lang="fa">?????</option>
+                  <!-- F?rsi -->
+                  <option value="fr" lang="fr">Fran&#38;#231;ais</option>
+                  <option value="gl" lang="gl">Galego</option>
+                  <option value="ko" lang="ko">???</option>
+                  <!-- Hangugeo -->
+                  <option value="hy" lang="hy">???????</option>
+                  <!-- Hayeren -->
+                  <option value="hi" lang="hi">??????</option>
+                  <!-- Hind? -->
+                  <option value="hr" lang="hr">Hrvatski</option>
+                  <option value="id" lang="id">Bahasa Indonesia</option>
+                  <option value="it" lang="it">Italiano</option>
+                  <option value="he" lang="he">?????</option>
+                  <!-- ?Ivrit -->
+                  <option value="ka" lang="ka">???????</option>
+                  <!-- Kartuli -->
+                  <option value="la" lang="la">Latina</option>
+                  <option value="lt" lang="lt">Lietuvi?</option>
+                  <option value="hu" lang="hu">Magyar</option>
+                  <option value="ms" lang="ms">Bahasa Melayu</option>
+                  <option value="min" lang="min">Bahaso Minangkabau</option>
+                  <option value="nl" lang="nl">Nederlands</option>
+                  <option value="ja" lang="ja">???</option>
+                  <!-- Nihongo -->
+                  <option value="no" lang="nb">Norsk (Bokm&#38;#229;l)</option>
+                  <option value="nn" lang="nn">Norsk (Nynorsk)</option>
+                  <option value="ce" lang="ce">???????</option>
+                  <!-- Nox&#38;#231;iyn -->
+                  <option value="uz" lang="uz">O?zbekcha / ???????</option>
+                  <option value="pl" lang="pl">Polski</option>
+                  <option value="pt" lang="pt">Portugu&#38;#234;s</option>
+                  <option value="kk" lang="kk">??????? / Qazaq?a / ???????</option>
+                  <option value="ro" lang="ro">Rom&#38;#226;n?</option>
+                  <option value="ru" lang="ru">???????</option>
+                  <!-- Russkiy -->
+                  <option value="simple" lang="en">Simple English</option>
+                  <option value="ceb" lang="ceb">Sinugboanong Binisaya</option>
+                  <option value="sk" lang="sk">Sloven?ina</option>
+                  <option value="sl" lang="sl">Sloven&#38;#154;?ina</option>
+                  <option value="sr" lang="sr">?????? / Srpski</option>
+                  <option value="sh" lang="sh">Srpskohrvatski / ??????????????</option>
+                  <option value="fi" lang="fi">Suomi</option>
+                  <option value="sv" lang="sv">Svenska</option>
+                  <option value="th" lang="th">???????</option>
+                  <!-- Phasa Thai -->
+                  <option value="tr" lang="tr">T&#38;#252;rk&#38;#231;e</option>
+                  <!-- Turkce -->
+                  <option value="uk" lang="uk">??????????</option>
+                  <!-- Ukrayins&#38;#146;ka -->
+                  <option value="ur" lang="ur">????</option>
+                  <!-- Urdu -->
+                  <option value="vi" lang="vi">Ti?ng Vi?t</option>
+                  <option value="vo" lang="vo">Volap&#38;#252;k</option>
+                  <option value="war" lang="war">Winaray</option>
+                  <option value="zh" lang="zh">??</option>
+                  <!-- Zh?ngw&#38;#233;n -->
+                </select>
+                <div class="styled-select-active-helper"></div>
+              </div>
+              <i class="sprite-icons sprite-icons-arrow-down"></i>
+            </div>
+            <div id="typeahead-suggestions"></div>
+          </div>
+          <button class="pure-button pure-button-primary-progressive" type="submit">
+            <i class="sprite-icons sprite-icons-search-icon"></i>
+          </button>
+          <input value="Go" name="go" type="hidden" />
+        </fieldset>
+      </form>
+    </div>
+    <div class="lang-list-button-wrapper">
+      <button id="js-lang-list-button" class="lang-list-button">
+        <i class="sprite-icons sprite-icons-translate-icon"></i>
+        <span class="lang-list-button-text jsl10n" data-jsl10n="language-button-text">Read Wikipedia in your language</span>
+        <i class="sprite-icons sprite-icons-arrow-down-blue"></i>
+      </button>
+    </div>
+    <div class="lang-list-border"></div>
+    <div class="lang-list-container">
+      <div id="js-lang-lists" class="lang-list-content">
+        <!-- Bookshelves -->
+        <h2 class="bookshelf-container">
+          <span class="bookshelf">
+            <span class="text">1&#38;#160;000&#38;#160;000+</span>
+          </span>
+        </h2>
+        <!-- 1,000,000+ content pages -->
+        <div class="langlist langlist-large hlist" data-el-section="secondary links">
+          <ul>
+            <li>
+              <a href="//de.wikipedia.org/" lang="de">Deutsch</a>
+            </li>
+            <li>
+              <a href="//en.wikipedia.org/" title="English" lang="en">English</a>
+            </li>
+            <li>
+              <a href="//es.wikipedia.org/" lang="es">Espa&#38;#241;ol</a>
+            </li>
+            <li>
+              <a href="//fr.wikipedia.org/" lang="fr">Fran&#38;#231;ais</a>
+            </li>
+            <li>
+              <a href="//it.wikipedia.org/" lang="it">Italiano</a>
+            </li>
+            <li>
+              <a href="//nl.wikipedia.org/" lang="nl">Nederlands</a>
+            </li>
+            <li>
+              <a href="//ja.wikipedia.org/" title="Nihongo" lang="ja">???</a>
+            </li>
+            <li>
+              <a href="//pl.wikipedia.org/" lang="pl">Polski</a>
+            </li>
+            <li>
+              <a href="//ru.wikipedia.org/" title="Russkiy" lang="ru">???????</a>
+            </li>
+            <li>
+              <a href="//ceb.wikipedia.org/" lang="ceb">Sinugboanong Binisaya</a>
+            </li>
+            <li>
+              <a href="//sv.wikipedia.org/" lang="sv">Svenska</a>
+            </li>
+            <li>
+              <a href="//vi.wikipedia.org/" lang="vi">Ti?ng Vi?t</a>
+            </li>
+            <li>
+              <a href="//war.wikipedia.org/" lang="war">Winaray</a>
+            </li>
+          </ul>
+        </div>
+        <!-- Bookshelves -->
+        <h2 class="bookshelf-container">
+          <span class="bookshelf">
+            <span class="text">100&#38;#160;000+</span>
+          </span>
+        </h2>
+        <!-- 100,000+ content pages -->
+        <div class="langlist langlist-large hlist" data-el-section="secondary links">
+          <ul>
+            <li>
+              <a href="//ar.wikipedia.org/" title="Al-?Arab?yah" lang="ar">
+                <bdi dir="rtl">???????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//az.wikipedia.org/" lang="az">Az?rbaycanca</a>
+            </li>
+            <li>
+              <a href="//bg.wikipedia.org/" title="B?lgarski" lang="bg">?????????</a>
+            </li>
+            <li>
+              <a href="//zh-min-nan.wikipedia.org/" lang="nan">B&#38;#226;n-l&#38;#226;m-g&#38;#250; / H?-l&#38;#243;-o?</a>
+            </li>
+            <li>
+              <a href="//be.wikipedia.org/" title="Belaruskaya (Akademichnaya)" lang="be">?????????? (???????????)</a>
+            </li>
+            <li>
+              <a href="//ca.wikipedia.org/" lang="ca">Catal&#38;#224;</a>
+            </li>
+            <li>
+              <a href="//cs.wikipedia.org/" lang="cs">?e&#38;#154;tina</a>
+            </li>
+            <li>
+              <a href="//da.wikipedia.org/" lang="da">Dansk</a>
+            </li>
+            <li>
+              <a href="//et.wikipedia.org/" lang="et">Eesti</a>
+            </li>
+            <li>
+              <a href="//el.wikipedia.org/" title="Ell?nik&#38;#225;" lang="el">????????</a>
+            </li>
+            <li>
+              <a href="//eo.wikipedia.org/" lang="eo">Esperanto</a>
+            </li>
+            <li>
+              <a href="//eu.wikipedia.org/" lang="eu">Euskara</a>
+            </li>
+            <li>
+              <a href="//fa.wikipedia.org/" title="F?rsi" lang="fa">
+                <bdi dir="rtl">?????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//gl.wikipedia.org/" lang="gl">Galego</a>
+            </li>
+            <li>
+              <a href="//ko.wikipedia.org/" title="Hangugeo" lang="ko">???</a>
+            </li>
+            <li>
+              <a href="//hy.wikipedia.org/" title="Hayeren" lang="hy">???????</a>
+            </li>
+            <li>
+              <a href="//hi.wikipedia.org/" title="Hind?" lang="hi">??????</a>
+            </li>
+            <li>
+              <a href="//hr.wikipedia.org/" lang="hr">Hrvatski</a>
+            </li>
+            <li>
+              <a href="//id.wikipedia.org/" lang="id">Bahasa Indonesia</a>
+            </li>
+            <li>
+              <a href="//he.wikipedia.org/" title="?Ivrit" lang="he">
+                <bdi dir="rtl">?????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//ka.wikipedia.org/" title="Kartuli" lang="ka">???????</a>
+            </li>
+            <li>
+              <a href="//la.wikipedia.org/" lang="la">Latina</a>
+            </li>
+            <li>
+              <a href="//lt.wikipedia.org/" lang="lt">Lietuvi?</a>
+            </li>
+            <li>
+              <a href="//hu.wikipedia.org/" lang="hu">Magyar</a>
+            </li>
+            <li>
+              <a href="//ms.wikipedia.org/" lang="ms">Bahasa Melayu</a>
+            </li>
+            <li>
+              <a href="//min.wikipedia.org/" lang="min">Bahaso Minangkabau</a>
+            </li>
+            <li lang="no">
+              Norsk
+              <ul>
+                <li>
+                  <a href="//no.wikipedia.org/" lang="nb">Bokm&#38;#229;l</a>
+                </li>
+                <li>
+                  <a href="//nn.wikipedia.org/" lang="nn">Nynorsk</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="//ce.wikipedia.org/" title="Nox&#38;#231;iyn" lang="ce">???????</a>
+            </li>
+            <li>
+              <a href="//uz.wikipedia.org/" lang="uz">O?zbekcha / ???????</a>
+            </li>
+            <li>
+              <a href="//pt.wikipedia.org/" lang="pt">Portugu&#38;#234;s</a>
+            </li>
+            <li>
+              <a href="//kk.wikipedia.org/" lang="kk">
+                <span lang="kk-Cyrl">???????</span>
+                /
+                <span lang="kk-Latn">Qazaq?a</span>
+                /
+                <bdi dir="rtl" lang="kk-Arab">???????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//ro.wikipedia.org/" lang="ro">Rom&#38;#226;n?</a>
+            </li>
+            <li>
+              <a href="//simple.wikipedia.org/" lang="en">Simple English</a>
+            </li>
+            <li>
+              <a href="//sk.wikipedia.org/" lang="sk">Sloven?ina</a>
+            </li>
+            <li>
+              <a href="//sl.wikipedia.org/" lang="sl">Sloven&#38;#154;?ina</a>
+            </li>
+            <li>
+              <a href="//sr.wikipedia.org/" lang="sr">?????? / Srpski</a>
+            </li>
+            <li>
+              <a href="//sh.wikipedia.org/" lang="sh">Srpskohrvatski / ??????????????</a>
+            </li>
+            <li>
+              <a href="//fi.wikipedia.org/" lang="fi">Suomi</a>
+            </li>
+            <li>
+              <a href="//th.wikipedia.org/" title="Phasa Thai" lang="th">???????</a>
+            </li>
+            <li>
+              <a href="//tr.wikipedia.org/" title="Turkce" lang="tr">T&#38;#252;rk&#38;#231;e</a>
+            </li>
+            <li>
+              <a href="//uk.wikipedia.org/" title="Ukrayins&#38;#146;ka" lang="uk">??????????</a>
+            </li>
+            <li>
+              <a href="//ur.wikipedia.org/" title="Urdu" lang="ur">
+                <bdi dir="rtl">????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//vo.wikipedia.org/" lang="vo">Volap&#38;#252;k</a>
+            </li>
+            <li>
+              <a href="//zh.wikipedia.org/" title="Zh?ngw&#38;#233;n" lang="zh">??</a>
+            </li>
+          </ul>
+        </div>
+        <!-- Bookshelves -->
+        <h2 class="bookshelf-container">
+          <span class="bookshelf">
+            <span class="text">10&#38;#160;000+</span>
+          </span>
+        </h2>
+        <!-- 10,000+ content pages -->
+        <div class="langlist hlist" data-el-section="secondary links">
+          <ul>
+            <li>
+              <a href="//af.wikipedia.org/" lang="af">Afrikaans</a>
+            </li>
+            <li>
+              <a href="//als.wikipedia.org/" lang="gsw">Alemannisch</a>
+            </li>
+            <li>
+              <a href="//am.wikipedia.org/" title="?mari&#38;#241;&#38;#241;?" lang="am">????</a>
+            </li>
+            <li>
+              <a href="//an.wikipedia.org/" lang="an">Aragon&#38;#233;s</a>
+            </li>
+            <li>
+              <a href="//ast.wikipedia.org/" lang="ast">Asturianu</a>
+            </li>
+            <li>
+              <a href="//bn.wikipedia.org/" title="Bangla" lang="bn">?????</a>
+            </li>
+            <li>
+              <a href="//map-bms.wikipedia.org/" lang="map-x-bms">Basa Banyumasan</a>
+            </li>
+            <li>
+              <a href="//ba.wikipedia.org/" title="Ba?qortsa" lang="ba">?????????</a>
+            </li>
+            <li>
+              <a href="//be-tarask.wikipedia.org/" title="Belaruskaya (Tara&#38;#154;kievica)" lang="be">?????????? (???????????)</a>
+            </li>
+            <li>
+              <a href="//bpy.wikipedia.org/" title="Bishnupriya Manipuri" lang="bpy">????????????? ???????</a>
+            </li>
+            <li>
+              <a href="//bar.wikipedia.org/" lang="bar">Boarisch</a>
+            </li>
+            <li>
+              <a href="//bs.wikipedia.org/" lang="bs">Bosanski</a>
+            </li>
+            <li>
+              <a href="//br.wikipedia.org/" lang="br">Brezhoneg</a>
+            </li>
+            <li>
+              <a href="//cv.wikipedia.org/" title="??va&#38;#154;la" lang="cv">???????</a>
+            </li>
+            <li>
+              <a href="//cy.wikipedia.org/" lang="cy">Cymraeg</a>
+            </li>
+            <li>
+              <a href="//fo.wikipedia.org/" lang="fo">F&#38;#248;royskt</a>
+            </li>
+            <li>
+              <a href="//fy.wikipedia.org/" lang="fy">Frysk</a>
+            </li>
+            <li>
+              <a href="//ga.wikipedia.org/" lang="ga">Gaeilge</a>
+            </li>
+            <li>
+              <a href="//gd.wikipedia.org/" lang="gd">G&#38;#224;idhlig</a>
+            </li>
+            <li>
+              <a href="//gu.wikipedia.org/" title="Gujarati" lang="gu">???????</a>
+            </li>
+            <li>
+              <a href="//hsb.wikipedia.org/" lang="hsb">Hornjoserbsce</a>
+            </li>
+            <li>
+              <a href="//io.wikipedia.org/" lang="io">Ido</a>
+            </li>
+            <li>
+              <a href="//ilo.wikipedia.org/" lang="ilo">Ilokano</a>
+            </li>
+            <li>
+              <a href="//ia.wikipedia.org/" lang="ia">Interlingua</a>
+            </li>
+            <li>
+              <a href="//os.wikipedia.org/" title="Iron &#38;#198;vzag" lang="os">???? &#38;#230;????</a>
+            </li>
+            <li>
+              <a href="//is.wikipedia.org/" lang="is">&#38;#205;slenska</a>
+            </li>
+            <li>
+              <a href="//jv.wikipedia.org/" lang="jv">Basa Jawa</a>
+            </li>
+            <li>
+              <a href="//kn.wikipedia.org/" title="Kannada" lang="kn">?????</a>
+            </li>
+            <li>
+              <a href="//ht.wikipedia.org/" lang="ht">Krey&#38;#242;l Ayisyen</a>
+            </li>
+            <li>
+              <a href="//ku.wikipedia.org/" lang="ku">
+                <span lang="ku-Latn">Kurd&#38;#238;</span>
+                /
+                <bdi dir="rtl" lang="ku-Arab">?????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//ckb.wikipedia.org/" title="Kurd&#38;#238;y Nawend&#38;#238;" lang="ckb">
+                <bdi dir="rtl">?????? ???????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//ky.wikipedia.org/" title="Kyrgyz?a" lang="ky">????????</a>
+            </li>
+            <li>
+              <a href="//mrj.wikipedia.org/" title="Kyryk Mary" lang="mjr">????? ????</a>
+            </li>
+            <li>
+              <a href="//lv.wikipedia.org/" lang="lv">Latvie&#38;#154;u</a>
+            </li>
+            <li>
+              <a href="//lb.wikipedia.org/" lang="lb">L&#38;#235;tzebuergesch</a>
+            </li>
+            <li>
+              <a href="//li.wikipedia.org/" lang="li">Limburgs</a>
+            </li>
+            <li>
+              <a href="//lmo.wikipedia.org/" lang="lmo">Lumbaart</a>
+            </li>
+            <li>
+              <a href="//mai.wikipedia.org/" title="Maithil?" lang="mai">??????</a>
+            </li>
+            <li>
+              <a href="//mk.wikipedia.org/" title="Makedonski" lang="mk">??????????</a>
+            </li>
+            <li>
+              <a href="//mg.wikipedia.org/" lang="mg">Malagasy</a>
+            </li>
+            <li>
+              <a href="//ml.wikipedia.org/" title="Malayalam" lang="ml">??????</a>
+            </li>
+            <li>
+              <a href="//mr.wikipedia.org/" title="Marathi" lang="mr">?????</a>
+            </li>
+            <li>
+              <a href="//arz.wikipedia.org/" title="Ma?r?" lang="arz">
+                <bdi dir="rtl">????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//mzn.wikipedia.org/" title="M&#38;#228;zeruni" lang="mzn">
+                <bdi dir="rtl">????????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//mn.wikipedia.org/" title="Mongol" lang="mn">??????</a>
+            </li>
+            <li>
+              <a href="//my.wikipedia.org/" title="Myanmarsar" lang="my">??????????</a>
+            </li>
+            <li>
+              <a href="//new.wikipedia.org/" title="Nepal Bhasa" lang="new">????? ????</a>
+            </li>
+            <li>
+              <a href="//ne.wikipedia.org/" title="Nep?l?" lang="ne">??????</a>
+            </li>
+            <li>
+              <a href="//nap.wikipedia.org/" lang="nap">Nnapulitano</a>
+            </li>
+            <li>
+              <a href="//oc.wikipedia.org/" lang="oc">Occitan</a>
+            </li>
+            <li>
+              <a href="//or.wikipedia.org/" title="O?i?" lang="or">?????</a>
+            </li>
+            <li>
+              <a href="//pa.wikipedia.org/" title="Pa&#38;#241;j?b? (Gurmukh?)" lang="pa">?????? (???????)</a>
+            </li>
+            <li>
+              <a href="//pnb.wikipedia.org/" title="Pa&#38;#241;j?b? (Sh?hmukh?)" lang="pnb">
+                <bdi dir="rtl">?????? (??? ????)</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//pms.wikipedia.org/" lang="pms">Piemont&#38;#232;is</a>
+            </li>
+            <li>
+              <a href="//nds.wikipedia.org/" lang="nds">Plattd&#38;#252;&#38;#252;tsch</a>
+            </li>
+            <li>
+              <a href="//qu.wikipedia.org/" lang="qu">Runa Simi</a>
+            </li>
+            <li>
+              <a href="//sa.wikipedia.org/" title="Sa?sk?tam" lang="sa">?????????</a>
+            </li>
+            <li>
+              <a href="//sah.wikipedia.org/" title="Saxa Tyla" lang="sah">???? ????</a>
+            </li>
+            <li>
+              <a href="//sco.wikipedia.org/" lang="sco">Scots</a>
+            </li>
+            <li>
+              <a href="//sq.wikipedia.org/" lang="sq">Shqip</a>
+            </li>
+            <li>
+              <a href="//scn.wikipedia.org/" lang="scn">Sicilianu</a>
+            </li>
+            <li>
+              <a href="//si.wikipedia.org/" title="Si?hala" lang="si">?????</a>
+            </li>
+            <li>
+              <a href="//su.wikipedia.org/" lang="su">Basa Sunda</a>
+            </li>
+            <li>
+              <a href="//sw.wikipedia.org/" lang="sw">Kiswahili</a>
+            </li>
+            <li>
+              <a href="//tl.wikipedia.org/" lang="tl">Tagalog</a>
+            </li>
+            <li>
+              <a href="//ta.wikipedia.org/" title="Tami?" lang="ta">?????</a>
+            </li>
+            <li>
+              <a href="//tt.wikipedia.org/" lang="tt">??????? / Tatar&#38;#231;a</a>
+            </li>
+            <li>
+              <a href="//te.wikipedia.org/" title="Telugu" lang="te">??????</a>
+            </li>
+            <li>
+              <a href="//tg.wikipedia.org/" title="Tojik?" lang="tg">??????</a>
+            </li>
+            <li>
+              <a href="//azb.wikipedia.org/" title="T&#38;#252;rkce" lang="azb">
+                <bdi dir="rtl">??????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//bug.wikipedia.org/" lang="bug">?? ???? / Basa Ugi</a>
+            </li>
+            <li>
+              <a href="//vec.wikipedia.org/" lang="vec">V&#38;#232;neto</a>
+            </li>
+            <li>
+              <a href="//wa.wikipedia.org/" lang="wa">Walon</a>
+            </li>
+            <li>
+              <a href="//yi.wikipedia.org/" title="Yidi&#38;#154;" lang="yi">
+                <bdi dir="rtl">??????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//yo.wikipedia.org/" lang="yo">Yor&#38;#249;b&#38;#225;</a>
+            </li>
+            <li>
+              <a href="//zh-yue.wikipedia.org/" title="Yuht Y&#38;#250;h / Jyut6 jyu5" data-convert-hans="??" id="zh-yue_wiki" lang="yue">??</a>
+            </li>
+            <li>
+              <a href="//bat-smg.wikipedia.org/" lang="sgs">&#38;#142;emait?&#38;#154;ka</a>
+            </li>
+          </ul>
+        </div>
+        <!-- Bookshelves -->
+        <h2 class="bookshelf-container">
+          <span class="bookshelf">
+            <span class="text">1&#38;#160;000+</span>
+          </span>
+        </h2>
+        <!-- 1,000+ content pages -->
+        <div class="langlist hlist" data-el-section="secondary links">
+          <ul>
+            <li>
+              <a href="//ace.wikipedia.org/" lang="ace">Bahsa Ac&#38;#232;h</a>
+            </li>
+            <li>
+              <a href="//kbd.wikipedia.org/" title="Adighabze" lang="kbd">????????</a>
+            </li>
+            <li>
+              <a href="//ang.wikipedia.org/" lang="ang">&#38;#198;nglisc</a>
+            </li>
+            <li>
+              <a href="//ab.wikipedia.org/" title="A?sua" lang="ab">?????</a>
+            </li>
+            <li>
+              <a href="//roa-rup.wikipedia.org/" lang="roa-rup">Arm&#38;#227;neashce</a>
+            </li>
+            <li>
+              <a href="//frp.wikipedia.org/" lang="frp">Arpitan</a>
+            </li>
+            <li>
+              <a href="//arc.wikipedia.org/" title="?t&#38;#251;r?y&#38;#226;" lang="arc">
+                <bdi dir="rtl">??????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//gn.wikipedia.org/" lang="gn">Ava&#38;#241;e&#38;#146;?</a>
+            </li>
+            <li>
+              <a href="//av.wikipedia.org/" title="Avar" lang="av">????</a>
+            </li>
+            <li>
+              <a href="//ay.wikipedia.org/" lang="ay">Aymar</a>
+            </li>
+            <li>
+              <a href="//bjn.wikipedia.org/" lang="bjn">Bahasa Banjar</a>
+            </li>
+            <li>
+              <a href="//bh.wikipedia.org/" title="Bh?japur?" lang="bh">???????</a>
+            </li>
+            <li>
+              <a href="//bcl.wikipedia.org/" lang="bcl">Bikol Central</a>
+            </li>
+            <li>
+              <a href="//bo.wikipedia.org/" title="Bod Skad" lang="bo">???????</a>
+            </li>
+            <li>
+              <a href="//bxr.wikipedia.org/" title="Buryad" lang="bxr">??????</a>
+            </li>
+            <li>
+              <a href="//cbk-zam.wikipedia.org/" lang="cbk-x-zam">Chavacano de Zamboanga</a>
+            </li>
+            <li>
+              <a href="//co.wikipedia.org/" lang="co">Corsu</a>
+            </li>
+            <li>
+              <a href="//za.wikipedia.org/" lang="za">Cuengh</a>
+            </li>
+            <li>
+              <a href="//pdc.wikipedia.org/" lang="pdc">Deitsch</a>
+            </li>
+            <li>
+              <a href="//dv.wikipedia.org/" title="Dhivehi" lang="dv">
+                <bdi dir="rtl">??????????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//nv.wikipedia.org/" lang="nv">Din&#38;#233; Bizaad</a>
+            </li>
+            <li>
+              <a href="//dsb.wikipedia.org/" lang="dsb">Dolnoserbski</a>
+            </li>
+            <li>
+              <a href="//eml.wikipedia.org/" lang="roa-x-eml">Emigli&#38;#224;n&#38;#150;Rumagn&#38;#242;l</a>
+            </li>
+            <li>
+              <a href="//myv.wikipedia.org/" title="Erzjanj" lang="myv">??????</a>
+            </li>
+            <li>
+              <a href="//ext.wikipedia.org/" lang="ext">Estreme&#38;#241;u</a>
+            </li>
+            <li>
+              <a href="//hif.wikipedia.org/" lang="hif">Fiji Hindi</a>
+            </li>
+            <li>
+              <a href="//fur.wikipedia.org/" lang="fur">Furlan</a>
+            </li>
+            <li>
+              <a href="//gv.wikipedia.org/" lang="gv">Gaelg</a>
+            </li>
+            <li>
+              <a href="//gag.wikipedia.org/" lang="gag">Gagauz</a>
+            </li>
+            <li>
+              <a href="//ki.wikipedia.org/" lang="ki">G?k?y?</a>
+            </li>
+            <li>
+              <a href="//glk.wikipedia.org/" title="Gil?ki" lang="glk">
+                <bdi dir="rtl">?????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//gan.wikipedia.org/" title="Gon ua" data-convert-hans="??" id="gan_wiki" lang="gan">??</a>
+            </li>
+            <li>
+              <a href="//hak.wikipedia.org/" lang="hak">Hak-k&#38;#226;-fa / ???</a>
+            </li>
+            <li>
+              <a href="//xal.wikipedia.org/" title="Hal?mg" lang="xal">??????</a>
+            </li>
+            <li>
+              <a href="//ha.wikipedia.org/" lang="ha">
+                <span lang="ha-Latn">Hausa</span>
+                /
+                <bdi dir="rtl" lang="ha-Arab">???????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//haw.wikipedia.org/" lang="haw">??lelo Hawai?i</a>
+            </li>
+            <li>
+              <a href="//ig.wikipedia.org/" lang="ig">Igbo</a>
+            </li>
+            <li>
+              <a href="//ie.wikipedia.org/" lang="ie">Interlingue</a>
+            </li>
+            <li>
+              <a href="//kl.wikipedia.org/" lang="kl">Kalaallisut</a>
+            </li>
+            <li>
+              <a href="//pam.wikipedia.org/" lang="pam">Kapampangan</a>
+            </li>
+            <li>
+              <a href="//csb.wikipedia.org/" lang="csb">Kasz&#38;#235;bsczi</a>
+            </li>
+            <li>
+              <a href="//kw.wikipedia.org/" lang="kw">Kernewek</a>
+            </li>
+            <li>
+              <a href="//km.wikipedia.org/" title="Ph&#38;#233;asa Khm&#38;#233;r" lang="km">?????????</a>
+            </li>
+            <li>
+              <a href="//rw.wikipedia.org/" lang="rw">Kinyarwanda</a>
+            </li>
+            <li>
+              <a href="//kv.wikipedia.org/" title="Komi" lang="kv">????</a>
+            </li>
+            <li>
+              <a href="//kg.wikipedia.org/" lang="kg">Kongo</a>
+            </li>
+            <li>
+              <a href="//gom.wikipedia.org/" lang="gom">?????? / Konknni</a>
+            </li>
+            <li>
+              <a href="//lo.wikipedia.org/" title="Phaasaa Laao" lang="lo">???????</a>
+            </li>
+            <li>
+              <a href="//lad.wikipedia.org/" title="Ladino" lang="lad">
+                <span lang="lad-Latn">Dzhudezmo</span>
+                /
+                <bdi dir="rtl" lang="lad-Hebr">??????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//lbe.wikipedia.org/" title="Lak?u" lang="lbe">?????</a>
+            </li>
+            <li>
+              <a href="//lez.wikipedia.org/" title="Lezgi" lang="lez">?????</a>
+            </li>
+            <li>
+              <a href="//lij.wikipedia.org/" lang="lij">L&#38;#237;guru</a>
+            </li>
+            <li>
+              <a href="//ln.wikipedia.org/" lang="ln">Ling&#38;#225;la</a>
+            </li>
+            <li>
+              <a href="//jbo.wikipedia.org/" lang="jbo">lojban</a>
+            </li>
+            <li>
+              <a href="//lrc.wikipedia.org/" title="L&#38;#246;riy&#38;#233;-&#38;#138;om?l?" lang="lrc">
+                <bdi dir="rtl">???? ??????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//lg.wikipedia.org/" lang="lg">Luganda</a>
+            </li>
+            <li>
+              <a href="//mt.wikipedia.org/" lang="mt">Malti</a>
+            </li>
+            <li>
+              <a href="//zh-classical.wikipedia.org/" title="Man4jin4 / W&#38;#233;ny&#38;#225;n" lang="lzh">??</a>
+            </li>
+            <li>
+              <a href="//ty.wikipedia.org/" lang="ty">Reo M?&#38;#146;ohi</a>
+            </li>
+            <li>
+              <a href="//mi.wikipedia.org/" lang="mi">M?ori</a>
+            </li>
+            <li>
+              <a href="//xmf.wikipedia.org/" title="Margaluri" lang="xmf">?????????</a>
+            </li>
+            <li>
+              <a href="//cdo.wikipedia.org/" lang="cdo">M&#38;#236;ng-d??ng-ng??</a>
+            </li>
+            <li>
+              <a href="//mwl.wikipedia.org/" lang="mwl">Mirand&#38;#233;s</a>
+            </li>
+            <li>
+              <a href="//mdf.wikipedia.org/" title="Mok&#38;#154;enj" lang="mdf">???????</a>
+            </li>
+            <li>
+              <a href="//nah.wikipedia.org/" lang="nah">N?huatlaht?lli</a>
+            </li>
+            <li>
+              <a href="//na.wikipedia.org/" lang="na">Dorerin Naoero</a>
+            </li>
+            <li>
+              <a href="//nds-nl.wikipedia.org/" lang="nds-nl">Nedersaksisch</a>
+            </li>
+            <li>
+              <a href="//frr.wikipedia.org/" lang="frr">Nordfriisk</a>
+            </li>
+            <li>
+              <a href="//nrm.wikipedia.org/" lang="roa-x-nrm">Nouormand / Normaund</a>
+            </li>
+            <li>
+              <a href="//nov.wikipedia.org/" lang="nov">Novial</a>
+            </li>
+            <li>
+              <a href="//mhr.wikipedia.org/" title="Olyk Marij" lang="mhr">???? ?????</a>
+            </li>
+            <li>
+              <a href="//as.wikipedia.org/" title="&#38;#212;x&#38;#244;miya" lang="as">???????</a>
+            </li>
+            <li>
+              <a href="//pi.wikipedia.org/" title="P??i" lang="pi">????</a>
+            </li>
+            <li>
+              <a href="//pag.wikipedia.org/" lang="pag">Pangasin&#38;#225;n</a>
+            </li>
+            <li>
+              <a href="//pap.wikipedia.org/" lang="pap">Papiamentu</a>
+            </li>
+            <li>
+              <a href="//ps.wikipedia.org/" title="Pa?to" lang="ps">
+                <bdi dir="rtl">????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//koi.wikipedia.org/" title="Perem Komi" lang="koi">????? ????</a>
+            </li>
+            <li>
+              <a href="//pfl.wikipedia.org/" lang="pfl">Pf&#38;#228;lzisch</a>
+            </li>
+            <li>
+              <a href="//pcd.wikipedia.org/" lang="pcd">Picard</a>
+            </li>
+            <li>
+              <a href="//krc.wikipedia.org/" title="Qara&#38;#231;ay&#38;#150;Malqar" lang="krc">????????&#38;#150;???????</a>
+            </li>
+            <li>
+              <a href="//kaa.wikipedia.org/" lang="kaa">Qaraqalpaqsha</a>
+            </li>
+            <li>
+              <a href="//crh.wikipedia.org/" lang="crh">Q?r?mtatarca</a>
+            </li>
+            <li>
+              <a href="//ksh.wikipedia.org/" lang="ksh">Ripoarisch</a>
+            </li>
+            <li>
+              <a href="//rm.wikipedia.org/" lang="rm">Rumantsch</a>
+            </li>
+            <li>
+              <a href="//rue.wikipedia.org/" title="Rusin&#38;#146;skyj Yazyk" lang="rue">?????????? ????</a>
+            </li>
+            <li>
+              <a href="//se.wikipedia.org/" lang="se">S&#38;#225;megiella</a>
+            </li>
+            <li>
+              <a href="//sc.wikipedia.org/" lang="sc">Sardu</a>
+            </li>
+            <li>
+              <a href="//stq.wikipedia.org/" lang="stq">Seeltersk</a>
+            </li>
+            <li>
+              <a href="//nso.wikipedia.org/" lang="nso">Sesotho sa Leboa</a>
+            </li>
+            <li>
+              <a href="//sn.wikipedia.org/" lang="sn">ChiShona</a>
+            </li>
+            <li>
+              <a href="//sd.wikipedia.org/" title="Sindh?" lang="sd">
+                <bdi dir="rtl">????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//szl.wikipedia.org/" lang="szl">?l?nski</a>
+            </li>
+            <li>
+              <a href="//so.wikipedia.org/" lang="so">Soomaaliga</a>
+            </li>
+            <li>
+              <a href="//srn.wikipedia.org/" lang="srn">Sranantongo</a>
+            </li>
+            <li>
+              <a href="//kab.wikipedia.org/" lang="kab">Taqbaylit</a>
+            </li>
+            <li>
+              <a href="//roa-tara.wikipedia.org/" lang="roa">Tarand&#38;#237;ne</a>
+            </li>
+            <li>
+              <a href="//tet.wikipedia.org/" lang="tet">Tetun</a>
+            </li>
+            <li>
+              <a href="//tpi.wikipedia.org/" lang="tpi">Tok Pisin</a>
+            </li>
+            <li>
+              <a href="//to.wikipedia.org/" lang="to">faka Tonga</a>
+            </li>
+            <li>
+              <a href="//tk.wikipedia.org/" lang="tk">T&#38;#252;rkmen&#38;#231;e</a>
+            </li>
+            <li>
+              <a href="//tyv.wikipedia.org/" title="Tyva dyl" lang="tyv">???? ???</a>
+            </li>
+            <li>
+              <a href="//udm.wikipedia.org/" title="Udmurt" lang="udm">??????</a>
+            </li>
+            <li>
+              <a href="//ug.wikipedia.org/" lang="ug">
+                <bdi dir="rtl">????????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//vep.wikipedia.org/" lang="vep">Veps&#38;#228;n</a>
+            </li>
+            <li>
+              <a href="//fiu-vro.wikipedia.org/" lang="fiu-vro">V&#38;#245;ro</a>
+            </li>
+            <li>
+              <a href="//vls.wikipedia.org/" lang="vls">West-Vlams</a>
+            </li>
+            <li>
+              <a href="//wo.wikipedia.org/" lang="wo">Wolof</a>
+            </li>
+            <li>
+              <a href="//wuu.wikipedia.org/" title="W&#38;#250; Y?" data-convert-hans="??" id="wuu_wiki" lang="wuu">??</a>
+            </li>
+            <li>
+              <a href="//diq.wikipedia.org/" lang="diq">Zazaki</a>
+            </li>
+            <li>
+              <a href="//zea.wikipedia.org/" lang="zea">Ze&#38;#234;uws</a>
+            </li>
+          </ul>
+        </div>
+        <!-- Bookshelves -->
+        <h2 class="bookshelf-container">
+          <span class="bookshelf">
+            <span class="text">100+</span>
+          </span>
+        </h2>
+        <!-- 100+ content pages -->
+        <div class="langlist langlist-tiny hlist" data-el-section="secondary links">
+          <ul>
+            <li>
+              <a href="//ak.wikipedia.org/" lang="ak">Akan</a>
+            </li>
+            <li>
+              <a href="//bm.wikipedia.org/" lang="bm">Bamanankan</a>
+            </li>
+            <li>
+              <a href="//bi.wikipedia.org/" lang="bi">Bislama</a>
+            </li>
+            <li>
+              <a href="//ch.wikipedia.org/" lang="ch">Chamoru</a>
+            </li>
+            <li>
+              <a href="//ny.wikipedia.org/" lang="ny">Chichewa</a>
+            </li>
+            <li>
+              <a href="//ee.wikipedia.org/" lang="ee">E?egbe</a>
+            </li>
+            <li>
+              <a href="//ff.wikipedia.org/" lang="ff">Fulfulde</a>
+            </li>
+            <li>
+              <a href="//got.wikipedia.org/" title="Gutisk" lang="got">??????</a>
+            </li>
+            <li>
+              <a href="//iu.wikipedia.org/" lang="iu">?????? / Inuktitut</a>
+            </li>
+            <li>
+              <a href="//ik.wikipedia.org/" lang="ik">I&#38;#241;upiak</a>
+            </li>
+            <li>
+              <a href="//ks.wikipedia.org/" title="Kashmiri" lang="ks">
+                <bdi dir="rtl">??????</bdi>
+              </a>
+            </li>
+            <li>
+              <a href="//ltg.wikipedia.org/" lang="ltg">Latga?u</a>
+            </li>
+            <li>
+              <a href="//mo.wikipedia.org/" title="Moldoveneasc?" lang="ro-Cyrl">????????????</a>
+            </li>
+            <li>
+              <a href="//fj.wikipedia.org/" lang="fj">Na Vosa Vaka-Viti</a>
+            </li>
+            <li>
+              <a href="//cr.wikipedia.org/" lang="cr">N?hiyaw?win / ???????</a>
+            </li>
+            <li>
+              <a href="//pih.wikipedia.org/" lang="pih">Norfuk / Pitkern</a>
+            </li>
+            <li>
+              <a href="//om.wikipedia.org/" lang="om">Afaan Oromoo</a>
+            </li>
+            <li>
+              <a href="//pnt.wikipedia.org/" title="Pontiak&#38;#225;" lang="pnt">????????</a>
+            </li>
+            <li>
+              <a href="//dz.wikipedia.org/" title="Rdzong-Kha" lang="dz">??????</a>
+            </li>
+            <li>
+              <a href="//rmy.wikipedia.org/" lang="rmy">Romani</a>
+            </li>
+            <li>
+              <a href="//rn.wikipedia.org/" lang="rn">Kirundi</a>
+            </li>
+            <li>
+              <a href="//sm.wikipedia.org/" lang="sm">Gagana S?moa</a>
+            </li>
+            <li>
+              <a href="//sg.wikipedia.org/" lang="sg">S&#38;#228;ng&#38;#246;</a>
+            </li>
+            <li>
+              <a href="//st.wikipedia.org/" lang="st">Sesotho</a>
+            </li>
+            <li>
+              <a href="//tn.wikipedia.org/" lang="tn">Setswana</a>
+            </li>
+            <li>
+              <a href="//cu.wikipedia.org/" title="Slov?n?sk?" lang="cu">??????????? / ??????????</a>
+            </li>
+            <li>
+              <a href="//ss.wikipedia.org/" lang="ss">SiSwati</a>
+            </li>
+            <li>
+              <a href="//ti.wikipedia.org/" title="Tigri&#38;#241;&#38;#241;?" lang="ti">????</a>
+            </li>
+            <li>
+              <a href="//chr.wikipedia.org/" title="Tsalagi" lang="chr">???</a>
+            </li>
+            <li>
+              <a href="//chy.wikipedia.org/" lang="chy">Ts?hesen?stsestotse</a>
+            </li>
+            <li>
+              <a href="//ve.wikipedia.org/" lang="ve">Tshiven?a</a>
+            </li>
+            <li>
+              <a href="//ts.wikipedia.org/" lang="ts">Xitsonga</a>
+            </li>
+            <li>
+              <a href="//tum.wikipedia.org/" lang="tum">chiTumbuka</a>
+            </li>
+            <li>
+              <a href="//tw.wikipedia.org/" lang="tw">Twi</a>
+            </li>
+            <li>
+              <a href="//xh.wikipedia.org/" lang="xh">isiXhosa</a>
+            </li>
+            <li>
+              <a href="//zu.wikipedia.org/" lang="zu">isiZulu</a>
+            </li>
+          </ul>
+        </div>
+        <!-- Other languages -->
+        <div class="langlist langlist-others hlist" data-el-section="other languages">
+          <ul>
+            <li>
+              <a href="//meta.wikimedia.org/wiki/List_of_Wikipedias" lang="en">Other languages</a>
+            </li>
+            <li>
+              <a href="//de.wikipedia.org/wiki/Wikipedia:Sprachen" lang="de">Weitere Sprachen</a>
+            </li>
+            <li>
+              <a href="//meta.wikimedia.org/wiki/Liste_des_Wikip%C3%A9dias" lang="fr">Autres langues</a>
+            </li>
+            <li>
+              <a href="//pl.wikipedia.org/wiki/Wikipedia:Lista_wersji_j%C4%99zykowych" lang="pl">Kompletna lista j?zyk&#38;#243;w</a>
+            </li>
+            <li>
+              <a href="//ja.wikipedia.org/wiki/Wikipedia:%E5%A4%9A%E8%A8%80%E8%AA%9E%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%81%A8%E3%81%97%E3%81%A6%E3%81%AE%E3%82%A6%E3%82%A3%E3%82%AD%E3%83%9A%E3%83%87%E3%82%A3%E3%82%A2" lang="ja">????</a>
+            </li>
+            <li>
+              <a href="//meta.wikimedia.org/wiki/Lista_de_Wikipedias" lang="es">Otros idiomas</a>
+            </li>
+            <li>
+              <a href="//zh.wikipedia.org/wiki/Wikipedia:%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91%E8%AF%AD%E8%A8%80%E5%88%97%E8%A1%A8" data-convert-hans="????" id="zh_others" lang="zh">????</a>
+            </li>
+            <li>
+              <a href="//ru.wikipedia.org/wiki/%D0%92%D0%B8%D0%BA%D0%B8%D0%BF%D0%B5%D0%B4%D0%B8%D1%8F:%D0%A1%D0%92" lang="ru">?????? ?????</a>
+            </li>
+            <li>
+              <a href="//eo.wikipedia.org/wiki/Vikipedio:Internacia_Vikipedio" lang="eo">Aliaj lingvoj</a>
+            </li>
+            <li>
+              <a href="//meta.wikimedia.org/wiki/%EC%9C%84%ED%82%A4%EB%B0%B1%EA%B3%BC%EC%9D%98_%EB%AA%A9%EB%A1%9D" lang="ko">?? ??</a>
+            </li>
+            <li>
+              <a href="//vi.wikipedia.org/wiki/Wikipedia:Phi%C3%AAn_b%E1%BA%A3n_ng%C3%B4n_ng%E1%BB%AF" lang="vi">Ng&#38;#244;n ng? kh&#38;#225;c</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="footer" data-el-section="other projects">
+      <div class="footer-sidebar">
+        <div class="footer-sidebar-content">
+          <div class="footer-sidebar-icon sprite-project-logos sprite-project-logos-Wikimedia-logo-grey"></div>
+          <div class="footer-sidebar-text jsl10n" data-jsl10n="footer-description">
+            Wikipedia is hosted by the
+            <a href="//wikimediafoundation.org/">Wikimedia Foundation</a>
+            , a non-profit organization that also hosts a range of other projects.
+          </div>
+        </div>
+      </div>
+      <div class="footer-sidebar app-badges">
+        <div class="footer-sidebar-content">
+          <div class="footer-sidebar-text">
+            <div class="footer-sidebar-icon sprite-project-logos sprite-project-logos-Wikipedia_app_tile"></div>
+            <strong>Wikipedia apps are now available:</strong>
+            <ul>
+              <li class="app-badge app-badge-ios">
+                Download for iOS on the
+                <a target="_blank" href="//itunes.apple.com/app/apple-store/id324715238?pt=208305&#38;amp;ct=portal&#38;amp;mt=8">App Store</a>
+              </li>
+              <li class="app-badge app-badge-android">
+                Download for Android on
+                <a target="_blank" href="//play.google.com/store/apps/details?id=org.wikipedia&#38;amp;referrer=campaign_id%3Dportal">Google Play</a>
+              </li>
+              <li class="app-badge app-badge-fulllist">
+                View full
+                <a target="_blank" href="//en.wikipedia.org/wiki/List_of_Wikipedia_mobile_applications">list of available Wikipedia apps</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="other-projects">
+        <div class="other-project">
+          <a class="other-project-link" href="//commons.wikimedia.org/">
+            <div class="other-project-icon">
+              <div class="sprite-project-logos sprite-project-logos-Commons-logo_sister"></div>
+            </div>
+            <div class="other-project-text">
+              <span class="other-project-title jsl10n" data-jsl10n="commons.name">Commons</span>
+              <span class="other-project-tagline jsl10n" data-jsl10n="commons.slogan">Freely usable photos &#38;amp; more</span>
+            </div>
+          </a>
+        </div>
+        <div class="other-project">
+          <a class="other-project-link" href="//www.wikivoyage.org/">
+            <div class="other-project-icon">
+              <div class="sprite-project-logos sprite-project-logos-Wikivoyage-logo_sister"></div>
+            </div>
+            <div class="other-project-text">
+              <span class="other-project-title jsl10n" data-jsl10n="wikivoyage.name">Wikivoyage</span>
+              <span class="other-project-tagline jsl10n" data-jsl10n="wikivoyage.slogan">Free travel guide</span>
+            </div>
+          </a>
+        </div>
+        <div class="other-project">
+          <a class="other-project-link" href="//www.wiktionary.org/">
+            <div class="other-project-icon">
+              <div class="sprite-project-logos sprite-project-logos-Wiktionary-logo_sister"></div>
+            </div>
+            <div class="other-project-text">
+              <span class="other-project-title jsl10n" data-jsl10n="wiktionary.name">Wiktionary</span>
+              <span class="other-project-tagline jsl10n" data-jsl10n="wiktionary.slogan">Free dictionary</span>
+            </div>
+          </a>
+        </div>
+        <div class="other-project">
+          <a class="other-project-link" href="//www.wikibooks.org/">
+            <div class="other-project-icon">
+              <div class="sprite-project-logos sprite-project-logos-Wikibooks-logo_sister"></div>
+            </div>
+            <div class="other-project-text">
+              <span class="other-project-title jsl10n" data-jsl10n="wikibooks.name">Wikibooks</span>
+              <span class="other-project-tagline jsl10n" data-jsl10n="wikibooks.slogan">Free textbooks</span>
+            </div>
+          </a>
+        </div>
+        <div class="other-project">
+          <a class="other-project-link" href="//www.wikinews.org/">
+            <div class="other-project-icon">
+              <div class="sprite-project-logos sprite-project-logos-Wikinews-logo_sister"></div>
+            </div>
+            <div class="other-project-text">
+              <span class="other-project-title jsl10n" data-jsl10n="wikinews.name">Wikinews</span>
+              <span class="other-project-tagline jsl10n" data-jsl10n="wikinews.slogan">Free news source</span>
+            </div>
+          </a>
+        </div>
+        <div class="other-project">
+          <a class="other-project-link" href="//www.wikidata.org/">
+            <div class="other-project-icon">
+              <div class="sprite-project-logos sprite-project-logos-Wikidata-logo_sister"></div>
+            </div>
+            <div class="other-project-text">
+              <span class="other-project-title jsl10n" data-jsl10n="wikidata.name">Wikidata</span>
+              <span class="other-project-tagline jsl10n" data-jsl10n="wikidata.slogan">Free knowledge base</span>
+            </div>
+          </a>
+        </div>
+        <div class="other-project">
+          <a class="other-project-link" href="//www.wikiversity.org/">
+            <div class="other-project-icon">
+              <div class="sprite-project-logos sprite-project-logos-Wikiversity-logo_sister"></div>
+            </div>
+            <div class="other-project-text">
+              <span class="other-project-title jsl10n" data-jsl10n="wikiversity.name">Wikiversity</span>
+              <span class="other-project-tagline jsl10n" data-jsl10n="wikiversity.slogan">Free course materials</span>
+            </div>
+          </a>
+        </div>
+        <div class="other-project">
+          <a class="other-project-link" href="//www.wikiquote.org/">
+            <div class="other-project-icon">
+              <div class="sprite-project-logos sprite-project-logos-Wikiquote-logo_sister"></div>
+            </div>
+            <div class="other-project-text">
+              <span class="other-project-title jsl10n" data-jsl10n="wikiquote.name">Wikiquote</span>
+              <span class="other-project-tagline jsl10n" data-jsl10n="wikiquote.slogan">Free quote compendium</span>
+            </div>
+          </a>
+        </div>
+        <div class="other-project">
+          <a class="other-project-link" href="//www.mediawiki.org/">
+            <div class="other-project-icon">
+              <div class="sprite-project-logos sprite-project-logos-MediaWiki-logo_sister"></div>
+            </div>
+            <div class="other-project-text">
+              <span class="other-project-title jsl10n" data-jsl10n="mediawiki.name">MediaWiki</span>
+              <span class="other-project-tagline jsl10n" data-jsl10n="mediawiki.slogan">Free &#38;amp; open wiki application</span>
+            </div>
+          </a>
+        </div>
+        <div class="other-project">
+          <a class="other-project-link" href="//www.wikisource.org/">
+            <div class="other-project-icon">
+              <div class="sprite-project-logos sprite-project-logos-Wikisource-logo_sister"></div>
+            </div>
+            <div class="other-project-text">
+              <span class="other-project-title jsl10n" data-jsl10n="wikisource.name">Wikisource</span>
+              <span class="other-project-tagline jsl10n" data-jsl10n="wikisource.slogan">Free library</span>
+            </div>
+          </a>
+        </div>
+        <div class="other-project">
+          <a class="other-project-link" href="//species.wikimedia.org/">
+            <div class="other-project-icon">
+              <div class="sprite-project-logos sprite-project-logos-Wikispecies-logo_sister"></div>
+            </div>
+            <div class="other-project-text">
+              <span class="other-project-title jsl10n" data-jsl10n="wikispecies.name">Wikispecies</span>
+              <span class="other-project-tagline jsl10n" data-jsl10n="wikispecies.slogan">Free species directory</span>
+            </div>
+          </a>
+        </div>
+        <div class="other-project">
+          <a class="other-project-link" href="//meta.wikimedia.org/">
+            <div class="other-project-icon">
+              <div class="sprite-project-logos sprite-project-logos-Meta-logo_sister"></div>
+            </div>
+            <div class="other-project-text">
+              <span class="other-project-title jsl10n" data-jsl10n="metawiki.name">Meta-Wiki</span>
+              <span class="other-project-tagline jsl10n" data-jsl10n="metawiki.slogan">Community coordination &#38;amp; documentation</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <p class="site-license">
+      <small>
+        This page is available under the
+        <a href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike License</a>
+        .
+      </small>
+      <small>
+        <a href="//wikimediafoundation.org/wiki/Terms_of_Use">Terms of Use</a>
+      </small>
+      &#38;#149;
+      <small>
+        <a href="//wikimediafoundation.org/wiki/Privacy_policy">Privacy Policy</a>
+      </small>
+    </p>
+    <!--[if gt IE 7]-->
+    <script>/*<![CDATA[*/var translationsHash = "1c501ded";/*]]>*/</script>
+    <script src="portal/wikipedia.org/assets/js/index-4398b00936.js">/*<![CDATA[*//*]]>*/</script>
+    <!--[endif]-->
+    <!--[if gt IE 9]-->
+    <script src="portal/wikipedia.org/assets/js/gt-ie9-c84bf66d33.js">/*<![CDATA[*//*]]>*/</script>
+    <!--[endif]-->
+    <!--[if lte IE 9]-->
+    <style>/*<![CDATA[*/
+      .styled-select {
+      display: block;
+      }
+    /*]]>*/</style>
+    <!--[endif]-->
+    <!--[if lte IE 9]>
+    <style>
+    .langlist > ul {
+    text-align: center;
+    }
+    .langlist > ul > li {
+    display: inline;
+    padding: 0 0.5em;
+    }
+    </style>
+    <![endif]-->
+  </body>
+</html>
