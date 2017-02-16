@@ -357,6 +357,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             PageManager.instance().setSiteName( sC.getSiteName() );
             log.info( "Extracted " + sC.getTestList().size() + " test cases (" + sC.getActiveTestList().size() + " active)" );
+
             for ( ModelContainer mC : sC.getModel() )
                 KeyWordDriver.instance().addPage( mC.getSiteName(), mC.getPageName(), mC.getClassName() ); 
             
@@ -701,7 +702,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     protected void runTest( String outputFolder, Class theTest, SuiteContainer sC )
     {
         int threadCount = Integer.parseInt( System.getProperty( "xF-ThreadCount", "10" ) );
-        int verboseLevel = Integer.parseInt( System.getProperty( "xF-VerboseLevel", "10" ) );
+        int verboseLevel = Integer.parseInt( System.getProperty( "xF-VerboseLevel", "1" ) );
 
         TestNG testNg = new TestNG( true );
         testNg.setVerbose( verboseLevel );

@@ -100,6 +100,7 @@ public class DeviceManager implements ArtifactListener
     private Map<String, Boolean> initializationMap = new HashMap<String, Boolean>( 10 );
 
     private String initializationName;
+    private Log testFlow = LogFactory.getLog( "testFlow" );
 
     public String getInitializationName()
     {
@@ -655,6 +656,7 @@ public class DeviceManager implements ArtifactListener
 
             if ( currentFailures >= (currentDevice.getAvailableDevices() * retryCount) )
             {
+                testFlow.warn( "Device has too many issues - " + currentDevice.getEnvironment() );
                 //
                 // This device has failed too many times
                 //
@@ -679,9 +681,9 @@ public class DeviceManager implements ArtifactListener
                 DeviceWebDriver webDriver = null;
                 try
                 {
-                    if ( log.isDebugEnabled() )
-                        log.debug( "Attempting to create a connected instance for " + currentDevice );
-
+                    if ( testFlow.isDebugEnabled() )
+                        testFlow.debug( Thread.currentThread().getName() + ": Attempting to create a connected instance for " + currentDevice );
+                    
                     if ( testPackage.getTestName().getPersonaName() != null && !testPackage.getTestName().getPersonaName().isEmpty() )
                         currentDevice.addCapability( "windTunnelPersona", testPackage.getTestName().getPersonaName(), "STRING" );
 
@@ -691,8 +693,8 @@ public class DeviceManager implements ArtifactListener
                     {
                         notifyBeforeRun( currentDevice, testPackage.getRunKey() );
 
-                        if ( log.isDebugEnabled() )
-                            log.debug( "WebDriver Created - Creating Connected Device for " + currentDevice );
+                        if ( testFlow.isDebugEnabled() )
+                            testFlow.debug( Thread.currentThread().getName() + ": WebDriver Created - Creating Connected Device for " + currentDevice );
 
                         DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
 
@@ -700,6 +702,7 @@ public class DeviceManager implements ArtifactListener
                     }
                     else
                     {
+                        testFlow.warn( Thread.currentThread().getName() + ": Could not connect to device - " + currentDevice.getEnvironment() );
                         //
                         // We got a null web driver here
                         //
@@ -719,7 +722,7 @@ public class DeviceManager implements ArtifactListener
                     catch ( Exception e2 )
                     {
                     }
-                    log.error( "Error creating factory instance", e );
+                    testFlow.error( Thread.currentThread().getName() + ": Error creating factory instance", e );
                     try
                     {
                         webDriver.close();
@@ -908,14 +911,22 @@ public class DeviceManager implements ArtifactListener
      */
     public void addRun( Device currentDevice, TestPackage testPackage, TestContainer testContainer, boolean success )
     {
+        if ( testFlow.isInfoEnabled() )
+            testFlow.info( Thread.currentThread().getName() + ": Adding run " + testPackage.getRunKey() + " to " + currentDevice.getEnvironment() );
         try
         {
             testContainer.completeTest( testPackage.getTestName(), testPackage.getRunKey(), success ? RunStatus.COMPLETED : RunStatus.FAILED );
-            notifyAfterRun( currentDevice, testPackage.getRunKey(), success );
-
         }
         finally
         {
+            try
+            {
+                notifyAfterRun( currentDevice, testPackage.getRunKey(), success );
+            }
+            catch( Exception e )
+            {
+                e.printStackTrace();
+            }
         }
     }
 

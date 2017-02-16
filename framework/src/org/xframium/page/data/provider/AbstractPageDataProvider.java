@@ -178,7 +178,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	        
 	        Deque<PageData> dataList = recordMap.get( fieldArray[ 0 ] ).getRecordList();
             
-	        String useType = getRecordType( fieldArray[ 0 ] );
+	        String useType = getRecordType( fieldArray[ 1 ] );
 	        
             for ( PageData p : dataList )
             {

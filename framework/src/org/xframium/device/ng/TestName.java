@@ -6,7 +6,6 @@ import org.xframium.reporting.ExecutionContextTest;
 
 public class TestName
 {
-    public static String DEFAULT = "default";
     /** The test name. */
     private String testName;
     private String baseTestName;

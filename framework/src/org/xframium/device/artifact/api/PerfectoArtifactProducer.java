@@ -233,6 +233,7 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 	    }
 	    catch( Exception e )
 	    {
+	        e.printStackTrace();
 	        return new Artifact( rootFolder + "generationFailure.txt", e.getMessage().getBytes() );
 	    }
 		

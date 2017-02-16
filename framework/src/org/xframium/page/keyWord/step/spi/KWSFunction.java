@@ -79,6 +79,7 @@ public class KWSFunction extends AbstractKeyWordStep
 		}
 		catch( Exception e )
 		{
+		    e.printStackTrace();
 			throw new ScriptException( "Function Call Failed " +  e.getMessage() );
 		}
 	}

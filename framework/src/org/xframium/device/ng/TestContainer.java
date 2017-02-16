@@ -21,6 +21,7 @@ import org.xframium.spi.Device;
 public class TestContainer
 {
     private Log log = LogFactory.getLog( TestContainer.class );
+    private Log testFlow = LogFactory.getLog( "testFlow" );
     private RunContainer runContainer = new RunContainer();
     private LinkedBlockingDeque<TestName> testList;
     private List<TestName> checkedOut = new ArrayList<TestName>(64);
@@ -39,7 +40,7 @@ public class TestContainer
         deviceList = new LinkedBlockingDeque<Device>( devices.length );
         deviceList.addAll( (List<Device> ) Arrays.asList( devices ) );
         
-        log.warn( "Executing " + testList.size() + " tests across " + deviceList.size() + " devices" );
+        testFlow.warn( Thread.currentThread().getName() + ": Executing " + testList.size() + " tests across " + deviceList.size() + " devices" );
         
     }
     
@@ -96,7 +97,7 @@ public class TestContainer
                     if ( cD != null )
                     {
                         testPackage.setConnectedDevice( cD );
-                        log.warn( "Test Started: " + runKey + " - " + cD );
+                        testFlow.warn( "Test Started: " + runKey + " - " + cD + " - " + testPackage );
                         return testPackage;
                     }
                     else
@@ -104,7 +105,8 @@ public class TestContainer
                         runContainer.addRun( runKey, RunStatus.RESET );
                         if ( DeviceManager.instance().isDeviceInvalid( useDevice ) )
                         {
-                            TestPackage tP = new TestPackage( testName, useDevice, null );
+                            testFlow.warn(  "Device Invalidated: " + useDevice.getEnvironment() );
+                            TestPackage tP = new TestPackage( testName, useDevice, runKey );
                             DeviceWebDriver webDriver = new DeviceWebDriver( null, false, useDevice );
                             webDriver.setArtifactProducer( getCloudActionProvider( currentCloud ).getArtifactProducer() );
                             tP.setConnectedDevice( new ConnectedDevice( webDriver, useDevice, null ) );
@@ -145,7 +147,7 @@ public class TestContainer
             e.printStackTrace();
         }
 
-        log.debug( "ACQUIRED: Available Devices: " + deviceList.size() + " - Running Devices: " + checkedOutDevice.size() + " - Test Remaining: " + testList.size() );
+        testFlow.debug( Thread.currentThread().getName() + ": ACQUIRED: Available Devices: " + deviceList.size() + " - Running Devices: " + checkedOutDevice.size() + " - Test Remaining: " + testList.size() );
         
         return device;
     }
@@ -154,10 +156,26 @@ public class TestContainer
     {
         try
         {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append( "Returning Device " ).append( currentDevice.getEnvironment() ).append( "\r\nCurrent Stored Devices:\r\n" );
             
-            deviceList.putLast( currentDevice );
+            for ( Device d : deviceList )
+                stringBuilder.append(  "\t" ).append( d.getEnvironment() ).append(  "\r\n" );
+            
+            testFlow.debug( stringBuilder.toString() );
+
+            if ( !deviceList.offerLast( currentDevice, 25, TimeUnit.SECONDS ) )
+            {
+                stringBuilder = new StringBuilder();
+                stringBuilder.append( "Trying to add device to full list " ).append( currentDevice.getEnvironment() ).append( "\r\nStored Devices:\r\n" );
+                
+                for ( Device d : deviceList )
+                    stringBuilder.append(  "\t" ).append( d.getEnvironment() ).append(  "\r\n" );
+                
+                log.error(  stringBuilder.toString() );
+            }
             checkedOutDevice.remove( currentDevice );
-            log.debug( "RETURNED: Available Devices: " + deviceList.size() + " - Running Devices: " + checkedOutDevice.size() + " - Test Remaining: " + testList.size() );
+            testFlow.debug( Thread.currentThread().getName() + ": RETURNED: Available Devices: " + deviceList.size() + " - Running Devices: " + checkedOutDevice.size() + " - Test Remaining: " + testList.size() );
         }
         catch ( InterruptedException e )
         {
@@ -203,12 +221,12 @@ public class TestContainer
     {
         checkedOutDevice.remove( currentDevice );
         errorOutDevice.add( currentDevice );
-        log.error( "************** DESTROYING DEVICE due to errors :" + currentDevice );
+        testFlow.error( Thread.currentThread().getName() + ": ************** DESTROYING DEVICE due to errors :" + currentDevice );
     }
     
     public void completeTest( TestName testName, String runKey, RunStatus runStatus )
     {
-        log.warn( "Test Completed: " + runKey + " - " + runStatus );
+        testFlow.warn( Thread.currentThread().getName() + ": Test Completed: " + runKey + " - " + runStatus );
         runContainer.addRun( runKey, runStatus );
         checkedOut.remove( testName );
         completedList.add( testName );

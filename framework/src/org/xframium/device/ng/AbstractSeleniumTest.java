@@ -74,7 +74,11 @@ public abstract class AbstractSeleniumTest
 
     /** The test context running on this thread. */
     private static ThreadLocal<TestContext> threadContext = new ThreadLocal<TestContext>();
+    
+    protected ThreadLocal<TestPackage> testPackageContainer = new ThreadLocal<TestPackage>();
 
+    
+    protected Log testFlow = LogFactory.getLog( "testFlow" );
     /** The name of the default device **/
 
     /**
@@ -302,7 +306,19 @@ public abstract class AbstractSeleniumTest
                 fullDeviceList.add( d.cloneDevice() );
         }
 
-        log.warn( "Preparing to execute " + newArray.length + " tests" );
+        StringBuilder logOut = new StringBuilder();
+        
+        logOut.append( "\r\n*********************************************************************\r\nPreparing to execute the following " + finalList.size() + " tests\r\n" );
+        for ( TestName t : finalList )
+            logOut.append( "\t" + t.getTestName() + "\r\n" );
+        
+        logOut.append( "\r\nAgainst the following " ).append(  deviceList.size() ).append( " devices\r\n" );
+        for ( Device d : deviceList )
+        {
+            logOut.append( "\t" + d.getEnvironment() + "\r\n" );
+        }
+        
+        
         
         
         try
@@ -322,8 +338,10 @@ public abstract class AbstractSeleniumTest
         Object[][] returnArray = new Object[newArray.length][1];
         for ( int i = 0; i < returnArray.length; i++ )
             returnArray[i][0] = testContainer;
+        
+        logOut.append( "\r\nFor a total of " ).append( returnArray.length ).append( " total execution\r\n*********************************************************************" );
 
-        log.warn( "Data Prepared" );
+        log.warn( logOut.toString() );
         
         return returnArray;
     }
@@ -337,34 +355,6 @@ public abstract class AbstractSeleniumTest
     public void addCapabilities( DesiredCapabilities dc )
     {
 
-    }
-
-    /**
-     * Gets the web driver.
-     *
-     * @return the web driver
-     */
-    protected WebDriver getWebDriver()
-    {
-        if ( getConnectedDevice( TestName.DEFAULT ) != null )
-        {
-            return getConnectedDevice( TestName.DEFAULT ).getWebDriver();
-        }
-        else
-            return null;
-    }
-
-    /**
-     * Gets the device.
-     *
-     * @return the device
-     */
-    protected Device getDevice()
-    {
-        if ( getConnectedDevice( TestName.DEFAULT ) != null )
-            return getConnectedDevice( TestName.DEFAULT ).getDevice();
-        else
-            return null;
     }
 
     /**
@@ -384,7 +374,7 @@ public abstract class AbstractSeleniumTest
 
             TestPackage testPackage = tC.getTestPackage( currentMethod, true );
 
-            testContext.setAttribute( "testPackage", testPackage );
+            testPackageContainer.set( testPackage );
 
             TestName testName = testPackage.getTestName();
             ConnectedDevice connectedDevice = testPackage.getConnectedDevice();
@@ -402,15 +392,13 @@ public abstract class AbstractSeleniumTest
 
             if ( connectedDevice != null )
             {
-                putConnectedDevice( TestName.DEFAULT, connectedDevice );
-
                 if ( testName.getTestName() == null || testName.getTestName().isEmpty() )
                     testName.setTestName( currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() );
 
                 testName.setFullName( testArgs[0].toString() );
 
-                if ( log.isInfoEnabled() )
-                    log.info( Thread.currentThread().getName() + ": acquired for " + currentMethod.getName() );
+                if ( testFlow.isInfoEnabled() )
+                    testFlow.info( Thread.currentThread().getName() + ": acquired for " + currentMethod.getName() );
             }
 
             if ( connectedDevice != null && connectedDevice.getWebDriver() != null && connectedDevice.getWebDriver().isConnected() )
@@ -434,7 +422,7 @@ public abstract class AbstractSeleniumTest
         }
         catch ( Exception e )
         {
-            log.fatal( Thread.currentThread().getName() + ": Fatal error configuring test", e );
+            testFlow.fatal( Thread.currentThread().getName() + ": Fatal error configuring test", e );
         }
     }
 
@@ -494,21 +482,20 @@ public abstract class AbstractSeleniumTest
     @AfterMethod ( alwaysRun = true)
     public void afterMethod( Method currentMethod, Object[] testArgs, ITestResult testResult, ITestContext testContext )
     {
+        TestPackage testPackage = null;
         try
         {
+            testPackage = testPackageContainer.get();
             HashMap<String, ConnectedDevice> map = getDevicesToCleanUp();
             threadContext.set( null );
             Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null);
 
-            if ( map.get( TestName.DEFAULT ) == null )
-                return;
-
-            if ( map.get( TestName.DEFAULT ).getWebDriver() != null && map.get( TestName.DEFAULT ).getWebDriver().isConnected() )
+            if ( testPackage.getConnectedDevice().getWebDriver() != null && testPackage.getConnectedDevice().getWebDriver().isConnected() )
             {
                 try
                 {
                     if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
-                        map.get( TestName.DEFAULT ).getWebDriver().getCloud().getCloudActionProvider().disableLogging( map.get( TestName.DEFAULT ).getWebDriver() );
+                        testPackage.getConnectedDevice().getWebDriver().getCloud().getCloudActionProvider().disableLogging( testPackage.getConnectedDevice().getWebDriver() );
 
                 }
                 catch ( Exception e )
@@ -516,13 +503,24 @@ public abstract class AbstractSeleniumTest
                     e.printStackTrace();
                 }
             }
+            
+            cleanUpConnectedDevice( "DEFAULT", testPackage.getTestName(), testPackage.getConnectedDevice(), testResult, (TestContainer) testArgs[0], true );
 
+            if ( testPackage.getConnectedDevice().getDevice() != null )
+            {
+                DeviceManager.instance().addRun( testPackage.getConnectedDevice().getWebDriver().getPopulatedDevice(), testPackage, (TestContainer) testArgs[0], testResult.isSuccess() );
+            }
+            
+            if ( testFlow.isInfoEnabled() )
+                testFlow.info( Thread.currentThread().getName() + ": Adding Execution for " + testPackage.getRunKey() );
+            ExecutionContext.instance().addExecution( testPackage.getTestName().getTest() );
+            
             while ( (keys != null) && (keys.hasNext()) )
             {
                 String name = keys.next();
                 ConnectedDevice device = map.get( name );
-
-                cleanUpConnectedDevice( name, device, currentMethod, testArgs, testResult, testContext, (TestContainer) testArgs[0] );
+                
+                cleanUpConnectedDevice( name, testPackage.getTestName(), device, testResult, (TestContainer) testArgs[0], true );
             }
 
             try
@@ -532,31 +530,36 @@ public abstract class AbstractSeleniumTest
             }
             catch ( Exception e )
             {
-                log.error( Thread.currentThread() + ": Error flushing artifacts", e );
+                testFlow.error( Thread.currentThread() + ": Error flushing artifacts", e );
             }
         }
         catch ( Exception e )
         {
-            log.fatal( Thread.currentThread().getName() + ": Fatal error completing test", e );
+            testFlow.fatal( Thread.currentThread().getName() + ": Fatal error completing test", e );
+        }
+        finally
+        {
+            ((TestContainer) testArgs[0]).returnDevice( testPackage.getDevice() );
         }
     }
 
-    private void cleanUpConnectedDevice( String name, ConnectedDevice device, Method currentMethod, Object[] testArgs, ITestResult testResult, ITestContext testContext, TestContainer testContainer )
+    private void cleanUpConnectedDevice( String name, TestName testName, ConnectedDevice device, ITestResult testResult, TestContainer testContainer, boolean primaryDevice )
     {
-        WebDriver webDriver = device.getWebDriver();
+        DeviceWebDriver webDriver = device.getWebDriver();
         Device currentDevice = device.getDevice();
         ExecutionContextTest test = null;
-        TestPackage testPackage = (TestPackage) testContext.getAttribute( "testPackage" );
-        TestName testName = testPackage.getTestName();
 
+        if ( testFlow.isInfoEnabled() )
+            testFlow.info( Thread.currentThread().getName() + ": Attempting to clean up " + testName.getTestName() + " on " + device.getPopulatedDevice().getEnvironment() );
+        
         try
         {
             if ( webDriver != null )
             {
 
-                String runKey = ((TestName.DEFAULT.equals( name )) ? testName.getTestName() : testName.getTestName() + "-" + name);
+                String runKey = primaryDevice ? testName.getTestName() : testName.getTestName() + "-" + name;
 
-                if ( TestName.DEFAULT.equals( name ) )
+                if ( primaryDevice )
                 {
                     test = testName.getTest();
                 }
@@ -566,7 +569,7 @@ public abstract class AbstractSeleniumTest
 
                 try
                 {
-                    if ( !testResult.isSuccess() )
+                    if ( webDriver.isConnected() && !testResult.isSuccess() )
                     {
 
                         if ( DataManager.instance().getAutomaticDownloads() != null )
@@ -580,6 +583,8 @@ public abstract class AbstractSeleniumTest
                                 {
                                     if ( aType.getTime() == ArtifactTime.ON_FAILURE )
                                     {
+                                        if ( testFlow.isInfoEnabled() )
+                                            testFlow.info( Thread.currentThread().getName() + ":Writing out failure artifact " + aType );
                                         try
                                         {
                                             Artifact currentArtifact = ((ArtifactProducer) webDriver).getArtifact( webDriver, aType, device, runKey, testResult.getStatus() == ITestResult.SUCCESS, test );
@@ -595,7 +600,7 @@ public abstract class AbstractSeleniumTest
                                         }
                                         catch ( Exception e )
                                         {
-                                            log.error( "Error acquiring Artifacts ", e );
+                                            testFlow.error( Thread.currentThread().getName() + ":Error acquiring Artifacts ", e );
                                         }
                                     }
                                 }
@@ -607,6 +612,8 @@ public abstract class AbstractSeleniumTest
                 {
                     try
                     {
+                        if ( testFlow.isInfoEnabled() )
+                            testFlow.info( Thread.currentThread().getName() + ":Closing WebDriver " );
                         webDriver.close();
                     }
                     catch ( Exception e )
@@ -616,7 +623,7 @@ public abstract class AbstractSeleniumTest
 
                 if ( DataManager.instance().getAutomaticDownloads() != null )
                 {
-                    if ( webDriver instanceof ArtifactProducer )
+                    if ( webDriver.isConnected() && webDriver instanceof ArtifactProducer )
                     {
                         if ( DataManager.instance().getReportFolder() == null )
                             DataManager.instance().setReportFolder( new File( "." ) );
@@ -625,6 +632,8 @@ public abstract class AbstractSeleniumTest
                         {
                             if ( aType.getTime() == ArtifactTime.AFTER_TEST )
                             {
+                                if ( testFlow.isInfoEnabled() )
+                                    testFlow.info( Thread.currentThread().getName() + ":Writing out after artifact " + aType );
                                 try
                                 {
                                     Artifact currentArtifact = ((ArtifactProducer) webDriver).getArtifact( webDriver, aType, device, runKey, testResult.getStatus() == ITestResult.SUCCESS, test );
@@ -654,26 +663,30 @@ public abstract class AbstractSeleniumTest
                         currentCloud = CloudRegistry.instance().getCloud( device.getDevice().getCloud() );
                     String cloudProvider = currentCloud.getProvider();
 
-                    //
-                    // Perfecto Wind Tunnel
-                    //
-                    String wtUrl = ((DeviceWebDriver) webDriver).getWindTunnelReport();
-                    if ( test != null && cloudProvider.equals( "PERFECTO" ) && wtUrl != null && !wtUrl.isEmpty() )
-                        test.addExecutionParameter( "PERFECTO_WT", wtUrl );
-
-                    //
-                    // Saucelabs integration
-                    //
-                    if ( test != null )
+                    
+                    if ( webDriver.isConnected() )
                     {
-                        if ( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) && cloudProvider.equals( "SAUCELABS" ) )
-                            test.addExecutionParameter( "SAUCELABS", "https://saucelabs.com/beta/tests/" + test.getSessionId() + "/commands#0" );
-
-                        if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) && ((DeviceWebDriver) webDriver).isConnected() && cloudProvider.equals( "PERFECTO" ) )
+                        //
+                        // Perfecto Wind Tunnel
+                        //
+                        String wtUrl = ((DeviceWebDriver) webDriver).getWindTunnelReport();
+                        if ( test != null && cloudProvider.equals( "PERFECTO" ) && wtUrl != null && !wtUrl.isEmpty() )
+                            test.addExecutionParameter( "PERFECTO_WT", wtUrl );
+    
+                        //
+                        // Saucelabs integration
+                        //
+                        if ( test != null )
                         {
-                            if ( ((ReportiumProvider) webDriver).getReportiumClient() != null )
+                            if ( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) && cloudProvider.equals( "SAUCELABS" ) )
+                                test.addExecutionParameter( "SAUCELABS", "https://saucelabs.com/beta/tests/" + test.getSessionId() + "/commands#0" );
+    
+                            if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) && ((DeviceWebDriver) webDriver).isConnected() && cloudProvider.equals( "PERFECTO" ) )
                             {
-                                test.addExecutionParameter( "SAUCELABS", ((ReportiumProvider) webDriver).getReportiumClient().getReportUrl() );
+                                if ( ((ReportiumProvider) webDriver).getReportiumClient() != null )
+                                {
+                                    test.addExecutionParameter( "SAUCELABS", ((ReportiumProvider) webDriver).getReportiumClient().getReportUrl() );
+                                }
                             }
                         }
                     }
@@ -682,6 +695,8 @@ public abstract class AbstractSeleniumTest
                     {
                         try
                         {
+                            if ( testFlow.isInfoEnabled() )
+                                testFlow.info( Thread.currentThread().getName() + ":Writing out default artifact" );
                             test.popupateSystemProperties();
                             Artifact currentArtifact = ((ArtifactProducer) webDriver).getArtifact( webDriver, ArtifactType.EXECUTION_RECORD_JSON, device, runKey, testResult.getStatus() == ITestResult.SUCCESS, test );
                             if ( currentArtifact != null )
@@ -700,31 +715,20 @@ public abstract class AbstractSeleniumTest
                 }
             }
 
-            if ( currentDevice != null )
-            {
-                if ( webDriver instanceof DeviceWebDriver )
-                    DeviceManager.instance().addRun( ((DeviceWebDriver) webDriver).getPopulatedDevice(), testPackage, testContainer, testResult.isSuccess() );
-                else
-                    DeviceManager.instance().addRun( currentDevice, testPackage, testContainer, testResult.isSuccess() );
-            }
+            
         }
         finally
         {
             try
             {
+                if ( testFlow.isInfoEnabled() )
+                    testFlow.info( Thread.currentThread().getName() + ": Quiting WebDriver " );
                 webDriver.quit();
             }
             catch ( Exception e )
             {
             }
 
-            if ( currentDevice != null && TestName.DEFAULT.equals( name ) )
-                testContainer.returnDevice( currentDevice );
-
-            if ( test != null && TestName.DEFAULT.equals( name ) )
-            {
-                ExecutionContext.instance().addExecution( test );
-            }
         }
 
     }

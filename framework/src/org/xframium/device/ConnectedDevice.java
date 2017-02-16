@@ -146,7 +146,10 @@ public class ConnectedDevice
 	 */
 	public String toString()
 	{
-		return device.toShortString();  
+	    if ( device != null )
+	        return device.getEnvironment();
+	    else
+	        return "Unknown Device";
 	}
 	
 	public String getExecutionId()

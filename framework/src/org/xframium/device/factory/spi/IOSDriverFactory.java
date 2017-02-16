@@ -97,7 +97,7 @@ public class IOSDriverFactory extends AbstractDriverFactory
                 dc.setCapability( Device.LOCALE, localeToConfigure );
             }
             
-
+System.out.println( hubUrl );
             if ( log.isDebugEnabled() )
                 log.debug( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 			

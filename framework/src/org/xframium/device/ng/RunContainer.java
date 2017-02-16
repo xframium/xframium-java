@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 public class RunContainer
 {
     private Log log = LogFactory.getLog( RunContainer.class );
+    private Log testFlow = LogFactory.getLog( "testFlow" );
     
     public enum RunStatus
     {
@@ -29,8 +30,7 @@ public class RunContainer
     {
         if (runStatus.equals( RunStatus.RESET ) )
         {
-            //if( log.isInfoEnabled() )
-                log.warn( Thread.currentThread().getName() + ":Issued RESET on " + runKey );
+            testFlow.warn( Thread.currentThread().getName() + ":Issued RESET on " + runKey );
             runMap.remove( runKey );
             return true;
         }
@@ -39,14 +39,13 @@ public class RunContainer
         
         if ( runStatus.equals( RunStatus.CHECK ) )
         {
-            //if( log.isInfoEnabled() )
-                log.warn( Thread.currentThread().getName() + ":CHECKING on " + runKey + " - " + (currentStatus == null) );
+            testFlow.warn( Thread.currentThread().getName() + ":CHECKING on " + runKey + " - " + (currentStatus == null) );
             return currentStatus == null;
         }
         
         if ( currentStatus == null )
         {
-            log.warn( Thread.currentThread().getName() + ":ADDING " + runKey  );
+            testFlow.warn( Thread.currentThread().getName() + ":ADDING " + runKey  );
             runMap.put( runKey, runStatus );
             return true;
         }
@@ -56,8 +55,7 @@ public class RunContainer
             case COMPLETED:
                 if ( currentStatus.equals( RunStatus.RUNNING ) )
                 {
-                    //if( log.isInfoEnabled() )
-                        log.warn(runStatus + " on " + runKey );
+                    testFlow.warn(runStatus + " on " + runKey );
                     runMap.put( runKey, runStatus);
                     return true;
                 }
@@ -66,8 +64,7 @@ public class RunContainer
             case FAILED:
                 if ( currentStatus.equals( RunStatus.RUNNING ) )
                 {
-                    //if( log.isInfoEnabled() )
-                        log.warn(runStatus + " on " + runKey );
+                    testFlow.warn(runStatus + " on " + runKey );
                     runMap.put( runKey, runStatus);
                     return true;
                 }

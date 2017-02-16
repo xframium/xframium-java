@@ -113,7 +113,7 @@ public class DefaultPageData implements PageData
 	    {
 	        String[] fieldArray = fieldName.split( "\\." );
 	        
-	        List<PageData> dataList = (List<PageData>) recordMap.get( fieldArray[ 0 ] );
+	        List<PageData> dataList = (List<PageData>) recordMap.get( fieldArray[ 1 ] );
 	        
 	        for ( PageData p : dataList )
 	        {

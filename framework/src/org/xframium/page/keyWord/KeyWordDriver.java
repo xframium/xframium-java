@@ -90,6 +90,17 @@ public class KeyWordDriver
         return singleton;
     }
 
+    public void clear()
+    {
+        testList.clear();
+        testMap.clear();
+        inactiveTestMap.clear();
+        functionMap.clear();
+        tagMap.clear();
+        pageMap.clear();
+        stepListenerList.clear();
+        configProperties.clear();
+    }
 
     /**
      * Load tests.
@@ -99,12 +110,6 @@ public class KeyWordDriver
      */
     public void loadTests( SuiteContainer sC )
     {
-        testList.clear();
-        testMap.clear();
-        inactiveTestMap.clear();
-        functionMap.clear();
-        pageMap.clear();
-        tagMap.clear();
         
         for ( KeyWordTest t : sC.getActiveTestList() )
         {

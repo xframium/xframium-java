@@ -166,6 +166,7 @@ public class SeleniumArtifactProducer extends AbstractArtifactProducer
         }
         catch ( Exception e )
         {
+            e.printStackTrace();
             return new Artifact( rootFolder + "generationFailure.txt", e.getMessage().getBytes() );
         }
     }

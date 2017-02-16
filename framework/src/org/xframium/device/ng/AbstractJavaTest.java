@@ -62,8 +62,9 @@ public abstract class AbstractJavaTest extends AbstractSeleniumTest
     @BeforeMethod ( alwaysRun = true)
     public void beforeMethod( Method currentMethod, Object[] testArgs, ITestContext testContext )
     {
+        TestPackage testPackage = testPackageContainer.get();
         super.beforeMethod( currentMethod, testArgs, testContext );
-        TestName testName = (TestName) testContext.getAttribute( "testName" );
+        TestName testName = (TestName) testPackage.getTestName();
         
         ExecutionContextTest eC = new ExecutionContextTest();
         eC.setTestName( currentMethod.getName() );
@@ -72,7 +73,7 @@ public abstract class AbstractJavaTest extends AbstractSeleniumTest
         eC.setTest( kwt );
         eC.setAut( ApplicationRegistry.instance().getAUT() );
         eC.setCloud( CloudRegistry.instance().getCloud() );
-        eC.setDevice( getConnectedDevice( TestName.DEFAULT ).getDevice() );
+        eC.setDevice( testPackage.getConnectedDevice().getPopulatedDevice() );
         testName.setTest( eC );
     }
 
