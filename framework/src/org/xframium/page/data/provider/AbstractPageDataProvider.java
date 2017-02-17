@@ -185,7 +185,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
                 if ( p.getName().equals( useType ) )
                 {
                     String newName = recordType.substring( recordType.indexOf( "." ) + 1 );
-                    
+                    newName = newName.substring( newName.indexOf( "." ) + 1 );                    
                     if ( newName.trim().isEmpty() )
                         return new PageData[] { p };
                     else

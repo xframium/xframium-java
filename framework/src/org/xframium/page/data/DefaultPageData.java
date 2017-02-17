@@ -113,7 +113,7 @@ public class DefaultPageData implements PageData
 	    {
 	        String[] fieldArray = fieldName.split( "\\." );
 	        
-	        List<PageData> dataList = (List<PageData>) recordMap.get( fieldArray[ 1 ] );
+	        List<PageData> dataList = (List<PageData>) recordMap.get( fieldArray[ 0 ] );
 	        
 	        for ( PageData p : dataList )
 	        {
@@ -132,11 +132,21 @@ public class DefaultPageData implements PageData
 	        return null;
 	    }
 	    
-	    List<PageData> dataList = getPageData( fieldName );
-	    if ( dataList.size() > 0 )
-	        return dataList.get( 0 );
-	    else
-	        return null;
+	    Object data = recordMap.get( fieldName );
+	    if ( data != null )
+	    {
+	        if ( data instanceof List )
+	        {
+	            List<PageData> dataList = (List<PageData>) data;
+	            return dataList.toArray( new PageData[ 0 ] );
+	        }
+	        else if ( data instanceof PageData )
+	        {
+	            return data;
+	        }
+	    }
+	    
+	    return null;
 	}
 	
 	/* (non-Javadoc)
