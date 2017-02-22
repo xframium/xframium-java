@@ -106,13 +106,6 @@ public class KWSWindow extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception
 	{
-		if ( log.isDebugEnabled() )
-			log.debug( "Execution Function " + getName() );
-
-		if ( getParameterList().size() < 1 )
-			throw new ScriptConfigurationException( "First Parameter Switchtype should be provided with values BY_WINTITLE| BY_WINURL|BY_FRAME|BY_PARENTFRAME|BY_DEFAULT" );
-
-
 		// Verify if the parameter-1 values are correct
 		String switchType = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
 		String switchExpValue = "";

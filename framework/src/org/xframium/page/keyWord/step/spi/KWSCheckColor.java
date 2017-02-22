@@ -96,8 +96,6 @@ public class KWSCheckColor extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
-		if ( pageObject == null )
-			throw new ScriptConfigurationException( "Page Object was not defined" );
 
 		if (getParameterList().size() < 2 )
 			throw new ScriptConfigurationException( "Verify Color must have 3 parameters - Resolution, location(x, y) and color" );

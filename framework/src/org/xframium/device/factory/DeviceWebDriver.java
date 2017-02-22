@@ -68,6 +68,7 @@ import org.xframium.device.artifact.ArtifactProducer;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.interrupt.DeviceInterrupt;
 import org.xframium.device.interrupt.DeviceInterruptThread;
+import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
 import org.xframium.spi.PropertyProvider;
@@ -123,6 +124,7 @@ public class DeviceWebDriver
 
     public void setAut( ApplicationDescriptor aut )
     {
+        ExecutionContext.instance().setAut( aut );
         this.aut = aut;
     }
 

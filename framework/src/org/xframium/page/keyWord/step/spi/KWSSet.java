@@ -54,11 +54,6 @@ public class KWSSet extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
-		if ( pageObject == null )
-			throw new ScriptConfigurationException( "There was no Page Object defined" );
-
-		if ( getParameterList().size() < 1 )
-			throw new ScriptConfigurationException( "You must provide 1 parameter to setValue" );
 
 		String newValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
 		String option = null;

@@ -233,7 +233,7 @@ public class XMLApplicationProvider extends AbstractApplicationProvider
   		    }
   		}
   		
-  		return new ApplicationDescriptor( app.getName(), "", app.getAppPackage(), app.getBundleId(), app.getUrl(), app.getIosInstall(), app.getAndroidInstall(), capabilities, app.getVersion() );
+  		return new ApplicationDescriptor( app.getName(), "", app.getAppPackage(), app.getBundleId(), app.getUrl(), app.getIosInstall(), app.getAndroidInstall(), capabilities, app.getVersion(), app.getEnvironment(), app.isAutoStart() );
     }
 
 }

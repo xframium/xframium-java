@@ -87,6 +87,8 @@ public class KeyWordTest
     private String outputPage;
     private String[] operationList;
     private String mode = "function";
+    private int priority;
+    private int severity;
     
     private List<KeyWordParameter> expectedParameters = new ArrayList<KeyWordParameter>( 5 );
     
@@ -123,7 +125,7 @@ public class KeyWordTest
      * @param contentKeys
      *            the content keys
      */
-    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys, String deviceTags, Map<String,String> overrideMap, int count, String inputPage, String outputPages, String mode, String operationList )
+    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys, String deviceTags, Map<String,String> overrideMap, int count, String inputPage, String outputPages, String mode, String operationList, int priority, int severity )
     {
         this.name = name;
         this.active = Boolean.parseBoolean( getValue( name, "active", active + "", overrideMap ) );
@@ -179,6 +181,8 @@ public class KeyWordTest
         setInputPage( inputPage );
         setOutputPage( outputPages );
         setOperationList( operationList );
+        this.priority = priority;
+        this.severity = severity;
     }
     
     public List<KeyWordParameter> getExpectedParameters()

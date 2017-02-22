@@ -82,21 +82,5 @@ public class ApplicationVersion
                     
         }
     }
-    
-    public static void main( String[] args )
-    {
-        
-        ApplicationDescriptor x = new ApplicationDescriptor( "FordPass", "", "", "", "", "", "", null, 1.0 );
-        
-        
-        System.out.println( new ApplicationVersion( "FordPass(1.0-1.6 ),LincolnWay(*),FordPass-EU(1.0-*)" ).isVersion( x ) );
-        System.out.println( new ApplicationVersion( "FordPass(1.3-1.6 ),LincolnWay(*),FordPass-EU(1.0-*)" ).isVersion( x ) );
-        x = new ApplicationDescriptor( "LincolnWay", "", "", "", "", "", "", null, 36.0 );
-        System.out.println( new ApplicationVersion( "FordPass(1.3-1.6 ),LincolnWay(*),FordPass-EU(1.0-*)" ).isVersion( x ) );
-        x = new ApplicationDescriptor( "FordPass-EU", "", "", "", "", "", "", null, 0.9 );
-        System.out.println( new ApplicationVersion( "FordPass(1.3-1.6 ),LincolnWay(*),FordPass-EU(1.0-*)" ).isVersion( x ) );
-        x = new ApplicationDescriptor( "FordPass-EU", "", "", "", "", "", "", null, 36.3 );
-        System.out.println( new ApplicationVersion( "FordPass(1.3-1.6 ),LincolnWay(*),FordPass-EU(1.0-*)" ).isVersion( x ) );
-        
-    }
+
 }

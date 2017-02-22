@@ -45,7 +45,7 @@ public class KWSCompare2 extends AbstractKeyWordStep
         kwDescription = "Allows the script to compare to parameter values";
         kwHelp = "https://www.xframium.org/keyword.html#kw-compare";
         orMapping = false;
-        category = "Flow Control";
+        category = "Verification";
     }
     
     public enum CompareType

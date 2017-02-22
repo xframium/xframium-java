@@ -141,7 +141,7 @@ public class SQLApplicationProvider extends AbstractApplicationProvider
                                                                                                     url,
                                                                                                     and_inst,
                                                                                                     ios_inst,
-                                                                                                    capabilities, version ));
+                                                                                                    capabilities, version, "", true ));
             }
 
             data = SQLUtil.getResults( username, password, url, driver, capQuery, null );

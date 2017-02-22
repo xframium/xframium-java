@@ -36,6 +36,7 @@ import org.xframium.application.ApplicationDescriptor;
 import org.xframium.content.ContentManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.exception.XFramiumException;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
 import org.xframium.page.BY;
@@ -509,7 +510,7 @@ public abstract class AbstractElement implements Element
 		    if ( e instanceof XFramiumException )
                 throw e;
             else
-                throw new ScriptConfigurationException( e.getMessage() );
+                throw new ScriptException( e.getMessage() );
 		}
 		finally
 		{
@@ -538,7 +539,7 @@ public abstract class AbstractElement implements Element
             if ( e instanceof XFramiumException )
                 throw e;
             else
-                throw new ScriptConfigurationException( e.getMessage() );
+                throw new ScriptException( e.getMessage() );
         }
         finally
         {
@@ -567,7 +568,7 @@ public abstract class AbstractElement implements Element
 		    if ( e instanceof XFramiumException )
                 throw e;
             else
-                throw new ScriptConfigurationException( e.getMessage() );
+                throw new ScriptException( e.getMessage() );
 		}
 		finally
 		{
@@ -597,7 +598,7 @@ public abstract class AbstractElement implements Element
 		    if ( e instanceof XFramiumException )
                 throw e;
             else
-                throw new ScriptConfigurationException( e.getMessage() );
+                throw new ScriptException( e.getMessage() );
 		}
 		finally
 		{
@@ -677,7 +678,7 @@ public abstract class AbstractElement implements Element
 		    if ( e instanceof XFramiumException )
                 throw e;
             else
-                throw new ScriptConfigurationException( e.getMessage() );
+                throw new ScriptException( e.getMessage() );
 		}
 		finally
 		{
@@ -706,7 +707,7 @@ public abstract class AbstractElement implements Element
 		    if ( e instanceof XFramiumException )
                 throw e;
             else
-                throw new ScriptConfigurationException( e.getMessage() );
+                throw new ScriptException( e.getMessage() );
 		}
 		finally
 		{
@@ -744,7 +745,7 @@ public abstract class AbstractElement implements Element
             if ( e instanceof XFramiumException )
                 throw e;
             else
-                throw new ScriptConfigurationException( e.getMessage() );
+                throw new ScriptException( e.getMessage() );
         }
         finally
         {
@@ -800,7 +801,7 @@ public abstract class AbstractElement implements Element
 			if(e instanceof XFramiumException)
 			    throw e;
 			else
-				throw new ScriptConfigurationException( e.getMessage() );
+				throw new ScriptException( e.getMessage() );
 		}
 		finally
 		{			

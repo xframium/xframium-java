@@ -20,6 +20,8 @@ public class DriverContainer
     private String testTags = "";
     private String deviceTags = "";
     private String suiteName = "";
+    private String phase = "";
+    private String domain = "";
     
     private String beforeTest;
     private String afterTest;
@@ -34,8 +36,27 @@ public class DriverContainer
     private List<ArtifactType> artifactList = new ArrayList<ArtifactType>( 20 );
     private boolean secureCloud = false;
     
-    
-    
+
+    public String getDomain()
+    {
+        return domain;
+    }
+
+    public void setDomain( String domain )
+    {
+        this.domain = domain;
+    }
+
+    public String getPhase()
+    {
+        return phase;
+    }
+
+    public void setPhase( String phase )
+    {
+        this.phase = phase;
+    }
+
     public String getBeforeTest()
     {
         return beforeTest;

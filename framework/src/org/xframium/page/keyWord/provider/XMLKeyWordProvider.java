@@ -322,7 +322,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 */
 	private KeyWordTest parseTest( Test xTest )
 	{
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount(), null, null, null, null );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount(), null, null, null, null, xTest.getPriority(), xTest.getSeverity() );
 		
         
 		KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
@@ -337,7 +337,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	
 	private KeyWordTest parseFunction( XFunction xTest)
     {
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), null, false, xTest.getLinkId(), null, 0, xTest.getDescription() != null ? xTest.getDescription().getValue() : null, null, null, null, configProperties, 1, xTest.getInputPage(), xTest.getOutputPage(), xTest.getMode(), xTest.getOperations() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), null, false, xTest.getLinkId(), null, 0, xTest.getDescription() != null ? xTest.getDescription().getValue() : null, null, null, null, configProperties, 1, xTest.getInputPage(), xTest.getOutputPage(), xTest.getMode(), xTest.getOperations(), 0, 0 );
         test.getExpectedParameters().addAll( parseParameters( xTest.getParameter() ) );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );

@@ -54,9 +54,6 @@ public class KWSAlign extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
-		if ( pageObject == null )
-			throw new ScriptConfigurationException( "Page Object was not defined" );
-		
 		for ( int i=0; i<getParameterList().size(); i++ )
 		{
 		    String[] dataSet = ( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "" ).split( "=" );

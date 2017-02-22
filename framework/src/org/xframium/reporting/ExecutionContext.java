@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import org.xframium.application.ApplicationDescriptor;
 import org.xframium.device.data.DataManager;
 
 public class ExecutionContext
@@ -20,7 +21,23 @@ public class ExecutionContext
     private Date startTime;
     private Date endTime;
     private String gridUrl;
+    private String phase;
+    private String domain;
+    private Map<String,String> configProperties;
+    private ApplicationDescriptor aut = null;
     
+    
+
+    public Map<String, String> getConfigProperties()
+    {
+        return configProperties;
+    }
+
+    public void setConfigProperties( Map<String, String> configProperties )
+    {
+        this.configProperties = configProperties;
+    }
+
     private List<Map<String, Object>> executionSummary = new ArrayList<Map<String, Object>>( 10 );
     private Map<String,String> sPMap = new HashMap<String,String>( 10 );
 
@@ -52,8 +69,37 @@ public class ExecutionContext
         }
     }
     
+    public ApplicationDescriptor getAut()
+    {
+        return aut;
+    }
+
+    public void setAut( ApplicationDescriptor aut )
+    {
+        if ( this.aut == null && !aut.getName().equals( "NOOP" ) )
+            this.aut = aut;
+    }
     
-    
+    public String getPhase()
+    {
+        return phase;
+    }
+
+    public void setPhase( String phase )
+    {
+        this.phase = phase;
+    }
+
+    public String getDomain()
+    {
+        return domain;
+    }
+
+    public void setDomain( String domain )
+    {
+        this.domain = domain;
+    }
+
     public String getGridUrl()
     {
         return gridUrl;

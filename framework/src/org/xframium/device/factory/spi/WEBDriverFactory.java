@@ -194,7 +194,9 @@ public class WEBDriverFactory extends AbstractDriverFactory
 
             if ( ApplicationRegistry.instance().getAUT() != null && ApplicationRegistry.instance().getAUT().getUrl() != null && !ApplicationRegistry.instance().getAUT().getUrl().isEmpty() )
             {
-                useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver );
+                if ( ApplicationRegistry.instance().getAUT().isAutoStart() )
+                    useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver );
+                
                 webDriver.setAut( ApplicationRegistry.instance().getAUT() );
                 String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
                 webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );

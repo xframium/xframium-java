@@ -63,6 +63,20 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 
 	private Map<String,String> overrideMap = new HashMap<String,String>( 20 ); 
 	
+	public String toString()
+	{
+	    StringBuilder sB = new StringBuilder();
+	    
+	    sB.append( "Provider Type: " ).append( getClass().getSimpleName() ).append( "\r\n" );
+	    
+	    for ( PageDataContainer p : recordMap.values() )
+	    {
+	        sB.append( p.toString() ).append( "\r\n" );
+	    }
+	    
+	    return sB.toString();
+	}
+	
 	/**
 	 * Populate trees.
 	 */

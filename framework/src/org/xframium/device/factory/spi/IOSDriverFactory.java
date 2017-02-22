@@ -97,7 +97,6 @@ public class IOSDriverFactory extends AbstractDriverFactory
                 dc.setCapability( Device.LOCALE, localeToConfigure );
             }
             
-System.out.println( hubUrl );
             if ( log.isDebugEnabled() )
                 log.debug( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 			
@@ -113,10 +112,9 @@ System.out.println( hubUrl );
                 webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
 			webDriver.context( "NATIVE_APP" );
 			
-			
 			if( ApplicationRegistry.instance().getAUT() != null && ApplicationRegistry.instance().getAUT().getAppleIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAppleIdentifier().isEmpty() )
             {
-			    if ( ( (IOSDriver) webDriver.getNativeDriver() ).isAppInstalled( ApplicationRegistry.instance().getAUT().getAppleIdentifier() ) )
+			    if ( ApplicationRegistry.instance().getAUT().isAutoStart() && ( (IOSDriver) webDriver.getNativeDriver() ).isAppInstalled( ApplicationRegistry.instance().getAUT().getAppleIdentifier() ) )
 			    {
     			    if ( !useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver ) )
     			        throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAppleIdentifier() );
@@ -124,8 +122,12 @@ System.out.println( hubUrl );
 			    else
 			    {
 			        useCloud.getCloudActionProvider().installApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver, false );
-			        if ( !useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver ) )
-                        throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAppleIdentifier() );
+			        
+			        if ( ApplicationRegistry.instance().getAUT().isAutoStart() )
+			        {
+    			        if ( !useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver ) )
+                            throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAppleIdentifier() );
+			        }
 			    }
 			    
 			    webDriver.setAut( ApplicationRegistry.instance().getAUT() );

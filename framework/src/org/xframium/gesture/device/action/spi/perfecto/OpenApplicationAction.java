@@ -35,6 +35,7 @@ import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.bean.Execution;
 import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
+import org.xframium.reporting.ExecutionContext;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -59,6 +60,7 @@ public class OpenApplicationAction extends AbstractDefaultAction implements Devi
 		if ( appDesc == null )
 		    throw new ScriptConfigurationException( "The Application " + applicationName + " does not exist" );
 	
+		
 		if ( appDesc.isWeb() )
 		{
     		String selectLinkOpeninNewTab = Keys.chord(Keys.CONTROL,"t");

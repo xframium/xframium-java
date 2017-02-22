@@ -23,6 +23,8 @@
     <attribute name="iosInstall" type="string" use="optional" />
     <attribute name="androidInstall" type="string" use="optional" />
     <attribute name="version" type="double" use="optional" default="0.0" />
+    <attribute name="environment" type="string" use="optional" default="" />
+    <attribute name="autoStart" type="boolean" use="optional" default="true" />
   </complexType>
   <complexType name="DeviceCapability">
     <simpleContent>

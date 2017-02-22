@@ -115,16 +115,19 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 			
 			if( ApplicationRegistry.instance().getAUT() != null && ApplicationRegistry.instance().getAUT().getAndroidIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAndroidIdentifier().isEmpty() )
             {
-			    if ( ( (AndroidDriver) webDriver.getNativeDriver() ).isAppInstalled( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() ) )
+			    if ( ApplicationRegistry.instance().getAUT().isAutoStart() && ( (AndroidDriver) webDriver.getNativeDriver() ).isAppInstalled( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() ) )
                 {
                     if ( !useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver ) )
                         throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
                 }
                 else
                 {
-                    useCloud.getCloudActionProvider().installApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver, false );
-                    if ( !useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver ) )
-                        throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
+                    if ( ApplicationRegistry.instance().getAUT().isAutoStart() )
+                    {
+                        useCloud.getCloudActionProvider().installApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver, false );
+                        if ( !useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver ) )
+                            throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
+                    }
                 }
 			    
 			    webDriver.setAut( ApplicationRegistry.instance().getAUT() );

@@ -1101,7 +1101,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         case ERROR:
                             stepStatus = StepStatus.FAILURE;
                             if ( stepException == null )
-                                stepException = new ScriptConfigurationException( kwName + " has failed to complete" );
+                                stepException = new ScriptException( kwName + " has failed to complete" );
     
                             break;
     
@@ -1113,7 +1113,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         case LOG_IGNORE:
                             stepStatus = StepStatus.FAILURE_IGNORED;
                             if ( stepException == null )
-                                stepException = new ScriptConfigurationException( kwName + " has failed to complete" );
+                                stepException = new ScriptException( kwName + " has failed to complete" );
                     }
                 }
             }

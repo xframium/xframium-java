@@ -104,6 +104,8 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     public abstract FavoriteContainer configureFavorites();
 
     protected abstract boolean _executeTest( SuiteContainer sC ) throws Exception;
+    
+    protected abstract Map<String,String> getConfigurationProperties();
 
     @Override
     public void readConfiguration( File configurationFile, boolean runTest )
@@ -485,6 +487,9 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                 CloudRegistry.instance().startEmbeddedCloud();
             
             ExecutionContext.instance().setSuiteName( (driverC.getSuiteName() != null && !driverC.getSuiteName().isEmpty()) ? driverC.getSuiteName() : ApplicationRegistry.instance().getAUT().getName() );
+            ExecutionContext.instance().setPhase( driverC.getPhase() );
+            ExecutionContext.instance().setDomain( driverC.getDomain() );
+            ExecutionContext.instance().setConfigProperties( getConfigurationProperties() );
             
             if ( runTest )
                 executeTest( sC );

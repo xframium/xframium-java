@@ -140,7 +140,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
             tagNames = tagNames.substring( 0, tagNames.length() - 1 );
         }
         
-        this.currentScenario = new KeyWordTest( xTest.getName(), true, null, null, false, null, null, 0, xTest.getDescription(), tagNames, null, null, configProperties, 0, null, null, null, null );
+        this.currentScenario = new KeyWordTest( xTest.getName(), true, null, null, false, null, null, 0, xTest.getDescription(), tagNames, null, null, configProperties, 0, null, null, null, null, 0, 0 );
 
         for ( KeyWordStep xStep : backgroundSteps )
             this.currentScenario.addStep( xStep );
@@ -162,7 +162,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
             tagNames = tagNames.substring( 0, tagNames.length() - 1 );
         }
         
-        this.currentScenario = new KeyWordTest( xTest.getName(), true, null, xTest.getName(), false, null, null, 0, xTest.getDescription(), tagNames, null, null, configProperties, 0, null, null, null, null );
+        this.currentScenario = new KeyWordTest( xTest.getName(), true, null, xTest.getName(), false, null, null, 0, xTest.getDescription(), tagNames, null, null, configProperties, 0, null, null, null, null, 0, 0 );
 
         for ( KeyWordStep xStep : backgroundSteps )
             this.currentScenario.addStep( xStep );
