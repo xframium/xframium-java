@@ -486,6 +486,7 @@ public abstract class AbstractSeleniumTest
         try
         {
             testPackage = testPackageContainer.get();
+            testPackageContainer.remove();
             HashMap<String, ConnectedDevice> map = getDevicesToCleanUp();
             threadContext.set( null );
             Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null);
@@ -546,7 +547,6 @@ public abstract class AbstractSeleniumTest
     private void cleanUpConnectedDevice( String name, TestName testName, ConnectedDevice device, ITestResult testResult, TestContainer testContainer, boolean primaryDevice )
     {
         DeviceWebDriver webDriver = device.getWebDriver();
-        Device currentDevice = device.getDevice();
         ExecutionContextTest test = null;
 
         if ( testFlow.isInfoEnabled() )

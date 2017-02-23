@@ -110,7 +110,7 @@ public class ExecutionContext
         this.gridUrl = gridUrl;
     }
 
-    public void addExecution( ExecutionContextTest test )
+    public synchronized void addExecution( ExecutionContextTest test )
     {
         executionList.add( test );
         executionSummary.add( test.toMap() );

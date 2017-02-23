@@ -973,6 +973,8 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         dC.setTestTags( getValue( "driver.tagNames", xRoot.getDriver().getTagNames(), configProperties ) );
         dC.setDryRun( xRoot.getDriver().isDryRun() );
         dC.setSuiteName( getValue( "driver.suiteName", xRoot.getDriver().getSuiteName(), configProperties ) );
+        dC.setDomain( getValue( "driver.domain", xRoot.getDriver().getDomain(), configProperties ) );
+        dC.setPhase( getValue( "driver.phase", xRoot.getDriver().getPhase(), configProperties ) );
 
         return dC;
     }
