@@ -1,6 +1,5 @@
 package org.xframium.device.ng;
 
-import java.util.List;
 import org.xframium.page.data.PageData;
 import org.xframium.reporting.ExecutionContextTest;
 
@@ -33,11 +32,27 @@ public class TestName
     {
         return dataDriven;
     }
-
-    public String toString()
+    
+    public TestName clone()
     {
-        return testName;
+        TestName newTest = new TestName();
+        newTest.testName = testName;
+        newTest.baseTestName = baseTestName;
+        newTest.fullName = fullName;
+        newTest.personaName = personaName;
+        newTest.testContext = testContext;
+        newTest.rawName = rawName;
+        newTest.contentKey = contentKey;
+        newTest.dataDriven = dataDriven;
+        newTest.iteration = iteration;
+        newTest.test = test;
+        return newTest;
     }
+
+//    public String toString()
+//    {
+//        return testName;
+//    }
     
     public void setDataDriven( PageData dataDriven )
     {

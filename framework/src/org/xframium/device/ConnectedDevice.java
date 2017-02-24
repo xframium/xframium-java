@@ -146,7 +146,9 @@ public class ConnectedDevice
 	 */
 	public String toString()
 	{
-	    if ( device != null )
+	    if ( webDriver != null && webDriver.getPopulatedDevice() != null )
+	        return webDriver.getPopulatedDevice().getEnvironment();
+	    else if ( device != null )
 	        return device.getEnvironment();
 	    else
 	        return "Unknown Device";

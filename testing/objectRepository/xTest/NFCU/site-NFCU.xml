@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
   <import fileName="NFCU/page-Home.xml" />
-  <import fileName="NFCU/page-Failed Login.xml" />
 </elementDefinition>

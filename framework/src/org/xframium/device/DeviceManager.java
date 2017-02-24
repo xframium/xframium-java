@@ -43,7 +43,6 @@ import org.xframium.device.data.DataProvider.DriverType;
 import org.xframium.device.data.NamedDataProvider;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.factory.DriverManager;
-import org.xframium.device.ng.RunContainer;
 import org.xframium.device.ng.RunContainer.RunStatus;
 import org.xframium.device.ng.TestContainer;
 import org.xframium.device.ng.TestPackage;
@@ -56,6 +55,7 @@ import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.KeyWordToken;
+import org.xframium.reporting.ElementUsage;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextStep;
 import org.xframium.reporting.ExecutionContextTest;
@@ -322,6 +322,7 @@ public class DeviceManager implements ArtifactListener
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( CloudDescriptor.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( Page.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( PageData.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ElementUsage.class, new ReflectionSerializer() );
 
     }
 

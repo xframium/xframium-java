@@ -31,13 +31,11 @@ import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 import org.xframium.artifact.ArtifactTime;
 import org.xframium.artifact.ArtifactType;
@@ -50,6 +48,9 @@ import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.integrations.alm.ALMRESTConnection;
+import org.xframium.integrations.alm.entity.ALMAttachment;
+import org.xframium.integrations.alm.entity.ALMDefect;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.keyWord.KeyWordDriver;
@@ -289,7 +290,7 @@ public abstract class AbstractSeleniumTest
             {
                 for ( int j = 0; j < deviceList.size(); j++ )
 
-                    newArray[i * deviceList.size() + j] = finalList.get( i );
+                    newArray[i * deviceList.size() + j] = finalList.get( i ).clone();
             }
         }
         else
@@ -482,11 +483,12 @@ public abstract class AbstractSeleniumTest
     @AfterMethod ( alwaysRun = true)
     public void afterMethod( Method currentMethod, Object[] testArgs, ITestResult testResult, ITestContext testContext )
     {
-        TestPackage testPackage = null;
+        TestPackage testPackage = testPackageContainer.get();
+        testPackageContainer.remove();
         try
         {
-            testPackage = testPackageContainer.get();
-            testPackageContainer.remove();
+            
+            
             HashMap<String, ConnectedDevice> map = getDevicesToCleanUp();
             threadContext.set( null );
             Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null);
@@ -505,15 +507,15 @@ public abstract class AbstractSeleniumTest
                 }
             }
             
-            cleanUpConnectedDevice( "DEFAULT", testPackage.getTestName(), testPackage.getConnectedDevice(), testResult, (TestContainer) testArgs[0], true );
-
+            cleanUpConnectedDevice( "DEFAULT", testPackage.getTestName(), testPackage.getConnectedDevice(), testResult, true, testPackage );
             if ( testPackage.getConnectedDevice().getDevice() != null )
             {
                 DeviceManager.instance().addRun( testPackage.getConnectedDevice().getWebDriver().getPopulatedDevice(), testPackage, (TestContainer) testArgs[0], testResult.isSuccess() );
             }
             
             if ( testFlow.isInfoEnabled() )
-                testFlow.info( Thread.currentThread().getName() + ": Adding Execution for " + testPackage.getRunKey() );
+                testFlow.info( Thread.currentThread().getName() + ": Adding Execution for " + testPackage.getRunKey() + " - " + testPackage.getTestName().getTest().getDevice().getKey() + " - " + testPackage.getDevice().getKey() + " - "+ testPackage + " - " + testPackage.getTestName() );
+            
             ExecutionContext.instance().addExecution( testPackage.getTestName().getTest() );
             
             while ( (keys != null) && (keys.hasNext()) )
@@ -521,7 +523,7 @@ public abstract class AbstractSeleniumTest
                 String name = keys.next();
                 ConnectedDevice device = map.get( name );
                 
-                cleanUpConnectedDevice( name, testPackage.getTestName(), device, testResult, (TestContainer) testArgs[0], true );
+                cleanUpConnectedDevice( name, testPackage.getTestName(), device, testResult, true, testPackage );
             }
 
             try
@@ -544,7 +546,7 @@ public abstract class AbstractSeleniumTest
         }
     }
 
-    private void cleanUpConnectedDevice( String name, TestName testName, ConnectedDevice device, ITestResult testResult, TestContainer testContainer, boolean primaryDevice )
+    private void cleanUpConnectedDevice( String name, TestName testName, ConnectedDevice device, ITestResult testResult, boolean primaryDevice, TestPackage testPackage )
     {
         DeviceWebDriver webDriver = device.getWebDriver();
         ExecutionContextTest test = null;
@@ -685,14 +687,71 @@ public abstract class AbstractSeleniumTest
                             {
                                 if ( ((ReportiumProvider) webDriver).getReportiumClient() != null )
                                 {
-                                    test.addExecutionParameter( "SAUCELABS", ((ReportiumProvider) webDriver).getReportiumClient().getReportUrl() );
+                                    test.addExecutionParameter( "REPORTIUM", ((ReportiumProvider) webDriver).getReportiumClient().getReportUrl() );
                                 }
                             }
                         }
                     }
-
+                    
                     if ( test != null )
                     {
+                        
+                        
+                        try
+                        {
+                            if ( webDriver.isConnected() && !testResult.isSuccess() &&  DataManager.instance().isArtifactEnabled( ArtifactType.ALM_DEFECT ) )
+                            {
+                                //
+                                // ALM Integration
+                                //
+                                ALMDefect almDefect = new ALMDefect();
+                                almDefect.setAssignedTo( ExecutionContext.instance().getConfigProperties().get( "alm.assignedTo" ) );
+                                almDefect.setDescription( test.getMessageDetail() );
+                                almDefect.setDetectedBy( ExecutionContext.instance().getConfigProperties().get( "alm.userName" ) );
+                                almDefect.setDetectedInCycle( ExecutionContext.instance().getPhase() );
+                                almDefect.setDetectedInEnvironment( ExecutionContext.instance().getAut().getEnvironment() );
+                                almDefect.setDetectedInRelease( ((int) ExecutionContext.instance().getAut().getVersion()) + "" );
+
+                                almDefect.setPriority( test.getTest().getPriority() );
+                                almDefect.setSeverity( test.getTest().getSeverity() );
+                                almDefect.setStatus( ExecutionContext.instance().getConfigProperties().get( "alm.defectStatus" ) );
+                                almDefect.setSummary( test.getMessage() );
+                                List<ALMAttachment> artifactList = new ArrayList<ALMAttachment>( 10 );
+                                for ( ArtifactType a : ArtifactType.CONSOLE_LOG.getSupported() )
+                                {
+                                    if ( test.getExecutionParameter( a.name() + "_FILE" ) != null )
+                                    {
+                                        artifactList.add( new ALMAttachment( new File( rootFolder, test.getTestName() + System.getProperty( "file.separator" ) + test.getDevice().getKey() + System.getProperty( "file.separator" ) + test.getExecutionParameter( a.name() + "_FILE" ) ), null, "", a.getDescription() ) );
+                                    }
+                                }
+                                
+                                String screenShot = test.getScreenShotLocation();
+                                if ( screenShot != null )
+                                {
+                                    artifactList.add( new ALMAttachment( new File( screenShot ), null, "", "SCREENSHOT" ) );
+                                }
+                                
+                                almDefect.setAttachments( artifactList.toArray( new ALMAttachment[ 0 ] ) );
+                                ALMRESTConnection arc = new ALMRESTConnection( ExecutionContext.instance().getConfigProperties().get( "alm.serverUrl" ), ExecutionContext.instance().getDomain(), ExecutionContext.instance().getSuiteName() );
+                                arc.login( ExecutionContext.instance().getConfigProperties().get( "alm.userName" ), ExecutionContext.instance().getConfigProperties().get( "alm.password" ) );
+                                if ( log.isInfoEnabled() )
+                                    log.info( "ALM: " + almDefect.toXML() );
+                                String almDefectUrl = arc.addDefect( almDefect );
+                                
+                                
+                                test.addExecutionParameter( "ALM_DEFECT", almDefectUrl + "?login-form-required=y" );
+                                arc.logout();
+                                
+                                
+                            }
+                            
+
+                        }
+                        catch ( Exception e )
+                        {
+                            log.error( "Error Update ALM - " + e );
+                        }
+                        
                         try
                         {
                             if ( testFlow.isInfoEnabled() )
@@ -701,15 +760,14 @@ public abstract class AbstractSeleniumTest
                             Artifact currentArtifact = ((ArtifactProducer) webDriver).getArtifact( webDriver, ArtifactType.EXECUTION_RECORD_JSON, device, runKey, testResult.getStatus() == ITestResult.SUCCESS, test );
                             if ( currentArtifact != null )
                                 currentArtifact.writeToDisk( rootFolder );
-
+                            
                             currentArtifact = ((ArtifactProducer) webDriver).getArtifact( webDriver, ArtifactType.EXECUTION_RECORD_HTML, device, runKey, testResult.getStatus() == ITestResult.SUCCESS, test );
                             if ( currentArtifact != null )
                                 currentArtifact.writeToDisk( rootFolder );
-
                         }
-                        catch ( Exception e )
+                        catch( Exception e )
                         {
-                            log.error( "Error acquiring Artifacts - " + e );
+                            log.error( "Error creating xFramium reports - " + e );
                         }
                     }
                 }

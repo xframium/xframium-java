@@ -5,12 +5,16 @@
     <element name="skipnav" value="//a[@id='skipnav']" descriptor="XPATH"/>
     <element name="Sign In" value="//a[text()='Sign In']" descriptor="XPATH"/>
     <element name="ANCHOR3" value="//div[@id='logolayer']/a[1]" descriptor="XPATH"/>
-    <element name="About Us" value="//div[@id='globalnav']/a[1]" descriptor="XPATH"/>
+    <element name="About Us" value="//div[@id='globalnav']/a[1]" descriptor="COMPLEX">
+<element value="//aaaaaa" descriptor="XPATH" os="IOS"/>
+<element value="text" descriptor="V_TEXT" os="ANDROID"/>
+<element value="#element" descriptor="CSS" os="WINDOWS"/>
+</element>
     <element name="Branches &amp; ATMs" value="//div[@id='globalnav']/a[2]" descriptor="XPATH"/>
     <element name="Become a Member" value="//div[@id='globalnav']/a[3]" descriptor="XPATH"/>
     <element name="Contact Us" value="//div[@id='globalnav']/a[4]" descriptor="XPATH"/>
     <element name="Security" value="//div[@id='globalnav']/a[5]" descriptor="XPATH"/>
-    <element name="accessible-megamenu-1487007191503-1" value="//a[@id='accessible-megamenu-1487007191503-1']" descriptor="XPATH"/>
+    <element name="accessible-megamenu-1487172865477-1" value="//a[@id='accessible-megamenu-1487172865477-1']" descriptor="XPATH"/>
     <element name="Equity" value="//a[text()='Equity']" descriptor="XPATH"/>
     <element name="Auto" value="//a[text()='Auto']" descriptor="XPATH"/>
     <element name="Student Loans" value="//a[text()='Student Loans']" descriptor="XPATH"/>
@@ -42,7 +46,7 @@
     <element name="Investments" value="//a[text()='Investments']" descriptor="XPATH"/>
     <element name="Insurance" value="//a[text()='Insurance']" descriptor="XPATH"/>
     <element name="Trust Services" value="//a[text()='Trust Services']" descriptor="XPATH"/>
-    <element name="accessible-megamenu-1487007191510-3" value="//a[@id='accessible-megamenu-1487007191510-3']" descriptor="XPATH"/>
+    <element name="accessible-megamenu-1487172865482-3" value="//a[@id='accessible-megamenu-1487172865482-3']" descriptor="XPATH"/>
     <element name="Am I Eligible?" value="//a[text()='Am I Eligible?']" descriptor="XPATH"/>
     <element name="Welcome to Navy Federal" value="//a[text()='Welcome to Navy Federal']" descriptor="XPATH"/>
     <element name="Military Exclusives" value="//a[text()='Military Exclusives']" descriptor="XPATH"/>
@@ -55,7 +59,7 @@
     <element name="Special Offers and Discounts" value="//a[text()='Special Offers and Discounts']" descriptor="XPATH"/>
     <element name="Business Services Application" value="//a[text()='Business Services Application']" descriptor="XPATH"/>
     <element name="Switch to Navy Federal" value="//a[text()='Switch to Navy Federal']" descriptor="XPATH"/>
-    <element name="accessible-megamenu-1487007191516-5" value="//a[@id='accessible-megamenu-1487007191516-5']" descriptor="XPATH"/>
+    <element name="accessible-megamenu-1487172865484-5" value="//a[@id='accessible-megamenu-1487172865484-5']" descriptor="XPATH"/>
     <element name="Managing Your Money" value="//a[text()='Managing Your Money']" descriptor="XPATH"/>
     <element name="MakingCents" value="//a[text()='MakingCents']" descriptor="XPATH"/>
     <element name="Security Center" value="//a[text()='Security Center']" descriptor="XPATH"/>

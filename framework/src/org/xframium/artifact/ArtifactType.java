@@ -83,6 +83,8 @@ public enum ArtifactType
     
     GRID_REPORT( ArtifactTime.NOOP, 21, "GRID_REPORT", "xFramium GRID Report" ),
     ADD_TO_CSV( ArtifactTime.AFTER_TEST, 22, "CSV_REPORT_DATA", "xFramium CSV Report compiled from REPORT steps" ),
+    
+    ALM_DEFECT( ArtifactTime.NOOP, 23, "ALM_DEFECT", "Creates a defect in HP ALM on failure" ),
     ;
     
     /** The time. */
@@ -113,6 +115,7 @@ public enum ArtifactType
         supportedList.add( ArtifactType.REPORTIUM );
         supportedList.add( ArtifactType.GRID_REPORT );
         supportedList.add( ArtifactType.ADD_TO_CSV );
+        supportedList.add( ArtifactType.ALM_DEFECT );
 
         return supportedList;
     }
@@ -139,6 +142,11 @@ public enum ArtifactType
     public ArtifactTime getTime()
     {
         return time;
+    }
+    
+    public String getDescription()
+    {
+        return description;
     }
 }
 

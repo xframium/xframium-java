@@ -7,10 +7,15 @@
   <devices provider="XML" fileName="deviceRegistry.xml">
     
   </devices>
-  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" testNames="Alert Test,Align Test"> 
+  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="CIBC" embeddedServer="true" testNames="Mouse Test" phase="1001" domain="PROFESSIONAL_SERVICES"> 
     
     <property name="xFramium General KeyWord Test.count">3</property>
     <property name="selenium.timeouts.implicitWait">5000</property>
+    <property name="alm.serverUrl">http://alm.perfectomobilelab.net:8080/qcbin</property>
+    <property name="alm.userName">alleng</property>
+    <property name="alm.password">Perfecto123!</property>
+    <property name="alm.assignedTo">alleng</property>
+    <property name="alm.defectStatus">New</property>
     <propertyAdapter className="org.xframium.device.property.SeleniumPropertyAdapter" />
     <artifact type="FAILURE_SOURCE" />
     <artifact type="DEVICE_LOG" />
@@ -24,6 +29,7 @@
     <artifact type="EXECUTION_REPORT_PDF" />
     <artifact type="GRID_REPORT"/>
     <artifact type="ADD_TO_CSV"/>
+    <artifact type="ALM_DEFECT" active="true"/>
     
   </driver>
 

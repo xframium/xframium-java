@@ -99,6 +99,26 @@ public class KeyWordTest
     /** The step list. */
     private List<KeyWordStep> stepList = new ArrayList<KeyWordStep>( 10 );
 
+    public int getPriority()
+    {
+        return priority;
+    }
+
+    public void setPriority( int priority )
+    {
+        this.priority = priority;
+    }
+
+    public int getSeverity()
+    {
+        return severity;
+    }
+
+    public void setSeverity( int severity )
+    {
+        this.severity = severity;
+    }
+
     /**
      * Instantiates a new key word test.
      *

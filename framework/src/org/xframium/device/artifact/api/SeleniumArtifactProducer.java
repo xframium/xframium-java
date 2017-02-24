@@ -38,6 +38,7 @@ import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.AbstractArtifactProducer;
 import org.xframium.device.artifact.Artifact;
+import org.xframium.integrations.alm.entity.ALMDefect;
 import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc

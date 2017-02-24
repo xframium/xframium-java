@@ -86,6 +86,8 @@ public class TestContainer
             
             for ( int i=0; i<testList.size(); i++ )
             {
+                
+                
                 testName = getTest();
                 String runKey = getRunKey( useDevice, currentMethod, testName.getTestName(), testName.getPersonaName() );
                 
@@ -97,7 +99,7 @@ public class TestContainer
                     if ( cD != null )
                     {
                         testPackage.setConnectedDevice( cD );
-                        testFlow.warn( "Test Started: " + runKey + " - " + cD + " - " + testPackage );
+                        testFlow.warn( "Test Started: " + runKey + " - " + cD + " - " + testPackage + " - " + testName );
                         return testPackage;
                     }
                     else

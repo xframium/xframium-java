@@ -196,8 +196,31 @@ public class ExecutionContextStep
     {
         for ( ExecutionContextStep eS : stepList )
         {
-            if ( eS.getStepException() != null )
-                return eS.getStepException();
+            if ( !eS.getStatus() )
+            {
+                if ( eS.getStepList() != null && eS.getStepList().size() > 0 )
+                    return eS.getStepException();
+                else
+                    return eS.getThrowable();
+            }
+        }
+        
+        return null;
+    }
+    
+    public String getScreenShotLocation()
+    {
+
+        for ( ExecutionContextStep eS : stepList )
+        {
+            if ( !eS.getStatus() && executionParameter.containsKey( "SCREENSHOT" ) )
+                return executionParameter.get( "SCREENSHOT" );
+            else if ( eS.getStepList() != null && eS.getStepList().size() > 0 )
+            {
+                String screenShot = eS.getScreenShotLocation();
+                if ( screenShot != null )
+                    return screenShot;
+            }
         }
         
         return null;

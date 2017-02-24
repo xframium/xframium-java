@@ -205,8 +205,9 @@ public class XMLTestDriver extends AbstractSeleniumTest
             if ( test.getDescription() != null && !test.getDescription().isEmpty() )
                 testPackage.getConnectedDevice().getWebDriver().setProperty( "testDescription", test.getDescription() );
 
-            testFlow.info( Thread.currentThread().getName() + ": Executing " + testPackage.getRunKey() );
+            testFlow.info( Thread.currentThread().getName() + ": Executing " + testPackage.getRunKey() + " against " + testPackage.getConnectedDevice().getDevice().getKey() );
             executionContextTest = KeyWordDriver.instance().executeTest( testName, testPackage.getConnectedDevice().getWebDriver(), null );
+            testFlow.info( Thread.currentThread().getName() + ": Completed Executing " + testPackage.getRunKey() + " against " + executionContextTest.getDevice().getKey() );
             returnValue = executionContextTest.getStatus();
             testName.setTest( executionContextTest );
 

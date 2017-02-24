@@ -200,6 +200,7 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         return new Artifact( rootFolder + "wcag.html", wcagBuffer.toString().getBytes() );
 	}
 	
+	
 	protected Artifact generateCSVRecord( Device device, String testName, String rootFolder )
 	{
         StringBuffer stringBuffer = new StringBuffer();
