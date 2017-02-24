@@ -248,8 +248,8 @@ public class ALMRESTConnection
         con.connect();
         ALMResponse ret = retrieveHtmlResponse( con );
 
-        if ( log.isDebugEnabled() )
-            log.debug( "Return Value: " + ret );
+        if ( log.isInfoEnabled() )
+            log.info( "Return Value: " + ret );
 
         updateCookies( ret );
 

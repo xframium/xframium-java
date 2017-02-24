@@ -205,7 +205,7 @@ public class ExecutionContextStep
             }
         }
         
-        return null;
+        return throwable;
     }
     
     public String getScreenShotLocation()
