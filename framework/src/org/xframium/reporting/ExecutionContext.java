@@ -1,6 +1,7 @@
 package org.xframium.reporting;
 
 import java.io.File;
+import java.sql.DriverManager;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,8 +26,20 @@ public class ExecutionContext
     private String domain;
     private Map<String,String> configProperties;
     private ApplicationDescriptor aut = null;
+    private String[] testTags = new String[ 0 ];
     
+    public void setTestTags( String[] testTags)
+    {
+        if ( testTags == null )
+            testTags = new String[ 0 ];
+        else
+            this.testTags = testTags;
+    }
     
+    public String[] getTestTags()
+    {
+        return testTags;
+    }
 
     public Map<String, String> getConfigProperties()
     {

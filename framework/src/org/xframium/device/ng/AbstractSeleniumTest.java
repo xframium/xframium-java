@@ -48,6 +48,7 @@ import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.exception.XFramiumException.ExceptionType;
 import org.xframium.integrations.alm.ALMRESTConnection;
 import org.xframium.integrations.alm.entity.ALMAttachment;
 import org.xframium.integrations.alm.entity.ALMDefect;
@@ -695,11 +696,11 @@ public abstract class AbstractSeleniumTest
                     
                     if ( test != null )
                     {
-                        
+                        ExceptionType eType = test.getExceptionType();
                         
                         try
                         {
-                            if ( webDriver.isConnected() && !testResult.isSuccess() &&  DataManager.instance().isArtifactEnabled( ArtifactType.ALM_DEFECT ) )
+                            if ( webDriver.isConnected() && !testResult.isSuccess() &&  DataManager.instance().isArtifactEnabled( ArtifactType.ALM_DEFECT ) && eType != null && eType.equals( ExceptionType.SCRIPT ) )
                             {
                                 //
                                 // ALM Integration

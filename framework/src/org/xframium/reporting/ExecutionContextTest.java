@@ -113,6 +113,7 @@ public class ExecutionContextTest
         asMap.put( "device", device );
         asMap.put( "sessionId", sessionId );
         asMap.put( "folderName", folderName );
+        asMap.put( "tagNames", test.getTags() );
         callMap.clear();
         analyzeCalls( callMap );
         

@@ -49,6 +49,17 @@ public class DataManager
 	{
 		return singleton;
 	}
+	
+	private String testTags;
+	public void setTestTags( String testTags )
+	{
+	    this.testTags = testTags;
+	}
+	
+	public String getTestTags()
+	{
+	    return testTags;
+	}
 
 	/**
 	 * Instantiates a new data manager.

@@ -1,5 +1,26 @@
+/*******************************************************************************
+ * xFramium
+ *
+ * Copyright 2017 by Moreland Labs LTD (http://www.morelandlabs.com)
+ *
+ * Some open source application is free software: you can redistribute 
+ * it and/or modify it under the terms of the GNU General Public 
+ * License as published by the Free Software Foundation, either 
+ * version 3 of the License, or (at your option) any later version.
+ *  
+ * Some open source application is distributed in the hope that it will 
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *  
+ * You should have received a copy of the GNU General Public License
+ * along with xFramium.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>
+ *******************************************************************************/
 package org.xframium.integrations.alm;
 
+import java.awt.HeadlessException;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -21,57 +42,46 @@ import org.xframium.integrations.alm.entity.ALMAttachment;
 import org.xframium.integrations.alm.entity.ALMDefect;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * Represents a connection to an ALM Server
+ */
 public class ALMRESTConnection
 {
+    
+    /** The log. */
     private static Log log = LogFactory.getLog( ALMRESTConnection.class );
+    
+    /** The field template. */
     private static String fieldTemplate = "--%1$s\r\n" + "Content-Disposition: form-data; name=\"%2$s\" \r\n\r\n" + "%3$s" + "\r\n";
+    
+    /** The file data prefix template. */
     private static String fileDataPrefixTemplate = "--%1$s\r\n" + "Content-Disposition: form-data; name=\"%2$s\"; filename=\"%3$s\"\r\n" + "Content-Type: %4$s\r\n\r\n";
+    
+    /** The boundary. */
     private static String boundary = "xALM-Boundary";
+    
+    /** The cookies. */
     protected Map<String, String> cookies = new HashMap<String, String>( 20 );
     /**
-     * This is the URL to the ALM application. For example:
-     * http://myhost:8080/qcbin. Make sure that there is no slash at the end.
+     * This is the URL to the ALM application. Make sure that there is no slash at the end.
      */
     protected String serverUrl;
+    
+    /** The domain. */
     protected String domain;
+    
+    /** The project. */
     protected String project;
 
-    public static void main( String[] args )
-    {
-        try
-        {
-            ALMRESTConnection c = new ALMRESTConnection( "http://alm.perfectomobilelab.net:8080/qcbin", "PROFESSIONAL_SERVICES", "CIBC" );
-            boolean loginSuccessful = c.login( "alleng", "Perfecto123!" );
 
-            log.info( "Logged In: " + loginSuccessful );
-
-            ALMDefect d = new ALMDefect();
-            d.setDescription( "This is a test defect" );
-            d.setStatus( "New" );
-            d.setSummary( "Summary Field" );
-            d.setSeverity( 3 );
-            d.setPriority( 3 );
-            d.setDetectedBy( "alleng" );
-
-            d.setAttachments( new ALMAttachment[] { new ALMAttachment( new File( "C:\\Users\\Allen\\git\\fordPass\\fordPass\\fordPass-out\\02-01_14-05-36-048\\artifacts\\state5655463874760842887.png" ), null, "image/png", "test description" ), new ALMAttachment( new File( "C:\\Users\\Allen\\git\\fordPass\\fordPass\\fordPass-out\\02-01_14-05-36-048\\artifacts\\dom-753326596865996462.xml" ), null, "text/xml", "test description" ) } );
-
-            System.out.println( d.toXML() );
-
-            String defectUrl = c.addDefect( d );
-
-            System.out.println( defectUrl );
-            // c.entityFields( "defect" );
-
-            if ( loginSuccessful )
-                c.logout();
-        }
-        catch ( Exception e )
-        {
-            e.printStackTrace();
-        }
-
-    }
-
+    /**
+     * Instantiates a new ALM REST connection.
+     *
+     * @param serverUrl The URL of the ALM Server instance
+     * @param domain The domain 
+     * @param project the project
+     */
     public ALMRESTConnection( String serverUrl, String domain, String project )
     {
         this.serverUrl = serverUrl;
@@ -124,19 +134,32 @@ public class ALMRESTConnection
         return response.getResponseHeaders().get( "Location" ).iterator().next();
     }
 
+    /**
+     * Builds the entity collection url.
+     *
+     * @param entityType the entity type
+     * @return the string
+     */
     public String buildEntityCollectionUrl( String entityType )
     {
         return buildUrl( "rest/domains/" + domain + "/projects/" + project + "/" + entityType + "s" );
     }
 
+    /**
+     * Builds the project url.
+     *
+     * @param path the path
+     * @return the string
+     */
     public String buildProjectUrl( String path )
     {
         return buildUrl( "rest/domains/" + domain + "/projects/" + project + "/" + path );
     }
 
     /**
-     * @param path
-     *            on the server to use
+     * Builds the base server url.
+     *
+     * @param path            on the server to use
      * @return a url on the server for the path parameter
      */
     public String buildUrl( String path )
@@ -146,86 +169,87 @@ public class ALMRESTConnection
     }
 
     /**
-     * @return the cookies
+     * Performs an HTTP Requests using PUT
+     *
+     * @param url the url
+     * @param data the data
+     * @param headers the headers
+     * @return the ALM response
+     * @throws Exception the exception
      */
-    public Map<String, String> getCookies()
-    {
-        return cookies;
-    }
-
-    /**
-     * @param cookies
-     *            the cookies to set
-     */
-    public void setCookies( Map<String, String> cookies )
-    {
-        this.cookies = cookies;
-    }
-
     public ALMResponse httpPut( String url, byte[] data, Map<String, String> headers ) throws Exception
     {
 
         return doHttp( "PUT", url, null, data, headers, cookies );
     }
 
+    /**
+     * Performs an HTTP Requests using POST
+     *
+     * @param url the url
+     * @param data the data
+     * @param headers the headers
+     * @return the ALM response
+     * @throws Exception the exception
+     */
     public ALMResponse httpPost( String url, byte[] data, Map<String, String> headers ) throws Exception
     {
 
         return doHttp( "POST", url, null, data, headers, cookies );
     }
 
+    /**
+     * Performs an HTTP Requests using DELETE
+     *
+     * @param url the url
+     * @param headers the headers
+     * @return the ALM response
+     * @throws Exception the exception
+     */
     public ALMResponse httpDelete( String url, Map<String, String> headers ) throws Exception
     {
 
         return doHttp( "DELETE", url, null, null, headers, cookies );
     }
 
+    /**
+     * Performs an HTTP Requests using GET
+     *
+     * @param url the url
+     * @param queryString the query string
+     * @param headers the headers
+     * @return the ALM response
+     * @throws Exception the exception
+     */
     public ALMResponse httpGet( String url, String queryString, Map<String, String> headers ) throws Exception
     {
 
         return doHttp( "GET", url, queryString, null, headers, cookies );
     }
 
-    /**
-     * @param type
-     *            http operation: get post put delete
-     * @param url
-     *            to work on
-     * @param queryString
-     * @param data
-     *            to write, if a writable operation
-     * @param headers
-     *            to use in the request
-     * @param cookies
-     *            to use in the request and update from the response
-     * @return http response
-     * @throws Exception
-     */
     private ALMResponse doHttp( String type, String url, String queryString, byte[] data, Map<String, String> headers, Map<String, String> cookies ) throws Exception
     {
 
         if ( (queryString != null) && !queryString.isEmpty() )
-        {
-
             url += "?" + queryString;
-        }
 
         if ( log.isInfoEnabled() )
-            log.info( type + ": " + url );
+            log.info( "Executing " + type + ": to " + url );
 
         HttpURLConnection con = (HttpURLConnection) new URL( url ).openConnection();
 
         con.setRequestMethod( type );
         String cookieString = getCookieString();
 
-        log.info( cookieString );
+        if ( log.isDebugEnabled() )
+            log.info( "Cookies: " + cookieString );
 
         prepareHttpRequest( con, headers, data, cookieString );
         con.connect();
         ALMResponse ret = retrieveHtmlResponse( con );
 
-        if ( log.isInfoEnabled() )
-            log.info( ret );
+        if ( log.isDebugEnabled() )
+            log.debug( "Return Value: " + ret );
 
         updateCookies( ret );
 
@@ -233,16 +257,14 @@ public class ALMRESTConnection
     }
 
     /**
-     * @param con
-     *            connection to set the headers and bytes in
-     * @param headers
-     *            to use in the request, such as content-type
-     * @param bytes
-     *            the actual data to post in the connection.
-     * @param cookieString
-     *            the cookies data from clientside, such as lwsso, qcsession,
+     * Prepare http request.
+     *
+     * @param con            connection to set the headers and bytes in
+     * @param headers            to use in the request, such as content-type
+     * @param bytes            the actual data to post in the connection.
+     * @param cookieString            the cookies data from clientside, such as lwsso, qcsession,
      *            jsession etc.
-     * @throws java.io.IOException
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     private void prepareHttpRequest( HttpURLConnection con, Map<String, String> headers, byte[] bytes, String cookieString ) throws IOException
     {
@@ -251,17 +273,12 @@ public class ALMRESTConnection
 
         // attach cookie information if such exists
         if ( (cookieString != null) && !cookieString.isEmpty() )
-        {
-
             con.setRequestProperty( "Cookie", cookieString );
-        }
 
         // send data from headers
         if ( headers != null )
         {
 
-            // Skip the content-type header - should only be sent
-            // if you actually have any content to send. see below.
             contentType = headers.remove( "Content-Type" );
 
             Iterator<Entry<String, String>> headersIterator = headers.entrySet().iterator();
@@ -272,17 +289,12 @@ public class ALMRESTConnection
             }
         }
 
-        // If there's data to attach to the request, it's handled here.
-        // Note that if data exists, we take into account previously removed
-        // content-type.
+
         if ( (bytes != null) && (bytes.length > 0) )
         {
 
             con.setDoOutput( true );
 
-            // warning: if you add content-type header then you MUST send
-            // information or receive error.
-            // so only do so if you're writing information...
             if ( contentType != null )
             {
                 con.setRequestProperty( "Content-Type", contentType );
@@ -295,14 +307,6 @@ public class ALMRESTConnection
         }
     }
 
-    /**
-     * @param con
-     *            that is already connected to its url with an http request, and
-     *            that should contain a response for us to retrieve
-     * @return a response from the server to the previously submitted http
-     *         request
-     * @throws Exception
-     */
     private ALMResponse retrieveHtmlResponse( HttpURLConnection con ) throws Exception
     {
 
@@ -312,18 +316,12 @@ public class ALMRESTConnection
         ret.setResponseHeaders( con.getHeaderFields() );
 
         InputStream inputStream;
-        // select the source of the input bytes, first try 'regular' input
+
         try
         {
             inputStream = con.getInputStream();
         }
 
-        /*
-         * If the connection to the server somehow failed, for example 404 or
-         * 500, con.getInputStream() will throw an exception, which we'll keep.
-         * We'll also store the body of the exception page, in the response
-         * data.
-         */
         catch ( Exception e )
         {
 
@@ -331,8 +329,6 @@ public class ALMRESTConnection
             ret.setFailure( e );
         }
 
-        // This actually takes the data from the previously set stream
-        // (error or input) and stores it in a byte[] inside the response
         ByteArrayOutputStream container = new ByteArrayOutputStream();
 
         byte[] buf = new byte[1024];
@@ -347,6 +343,11 @@ public class ALMRESTConnection
         return ret;
     }
 
+    /**
+     * Update cookies.
+     *
+     * @param response the response
+     */
     private void updateCookies( ALMResponse response )
     {
 
@@ -367,7 +368,7 @@ public class ALMRESTConnection
         }
     }
 
-    public String getCookieString()
+    private String getCookieString()
     {
 
         StringBuilder sb = new StringBuilder();
@@ -388,12 +389,12 @@ public class ALMRESTConnection
     }
 
     /**
-     * @param username
-     * @param password
-     * @return true if authenticated at the end of this method.
-     * @throws Exception
+     * Allows the user to login to ALM by first determining the authentication point
      *
-     *             convenience method used by other examples to do their login
+     * @param username the username
+     * @param password the password
+     * @return true if authenticated at the end of this method.
+     * @throws Exception             convenience method used by other examples to do their login
      */
     public boolean login( String username, String password ) throws Exception
     {
@@ -407,14 +408,13 @@ public class ALMRESTConnection
     }
 
     /**
-     * @param loginUrl
-     *            to authenticate at
-     * @param username
-     * @param password
-     * @return true on operation success, false otherwise
-     * @throws Exception
+     * Allows the user to login to ALM using the specified authentication point
      *
-     *             Logging in to our system is standard http login (basic
+     * @param loginUrl            to authenticate at
+     * @param username the username
+     * @param password the password
+     * @return true on operation success, false otherwise
+     * @throws Exception             Logging in to our system is standard http login (basic
      *             authentication), where one must store the returned cookies
      *             for further use.
      */
@@ -447,6 +447,13 @@ public class ALMRESTConnection
         return ret;
     }
 
+    /**
+     * Adds a defect to ALM
+     *
+     * @param almDefect the alm defect
+     * @return the string
+     * @throws Exception the exception
+     */
     public String addDefect( ALMDefect almDefect ) throws Exception
     {
         String defectUrl = createEntity( buildEntityCollectionUrl( almDefect.getEntityType() ), almDefect.toXML() );
@@ -455,17 +462,22 @@ public class ALMRESTConnection
         {
             for ( ALMAttachment a : almDefect.getAttachments() )
             {
-                //String attachmentUrl = attachWithMultipart( defectUrl, a.getFileData() != null ? a.getFileData() : readFile( a.getFileName() ), a.getContentType(), a.getFileName().getName(), a.getDescription() );
-
                 String attachmentUrl = attachWithOctetStream( defectUrl, a.getFileData() != null ? a.getFileData() : readFile( a.getFileName() ), a.getFileName().getName() );
                 
-                log.info( "Attachment Url: " + attachmentUrl );
+                if ( log.isDebugEnabled() )
+                    log.debug( "Attachment Url: " + attachmentUrl );
             }
         }
 
         return defectUrl;
     }
 
+    /**
+     * Read file.
+     *
+     * @param currentFile the current file
+     * @return the byte[]
+     */
     private byte[] readFile( File currentFile )
     {
         byte[] buffer = new byte[512];
@@ -501,6 +513,13 @@ public class ALMRESTConnection
         }
     }
 
+    /**
+     * Given an entity, list all of the possible fields.
+     *
+     * @param entityType the entity type
+     * @return the string
+     * @throws Exception the exception
+     */
     public String entityFields( String entityType ) throws Exception
     {
 
@@ -508,8 +527,6 @@ public class ALMRESTConnection
         requestHeaders.put( "Content-Type", "application/xml" );
         requestHeaders.put( "Accept", "application/xml" );
 
-        // As can be seen in the implementation below, creating an entity
-        // is simply posting its xml into the correct collection.
         ALMResponse response = httpGet( buildProjectUrl( "customization/entities/" + entityType + "/fields" ), null, requestHeaders );
 
         Exception failure = response.getFailure();
@@ -521,15 +538,14 @@ public class ALMRESTConnection
         return null;
     }
 
-    public String createEntity( String collectionUrl, String postedEntityXml ) throws Exception
+    private String createEntity( String collectionUrl, String postedEntityXml ) throws Exception
     {
 
         Map<String, String> requestHeaders = new HashMap<String, String>();
         requestHeaders.put( "Content-Type", "application/xml" );
         requestHeaders.put( "Accept", "application/xml" );
 
-        // As can be seen in the implementation below, creating an entity
-        // is simply posting its xml into the correct collection.
+
         ALMResponse response = httpPost( collectionUrl, postedEntityXml.getBytes(), requestHeaders );
 
         Exception failure = response.getFailure();
@@ -538,37 +554,32 @@ public class ALMRESTConnection
             throw failure;
         }
 
-        /*
-         * Note that we also get the xml of the newly created entity. at the
-         * same time we get the url where it was created in a location response
-         * header.
-         */
         String entityUrl = response.getResponseHeaders().get( "Location" ).iterator().next();
 
         return entityUrl;
     }
 
     /**
+     * Logout of ALM
+     *
      * @return true if logout successful
-     * @throws Exception
-     *             close session on server and clean session cookies on client
+     * @throws Exception             close session on server and clean session cookies on client
      */
     public boolean logout() throws Exception
     {
-
-        // note the get operation logs us out by setting authentication cookies
-        // to:
-        // LWSSO_COOKIE_KEY="" via server response header Set-Cookie
         ALMResponse response = httpGet( buildUrl( "authentication-point/logout" ), null, null );
+        cookies.clear();
 
         return (response.getStatusCode() == HttpURLConnection.HTTP_OK);
 
     }
 
     /**
+     * Checks if is authenticated.
+     *
      * @return null if authenticated.<br>
      *         a url to authenticate against if not authenticated.
-     * @throws Exception
+     * @throws Exception the exception
      */
     public String isAuthenticated() throws Exception
     {

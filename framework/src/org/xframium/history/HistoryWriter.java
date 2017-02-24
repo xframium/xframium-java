@@ -16,7 +16,7 @@ import org.apache.commons.logging.LogFactory;
 
 public class HistoryWriter
 {
-    private static final int MAX_HISTORY = 30;
+    private static final int MAX_HISTORY = 20;
     private File rootFolder;
     private Log log = LogFactory.getLog(HistoryWriter.class);
     

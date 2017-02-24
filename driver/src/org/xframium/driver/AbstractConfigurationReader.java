@@ -435,6 +435,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             if ( tagNames != null && !tagNames.isEmpty() )
             {
                 DeviceManager.instance().setTagNames( tagNames.split( "," ) );
+                ExecutionContext.instance().setTestTags( tagNames.split( "," ) );
                 Collection<KeyWordTest> testList = KeyWordDriver.instance().getTaggedTests( tagNames.split( "," ) );
 
                 if ( testList.isEmpty() )
