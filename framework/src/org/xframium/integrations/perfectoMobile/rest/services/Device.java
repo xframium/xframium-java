@@ -57,6 +57,7 @@ public interface Device extends PerfectoService
 	@PerfectoCommand( commandName="device", subCommandName = "rotate" )
 	public Execution rotate( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="state" ) ScreenOrientation state );
 	
+	
 	/**
 	 * Reboot.
 	 *

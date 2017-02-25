@@ -1,7 +1,9 @@
 package org.xframium.device.cloud.action;
 
+import org.openqa.selenium.WebElement;
 import org.xframium.device.artifact.ArtifactProducer;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.integrations.common.PercentagePoint;
 import org.xframium.page.BY;
 import org.xframium.page.element.Element;
 import org.xframium.reporting.ExecutionContextTest;
@@ -27,5 +29,7 @@ public interface CloudActionProvider
     public String startTimer( DeviceWebDriver webDriver, Element element, ExecutionContextTest executionContext);
     public boolean getSupportedTimers( DeviceWebDriver webDriver, String timerId, ExecutionContextTest executionContext, String type  );
     public void stopTimer( DeviceWebDriver webDriver, String timerId, ExecutionContextTest executionContext );
+
+    public void tap( DeviceWebDriver webDriver, PercentagePoint location, int lengthInMillis );
     
 }

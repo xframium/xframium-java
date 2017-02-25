@@ -50,8 +50,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.HasInputDevices;
+import org.openqa.selenium.interactions.HasTouchScreen;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
+import org.openqa.selenium.interactions.TouchScreen;
 import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.ExecuteMethod;
 import org.openqa.selenium.remote.RemoteExecuteMethod;
@@ -86,7 +88,7 @@ import io.appium.java_client.AppiumDriver;
  * The Class DeviceWebDriver.
  */
 public class DeviceWebDriver
-        implements HasCapabilities, WebDriver, JavascriptExecutor, ContextAware, ExecuteMethod, ArtifactProducer, NativeDriverProvider, PropertyProvider, TakesScreenshot, DeviceProvider, HasInputDevices, CachingDriver, ReportiumProvider
+        implements HasCapabilities, WebDriver, JavascriptExecutor, ContextAware, ExecuteMethod, ArtifactProducer, NativeDriverProvider, PropertyProvider, TakesScreenshot, DeviceProvider, HasInputDevices, CachingDriver, ReportiumProvider, HasTouchScreen
 {
 
     
@@ -904,6 +906,15 @@ public class DeviceWebDriver
     {
         if ( webDriver instanceof HasCapabilities )
             return ((HasCapabilities) webDriver).getCapabilities();
+        else
+            return null;
+    }
+
+    @Override
+    public TouchScreen getTouch()
+    {
+        if ( webDriver instanceof HasTouchScreen )
+            return ((HasTouchScreen) webDriver).getTouch();
         else
             return null;
     }

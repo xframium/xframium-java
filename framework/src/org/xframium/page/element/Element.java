@@ -398,5 +398,7 @@ public interface Element
 	
 	public void click (int clicks, int waitTime);
 	
+	public boolean clickFor( int lengthInMillis );
+	
 	public String getName();
 }

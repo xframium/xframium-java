@@ -8,6 +8,7 @@ import org.xframium.device.artifact.ArtifactProducer;
 import org.xframium.device.artifact.api.SeleniumArtifactProducer;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.integrations.common.PercentagePoint;
 import org.xframium.page.BY;
 import org.xframium.page.element.Element;
 import org.xframium.reporting.ExecutionContextTest;
@@ -38,6 +39,13 @@ public class SAUCELABSCloudActionProvider extends AbstractCloudActionProvider
             default:
                 return true;
         }
+    }
+    
+    @Override
+    public void tap( DeviceWebDriver webDriver, PercentagePoint location, int lengthInMillis )
+    {
+        
+        
     }
     
     @Override

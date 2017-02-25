@@ -23,7 +23,8 @@ package org.xframium.page.keyWord.step.spi;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
-import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.device.cloud.action.CloudActionProvider;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -65,9 +66,7 @@ public class KWSClick extends AbstractKeyWordStep
 		}
 		else if ( getParameter( "Length" ) != null )
         {
-		    getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).press();
-		    try { Thread.sleep( Long.parseLong( getParameterValue( getParameter( "Length" ), contextMap, dataMap ) ) ); } catch( Exception e ) {}
-		    getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).release();
+		    getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).clickFor( Integer.parseInt( getParameterValue( getParameter( "Length" ), contextMap, dataMap ) ) );
             return true;
         }
 		

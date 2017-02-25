@@ -140,6 +140,7 @@ public abstract class AbstractElement implements Element
 
 	protected abstract Dimension _getSize();
 	protected abstract Point _getAt();
+	protected abstract boolean _clickFor( int lengthInMillis );
 	
 	/**
 	 * _set value.
@@ -879,4 +880,11 @@ public abstract class AbstractElement implements Element
     {
         return _isEnabled();
     }
+	
+	@Override
+	public boolean clickFor( int lengthInMillis )
+	{
+	    return _clickFor( lengthInMillis );
+	    
+	}
 }

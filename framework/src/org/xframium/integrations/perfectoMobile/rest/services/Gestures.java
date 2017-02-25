@@ -34,7 +34,7 @@ public interface Gestures extends PerfectoService
 
     @Operation ( operationName = "command")
     @PerfectoCommand ( commandName = "touch", subCommandName = "tap")
-    public Execution tap( @ResourceID String executionId, @Parameter ( name = "handsetId" ) String handsetId, @Parameter ( name = "location") PercentagePoint location);
+    public Execution tap( @ResourceID String executionId, @Parameter ( name = "handsetId" ) String handsetId, @Parameter ( name = "location") PercentagePoint location, @Parameter ( name = "duration") int duration);
 
     @Operation ( operationName = "command")
     @PerfectoCommand ( commandName = "touch", subCommandName = "tap")

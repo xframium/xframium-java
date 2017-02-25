@@ -32,13 +32,14 @@ import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.internal.Coordinates;
+import org.openqa.selenium.internal.HasIdentity;
 import org.openqa.selenium.internal.Locatable;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class CachedWebElement.
  */
-public class MorelandWebElement implements WebElement, Locatable
+public class MorelandWebElement implements WebElement, Locatable, HasIdentity
 {
 	
 	private DeviceWebDriver deviceDriver;
@@ -223,6 +224,15 @@ public class MorelandWebElement implements WebElement, Locatable
     public WebElement getWebElement()
     {
         return webElement;
+    }
+
+    @Override
+    public String getId()
+    {
+        if ( webElement instanceof HasIdentity )
+            return ( (HasIdentity) webElement ).getId();
+        else
+            return null;
     }
     
     

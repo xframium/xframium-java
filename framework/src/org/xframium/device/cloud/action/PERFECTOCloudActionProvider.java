@@ -11,6 +11,7 @@ import org.xframium.exception.DeviceConfigurationException;
 import org.xframium.exception.DeviceException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
+import org.xframium.integrations.common.PercentagePoint;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.bean.Execution;
 import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
@@ -32,6 +33,12 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 	    return stringBuilder.toString();
 	}
 
+	@Override
+	public void tap( DeviceWebDriver webDriver, PercentagePoint location, int lengthInMillis )
+	{
+	    PerfectoMobile.instance().gestures().tap( webDriver.getExecutionId(), webDriver.getDeviceName(), location, lengthInMillis / 1000 );
+	}
+	
 	@Override
 	public boolean getSupportedTimers( DeviceWebDriver webDriver, String timerId, ExecutionContextTest executionContext, String type )
 	{
