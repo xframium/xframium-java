@@ -193,7 +193,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
                         for ( String tag : test.getTags() )
                             ArrayUtils.add( tags, tag );
                     }
-                    PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder().withProject( new Project( ApplicationRegistry.instance().getAUT().getName(), "1.0" ) ).withContextTags( tags )
+                    PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder().withProject( new Project( ApplicationRegistry.instance().getAUT().getName(), ApplicationRegistry.instance().getAUT().getVersion() + "" ) ).withContextTags( tags )
                             .withWebDriver( testPackage.getConnectedDevice().getWebDriver() ).build();
                     testPackage.getConnectedDevice().getWebDriver().setReportiumClient( new ReportiumClientFactory().createPerfectoReportiumClient( perfectoExecutionContext ) );
 

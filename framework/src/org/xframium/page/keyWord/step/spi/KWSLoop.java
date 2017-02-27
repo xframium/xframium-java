@@ -159,10 +159,9 @@ public class KWSLoop extends AbstractKeyWordStep
 				        if ( treeRecord == null )
 				            throw new ScriptConfigurationException( "Could not locate a PageData record using " + useValue );
 				        
-				        if ( treeRecord instanceof List<?> )
+				        if ( treeRecord instanceof PageData[] )
 				        {
-				            List<PageData> dataArray = (List<PageData>) treeRecord;
-				            dataTable = dataArray.toArray( new PageData[ 0 ] );
+				            dataTable = (PageData[]) treeRecord;
 				        }
 				        else
 				        {

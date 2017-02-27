@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-<test name="State Test" tagNames="Keyword" timed="false" threshold="0" active="true">
+<test name="State Test" tagNames="Keyword" timed="false" threshold="0" active="true" priority="1" severity="1">
 <description>State Test</description>
 <step name="kw-dumpstate" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
 </test>

@@ -3,4 +3,5 @@
   <import fileName="Settings/page-Home.xml" />
   <import fileName="Settings/page-General.xml" />
   <import fileName="Settings/page-Date and Time.xml" />
+  <import fileName="Settings/page-Safari.xml" />
 </elementDefinition>

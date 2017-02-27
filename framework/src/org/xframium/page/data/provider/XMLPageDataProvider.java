@@ -209,6 +209,9 @@ public class XMLPageDataProvider extends AbstractPageDataProvider
 	 */
 	private void parseRecord( String typeName, Node pageNode )
 	{
+	    if ( pageNode == null || pageNode.getAttributes() == null || pageNode.getAttributes().getNamedItem( NAME ) == null )
+	        return;
+	    
 		String recordName = pageNode.getAttributes().getNamedItem( NAME ).getNodeValue();
 
 		boolean active = true;

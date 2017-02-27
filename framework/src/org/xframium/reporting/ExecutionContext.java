@@ -89,6 +89,9 @@ public class ExecutionContext
 
     public void setAut( ApplicationDescriptor aut )
     {
+        if ( aut == null )
+            return;
+        
         if ( this.aut == null && !aut.getName().equals( "NOOP" ) )
             this.aut = aut;
     }
