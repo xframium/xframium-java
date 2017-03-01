@@ -98,7 +98,6 @@ public class KeyWordDriver
         functionMap.clear();
         tagMap.clear();
         pageMap.clear();
-        stepListenerList.clear();
         configProperties.clear();
     }
 
