@@ -615,6 +615,7 @@ public class KeyWordDriver
             if ( !KeyWordDriver.instance().notifyBeforeTest( webDriver, test, contextMap, dataMap, pageMap, sC, executionContext ) )
             {
                 log.warn( "Test was skipped due to a failed test notification listener" );
+                contextMap.put( "XF_TEST_STATUS", TestStatus.SKIPPED.name() );
                 executionContext.completeTest( TestStatus.SKIPPED, new FilteredException( "Test was skipped due to a failed test notification listener" ) );
                 return executionContext;
             }
@@ -642,6 +643,7 @@ public class KeyWordDriver
             if ( returnValue )
                 returnValue = test.executeTest( webDriver, contextMap, dataMap, pageMap, sC, executionContext );
             
+            contextMap.put( "XF_TEST_STATUS", returnValue ? TestStatus.PASSED.name() : TestStatus.FAILED.name() );
             executionContext.completeTest( returnValue ? TestStatus.PASSED : TestStatus.FAILED, null );
 
             return executionContext;
@@ -651,10 +653,11 @@ public class KeyWordDriver
         {
             if ( !e.isSuccess() )
             {
+                
                 executionContext.startStep( new SyntheticStep( test.getName(), "TEST" ), contextMap, dataMap );
                 executionContext.completeStep( StepStatus.FAILURE, e );
                 executionContext.completeTest( TestStatus.FAILED, e );
-   
+                contextMap.put( "XF_TEST_STATUS", TestStatus.FAILED.name() );
                 log.error( "Error executing Test " + testName, e );
                 
             }
@@ -662,11 +665,13 @@ public class KeyWordDriver
             {
                 executionContext.completeStep( StepStatus.SUCCESS, null );
                 executionContext.completeTest( TestStatus.PASSED, null );
+                contextMap.put( "XF_TEST_STATUS", TestStatus.PASSED.name() );
             }
             return executionContext;
         }
         catch ( Throwable e )
         {
+            contextMap.put( "XF_TEST_STATUS", TestStatus.FAILED.name() );
             executionContext.startStep( new SyntheticStep( test.getName(), "TEST" ), contextMap, dataMap );
             executionContext.completeStep( StepStatus.FAILURE, e );
             executionContext.completeTest( TestStatus.FAILED, e );
@@ -676,6 +681,8 @@ public class KeyWordDriver
         }
         finally
         {
+            if ( !contextMap.containsKey( "XF_TEST_STATUS" ) )
+                contextMap.put( "XF_TEST_STATUS", "UNKNOWN" );
             if ( testStarted )
                 KeyWordDriver.instance().notifyAfterTest( webDriver, test, contextMap, dataMap, pageMap, returnValue, sC, executionContext );
             

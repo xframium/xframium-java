@@ -159,7 +159,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                         boolean returnValue = false;
                         try
                         {
-                            eC.startStep( new SyntheticStep( "Test Initialization", "CALL2" ), contextMap, dataMap );
+                            eC.startStep( new SyntheticStep( driverC.getBeforeTest(), "CALL2" ), contextMap, dataMap );
                             
                             KeyWordTest kTest = KeyWordDriver.instance().getTest( driverC.getBeforeTest() );
                             if ( kTest != null )
@@ -228,9 +228,9 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                         boolean returnValue = false;
                         try
                         {
-                            eC.startStep( new SyntheticStep( "Test Initialization", "CALL2" ), contextMap, dataMap );
+                            eC.startStep( new SyntheticStep( driverC.getAfterTest(), "CALL2" ), contextMap, dataMap );
                             
-                            KeyWordTest kTest = KeyWordDriver.instance().getTest( driverC.getBeforeTest() );
+                            KeyWordTest kTest = KeyWordDriver.instance().getTest( driverC.getAfterTest() );
                             if ( kTest != null )
                             {
                                  returnValue = kTest.executeTest( webDriver, contextMap, dataMap, pageMap, sC, eC );

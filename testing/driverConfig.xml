@@ -7,7 +7,7 @@
   <devices provider="XML" fileName="deviceRegistry.xml">
     
   </devices>
-  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true"> 
+  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="CIBC" embeddedServer="true" phase="1001" domain="PROFESSIONAL_SERVICES" testNames="Mouse Test"> 
     
     <property name="xFramium General KeyWord Test.count">3</property>
     <property name="selenium.timeouts.implicitWait">5000</property>
@@ -25,17 +25,17 @@
     <artifact type="CONSOLE_LOG" />
     <artifact type="SAUCE_LABS" />
     <artifact type="REPORTIUM" />
-    <artifact type="EXECUTION_REPORT_HTML" />
-    <artifact type="EXECUTION_REPORT_PDF" />
+    <artifact type="DEBUGGER" />
     <artifact type="GRID_REPORT"/>
     <artifact type="ADD_TO_CSV"/>
     <artifact type="ALM_DEFECT" active="true"/>
-    
   </driver>
 
   <model provider="XML" siteName="xTest" fileName="objectRepository/xTest/objectRepository.xml" />
 
   <suite provider="XML" fileName="tests/tests-xTest.xml" />
+
+  <dependencies afterTest="Report Test Success"/>
 
   <data fileName="pageData/pageData.xml" />
 </xFramium>
