@@ -32,6 +32,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -72,6 +73,7 @@ import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.step.spi.KWSElse;
 import org.xframium.page.keyWord.step.spi.KWSLoopBreak;
 import org.xframium.reporting.ExecutionContext;
+import org.xframium.reporting.ExecutionContextStep;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.driver.ReportiumProvider;
 import org.xframium.utility.ImageUtility;
@@ -83,6 +85,8 @@ import org.xframium.utility.XMLEscape;
  */
 public abstract class AbstractKeyWordStep implements KeyWordStep
 {
+    private static final Map<String,String> HASH_CACHE = new HashMap<String,String>(20);
+    private static final String[] WEB_PERFORMANCE = new String[] { "navigationStart", "redirectStart", "redirectEnd", "fetchStart", "domainLookupStart", "domainLookupEnd", "connectStart", "connectEnd", "requestStart", "responseStart", "responseEnd", "unloadStart", "unloadEnd", "domLoading", "domInteractive", "domContentLoaded", "domComplete", "loadEventStart", "loadEventEnd" };
     private static NumberFormat numberFormat = new DecimalFormat( "0000" );
 
     public AbstractKeyWordStep()
@@ -626,9 +630,9 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      *            the data map
      * @return the element
      */
-    protected Element getElement( Page pageObject, Map<String, Object> contextMap, Object webDriver, Map<String, PageData> dataMap )
+    protected Element getElement( Page pageObject, Map<String, Object> contextMap, Object webDriver, Map<String, PageData> dataMap, ExecutionContextTest executionContext )
     {
-        return getElement( pageObject, contextMap, webDriver, dataMap, null );
+        return getElement( pageObject, contextMap, webDriver, dataMap, null, executionContext );
     }
 
     /**
@@ -646,7 +650,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      *            the override name
      * @return the element
      */
-    protected Element getElement( Page pageObject, Map<String, Object> contextMap, Object webDriver, Map<String, PageData> dataMap, String overrideName )
+    protected Element getElement( Page pageObject, Map<String, Object> contextMap, Object webDriver, Map<String, PageData> dataMap, String overrideName, ExecutionContextTest executionContext )
     {
         String useName = name;
         if ( overrideName != null && !overrideName.isEmpty() )
@@ -662,6 +666,9 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     log.debug( Thread.currentThread().getName() + ": Attempting to acquire CONTEXT element" );
 
                 Element currentElement = (Element) contextMap.get( Element.CONTEXT_ELEMENT );
+                currentElement = currentElement.cloneElement();
+                currentElement.setTimed( isTimed() );
+                currentElement.setExecutionContext( executionContext );
 
                 if ( log.isDebugEnabled() )
                     log.debug( Thread.currentThread().getName() + ": CONTEXT element found as " + currentElement );
@@ -682,13 +689,15 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
                 ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance().getSiteName(), getPageName(), elementName );
                 Element myElement = pageObject.getElement( elementDescriptor ).cloneElement();
+                
 
                 if ( myElement == null )
                 {
                     log.error( Thread.currentThread().getName() + ": **** COULD NOT LOCATE ELEMENT [" + elementDescriptor.toString() + "]  Make sure your Page Name and Element Name are spelled correctly and that they have been defined" );
                     return null;
                 }
-
+                
+                myElement.setTimed( isTimed() );
                 myElement.setDriver( webDriver );
 
                 for ( KeyWordToken token : tokenList )
@@ -700,6 +709,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
                 myElement.setDriver( webDriver );
                 myElement.setContext( currentElement );
+                myElement.setExecutionContext( executionContext );
                 return myElement;
             }
         }
@@ -724,6 +734,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 }
 
                 clonedElement.setCacheNative( true );
+                clonedElement.setExecutionContext( executionContext );
+                clonedElement.setTimed( isTimed() );
                 return clonedElement;
             }
             else
@@ -734,6 +746,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     Element elt = pageObject.getElement( elementDescriptor ).cloneElement();
                     elt.setDriver( webDriver );
                     elt.setCacheNative( true );
+                    elt.setExecutionContext( executionContext );
+                    elt.setTimed( isTimed() );
                     return elt;
                 }
                 catch ( NullPointerException e )
@@ -772,7 +786,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 //
                 if ( os != null )
                 {
-                    String deviceOs = getDeviceOs( webDriver );
+                    String deviceOs = executionContext.getDevice().getOs();
                     if ( deviceOs == null )
                     {
                         throw new FilteredException( "A Required OS of [" + os + "] was specified however the OS of the device could not be determined" );
@@ -1087,7 +1101,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         case ERROR:
                             stepStatus = StepStatus.FAILURE;
                             if ( stepException == null )
-                                stepException = new ScriptConfigurationException( kwName + " has failed to complete" );
+                                stepException = new ScriptException( kwName + " has failed to complete" );
     
                             break;
     
@@ -1099,11 +1113,16 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         case LOG_IGNORE:
                             stepStatus = StepStatus.FAILURE_IGNORED;
                             if ( stepException == null )
-                                stepException = new ScriptConfigurationException( kwName + " has failed to complete" );
+                                stepException = new ScriptException( kwName + " has failed to complete" );
                     }
                 }
             }
 
+            executionContext.setEndTime( System.currentTimeMillis() );
+            
+            if ( isTimed() )
+                recordTimings( (DeviceWebDriver)webDriver, executionContext, System.currentTimeMillis(), returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE );
+            
             try
             {
                 if ( !returnValue )
@@ -1113,15 +1132,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             {
                 e.printStackTrace();
             }
-
+            
             executionContext.completeStep( stepStatus, stepException );
-
-            if ( isRecordable() )
-            {
-                if ( isTimed() )
-                    PageManager.instance().addExecutionTiming( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName() + "." + getName() + "." + getClass().getSimpleName(), System.currentTimeMillis() - startTime,
-                            returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, description, threshold );
-            }
 
             if ( PageManager.instance().isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
                 PerfectoMobile.instance().windTunnel().addPointOfInterest( getExecutionId( webDriver ), getPoi() + "(" + getPageName() + "." + getName() + ")", returnValue ? Status.success : Status.failure );
@@ -1133,6 +1145,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 {
                     case ERROR:
 
+                        
                         if ( currentError == null )
                         {
                             if ( stepException == null )
@@ -1141,8 +1154,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                             currentError = stepException;
 
                             if ( isTimed() )
-                                PageManager.instance().addExecutionTiming( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName() + "." + getName() + "." + getClass().getSimpleName(), System.currentTimeMillis() - startTime,
-                                        StepStatus.FAILURE, description, threshold );
+                                recordTimings( (DeviceWebDriver)webDriver, executionContext, System.currentTimeMillis(), StepStatus.FAILURE );
 
                             if ( PageManager.instance().isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
                                 PerfectoMobile.instance().windTunnel().addPointOfInterest( getExecutionId( webDriver ), getPoi() + "(" + getPageName() + "." + getName() + ")", Status.failure );
@@ -1160,8 +1172,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                                 stepException = new ScriptConfigurationException( toError() );
 
                             if ( isTimed() )
-                                PageManager.instance().addExecutionTiming( getExecutionId( webDriver ), getDeviceName( webDriver ), getPageName() + "." + getName() + "." + getClass().getSimpleName(), System.currentTimeMillis() - startTime,
-                                        StepStatus.FAILURE, description, threshold );
+                                recordTimings( (DeviceWebDriver)webDriver, executionContext, System.currentTimeMillis(), StepStatus.FAILURE );
 
                             if ( PageManager.instance().isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
                                 PerfectoMobile.instance().windTunnel().addPointOfInterest( getExecutionId( webDriver ), getPoi() + "(" + getPageName() + "." + getName() + ")", Status.failure );
@@ -1200,6 +1211,43 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         }
     }
 
+     
+    protected void recordTimings( DeviceWebDriver webDriver, ExecutionContextTest executionContext, long runLength, StepStatus status )
+    {
+        ExecutionContextStep currentStep = executionContext.getStep();
+        
+        if ( webDriver.getAut() != null && webDriver.getAut().isWeb() )
+        {
+            try
+            {
+            Map<String,Long> performanceData = (Map<String,Long>)webDriver.executeScript( "var perfData = window.performance.timing; return perfData;", HASH_CACHE );
+            
+            for ( String perfKey : WEB_PERFORMANCE )
+            {
+                try
+                {
+                    Long value = performanceData.get( perfKey );
+                    if ( value != null )
+                        currentStep.addTiming( perfKey, value );
+                }
+                catch( Exception e )
+                {
+                    
+                }
+            }
+            }
+            catch( Exception e )
+            {
+                log.warn( "Could not capture WEB performance data " + e.getMessage() );
+            }
+        }
+        
+        if ( PageManager.instance().isWindTunnelEnabled() )
+            PerfectoMobile.instance().windTunnel().addTimerReport( webDriver.getExecutionId(), getPageName() + "." + getName() + "." + getClass().getSimpleName(), (int) runLength, ((status.equals( StepStatus.SUCCESS ) || (status.equals( StepStatus.FAILURE_IGNORED ))) ? Status.success : Status.failure), description, threshold );
+        
+        
+    }
+    
     /*
      * (non-Javadoc)
      * 

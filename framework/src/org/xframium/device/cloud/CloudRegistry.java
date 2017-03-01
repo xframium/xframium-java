@@ -129,8 +129,11 @@ public class CloudRegistry
 		}
 		
 		System.setProperty( "__cloudUrl", "https://" + cut.getHostName() );
-		System.setProperty( "__userName", cut.getUserName() );
-		System.setProperty( "__password", cut.getPassword() );
+		if ( cut.getUserName() != null )
+		    System.setProperty( "__userName", cut.getUserName() );
+		
+		if ( cut.getPassword() != null )
+		    System.setProperty( "__password", cut.getPassword() );
 	}
 	
 	public void startEmbeddedCloud()
@@ -141,7 +144,9 @@ public class CloudRegistry
 	            return;
 
 	        serverStarted = true;
-            _server = new SeleniumServer( new StandaloneConfiguration() );
+	        
+
+            _server = new SeleniumServer( new StandaloneConfiguration( ) );
             _server.boot();
             CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( "EMBEDDED", "", "", "127.0.0.1:4444", "", "0", "", null, "SELENIUM", "SELENIUM", "SELENIUM" ) );
             embeddedGrid=true;

@@ -39,8 +39,8 @@ public class WeightedDeviceComparator implements Comparator<Device>
 	 */
 	public int compare( Device o1, Device o2 )
 	{
-		int usageOne = DeviceManager.instance().getUsage( o1 );
-		int usageTwo = DeviceManager.instance().getUsage( o2 );
+		int usageOne = 0;
+		int usageTwo = 0;
 		
 		
 		if ( usageOne < usageTwo )

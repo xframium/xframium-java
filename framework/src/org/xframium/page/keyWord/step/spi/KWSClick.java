@@ -23,7 +23,8 @@ package org.xframium.page.keyWord.step.spi;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
-import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.device.cloud.action.CloudActionProvider;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -54,23 +55,18 @@ public class KWSClick extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
-
-		if ( pageObject == null )
-			throw new ScriptConfigurationException( "There was no Page Object defined");
 		
 		if(getParameterList().size() == 0){
-            getElement( pageObject, contextMap, webDriver, dataMap ).click();
+            getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).click();
         } 
 		else if ( getParameter( "Count" ) != null )
 		{
-		    getElement( pageObject, contextMap, webDriver, dataMap ).click( Integer.parseInt( getParameterValue( getParameter( "Count" ), contextMap, dataMap ) ),250);
+		    getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).click( Integer.parseInt( getParameterValue( getParameter( "Count" ), contextMap, dataMap ) ),250);
 		    return true;
 		}
 		else if ( getParameter( "Length" ) != null )
         {
-		    getElement( pageObject, contextMap, webDriver, dataMap ).press();
-		    try { Thread.sleep( Long.parseLong( getParameterValue( getParameter( "Length" ), contextMap, dataMap ) ) ); } catch( Exception e ) {}
-		    getElement( pageObject, contextMap, webDriver, dataMap ).release();
+		    getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).clickFor( Integer.parseInt( getParameterValue( getParameter( "Length" ), contextMap, dataMap ) ) );
             return true;
         }
 		
@@ -78,7 +74,7 @@ public class KWSClick extends AbstractKeyWordStep
         {
 		    String[] offSet = getParameterValue( getParameter( "Offset" ), contextMap, dataMap ).replace( "%", "").split( "," );
 		    
-            getElement( pageObject, contextMap, webDriver, dataMap ).clickAt( Integer.parseInt( offSet[ 0 ] ), Integer.parseInt( offSet[ 1 ] ) );
+            getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).clickAt( Integer.parseInt( offSet[ 0 ] ), Integer.parseInt( offSet[ 1 ] ) );
             return true;
         }
 		
@@ -91,14 +87,14 @@ public class KWSClick extends AbstractKeyWordStep
     		{	
     			String clicks = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
     			int intClicks = Integer.parseInt(clicks);
-    			getElement( pageObject, contextMap, webDriver, dataMap ).click(intClicks,250);
+    			getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).click(intClicks,250);
     		}
     		else {	
     			String clicks = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
     			String waitTime = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
     			int intClicks = Integer.parseInt(clicks);
     			int intwaitTime =Integer.parseInt(waitTime);			
-    			getElement( pageObject, contextMap, webDriver, dataMap ).click(intClicks,intwaitTime);
+    			getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).click(intClicks,intwaitTime);
     		}	
 		}
 		return true;

@@ -11,8 +11,8 @@
   </recordType>
   
   <recordType name="parentData">
-    <record name="one" value="one" childRecord="|childRecords:[name='childOne']" />
-    <record name="two" value="two" childRecord="|childRecords:[name='childTwo']" />
+    <record name="one" value="one" childRecord="|childRecords:[value='childOne']|" />
+    <record name="two" value="two" childRecord="|childRecords:[value='childTwo']|" />
   </recordType>
   
   <recordType name="childRecords">

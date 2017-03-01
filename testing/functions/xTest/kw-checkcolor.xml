@@ -2,41 +2,41 @@
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
 <function name="kw-checkcolor" mode="function" threshold="0" active="true">
 <description>null</description>
-<step name="alertButton" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" wait="0" failureMode="ERROR">
-<parameter type="STATIC" name="null" value="high"/>
-<parameter type="STATIC" name="null" value="5,5"/>
+<step name="alertButton" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="5,5"/>
 </step>
-<step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" wait="0" failureMode="ERROR">
-<parameter type="STATIC" name="null" value="high"/>
-<parameter type="STATIC" name="null" value="5,5"/>
-<parameter type="STATIC" name="null" value="#337ab7"/>
-<parameter type="STATIC" name="null" value="0"/>
+<step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="5,5"/>
+<parameter type="STATIC" value="#337ab7"/>
+<parameter type="STATIC" value="0"/>
 </step>
-<step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" wait="0" failureMode="ERROR" context="alertColor">
-<parameter type="STATIC" name="null" value="high"/>
-<parameter type="STATIC" name="null" value="5,5"/>
+<step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="alertColor">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="5,5"/>
 </step>
-<step name="checkColor" site="xTest" page="home" type="COMPARE" active="true" threshold="0" wait="0" failureMode="ERROR">
-<parameter type="CONTEXT" name="null" value="alertColor"/>
-<parameter type="STATIC" name="null" value="-13403465"/>
+<step name="checkColor" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="CONTEXT" value="alertColor"/>
+<parameter type="STATIC" value="-13403465"/>
 </step>
-<step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" wait="0" failureMode="ERROR">
-<parameter type="STATIC" name="null" value="high"/>
-<parameter type="STATIC" name="null" value="5,5"/>
-<parameter type="STATIC" name="null" value="51,122,183"/>
-<parameter type="STATIC" name="null" value="5"/>
+<step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="5,5"/>
+<parameter type="STATIC" value="51,122,183"/>
+<parameter type="STATIC" value="5"/>
 </step>
-<step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" wait="0" failureMode="ERROR">
-<parameter type="STATIC" name="null" value="high"/>
-<parameter type="STATIC" name="null" value="5,5"/>
-<parameter type="STATIC" name="null" value="-13403465"/>
-<parameter type="STATIC" name="null" value="5"/>
+<step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="5,5"/>
+<parameter type="STATIC" value="-13403465"/>
+<parameter type="STATIC" value="5"/>
 </step>
-<step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" inverse="true" wait="0" failureMode="ERROR">
-<parameter type="STATIC" name="null" value="high"/>
-<parameter type="STATIC" name="null" value="5,5"/>
-<parameter type="STATIC" name="null" value="#000000"/>
-<parameter type="STATIC" name="null" value="0"/>
+<step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="5,5"/>
+<parameter type="STATIC" value="#000000"/>
+<parameter type="STATIC" value="0"/>
 </step>
 </function>
 </suite>

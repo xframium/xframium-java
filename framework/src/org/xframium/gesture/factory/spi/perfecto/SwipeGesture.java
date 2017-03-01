@@ -65,7 +65,7 @@ public class SwipeGesture extends AbstractSwipeGesture
 					Map<String, Object> params = new HashMap<>();
 					params.put( "start", new PercentagePoint( swipeStart.getX(), swipeStart.getY(), false ).toString() );
 					params.put( "end", new PercentagePoint( swipeEnd.getX(), swipeEnd.getY(), false ).toString() );
-					params.put( "duration", "1" );
+					params.put( "duration", "2" );
 					String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript("mobile:touch:swipe", params) + "";
 					//PerfectoMobile.instance().gestures().swipe( executionId, deviceName, new PercentagePoint( swipeStart.getX(), swipeStart.getY(), false ), new PercentagePoint( swipeEnd.getX(), swipeEnd.getY(), false ), 3 );
 					return true;
@@ -80,7 +80,7 @@ public class SwipeGesture extends AbstractSwipeGesture
 			Map<String, Object> params = new HashMap<>();
 			params.put( "start", new PercentagePoint( getSwipeStart().getX(), getSwipeStart().getY() ).toString() );
 			params.put( "end", new PercentagePoint( getSwipeEnd().getX(), getSwipeEnd().getY() ).toString() );
-			params.put( "duration", "1" );
+			params.put( "duration", "2" );
 			String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript("mobile:touch:swipe", params) + "";
 			
 			//PerfectoMobile.instance().gestures().swipe( executionId, deviceName, new PercentagePoint( getSwipeStart().getX(), getSwipeStart().getY() ), new PercentagePoint( getSwipeEnd().getX(), getSwipeEnd().getY() ), 3 );

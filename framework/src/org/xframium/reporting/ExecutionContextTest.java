@@ -1,5 +1,7 @@
 package org.xframium.reporting;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,8 +32,7 @@ public class ExecutionContextTest
         FAILED,
         SKIPPED;
     }
-    
-    
+
     private ExceptionType exceptionType;
     private KeyWordTest test;
     private String testName;
@@ -49,9 +50,13 @@ public class ExecutionContextTest
     private Map<String,Page> pageMap = null;
     private Map<String,Object> contextMap = null;
     private String message;
+    private String messageDetail;
     private String folderName;
     private Map<String,String> sPMap = new HashMap<String,String>( 10 );
     private ApplicationDescriptor aut;
+    private StringBuilder csvOutput = new StringBuilder();
+    
+    private String timerName;
     
     private Map<String,Integer[]> callMap = new HashMap<String,Integer[]>( 10 );
     private Map<String,Integer[]> pageUsageMap = new HashMap<String,Integer[]>( 10 );
@@ -67,6 +72,28 @@ public class ExecutionContextTest
         {
             return Integer.compare( o2.getFailCount(), o1.getFailCount() );
         }
+    }
+    
+    public void addToCSV( String line )
+    {
+        csvOutput.append( line ).append( "\r\n" );
+    }
+    
+    public void addToCSV( String[] line )
+    {
+        for ( int i=0; i<line.length; i++ )
+        {
+            csvOutput.append( line[i] );
+            if ( i < csvOutput.length() - 1 )
+                csvOutput.append( "," );
+        }
+        
+        csvOutput.append( "\r\n" );
+    }
+    
+    public String getCSVReport()
+    {
+        return csvOutput.toString();
     }
     
     public Map<String,Object> toMap()
@@ -86,6 +113,7 @@ public class ExecutionContextTest
         asMap.put( "device", device );
         asMap.put( "sessionId", sessionId );
         asMap.put( "folderName", folderName );
+        asMap.put( "tagNames", test.getTags() );
         callMap.clear();
         analyzeCalls( callMap );
         
@@ -106,6 +134,42 @@ public class ExecutionContextTest
     }
     
     
+    
+    public String getMessageDetail()
+    {
+        if ( messageDetail == null )
+        {
+            if ( getStepException() != null )
+            {
+                message = getStepException().getMessage();
+                
+                StringWriter sW = new StringWriter();
+                getStepException().printStackTrace( new PrintWriter( sW ) );
+                messageDetail = sW.toString();
+            }
+        }
+        return messageDetail;
+    }
+
+    public void setMessageDetail( String messageDetail )
+    {
+        this.messageDetail = messageDetail;
+    }
+
+    public String getTimerName()
+    {
+        return timerName;
+    }
+    
+    public void setTimerName( String timerName )
+    {
+        this.timerName = timerName;
+    }
+    
+    public void clearTimer()
+    {
+        this.timerName = null;
+    }
     
     public String getTestName()
     {
@@ -156,6 +220,11 @@ public class ExecutionContextTest
         executionParameters.put( name,  value );
     }
     
+    public String getElementParameter( String name )
+    {
+        return executionParameters.get( name );
+    }
+    
     public ExecutionContextStep getStep()
     {
         return currentStep;
@@ -166,7 +235,7 @@ public class ExecutionContextTest
         return dataMap;
     }
 
-
+    
 
     public void setDataMap( Map<String, PageData> dataMap )
     {
@@ -314,9 +383,22 @@ public class ExecutionContextTest
             currentStep.addParameterValue( step.getParameterValue( p, contextMap, dataMap ) + "" );
         }
     }
+
     
     public String getMessage()
     {
+        if ( message == null )
+        {
+            if ( getStepException() != null )
+            {
+                message = getStepException().getMessage();
+                
+                StringWriter sW = new StringWriter();
+                getStepException().printStackTrace( new PrintWriter( sW ) );
+                messageDetail = sW.toString();
+            }
+        }
+        
         return message;
     }
 
@@ -459,6 +541,19 @@ public class ExecutionContextTest
         return null;
     }
     
+    public String getScreenShotLocation()
+    {
+
+        for ( ExecutionContextStep eS : stepList )
+        {
+            String screenShot = eS.getScreenShotLocation();
+            if ( screenShot != null )
+                return screenShot;
+        }
+        
+        return null;
+    }
+    
     public Throwable getStepException()
     {
         for ( ExecutionContextStep eS : stepList )
@@ -473,6 +568,11 @@ public class ExecutionContextTest
     public Map<String, String> getExecutionParameters()
     {
         return executionParameters;
+    }
+    
+    public String getExecutionParameter( String name )
+    {
+        return executionParameters.get( name );
     }
     
     

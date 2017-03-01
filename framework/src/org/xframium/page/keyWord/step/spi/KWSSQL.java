@@ -65,9 +65,6 @@ public class KWSSQL extends AbstractKeyWordStep
     {
         boolean rtn = true;
         
-        if ( pageObject == null )
-            throw new ScriptConfigurationException( "Page Object was not defined" );
-
         //
         // OK, this step needs at least one parameter and the first is the query to execute.  If there are
         // any more, they are values to compare the query results to.  If all the test parameters match

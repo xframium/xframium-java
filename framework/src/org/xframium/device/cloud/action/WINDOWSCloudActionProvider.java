@@ -1,13 +1,14 @@
 package org.xframium.device.cloud.action;
 
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.device.artifact.ArtifactProducer;
 import org.xframium.device.artifact.api.SeleniumArtifactProducer;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.integrations.common.PercentagePoint;
 import org.xframium.page.BY;
+import org.xframium.page.element.Element;
+import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
-import eu.bitwalker.useragentutils.UserAgent;
 
 public class WINDOWSCloudActionProvider extends AbstractCloudActionProvider
 {
@@ -32,6 +33,13 @@ public class WINDOWSCloudActionProvider extends AbstractCloudActionProvider
     {
         
         return true;
+    }
+	
+	@Override
+    public void tap( DeviceWebDriver webDriver, PercentagePoint location, int lengthInMillis )
+    {
+        
+        
     }
     
     @Override
@@ -116,7 +124,28 @@ public class WINDOWSCloudActionProvider extends AbstractCloudActionProvider
         // TODO Auto-generated method stub
         return false;
     }
-    
+
+    @Override
+    public String startTimer( DeviceWebDriver webDriver, Element element, ExecutionContextTest executionContext )
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean getSupportedTimers( DeviceWebDriver webDriver, String timerId, ExecutionContextTest executionContext, String type )
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void stopTimer( DeviceWebDriver webDriver, String timerId, ExecutionContextTest executionContext )
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
 	
     
 }

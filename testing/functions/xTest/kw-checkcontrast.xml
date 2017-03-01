@@ -2,25 +2,25 @@
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
 <function name="kw-checkcontrast" mode="function" threshold="0" active="true">
 <description>null</description>
-<step name="alertButton" site="xTest" page="home" type="VERIFY_CONTRAST" active="true" threshold="0" wait="0" failureMode="ERROR">
-<parameter type="STATIC" name="null" value="high"/>
-<parameter type="STATIC" name="null" value="7"/>
-<parameter type="STATIC" name="null" value="21"/>
+<step name="alertButton" site="xTest" page="home" type="VERIFY_CONTRAST" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="7"/>
+<parameter type="STATIC" value="21"/>
 </step>
-<step name="colorContrastAA" site="xTest" page="home" type="VERIFY_CONTRAST" active="true" threshold="0" inverse="true" wait="0" failureMode="ERROR">
-<parameter type="STATIC" name="null" value="high"/>
-<parameter type="STATIC" name="null" value="7"/>
-<parameter type="STATIC" name="null" value="21"/>
+<step name="colorContrastAA" site="xTest" page="home" type="VERIFY_CONTRAST" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="7"/>
+<parameter type="STATIC" value="21"/>
 </step>
-<step name="colorContrastAA" site="xTest" page="home" type="VERIFY_CONTRAST" active="true" threshold="0" wait="0" failureMode="ERROR">
-<parameter type="STATIC" name="null" value="high"/>
-<parameter type="STATIC" name="null" value="4.5"/>
-<parameter type="STATIC" name="null" value="7"/>
+<step name="colorContrastAA" site="xTest" page="home" type="VERIFY_CONTRAST" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="4.5"/>
+<parameter type="STATIC" value="7"/>
 </step>
-<step name="colorContrast" site="xTest" page="home" type="VERIFY_CONTRAST" active="true" threshold="0" inverse="true" wait="0" failureMode="ERROR">
-<parameter type="STATIC" name="null" value="high"/>
-<parameter type="STATIC" name="null" value="4.5"/>
-<parameter type="STATIC" name="null" value="21"/>
+<step name="colorContrast" site="xTest" page="home" type="VERIFY_CONTRAST" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="4.5"/>
+<parameter type="STATIC" value="21"/>
 </step>
 </function>
 </suite>

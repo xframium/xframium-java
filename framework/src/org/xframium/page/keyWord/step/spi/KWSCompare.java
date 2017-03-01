@@ -37,11 +37,6 @@ public class KWSCompare extends AbstractKeyWordStep
 {
     public KWSCompare()
     {
-        kwName = "Compare";
-        kwDescription = "Allows the script to compare to parameter values";
-        kwHelp = "https://www.xframium.org/keyword.html#kw-compare";
-        orMapping = false;
-        category = "Flow Control";
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

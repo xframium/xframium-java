@@ -2,7 +2,7 @@
 <applicationRegistry xmlns="http://www.xframium.org/applicationRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/applicationRegistry http://www.xframium.org/xsd/deviceManagement/applicationRegistry.xsd">
 <application name="default"/>
 <application name="Settings" appPackage="com.android.settings" bundleId="com.apple.Preferences"/>
-<application name="xTest" url="http://xframium.org/testing.html"/>
-<application name="xTest0" url="http://xframium.org/testing.html"/>
-<application name="xTest1" url="http://xframium.org/testing2.html"/>
+<application name="xTest" version="1001.0" url="http://xframium.org/testing.html"/>
+<application name="xTest0" version="1.0" url="http://xframium.org/testing.html"/>
+<application name="xTest1" version="1.0" url="http://xframium.org/testing2.html"/>
 </applicationRegistry>

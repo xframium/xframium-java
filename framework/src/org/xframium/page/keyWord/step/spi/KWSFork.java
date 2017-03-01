@@ -54,10 +54,6 @@ public class KWSFork extends AbstractKeyWordStep
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception
 	{
 			
-		if ( pageObject == null )
-			throw new ScriptConfigurationException( "Page Object was not defined" );
-		if ( getParameterList().size() < 2 )
-			throw new ScriptConfigurationException( "You must provide at least 2 elements to check for" );
 		
 		if ( getStepList().size() != getParameterList().size() )
 			throw new ScriptConfigurationException( "Your sub step count must equal your parameter count for a proper fork" );

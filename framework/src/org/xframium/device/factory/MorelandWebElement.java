@@ -32,13 +32,14 @@ import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.internal.Coordinates;
+import org.openqa.selenium.internal.HasIdentity;
 import org.openqa.selenium.internal.Locatable;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class CachedWebElement.
  */
-public class MorelandWebElement implements WebElement, Locatable
+public class MorelandWebElement implements WebElement, Locatable, HasIdentity
 {
 	
 	private DeviceWebDriver deviceDriver;
@@ -161,22 +162,29 @@ public class MorelandWebElement implements WebElement, Locatable
 		return webElement.isDisplayed();
 	}
 
+	private Point cachedLocation = null;
+	
 	/* (non-Javadoc)
 	 * @see org.openqa.selenium.WebElement#getLocation()
 	 */
 	@Override
 	public Point getLocation()
 	{
-		return webElement.getLocation();
+	    if ( cachedLocation == null )
+	        cachedLocation = webElement.getLocation();
+		return cachedLocation;
 	}
 
+	private Dimension cachedSize = null;
 	/* (non-Javadoc)
 	 * @see org.openqa.selenium.WebElement#getSize()
 	 */
 	@Override
 	public Dimension getSize()
 	{
-		return webElement.getSize();
+	    if ( cachedSize == null )
+	        cachedSize = webElement.getSize();
+		return cachedSize;
 	}
 
 	/* (non-Javadoc)
@@ -188,11 +196,17 @@ public class MorelandWebElement implements WebElement, Locatable
 		return webElement.getCssValue( propertyName );
 	}
 
+	private Coordinates cachedCoordinates = null;
     @Override
     public Coordinates getCoordinates()
     {
         if ( webElement instanceof Locatable )
-            return ( (Locatable) webElement ).getCoordinates();
+        {
+            if ( cachedCoordinates == null )
+                cachedCoordinates = ( (Locatable) webElement ).getCoordinates();
+        
+            return cachedCoordinates;
+        }
         else
             return null;
     }
@@ -210,6 +224,15 @@ public class MorelandWebElement implements WebElement, Locatable
     public WebElement getWebElement()
     {
         return webElement;
+    }
+
+    @Override
+    public String getId()
+    {
+        if ( webElement instanceof HasIdentity )
+            return ( (HasIdentity) webElement ).getId();
+        else
+            return null;
     }
     
     

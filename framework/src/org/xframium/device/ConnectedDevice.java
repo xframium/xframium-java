@@ -146,7 +146,12 @@ public class ConnectedDevice
 	 */
 	public String toString()
 	{
-		return device.toShortString();  
+	    if ( webDriver != null && webDriver.getPopulatedDevice() != null )
+	        return webDriver.getPopulatedDevice().getEnvironment();
+	    else if ( device != null )
+	        return device.getEnvironment();
+	    else
+	        return "Unknown Device";
 	}
 	
 	public String getExecutionId()

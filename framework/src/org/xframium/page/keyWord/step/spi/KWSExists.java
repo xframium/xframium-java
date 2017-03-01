@@ -79,7 +79,7 @@ public class KWSExists extends AbstractKeyWordStep
             {
                 try
                 {
-                    currentElement = getElement( pageObject, contextMap, webDriver, dataMap );
+                    currentElement = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
                     if ( currentElement.isPresent() )
                         returnValue = true;
                 }
@@ -93,7 +93,7 @@ public class KWSExists extends AbstractKeyWordStep
         else
         {
 
-            currentElement = getElement( pageObject, contextMap, webDriver, dataMap );
+            currentElement = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
             returnValue = currentElement.isPresent();
         }
 

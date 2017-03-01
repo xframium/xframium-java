@@ -63,8 +63,8 @@ public class KeyWordPageImpl extends AbstractPage implements KeyWordPage
 	@Override
 	public Element getElement( ElementDescriptor elementDescriptor )
 	{
-	    if ( log.isInfoEnabled() )
-            log.info( Thread.currentThread().getName() + ": Attempting to locate element using [" + elementDescriptor.toString() + "]" + " - " + webDriver );
+	    if ( log.isDebugEnabled() )
+            log.debug( Thread.currentThread().getName() + ": Attempting to locate element using [" + elementDescriptor.toString() + "]" + " - " + webDriver );
         
         Element myElement = elementProvider.getElement( elementDescriptor );
         

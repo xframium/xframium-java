@@ -209,6 +209,9 @@ public class XMLPageDataProvider extends AbstractPageDataProvider
 	 */
 	private void parseRecord( String typeName, Node pageNode )
 	{
+	    if ( pageNode == null || pageNode.getAttributes() == null || pageNode.getAttributes().getNamedItem( NAME ) == null )
+	        return;
+	    
 		String recordName = pageNode.getAttributes().getNamedItem( NAME ).getNodeValue();
 
 		boolean active = true;
@@ -295,5 +298,13 @@ public class XMLPageDataProvider extends AbstractPageDataProvider
 			return null;
 		}
 	}
+	
+	public static void main( String[] args )
+    {
+        XMLPageDataProvider x = new XMLPageDataProvider( new File( "C:\\Users\\Allen\\git\\xframium-java\\testing\\pageData\\pageData.xml" ) );
+        x.readPageData();
+        //x.populateTrees();
+        System.out.println( x.getRecords( "parentData.one.childRecord.childOne.loopData" ) );
+    }
 
 }

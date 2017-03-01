@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-<test name="xFramium Page Element Context" dataProvider="callTest" tagNames="performance,regression" threshold="0" active="true" os="ANDROID,IOS">
+<test name="xFramium Page Element Context" dataProvider="callTest" tagNames="performance,regression" timed="false" threshold="0" active="true" priority="1" severity="1" os="ANDROID,IOS">
 <description>Tests that the specified step is ignored for a specific OS type</description>
-<step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR"/>
-<step name="toggleButtonWeb" site="xTest" page="home" type="EXISTS" active="true" threshold="0" wait="0" failureMode="ERROR"/>
-<step name="toggleButtonNative" site="xTest" page="home" type="EXISTS" active="true" threshold="0" inverse="true" wait="0" failureMode="ERROR"/>
+<step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="toggleButtonWeb" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="toggleButtonNative" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR"/>
 </test>
 </suite>

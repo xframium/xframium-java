@@ -58,5 +58,16 @@ public class PageDataContainer
             fieldNames = Arrays.asList( pageData.getFieldNames() );
     }
     
+    public String toString()
+    {
+        StringBuilder sB = new StringBuilder();
+        sB.append( recordType ).append( ": Locked=" ).append( lockRecords ).append( "\r\n" );
+        for ( PageData pD : recordList )
+        {
+            sB.append( pD.toString() ).append( "\r\n" );
+        }
+        return sB.toString();
+    }
+    
     
 }

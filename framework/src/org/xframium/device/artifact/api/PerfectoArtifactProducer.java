@@ -138,6 +138,9 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 	    
     		switch (aType)
     		{
+    		    case ADD_TO_CSV:
+                    return generateCSVReport( rootFolder, test );
+    		    
     			case EXECUTION_DEFINITION:
     				StringBuilder defBuilder = new StringBuilder();
     				defBuilder.append( "DATE=" ).append( simpleDateFormat.format( new Date( System.currentTimeMillis() ) ) ).append( "\r\n");
@@ -230,6 +233,7 @@ public class PerfectoArtifactProducer extends AbstractArtifactProducer
 	    }
 	    catch( Exception e )
 	    {
+	        e.printStackTrace();
 	        return new Artifact( rootFolder + "generationFailure.txt", e.getMessage().getBytes() );
 	    }
 		

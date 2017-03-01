@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
+<site name="NFCU">
+  <page name="Home">
+    <element name="skipnav" value="//a[@id='skipnav']" descriptor="XPATH"/>
+    <element name="Sign In" value="//a[text()='Sign In']" descriptor="XPATH"/>
+    <element name="ANCHOR3" value="//div[@id='logolayer']/a[1]" descriptor="XPATH"/>
+    <element name="About Us" value="//div[@id='globalnav']/a[1]" descriptor="COMPLEX">
+<element value="//aaaaaa" descriptor="XPATH" os="IOS"/>
+<element value="text" descriptor="V_TEXT" os="ANDROID"/>
+<element value="#element" descriptor="CSS" os="WINDOWS"/>
+</element>
+    <element name="Branches &amp; ATMs" value="//div[@id='globalnav']/a[2]" descriptor="XPATH"/>
+    <element name="Become a Member" value="//div[@id='globalnav']/a[3]" descriptor="XPATH"/>
+    <element name="Contact Us" value="//div[@id='globalnav']/a[4]" descriptor="XPATH"/>
+    <element name="Security" value="//div[@id='globalnav']/a[5]" descriptor="XPATH"/>
+    <element name="accessible-megamenu-1487172865477-1" value="//a[@id='accessible-megamenu-1487172865477-1']" descriptor="XPATH"/>
+    <element name="Equity" value="//a[text()='Equity']" descriptor="XPATH"/>
+    <element name="Auto" value="//a[text()='Auto']" descriptor="XPATH"/>
+    <element name="Student Loans" value="//a[text()='Student Loans']" descriptor="XPATH"/>
+    <element name="Personal Loans" value="//a[text()='Personal Loans']" descriptor="XPATH"/>
+    <element name="Savings" value="//a[text()='Savings']" descriptor="XPATH"/>
+    <element name="Money Market" value="//a[text()='Money Market']" descriptor="XPATH"/>
+    <element name="IRAs" value="//a[text()='IRAs']" descriptor="XPATH"/>
+    <element name="Direct Deposit" value="//a[text()='Direct Deposit']" descriptor="XPATH"/>
+    <element name="Checking Protection Options" value="//a[text()='Checking Protection Options']" descriptor="XPATH"/>
+    <element name="Mobile &amp; Scan Deposits" value="//a[text()='Mobile &amp; Scan Deposits']" descriptor="XPATH"/>
+    <element name="Debit Cards" value="//a[text()='Debit Cards']" descriptor="XPATH"/>
+    <element name="Prepaid Cards" value="//a[text()='Prepaid Cards']" descriptor="XPATH"/>
+    <element name="GO Prepaid Card" value="//a[text()='GO Prepaid Card']" descriptor="XPATH"/>
+    <element name="Visa Buxx Prepaid Card" value="//a[text()='Visa Buxx Prepaid Card']" descriptor="XPATH"/>
+    <element name="Gift Cards" value="//a[text()='Gift Cards']" descriptor="XPATH"/>
+    <element name="Android&#153; App" value="//a[text()='Android&#153; App']" descriptor="XPATH"/>
+    <element name="Kindle Fire App" value="//a[text()='Kindle Fire App']" descriptor="XPATH"/>
+    <element name="Mobile Web" value="//a[text()='Mobile Web']" descriptor="XPATH"/>
+    <element name="SMS Text Banking" value="//a[text()='SMS Text Banking']" descriptor="XPATH"/>
+    <element name="Overview" value="//a[text()='Overview']" descriptor="XPATH"/>
+    <element name="Membership" value="//a[text()='Membership']" descriptor="XPATH"/>
+    <element name="Checking &amp; Savings" value="//a[text()='Checking &amp; Savings']" descriptor="XPATH"/>
+    <element name="Loans" value="//a[text()='Loans']" descriptor="XPATH"/>
+    <element name="Business Credit Cards" value="//a[text()='Business Credit Cards']" descriptor="XPATH"/>
+    <element name="Retirement &amp; Insurance" value="//a[text()='Retirement &amp; Insurance']" descriptor="XPATH"/>
+    <element name="Convenience" value="//a[text()='Convenience']" descriptor="XPATH"/>
+    <element name="Processing Services" value="//a[text()='Processing Services']" descriptor="XPATH"/>
+    <element name="Financial Planning" value="//a[text()='Financial Planning']" descriptor="XPATH"/>
+    <element name="Investments" value="//a[text()='Investments']" descriptor="XPATH"/>
+    <element name="Insurance" value="//a[text()='Insurance']" descriptor="XPATH"/>
+    <element name="Trust Services" value="//a[text()='Trust Services']" descriptor="XPATH"/>
+    <element name="accessible-megamenu-1487172865482-3" value="//a[@id='accessible-megamenu-1487172865482-3']" descriptor="XPATH"/>
+    <element name="Am I Eligible?" value="//a[text()='Am I Eligible?']" descriptor="XPATH"/>
+    <element name="Welcome to Navy Federal" value="//a[text()='Welcome to Navy Federal']" descriptor="XPATH"/>
+    <element name="Military Exclusives" value="//a[text()='Military Exclusives']" descriptor="XPATH"/>
+    <element name="Army" value="//a[text()='Army']" descriptor="XPATH"/>
+    <element name="Marine Corps" value="//a[text()='Army']/following-sibling::a[1]" descriptor="XPATH"/>
+    <element name="Navy" value="//a[text()='Army']/following-sibling::a[2]" descriptor="XPATH"/>
+    <element name="Air Force" value="//a[text()='Army']/following-sibling::a[3]" descriptor="XPATH"/>
+    <element name="Coast Guard" value="//a[text()='Army']/following-sibling::a[4]" descriptor="XPATH"/>
+    <element name="Convenient Money Management" value="//a[text()='Convenient Money Management']" descriptor="XPATH"/>
+    <element name="Special Offers and Discounts" value="//a[text()='Special Offers and Discounts']" descriptor="XPATH"/>
+    <element name="Business Services Application" value="//a[text()='Business Services Application']" descriptor="XPATH"/>
+    <element name="Switch to Navy Federal" value="//a[text()='Switch to Navy Federal']" descriptor="XPATH"/>
+    <element name="accessible-megamenu-1487172865484-5" value="//a[@id='accessible-megamenu-1487172865484-5']" descriptor="XPATH"/>
+    <element name="Managing Your Money" value="//a[text()='Managing Your Money']" descriptor="XPATH"/>
+    <element name="MakingCents" value="//a[text()='MakingCents']" descriptor="XPATH"/>
+    <element name="Security Center" value="//a[text()='Security Center']" descriptor="XPATH"/>
+    <element name="Retirement Center" value="//a[text()='Retirement Center']" descriptor="XPATH"/>
+    <element name="Family Finances" value="//a[text()='Family Finances']" descriptor="XPATH"/>
+    <element name="Tax Center" value="//a[text()='Tax Center']" descriptor="XPATH"/>
+    <element name="FREE Navy Federal Events" value="//a[text()='FREE Navy Federal Events']" descriptor="XPATH"/>
+    <element name="Military Life" value="//a[text()='Military Life']" descriptor="XPATH"/>
+    <element name="Work Life" value="//a[text()='Work Life']" descriptor="XPATH"/>
+    <element name="Calculators" value="//a[text()='Calculators']" descriptor="XPATH"/>
+    <element name="here" value="//a[text()='here']" descriptor="XPATH"/>
+    <element name="Forgot Username?" value="//form[@id='logon']/a[2]" descriptor="XPATH"/>
+    <element name="Forgot password?" value="//form[@id='logon']/a[3]" descriptor="XPATH"/>
+    <element name="Sign up for online banking" value="//a[text()='Sign up for online banking']" descriptor="XPATH"/>
+    <element name="Become a member" value="//a[text()='Sign up for online banking']/following-sibling::a[1]" descriptor="XPATH"/>
+    <element name="Find a Branch or ATM Near You" value="//a[text()='Find a Branch or ATM Near You']" descriptor="XPATH"/>
+    <element name="Auto Loans" value="//a[text()='Auto Loans']" descriptor="XPATH"/>
+    <element name="More Rates" value="//a[text()='More Rates']" descriptor="XPATH"/>
+    <element name="http://nfcu.me/NavyYard50" value="//a[text()='http://nfcu.me/NavyYard50']" descriptor="XPATH"/>
+    <element name="ANCHOR74" value="//div[9]/a[1]" descriptor="XPATH"/>
+    <element name="Careers" value="//a[text()='Careers']" descriptor="XPATH"/>
+    <element name="Newsroom" value="//a[text()='Newsroom']" descriptor="XPATH"/>
+    <element name="Videos" value="//a[text()='Videos']" descriptor="XPATH"/>
+    <element name="FAQs" value="//a[text()='FAQs']" descriptor="XPATH"/>
+    <element name="Home Center" value="//a[text()='Home Center']" descriptor="XPATH"/>
+    <element name="Free Navy Federal Events" value="//a[text()='Free Navy Federal Events']" descriptor="XPATH"/>
+    <element name="Business Services" value="//a[text()='Business Services']" descriptor="XPATH"/>
+    <element name="Forms" value="//a[text()='Forms']" descriptor="XPATH"/>
+    <element name="Facebook" value="//a[text()='Facebook']" descriptor="XPATH"/>
+    <element name="Twitter" value="//a[text()='Facebook']/following-sibling::a[1]" descriptor="XPATH"/>
+    <element name="Youtube" value="//a[text()='Facebook']/following-sibling::a[2]" descriptor="XPATH"/>
+    <element name="LinkedIn" value="//a[text()='Facebook']/following-sibling::a[3]" descriptor="XPATH"/>
+    <element name="Navy Federal Blog" value="//a[text()='Facebook']/following-sibling::a[4]" descriptor="XPATH"/>
+    <element name="Instagram" value="//a[text()='Facebook']/following-sibling::a[5]" descriptor="XPATH"/>
+    <element name="ANCHOR89" value="//div[@id='subfooterlogo']/a[1]" descriptor="XPATH"/>
+    <element name="ANCHOR90" value="//div[@id='subnav']/a[1]" descriptor="XPATH"/>
+    <element name="Navy Federal Credit Union is federally insured by NCUA" value="//div[@id='subnav']/a[2]" descriptor="XPATH"/>
+    <element name="Web Policy" value="//div[@id='subnav']/a[3]" descriptor="XPATH"/>
+    <element name="Privacy Policy" value="//div[@id='subnav']/a[4]" descriptor="XPATH"/>
+    <element name="Browser Support" value="//div[@id='subnav']/a[5]" descriptor="XPATH"/>
+    <element name="Accessibility" value="//div[@id='subnav']/a[6]" descriptor="XPATH"/>
+    <element name="Site Map" value="//div[@id='subnav']/a[7]" descriptor="XPATH"/>
+    <element name="Equal Housing Lender" value="//div[@id='footercopyright']/a[1]" descriptor="XPATH"/>
+    <element name="Important Information About Opening a New Account" value="//div[@id='footercopyright']/a[2]" descriptor="XPATH"/>
+    <element name="Terms and Conditions" value="//p[3]/a[1]" descriptor="XPATH"/>
+    <element name="q" value="//input[@id='q']" descriptor="XPATH"/>
+    <element name="submit" value="//input[@name='submit']" descriptor="XPATH"/>
+    <element name="user" value="//input[@id='user']" descriptor="XPATH"/>
+    <element name="password" value="//input[@id='password']" descriptor="XPATH"/>
+    <element name="signin" value="//input[@name='signin']" descriptor="XPATH"/>
+    <element name="popCheck" value="//input[@id='popCheck']" descriptor="XPATH"/>
+    <element name="address" value="//input[@id='address']" descriptor="XPATH"/>
+    <element name="submitbranch" value="//input[@name='submitbranch']" descriptor="XPATH"/>
+  </page>
+</site></elementDefinition>

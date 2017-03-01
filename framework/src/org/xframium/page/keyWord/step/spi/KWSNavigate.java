@@ -65,11 +65,6 @@ public class KWSNavigate extends  AbstractKeyWordStep {
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
 		Boolean success = false;
-		if ( pageObject == null )
-			throw new ScriptConfigurationException( "There was no Page Object defined" );
-		
-		if ( getParameterList().size() < 1)
-			throw new ScriptConfigurationException( "Please provide the type of navigation as the first parameter" );
 		
 		try{
 			String NavigateType = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";

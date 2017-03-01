@@ -41,8 +41,12 @@ xConsole
                     $scope.deviceList;
                     $scope.globalConfig;
                     $scope.tagList = [];
+                    $scope.deviceTagList = [];
+                    
+                    $scope.threadList = [];
                     
                     $scope.intervalPromise;
+                    $scope.intervalThreadPromise;
                    
                     $scope.executionStatus = 'idle';
                    
@@ -154,17 +158,47 @@ xConsole
                                 $scope.testList[ i ].active = true;
                         }
                     }
+                    
+                    $scope.setDeviceActive = function( active )
+                    {
+                        for ( var j = 0; j < $scope.deviceList.length; j++ ) 
+                        {
+                            $scope.deviceList[ j ].active = active;
+                        }
+                    }
+                    
+                    $scope.selectDeviceByTag = function( tag )
+                    {
+                        for ( var i = 0; i< $scope.deviceList.length; i++ ) 
+                        {
+                            if ( $scope.deviceList[i].tagNames.indexOf( tag ) != -1 )
+                                $scope.deviceList[ i ].active = true;
+                        }
+                    }
 
+                    $scope.checkThreadStatus = function()
+                    {
+                        xConsoleService.checkThreadStatus().then(function( returnValue )
+                        {
+                            $scope.threadList = returnValue.pageData;
+                        });
+                    }
+                    
                     $scope.checkStatus = function()
                     {
                         xConsoleService.checkStatus().then(function( returnValue )
                         {
                             if ( returnValue == null )
+                            {
                                 $interval.cancel($scope.intervalPromise);
+                                $interval.cancel($scope.intervalThreadPromise);
+                            }
                             
                             if ( !returnValue.pageData.status )
                             {
                                 $interval.cancel($scope.intervalPromise);
+                                $interval.cancel($scope.intervalThreadPromise);
+                                
                                 $scope.executionStatus = 'idle';
                             }
                             
@@ -298,22 +332,14 @@ xConsole
 
                             if ( $scope.deviceList != null ) {
                                 for ( var i = 0; i < $scope.deviceList.length; i++ ) {
-                                    $scope.selectedDevice = $scope.deviceList[i];
+                                    
+                                    var device = $scope.deviceList[i];
 
-                                    if ( $scope.selectedDevice.deviceName == 'null' )
-                                        $scope.selectedDevice.deviceName = '';
-                                    if ( $scope.selectedDevice.manufacturer == 'null' )
-                                        $scope.selectedDevice.manufacturer = '';
-                                    if ( $scope.selectedDevice.model == 'null' )
-                                        $scope.selectedDevice.model = '';
-                                    if ( $scope.selectedDevice.browserName == 'null' )
-                                        $scope.selectedDevice.browserName = '';
-                                    if ( $scope.selectedDevice.browserVersion == 'null' )
-                                        $scope.selectedDevice.browserVersion = '';
-                                    if ( $scope.selectedDevice.os == 'null' )
-                                        $scope.selectedDevice.os = '';
-                                    if ( $scope.selectedDevice.osVersion == 'null' )
-                                        $scope.selectedDevice.osVersion = '';
+                                    for( var j=0; j<device.tagNames.length; j++ )
+                                    {
+                                        if ( device.tagNames[ j ] != '' && $scope.deviceTagList.indexOf( device.tagNames[ j ] ) == -1 )
+                                            $scope.deviceTagList.push( device.tagNames[ j ] );
+                                    }
                                 }
                             }
 
@@ -412,6 +438,10 @@ xConsole
                             $scope.intervalPromise = $interval(function() {
                                 $scope.checkStatus();
                             }, 1000);
+                            
+                            $scope.intervalThreadPromise = $interval(function() {
+                                $scope.checkThreadStatus();
+                            }, 3000);
                         });
                     }
 

@@ -18,16 +18,17 @@
     <element name="focusId" value="focusId" descriptor="ID"/>
     <element name="testingTwo" value="testingTwo" descriptor="ID"/>
     <element name="selectBox" value="selectBox" descriptor="ID"/>
+    <element name="bsSelectUL" value="//button[@id='bsDropdownButton']/following-sibling::ul[1]" descriptor="XPATH"/>
+    <element name="bsSelectValue" value="bsDropdownButton" descriptor="ID"/>
     <element name="aOpen" value="//div[@id='aOpen']//a" descriptor="XPATH"/>
     <element name="deleteButton" value="deleteButton" descriptor="ID"/>
     <element name="_testingTwo" value="_testingTwo" descriptor="ID"/>
     <element name="testingTwoFrame" value="testingTwoFrame" descriptor="ID"/>
     <element name="versionTest" descriptor="COMPLEX">
 <element value="//*[@id='V1']" descriptor="XPATH" version="xTest(1.0)"/>
-<element value="//*[@id='V2']" descriptor="V_IMAGE" version="xTest(1.0-1.1)"/>
-<element value="//*[@id='V3']" descriptor="XPATH" version="xTest(1.0-1.2)"/>
+<element value="//*[@id='V2']" descriptor="XPATH" version="xTest(1.1-1.2)"/>
 <element value="//*[@id='V1']" descriptor="XPATH" version="xTest0(1.0)"/>
-<element value="//*[@id='V2']" descriptor="XPATH" version="xTest0(1.0-*)"/>
+<element value="//*[@id='V2']" descriptor="XPATH" version="xTest0(1.1-*)"/>
 </element>
     <element name="osTest" descriptor="COMPLEX">
 <element value="//*[@id='IOS']" descriptor="XPATH" version="xTest0(1.0)" os="IOS"/>

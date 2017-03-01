@@ -5,6 +5,7 @@ xConsole.service("xConsoleService", function($http, $location) {
 		getFiles : getFiles,
 		executeTest : executeTest,
 		getHtml : getHtml,
+		checkThreadStatus : checkThreadStatus,
 		checkStatus : checkStatus
 	});
 	
@@ -14,6 +15,17 @@ xConsole.service("xConsoleService", function($http, $location) {
         var request = $http({
             method : "get",
             url : "/executionConsole/status",
+        });
+
+        return request.then(handleSuccess, handleError);
+    }
+	
+	function checkThreadStatus( )
+    {
+
+        var request = $http({
+            method : "get",
+            url : "/executionConsole/threadStatus",
         });
 
         return request.then(handleSuccess, handleError);

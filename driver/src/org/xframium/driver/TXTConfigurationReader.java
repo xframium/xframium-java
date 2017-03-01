@@ -94,6 +94,11 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
         }
     }
     
+    protected Map<String,String> getConfigurationProperties()
+    {
+        return configProperties;
+    }
+    
     @Override
     public boolean readFile( InputStream inputStream )
     {

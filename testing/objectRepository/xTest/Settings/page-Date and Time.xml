@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
+<site name="Settings">
+  <page name="Date and Time" class="org.xframium.page.keyWord.KeyWordPage">
+    <element name="Time Zone" value="//UIATableCell[@name='Time Zone']" descriptor="XPATH"/>
+    <element name="24-Hour Time" value="//UIASwitch[@name='24-Hour Time']" descriptor="XPATH"/>
+    <element name="Set Automatically" value="//UIASwitch[@name='Set Automatically']" descriptor="XPATH"/>
+    <element name="General" value="//UIAButton[@name='General']" descriptor="XPATH"/>
+    <element name="Back" value="//UIAButton[@name='Back']" descriptor="XPATH"/>
+    <element name="Date Selection" value="//UIATableCell[@name='Set Automatically']/following-sibling::UIATableCell[2]/UIAStaticText[1]" descriptor="XPATH"/>
+    <element name="Date Wheel" value="//UIAPicker/UIAPickerWheel[1]" descriptor="XPATH"/>
+  </page>
+</site></elementDefinition>

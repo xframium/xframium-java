@@ -59,7 +59,7 @@ public class KWSVisible extends AbstractKeyWordStep
 			{
 				try
 				{
-					if ( getElement( pageObject, contextMap, webDriver, dataMap ).isVisible() )
+					if ( getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).isVisible() )
 						return true;
 				}
 				catch( Exception e )
@@ -74,7 +74,7 @@ public class KWSVisible extends AbstractKeyWordStep
 		}
 		else
 		{
-			return getElement( pageObject, contextMap, webDriver, dataMap ).isVisible();
+			return getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).isVisible();
 		}
 	}
 	

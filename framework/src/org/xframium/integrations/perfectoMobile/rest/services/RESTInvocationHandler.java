@@ -197,7 +197,7 @@ public class RESTInvocationHandler implements InvocationHandler
     			int bytesRead= 0;
     			
     			URLConnection currentConnection = currentUrl.openConnection();
-    			currentConnection.setReadTimeout( 300000 );
+    			currentConnection.setReadTimeout( 600000 );
     			currentConnection.setConnectTimeout( 30000 );
     			
     			inputStream = currentConnection.getInputStream();

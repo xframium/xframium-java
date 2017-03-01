@@ -23,16 +23,13 @@
  */
 package org.xframium.device.artifact;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -41,22 +38,13 @@ import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import org.xframium.Initializable;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
-import org.xframium.device.cloud.CloudDescriptor;
-import org.xframium.device.cloud.CloudRegistry;
-import org.xframium.device.data.DataManager;
-import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.ExecutionRecord;
-import org.xframium.page.StepStatus;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
-import org.xframium.spi.PropertyProvider;
-import org.xframium.spi.driver.ReportiumProvider;
 import org.xframium.wcag.WCAGRecord;
-import org.yaml.snakeyaml.util.UriEncoder;
 import com.xframium.serialization.SerializationManager;
 
 // TODO: Auto-generated Javadoc
@@ -167,6 +155,11 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         return new Artifact( rootFolder + "index.html", stringBuffer.toString().getBytes() );
 	}
 	
+	protected Artifact generateCSVReport( String rootFolder, ExecutionContextTest executionContext )
+	{
+	    return new Artifact( rootFolder + "outputData.csv", executionContext.getCSVReport().getBytes() );
+	}
+	
 	protected Artifact generateWCAG( Device device, String testName, String rootFolder )
 	{
 	    StringBuilder wcagBuffer = new StringBuilder();
@@ -206,6 +199,7 @@ public abstract class AbstractArtifactProducer implements ArtifactProducer
         
         return new Artifact( rootFolder + "wcag.html", wcagBuffer.toString().getBytes() );
 	}
+	
 	
 	protected Artifact generateCSVRecord( Device device, String testName, String rootFolder )
 	{

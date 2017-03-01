@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-  <import fileName="./xTest/xFramium General KeyWord Test.xml" />
   <import fileName="./xTest/xFramium 2nd Device.xml" />
   <import fileName="./xTest/xFramium GRID dumpstate.xml" />
   <import fileName="./xTest/xFramium Step Tags.xml" />
@@ -15,5 +14,41 @@
   <import fileName="./xTest/xFramium Module Test.xml" />
   <import fileName="./xTest/xFramium Perfecto VISUAL Keyword Tests.xml" />
   <import fileName="./xTest/xFramium Flow Control.xml" />
+  <import fileName="./xTest/Alert Test.xml" />
+  <import fileName="./xTest/Align Test.xml" />
+  <import fileName="./xTest/Attribute Test.xml" />
+  <import fileName="./xTest/Browser Test.xml" />
+  <import fileName="./xTest/Cache Test.xml" />
+  <import fileName="./xTest/Call Test.xml" />
+  <import fileName="./xTest/Verify Color Test.xml" />
+  <import fileName="./xTest/Verify Contrast Test.xml" />
+  <import fileName="./xTest/Click Test.xml" />
+  <import fileName="./xTest/LEGACY Compare Test.xml" />
+  <import fileName="./xTest/State Test.xml" />
+  <import fileName="./xTest/Else Test.xml" />
+  <import fileName="./xTest/JS Test.xml" />
+  <import fileName="./xTest/WebService Test.xml" />
+  <import fileName="./xTest/Exists Test.xml" />
+  <import fileName="./xTest/Flow Tests.xml" />
+  <import fileName="./xTest/Focus Test.xml" />
+  <import fileName="./xTest/GET Value Test.xml" />
+  <import fileName="./xTest/Loop Test.xml" />
+  <import fileName="./xTest/Math Test.xml" />
+  <import fileName="./xTest/Mouse Test.xml" />
+  <import fileName="./xTest/Navigate Test.xml" />
+  <import fileName="./xTest/Operator Test.xml" />
+  <import fileName="./xTest/Random Test.xml" />
+  <import fileName="./xTest/Report Test.xml" />
+  <import fileName="./xTest/SET Test.xml" />
+  <import fileName="./xTest/String Test.xml" />
+  <import fileName="./xTest/Visible Test.xml" />
+  <import fileName="./xTest/Visual Test.xml" />
+  <import fileName="./xTest/Wait Test.xml" />
+  <import fileName="./xTest/Wait For Test.xml" />
+  <import fileName="./xTest/Window Keyword.xml" />
+  <import fileName="./xTest/Perfecto SET Test.xml" />
+  <import fileName="./xTest/Comparison Test.xml" />
+  <import fileName="./xTest/new test.xml" />
+  <import fileName="./xTest/new test.xml" />
   <import fileName="../functions/functions-xTest.xml" />
 </suite>

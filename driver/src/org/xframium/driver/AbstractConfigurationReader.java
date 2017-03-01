@@ -104,6 +104,8 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     public abstract FavoriteContainer configureFavorites();
 
     protected abstract boolean _executeTest( SuiteContainer sC ) throws Exception;
+    
+    protected abstract Map<String,String> getConfigurationProperties();
 
     @Override
     public void readConfiguration( File configurationFile, boolean runTest )
@@ -357,6 +359,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             PageManager.instance().setSiteName( sC.getSiteName() );
             log.info( "Extracted " + sC.getTestList().size() + " test cases (" + sC.getActiveTestList().size() + " active)" );
+
             for ( ModelContainer mC : sC.getModel() )
                 KeyWordDriver.instance().addPage( mC.getSiteName(), mC.getPageName(), mC.getClassName() ); 
             
@@ -432,6 +435,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             if ( tagNames != null && !tagNames.isEmpty() )
             {
                 DeviceManager.instance().setTagNames( tagNames.split( "," ) );
+                ExecutionContext.instance().setTestTags( tagNames.split( "," ) );
                 Collection<KeyWordTest> testList = KeyWordDriver.instance().getTaggedTests( tagNames.split( "," ) );
 
                 if ( testList.isEmpty() )
@@ -484,6 +488,9 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                 CloudRegistry.instance().startEmbeddedCloud();
             
             ExecutionContext.instance().setSuiteName( (driverC.getSuiteName() != null && !driverC.getSuiteName().isEmpty()) ? driverC.getSuiteName() : ApplicationRegistry.instance().getAUT().getName() );
+            ExecutionContext.instance().setPhase( driverC.getPhase() );
+            ExecutionContext.instance().setDomain( driverC.getDomain() );
+            ExecutionContext.instance().setConfigProperties( getConfigurationProperties() );
             
             if ( runTest )
                 executeTest( sC );

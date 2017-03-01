@@ -32,16 +32,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
-import org.openqa.selenium.WebDriver;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.content.ContentManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.exception.XFramiumException;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
 import org.xframium.page.BY;
 import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
+import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -54,6 +55,7 @@ public abstract class AbstractElement implements Element
     protected Map<String,String> elementProperties;
 	protected Log log = LogFactory.getLog( Element.class );
 	private boolean cacheNative = false;
+	private transient ExecutionContextTest executionContext;
 
 	protected List<SubElement> subElementList = new ArrayList<SubElement>( 10 );
 	
@@ -81,6 +83,16 @@ public abstract class AbstractElement implements Element
         }
 	    
 	    return osList.toArray( new SubElement[ 0 ] );
+	}
+	
+	public void setExecutionContext( ExecutionContextTest executionContext )
+	{
+	    this.executionContext = executionContext;
+	}
+	
+	public ExecutionContextTest getExecutionContext()
+	{
+	    return executionContext;
 	}
 	
 	public void addSubElement( SubElement subElement )
@@ -128,6 +140,7 @@ public abstract class AbstractElement implements Element
 
 	protected abstract Dimension _getSize();
 	protected abstract Point _getAt();
+	protected abstract boolean _clickFor( int lengthInMillis );
 	
 	/**
 	 * _set value.
@@ -454,7 +467,7 @@ public abstract class AbstractElement implements Element
 	 *
 	 * @return the element name
 	 */
-	protected String getElementName()
+	public String getElementName()
 	{
 		return elementName;
 	}
@@ -464,7 +477,7 @@ public abstract class AbstractElement implements Element
 	 *
 	 * @return the page name
 	 */
-	protected String getPageName()
+	public String getPageName()
 	{
 		return pageName;
 	}
@@ -498,7 +511,7 @@ public abstract class AbstractElement implements Element
 		    if ( e instanceof XFramiumException )
                 throw e;
             else
-                throw new ScriptConfigurationException( e.getMessage() );
+                throw new ScriptException( e.getMessage() );
 		}
 		finally
 		{
@@ -527,7 +540,7 @@ public abstract class AbstractElement implements Element
             if ( e instanceof XFramiumException )
                 throw e;
             else
-                throw new ScriptConfigurationException( e.getMessage() );
+                throw new ScriptException( e.getMessage() );
         }
         finally
         {
@@ -556,7 +569,7 @@ public abstract class AbstractElement implements Element
 		    if ( e instanceof XFramiumException )
                 throw e;
             else
-                throw new ScriptConfigurationException( e.getMessage() );
+                throw new ScriptException( e.getMessage() );
 		}
 		finally
 		{
@@ -582,10 +595,11 @@ public abstract class AbstractElement implements Element
 		}
 		catch( Exception e )
 		{
+		    e.printStackTrace();
 		    if ( e instanceof XFramiumException )
                 throw e;
             else
-                throw new ScriptConfigurationException( e.getMessage() );
+                throw new ScriptException( e.getMessage() );
 		}
 		finally
 		{
@@ -665,7 +679,7 @@ public abstract class AbstractElement implements Element
 		    if ( e instanceof XFramiumException )
                 throw e;
             else
-                throw new ScriptConfigurationException( e.getMessage() );
+                throw new ScriptException( e.getMessage() );
 		}
 		finally
 		{
@@ -694,7 +708,7 @@ public abstract class AbstractElement implements Element
 		    if ( e instanceof XFramiumException )
                 throw e;
             else
-                throw new ScriptConfigurationException( e.getMessage() );
+                throw new ScriptException( e.getMessage() );
 		}
 		finally
 		{
@@ -732,7 +746,7 @@ public abstract class AbstractElement implements Element
             if ( e instanceof XFramiumException )
                 throw e;
             else
-                throw new ScriptConfigurationException( e.getMessage() );
+                throw new ScriptException( e.getMessage() );
         }
         finally
         {
@@ -771,7 +785,14 @@ public abstract class AbstractElement implements Element
 		        _mouseDoubleClick();
 		    else
 		    for ( int i=0; i<clickCount; i++ )
+		    {
 		        _click();
+		        try
+		        {
+		        Thread.sleep( 250 );
+		        }
+		        catch( Exception e ) {}
+		    }
 
 								
 			success = true;
@@ -781,7 +802,7 @@ public abstract class AbstractElement implements Element
 			if(e instanceof XFramiumException)
 			    throw e;
 			else
-				throw new ScriptConfigurationException( e.getMessage() );
+				throw new ScriptException( e.getMessage() );
 		}
 		finally
 		{			
@@ -859,4 +880,11 @@ public abstract class AbstractElement implements Element
     {
         return _isEnabled();
     }
+	
+	@Override
+	public boolean clickFor( int lengthInMillis )
+	{
+	    return _clickFor( lengthInMillis );
+	    
+	}
 }

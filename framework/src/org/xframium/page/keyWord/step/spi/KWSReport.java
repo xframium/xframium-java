@@ -20,12 +20,12 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
-import org.xframium.page.PageManager;
-import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.reporting.ExecutionContextTest;
@@ -41,7 +41,7 @@ public class KWSReport extends AbstractKeyWordStep
     public KWSReport()
     {
         kwName = "Report Item";
-        kwDescription = "Alolows the script to add a parameter value to the output report";
+        kwDescription = "Allows the script to add a parameter value to the output report or CSV file";
         kwHelp = "https://www.xframium.org/keyword.html#kw-report";
         orMapping = false;
         category = "Utility";
@@ -57,7 +57,6 @@ public class KWSReport extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
-	    long startTime = System.currentTimeMillis();
 		if ( log.isDebugEnabled() )
 			log.debug( "Executing Device Action " + getName() + " using " + getParameterList() );
 		
@@ -66,8 +65,23 @@ public class KWSReport extends AbstractKeyWordStep
 		    reportData.append( getName() ).append( "\t" );
 		
 		for ( int i=0; i<getParameterList().size(); i++ )
-		    reportData.append( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) ).append( "\t" );
+		{
+		    if ( !"ADD_TO_CSV".equals( getParameterList().get( i ).getName() ) )
+		        reportData.append( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) ).append( "\t" );
+		}
 		
+		if ( getParameter( "ADD_TO_CSV" ) != null && Boolean.parseBoolean( getParameterValue( getParameter( "ADD_TO_CSV" ), contextMap, dataMap ) ) )
+		{
+		    List<String> dataList = new ArrayList<String>( 10 );
+		    for ( int i=0; i<getParameterList().size(); i++ )
+	        {
+	            if ( !"ADD_TO_CSV".equals( getParameterList().get( i ).getName() ) )
+	                dataList.add( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) );
+	        }
+		    executionContext.addToCSV( dataList.toArray( new String[ 0 ] ) );
+		}
+		    
+		    
 		executionContext.getStep().addExecutionParameter( "REPORT_ENTRY", reportData.toString() );
 
 		return true;

@@ -90,7 +90,33 @@ public class ApplicationDescriptor
 	
 	private double version;
 	
-	/**
+	private String environment;
+	
+	private boolean autoStart = true;
+	
+	
+	
+	public boolean isAutoStart()
+    {
+        return autoStart;
+    }
+
+    public void setAutoStart( boolean autoStart )
+    {
+        this.autoStart = autoStart;
+    }
+
+    public String getEnvironment()
+    {
+        return environment;
+    }
+
+    public void setEnvironment( String environment )
+    {
+        this.environment = environment;
+    }
+
+    /**
 	 * Gets the capabilities.
 	 *
 	 * @return the capabilities
@@ -206,7 +232,7 @@ public class ApplicationDescriptor
 	 * @param androidInstallation the android installation
 	 * @param capabilities the capabilities
 	 */
-	public ApplicationDescriptor( String name, String description, String androidIdentifier, String appleIdentifier, String url, String iosInstallation, String androidInstallation, Map<String,Object> capabilities, double appVersion )
+	public ApplicationDescriptor( String name, String description, String androidIdentifier, String appleIdentifier, String url, String iosInstallation, String androidInstallation, Map<String,Object> capabilities, double appVersion, String environment, boolean autoStart )
 	{
 		super();
 		this.name = name;
@@ -218,6 +244,8 @@ public class ApplicationDescriptor
 		this.androidInstallation = androidInstallation;
 		this.capabilities = capabilities;
 		this.version = appVersion;
+		this.environment = environment;
+		this.autoStart = autoStart;
 		
 		_setAppType();
 	}

@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
-import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.StepStatus;
@@ -147,27 +146,42 @@ public class KWSLoop extends AbstractKeyWordStep
 				    //
 				    tableName = tableName.substring( 1 );
 				    String[] valueSet = tableName.split( "\\." );
-				    if ( valueSet.length == 2 )
+				    if ( valueSet.length >= 2 )
 				    {
 				        PageData rootRecord = dataMap.get( valueSet[ 0 ] );
 				        if ( rootRecord == null )
-				            log.error( "The root page data record " + valueSet[ 0 ] + " does not exist" );
+				            throw new ScriptConfigurationException( "Could not locate a PageData record using " + useValue );
 				        
-				        List<PageData> dataArray = rootRecord.getPageData( valueSet[ 1 ] );
+				        tableName = tableName.substring( valueSet[ 0 ].length() + 1 );
 				        
-				        if ( dataArray == null )
-				            log.error( "The sub page data record " + valueSet[ 1 ] + " does not exist in " + valueSet[ 0 ] );
+				        Object treeRecord = rootRecord.get( tableName );
 				        
-				        dataTable = dataArray.toArray( new PageData[ 0 ] );
+				        if ( treeRecord == null )
+				            throw new ScriptConfigurationException( "Could not locate a PageData record using " + useValue );
+				        
+				        if ( treeRecord instanceof PageData[] )
+				        {
+				            dataTable = (PageData[]) treeRecord;
+				        }
+				        else
+				        {
+				            throw new ScriptConfigurationException( useValue + " was found but referenced a single value rather than a list" );
+				        }
 				    }
 				}
 				else
+				{
 				    dataTable = PageDataManager.instance().getRecords( tableName );
+				    String[] tableParts = tableName.split(  "\\." );
+				    tableName = tableParts[ tableParts.length - 1 ];
+				}
 				
 				for ( PageData pageData : dataTable )
 				{
 					try
 					{
+					    
+					    
 						dataMap.put( tableName, pageData );
 						
 						if ( log.isDebugEnabled() )

@@ -49,10 +49,7 @@ public class KWSValue extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
-		if ( pageObject == null )
-			throw new ScriptConfigurationException( "Page Object was not defined" );
-
-		String elementValue = getElement( pageObject, contextMap, webDriver, dataMap ).getValue();
+		String elementValue = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getValue();
 		
 		if ( getParameterList().size() == 1 )
 		{

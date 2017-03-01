@@ -16,7 +16,7 @@ import org.apache.commons.logging.LogFactory;
 
 public class HistoryWriter
 {
-    private static final int MAX_HISTORY = 15;
+    private static final int MAX_HISTORY = 20;
     private File rootFolder;
     private Log log = LogFactory.getLog(HistoryWriter.class);
     
@@ -28,7 +28,7 @@ public class HistoryWriter
     
     public static void main( String[] args )
     {
-        new HistoryWriter( new File( "C:\\Users\\Allen\\git\\xframium-java\\testing\\test-output" ) ).updateHistory();
+        new HistoryWriter( new File( "C:\\Users\\Allen\\git\\fordPass\\fordPass\\fordPass-out" ) ).updateHistory();
     }
     
     public void updateHistory()

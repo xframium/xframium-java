@@ -47,7 +47,7 @@ public class KWSGesture extends AbstractKeyWordStep
         kwDescription = "Allows the script to perform a gesture on a touch-enabled device";
         kwHelp = "https://www.xframium.org/keyword.html#kw-gesture";
         orMapping = false;
-        category = "Visual";
+        category = "Interaction";
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
@@ -64,7 +64,7 @@ public class KWSGesture extends AbstractKeyWordStep
 		String[] gestureName = getName().split( "\\." );
 		if ( gestureName.length == 2 )
 		{
-			Element gestureElement = getElement( pageObject, contextMap, webDriver, dataMap, gestureName[ 1 ] );
+			Element gestureElement = getElement( pageObject, contextMap, webDriver, dataMap, gestureName[ 1 ], executionContext );
 			if ( gestureElement != null )
 				webElement = (WebElement)gestureElement.getNative();
 		}

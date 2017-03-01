@@ -38,6 +38,7 @@ import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.artifact.AbstractArtifactProducer;
 import org.xframium.device.artifact.Artifact;
+import org.xframium.integrations.alm.entity.ALMDefect;
 import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc
@@ -99,6 +100,9 @@ public class SeleniumArtifactProducer extends AbstractArtifactProducer
             switch ( aType )
             {
 
+                case ADD_TO_CSV:
+                    return generateCSVReport( rootFolder, test );
+                
                 case FAILURE_SOURCE:
                     return new Artifact( rootFolder + "failureDOM.xml", webDriver.getPageSource().getBytes() );
 
@@ -163,6 +167,7 @@ public class SeleniumArtifactProducer extends AbstractArtifactProducer
         }
         catch ( Exception e )
         {
+            e.printStackTrace();
             return new Artifact( rootFolder + "generationFailure.txt", e.getMessage().getBytes() );
         }
     }

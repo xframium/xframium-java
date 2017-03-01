@@ -56,25 +56,25 @@ public class KWSMouse extends AbstractKeyWordStep
 	    switch( mouseAction.toUpperCase() )
 	    {
 	        case "MOVE_TO":
-	            return getElement( pageObject, contextMap, webDriver, dataMap ).moveTo();
+	            return getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).moveTo();
 
 			case "MOVE_TO_MAC":
-				return moveToElementWithJS(webDriver, getElement( pageObject, contextMap, webDriver, dataMap ));
+				return moveToElementWithJS(webDriver, getElement( pageObject, contextMap, webDriver, dataMap, executionContext ));
 	            
 	        case "PRESS":
-                return getElement( pageObject, contextMap, webDriver, dataMap ).press();
+                return getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).press();
                 
 	        case "CLICK_AT":
-	            return getElement( pageObject, contextMap, webDriver, dataMap ).clickAt( Integer.parseInt( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" ), Integer.parseInt( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" ) );
+	            return getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).clickAt( Integer.parseInt( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" ), Integer.parseInt( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" ) );
 
 			case "CLICK_JS":
-				return clickWithJS(webDriver, getElement( pageObject, contextMap, webDriver, dataMap ));
+				return clickWithJS(webDriver, getElement( pageObject, contextMap, webDriver, dataMap, executionContext ));
 
 			case "ENTER_KEY_JS":
 				return enterWithJS(webDriver);
 
 			case "RELEASE":
-                return getElement( pageObject, contextMap, webDriver, dataMap ).release();
+                return getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).release();
 	            
 	    }
 		

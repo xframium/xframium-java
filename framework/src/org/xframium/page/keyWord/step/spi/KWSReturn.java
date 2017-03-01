@@ -47,10 +47,6 @@ public class KWSReturn extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
-		if ( pageObject == null )
-			throw new ScriptConfigurationException( "Page Object was not defined" );
-		if ( getParameterList().size() < 1 )
-			throw new ScriptConfigurationException( "You must provide a parameter 1 parameter to a step in which the type is Validation" );
 		
 		Object compare = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
 		

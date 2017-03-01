@@ -50,8 +50,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.HasInputDevices;
+import org.openqa.selenium.interactions.HasTouchScreen;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
+import org.openqa.selenium.interactions.TouchScreen;
 import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.ExecuteMethod;
 import org.openqa.selenium.remote.RemoteExecuteMethod;
@@ -68,6 +70,7 @@ import org.xframium.device.artifact.ArtifactProducer;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.interrupt.DeviceInterrupt;
 import org.xframium.device.interrupt.DeviceInterruptThread;
+import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
 import org.xframium.spi.PropertyProvider;
@@ -85,7 +88,7 @@ import io.appium.java_client.AppiumDriver;
  * The Class DeviceWebDriver.
  */
 public class DeviceWebDriver
-        implements HasCapabilities, WebDriver, JavascriptExecutor, ContextAware, ExecuteMethod, ArtifactProducer, NativeDriverProvider, PropertyProvider, TakesScreenshot, DeviceProvider, HasInputDevices, CachingDriver, ReportiumProvider
+        implements HasCapabilities, WebDriver, JavascriptExecutor, ContextAware, ExecuteMethod, ArtifactProducer, NativeDriverProvider, PropertyProvider, TakesScreenshot, DeviceProvider, HasInputDevices, CachingDriver, ReportiumProvider, HasTouchScreen
 {
 
     
@@ -123,6 +126,7 @@ public class DeviceWebDriver
 
     public void setAut( ApplicationDescriptor aut )
     {
+        ExecutionContext.instance().setAut( aut );
         this.aut = aut;
     }
 
@@ -902,6 +906,15 @@ public class DeviceWebDriver
     {
         if ( webDriver instanceof HasCapabilities )
             return ((HasCapabilities) webDriver).getCapabilities();
+        else
+            return null;
+    }
+
+    @Override
+    public TouchScreen getTouch()
+    {
+        if ( webDriver instanceof HasTouchScreen )
+            return ((HasTouchScreen) webDriver).getTouch();
         else
             return null;
     }

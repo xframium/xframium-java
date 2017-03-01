@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.reporting.ExecutionContext;
 public class TestDriver
 {
@@ -38,9 +39,12 @@ public class TestDriver
     
     public void execute( File configFile, Map<String,String> customConfig )
     {
+        System.setProperty( "selenium.LOGGER.level", "WARNING" );
+        System.setProperty( "selenium.LOGGER", "c:\\projects\\selenium.log" );
         try
         {
             DeviceManager.instance().clear();
+            KeyWordDriver.instance().clear();
             ConfigurationReader configReader = null;
             if ( configFile.getName().toLowerCase().endsWith( ".txt" ) )
             {

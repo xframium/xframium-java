@@ -49,15 +49,7 @@ public class DeviceAnalytics
 		this.key = deviceKey;
 	}
 	
-	/**
-	 * Gets the key.
-	 *
-	 * @return the key
-	 */
-	public String getKey()
-	{
-		return key;
-	}
+	
 	
 	/**
 	 * Adds the run.
@@ -68,7 +60,7 @@ public class DeviceAnalytics
 	{
 		if ( usageMap.containsKey( runKey ) )
 		{
-			throw new IllegalArgumentException( "Device " + key + " has already ran " + runKey );
+			System.err.println( "Device " + key + " has already ran " + runKey );
 		}
 		
 		usageMap.put( runKey, Boolean.TRUE );

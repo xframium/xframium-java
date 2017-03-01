@@ -77,7 +77,7 @@ iframe {
         <div class="col-sm-12 content">
             <div class="dashhead">
                 <span class="pull-right text-muted">{{testData.startTime.dateOnly}} at {{testData.startTime.timeOnly}}</span>
-                <h6 class="dashhead-subtitle">xFramium 1.0.7</h6>
+                <h6 class="dashhead-subtitle">xFramium 1.0.9a</h6>
                 <h3 class="dashhead-title">{{testData.test.name}}</h3>
                 <h6>{{testData.device.environment}} on {{testData.cloudDescriptor.hostName}} ({{testData.cloudDescriptor.provider.name}})</h6>
             </div>
@@ -124,7 +124,7 @@ iframe {
                     </div>
                 </div>
             </div>
-            <a hRef="../index.html" class="pull-right" style="margin-right: 10px"><span>Test Suite Execution Detail</span></a>
+            <a hRef="../../index.html" class="pull-right" style="margin-right: 10px"><span>Test Suite Execution Detail</span></a>
             <uib-tabset active="active"> 
             <uib-tab heading="Steps" active="true">
             <div ui-tree id="tree-root" class="scrollable" style="max-height: 700px">
@@ -451,7 +451,8 @@ iframe {
             "EXECUTION_REPORT_XML" : "Perfecto Legacy Execution Report (XML)",
             "EXECUTION_REPORT_HTML" : "Perfecto Legacy Execution Report (HTML)",
             "SAUCELABS" : "SauceLabs Report",
-            "REPORTIUM" : "Perfecto Execution Report"
+            "REPORTIUM" : "Perfecto Execution Report",
+            "ALM_DEFECT" : "HP ALM Defect Detail"
         }
 
         $scope.stepMessages = {
@@ -490,6 +491,7 @@ iframe {
             "WINDOW" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use BROWSER)",
             "GET" : "{kw} the value of {name} on {pageName}",
             "COMPARE" : "{kw} {$p1} to {$p2}",
+            "COMPARE2" : "Use {name} methods to {kw} {$p1} to {$p2}",
             "GESTURE" : "Perform a {name} {kw}",
             "STRING2" : "Perform a {name} operation on a STRING",
             "STRING" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use STRING2)",

@@ -78,8 +78,6 @@ public class KWSAttribute extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
-		if ( pageObject == null )
-			throw new ScriptConfigurationException( "Page Object was not defined" );
 		
 		String attributeValue = null;
 		Object compareTo = null;
@@ -88,18 +86,18 @@ public class KWSAttribute extends AbstractKeyWordStep
 		{
 		    String attributeName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
 		    if ( attributeName.toLowerCase().startsWith( STYLE ) )
-		        attributeValue = getElement( pageObject, contextMap, webDriver, dataMap ).getStyle( attributeName.substring( STYLE.length() ) );
+		        attributeValue = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getStyle( attributeName.substring( STYLE.length() ) );
 		    else
-		        attributeValue = getElement( pageObject, contextMap, webDriver, dataMap ).getAttribute( attributeName );
+		        attributeValue = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getAttribute( attributeName );
 			
 		}
 		else
 		{
 		    String attributeName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
             if ( attributeName.toLowerCase().startsWith( STYLE ) )
-                attributeValue = getElement( pageObject, contextMap, webDriver, dataMap ).getStyle( attributeName.substring( STYLE.length() ) );
+                attributeValue = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getStyle( attributeName.substring( STYLE.length() ) );
             else
-                attributeValue = getElement( pageObject, contextMap, webDriver, dataMap ).getAttribute( attributeName );
+                attributeValue = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getAttribute( attributeName );
             
 			compareTo = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
 			if ( !attributeValue.equals( compareTo ) )

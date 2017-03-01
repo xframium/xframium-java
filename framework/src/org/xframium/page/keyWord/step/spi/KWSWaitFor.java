@@ -66,9 +66,9 @@ public class KWSWaitFor extends AbstractKeyWordStep
 
         String[] waitType = getName().split( "\\." );
         if ( waitType.length == 2 )
-            returnValue = getElement( pageObject, contextMap, webDriver, dataMap, waitType[ 0 ] ).waitFor( waitFor, TimeUnit.SECONDS, WAIT_FOR.valueOf( waitType[ 1 ] ), "" );
+            returnValue = getElement( pageObject, contextMap, webDriver, dataMap, waitType[ 0 ], executionContext ).waitFor( waitFor, TimeUnit.SECONDS, WAIT_FOR.valueOf( waitType[ 1 ] ), "" );
         else
-            returnValue = getElement( pageObject, contextMap, webDriver, dataMap ).waitForPresent( waitFor, TimeUnit.SECONDS );
+            returnValue = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).waitForPresent( waitFor, TimeUnit.SECONDS );
 
 		
 		return returnValue;

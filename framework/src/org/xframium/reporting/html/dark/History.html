@@ -20,7 +20,7 @@
         <div class="col-sm-12 content">
             <div class="dashhead">
                 <span class="pull-right text-muted">{{testData[0].pageData.startTime.dateOnly}} at {{testData[0].pageData.startTime.timeOnly}}</span>
-                <h6 class="dashhead-subtitle">xFramium 1.0.7</h6>
+                <h6 class="dashhead-subtitle">xFramium 1.0.8</h6>
                 <h3 class="dashhead-title">{{testData[0].pageData.suiteName}}</h3>
                 
             </div>
@@ -45,28 +45,46 @@
             <div class="col-sm-12">
                 <div class="panel panel-primary">
                     <div class=panel-heading>
-                        <div class=panel-title>Execution Detail</div>
+                        <div class="row">
+                            <div class="panel-title col-md-4">Execution Detail</div>
+                            <div class="col-sm-8 input-group" style="padding-right: 10px">
+                                <span class="input-group-addon" id="basic-addon2"></span>
+                                <input type="text" class="form-control" placeholder="Execution Filter" aria-describedby="basic-addon2" ng-model="filterTestsBy">
+                            </div>
+                        </div>
                     </div>
                     <div class=panel-body>
                         <table class="table table-hover table-condensed">
                             <thead>
                                 <tr>
                                     <th>When Executed</th>
+                                    <th style="text-align: center">Tags</th>
                                     <th style="text-align: center">Duration</th>
                                     <th style="text-align: center">Tests</th>
                                     <th style="text-align: center">Passed</th>
                                     <th style="text-align: center">Failed</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr ng-repeat="exec in testData">
+                            <tbody ng-repeat="exec in testData">
+                                <tr>
                                     <td>
-                                        <a href='file://{{exec.pageData.reportFolder}}/index.html'>{{exec.pageData.startTime.dateTime}}</a>
+                                        <a ng-click="collapsed = !collapsed"><span class="glyphicon" ng-class="{'glyphicon-chevron-right': !collapsed, 'glyphicon-chevron-down': collapsed }"></span></a><a href='file://{{exec.pageData.reportFolder}}/index.html'>{{exec.pageData.startTime.dateTime}}</a>
                                     </td>
+                                    <td style="text-align: center"><span class="text-warning" ng-repeat="tag in exec.pageData.testTags">{{tag}} </span></td>
                                     <td style="text-align: center">{{formatSuiteDuration( exec.pageData )}}</td>
                                     <td style="text-align: center">{{exec.pageData.summaryData.passed + exec.pageData.summaryData.failed}}</td>
                                     <td style="text-align: center">{{exec.pageData.summaryData.passed}}</td>
                                     <td style="text-align: center">{{exec.pageData.summaryData.failed}}</td>
+                                </tr>
+                                <tr ng-repeat="test in exec.pageData.executionSummary | filter:filterTestsBy" uib-collapse="!collapsed">
+                                    <td style="padding-left: 20px">
+                                        {{test.name}}
+                                    </td>
+                                    <td style="text-align: center"><span ng-repeat="tag in test.tagNames">{{tag}} </span></td>
+                                    <td style="text-align: center">{{formatDuration( test.startTime.raw, test.endTime.raw )}}</td>
+                                    <td style="text-align: center"></td>
+                                    <td style="text-align: center"><span ng-if="test.testStatus=='PASSED'" class="glyphicon glyphicon-ok text-success"></span></td>
+                                    <td style="text-align: center"><span ng-if="test.testStatus=='FAILED'" class="glyphicon glyphicon-remove text-danger"></span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -242,6 +260,18 @@
                 
             }
             return returnData;
+        }
+        
+        
+        $scope.formatDuration = function( startTime, endTime )
+        {
+            var duration = endTime - startTime;
+            var milliseconds = parseInt((duration % 1000) / 100);
+            var seconds = parseInt((duration / 1000) % 60);
+            var minutes = parseInt((duration / (1000 * 60)) % 60);
+            var hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+            return hours + "h " + minutes + "m " + seconds + "s"
         }
         
         $scope.formatSuiteDuration = function( suite )

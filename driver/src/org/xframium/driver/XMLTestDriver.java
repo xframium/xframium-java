@@ -23,7 +23,10 @@ package org.xframium.driver;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
+import org.testng.ITestContext;
 import org.testng.annotations.Test;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactType;
@@ -33,10 +36,12 @@ import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.ng.AbstractSeleniumTest;
+import org.xframium.device.ng.TestContainer;
 import org.xframium.device.ng.TestName;
+import org.xframium.device.ng.TestPackage;
 import org.xframium.exception.DeviceAcquisitionException;
+import org.xframium.exception.DeviceException;
 import org.xframium.exception.FilteredException;
-import org.xframium.exception.FlowException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.integrations.sauceLabs.rest.SauceREST;
 import org.xframium.page.PageManager;
@@ -53,35 +58,43 @@ import com.perfecto.reportium.test.result.TestResultFactory;
 
 public class XMLTestDriver extends AbstractSeleniumTest
 {
+
     @Test ( dataProvider = "deviceManager")
-    public void testDriver( TestName testName ) throws Throwable
+    public void testDriver( TestContainer testContainer, ITestContext testContext ) throws Throwable
     {
-        String deviceOs = getDevice().getOs();
-        String[] deviceTags = getDevice().getTagNames();
+        TestPackage testPackage = testPackageContainer.get();
+        testFlow.info( Thread.currentThread().getName() + ": Performaning initialization checked for " + testPackage.getRunKey() );
         
-        CloudDescriptor cD = CloudRegistry.instance().getCloud();
-        if ( getDevice().getCloud() != null && !getDevice().getCloud().trim().isEmpty() )
-            cD = CloudRegistry.instance().getCloud( getDevice().getCloud() );
+        TestName testName = testPackage.getTestName();
         
-        boolean returnValue = false;
-
-        ExecutionContextTest executionContextTest = new ExecutionContextTest();
-
         KeyWordTest test = KeyWordDriver.instance().getTest( testName.getRawName() );
         if ( test == null )
             throw new ScriptConfigurationException( "The Test Name " + testName.getRawName() + " does not exist" );
+        
+        ExecutionContextTest executionContextTest = new ExecutionContextTest();
+        
+        CloudDescriptor cD = CloudRegistry.instance().getCloud();
+        if ( testPackage.getDevice().getCloud() != null && !testPackage.getDevice().getCloud().trim().isEmpty() )
+            cD = CloudRegistry.instance().getCloud( testPackage.getDevice().getCloud() );
+        
+        if ( !testPackage.getConnectedDevice().getWebDriver().isConnected() )
+        {
+            executionContextTest.setTest( test );
+            executionContextTest.setDevice( testPackage.getDevice() );
+            executionContextTest.setCloud( cD );
+            executionContextTest.completeTest( TestStatus.FAILED, new DeviceException( "Could not connect to " + testPackage.getDevice() ) );
+            testName.setTest( executionContextTest );
+            testFlow.error( Thread.currentThread().getName() + ": Device not connected for " + testPackage.getRunKey() );
+            throw new DeviceException( "Could not connect to " + testPackage.getDevice() );
+        }
+        
+        String deviceOs = testPackage.getDevice().getOs();
+        String[] deviceTags = testPackage.getDevice().getTagNames();
+        
+        boolean returnValue = false;
 
         try
         {
-            if ( !((DeviceWebDriver) getWebDriver()).isConnected() )
-            {
-                executionContextTest.setDevice( getDevice() );
-                executionContextTest.setCloud( cD );
-                executionContextTest.setTest( test );
-                executionContextTest.completeTest( TestStatus.FAILED, new DeviceAcquisitionException( getDevice() ) );
-                testName.setTest( executionContextTest );
-                throw new DeviceAcquisitionException( getDevice() );
-            }
 
             if ( test.getOs() != null && deviceOs != null )
             {
@@ -99,10 +112,11 @@ public class XMLTestDriver extends AbstractSeleniumTest
                 if ( !osFound )
                 {
                     executionContextTest.setTest( test );
-                    executionContextTest.setDevice( getDevice() );
+                    executionContextTest.setDevice( testPackage.getDevice() );
                     executionContextTest.setCloud( cD );
                     executionContextTest.completeTest( TestStatus.SKIPPED, new FilteredException( "This test is not designed to work on a device with [" + deviceOs + "]  It needs [" + test.getOs() + "]" ) );
                     testName.setTest( executionContextTest );
+                    testFlow.error( Thread.currentThread().getName() + ": Mismatched OS for " + testPackage.getRunKey() );
                     throw new FilteredException( "This test is not designed to work on a device with [" + deviceOs + "]  It needs [" + test.getOs() + "]" );
                 }
             }
@@ -136,6 +150,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
                     executionContextTest.setCloud( cD );
                     executionContextTest.completeTest( TestStatus.SKIPPED, new FilteredException( "This test did not contain the specified device tag and will be skipped" ) );
                     testName.setTest( executionContextTest );
+                    testFlow.error( Thread.currentThread().getName() + ": Mismatched TAG name for " + testPackage.getRunKey() );
                     throw new FilteredException( "This test did not contain the specified tag and will be skipped" );
                 }
             }
@@ -148,13 +163,9 @@ public class XMLTestDriver extends AbstractSeleniumTest
 
             if ( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) )
             {
-                CloudDescriptor currentCloud = CloudRegistry.instance().getCloud();
-                if ( getDevice().getCloud() != null && !getDevice().getCloud().isEmpty() )
-                    currentCloud = CloudRegistry.instance().getCloud( getDevice().getCloud() );
-
-                if ( currentCloud.getProvider().equals( "SAUCELABS" ) )
+                if ( cD.getProvider().equals( "SAUCELABS" ) )
                 {
-                    SauceREST sR = new SauceREST( currentCloud.getUserName(), currentCloud.getPassword() );
+                    SauceREST sR = new SauceREST( cD.getUserName(), cD.getPassword() );
                     Map<String, Object> jobInfo = new HashMap<String, Object>( 10 );
                     jobInfo.put( "name", testName.getTestName() );
 
@@ -164,14 +175,14 @@ public class XMLTestDriver extends AbstractSeleniumTest
 
                     jobInfo.put( "tags", tags );
 
-                    sR.updateJobInfo( ((DeviceWebDriver) getWebDriver()).getExecutionId(), jobInfo );
+                    sR.updateJobInfo( testPackage.getConnectedDevice().getWebDriver().getExecutionId(), jobInfo );
 
                 }
             }
 
-            if ( ((DeviceWebDriver) getWebDriver()).getCloud().getProvider().equals( "PERFECTO" ) )
+            if ( testPackage.getConnectedDevice().getWebDriver().getCloud().getProvider().equals( "PERFECTO" ) )
             {
-                if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) && getWebDriver() instanceof ReportiumProvider )
+                if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM )  )
                 {
                     //
                     // Reportium Integration
@@ -182,48 +193,46 @@ public class XMLTestDriver extends AbstractSeleniumTest
                         for ( String tag : test.getTags() )
                             ArrayUtils.add( tags, tag );
                     }
-                    PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder().withProject( new Project( ApplicationRegistry.instance().getAUT().getName(), "1.0" ) ).withContextTags( tags )
-                            .withWebDriver( getWebDriver() ).build();
-                    ((ReportiumProvider) getWebDriver()).setReportiumClient( new ReportiumClientFactory().createPerfectoReportiumClient( perfectoExecutionContext ) );
+                    PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder().withProject( new Project( ApplicationRegistry.instance().getAUT().getName(), ApplicationRegistry.instance().getAUT().getVersion() + "" ) ).withContextTags( tags )
+                            .withWebDriver( testPackage.getConnectedDevice().getWebDriver() ).build();
+                    testPackage.getConnectedDevice().getWebDriver().setReportiumClient( new ReportiumClientFactory().createPerfectoReportiumClient( perfectoExecutionContext ) );
 
-                    if ( ((ReportiumProvider) getWebDriver()).getReportiumClient() != null )
-                        ((ReportiumProvider) getWebDriver()).getReportiumClient().testStart( testName.getTestName(), new com.perfecto.reportium.test.TestContext() );
+                    if ( testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
+                        testPackage.getConnectedDevice().getWebDriver().getReportiumClient().testStart( testName.getTestName(), new com.perfecto.reportium.test.TestContext() );
                 }
             }
 
-            if ( test.getDescription() != null && !test.getDescription().isEmpty() && getWebDriver() instanceof PropertyProvider )
-                ((PropertyProvider) getWebDriver()).setProperty( "testDescription", test.getDescription() );
+            if ( test.getDescription() != null && !test.getDescription().isEmpty() )
+                testPackage.getConnectedDevice().getWebDriver().setProperty( "testDescription", test.getDescription() );
 
-            executionContextTest = KeyWordDriver.instance().executeTest( testName, getWebDriver(), null );
+            testFlow.info( Thread.currentThread().getName() + ": Executing " + testPackage.getRunKey() + " against " + testPackage.getConnectedDevice().getDevice().getKey() );
+            executionContextTest = KeyWordDriver.instance().executeTest( testName, testPackage.getConnectedDevice().getWebDriver(), null );
+            testFlow.info( Thread.currentThread().getName() + ": Completed Executing " + testPackage.getRunKey() + " against " + executionContextTest.getDevice().getKey() );
             returnValue = executionContextTest.getStatus();
             testName.setTest( executionContextTest );
 
         }
         finally
         {
-            if ( getWebDriver() != null )
+            if ( testPackage.getConnectedDevice().getWebDriver() != null )
             {
                 if ( returnValue )
                 {
                     if ( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) )
                     {
-                        CloudDescriptor currentCloud = CloudRegistry.instance().getCloud();
-                        if ( getDevice().getCloud() != null && !getDevice().getCloud().isEmpty() )
-                            currentCloud = CloudRegistry.instance().getCloud( getDevice().getCloud() );
-
-                        if ( currentCloud.getProvider().equals( "SAUCELABS" ) )
+                        if ( cD.getProvider().equals( "SAUCELABS" ) )
                         {
-                            SauceREST sR = new SauceREST( currentCloud.getUserName(), currentCloud.getPassword() );
-                            sR.jobPassed( ((DeviceWebDriver) getWebDriver()).getExecutionId() );
+                            SauceREST sR = new SauceREST( cD.getUserName(), cD.getPassword() );
+                            sR.jobPassed( testPackage.getConnectedDevice().getWebDriver().getExecutionId() );
                         }
                     }
 
                     if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
                     {
-                        if ( ((ReportiumProvider) getWebDriver()).getReportiumClient() != null )
+                        if ( testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
                         {
                             if ( returnValue )
-                                ((ReportiumProvider) getWebDriver()).getReportiumClient().testStop( TestResultFactory.createSuccess() );
+                                testPackage.getConnectedDevice().getWebDriver().getReportiumClient().testStop( TestResultFactory.createSuccess() );
                         }
                     }
 
@@ -233,24 +242,20 @@ public class XMLTestDriver extends AbstractSeleniumTest
                 {
                     if ( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) )
                     {
-                        CloudDescriptor currentCloud = CloudRegistry.instance().getCloud();
-                        if ( getDevice().getCloud() != null && !getDevice().getCloud().isEmpty() )
-                            currentCloud = CloudRegistry.instance().getCloud( getDevice().getCloud() );
-
-                        if ( currentCloud.getProvider().equals( "SAUCELABS" ) )
+                        if ( cD.getProvider().equals( "SAUCELABS" ) )
                         {
-                            SauceREST sR = new SauceREST( currentCloud.getUserName(), currentCloud.getPassword() );
-                            sR.jobFailed( ((DeviceWebDriver) getWebDriver()).getExecutionId() );
+                            SauceREST sR = new SauceREST( cD.getUserName(), cD.getPassword() );
+                            sR.jobFailed( testPackage.getConnectedDevice().getWebDriver().getExecutionId() );
                         }
                     }
 
                     if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
                     {
-                        if ( ((ReportiumProvider) getWebDriver()).getReportiumClient() != null )
+                        if ( testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
                         {
                             Throwable currentException = executionContextTest.getStepException();
 
-                            ((ReportiumProvider) getWebDriver()).getReportiumClient().testStop( TestResultFactory.createFailure( currentException != null ? currentException.getMessage() : "Unknown Failure", currentException ) );
+                            testPackage.getConnectedDevice().getWebDriver().getReportiumClient().testStop( TestResultFactory.createFailure( currentException != null ? currentException.getMessage() : "Unknown Failure", currentException ) );
 
                         }
                     }

@@ -1,6 +1,7 @@
 package org.xframium.reporting;
 
 import java.io.File;
+import java.sql.DriverManager;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import org.xframium.application.ApplicationDescriptor;
 import org.xframium.device.data.DataManager;
 
 public class ExecutionContext
@@ -20,7 +22,35 @@ public class ExecutionContext
     private Date startTime;
     private Date endTime;
     private String gridUrl;
+    private String phase;
+    private String domain;
+    private Map<String,String> configProperties;
+    private ApplicationDescriptor aut = null;
+    private String[] testTags = new String[ 0 ];
     
+    public void setTestTags( String[] testTags)
+    {
+        if ( testTags == null )
+            testTags = new String[ 0 ];
+        else
+            this.testTags = testTags;
+    }
+    
+    public String[] getTestTags()
+    {
+        return testTags;
+    }
+
+    public Map<String, String> getConfigProperties()
+    {
+        return configProperties;
+    }
+
+    public void setConfigProperties( Map<String, String> configProperties )
+    {
+        this.configProperties = configProperties;
+    }
+
     private List<Map<String, Object>> executionSummary = new ArrayList<Map<String, Object>>( 10 );
     private Map<String,String> sPMap = new HashMap<String,String>( 10 );
 
@@ -52,8 +82,40 @@ public class ExecutionContext
         }
     }
     
+    public ApplicationDescriptor getAut()
+    {
+        return aut;
+    }
+
+    public void setAut( ApplicationDescriptor aut )
+    {
+        if ( aut == null )
+            return;
+        
+        if ( this.aut == null && !aut.getName().equals( "NOOP" ) )
+            this.aut = aut;
+    }
     
-    
+    public String getPhase()
+    {
+        return phase;
+    }
+
+    public void setPhase( String phase )
+    {
+        this.phase = phase;
+    }
+
+    public String getDomain()
+    {
+        return domain;
+    }
+
+    public void setDomain( String domain )
+    {
+        this.domain = domain;
+    }
+
     public String getGridUrl()
     {
         return gridUrl;
@@ -64,7 +126,7 @@ public class ExecutionContext
         this.gridUrl = gridUrl;
     }
 
-    public void addExecution( ExecutionContextTest test )
+    public synchronized void addExecution( ExecutionContextTest test )
     {
         executionList.add( test );
         executionSummary.add( test.toMap() );
