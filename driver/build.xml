@@ -33,7 +33,7 @@
 
 		<for param="jarFile">
             <path>
-                <fileset dir="${distRoot}" includes="*.jar" />
+                <fileset dir="${distRoot}" includes="xframium-driver*.jar" />
             </path>
             <sequential>
                 <echo message="Reorganizing @{jarFile}" />

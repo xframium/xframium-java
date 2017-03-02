@@ -542,7 +542,6 @@
     <attribute name="type" use="required">
       <simpleType>
         <restriction base="string">
-          <enumeration value="CALL" />
           <enumeration value="CALL2" />
           <enumeration value="CLICK" />
           <enumeration value="EXISTS" />
@@ -564,8 +563,7 @@
           <enumeration value="WINDOW" />
           <enumeration value="EXECJS" />
           <enumeration value="EXECWS" />
-          <enumeration value="COMPARE" />
-          <enumeration value="STRING" />
+          <enumeration value="COMPARE2" />
           <enumeration value="STRING2" />
           <enumeration value="MATH" />
           <enumeration value="MOUSE" />
@@ -590,6 +588,9 @@
           <enumeration value="COMMAND" />
           <enumeration value="EMAIL" />
           <enumeration value="APPLICATION" />
+          <enumeration value="RANDOM" />
+          <enumeration value="FLOW" />
+          <enumeration value="CONSOLE" />
         </restriction>
       </simpleType>
     </attribute>

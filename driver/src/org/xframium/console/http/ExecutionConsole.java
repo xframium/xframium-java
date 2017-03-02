@@ -141,6 +141,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
     
     private ExecutionConsole() 
     {
+        KeyWordDriver.instance().addStepListener( this );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( KeyWordStep.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( KWSClick.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( AbstractKeyWordStep.class, new ReflectionSerializer() );
@@ -191,7 +192,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ElementUsage.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ThreadContainer.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( Thread.State.class, new ReflectionSerializer() );
-        KeyWordDriver.instance().addStepListener( this );
+        
     }
     
     private void createServer( String ipAddress, int portNumber ) throws Exception

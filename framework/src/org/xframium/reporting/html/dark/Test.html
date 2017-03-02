@@ -124,7 +124,7 @@ iframe {
                     </div>
                 </div>
             </div>
-            <a hRef="../../index.html" class="pull-right" style="margin-right: 10px"><span>Test Suite Execution Detail</span></a>
+            <a hRef="../../../index.html" class="pull-right" style="margin-right: 10px"><span>Test Suite Execution Detail</span></a>
             <uib-tabset active="active"> 
             <uib-tab heading="Steps" active="true">
             <div ui-tree id="tree-root" class="scrollable" style="max-height: 700px">
@@ -233,7 +233,7 @@ iframe {
     <div class="panel-body">
         <div class="row">
             <div class="col-md-4">
-                <img width="100%" src="file://{{selectedStep.executionParameter.SCREENSHOT}}" class="img-rounded" />
+                <a hRef="file://{{selectedStep.executionParameter.SCREENSHOT}}" target="_blank"><img width="100%" src="file://{{selectedStep.executionParameter.SCREENSHOT}}" class="img-rounded" /></a>
             </div>
             <div class="col-md-8" ng-if="selectedStep.throwable != 'null'">
                 <span class="text-danger">{{selectedStep.throwable}}</span>
@@ -354,7 +354,8 @@ iframe {
                 messageText = '<span class="text-warning">' + step.step.name + "</span><br/>";
                 for ( var i = 0; i < step.parameterList.length; i++ ) 
                 {
-                    messageText += '<span class="text-info" style="margin-left: 30px">' + step.parameterList[i] + "</span><br/>";        
+
+                    messageText += '<span class="text-info">' + step.parameterList[i] + "</span> ";        
                 }
             }
             else

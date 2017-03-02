@@ -152,9 +152,9 @@ public class KWSLoop extends AbstractKeyWordStep
 				        if ( rootRecord == null )
 				            throw new ScriptConfigurationException( "Could not locate a PageData record using " + useValue );
 				        
-				        tableName = tableName.substring( valueSet[ 0 ].length() + 1 );
+				        Object treeRecord = rootRecord.get( tableName.substring( valueSet[ 0 ].length() + 1 ) );
 				        
-				        Object treeRecord = rootRecord.get( tableName );
+				        tableName = valueSet[ valueSet.length - 1 ];
 				        
 				        if ( treeRecord == null )
 				            throw new ScriptConfigurationException( "Could not locate a PageData record using " + useValue );

@@ -19,6 +19,11 @@
     <record name="childOne" value="childOne" loopData="|dataLoop|" />
     <record name="childTwo" value="childTwo" loopData="|dataLoop:[value='two']|" />
   </recordType>
+  
+  <receordType name="authData" >
+    <record name="userOne" active="true" userName="allen" password="secret" ssn="123456789" />
+    <record name="userOne" active="true" userName="bob" password="secret" ssn="123456789" />
+    <record name="userOne" active="true" userName="kevin" password="secret" ssn="123456789" />
+    <record name="userOne" active="true" userName="rich" password="secret" ssn="123456789" />
+  </receordType>
 </data>
-
-
