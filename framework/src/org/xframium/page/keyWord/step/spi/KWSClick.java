@@ -70,7 +70,7 @@ public class KWSClick extends AbstractKeyWordStep
             return true;
         }
 		
-		else if ( getParameter( "OffSet" ) != null )
+		else if ( getParameter( "Offset" ) != null )
         {
 		    String[] offSet = getParameterValue( getParameter( "Offset" ), contextMap, dataMap ).replace( "%", "").split( "," );
 		    

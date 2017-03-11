@@ -138,22 +138,22 @@ public class SimpleDevice implements Device
 	{
 	    StringBuilder stringBuilder = new StringBuilder();
         if ( model != null )
-            stringBuilder.append( model );
+            stringBuilder.append( model.replace( ".*", "" ) );
 
 	    
 	    if ( os != null )
         {
 	        if ( os != null )
-	            stringBuilder.append( stringBuilder.length() > 0 ? " " : "" ).append( os );
+	            stringBuilder.append( stringBuilder.length() > 0 ? " " : "" ).append( os.replace( ".*", "" ) );
             if ( osVersion != null )
-                stringBuilder.append( stringBuilder.length() > 0 ? " " : "" ).append( osVersion );
+                stringBuilder.append( stringBuilder.length() > 0 ? " " : "" ).append( osVersion.replace( ".*", "" ) );
         }
 	    
 	    if ( browserName != null )
 	    {
 	        stringBuilder.append( stringBuilder.length() > 0 ? " " : "" ).append( browserName );
 	        if ( browserVersion != null )
-	            stringBuilder.append( stringBuilder.length() > 0 ? " " : "" ).append( browserVersion );
+	            stringBuilder.append( stringBuilder.length() > 0 ? " " : "" ).append( browserVersion.replace( ".*", "" ) );
 	    }
 	    
 	    environment = stringBuilder.toString();

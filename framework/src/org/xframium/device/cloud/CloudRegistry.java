@@ -23,6 +23,7 @@
  */
 package org.xframium.device.cloud;
 
+import java.net.Socket;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -136,6 +137,31 @@ public class CloudRegistry
 		    System.setProperty( "__password", cut.getPassword() );
 	}
 	
+	private boolean isListening( String hostName, int port )
+    {
+        Socket s = null;
+        try
+        {
+            s = new Socket( hostName, port );
+            return true;
+        }
+        catch ( Exception e )
+        {
+            return false;
+        }
+        finally
+        {
+            try
+            {
+                if ( s != null )
+                    s.close();
+            }
+            catch ( Exception e )
+            {
+            }
+        }
+    }
+	
 	public void startEmbeddedCloud()
 	{
 	    try
@@ -145,9 +171,14 @@ public class CloudRegistry
 
 	        serverStarted = true;
 	        
+	        if ( !isListening( "127.0.0.1", 4444 ) )
+	        {
+                _server = new SeleniumServer( new StandaloneConfiguration( ) );
+                _server.boot();
+	        }
+	        else
+	            log.warn( "There is already an EMBEDDED server listening - we will use that instance" );
 
-            _server = new SeleniumServer( new StandaloneConfiguration( ) );
-            _server.boot();
             CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( "EMBEDDED", "", "", "127.0.0.1:4444", "", "0", "", null, "SELENIUM", "SELENIUM", "SELENIUM" ) );
             embeddedGrid=true;
         }

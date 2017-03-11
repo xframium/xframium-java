@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-<function name="kw-else" mode="function" threshold="0" active="true">
+<function name="kw-else" active="true">
 <description>null</description>
 <step name="dumpState" site="xTest" page="home" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
 <step name="toggleValue" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="existsSingle"/>

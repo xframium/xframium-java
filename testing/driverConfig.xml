@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xFramium xmlns="http://www.xframium.org/xFramiumDriver" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/xFramiumDriver http://www.xframium.org/xsd/xFramiumDriver.xsd">
   <cloud provider="XML" fileName="cloudRegistry.xml" name="saucelabs" />
-
   <application provider="XML" name="xTest" fileName="applicationRegistry.xml" />
-
   <devices provider="XML" fileName="deviceRegistry.xml">
-    
   </devices>
-  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="CIBC" embeddedServer="true" phase="1001" domain="PROFESSIONAL_SERVICES" testNames="Mouse Test"> 
-    
+  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="CIBC" embeddedServer="true" phase="1001" domain="PROFESSIONAL_SERVICES" testNames="String Test">
     <property name="xFramium General KeyWord Test.count">3</property>
     <property name="selenium.timeouts.implicitWait">5000</property>
     <property name="alm.serverUrl">http://alm.perfectomobilelab.net:8080/qcbin</property>
@@ -23,24 +19,13 @@
     <artifact type="EXECUTION_RECORD_HTML" />
     <artifact type="EXECUTION_RECORD_JSON" />
     <artifact type="CONSOLE_LOG" />
-    <artifact type="SAUCE_LABS" />
+    <artifact type="GRID_REPORT" />
     <artifact type="REPORTIUM" />
-    <artifact type="DEBUGGER" />
-    <artifact type="GRID_REPORT"/>
-    <artifact type="ADD_TO_CSV"/>
-    <artifact type="ALM_DEFECT" active="true"/>
   </driver>
-
   <model provider="XML" siteName="xTest" fileName="objectRepository/xTest/objectRepository.xml" />
-
   <suite provider="XML" fileName="tests/tests-xTest.xml" />
-
-  <dependencies afterTest="Report Test Success"/>
-
+  <dependencies afterTest="Report Test Success" />
   <data fileName="pageData/pageData.xml" />
+  <proxy></proxy>
+  <security />
 </xFramium>
-
-
-
-
-

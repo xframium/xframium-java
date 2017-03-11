@@ -159,6 +159,8 @@ public interface Element
 	 */
 	public boolean press();
 	
+	public boolean isSelected();
+	
 	/**
 	 * Release.
 	 *

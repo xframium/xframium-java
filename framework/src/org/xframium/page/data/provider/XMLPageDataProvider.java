@@ -301,9 +301,11 @@ public class XMLPageDataProvider extends AbstractPageDataProvider
 	
 	public static void main( String[] args )
     {
-        XMLPageDataProvider x = new XMLPageDataProvider( new File( "C:\\Users\\Allen\\git\\xframium-java\\testing\\pageData\\pageData.xml" ) );
+        //XMLPageDataProvider x = new XMLPageDataProvider( new File( "C:\\Users\\Allen\\git\\xframium-java\\testing\\pageData\\pageData.xml" ) );
+	    ExcelPageDataProvider x = new ExcelPageDataProvider( new File( "C:\\Users\\Allen\\git\\fordPass\\fordPass\\data\\pageData-STAGING.xlsx" ), "fordPassNA" );
         x.readPageData();
         //x.populateTrees();
+        System.out.println( x.toString() );
         System.out.println( x.getRecords( "parentData.one.childRecord.childOne.loopData" ) );
     }
 

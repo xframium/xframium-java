@@ -102,6 +102,8 @@ public class KWSApplication extends AbstractKeyWordStep
 	            return cP.installApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap ) + "", (DeviceWebDriver)webDriver, Boolean.parseBoolean( getParameterValue( getParameter( "Instrument" ), contextMap, dataMap ) + "" ) );
 	            
 	        case OPEN:
+	            if ( isTimed() )
+                    cP.startTimer( (DeviceWebDriver) webDriver, null, executionContext );
 	            if ( cP.openApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap ) + "", (DeviceWebDriver)webDriver ) )
 	            {
 	                ( (DeviceWebDriver) webDriver ).setAut( ApplicationRegistry.instance().getApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap ) + "" ) );
