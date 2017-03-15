@@ -29,6 +29,17 @@ public class DefaultSetMethod extends AbstractSetMethod
             }
             else if ( setType.equals( "SINGLE" ) )
                 webElement.sendKeys( value );
+            else if ( setType.equals( "DELAYED" ) )
+            {
+                webElement.clear();
+                byte[] buffer = value.getBytes();
+                for ( int i=0; i<buffer.length; i++ )
+                {
+                    webElement.sendKeys( new String( new byte[] { buffer[ i ] } ) );
+                    try { Thread.sleep( 7500 ); } catch( Exception e ) {}
+                    
+                }
+            }
         }
         
         return true;
