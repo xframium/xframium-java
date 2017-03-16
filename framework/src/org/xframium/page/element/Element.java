@@ -57,7 +57,9 @@ public interface Element
     	MULTISELECT,
     	VALIDATE,
     	BY_VALUE,
-    	BY_VISIBLE_TEXT;
+    	BY_VISIBLE_TEXT,
+    	DELAYED,
+    	PERFECTO;
     }
 	
 	/**
