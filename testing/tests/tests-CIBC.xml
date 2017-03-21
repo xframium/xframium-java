@@ -49,6 +49,7 @@
   <import fileName="./CIBC/Perfecto SET Test.xml" />
   <import fileName="./CIBC/Comparison Test.xml" />
   <import fileName="./CIBC/new test.xml" />
+  <import fileName="./CIBC/Checkbox Test.xml" />
   <import fileName="./CIBC/new test.xml" />
   <import fileName="../functions/functions-CIBC.xml" />
 </suite>

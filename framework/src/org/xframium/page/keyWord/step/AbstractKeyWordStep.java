@@ -1126,7 +1126,10 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             try
             {
                 if ( !returnValue )
-                    dumpState( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+                {
+                    if ( !sFailure.equals( StepFailure.IGNORE ) )
+                        dumpState( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+                }
             }
             catch ( Exception e )
             {

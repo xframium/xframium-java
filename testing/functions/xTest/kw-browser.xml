@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-<function name="kw-browser" inputPage="xTest.home" outputPage="xTest.home" mode="function" threshold="0" active="true">
+<function name="kw-browser" inputPage="xTest.home" outputPage="xTest.home" active="true">
 <description></description>
 <step name="GET_TITLE" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
 <parameter type="STATIC" value="xFramium Testing"/>

@@ -31,7 +31,6 @@ import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.factory.AbstractDriverFactory;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.spi.Device;
-import com.experitest.selenium.MobileWebDriver;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -50,41 +49,43 @@ public class EXPERITESTDriverFactory extends AbstractDriverFactory
 		try
 		{
 			
-            DeviceManager.instance().setCurrentCloud( useCloud );
-			
-			URL hubUrl = new URL( useCloud.getCloudUrl() );
-
-            if ( log.isDebugEnabled() )
-                log.debug( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + currentDevice.getDeviceName() + "\r\nagainst " + hubUrl );
-			MobileWebDriver mDriver = new MobileWebDriver( useCloud.getHostName().split( ":" )[ 0 ], Integer.parseInt( useCloud.getHostName().split( ":" )[ 1 ] ) );
-			mDriver.setDevice( currentDevice.getDeviceName() );
-			
-			if( ApplicationRegistry.instance().getAUT() != null && 
-			    ( ( ApplicationRegistry.instance().getAUT().getAppleIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAppleIdentifier().isEmpty() || 
-			    ApplicationRegistry.instance().getAUT().getAndroidIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAndroidIdentifier().isEmpty() ) ) )
-            {
-			    if ( currentDevice != null && currentDevice.getOs() != null )
-	            {
-			        if ( currentDevice.getOs().toLowerCase().equals( "ios" ) )
-			            mDriver.application( ApplicationRegistry.instance().getAUT().getAppleIdentifier() ).launch( true, false );
-			        else if ( currentDevice.getOs().toLowerCase().equals( "android" ) )
-			            mDriver.application( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() ).launch( true, false );
-	            }
-            }
-			else
-			{
-			    if ( ApplicationRegistry.instance().getAUT() != null && !ApplicationRegistry.instance().getAUT().getUrl().isEmpty() )
-			    {
-			        mDriver.get( ApplicationRegistry.instance().getAUT().getUrl() );
-			    }
-			}
-            
-			webDriver = new DeviceWebDriver( mDriver, DeviceManager.instance().isCachingEnabled(), currentDevice );
-			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
-            webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );
-            webDriver.setCloud( useCloud );
-            
-			return webDriver;
+//            DeviceManager.instance().setCurrentCloud( useCloud );
+//			
+//			URL hubUrl = new URL( useCloud.getCloudUrl() );
+//
+//            if ( log.isDebugEnabled() )
+//                log.debug( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + currentDevice.getDeviceName() + "\r\nagainst " + hubUrl );
+////			MobileWebDriver mDriver = new MobileWebDriver( useCloud.getHostName().split( ":" )[ 0 ], Integer.parseInt( useCloud.getHostName().split( ":" )[ 1 ] ) );
+////			mDriver.setDevice( currentDevice.getDeviceName() );
+//			
+//			if( ApplicationRegistry.instance().getAUT() != null && 
+//			    ( ( ApplicationRegistry.instance().getAUT().getAppleIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAppleIdentifier().isEmpty() || 
+//			    ApplicationRegistry.instance().getAUT().getAndroidIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAndroidIdentifier().isEmpty() ) ) )
+//            {
+//			    if ( currentDevice != null && currentDevice.getOs() != null )
+//	            {
+//			        if ( currentDevice.getOs().toLowerCase().equals( "ios" ) )
+//			            mDriver.application( ApplicationRegistry.instance().getAUT().getAppleIdentifier() ).launch( true, false );
+//			        else if ( currentDevice.getOs().toLowerCase().equals( "android" ) )
+//			            mDriver.application( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() ).launch( true, false );
+//	            }
+//            }
+//			else
+//			{
+//			    if ( ApplicationRegistry.instance().getAUT() != null && !ApplicationRegistry.instance().getAUT().getUrl().isEmpty() )
+//			    {
+//			        mDriver.get( ApplicationRegistry.instance().getAUT().getUrl() );
+//			    }
+//			}
+//            
+//			webDriver = new DeviceWebDriver( mDriver, DeviceManager.instance().isCachingEnabled(), currentDevice );
+//			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
+//            webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );
+//            webDriver.setCloud( useCloud );
+//            
+//			return webDriver;
+		    
+		    return null;
 
 		}
 		catch( Exception e )

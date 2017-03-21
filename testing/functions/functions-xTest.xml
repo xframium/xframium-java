@@ -19,6 +19,8 @@
   <import fileName="../functions/xTest/setValueFromNumericIndex.xml" />
   <import fileName="../functions/xTest/setValueFromElement.xml" />
   <import fileName="../functions/xTest/setValue.xml" />
+  <import fileName="../functions/xTest/setValue2.xml" />
+  <import fileName="../functions/xTest/Report Test Success.xml" />
   <import fileName="../functions/xTest/setValueWithBreak.xml" />
   <import fileName="../functions/xTest/kw-math.xml" />
   <import fileName="../functions/xTest/kw-mouse.xml" />
@@ -40,4 +42,5 @@
   <import fileName="../functions/xTest/kw-flow.xml" />
   <import fileName="../functions/xTest/kw-random.xml" />
   <import fileName="../functions/xTest/kw-compare2.xml" />
+  <import fileName="../functions/xTest/checkData.xml" />
 </suite>

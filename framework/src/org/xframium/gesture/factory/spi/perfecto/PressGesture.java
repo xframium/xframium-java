@@ -21,6 +21,7 @@
 package org.xframium.gesture.factory.spi.perfecto;
 
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.AbstractPressGesture;
 import org.xframium.integrations.common.PercentagePoint;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
@@ -55,6 +56,7 @@ public class PressGesture extends AbstractPressGesture
                 {
                 
                     PerfectoMobile.instance().gestures().tapAt( executionId, deviceName, pressPosition );
+                    
                     try
                     {
                         Thread.sleep( 500 );

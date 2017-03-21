@@ -20,11 +20,11 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
+import java.util.HashMap;
 import java.util.Map;
-
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
-import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
@@ -33,7 +33,6 @@ import org.xframium.page.element.Element.SetMethod;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.reporting.ExecutionContextTest;
-import gherkin.Main;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -98,7 +97,30 @@ public class KWSSet extends AbstractKeyWordStep
 					
 					elt.setValue( newValue );
 					
-					
+				case PERFECTO:
+				    KeyWordParameter delayLengthParam = getParameter( "Delay" );
+				    int delayLength = 0;
+				    
+				    if ( delayLengthParam != null )
+				        delayLength = Integer.parseInt( getParameterValue( delayLengthParam, contextMap, dataMap ) );
+				    
+				    if ( delayLength > 0 )
+				    {
+    				    byte[] buffer = newValue.getBytes();
+    	                for ( int i=0; i<buffer.length; i++ )
+    	                {
+    	                    Map<String, Object> params = new HashMap<>();
+    	                    params.put( "text", new String( new byte[] { buffer[ i ] } ) );
+    	                    ( (DeviceWebDriver) webDriver ).executeScript( "mobile:text:find", params );
+    	                    try { Thread.sleep( delayLength ); } catch( Exception e ) {}
+    	                }
+				    }
+				    else
+				    {
+				        Map<String, Object> params = new HashMap<>();
+                        params.put( "text", newValue );
+				    }
+				    
 					
 				default:
 					elt.setValue( newValue,setMethod );

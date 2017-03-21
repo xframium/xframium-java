@@ -21,70 +21,39 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
-
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
-import org.xframium.gesture.Gesture.Direction;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
+import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.reporting.ExecutionContextTest;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class KWSExists.
- */
-public class KWSVisible extends AbstractKeyWordStep
+public class KWSSelected extends AbstractKeyWordStep
 {
-    public KWSVisible()
+    public KWSSelected()
     {
-        kwName = "Is Visible";
-        kwDescription = "Allows the script to validate that the element exists and is visible on the screen - Can scroll and search as well";
-        kwHelp = "https://www.xframium.org/keyword.html#kw-visible";
+        kwName = "Selected";
+        kwDescription = "Allows the script check if the current element is selected or checked";
+        kwHelp = "https://www.xframium.org/keyword.html#kw-selected";
         category = "Verification";
     }
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
-	 */
+    
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
-		if ( pageObject == null )
-			throw new IllegalStateException( "There was not page object defined" );
-		
-		if ( getParameterList().size() == 2 )
-		{
-			int searchCount = Integer.parseInt( getParameterValue(getParameterList().get(0), contextMap, dataMap) + "" );
-			for ( int i=0; i<searchCount; i++)
-			{
-				try
-				{
-					if ( getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).isVisible() )
-						return true;
-				}
-				catch( Exception e )
-				{
-					
-				}
-				
-				scroll( Direction.valueOf( getParameterValue(getParameterList().get(1), contextMap, dataMap) + "" ), webDriver);
-
-			}
-			return false;
-		}
-		else
-		{
-			return getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).isVisible();
-		}
+	    if ( pageObject == null )
+            throw new IllegalStateException( "There was no Page Object defined" );
+        
+        Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );        
+       
+        if ( getContext() != null )
+        {
+            if ( log.isDebugEnabled() )
+                log.debug( "Setting Context Data to [" + currentElement.getValue() + "] for [" + getContext() + "]" );
+            contextMap.put( getContext(), currentElement.getValue() );
+        }
+        return currentElement.isSelected();
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
-	 */
-	public boolean isRecordable()
-	{
-		return false;
-	}
-
 
 }

@@ -57,7 +57,9 @@ public interface Element
     	MULTISELECT,
     	VALIDATE,
     	BY_VALUE,
-    	BY_VISIBLE_TEXT;
+    	BY_VISIBLE_TEXT,
+    	DELAYED,
+    	PERFECTO;
     }
 	
 	/**
@@ -158,6 +160,8 @@ public interface Element
 	 * @return true, if successful
 	 */
 	public boolean press();
+	
+	public boolean isSelected();
 	
 	/**
 	 * Release.

@@ -29,7 +29,11 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 	private String createTimerId( Element element )
 	{
 	    StringBuilder stringBuilder = new StringBuilder();
-	    stringBuilder.append( element.getPageName() ).append( "." ).append( element.getName() );
+	    if ( element != null )
+	        stringBuilder.append( element.getPageName() ).append( "." ).append( element.getName() );
+	    else
+	        stringBuilder.append( "Unknown Action" );
+	    
 	    return stringBuilder.toString();
 	}
 

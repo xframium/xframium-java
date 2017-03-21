@@ -48,6 +48,7 @@ import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.XFramiumException.ExceptionType;
 import org.xframium.integrations.alm.ALMRESTConnection;
 import org.xframium.integrations.alm.entity.ALMAttachment;
@@ -166,6 +167,13 @@ public abstract class AbstractSeleniumTest
         for ( TestKey tK : testList )
         {
             KeyWordTest kT = KeyWordDriver.instance().getTest( tK.getKey() );
+            
+            if ( kT == null )
+            {
+                log.error( "Could not find test: " + tK.getKey() );
+                continue;
+            }
+            
             if ( kT.getContentKeys() != null && kT.getContentKeys().length > 0 )
             {
                 for ( String contentKey : kT.getContentKeys() )
@@ -320,7 +328,11 @@ public abstract class AbstractSeleniumTest
             logOut.append( "\t" + d.getEnvironment() + "\r\n" );
         }
         
-        
+        if ( finalList.isEmpty())
+        {
+            log.fatal( "No scripts were defined - nothign to do!" );
+            throw new ScriptConfigurationException( "No scripts were defined - nothign to do!" );
+        }
         
         
         try

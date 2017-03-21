@@ -176,12 +176,7 @@ public class KWSCompare2 extends AbstractKeyWordStep
 	            break;
 	    }
 	    
-	    
-		Object compareFrom = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
-		Object compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap );
-		
 
-		
 		return true;
 	}
 

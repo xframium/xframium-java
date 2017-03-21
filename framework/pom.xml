@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.xframium</groupId>
   <artifactId>xframium-java</artifactId>
-  <version>1.0.9</version>
+  <version>1.0.10-SNAPSHOT</version>
   <name>xframium-java</name>
   <repositories>
     <repository>
@@ -25,17 +25,6 @@
       <id>perfectomobile</id>
       <name>Perfecto mobile</name>
       <url>http://repository-perfectomobile.forge.cloudbees.com/public</url>
-    </repository>
-    <repository>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>always</updatePolicy>
-        <checksumPolicy>fail</checksumPolicy>
-      </releases>
-      <id>Experitest Public REPO</id>
-      <name>xFramium</name>
-      <url>http://repo.experitest.com:8010/Maven2/</url>
-      <layout>default</layout>
     </repository>
   </repositories>
   <distributionManagement>
@@ -196,11 +185,6 @@
       <groupId>com.xframium</groupId>
       <artifactId>xframium-serialization</artifactId>
       <version>2.0.6</version>
-    </dependency>
-    <dependency>
-      <groupId>com.experitest</groupId>
-      <artifactId>mobile-webdriver</artifactId>
-      <version>LATEST</version>
     </dependency>
     <dependency>
       <groupId>javax.mail</groupId>

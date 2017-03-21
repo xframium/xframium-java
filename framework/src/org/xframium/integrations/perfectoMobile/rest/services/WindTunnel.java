@@ -193,5 +193,17 @@ public interface WindTunnel extends PerfectoService
 	 */
 	@Operation( operationName="command" )
 	@PerfectoCommand( commandName="monitor", subCommandName = "start" )
-	public Execution startVitals( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="timerId" ) String timerId );
+	public Execution startVitals( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="sources" ) String sources, @Parameter( name="interval" ) int interval );
+	
+	/**
+     * Start vitals.
+     *
+     * @param executionId the execution id
+     * @param handsetId the handset id
+     * @param timerId the timer id
+     * @return the execution
+     */
+    @Operation( operationName="command" )
+    @PerfectoCommand( commandName="monitor", subCommandName = "stop" )
+    public Execution stopVitals( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId );
 }

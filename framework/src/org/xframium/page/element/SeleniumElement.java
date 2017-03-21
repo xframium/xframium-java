@@ -106,8 +106,6 @@ public class SeleniumElement extends AbstractElement
 
     /** The use visual driver. */
     private boolean useVisualDriver = false;
-    
-
 
     /*
      * (non-Javadoc)
@@ -233,6 +231,7 @@ public class SeleniumElement extends AbstractElement
         return null;
     }
 
+    
     /*
      * (non-Javadoc)
      * 
@@ -321,26 +320,25 @@ public class SeleniumElement extends AbstractElement
             else if ( webDriver instanceof ContextAware )
                 ((ContextAware) webDriver).context( getBy().getContext() );
         }
-        
-        switch( getBy() )
+
+        switch ( getBy() )
         {
             case COMPLEX:
                 if ( subElementList != null && subElementList.size() > 0 )
                 {
-                    SubElement[] subList = getSubElement( ( (DeviceWebDriver) webDriver ).getAut(), ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getOs().toUpperCase(), (DeviceWebDriver) webDriver );
+                    SubElement[] subList = getSubElement( ((DeviceWebDriver) webDriver).getAut(), ((DeviceWebDriver) webDriver).getPopulatedDevice().getOs().toUpperCase(), (DeviceWebDriver) webDriver );
                     if ( subList.length > 0 )
                     {
-                        By foundBy = _useBy( subList[ 0 ].getBy(), applyToken( subList[ 0 ].getKey() ) );
-                        
+                        By foundBy = _useBy( subList[0].getBy(), applyToken( subList[0].getKey() ) );
+
                         if ( foundBy == null )
-                            throw new ScriptConfigurationException( "Could not locate sub-element for " + getName() + "( " + ( (DeviceWebDriver) webDriver ).getAut().getName() + " " + ( (DeviceWebDriver) webDriver ).getAut().getVersion() + " )");
-                        
-                        return foundBy; 
+                            throw new ScriptConfigurationException( "Could not locate sub-element for " + getName() + "( " + ((DeviceWebDriver) webDriver).getAut().getName() + " " + ((DeviceWebDriver) webDriver).getAut().getVersion() + " )" );
+
+                        return foundBy;
                     }
                     else
                     {
-                        throw new ScriptConfigurationException( "Could not locate sub-element for " +
-                                                                getName() + "( " + ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getOs() + " )");
+                        throw new ScriptConfigurationException( "Could not locate sub-element for " + getName() + "( " + ((DeviceWebDriver) webDriver).getPopulatedDevice().getOs() + " )" );
                     }
                 }
                 else
@@ -349,10 +347,10 @@ public class SeleniumElement extends AbstractElement
                 }
             default:
                 return _useBy( getBy(), getKey() );
-                    
+
         }
     }
-    
+
     private By _useBy( BY byType, String keyValue )
     {
         switch ( byType )
@@ -370,7 +368,7 @@ public class SeleniumElement extends AbstractElement
                 return By.linkText( keyValue );
 
             case NAME:
-                return By.name(keyValue );
+                return By.name( keyValue );
 
             case TAG_NAME:
                 return By.tagName( keyValue );
@@ -379,7 +377,7 @@ public class SeleniumElement extends AbstractElement
                 return By.xpath( keyValue );
 
             case V_TEXT:
-                return By.linkText(keyValue );
+                return By.linkText( keyValue );
 
             case HTML:
                 HTMLElementLookup elementLookup = new HTMLElementLookup( keyValue );
@@ -387,7 +385,7 @@ public class SeleniumElement extends AbstractElement
 
             case PROP:
                 Map<String, String> propertyMap = new HashMap<String, String>( 10 );
-                propertyMap.put( "resource-id", ( (DeviceWebDriver) webDriver ).getAut().getAndroidIdentifier() );
+                propertyMap.put( "resource-id", ((DeviceWebDriver) webDriver).getAut().getAndroidIdentifier() );
                 return By.xpath( XPathGenerator.generateXPathFromProperty( propertyMap, keyValue ) );
             default:
                 return null;
@@ -408,20 +406,19 @@ public class SeleniumElement extends AbstractElement
             {
                 if ( isTimed() )
                     getActionProvider().startTimer( (DeviceWebDriver) webDriver, this, getExecutionContext() );
-                
-                if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof AppiumDriver )
+
+                if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof AppiumDriver )
                 {
-                    new TouchAction( (AppiumDriver) ( (DeviceWebDriver) webDriver ).getNativeDriver() ).moveTo( webElement ).perform();
+                    new TouchAction( (AppiumDriver) ((DeviceWebDriver) webDriver).getNativeDriver() ).moveTo( webElement ).perform();
                 }
-                else if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof RemoteWebDriver )
+                else if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof RemoteWebDriver )
                 {
-                    if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof HasTouchScreen )
+                    if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof HasTouchScreen )
                         new TouchActions( webDriver ).moveToElement( webElement ).build().perform();
                     else
                         new Actions( webDriver ).moveToElement( webElement ).build().perform();
                 }
-                
-                
+
                 return true;
             }
         }
@@ -431,9 +428,9 @@ public class SeleniumElement extends AbstractElement
 
     private CloudActionProvider getActionProvider()
     {
-        return ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider();
+        return ((DeviceWebDriver) webDriver).getCloud().getCloudActionProvider();
     }
-    
+
     public boolean _clickFor( int length )
     {
         WebElement webElement = getElement();
@@ -443,35 +440,34 @@ public class SeleniumElement extends AbstractElement
             {
                 if ( isTimed() )
                     getActionProvider().startTimer( (DeviceWebDriver) webDriver, this, getExecutionContext() );
-                
-                if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof AppiumDriver )
+
+                if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof AppiumDriver )
                 {
-                    new TouchAction( (AppiumDriver<?>) ( (DeviceWebDriver) webDriver ).getNativeDriver() ).press( webElement ).waitAction( length ).release().perform();
+                    new TouchAction( (AppiumDriver<?>) ((DeviceWebDriver) webDriver).getNativeDriver() ).press( webElement ).waitAction( length ).release().perform();
                 }
-                else if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof RemoteWebDriver )
+                else if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof RemoteWebDriver )
                 {
                     int x = webElement.getLocation().getX() + (webElement.getSize().getWidth() / 2);
                     int y = webElement.getLocation().getY() + (webElement.getSize().getHeight() / 2);
-                    
+
                     try
                     {
                         new TouchActions( webDriver ).longPress( webElement ).build().perform();
                     }
-                    catch( Exception e )
+                    catch ( Exception e )
                     {
-                        ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider().tap( (DeviceWebDriver) webDriver, new PercentagePoint( x, y, false ), length );
+                        ((DeviceWebDriver) webDriver).getCloud().getCloudActionProvider().tap( (DeviceWebDriver) webDriver, new PercentagePoint( x, y, false ), length );
                     }
-                    
+
                 }
-                
-                
+
                 return true;
             }
         }
 
         return false;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -486,20 +482,19 @@ public class SeleniumElement extends AbstractElement
             {
                 if ( isTimed() )
                     getActionProvider().startTimer( (DeviceWebDriver) webDriver, this, getExecutionContext() );
-                
-                if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof AppiumDriver )
+
+                if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof AppiumDriver )
                 {
-                    new TouchAction( (AppiumDriver) ( (DeviceWebDriver) webDriver ).getNativeDriver() ).press( webElement ).perform();
+                    new TouchAction( (AppiumDriver) ((DeviceWebDriver) webDriver).getNativeDriver() ).press( webElement ).perform();
                 }
-                else if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof RemoteWebDriver )
+                else if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof RemoteWebDriver )
                 {
-                    if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof HasTouchScreen )
+                    if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof HasTouchScreen )
                         new TouchActions( webDriver ).clickAndHold( webElement ).build().perform();
                     else
                         new Actions( webDriver ).clickAndHold( webElement ).build().perform();
                 }
-                
-                
+
                 return true;
             }
         }
@@ -526,20 +521,19 @@ public class SeleniumElement extends AbstractElement
             {
                 if ( isTimed() )
                     getActionProvider().startTimer( (DeviceWebDriver) webDriver, this, getExecutionContext() );
-                
-                if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof AppiumDriver )
+
+                if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof AppiumDriver )
                 {
-                    new TouchAction( (AppiumDriver) ( (DeviceWebDriver) webDriver ).getNativeDriver() ).moveTo( webElement ).tap( webElement, useX, useY ).perform();
+                    new TouchAction( (AppiumDriver) ((DeviceWebDriver) webDriver).getNativeDriver() ).moveTo( webElement ).tap( webElement, useX, useY ).perform();
                 }
-                else if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof RemoteWebDriver )
+                else if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof RemoteWebDriver )
                 {
-                    if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof HasTouchScreen )
+                    if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof HasTouchScreen )
                         new TouchActions( webDriver ).moveToElement( webElement, useX, useY ).click().build().perform();
                     else
                         new Actions( webDriver ).moveToElement( webElement, useX, useY ).click().build().perform();
                 }
-                
-                
+
                 new Actions( webDriver ).moveToElement( webElement, useX, useY ).click().build().perform();
                 return true;
             }
@@ -565,20 +559,19 @@ public class SeleniumElement extends AbstractElement
             {
                 if ( isTimed() )
                     getActionProvider().startTimer( (DeviceWebDriver) webDriver, this, getExecutionContext() );
-                
-                if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof AppiumDriver )
+
+                if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof AppiumDriver )
                 {
-                    new TouchAction( (AppiumDriver) ( (DeviceWebDriver) webDriver ).getNativeDriver() ).tap( webElement ).tap( webElement ).perform();
+                    new TouchAction( (AppiumDriver) ((DeviceWebDriver) webDriver).getNativeDriver() ).tap( webElement ).tap( webElement ).perform();
                 }
-                else if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof RemoteWebDriver )
+                else if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof RemoteWebDriver )
                 {
-                    if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof HasTouchScreen )
+                    if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof HasTouchScreen )
                         new TouchActions( webDriver ).doubleClick().build().perform();
                     else
                         new Actions( webDriver ).doubleClick( webElement ).build().perform();
                 }
-                
-                
+
                 return true;
             }
         }
@@ -600,14 +593,14 @@ public class SeleniumElement extends AbstractElement
             {
                 if ( isTimed() )
                     getActionProvider().startTimer( (DeviceWebDriver) webDriver, this, getExecutionContext() );
-                
-                if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof AppiumDriver )
+
+                if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof AppiumDriver )
                 {
-                    new TouchAction( (AppiumDriver) ( (DeviceWebDriver) webDriver ).getNativeDriver() ).release( ).perform();
+                    new TouchAction( (AppiumDriver) ((DeviceWebDriver) webDriver).getNativeDriver() ).release().perform();
                 }
-                else if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof RemoteWebDriver )
+                else if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof RemoteWebDriver )
                 {
-                    if ( ( (DeviceWebDriver) webDriver ).getNativeDriver() instanceof HasTouchScreen )
+                    if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof HasTouchScreen )
                         new TouchActions( webDriver ).release().build().perform();
                     else
                         new Actions( webDriver ).release().build().perform();
@@ -673,7 +666,7 @@ public class SeleniumElement extends AbstractElement
      */
     private WebElement getElement()
     {
-        
+
         if ( locatedElement != null )
         {
             if ( log.isDebugEnabled() )
@@ -995,7 +988,7 @@ public class SeleniumElement extends AbstractElement
 
                 if ( webElement != null )
                     getActionProvider().getSupportedTimers( (DeviceWebDriver) webDriver, getExecutionContext().getTimerName(), getExecutionContext(), null );
-                
+
                 return webElement != null;
             }
             catch ( Exception e )
@@ -1018,17 +1011,17 @@ public class SeleniumElement extends AbstractElement
         boolean enableCache = false;
         if ( webDriver instanceof CachingDriver )
         {
-            if ( ( (CachingDriver) webDriver ).isCachingEnabled() )
+            if ( ((CachingDriver) webDriver).isCachingEnabled() )
             {
-                ( (CachingDriver) webDriver ).setCachingEnabled( false );
+                ((CachingDriver) webDriver).setCachingEnabled( false );
                 enableCache = true;
             }
         }
-        
+
         try
         {
             WebElement webElement = getElement();
-            
+
             if ( "V_TEXT".equals( getBy().name().toUpperCase() ) )
             {
                 if ( getElementProperties() != null )
@@ -1036,7 +1029,7 @@ public class SeleniumElement extends AbstractElement
                     String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript( "mobile:edit-text:set", getElementProperties() ) + "";
                     if ( "false".equals( result.toLowerCase() ) )
                         throw new ScriptException( "Visual set failed to execute" );
-    
+
                 }
                 else
                     throw new ScriptConfigurationException( "A visual set requires element properties to be specified" );
@@ -1050,7 +1043,7 @@ public class SeleniumElement extends AbstractElement
         finally
         {
             if ( enableCache )
-                ( (CachingDriver) webDriver ).setCachingEnabled( true );
+                ((CachingDriver) webDriver).setCachingEnabled( true );
         }
     }
 
@@ -1065,9 +1058,9 @@ public class SeleniumElement extends AbstractElement
         boolean enableCache = false;
         if ( webDriver instanceof CachingDriver )
         {
-            if ( ( (CachingDriver) webDriver ).isCachingEnabled() )
+            if ( ((CachingDriver) webDriver).isCachingEnabled() )
             {
-                ( (CachingDriver) webDriver ).setCachingEnabled( false );
+                ((CachingDriver) webDriver).setCachingEnabled( false );
                 enableCache = true;
             }
         }
@@ -1096,7 +1089,7 @@ public class SeleniumElement extends AbstractElement
         finally
         {
             if ( enableCache )
-                ( (CachingDriver) webDriver ).setCachingEnabled( true );
+                ((CachingDriver) webDriver).setCachingEnabled( true );
         }
 
     }
@@ -1222,6 +1215,13 @@ public class SeleniumElement extends AbstractElement
     {
         WebElement webElement = getElement();
         return webElement.getLocation();
+    }
+    
+    @Override
+    protected boolean _isSelected()
+    {
+        WebElement webElement = getElement();
+        return webElement.isSelected();
     }
 
 }

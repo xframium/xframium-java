@@ -212,7 +212,7 @@ public class RESTInvocationHandler implements InvocationHandler
 		
 		
 		    URLConnection currentConnection = currentUrl.openConnection();
-            currentConnection.setReadTimeout( 300000 );
+            currentConnection.setReadTimeout( 600000 );
             currentConnection.setConnectTimeout( 30000 );
             inputStream = currentConnection.getInputStream();
 			Bean newBean = BeanManager.instance().createBean( method.getReturnType(), inputStream );

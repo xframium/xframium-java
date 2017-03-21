@@ -140,6 +140,7 @@ public abstract class AbstractElement implements Element
 
 	protected abstract Dimension _getSize();
 	protected abstract Point _getAt();
+	protected abstract boolean _isSelected();
 	protected abstract boolean _clickFor( int lengthInMillis );
 	
 	/**
@@ -857,6 +858,12 @@ public abstract class AbstractElement implements Element
         return _release();
     }
 
+	@Override
+	public boolean isSelected()
+	{
+	    return _isSelected();
+	}
+	
 	@Override
 	public boolean isFocused()
 	{
