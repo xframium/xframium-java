@@ -62,9 +62,10 @@ public class KWSSet extends AbstractKeyWordStep
 		if ( log.isInfoEnabled() )
 			log.info( "Attmepting to set " + getName() + " to [" + newValue + "]" );
 
-		Element elt = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
+		
 		if(option == null)
 		{
+		    Element elt = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
 			elt.setValue( newValue);
 		}
 		else 
@@ -75,6 +76,7 @@ public class KWSSet extends AbstractKeyWordStep
 			{
 				case VALIDATE:
 					
+				    Element elt = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
 					int length = -1;
 					KeyWordParameter lengthParam = getParameter( "length" );
 					if ( lengthParam != null )
@@ -96,6 +98,7 @@ public class KWSSet extends AbstractKeyWordStep
 						throw new ScriptException( "The length of was exceeded - expected " + length );
 					
 					elt.setValue( newValue );
+					break;
 					
 				case PERFECTO:
 				    KeyWordParameter delayLengthParam = getParameter( "Delay" );
@@ -104,6 +107,9 @@ public class KWSSet extends AbstractKeyWordStep
 				    if ( delayLengthParam != null )
 				        delayLength = Integer.parseInt( getParameterValue( delayLengthParam, contextMap, dataMap ) );
 				    
+				    if ( log.isInfoEnabled() )
+				        log.info( "PERFECTO Type (" + delayLength + " )" );
+				    
 				    if ( delayLength > 0 )
 				    {
     				    byte[] buffer = newValue.getBytes();
@@ -111,7 +117,7 @@ public class KWSSet extends AbstractKeyWordStep
     	                {
     	                    Map<String, Object> params = new HashMap<>();
     	                    params.put( "text", new String( new byte[] { buffer[ i ] } ) );
-    	                    ( (DeviceWebDriver) webDriver ).executeScript( "mobile:text:find", params );
+    	                    ( (DeviceWebDriver) webDriver ).executeScript( "mobile:typetext", params );
     	                    try { Thread.sleep( delayLength ); } catch( Exception e ) {}
     	                }
 				    }
@@ -120,10 +126,12 @@ public class KWSSet extends AbstractKeyWordStep
 				        Map<String, Object> params = new HashMap<>();
                         params.put( "text", newValue );
 				    }
+				    break;
 				    
 					
 				default:
-					elt.setValue( newValue,setMethod );
+				    Element elt2 = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
+					elt2.setValue( newValue,setMethod );
 			}
 			
 			
