@@ -306,7 +306,60 @@ iframe {
                       <td style="text-align:left">{{row.appName}}</td> 
                       <td style="text-align:left">{{row.webReport}}</td>
 
-                    </tr> 
+                    </tr>
+
+                    <tr>
+
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td><span class="pull-right btn btn-primary" style="margin-right: 16px" ng-click="downloadCSV()">Download CSV</span></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+
+                    </tr>
                   </table>
 
                 </div>
@@ -574,7 +627,7 @@ iframe {
 
         $scope.walkStepToGetTimeings = function( step, txNamePrefix, testLevelData )
         {
-           var txName = txNamePrefix + "." + step.name;
+           var txName = txNamePrefix + "." + step.step.name;
            
            if ( step.timingMap.elapsed )
            {
@@ -607,6 +660,23 @@ iframe {
                  $scope.walkStepToGetTimeings( subStep, txName, testLevelData );
               });
            } 
+        }
+
+        $scope.downloadCSV = function()
+        {
+           var lineArray = [];
+                                 
+           $scope.timings.forEach(function (infoArray, index)
+           {
+             console.log( "zzz --> " + JSON.stringify( infoArray ));                    
+             var line = infoArray.join(",");
+             lineArray.push(index == 0 ? "data:text/csv;charset=utf-8," + line : line);
+           });
+                                 
+           var csvContent = lineArray.join("\n");
+           var encodedUri = encodeURI(csvContent);
+                                 
+           window.open(encodedUri);
         }
                                  
         $scope.initialize = function()
