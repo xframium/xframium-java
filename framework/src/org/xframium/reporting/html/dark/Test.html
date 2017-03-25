@@ -200,8 +200,16 @@ iframe {
                     </ol>
                 </div>
             </uib-tab>
-            <uib-tab heading="Timing" active="true" ng-if="!angular.equals( [], timings )">
-                <div data-nodrag >
+            <uib-tab heading="Timing" active="true" ng-if="!angular.equals( [], $scope.timings )">
+                <div data-nodrag>
+                  <span class="pull-right btn btn-primary" style="margin-right: 16px" ng-click="downloadCSV()">Download CSV</span>
+                  <br>
+                  <br>
+                </div>
+
+                <div data-nodrag><br></div>
+                  
+                <div data-nodrag>
                               
                   <table ng-model="timings"  class="table" style="width:100%">
                     <tr>
@@ -253,10 +261,9 @@ iframe {
                       <th style="text-align:left">Environment</th>
                       <th style="text-align:left">App Name</th>
                       <th style="text-align:left">Web Report</th>
-
                     </tr>
+
                     <tr ng-repeat="row in timings">
-                      
                       <td style="text-align:left">{{row.script}}</td> 
                       <td style="text-align:left">{{row.execId}}</td>
                       <td style="text-align:left">{{row.startTime}}</td> 
@@ -305,61 +312,8 @@ iframe {
                       <td style="text-align:left">{{row.environment}}</td>
                       <td style="text-align:left">{{row.appName}}</td> 
                       <td style="text-align:left">{{row.webReport}}</td>
-
                     </tr>
 
-                    <tr>
-
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td><span class="pull-right btn btn-primary" style="margin-right: 16px" ng-click="downloadCSV()">Download CSV</span></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-
-                    </tr>
                   </table>
 
                 </div>
@@ -665,12 +619,14 @@ iframe {
         $scope.downloadCSV = function()
         {
            var lineArray = [];
+
+           lineArray.push( "data:text/csv;charset=utf-8," + $scope.timingDataDownloadHeaders );                
                                  
-           $scope.timings.forEach(function (infoArray, index)
+           $scope.timings.forEach(function (row, index)
            {
-             console.log( "zzz --> " + JSON.stringify( infoArray ));                    
-             var line = infoArray.join(",");
-             lineArray.push(index == 0 ? "data:text/csv;charset=utf-8," + line : line);
+             var line = $scope.timingDataDownloadCols.map( function(val) { return "\x22" + row[val] + "\x22"; } ).join(",");
+                                 
+             lineArray.push(line);
            });
                                  
            var csvContent = lineArray.join("\n");
@@ -771,6 +727,58 @@ iframe {
             "FUNCTION" : "Execution the native {kw} {name} on {pageName}"
         };
 
+        $scope.timingDataDownloadHeaders = "\x22Script\x22,\x22ExecId\x22,\x22Time Start\x22,\x22Time End\x22,\x22Time Start Formatted\x22,\x22Time End Formatted\x22,\x22PM User\x22,\x22User\x22,\x22Data\x22,\x22Wifi\x22,\x22HS Id\x22,\x22HS Operator\x22,\x22HS Manufacturer\x22,\x22HS Model\x22,\x22HS OS\x22,\x22HS OS Ver.\x22,\x22Network Carrier\x22,\x22Network Speed\x22,\x22Latency\x22,\x22IN Bandwidth\x22,\x22OUT Bandwidth\x22,\x22Transaction Name\x22,\x22Transaction Time Start\x22,\x22Transaction Time End\x22,\x22Transaction Time Start Formatted\x22,\x22Transaction Time End Formatted\x22,\x22Validation Success\x22,\x22Timer UX\x22,\x22Request Time\x22,\x22Response Time\x22,\x22Request Timestamp [ms]\x22,\x22Response Timestamp [ms]\x22,\x22Vitals Timestamp\x22,\x22Vitals Timestamp Formatted\x22,\x22Vitals CPU\x22,\x22Vitals Mem Free\x22,\x22Vitals Mem Used\x22,\x22Vitals Mem Cached\x22,\x22City\x22,\x22Country\x22,\x22Mobile App Version\x22,\x22Environment\x22,\x22App Name\x22,\x22Web Report\x22";       
+                                 
+        $scope.timingDataDownloadCols = [
+           "script",
+           "execId",
+           "startTime",
+           "endTime",
+           "startTimeFormatted",
+           "endTimeFormatted",
+           "pmUser",
+           "user",
+           "data",
+           "wifi",
+
+           "hsId",
+           "hsOperator",
+           "hsManufacturer",
+           "hsModel",
+           "hsOS",
+           "hsOSVer",
+           "networkCarrier",
+           "networkSpeed",
+           "latency",
+           "inBandwidth",
+
+           "outBandwidth",
+           "txName",
+           "txTimeStart",
+           "txTimeEnd",
+           "txTimeStartFormatted",
+           "txTimeEndFormatted",
+           "validationSuccess",
+           "timerUx",
+           "requestTime",
+           "responseTime",
+
+           "requestTimestamp",
+           "responseTimestamp",
+           "vitalsTimestamp",
+           "vitalsTimestampFormatted",
+           "vitalseCPU",
+           "vitalsMemFree",
+           "vitalsMemUsed",
+           "vitalsMemCached",
+           "City",
+           "Country",
+
+           "mobileAppVersion",
+           "environment",
+           "appName",
+           "webReport"             
+        ];
     });
 </script>
 </html>
