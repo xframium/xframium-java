@@ -305,8 +305,8 @@ iframe {
                       <td style="text-align:left">{{row.vitalsMemFree}}</td> 
                       <td style="text-align:left">{{row.vitalsMemUsed}}</td>
                       <td style="text-align:left">{{row.vitalsMemCached}}</td> 
-                      <td style="text-align:left">{{row.City}}</td>
-                      <td style="text-align:left">{{row.Country}}</td>
+                      <td style="text-align:left">{{row.city}}</td>
+                      <td style="text-align:left">{{row.country}}</td>
 
                       <td style="text-align:left">{{row.mobileAppVersion}}</td> 
                       <td style="text-align:left">{{row.environment}}</td>
@@ -567,9 +567,15 @@ iframe {
                "hsOS": $scope.testData.device.os,
                "hsOSVer": $scope.testData.device.osVersion,
                "networkCarrier": "n/a",
+               "networkSpeed": "",
+               "latency": "",
+               "inBandwidth": "",
+               "outBandwidth": "",  
                "city": "n/a",
                "country": "n/a",
+               "mobileAppVersion": "",                  
                "environment": $scope.testData.device.environment,
+               "appName": "",                  
                "webReport": $scope.testData.executionParameters.PERFECTO_WT
            };
 
@@ -771,8 +777,8 @@ iframe {
            "vitalsMemFree",
            "vitalsMemUsed",
            "vitalsMemCached",
-           "City",
-           "Country",
+           "city",
+           "country",
 
            "mobileAppVersion",
            "environment",
