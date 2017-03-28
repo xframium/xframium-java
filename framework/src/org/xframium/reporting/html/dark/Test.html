@@ -376,7 +376,10 @@ iframe {
         <span data-nodrag ng-if="stepDef.stepList.length == 0" style="margin-left: 15px"></span>
         <span data-nodrag compile="formatStep(stepDef)" style="cursor: default"></span>
 
-        <a hRef="#" ng-click="showError( stepDef )" ng-if="hasExecutionParameter( stepDef, 'SCREENSHOT' ) || ( stepDef.throwable != null && stepDef.throwable != 'null' && stepDef.throwable != '' )"><span data-nodrag class="glyphicon glyphicon-eye-open text-danger" style="cursor: default; margin-left: 15px" ></span></a>
+        <a hRef="#" ng-click="showError( stepDef )" ng-if="hasExecutionParameter( stepDef, 'SCREENSHOT' ) || ( stepDef.throwable != null && stepDef.throwable != 'null' && stepDef.throwable != '' )">
+            <span ng-if="( stepDef.throwable != null && stepDef.throwable != 'null' && stepDef.throwable != '' )" data-nodrag class="glyphicon glyphicon-eye-open text-danger" style="cursor: default; margin-left: 15px" ></span>
+            <span ng-if="!( stepDef.throwable != null && stepDef.throwable != 'null' && stepDef.throwable != '' )" data-nodrag class="glyphicon glyphicon-eye-open text-primary" style="cursor: default; margin-left: 15px" ></span>
+        </a>
         <span data-nodrag class="pull-right" style="cursor: default; font-weight: 200">{{(stepDef.endTime.raw - stepDef.startTime.raw )}} ms</span>
 
     </div>
@@ -519,7 +522,19 @@ iframe {
 
         $scope.formatStep = function( step )
         {
-            var messageText = $scope.stepMessages[step.step.kw];
+            var messageText = null;
+            
+            if ( step.step.description != null && step.step.description != '' && step.step.description != 'null' )
+            {
+                //
+                // Allows a custom description 
+                //
+                messageText = '<span class="text-info">' + step.step.description + '</span>';
+            }
+            else
+            {
+                messageText = $scope.stepMessages[step.step.kw];
+            }
 
             if ( messageText == null )
                 messageText = $scope.stepMessages['DEFAULT'];
@@ -727,7 +742,6 @@ iframe {
             "NAVIGATE" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use BROWSER)",
             "LOOP" : "Execute {$p2} in a {kw}",
             "STATE" : "Extract the {kw} of the application",
-            "STATE" : "Call the {kw} {name}",
             "ALERT" : "{name} to a web-based {kw} ",
             "VISIBLE" : "Is {name} {kw} on {pageName}",
             "ALIGN" : "Do controls {kw} with {name} on {pageName}",

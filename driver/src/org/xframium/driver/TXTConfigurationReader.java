@@ -249,7 +249,8 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     @Override
     public ElementProvider configurePageManagement( SuiteContainer sC )
     {
-        sC.setSiteName( configProperties.get( PAGE[0] ) );
+        if ( sC != null )
+            sC.setSiteName( configProperties.get( PAGE[0] ) );
 
         switch ( (configProperties.get( PAGE[1] )).toUpperCase() )
         {
@@ -508,38 +509,48 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
     public SuiteContainer configureTestCases( PageDataProvider pdp, boolean parseDataIterators )
     {
         SuiteContainer sC = null;
-        switch ( configProperties.get( DRIVER[0] ).toUpperCase() )
+        
+        if ( configProperties.get( DRIVER[0] ) == null )
         {
-            case "XML":
-            {
-                sC = new XMLKeyWordProvider( findFile( configFolder, new File( configProperties.get( DRIVER[1] ) ) ), configProperties ).readData( true );
-                break;
-            }
-            
-            case "EXCEL":
-            {
-                sC = new ExcelKeyWordProvider( findFile( configFolder, new File( configProperties.get( DRIVER[1] ) ) ), configProperties ).readData( true );
-
-                break;
-            }
-
-            case "SQL":
-            case "OBJ-SQL":
-            {
-                sC = new SQLKeyWordProvider( configProperties.get( JDBC[0] ),
-                                                                            configProperties.get( JDBC[1] ),
-                                                                            configProperties.get( JDBC[2] ),
-                                                                            configProperties.get( JDBC[3] ),
-                                                                            configProperties.get( OPT_DRIVER[0] ),
-                                                                            configProperties.get( PAGE[0] ),
-                                                                            configProperties.get( OPT_DRIVER[1] ),
-                                                                            configProperties.get( OPT_DRIVER[2] ),
-                                                                            configProperties.get( OPT_DRIVER[3] ),
-                                                                            configProperties ).readData( true );
-                                                   
-                break;
-            }
+            sC = new SuiteContainer();
         }
+        else
+            {
+            
+            switch ( configProperties.get( DRIVER[0] ).toUpperCase() )
+            {
+                case "XML":
+                {
+                    sC = new XMLKeyWordProvider( findFile( configFolder, new File( configProperties.get( DRIVER[1] ) ) ), configProperties ).readData( true );
+                    break;
+                }
+                
+                case "EXCEL":
+                {
+                    sC = new ExcelKeyWordProvider( findFile( configFolder, new File( configProperties.get( DRIVER[1] ) ) ), configProperties ).readData( true );
+    
+                    break;
+                }
+    
+                case "SQL":
+                case "OBJ-SQL":
+                {
+                    sC = new SQLKeyWordProvider( configProperties.get( JDBC[0] ),
+                                                                                configProperties.get( JDBC[1] ),
+                                                                                configProperties.get( JDBC[2] ),
+                                                                                configProperties.get( JDBC[3] ),
+                                                                                configProperties.get( OPT_DRIVER[0] ),
+                                                                                configProperties.get( PAGE[0] ),
+                                                                                configProperties.get( OPT_DRIVER[1] ),
+                                                                                configProperties.get( OPT_DRIVER[2] ),
+                                                                                configProperties.get( OPT_DRIVER[3] ),
+                                                                                configProperties ).readData( true );
+                                                       
+                    break;
+                }
+            }
+        
+            }
         if ( sC != null )
             sC.setDataProvider( pdp );
         return sC;

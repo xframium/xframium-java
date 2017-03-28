@@ -92,8 +92,7 @@ public class SeleniumElement extends AbstractElement
     /** The Constant DEVICE_NAME. */
     private static final String DEVICE_NAME = "DEVICE_NAME";
 
-    /** The web driver. */
-    private WebDriver webDriver;
+    
 
     /** The located element. */
     private WebElement locatedElement;
@@ -115,7 +114,7 @@ public class SeleniumElement extends AbstractElement
     public Element cloneElement()
     {
         SeleniumElement element = new SeleniumElement( getBy(), getRawKey(), getElementName(), getPageName(), getContextElement(), locatedElement, index );
-        element.setDriver( webDriver );
+        element.setDriver( getWebDriver() );
         element.setDeviceContext( getDeviceContext() );
         element.subElementList.addAll( subElementList );
         return element;
@@ -185,7 +184,7 @@ public class SeleniumElement extends AbstractElement
 
                 byte[] imageData = null;
 
-                String cloudName = ((DeviceWebDriver) webDriver).getDevice().getCloud();
+                String cloudName = ((DeviceWebDriver) getWebDriver()).getDevice().getCloud();
                 if ( cloudName == null || cloudName.trim().isEmpty() )
                     cloudName = CloudRegistry.instance().getCloud().getName();
 
@@ -196,11 +195,11 @@ public class SeleniumElement extends AbstractElement
                 }
                 else
                 {
-                    if ( webDriver instanceof TakesScreenshot )
+                    if ( getWebDriver() instanceof TakesScreenshot )
                     {
                         try
                         {
-                            imageData = ((TakesScreenshot) webDriver).getScreenshotAs( OutputType.BYTES );
+                            imageData = ((TakesScreenshot) getWebDriver()).getScreenshotAs( OutputType.BYTES );
                         }
                         catch ( Exception e )
                         {
@@ -240,7 +239,7 @@ public class SeleniumElement extends AbstractElement
     @Override
     public void setDriver( Object webDriver )
     {
-        this.webDriver = (WebDriver) webDriver;
+        this.setWebDriver( (DeviceWebDriver) webDriver );
     }
 
     /*
@@ -269,7 +268,7 @@ public class SeleniumElement extends AbstractElement
             log.debug( Thread.currentThread().getName() + ": Attempting to locate element using [" + elementDescriptor.toString() + "]" );
 
         Element myElement = PageManager.instance().getElementProvider().getElement( elementDescriptor );
-        myElement.setDriver( webDriver );
+        myElement.setDriver( getWebDriver() );
         myElement = myElement.cloneElement();
         myElement.setExecutionContext( getExecutionContext() );
         return myElement;
@@ -308,17 +307,17 @@ public class SeleniumElement extends AbstractElement
     {
         if ( getDeviceContext() != null && !getDeviceContext().trim().isEmpty() )
         {
-            if ( webDriver instanceof VisualDriverProvider )
+            if ( getWebDriver() instanceof VisualDriverProvider )
                 useVisualDriver = true;
-            else if ( webDriver instanceof ContextAware )
-                ((ContextAware) webDriver).context( getDeviceContext() );
+            else if ( getWebDriver() instanceof ContextAware )
+                ((ContextAware) getWebDriver()).context( getDeviceContext() );
         }
         else if ( getBy().getContext() != null )
         {
-            if ( webDriver instanceof VisualDriverProvider )
+            if ( getWebDriver() instanceof VisualDriverProvider )
                 useVisualDriver = true;
-            else if ( webDriver instanceof ContextAware )
-                ((ContextAware) webDriver).context( getBy().getContext() );
+            else if ( getWebDriver() instanceof ContextAware )
+                ((ContextAware) getWebDriver()).context( getBy().getContext() );
         }
 
         switch ( getBy() )
@@ -326,19 +325,19 @@ public class SeleniumElement extends AbstractElement
             case COMPLEX:
                 if ( subElementList != null && subElementList.size() > 0 )
                 {
-                    SubElement[] subList = getSubElement( ((DeviceWebDriver) webDriver).getAut(), ((DeviceWebDriver) webDriver).getPopulatedDevice().getOs().toUpperCase(), (DeviceWebDriver) webDriver );
+                    SubElement[] subList = getSubElement( ((DeviceWebDriver) getWebDriver()).getAut(), ((DeviceWebDriver) getWebDriver()).getPopulatedDevice().getOs().toUpperCase(), (DeviceWebDriver) getWebDriver() );
                     if ( subList.length > 0 )
                     {
                         By foundBy = _useBy( subList[0].getBy(), applyToken( subList[0].getKey() ) );
 
                         if ( foundBy == null )
-                            throw new ScriptConfigurationException( "Could not locate sub-element for " + getName() + "( " + ((DeviceWebDriver) webDriver).getAut().getName() + " " + ((DeviceWebDriver) webDriver).getAut().getVersion() + " )" );
+                            throw new ScriptConfigurationException( "Could not locate sub-element for " + getName() + "( " + ((DeviceWebDriver) getWebDriver()).getAut().getName() + " " + ((DeviceWebDriver) getWebDriver()).getAut().getVersion() + " )" );
 
                         return foundBy;
                     }
                     else
                     {
-                        throw new ScriptConfigurationException( "Could not locate sub-element for " + getName() + "( " + ((DeviceWebDriver) webDriver).getPopulatedDevice().getOs() + " )" );
+                        throw new ScriptConfigurationException( "Could not locate sub-element for " + getName() + "( " + ((DeviceWebDriver) getWebDriver()).getPopulatedDevice().getOs() + " )" );
                     }
                 }
                 else
@@ -385,7 +384,7 @@ public class SeleniumElement extends AbstractElement
 
             case PROP:
                 Map<String, String> propertyMap = new HashMap<String, String>( 10 );
-                propertyMap.put( "resource-id", ((DeviceWebDriver) webDriver).getAut().getAndroidIdentifier() );
+                propertyMap.put( "resource-id", ((DeviceWebDriver) getWebDriver()).getAut().getAndroidIdentifier() );
                 return By.xpath( XPathGenerator.generateXPathFromProperty( propertyMap, keyValue ) );
             default:
                 return null;
@@ -402,21 +401,21 @@ public class SeleniumElement extends AbstractElement
         WebElement webElement = getElement();
         if ( webElement != null && webElement.getSize().getHeight() > 0 && webElement.getSize().getWidth() > 0 )
         {
-            if ( webDriver instanceof HasInputDevices )
+            if ( getWebDriver() instanceof HasInputDevices )
             {
                 if ( isTimed() )
-                    getActionProvider().startTimer( (DeviceWebDriver) webDriver, this, getExecutionContext() );
+                    getActionProvider().startTimer( (DeviceWebDriver) getWebDriver(), this, getExecutionContext() );
 
-                if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof AppiumDriver )
+                if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver )
                 {
-                    new TouchAction( (AppiumDriver) ((DeviceWebDriver) webDriver).getNativeDriver() ).moveTo( webElement ).perform();
+                    new TouchAction( (AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver() ).moveTo( webElement ).perform();
                 }
-                else if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof RemoteWebDriver )
+                else if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver )
                 {
-                    if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof HasTouchScreen )
-                        new TouchActions( webDriver ).moveToElement( webElement ).build().perform();
+                    if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof HasTouchScreen )
+                        new TouchActions( getWebDriver() ).moveToElement( webElement ).build().perform();
                     else
-                        new Actions( webDriver ).moveToElement( webElement ).build().perform();
+                        new Actions( getWebDriver() ).moveToElement( webElement ).build().perform();
                 }
 
                 return true;
@@ -428,7 +427,7 @@ public class SeleniumElement extends AbstractElement
 
     private CloudActionProvider getActionProvider()
     {
-        return ((DeviceWebDriver) webDriver).getCloud().getCloudActionProvider();
+        return ((DeviceWebDriver) getWebDriver()).getCloud().getCloudActionProvider();
     }
 
     public boolean _clickFor( int length )
@@ -436,27 +435,27 @@ public class SeleniumElement extends AbstractElement
         WebElement webElement = getElement();
         if ( webElement != null && webElement.getSize().getHeight() > 0 && webElement.getSize().getWidth() > 0 )
         {
-            if ( webDriver instanceof HasInputDevices )
+            if ( getWebDriver() instanceof HasInputDevices )
             {
                 if ( isTimed() )
-                    getActionProvider().startTimer( (DeviceWebDriver) webDriver, this, getExecutionContext() );
+                    getActionProvider().startTimer( (DeviceWebDriver) getWebDriver(), this, getExecutionContext() );
 
-                if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof AppiumDriver )
+                if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver )
                 {
-                    new TouchAction( (AppiumDriver<?>) ((DeviceWebDriver) webDriver).getNativeDriver() ).press( webElement ).waitAction( length ).release().perform();
+                    new TouchAction( (AppiumDriver<?>) ((DeviceWebDriver) getWebDriver()).getNativeDriver() ).press( webElement ).waitAction( length ).release().perform();
                 }
-                else if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof RemoteWebDriver )
+                else if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver )
                 {
                     int x = webElement.getLocation().getX() + (webElement.getSize().getWidth() / 2);
                     int y = webElement.getLocation().getY() + (webElement.getSize().getHeight() / 2);
 
                     try
                     {
-                        new TouchActions( webDriver ).longPress( webElement ).build().perform();
+                        new TouchActions( getWebDriver() ).longPress( webElement ).build().perform();
                     }
                     catch ( Exception e )
                     {
-                        ((DeviceWebDriver) webDriver).getCloud().getCloudActionProvider().tap( (DeviceWebDriver) webDriver, new PercentagePoint( x, y, false ), length );
+                        ((DeviceWebDriver) getWebDriver()).getCloud().getCloudActionProvider().tap( (DeviceWebDriver) getWebDriver(), new PercentagePoint( x, y, false ), length );
                     }
 
                 }
@@ -478,21 +477,21 @@ public class SeleniumElement extends AbstractElement
         WebElement webElement = getElement();
         if ( webElement != null && webElement.getSize().getHeight() > 0 && webElement.getSize().getWidth() > 0 )
         {
-            if ( webDriver instanceof HasInputDevices )
+            if ( getWebDriver() instanceof HasInputDevices )
             {
                 if ( isTimed() )
-                    getActionProvider().startTimer( (DeviceWebDriver) webDriver, this, getExecutionContext() );
+                    getActionProvider().startTimer( (DeviceWebDriver) getWebDriver(), this, getExecutionContext() );
 
-                if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof AppiumDriver )
+                if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver )
                 {
-                    new TouchAction( (AppiumDriver) ((DeviceWebDriver) webDriver).getNativeDriver() ).press( webElement ).perform();
+                    new TouchAction( (AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver() ).press( webElement ).perform();
                 }
-                else if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof RemoteWebDriver )
+                else if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver )
                 {
-                    if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof HasTouchScreen )
-                        new TouchActions( webDriver ).clickAndHold( webElement ).build().perform();
+                    if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof HasTouchScreen )
+                        new TouchActions( getWebDriver() ).clickAndHold( webElement ).build().perform();
                     else
-                        new Actions( webDriver ).clickAndHold( webElement ).build().perform();
+                        new Actions( getWebDriver() ).clickAndHold( webElement ).build().perform();
                 }
 
                 return true;
@@ -517,24 +516,24 @@ public class SeleniumElement extends AbstractElement
             if ( log.isInfoEnabled() )
                 log.info( "Clicking " + useX + "," + useY + " pixels relative to " + getName() );
 
-            if ( webDriver instanceof HasInputDevices )
+            if ( getWebDriver() instanceof HasInputDevices )
             {
                 if ( isTimed() )
-                    getActionProvider().startTimer( (DeviceWebDriver) webDriver, this, getExecutionContext() );
+                    getActionProvider().startTimer( (DeviceWebDriver) getWebDriver(), this, getExecutionContext() );
 
-                if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof AppiumDriver )
+                if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver )
                 {
-                    new TouchAction( (AppiumDriver) ((DeviceWebDriver) webDriver).getNativeDriver() ).moveTo( webElement ).tap( webElement, useX, useY ).perform();
+                    new TouchAction( (AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver() ).moveTo( webElement ).tap( webElement, useX, useY ).perform();
                 }
-                else if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof RemoteWebDriver )
+                else if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver )
                 {
-                    if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof HasTouchScreen )
-                        new TouchActions( webDriver ).moveToElement( webElement, useX, useY ).click().build().perform();
+                    if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof HasTouchScreen )
+                        new TouchActions( getWebDriver() ).moveToElement( webElement, useX, useY ).click().build().perform();
                     else
-                        new Actions( webDriver ).moveToElement( webElement, useX, useY ).click().build().perform();
+                        new Actions( getWebDriver() ).moveToElement( webElement, useX, useY ).click().build().perform();
                 }
 
-                new Actions( webDriver ).moveToElement( webElement, useX, useY ).click().build().perform();
+                new Actions( getWebDriver() ).moveToElement( webElement, useX, useY ).click().build().perform();
                 return true;
             }
 
@@ -555,21 +554,21 @@ public class SeleniumElement extends AbstractElement
         WebElement webElement = getElement();
         if ( webElement != null && webElement.getSize().getHeight() > 0 && webElement.getSize().getWidth() > 0 )
         {
-            if ( webDriver instanceof HasInputDevices )
+            if ( getWebDriver() instanceof HasInputDevices )
             {
                 if ( isTimed() )
-                    getActionProvider().startTimer( (DeviceWebDriver) webDriver, this, getExecutionContext() );
+                    getActionProvider().startTimer( (DeviceWebDriver) getWebDriver(), this, getExecutionContext() );
 
-                if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof AppiumDriver )
+                if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver )
                 {
-                    new TouchAction( (AppiumDriver) ((DeviceWebDriver) webDriver).getNativeDriver() ).tap( webElement ).tap( webElement ).perform();
+                    new TouchAction( (AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver() ).tap( webElement ).tap( webElement ).perform();
                 }
-                else if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof RemoteWebDriver )
+                else if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver )
                 {
-                    if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof HasTouchScreen )
-                        new TouchActions( webDriver ).doubleClick().build().perform();
+                    if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof HasTouchScreen )
+                        new TouchActions( getWebDriver() ).doubleClick().build().perform();
                     else
-                        new Actions( webDriver ).doubleClick( webElement ).build().perform();
+                        new Actions( getWebDriver() ).doubleClick( webElement ).build().perform();
                 }
 
                 return true;
@@ -589,21 +588,21 @@ public class SeleniumElement extends AbstractElement
         WebElement webElement = getElement();
         if ( webElement != null && webElement.getSize().getHeight() > 0 && webElement.getSize().getWidth() > 0 )
         {
-            if ( webDriver instanceof HasInputDevices )
+            if ( getWebDriver() instanceof HasInputDevices )
             {
                 if ( isTimed() )
-                    getActionProvider().startTimer( (DeviceWebDriver) webDriver, this, getExecutionContext() );
+                    getActionProvider().startTimer( (DeviceWebDriver) getWebDriver(), this, getExecutionContext() );
 
-                if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof AppiumDriver )
+                if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver )
                 {
-                    new TouchAction( (AppiumDriver) ((DeviceWebDriver) webDriver).getNativeDriver() ).release().perform();
+                    new TouchAction( (AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver() ).release().perform();
                 }
-                else if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof RemoteWebDriver )
+                else if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver )
                 {
-                    if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof HasTouchScreen )
-                        new TouchActions( webDriver ).release().build().perform();
+                    if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof HasTouchScreen )
+                        new TouchActions( getWebDriver() ).release().build().perform();
                     else
-                        new Actions( webDriver ).release().build().perform();
+                        new Actions( getWebDriver() ).release().build().perform();
                 }
                 return true;
             }
@@ -635,7 +634,7 @@ public class SeleniumElement extends AbstractElement
             if ( fromContext != null )
                 webElements = ((WebElement) fromContext.getNative()).findElements( useBy() );
             else
-                webElements = ((WebDriver) webDriver).findElements( useBy() );
+                webElements = ((WebDriver) getWebDriver()).findElements( useBy() );
 
             if ( log.isInfoEnabled() )
             {
@@ -650,7 +649,7 @@ public class SeleniumElement extends AbstractElement
             for ( int i = 0; i < webElements.size(); i++ )
             {
                 foundElements[i] = new SeleniumElement( getBy(), getKey() + "[" + (i + 1) + "]", getElementName(), getPageName(), getContextElement(), webElements.get( i ), i );
-                foundElements[i].setDriver( webDriver );
+                foundElements[i].setDriver( getWebDriver() );
             }
 
             return foundElements;
@@ -675,8 +674,8 @@ public class SeleniumElement extends AbstractElement
         }
 
         String currentContext = null;
-        if ( webDriver instanceof ContextAware )
-            currentContext = ((ContextAware) webDriver).getContext();
+        if ( getWebDriver() instanceof ContextAware )
+            currentContext = ((ContextAware) getWebDriver()).getContext();
 
         Element fromContext = getContext();
         if ( fromContext == null && getContextElement() != null && !getContextElement().isEmpty() )
@@ -694,14 +693,14 @@ public class SeleniumElement extends AbstractElement
 
                 if ( useVisualDriver && "VISUAL".equals( getBy().getContext() ) )
                 {
-                    webElement = ((VisualDriverProvider) webDriver).getVisualDriver().findElement( useBy );
+                    webElement = ((VisualDriverProvider) getWebDriver()).getVisualDriver().findElement( useBy );
                 }
                 else
                 {
                     if ( fromContext != null )
                         webElement = ((WebElement) fromContext.getNative()).findElement( useBy() );
                     else
-                        webElement = ((WebDriver) webDriver).findElement( useBy() );
+                        webElement = ((WebDriver) getWebDriver()).findElement( useBy() );
                 }
 
                 if ( log.isInfoEnabled() )
@@ -721,8 +720,8 @@ public class SeleniumElement extends AbstractElement
         }
         finally
         {
-            if ( currentContext != null && webDriver instanceof ContextAware )
-                ((ContextAware) webDriver).context( currentContext );
+            if ( currentContext != null && getWebDriver() instanceof ContextAware )
+                ((ContextAware) getWebDriver()).context( currentContext );
         }
 
     }
@@ -821,7 +820,7 @@ public class SeleniumElement extends AbstractElement
         WebElement webElement = (WebElement) getElement();
         boolean returnValue = webElement.isDisplayed();
         if ( returnValue )
-            getActionProvider().getSupportedTimers( (DeviceWebDriver) webDriver, getExecutionContext().getTimerName(), getExecutionContext(), null );
+            getActionProvider().getSupportedTimers( (DeviceWebDriver) getWebDriver(), getExecutionContext().getTimerName(), getExecutionContext(), null );
         return returnValue;
     }
 
@@ -840,10 +839,10 @@ public class SeleniumElement extends AbstractElement
                 returnValue = Boolean.parseBoolean( focusValue );
         }
         else if ( getNativeDriver() instanceof RemoteWebDriver )
-            returnValue = webElement.equals( webDriver.switchTo().activeElement() );
+            returnValue = webElement.equals( getWebDriver().switchTo().activeElement() );
 
         if ( returnValue )
-            getActionProvider().getSupportedTimers( (DeviceWebDriver) webDriver, getExecutionContext().getTimerName(), getExecutionContext(), null );
+            getActionProvider().getSupportedTimers( (DeviceWebDriver) getWebDriver(), getExecutionContext().getTimerName(), getExecutionContext(), null );
         return returnValue;
     }
 
@@ -854,7 +853,7 @@ public class SeleniumElement extends AbstractElement
 
         boolean returnValue = webElement.isEnabled();
         if ( returnValue )
-            getActionProvider().getSupportedTimers( (DeviceWebDriver) webDriver, getExecutionContext().getTimerName(), getExecutionContext(), null );
+            getActionProvider().getSupportedTimers( (DeviceWebDriver) getWebDriver(), getExecutionContext().getTimerName(), getExecutionContext(), null );
 
         return returnValue;
 
@@ -863,10 +862,10 @@ public class SeleniumElement extends AbstractElement
     private WebDriver getNativeDriver()
     {
 
-        if ( webDriver instanceof NativeDriverProvider )
-            return ((NativeDriverProvider) webDriver).getNativeDriver();
+        if ( getWebDriver() instanceof NativeDriverProvider )
+            return ((NativeDriverProvider) getWebDriver()).getNativeDriver();
         else
-            return webDriver;
+            return getWebDriver();
     }
 
     /*
@@ -883,17 +882,17 @@ public class SeleniumElement extends AbstractElement
         {
             if ( getElementProperties() != null )
             {
-                String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript( "mobile:text:find", getElementProperties() ) + "";
+                String result = ((RemoteWebDriver) ((DeviceWebDriver) getWebDriver()).getWebDriver()).executeScript( "mobile:text:find", getElementProperties() ) + "";
                 returnValue = !"false".equals( result.toLowerCase() );
                 if ( returnValue )
-                    getActionProvider().getSupportedTimers( (DeviceWebDriver) webDriver, getExecutionContext().getTimerName(), getExecutionContext(), null );
+                    getActionProvider().getSupportedTimers( (DeviceWebDriver) getWebDriver(), getExecutionContext().getTimerName(), getExecutionContext(), null );
             }
             else
             {
                 String testValue = PerfectoMobile.instance().imaging().textExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, 50 ).getStatus();
                 returnValue = Boolean.parseBoolean( testValue ) | testValue.toUpperCase().equals( "SUCCESS" );
                 if ( returnValue )
-                    getActionProvider().getSupportedTimers( (DeviceWebDriver) webDriver, getExecutionContext().getTimerName(), getExecutionContext(), null );
+                    getActionProvider().getSupportedTimers( (DeviceWebDriver) getWebDriver(), getExecutionContext().getTimerName(), getExecutionContext(), null );
             }
 
             return returnValue;
@@ -907,7 +906,7 @@ public class SeleniumElement extends AbstractElement
         WebElement webElement = getElement();
         if ( webElement != null )
         {
-            getActionProvider().getSupportedTimers( (DeviceWebDriver) webDriver, getExecutionContext().getTimerName(), getExecutionContext(), null );
+            getActionProvider().getSupportedTimers( (DeviceWebDriver) getWebDriver(), getExecutionContext().getTimerName(), getExecutionContext(), null );
         }
         return webElement != null;
     }
@@ -922,79 +921,99 @@ public class SeleniumElement extends AbstractElement
     @Override
     protected boolean _waitFor( long timeOut, TimeUnit timeUnit, WAIT_FOR waitType, String value )
     {
-        if ( "V_TEXT".equals( getBy().name().toUpperCase() ) )
+        long implicitWait = getWebDriver().getImplicitWait();
+        getWebDriver().manage().timeouts().implicitlyWait( 1, TimeUnit.SECONDS );
+        
+        try
         {
-            boolean returnValue = false;
-            if ( getElementProperties() != null )
+            if ( "V_TEXT".equals( getBy().name().toUpperCase() ) )
             {
-                String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript( "mobile:text:find", getElementProperties() ) + "";
-                returnValue = !"false".equals( result.toLowerCase() );
+                boolean returnValue = false;
+                if ( getElementProperties() != null )
+                {
+                    String result = ((RemoteWebDriver) ((DeviceWebDriver) getWebDriver()).getWebDriver()).executeScript( "mobile:text:find", getElementProperties() ) + "";
+                    returnValue = !"false".equals( result.toLowerCase() );
+                }
+                else
+                {
+                    String testValue = PerfectoMobile.instance().imaging().textExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, 50 ).getStatus();
+                    if ( testValue == null )
+                        returnValue = true;
+                    else
+                        returnValue = Boolean.parseBoolean( testValue ) | testValue.toUpperCase().equals( "SUCCESS" );
+                }
+                if ( returnValue )
+                    getActionProvider().getSupportedTimers( (DeviceWebDriver) getWebDriver(), getExecutionContext().getTimerName(), getExecutionContext(), null );
+                return returnValue;
             }
             else
             {
-                String testValue = PerfectoMobile.instance().imaging().textExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, 50 ).getStatus();
-                if ( testValue == null )
-                    returnValue = true;
-                else
-                    returnValue = Boolean.parseBoolean( testValue ) | testValue.toUpperCase().equals( "SUCCESS" );
-            }
-            if ( returnValue )
-                getActionProvider().getSupportedTimers( (DeviceWebDriver) webDriver, getExecutionContext().getTimerName(), getExecutionContext(), null );
-            return returnValue;
-        }
-        else
-        {
-
-            try
-            {
-
-                String currentContext = null;
-                if ( webDriver instanceof ContextAware )
-                    currentContext = ((ContextAware) webDriver).getContext();
-
-                WebDriverWait wait = new WebDriverWait( webDriver, timeOut, 250 );
-                WebElement webElement = null;
-
-                switch ( waitType )
+    
+                try
                 {
-                    case CLICKABLE:
-                        webElement = wait.until( ExpectedConditions.elementToBeClickable( useBy() ) );
-                        break;
-
-                    case INVISIBLE:
-                        return wait.until( ExpectedConditions.invisibilityOfElementLocated( useBy() ) );
-
-                    case PRESENT:
-
-                        webElement = wait.until( ExpectedConditions.presenceOfElementLocated( useBy() ) );
-                        break;
-
-                    case SELECTABLE:
-                        return wait.until( ExpectedConditions.elementToBeSelected( useBy() ) );
-
-                    case TEXT_VALUE_PRESENT:
-                        return wait.until( ExpectedConditions.textToBePresentInElementValue( useBy(), value ) );
-
-                    case VISIBLE:
-                        webElement = wait.until( ExpectedConditions.visibilityOfElementLocated( useBy() ) );
-                        break;
-
-                    default:
-                        throw new IllegalArgumentException( "Unknown Wait Condition [" + waitType + "]" );
+    
+                    String currentContext = null;
+                    if ( getWebDriver() instanceof ContextAware )
+                        currentContext = ((ContextAware) getWebDriver()).getContext();
+    
+                    WebDriverWait wait = new WebDriverWait( getWebDriver(), timeOut, 250 );
+                    WebElement webElement = null;
+    
+                    switch ( waitType )
+                    {
+                        case CLICKABLE:
+                            webElement = wait.until( ExpectedConditions.elementToBeClickable( useBy() ) );
+                            break;
+    
+                        case INVISIBLE:
+                            return wait.until( ExpectedConditions.invisibilityOfElementLocated( useBy() ) );
+    
+                        case PRESENT:
+    
+                            webElement = wait.until( ExpectedConditions.presenceOfElementLocated( useBy() ) );
+                            break;
+    
+                        case SELECTABLE:
+                            return wait.until( ExpectedConditions.elementToBeSelected( useBy() ) );
+    
+                        case TEXT_VALUE_PRESENT:
+                            return wait.until( ExpectedConditions.textToBePresentInElementValue( useBy(), value ) );
+    
+                        case VISIBLE:
+                            webElement = wait.until( ExpectedConditions.visibilityOfElementLocated( useBy() ) );
+                            break;
+    
+                        default:
+                            throw new IllegalArgumentException( "Unknown Wait Condition [" + waitType + "]" );
+                    }
+    
+                    if ( currentContext != null && getWebDriver() instanceof ContextAware )
+                        ((ContextAware) getWebDriver()).context( currentContext );
+    
+                    if ( webElement != null )
+                        getActionProvider().getSupportedTimers( (DeviceWebDriver) getWebDriver(), getExecutionContext().getTimerName(), getExecutionContext(), null );
+    
+                    return webElement != null;
                 }
-
-                if ( currentContext != null && webDriver instanceof ContextAware )
-                    ((ContextAware) webDriver).context( currentContext );
-
-                if ( webElement != null )
-                    getActionProvider().getSupportedTimers( (DeviceWebDriver) webDriver, getExecutionContext().getTimerName(), getExecutionContext(), null );
-
-                return webElement != null;
+                catch ( Exception e )
+                {
+                    log.error( Thread.currentThread().getName() + ": Could not locate " + useBy(), e );
+                    throw new ObjectIdentificationException( getBy(), useBy() );
+                }
             }
-            catch ( Exception e )
+        }
+        finally
+        {
+            if ( implicitWait > 0 )
             {
-                log.error( Thread.currentThread().getName() + ": Could not locate " + useBy(), e );
-                throw new ObjectIdentificationException( getBy(), useBy() );
+                try
+                {
+                    getWebDriver().manage().timeouts().implicitlyWait( implicitWait, TimeUnit.MILLISECONDS );
+                }
+                catch( Exception e )
+                {
+                  
+                }
             }
         }
     }
@@ -1009,11 +1028,11 @@ public class SeleniumElement extends AbstractElement
     protected void _setValue( String currentValue, SetMethod setMethod )
     {
         boolean enableCache = false;
-        if ( webDriver instanceof CachingDriver )
+        if ( getWebDriver() instanceof CachingDriver )
         {
-            if ( ((CachingDriver) webDriver).isCachingEnabled() )
+            if ( ((CachingDriver) getWebDriver()).isCachingEnabled() )
             {
-                ((CachingDriver) webDriver).setCachingEnabled( false );
+                ((CachingDriver) getWebDriver()).setCachingEnabled( false );
                 enableCache = true;
             }
         }
@@ -1026,7 +1045,7 @@ public class SeleniumElement extends AbstractElement
             {
                 if ( getElementProperties() != null )
                 {
-                    String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript( "mobile:edit-text:set", getElementProperties() ) + "";
+                    String result = ((RemoteWebDriver) ((DeviceWebDriver) getWebDriver()).getWebDriver()).executeScript( "mobile:edit-text:set", getElementProperties() ) + "";
                     if ( "false".equals( result.toLowerCase() ) )
                         throw new ScriptException( "Visual set failed to execute" );
 
@@ -1036,14 +1055,14 @@ public class SeleniumElement extends AbstractElement
             }
             else
             {
-                if ( !SetMethodFactory.instance().createSetMethod( webElement.getTagName() ).set( webElement, webDriver, currentValue, setMethod.name().toUpperCase() ) )
+                if ( !SetMethodFactory.instance().createSetMethod( webElement.getTagName() ).set( webElement, getWebDriver(), currentValue, setMethod.name().toUpperCase() ) )
                     throw new ScriptException( "Could not set " + getName() + " with " + currentValue );
             }
         }
         finally
         {
             if ( enableCache )
-                ((CachingDriver) webDriver).setCachingEnabled( true );
+                ((CachingDriver) getWebDriver()).setCachingEnabled( true );
         }
     }
 
@@ -1056,11 +1075,11 @@ public class SeleniumElement extends AbstractElement
     protected void _click()
     {
         boolean enableCache = false;
-        if ( webDriver instanceof CachingDriver )
+        if ( getWebDriver() instanceof CachingDriver )
         {
-            if ( ((CachingDriver) webDriver).isCachingEnabled() )
+            if ( ((CachingDriver) getWebDriver()).isCachingEnabled() )
             {
-                ((CachingDriver) webDriver).setCachingEnabled( false );
+                ((CachingDriver) getWebDriver()).setCachingEnabled( false );
                 enableCache = true;
             }
         }
@@ -1069,27 +1088,27 @@ public class SeleniumElement extends AbstractElement
             if ( "V_TEXT".equals( getBy().name().toUpperCase() ) )
             {
                 if ( isTimed() )
-                    getActionProvider().startTimer( (DeviceWebDriver) webDriver, this, getExecutionContext() );
+                    getActionProvider().startTimer( (DeviceWebDriver) getWebDriver(), this, getExecutionContext() );
                 createPressFromVisual( PerfectoMobile.instance().imaging().textExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, 50 ) );
             }
             else if ( "V_IMAGE".equals( getBy().name().toUpperCase() ) )
             {
                 if ( isTimed() )
-                    getActionProvider().startTimer( (DeviceWebDriver) webDriver, this, getExecutionContext() );
+                    getActionProvider().startTimer( (DeviceWebDriver) getWebDriver(), this, getExecutionContext() );
                 createPressFromVisual( PerfectoMobile.instance().imaging().imageExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, MatchMode.bounded ) );
             }
             else
             {
                 WebElement e = getElement();
                 if ( isTimed() )
-                    getActionProvider().startTimer( (DeviceWebDriver) webDriver, this, getExecutionContext() );
+                    getActionProvider().startTimer( (DeviceWebDriver) getWebDriver(), this, getExecutionContext() );
                 e.click();
             }
         }
         finally
         {
             if ( enableCache )
-                ((CachingDriver) webDriver).setCachingEnabled( true );
+                ((CachingDriver) getWebDriver()).setCachingEnabled( true );
         }
 
     }
@@ -1098,7 +1117,7 @@ public class SeleniumElement extends AbstractElement
     {
         if ( getElementProperties() != null )
         {
-            String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript( "mobile:button-text:click", getElementProperties() ) + "";
+            String result = (((RemoteWebDriver) getWebDriver().getWebDriver() ) ).executeScript( "mobile:button-text:click", getElementProperties() ) + "";
             if ( "false".equals( result.toLowerCase() ) )
                 throw new ScriptException( "Visual click failed to execute" );
 
@@ -1113,7 +1132,7 @@ public class SeleniumElement extends AbstractElement
                 int useX = (int) (((double) centerWidth / (double) Integer.parseInt( iExec.getScreenWidth() )) * 100);
                 int useY = (int) (((double) centerHeight / (double) Integer.parseInt( iExec.getScreenHeight() )) * 100);
 
-                GestureManager.instance().createPress( new Point( useX, useY ) ).executeGesture( webDriver );
+                GestureManager.instance().createPress( new Point( useX, useY ) ).executeGesture( getWebDriver() );
 
             }
         }
@@ -1126,39 +1145,7 @@ public class SeleniumElement extends AbstractElement
      */
     public String getExecutionId()
     {
-        String executionId = null;
-
-        if ( webDriver instanceof PropertyProvider )
-        {
-            executionId = ((PropertyProvider) webDriver).getProperty( EXECUTION_ID );
-        }
-
-        if ( executionId == null )
-        {
-            if ( webDriver instanceof HasCapabilities )
-            {
-                Capabilities caps = ((HasCapabilities) webDriver).getCapabilities();
-                executionId = caps.getCapability( "executionId" ).toString();
-            }
-        }
-
-        if ( executionId == null )
-        {
-            if ( webDriver instanceof NativeDriverProvider )
-            {
-                WebDriver nativeDriver = ((NativeDriverProvider) webDriver).getNativeDriver();
-                if ( nativeDriver instanceof HasCapabilities )
-                {
-                    Capabilities caps = ((HasCapabilities) webDriver).getCapabilities();
-                    executionId = caps.getCapability( "executionId" ).toString();
-                }
-            }
-        }
-
-        if ( executionId == null )
-            log.warn( "No Execution ID could be located" );
-
-        return executionId;
+        return getWebDriver().getProperty( EXECUTION_ID );
     }
 
     /*
@@ -1168,39 +1155,7 @@ public class SeleniumElement extends AbstractElement
      */
     public String getDeviceName()
     {
-        String executionId = null;
-
-        if ( webDriver instanceof PropertyProvider )
-        {
-            executionId = ((PropertyProvider) webDriver).getProperty( DEVICE_NAME );
-        }
-
-        if ( executionId == null )
-        {
-            if ( webDriver instanceof HasCapabilities )
-            {
-                Capabilities caps = ((HasCapabilities) webDriver).getCapabilities();
-                executionId = caps.getCapability( "deviceName" ).toString();
-            }
-        }
-
-        if ( executionId == null )
-        {
-            if ( webDriver instanceof NativeDriverProvider )
-            {
-                WebDriver nativeDriver = ((NativeDriverProvider) webDriver).getNativeDriver();
-                if ( nativeDriver instanceof HasCapabilities )
-                {
-                    Capabilities caps = ((HasCapabilities) webDriver).getCapabilities();
-                    executionId = caps.getCapability( "deviceName" ).toString();
-                }
-            }
-        }
-
-        if ( executionId == null )
-            log.warn( Thread.currentThread().getName() + ": No Execution ID could be located" );
-
-        return executionId;
+        return getWebDriver().getProperty( DEVICE_NAME );
     }
 
     @Override
@@ -1223,5 +1178,4 @@ public class SeleniumElement extends AbstractElement
         WebElement webElement = getElement();
         return webElement.isSelected();
     }
-
 }

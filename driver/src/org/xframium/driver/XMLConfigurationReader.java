@@ -365,8 +365,9 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     @Override
     public ElementProvider configurePageManagement( SuiteContainer sC )
     {
-        sC.setSiteName( xRoot.getModel().getSiteName() );
-        siteName = sC.getSiteName();
+        if ( sC != null )
+            sC.setSiteName( xRoot.getModel().getSiteName() );
+        siteName = xRoot.getModel().getSiteName();
 
         switch ( xRoot.getModel().getProvider() )
         {
@@ -808,98 +809,106 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     public SuiteContainer configureTestCases( PageDataProvider pdp, boolean parseDataIterators )
     {
         SuiteContainer sC = null;
-        switch ( xRoot.getSuite().getProvider() )
+        
+        if ( xRoot.getSuite() == null )
         {
-            case "LOCAL":
-                sC = new SuiteContainer(); 
-                parseModel( sC, xRoot.getModel() );
-                for( XTest test : xRoot.getSuite().getTest() )
-                {
-                    if ( sC.testExists( test.getName() ) )
-                    {
-                        log.warn( "The test [" + test.getName() + "] is already defined and will not be added again" );
-                        continue;
-                    }
-                    
-                    if ( test.getType().equals( "BDD" ) )
-                    {
-                        XMLFormatter xmlFormatter = new XMLFormatter( sC.getDataProvider(), configProperties );
-                        Parser bddParser = new Parser( xmlFormatter );
-                        bddParser.parse( test.getDescription().getValue(), "", 0 );
-                        sC.setDataProvider( xmlFormatter );
-                    }
-                    else if ( test.getType().equals( "CSV" ) )
-                    {
-                        StringBuilder stringBuilder = new StringBuilder();
-                        stringBuilder.append( test.getName() );
-                        stringBuilder.append( ",Test,," );
-                        stringBuilder.append( test.getDataProvider()!= null ? test.getDataProvider() : "" );
-                        stringBuilder.append( "," );
-                        stringBuilder.append( test.getDataDriver()!= null ? test.getDataDriver() : "" );
-                        stringBuilder.append( "," );
-                        stringBuilder.append( test.getTagNames() != null ? test.getTagNames() : "" );
-                        stringBuilder.append( ",," );
-                        stringBuilder.append( test.isTimed() );
-                        stringBuilder.append( ",0," );
-                        stringBuilder.append( test.isActive() );
-                        stringBuilder.append( "," );
-                        stringBuilder.append( test.getOs()!= null ? test.getOs() : "" );
-                        
-                        MatrixTest matrixTest = new MatrixTest( stringBuilder.toString(), test.getDescription().getValue() );
-                        if ( matrixTest.isActive() )
-                            sC.addActiveTest( matrixTest.createTest( configProperties ) );
-                        else
-                            sC.addInactiveTest( matrixTest.createTest( configProperties ) );
-                    }
-                    else if ( test.getType().equals( "XML" ) )
-                    {
-                        KeyWordTest currentTest = parseTest( test );
-                        if ( currentTest.isActive() )
-                            sC.addActiveTest( currentTest );
-                        else
-                            sC.addInactiveTest( currentTest );
-                    }
-                }
-                
-                for( XFunction test : xRoot.getSuite().getFunction() )
-                {
-                    if ( sC.testExists( test.getName() ) )
-                    {
-                        log.warn( "The function [" + test.getName() + "] is already defined and will not be added again" );
-                        continue;
-                    }
-                    
-                    sC.addFunction( parseFunction( test ) );
-                }
-                break;
-                
-                
-            
-            case "XML":
-                sC = new XMLKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ), configProperties ).readData( true );
-
-                break;
-                
-            case "EXCEL":
-                sC =  new ExcelKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ), configProperties ).readData( true );
-
-                break;
-
-            case "SQL":
-            case "LOCAL-SQL":
+            sC = new SuiteContainer();
+        }
+        else
+        {
+            switch ( xRoot.getSuite().getProvider() )
             {
-                sC = new SQLKeyWordProvider( configProperties.get( JDBC[0] ),
-                                                                            configProperties.get( JDBC[1] ),
-                                                                            configProperties.get( JDBC[2] ),
-                                                                            configProperties.get( JDBC[3] ),
-                                                                            configProperties.get( OPT_DRIVER[0] ),
-                                                                            xRoot.getModel().getSiteName(),
-                                                                            configProperties.get( OPT_DRIVER[1] ),
-                                                                            configProperties.get( OPT_DRIVER[2] ),
-                                                                            configProperties.get( OPT_DRIVER[3] ),
-                                                                            configProperties).readData( true ) ;
-                                                   
-                break;
+                case "LOCAL":
+                    sC = new SuiteContainer(); 
+                    parseModel( sC, xRoot.getModel() );
+                    for( XTest test : xRoot.getSuite().getTest() )
+                    {
+                        if ( sC.testExists( test.getName() ) )
+                        {
+                            log.warn( "The test [" + test.getName() + "] is already defined and will not be added again" );
+                            continue;
+                        }
+                        
+                        if ( test.getType().equals( "BDD" ) )
+                        {
+                            XMLFormatter xmlFormatter = new XMLFormatter( sC.getDataProvider(), configProperties );
+                            Parser bddParser = new Parser( xmlFormatter );
+                            bddParser.parse( test.getDescription().getValue(), "", 0 );
+                            sC.setDataProvider( xmlFormatter );
+                        }
+                        else if ( test.getType().equals( "CSV" ) )
+                        {
+                            StringBuilder stringBuilder = new StringBuilder();
+                            stringBuilder.append( test.getName() );
+                            stringBuilder.append( ",Test,," );
+                            stringBuilder.append( test.getDataProvider()!= null ? test.getDataProvider() : "" );
+                            stringBuilder.append( "," );
+                            stringBuilder.append( test.getDataDriver()!= null ? test.getDataDriver() : "" );
+                            stringBuilder.append( "," );
+                            stringBuilder.append( test.getTagNames() != null ? test.getTagNames() : "" );
+                            stringBuilder.append( ",," );
+                            stringBuilder.append( test.isTimed() );
+                            stringBuilder.append( ",0," );
+                            stringBuilder.append( test.isActive() );
+                            stringBuilder.append( "," );
+                            stringBuilder.append( test.getOs()!= null ? test.getOs() : "" );
+                            
+                            MatrixTest matrixTest = new MatrixTest( stringBuilder.toString(), test.getDescription().getValue() );
+                            if ( matrixTest.isActive() )
+                                sC.addActiveTest( matrixTest.createTest( configProperties ) );
+                            else
+                                sC.addInactiveTest( matrixTest.createTest( configProperties ) );
+                        }
+                        else if ( test.getType().equals( "XML" ) )
+                        {
+                            KeyWordTest currentTest = parseTest( test );
+                            if ( currentTest.isActive() )
+                                sC.addActiveTest( currentTest );
+                            else
+                                sC.addInactiveTest( currentTest );
+                        }
+                    }
+                    
+                    for( XFunction test : xRoot.getSuite().getFunction() )
+                    {
+                        if ( sC.testExists( test.getName() ) )
+                        {
+                            log.warn( "The function [" + test.getName() + "] is already defined and will not be added again" );
+                            continue;
+                        }
+                        
+                        sC.addFunction( parseFunction( test ) );
+                    }
+                    break;
+                    
+                    
+                
+                case "XML":
+                    sC = new XMLKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ), configProperties ).readData( true );
+    
+                    break;
+                    
+                case "EXCEL":
+                    sC =  new ExcelKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ), configProperties ).readData( true );
+    
+                    break;
+    
+                case "SQL":
+                case "LOCAL-SQL":
+                {
+                    sC = new SQLKeyWordProvider( configProperties.get( JDBC[0] ),
+                                                                                configProperties.get( JDBC[1] ),
+                                                                                configProperties.get( JDBC[2] ),
+                                                                                configProperties.get( JDBC[3] ),
+                                                                                configProperties.get( OPT_DRIVER[0] ),
+                                                                                xRoot.getModel().getSiteName(),
+                                                                                configProperties.get( OPT_DRIVER[1] ),
+                                                                                configProperties.get( OPT_DRIVER[2] ),
+                                                                                configProperties.get( OPT_DRIVER[3] ),
+                                                                                configProperties).readData( true ) ;
+                                                       
+                    break;
+                }
             }
         }
         

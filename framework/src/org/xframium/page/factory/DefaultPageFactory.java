@@ -32,6 +32,7 @@ import java.lang.reflect.Proxy;
 import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
+import org.xframium.reporting.ExecutionContextTest;
 
 
 
@@ -62,7 +63,9 @@ public class DefaultPageFactory extends LocalPageFactory implements InvocationHa
     	if ( log.isInfoEnabled() )
     		log.info( "Attempting to create PROXY interface by " + serviceInterface );
     	
-    	return (Page) Proxy.newProxyInstance( this.getClass().getClassLoader(), new Class[] { serviceInterface, Page.class }, this );
+    	Page newPage = (Page) Proxy.newProxyInstance( this.getClass().getClassLoader(), new Class[] { serviceInterface, Page.class }, this );
+    	
+    	return newPage;
     }
     
     /**
@@ -141,7 +144,7 @@ public class DefaultPageFactory extends LocalPageFactory implements InvocationHa
 		
 		if ( currentService == null )
 		{
-		    currentService = super._createPage( (Class<Page>) proxy.getClass().getInterfaces()[0], webDriver );
+		    currentService = super._createPage( (Class<Page>) proxy.getClass().getInterfaces()[0], webDriver);
 		    PageManager.instance().getPageCache().put(  proxy.getClass(), currentService );
 		}
 		 

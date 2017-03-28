@@ -31,6 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
@@ -42,6 +43,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.ContextAware;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
@@ -54,6 +56,7 @@ import org.openqa.selenium.interactions.HasTouchScreen;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.interactions.TouchScreen;
+import org.openqa.selenium.logging.Logs;
 import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.ExecuteMethod;
 import org.openqa.selenium.remote.RemoteExecuteMethod;
@@ -70,8 +73,12 @@ import org.xframium.device.artifact.ArtifactProducer;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.interrupt.DeviceInterrupt;
 import org.xframium.device.interrupt.DeviceInterruptThread;
+import org.xframium.page.StepStatus;
+import org.xframium.page.keyWord.KeyWordStep.StepFailure;
+import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
+import org.xframium.reporting.ReportingWebElementAdapter;
 import org.xframium.spi.Device;
 import org.xframium.spi.PropertyProvider;
 import org.xframium.spi.driver.CachingDriver;
@@ -116,8 +123,56 @@ public class DeviceWebDriver
     private Device populatedDevice;
     private CloudDescriptor cloud;
     private boolean syntheticConnection;
+    
+    private long implicitWait = 0;
+    private long scriptTimeout = 0;
+    private long pageLoadTimeout = 0;
+    
+    private boolean reportingElement = false;
+    
+    private DeviceOptions deviceOptions = null;
+    private DeviceTimeouts deviceTimeouts = null;
 
     private ApplicationDescriptor aut;
+    
+    private ExecutionContextTest executionContext;
+
+    
+    
+    public boolean isReportingElement()
+    {
+        return reportingElement;
+    }
+
+    public void setReportingElement( boolean reportingElement )
+    {
+        this.reportingElement = reportingElement;
+    }
+
+    public ExecutionContextTest getExecutionContext()
+    {
+        return executionContext;
+    }
+
+    public void setExecutionContext( ExecutionContextTest executionContext )
+    {
+        this.executionContext = executionContext;
+    }
+
+    public long getImplicitWait()
+    {
+        return implicitWait;
+    }
+
+    public long getScriptTimeout()
+    {
+        return scriptTimeout;
+    }
+
+    public long getPageLoadTimeout()
+    {
+        return pageLoadTimeout;
+    }
 
     public ApplicationDescriptor getAut()
     {
@@ -482,7 +537,12 @@ public class DeviceWebDriver
                 List<WebElement> elementList = new ArrayList<WebElement>( 10 );
 
                 for ( int i = 0; i < nodes.getLength(); i++ )
-                    elementList.add( new CachedWebElement( this, webDriver, by, nodes.item( i ) ) );
+                {
+                    if ( reportingElement )
+                        elementList.add( new ReportingWebElementAdapter( new CachedWebElement( this, webDriver, by, nodes.item( i ) ), this, by ) );
+                    else
+                        elementList.add( new CachedWebElement( this, webDriver, by, nodes.item( i ) ) );
+                }
 
                 return elementList;
             }
@@ -499,7 +559,22 @@ public class DeviceWebDriver
             }
         }
 
-        return webDriver.findElements( by );
+        if ( reportingElement )
+        {
+            List<WebElement> currentList = webDriver.findElements( by );
+            if ( !currentList.isEmpty() )
+            {
+                List<WebElement> newList = new ArrayList<WebElement>( currentList.size() );
+                for ( WebElement wE : currentList )
+                    newList.add( new ReportingWebElementAdapter( wE, this, by ) );
+                return newList;
+            }
+            else
+                return currentList;
+            
+        }
+        else
+            return webDriver.findElements( by );
     }
 
     public void clearCache()
@@ -529,7 +604,12 @@ public class DeviceWebDriver
                     Node node = (Node) xPath.evaluate( path, cachedDocument, XPathConstants.NODE );
 
                     if ( node != null )
-                        return new CachedWebElement( this, webDriver, by, node );
+                    {
+                        if ( reportingElement )
+                            return new ReportingWebElementAdapter( new CachedWebElement( this, webDriver, by, node ), this, by );
+                        else
+                            return new CachedWebElement( this, webDriver, by, node );
+                    }
                     else
                         cachedDocument = null;
                 }
@@ -541,7 +621,27 @@ public class DeviceWebDriver
                 }
             }
         }
-        return new MorelandWebElement( this, webDriver.findElement( by ) );
+        
+        
+        
+        if ( reportingElement )
+        {
+            try
+            {
+                executionContext.startStep( KeyWordStepFactory.instance().createStep( by.toString(), "SELENIUM", true, "EXISTS", "", false, StepFailure.IGNORE, false, "", "", "", 0, "", 0, "", "", "", null, "", false, false, "", "", null, "" ), null, null );
+                WebElement webElement = new ReportingWebElementAdapter( new MorelandWebElement( this, webDriver.findElement( by ) ), this, by );
+                executionContext.completeStep( webElement == null ? StepStatus.FAILURE : StepStatus.SUCCESS, null );
+                return webElement;
+            }
+            catch( Exception e )
+            {
+                executionContext.completeStep( StepStatus.FAILURE, e );
+                return null;
+            }
+            
+        }
+        else
+            return new MorelandWebElement( this, webDriver.findElement( by ) );
     }
 
     public boolean isCachingEnabled()
@@ -641,7 +741,9 @@ public class DeviceWebDriver
      */
     public Options manage()
     {
-        return webDriver.manage();
+        if ( deviceOptions == null )
+            deviceOptions = new DeviceOptions( webDriver.manage() );
+        return deviceOptions;
     }
 
     /*
@@ -918,4 +1020,120 @@ public class DeviceWebDriver
         else
             return null;
     }
+    
+    
+    
+    public class DeviceTimeouts implements Timeouts
+    {
+        private Timeouts timeouts;
+        public DeviceTimeouts( Timeouts timeouts )
+        {
+             this.timeouts = timeouts;
+        }
+        
+        @Override
+        public Timeouts implicitlyWait( long time, TimeUnit unit )
+        {
+            
+            timeouts.implicitlyWait( time, unit );
+            implicitWait = unit.toMillis( time );
+            if ( log.isInfoEnabled() )
+                log.info( "Setting IMPLICIT WAIT to " + implicitWait );
+            return this;
+        }
+
+        @Override
+        public Timeouts setScriptTimeout( long time, TimeUnit unit )
+        {
+            timeouts.setScriptTimeout( time, unit );
+            scriptTimeout = unit.toMillis( time );
+            return this;
+        }
+
+        @Override
+        public Timeouts pageLoadTimeout( long time, TimeUnit unit )
+        {
+            timeouts.pageLoadTimeout( time, unit );
+            pageLoadTimeout = unit.toMillis( time );
+            return this;
+        }
+        
+    }
+    
+    public class DeviceOptions implements Options
+    {
+        private Options options;
+        public DeviceOptions( Options options )
+        {
+            this.options = options;
+        }
+        
+        @Override
+        public void addCookie( Cookie cookie )
+        {
+            options.addCookie( cookie );
+            
+        }
+
+        @Override
+        public void deleteCookieNamed( String name )
+        {
+            options.deleteCookieNamed( name );
+            
+        }
+
+        @Override
+        public void deleteCookie( Cookie cookie )
+        {
+            options.deleteCookie( cookie );
+            
+        }
+
+        @Override
+        public void deleteAllCookies()
+        {
+            options.deleteAllCookies();
+            
+        }
+
+        @Override
+        public Set<Cookie> getCookies()
+        {
+            return options.getCookies();
+        }
+
+        @Override
+        public Cookie getCookieNamed( String name )
+        {
+            return options.getCookieNamed( name );
+        }
+
+        @Override
+        public Timeouts timeouts()
+        {
+            if ( deviceTimeouts == null )
+                deviceTimeouts = new DeviceTimeouts( options.timeouts() );
+            return deviceTimeouts;
+        }
+
+        @Override
+        public ImeHandler ime()
+        {
+            return options.ime();
+        }
+
+        @Override
+        public Window window()
+        {
+            return options.window();
+        }
+
+        @Override
+        public Logs logs()
+        {
+            return options.logs();
+        }
+        
+    }
+    
 }

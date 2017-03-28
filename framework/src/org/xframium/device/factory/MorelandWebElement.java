@@ -235,6 +235,11 @@ public class MorelandWebElement implements WebElement, Locatable, HasIdentity
             return null;
     }
     
+    public String toString()
+    {
+        return webElement.toString();
+    }
+    
     
 
 }

@@ -20,11 +20,13 @@
  *******************************************************************************/
 package org.xframium.page.keyWord;
 
+import org.xframium.page.Page;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Interface KeyWordPage.
  */
-public interface KeyWordPage
+public interface KeyWordPage extends Page
 {
 	
 	/**

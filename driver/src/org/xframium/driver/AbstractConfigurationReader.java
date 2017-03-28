@@ -503,6 +503,84 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         }
     }
 
+    public void afterSuite()
+    {
+        if ( DataManager.instance().isArtifactEnabled( ArtifactType.GRID_REPORT ) )
+        {
+            generateGridReport( ExecutionContext.instance().getReportFolder() );
+        }
+        
+        if ( ExecutionContext.instance().isEnabled() )
+        {
+            ExecutionContext.instance().setEndTime( new Date( System.currentTimeMillis() ) );
+            ExecutionContext.instance().popupateSystemProperties();
+            
+            if ( DataManager.instance().isArtifactEnabled( ArtifactType.GRID_REPORT ) )
+            {
+                ExecutionContext.instance().setGridUrl( "grid.html" );
+            }
+
+            String outputData = "var testData = " + new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ), ExecutionContext.instance(), 0 ) ) + ";";
+            Artifact jsArtifact = new Artifact( "Suite.js", outputData.getBytes() );
+            jsArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
+
+            new HistoryWriter( DataManager.instance().getReportFolder() ).updateHistory();
+
+            StringBuilder stringBuffer = new StringBuilder();
+            InputStream inputStream = null;
+            try
+            {
+                if ( System.getProperty( "reportTemplateFolder" ) == null )
+                {
+                    if ( System.getProperty( "reportTemplate" ) == null )
+                        inputStream = this.getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/dark/Suite.html" );
+                    else
+                        inputStream = this.getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/Suite.html" );
+                }
+                else
+                    inputStream = new FileInputStream( new File( System.getProperty( "reportTemplateFolder" ), "Suite.html" ) );
+
+                int bytesRead = 0;
+                byte[] buffer = new byte[512];
+
+                while ( (bytesRead = inputStream.read( buffer )) > 0 )
+                {
+                    stringBuffer.append( new String( buffer, 0, bytesRead ) );
+                }
+
+                Artifact indexArtifact = new Artifact( "index.html", stringBuffer.toString().getBytes() );
+                indexArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
+
+                File htmlFile = new File( ExecutionContext.instance().getReportFolder(), "index.html" );
+
+                try
+                {
+                    if ( htmlFile.exists() )
+                        Desktop.getDesktop().browse( htmlFile.toURI() );
+                }
+                catch ( Exception e )
+                {
+                    e.printStackTrace();
+                }
+            }
+            catch ( Exception e )
+            {
+                log.error( "Error generating INDEX", e );
+
+            }
+            finally
+            {
+                try
+                {
+                    inputStream.close();
+                }
+                catch ( Exception e )
+                {
+                }
+            }
+        }
+    }
+    
     public boolean executeTest( SuiteContainer sC )
     {
         log.info( "Go: Executing Tests" );
@@ -521,80 +599,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
 
             _executeTest( sC == null ? suiteContainer : sC );
 
-            if ( DataManager.instance().isArtifactEnabled( ArtifactType.GRID_REPORT ) )
-            {
-                generateGridReport( ExecutionContext.instance().getReportFolder() );
-            }
-            
-            if ( ExecutionContext.instance().isEnabled() )
-            {
-                ExecutionContext.instance().setEndTime( new Date( System.currentTimeMillis() ) );
-                ExecutionContext.instance().popupateSystemProperties();
-                
-                if ( DataManager.instance().isArtifactEnabled( ArtifactType.GRID_REPORT ) )
-                {
-                    ExecutionContext.instance().setGridUrl( "grid.html" );
-                }
-
-                String outputData = "var testData = " + new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ), ExecutionContext.instance(), 0 ) ) + ";";
-                Artifact jsArtifact = new Artifact( "Suite.js", outputData.getBytes() );
-                jsArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
-
-                new HistoryWriter( DataManager.instance().getReportFolder() ).updateHistory();
-
-                StringBuilder stringBuffer = new StringBuilder();
-                InputStream inputStream = null;
-                try
-                {
-                    if ( System.getProperty( "reportTemplateFolder" ) == null )
-                    {
-                        if ( System.getProperty( "reportTemplate" ) == null )
-                            inputStream = this.getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/dark/Suite.html" );
-                        else
-                            inputStream = this.getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/Suite.html" );
-                    }
-                    else
-                        inputStream = new FileInputStream( new File( System.getProperty( "reportTemplateFolder" ), "Suite.html" ) );
-
-                    int bytesRead = 0;
-                    byte[] buffer = new byte[512];
-
-                    while ( (bytesRead = inputStream.read( buffer )) > 0 )
-                    {
-                        stringBuffer.append( new String( buffer, 0, bytesRead ) );
-                    }
-
-                    Artifact indexArtifact = new Artifact( "index.html", stringBuffer.toString().getBytes() );
-                    indexArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
-
-                    File htmlFile = new File( ExecutionContext.instance().getReportFolder(), "index.html" );
-
-                    try
-                    {
-                        if ( htmlFile.exists() )
-                            Desktop.getDesktop().browse( htmlFile.toURI() );
-                    }
-                    catch ( Exception e )
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                catch ( Exception e )
-                {
-                    log.error( "Error generating INDEX", e );
-
-                }
-                finally
-                {
-                    try
-                    {
-                        inputStream.close();
-                    }
-                    catch ( Exception e )
-                    {
-                    }
-                }
-            }
+            afterSuite();
 
             
             if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )

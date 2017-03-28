@@ -31,9 +31,12 @@ import org.xframium.page.BY;
  */
 public class ElementFactory 
 {
-	
+	public static final String ELEMENT_IMPL = "xframium.elementImplementation";
+	public static final String WRAPPER_IMPL = "xframium.wrapperElementImplementation";
+    
+    
 	/** The Constant DEFAULT_IMPL. */
-	private static final String DEFAULT_IMPL = "Selenium";
+	private static final String DEFAULT_IMPL = SeleniumElement.class.getName();
 	
 	/** The log. */
 	private Log log = LogFactory.getLog( getClass() );
@@ -122,7 +125,8 @@ public class ElementFactory
      */
     public Element createElement( BY by, String keyName, String fieldName, String pageName, String contextName )
     {
-    	String implName = System.getProperty( "elementImplementation" );
+    	String implName = System.getProperty( ELEMENT_IMPL );
+    	String wrapperName = System.getProperty( WRAPPER_IMPL );
     	
     	if ( implName == null )
     	{
@@ -131,21 +135,28 @@ public class ElementFactory
     		implName = DEFAULT_IMPL;
     	}
     	
-    	String implementationName = this.getClass().getPackage().getName() + "." + implName + "Element";
     	
     	if ( log.isDebugEnabled() )
-    		log.debug( "Creating Element by [" + by + " as [" + keyName + "] as [" + implementationName + "]" );
+    		log.debug( "Creating Element by [" + by + " as [" + keyName + "] as [" + implName + "]" );
     	
     	Element currentElement = null;
     	
     	try
     	{
-    		currentElement = (Element) Class.forName( implementationName ).getConstructor( BY.class, String.class, String.class, String.class, String.class ).newInstance( new Object[] { by, keyName, fieldName, pageName, contextName } );
+    		currentElement = (Element) Class.forName( implName ).getConstructor( BY.class, String.class, String.class, String.class, String.class ).newInstance( new Object[] { by, keyName, fieldName, pageName, contextName } );
+    		
+    		if ( wrapperName != null )
+    		{
+    		    if ( log.isDebugEnabled() )
+    	            log.debug( "Wrapping Element by with " + wrapperName );
+    		    currentElement = (Element) Class.forName( wrapperName ).getConstructor( Element.class ).newInstance( new Object[] { currentElement } );
+    		}
+    		
     	}
     	catch( Exception e )
     	{
     		if ( log.isFatalEnabled() )
-    			log.fatal( "Could not create the element implementation of " + implementationName + "].  Please make sure that the elementImplementation property has been set", e );
+    			log.fatal( "Could not create the element implementation of " + implName + "].  Please make sure that the elementImplementation property has been set", e );
     	}
     	
     	return currentElement;

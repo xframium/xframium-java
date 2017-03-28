@@ -56,8 +56,23 @@ public abstract class AbstractElement implements Element
 	protected Log log = LogFactory.getLog( Element.class );
 	private boolean cacheNative = false;
 	private transient ExecutionContextTest executionContext;
+	
+	/** The web driver. */
+    private DeviceWebDriver webDriver;
+    
+    
 
 	protected List<SubElement> subElementList = new ArrayList<SubElement>( 10 );
+	
+	public DeviceWebDriver getWebDriver()
+    {
+        return webDriver;
+    }
+
+	public void setWebDriver( DeviceWebDriver webDriver )
+    {
+        this.webDriver = webDriver;
+    }
 	
 	protected SubElement[] getSubElement( ApplicationDescriptor appDesc, String os, DeviceWebDriver webDriver )
 	{

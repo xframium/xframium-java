@@ -60,10 +60,10 @@ public class XMLTestDriver extends AbstractSeleniumTest
 {
 
     @Test ( dataProvider = "deviceManager")
-    public void testDriver( TestContainer testContainer, ITestContext testContext ) throws Throwable
+    public void testDriver( TestContainer testContainer ) throws Throwable
     {
         TestPackage testPackage = testPackageContainer.get();
-        testFlow.info( Thread.currentThread().getName() + ": Performaning initialization checked for " + testPackage.getRunKey() );
+        testFlow.info( Thread.currentThread().getName() + ": Performing initialization checked for " + testPackage.getRunKey() );
         
         TestName testName = testPackage.getTestName();
         
@@ -72,6 +72,8 @@ public class XMLTestDriver extends AbstractSeleniumTest
             throw new ScriptConfigurationException( "The Test Name " + testName.getRawName() + " does not exist" );
         
         ExecutionContextTest executionContextTest = new ExecutionContextTest();
+        
+        testPackage.getConnectedDevice().getWebDriver().setExecutionContext( executionContextTest );
         
         CloudDescriptor cD = CloudRegistry.instance().getCloud();
         if ( testPackage.getDevice().getCloud() != null && !testPackage.getDevice().getCloud().trim().isEmpty() )
