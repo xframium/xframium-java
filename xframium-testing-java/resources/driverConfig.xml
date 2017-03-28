@@ -4,14 +4,8 @@
   <application provider="XML" name="xTest" fileName="applicationRegistry.xml" />
   <devices provider="XML" fileName="deviceRegistry.xml">
   </devices>
-  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" phase="1001" domain="PROFESSIONAL_SERVICES" testNames="String Test">
-    <property name="xFramium General KeyWord Test.count">3</property>
+  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true">
     <property name="selenium.timeouts.implicitWait">5000</property>
-    <property name="alm.serverUrl">http://alm.perfectomobilelab.net:8080/qcbin</property>
-    <property name="alm.userName">alleng</property>
-    <property name="alm.password">Perfecto123!</property>
-    <property name="alm.assignedTo">alleng</property>
-    <property name="alm.defectStatus">New</property>
     <propertyAdapter className="org.xframium.device.property.SeleniumPropertyAdapter" />
     <artifact type="FAILURE_SOURCE" />
     <artifact type="DEVICE_LOG" />
@@ -20,10 +14,6 @@
     <artifact type="EXECUTION_RECORD_JSON" />
     <artifact type="CONSOLE_LOG" />
     <artifact type="GRID_REPORT" />
-    <artifact type="REPORTIUM" />
   </driver>
-  <model provider="XML" siteName="xTest" fileName="objectRepository/xTest/objectRepository.xml" />
-  <suite provider="XML" fileName="tests/tests-xTest.xml" />
-  <dependencies afterTest="Report Test Success" />
-  <data fileName="pageData/pageData.xml" />
+  <model provider="XML" siteName="xTest" fileName="page-home.xml" />
 </xFramium>

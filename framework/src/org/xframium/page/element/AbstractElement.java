@@ -72,6 +72,8 @@ public abstract class AbstractElement implements Element
 	public void setWebDriver( DeviceWebDriver webDriver )
     {
         this.webDriver = webDriver;
+        if ( webDriver != null )
+            this.executionContext = webDriver.getExecutionContext();
     }
 	
 	protected SubElement[] getSubElement( ApplicationDescriptor appDesc, String os, DeviceWebDriver webDriver )

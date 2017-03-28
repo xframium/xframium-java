@@ -23,26 +23,11 @@
  */
 package org.xframium.device.ng;
 
-import java.io.File;
-import java.util.List;
-import java.util.logging.Level;
-import org.xframium.application.ApplicationDescriptor;
-import org.xframium.application.ApplicationProvider;
-import org.xframium.application.ApplicationRegistry;
-import org.xframium.artifact.ArtifactType;
-import org.xframium.device.DeviceManager;
-import org.xframium.device.cloud.CloudDescriptor;
-import org.xframium.device.cloud.CloudProvider;
-import org.xframium.device.cloud.CloudRegistry;
-import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
-import org.xframium.device.logging.ThreadedFileHandler;
-import org.xframium.gesture.GestureManager;
-import org.xframium.gesture.factory.spi.PerfectoGestureFactory;
+import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
 import org.xframium.page.element.ElementFactory;
-import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
@@ -51,9 +36,7 @@ import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.spi.KeyWordPageImpl;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import org.xframium.page.keyWord.step.SyntheticStep;
-import org.xframium.page.listener.LoggingExecutionListener;
 import org.xframium.reporting.ReportingElementAdapter;
-import org.xframium.spi.Device;
 
 /**
  * The base class for Java based tests in xFramium.  
@@ -64,7 +47,7 @@ public abstract class AbstractJavaTest extends AbstractSeleniumTest
 {
 
     /**
-     * The default contstructor required when using Jav based test in xFramium.  This will disable XML mode and wrap the elements for reporting
+     * The default constructor required when using Java based test in xFramium.  This will disable XML mode and wrap the elements for reporting
      */
     public AbstractJavaTest()
     {
@@ -82,6 +65,30 @@ public abstract class AbstractJavaTest extends AbstractSeleniumTest
     public void startStep( TestName testName, String stepName, String description )
     {
         testName.getTest().startStep( new SyntheticStep( stepName, stepName, description ), null, null );
+    }
+    
+    /**
+     * Allows creation of a configuration backed page object without having to define the interface and implemention classes
+     * @param pageName The name of the page matched to the name of the page in your object repository
+     * @param webDriver The webDriver object
+     * @return A synthetic page object
+     */
+    public Page createPage( String pageName, DeviceWebDriver webDriver )
+    {
+        KeyWordPage wPage = (KeyWordPage) PageManager.instance().createPage( KeyWordPage.class, webDriver );
+        wPage.setPageName( pageName );
+        return wPage;
+    }
+    
+    /**
+     * Creates a new page object based off of the supplied interface
+     * @param pageInterface The interface to create - must have a class in the spi package named the same as the interface with Impl appended 
+     * @param webDriver The webDriver object
+     * @return A synthetic page object
+     */
+    public Page createPage( Class pageInterface, DeviceWebDriver webDriver )
+    {
+        return (Page) PageManager.instance().createPage( pageInterface, webDriver );
     }
     
     /**

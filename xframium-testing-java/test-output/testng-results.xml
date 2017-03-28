@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="6" passed="6">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="45650" started-at="2017-03-28T16:44:59Z" finished-at="2017-03-28T16:45:45Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="45650" started-at="2017-03-28T16:44:59Z" finished-at="2017-03-28T16:45:45Z">
+      <class name="org.xframium.examples.java.test.WebHome">
+        <test-method status="PASS" signature="setupSuite()[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="setupSuite" is-config="true" duration-ms="1787" started-at="2017-03-28T12:44:58Z" finished-at="2017-03-28T12:44:59Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setupSuite -->
+        <test-method status="PASS" signature="beforeMethod(java.lang.reflect.Method, [Ljava.lang.Object;, org.testng.ITestContext)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="beforeMethod" is-config="true" duration-ms="8064" started-at="2017-03-28T12:44:59Z" finished-at="2017-03-28T12:45:08Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void org.xframium.examples.java.test.WebHome.testNativeSeleniumAppium(org.xframium.device.ng.TestContainer) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[[Ljava.lang.Object;@336f1079]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[org.testng.TestRunner@2f16c6b3]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeMethod -->
+        <test-method status="PASS" signature="beforeMethod(java.lang.reflect.Method, [Ljava.lang.Object;, org.testng.ITestContext)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="beforeMethod" is-config="true" duration-ms="4078" started-at="2017-03-28T12:44:59Z" finished-at="2017-03-28T12:45:04Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void org.xframium.examples.java.test.WebHome.testNativeSeleniumAppium(org.xframium.device.ng.TestContainer) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[[Ljava.lang.Object;@34158c08]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[org.testng.TestRunner@2f16c6b3]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeMethod -->
+        <test-method status="PASS" signature="testNativeSeleniumAppium(org.xframium.device.ng.TestContainer)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="testNativeSeleniumAppium" duration-ms="2374" started-at="2017-03-28T12:45:04Z" data-provider="deviceManager" finished-at="2017-03-28T12:45:06Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[org.xframium.device.ng.TestContainer@b224781]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testNativeSeleniumAppium -->
+        <test-method status="PASS" signature="afterMethod(java.lang.reflect.Method, [Ljava.lang.Object;, org.testng.ITestResult, org.testng.ITestContext)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="afterMethod" is-config="true" duration-ms="1663" started-at="2017-03-28T12:45:06Z" finished-at="2017-03-28T12:45:08Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void org.xframium.examples.java.test.WebHome.testNativeSeleniumAppium(org.xframium.device.ng.TestContainer) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[[Ljava.lang.Object;@34158c08]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[[TestResult name=testNativeSeleniumAppium status=SUCCESS method=WebHome.testNativeSeleniumAppium(org.xframium.device.ng.TestContainer)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255] output={null}]]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[org.testng.TestRunner@2f16c6b3]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterMethod -->
+        <test-method status="PASS" signature="testNativeSeleniumAppium(org.xframium.device.ng.TestContainer)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="testNativeSeleniumAppium" duration-ms="4869" started-at="2017-03-28T12:45:08Z" data-provider="deviceManager" finished-at="2017-03-28T12:45:12Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[org.xframium.device.ng.TestContainer@b224781]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testNativeSeleniumAppium -->
+        <test-method status="PASS" signature="afterMethod(java.lang.reflect.Method, [Ljava.lang.Object;, org.testng.ITestResult, org.testng.ITestContext)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="afterMethod" is-config="true" duration-ms="1979" started-at="2017-03-28T12:45:12Z" finished-at="2017-03-28T12:45:14Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void org.xframium.examples.java.test.WebHome.testNativeSeleniumAppium(org.xframium.device.ng.TestContainer) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[[Ljava.lang.Object;@336f1079]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[[TestResult name=testNativeSeleniumAppium status=SUCCESS method=WebHome.testNativeSeleniumAppium(org.xframium.device.ng.TestContainer)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255] output={null}]]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[org.testng.TestRunner@2f16c6b3]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterMethod -->
+        <test-method status="PASS" signature="beforeMethod(java.lang.reflect.Method, [Ljava.lang.Object;, org.testng.ITestContext)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="beforeMethod" is-config="true" duration-ms="7963" started-at="2017-03-28T12:45:14Z" finished-at="2017-03-28T12:45:22Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void org.xframium.examples.java.test.WebHome.testXFramiumWithJavaPOM(org.xframium.device.ng.TestContainer) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[[Ljava.lang.Object;@52c3cb31]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[org.testng.TestRunner@2f16c6b3]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeMethod -->
+        <test-method status="PASS" signature="beforeMethod(java.lang.reflect.Method, [Ljava.lang.Object;, org.testng.ITestContext)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="beforeMethod" is-config="true" duration-ms="3894" started-at="2017-03-28T12:45:14Z" finished-at="2017-03-28T12:45:18Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void org.xframium.examples.java.test.WebHome.testXFramiumWithJavaPOM(org.xframium.device.ng.TestContainer) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[[Ljava.lang.Object;@19e4fcac]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[org.testng.TestRunner@2f16c6b3]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeMethod -->
+        <test-method status="PASS" signature="testXFramiumWithJavaPOM(org.xframium.device.ng.TestContainer)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="testXFramiumWithJavaPOM" duration-ms="2140" started-at="2017-03-28T12:45:18Z" data-provider="deviceManager" finished-at="2017-03-28T12:45:20Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[org.xframium.device.ng.TestContainer@62b81cda]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testXFramiumWithJavaPOM -->
+        <test-method status="PASS" signature="afterMethod(java.lang.reflect.Method, [Ljava.lang.Object;, org.testng.ITestResult, org.testng.ITestContext)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="afterMethod" is-config="true" duration-ms="1575" started-at="2017-03-28T12:45:20Z" finished-at="2017-03-28T12:45:22Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void org.xframium.examples.java.test.WebHome.testXFramiumWithJavaPOM(org.xframium.device.ng.TestContainer) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[[Ljava.lang.Object;@19e4fcac]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[[TestResult name=testXFramiumWithJavaPOM status=SUCCESS method=WebHome.testXFramiumWithJavaPOM(org.xframium.device.ng.TestContainer)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255] output={null}]]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[org.testng.TestRunner@2f16c6b3]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterMethod -->
+        <test-method status="PASS" signature="testXFramiumWithJavaPOM(org.xframium.device.ng.TestContainer)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="testXFramiumWithJavaPOM" duration-ms="5272" started-at="2017-03-28T12:45:22Z" data-provider="deviceManager" finished-at="2017-03-28T12:45:28Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[org.xframium.device.ng.TestContainer@62b81cda]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testXFramiumWithJavaPOM -->
+        <test-method status="PASS" signature="afterMethod(java.lang.reflect.Method, [Ljava.lang.Object;, org.testng.ITestResult, org.testng.ITestContext)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="afterMethod" is-config="true" duration-ms="2114" started-at="2017-03-28T12:45:28Z" finished-at="2017-03-28T12:45:30Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void org.xframium.examples.java.test.WebHome.testXFramiumWithJavaPOM(org.xframium.device.ng.TestContainer) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[[Ljava.lang.Object;@52c3cb31]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[[TestResult name=testXFramiumWithJavaPOM status=SUCCESS method=WebHome.testXFramiumWithJavaPOM(org.xframium.device.ng.TestContainer)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255] output={null}]]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[org.testng.TestRunner@2f16c6b3]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterMethod -->
+        <test-method status="PASS" signature="beforeMethod(java.lang.reflect.Method, [Ljava.lang.Object;, org.testng.ITestContext)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="beforeMethod" is-config="true" duration-ms="7850" started-at="2017-03-28T12:45:30Z" finished-at="2017-03-28T12:45:38Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void org.xframium.examples.java.test.WebHome.testXFramiumWithKWPOM(org.xframium.device.ng.TestContainer) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[[Ljava.lang.Object;@4b79ac84]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[org.testng.TestRunner@2f16c6b3]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeMethod -->
+        <test-method status="PASS" signature="beforeMethod(java.lang.reflect.Method, [Ljava.lang.Object;, org.testng.ITestContext)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="beforeMethod" is-config="true" duration-ms="3271" started-at="2017-03-28T12:45:30Z" finished-at="2017-03-28T12:45:33Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void org.xframium.examples.java.test.WebHome.testXFramiumWithKWPOM(org.xframium.device.ng.TestContainer) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[[Ljava.lang.Object;@53941c2f]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[org.testng.TestRunner@2f16c6b3]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeMethod -->
+        <test-method status="PASS" signature="testXFramiumWithKWPOM(org.xframium.device.ng.TestContainer)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="testXFramiumWithKWPOM" duration-ms="1954" started-at="2017-03-28T12:45:33Z" data-provider="deviceManager" finished-at="2017-03-28T12:45:35Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[org.xframium.device.ng.TestContainer@5a4ec0fa]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testXFramiumWithKWPOM -->
+        <test-method status="PASS" signature="afterMethod(java.lang.reflect.Method, [Ljava.lang.Object;, org.testng.ITestResult, org.testng.ITestContext)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="afterMethod" is-config="true" duration-ms="1261" started-at="2017-03-28T12:45:35Z" finished-at="2017-03-28T12:45:36Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void org.xframium.examples.java.test.WebHome.testXFramiumWithKWPOM(org.xframium.device.ng.TestContainer) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[[Ljava.lang.Object;@53941c2f]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[[TestResult name=testXFramiumWithKWPOM status=SUCCESS method=WebHome.testXFramiumWithKWPOM(org.xframium.device.ng.TestContainer)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255] output={null}]]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[org.testng.TestRunner@2f16c6b3]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterMethod -->
+        <test-method status="PASS" signature="testXFramiumWithKWPOM(org.xframium.device.ng.TestContainer)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="testXFramiumWithKWPOM" duration-ms="5321" started-at="2017-03-28T12:45:38Z" data-provider="deviceManager" finished-at="2017-03-28T12:45:43Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[org.xframium.device.ng.TestContainer@5a4ec0fa]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testXFramiumWithKWPOM -->
+        <test-method status="PASS" signature="afterMethod(java.lang.reflect.Method, [Ljava.lang.Object;, org.testng.ITestResult, org.testng.ITestContext)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="afterMethod" is-config="true" duration-ms="2179" started-at="2017-03-28T12:45:43Z" finished-at="2017-03-28T12:45:45Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[public void org.xframium.examples.java.test.WebHome.testXFramiumWithKWPOM(org.xframium.device.ng.TestContainer) throws java.lang.Exception]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[[Ljava.lang.Object;@4b79ac84]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[[TestResult name=testXFramiumWithKWPOM status=SUCCESS method=WebHome.testXFramiumWithKWPOM(org.xframium.device.ng.TestContainer)[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255] output={null}]]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[org.testng.TestRunner@2f16c6b3]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterMethod -->
+        <test-method status="PASS" signature="afterSuite()[pri:0, instance:org.xframium.examples.java.test.WebHome@5bc79255]" name="afterSuite" is-config="true" duration-ms="283" started-at="2017-03-28T12:45:45Z" finished-at="2017-03-28T12:45:45Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterSuite -->
+      </class> <!-- org.xframium.examples.java.test.WebHome -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
