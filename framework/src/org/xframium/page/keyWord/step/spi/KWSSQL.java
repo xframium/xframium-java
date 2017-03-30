@@ -64,12 +64,6 @@ public class KWSSQL extends AbstractKeyWordStep
     public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
     {
         boolean rtn = true;
-        
-        //
-        // OK, this step needs at least one parameter and the first is the query to execute.  If there are
-        // any more, they are values to compare the query results to.  If all the test parameters match
-        // the step passes
-        //
 
         String query = null;
         String[] query_params = null;
@@ -102,10 +96,13 @@ public class KWSSQL extends AbstractKeyWordStep
                                                    KeyWordDriver.instance().getConfigProperties().getProperty( JDBC[3] ),
                                                    query,
                                                    query_params );
-                Map results = resultsArr[0];
+                Map<String,String> results = resultsArr[0];
                 
                 if (resultsArr.length > 1)
                 {
+                    //
+                    // Populate page data using the context name if more than one record is returned
+                    //
 	                DefaultPageData pageData = null;
 	                Map resultMap = null;
 	                String mapKey = null;
@@ -156,18 +153,12 @@ public class KWSSQL extends AbstractKeyWordStep
                         contextMap.put( context_name, value );
                     }
                 }
-
-                for( int i = 1; (( i < paramCount ) && ( rtn )); ++i )
-                {
-                    Object paramValue = getParameterValue( getParameterList().get( i ), contextMap, dataMap );
-                    Object queryValue = results.get( i );
-
-                    rtn = ((( paramValue == null ) && ( queryValue == null )) ||
-                           (( paramValue != null ) && ( paramValue.equals( queryValue ))));
-                }
             }
             else
             {
+                //
+                // We only capture the update count here
+                //
                 int row_count = SQLUtil.execute( KeyWordDriver.instance().getConfigProperties().getProperty( JDBC[0] ),
                                                  KeyWordDriver.instance().getConfigProperties().getProperty( JDBC[1] ),
                                                  KeyWordDriver.instance().getConfigProperties().getProperty( JDBC[2] ),

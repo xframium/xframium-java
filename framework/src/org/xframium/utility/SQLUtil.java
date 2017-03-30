@@ -26,9 +26,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 public class SQLUtil
 {
@@ -36,7 +36,7 @@ public class SQLUtil
     // Class Data
     //
 
-    private static final Map[] EMPTY_MAP_ARRAY = new Map[0];
+    private static final Map<String,String>[] EMPTY_MAP_ARRAY = new Map[0];
     
     //
     // Implementation
@@ -66,10 +66,7 @@ public class SQLUtil
 
         try
         {
-            conn = getConnection( username,
-                                  password,
-                                  url,
-                                  driver );
+            conn = getConnection( username, password, url, driver );
 
             pstmt = conn.prepareStatement( query );
 
@@ -77,9 +74,7 @@ public class SQLUtil
             {
                 int offset = 1;
                 for( String param : params )
-                {
                     pstmt.setString( offset++, param );
-                }
             }
 
             rs = pstmt.executeQuery();
@@ -110,7 +105,7 @@ public class SQLUtil
      * @return Map
      * @throws Exception
      */
-    public static Map[] getRow( String username,
+    public static Map<String,String>[] getRow( String username,
                               String password,
                               String url,
                               String driver,
@@ -279,23 +274,23 @@ public class SQLUtil
      * @return Map[]
      * @throws Exception
      */
-    private static Map[] consume2( ResultSet rs )
+    private static Map<String,String>[] consume2( ResultSet rs )
         throws Exception
     {
         ResultSetMetaData rsmd = rs.getMetaData();
-        ArrayList results = new ArrayList();
+        List<Map<String,String>> results = new ArrayList<Map<String,String>>( 10 );
         int colCount = rsmd.getColumnCount();
 
         while( rs.next() )
         {
-            Map row = new HashMap();
+            Map<String,String> row = new HashMap<String,String>();
 
             for( int i = 1; i <= colCount; ++i )
             {
-                Object val = rs.getObject( i );
+                String val = String.valueOf( rs.getObject( i ) );
                 
                 row.put( rsmd.getColumnName( i ), val );
-                row.put( i, val );
+                row.put( i+ "", val );
             }
 
             results.add( row );
@@ -310,7 +305,7 @@ public class SQLUtil
      * @param colCount
      * @return Object[][]
      */
-    private static Object[][] toOutArray( List listOfArray, int colCount )
+    private static Object[][] toOutArray( List<String[]> listOfArray, int colCount )
     {
         int length = listOfArray.size();
         Object[][] rtn = new Object[ length ][colCount ];
@@ -328,8 +323,8 @@ public class SQLUtil
      * @param listOfMaps
      * @return Map[]
      */
-    private static Map[] toOutArray2( List listOfMaps )
+    private static Map<String,String>[] toOutArray2( List<Map<String,String>> listOfMaps )
     {
-        return (Map[]) listOfMaps.toArray( EMPTY_MAP_ARRAY );
+        return (Map<String,String>[]) listOfMaps.toArray( EMPTY_MAP_ARRAY );
     }
 }
