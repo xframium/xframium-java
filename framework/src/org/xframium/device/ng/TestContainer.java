@@ -29,11 +29,13 @@ public class TestContainer
     
     private List<Device> checkedOutDevice = new ArrayList<Device>(64);
     private LinkedBlockingDeque<Device> deviceList;
+    private boolean emptyTests = false;
     
     private List<Device> errorOutDevice = new ArrayList<Device>(64); 
     
     public TestContainer( TestName[] testNames, Device[] devices )
     {
+        emptyTests = testNames.length == 0;
         testList = new LinkedBlockingDeque<TestName>( testNames.length );
         testList.addAll( (List<TestName>) Arrays.asList( testNames ) );
         
@@ -41,7 +43,6 @@ public class TestContainer
         deviceList.addAll( (List<Device> ) Arrays.asList( devices ) );
         
         testFlow.warn( Thread.currentThread().getName() + ": Executing " + testList.size() + " tests across " + deviceList.size() + " devices" );
-        
     }
     
     public String getRunKey( Device currentDevice, Method currentMethod, String testContext, String personaName )
@@ -86,10 +87,64 @@ public class TestContainer
             
             for ( int i=0; i<testList.size(); i++ )
             {
-                
-                
-                testName = getTest();
+                testName = getTest( currentMethod );
                 String runKey = getRunKey( useDevice, currentMethod, testName.getTestName(), testName.getPersonaName() );
+                
+                if ( runContainer.addRun( runKey, RunStatus.RUNNING ) )
+                {
+                    Thread.currentThread().setName( "xF-" + testName.getRawName() + "-->" + useDevice.getEnvironment() );
+                    TestPackage testPackage = new TestPackage( testName, useDevice, runKey );
+                    ConnectedDevice cD = DeviceManager.instance().getDevice( testPackage, attachDevice );
+                    if ( cD != null )
+                    {
+                        testPackage.setConnectedDevice( cD );
+                        testFlow.warn( "Test Started: " + runKey + " - " + cD + " - " + testPackage + " - " + testName );
+                        return testPackage;
+                    }
+                    else
+                    {
+                        runContainer.addRun( runKey, RunStatus.RESET );
+                        if ( DeviceManager.instance().isDeviceInvalid( useDevice ) )
+                        {
+                            testFlow.warn(  "Device Invalidated: " + useDevice.getEnvironment() );
+                            TestPackage tP = new TestPackage( testName, useDevice, runKey );
+                            DeviceWebDriver webDriver = new DeviceWebDriver( null, false, useDevice );
+                            webDriver.setArtifactProducer( getCloudActionProvider( currentCloud ).getArtifactProducer() );
+                            tP.setConnectedDevice( new ConnectedDevice( webDriver, useDevice, null ) );
+                            return tP;
+                        }
+                    }
+                }
+                
+                returnTest( testName );
+            }
+            
+         
+            returnDevice( useDevice );
+            
+            
+            try { Thread.sleep( 1500 ); } catch( Exception e ) {}
+        }
+    }
+    
+    public TestPackage getNativeTestPackage( Method currentMethod, boolean attachDevice )
+    {
+        Thread.currentThread().setName( "xF-Acquiring Test Package..." );
+        TestName testName = null;
+        
+        while( true )
+        {
+            Device useDevice = getDevice();
+            
+            CloudDescriptor currentCloud = CloudRegistry.instance().getCloud();
+            if ( useDevice.getCloud() != null && !useDevice.getCloud().isEmpty() )
+                currentCloud = CloudRegistry.instance().getCloud( useDevice.getCloud() );
+
+            
+            for ( int i=0; i<testList.size(); i++ )
+            {
+                testName = new TestName( currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() );
+                String runKey = getRunKey( useDevice, currentMethod, currentMethod.getName(), testName.getPersonaName() );
                 
                 if ( runContainer.addRun( runKey, RunStatus.RUNNING ) )
                 {
@@ -189,6 +244,9 @@ public class TestContainer
     {
         try
         {
+            if ( emptyTests )
+                return;
+            
             if ( currentTest != null )
             {
                 checkedOut.remove( currentTest );
@@ -201,15 +259,20 @@ public class TestContainer
         }
     }
     
-    public TestName getTest()
+    public TestName getTest( Method currentMethod )
     {
         TestName testName = null;
         
         try
         {    
-            testName = testList.take();
-            if ( testName != null )
-                checkedOut.add( testName );
+            if ( emptyTests )
+                testName = new TestName( currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() );
+            else
+            {
+                testName = testList.take();
+                if ( testName != null )
+                    checkedOut.add( testName );
+            }
         }
         catch( Exception e )
         {
@@ -230,6 +293,8 @@ public class TestContainer
     {
         testFlow.warn( Thread.currentThread().getName() + ": Test Completed: " + runKey + " - " + runStatus );
         runContainer.addRun( runKey, runStatus );
+        if ( emptyTests )
+            return;
         checkedOut.remove( testName );
         completedList.add( testName );
     }

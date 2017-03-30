@@ -40,7 +40,7 @@ public class KWSAt extends AbstractKeyWordStep
         kwName = "Element dimensions";
         kwDescription = "Extract the size and location of a named element";
         kwHelp = "https://www.xframium.org/keyword.html#kw-at";
-        category = "Visual";
+        category = "Verification";
     }
     /*
      * (non-Javadoc)

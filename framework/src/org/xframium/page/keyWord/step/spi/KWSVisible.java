@@ -41,7 +41,7 @@ public class KWSVisible extends AbstractKeyWordStep
         kwName = "Is Visible";
         kwDescription = "Allows the script to validate that the element exists and is visible on the screen - Can scroll and search as well";
         kwHelp = "https://www.xframium.org/keyword.html#kw-visible";
-        category = "Visual";
+        category = "Verification";
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

@@ -58,6 +58,8 @@ public class PerfectoDeviceActionFactory implements DeviceActionFactory
 		DeviceActionManager.instance().registerAction( ActionType.STOP_V_NET, StopNetworkVirtualization.class );
 		DeviceActionManager.instance().registerAction( ActionType.DOWNLOAD_FILE, DownloadFileAction.class );
 		DeviceActionManager.instance().registerAction( ActionType.CONFIGURE_NETWORK, ConfigureNetworkAction.class );
+		DeviceActionManager.instance().registerAction( ActionType.START_VITALS, StartMonitorAction.class );
+		DeviceActionManager.instance().registerAction( ActionType.STOP_VITALS, StopMonitorAction.class );
 	}
 
 }

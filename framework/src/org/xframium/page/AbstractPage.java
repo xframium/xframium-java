@@ -26,8 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.xframium.page.activity.PageActivity;
 import org.xframium.page.element.Element;
+import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -49,6 +49,20 @@ public abstract class AbstractPage implements Page
     
     /** The web driver. */
     protected Object webDriver;
+    
+    private ExecutionContextTest executionContext;
+    
+    @Override
+    public ExecutionContextTest getExecutionContext()
+    {
+        return executionContext;
+    }
+    
+    @Override
+    public void setExecutionContext( ExecutionContextTest executionContext )
+    {
+        this.executionContext = executionContext;
+    }
     
     /**
      * Register element.

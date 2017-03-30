@@ -26,6 +26,7 @@ import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.Gesture.Direction;
 import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.gesture.GestureManager;
@@ -58,18 +59,19 @@ public class KWSGesture extends AbstractKeyWordStep
 		if ( log.isDebugEnabled() )
 			log.info( "Executing Gesture " + getName() );
 		boolean success = false;
-
+		Element gestureElement = null;
 			
 		WebElement webElement = null;
 		String[] gestureName = getName().split( "\\." );
 		if ( gestureName.length == 2 )
 		{
-			Element gestureElement = getElement( pageObject, contextMap, webDriver, dataMap, gestureName[ 1 ], executionContext );
+			gestureElement = getElement( pageObject, contextMap, webDriver, dataMap, gestureName[ 1 ], executionContext );
 			if ( gestureElement != null )
 				webElement = (WebElement)gestureElement.getNative();
 		}
 		
-		
+		if ( isTimed() )
+            ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider().startTimer( (DeviceWebDriver) webDriver, gestureElement, executionContext );
 		
 		switch( GestureType.valueOf( gestureName[0] ) )
 		{

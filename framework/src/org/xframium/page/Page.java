@@ -23,6 +23,7 @@ package org.xframium.page;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import org.xframium.page.element.Element;
+import org.xframium.reporting.ExecutionContextTest;
 
 
 // TODO: Auto-generated Javadoc
@@ -119,4 +120,7 @@ public interface Page
      * @param webDriver the new driver
      */
     public void setDriver( Object webDriver );
+    
+    public void setExecutionContext( ExecutionContextTest executionContext );
+    public ExecutionContextTest getExecutionContext();
 }

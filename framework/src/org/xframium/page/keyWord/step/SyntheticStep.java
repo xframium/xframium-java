@@ -11,7 +11,14 @@ import org.xframium.reporting.ExecutionContextTest;
 public class SyntheticStep extends AbstractKeyWordStep implements KeyWordStep
 {
 
-    public SyntheticStep( String name, String kwName)
+    public SyntheticStep( String name, String kwName, String description )
+    {
+        this.setName( name );
+        this.kw = kwName;
+        this.setDescription( description );
+    }
+    
+    public SyntheticStep( String name, String kwName )
     {
         this.setName( name );
         this.kw = kwName;

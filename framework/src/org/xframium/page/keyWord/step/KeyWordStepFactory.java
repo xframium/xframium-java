@@ -69,6 +69,7 @@ import org.xframium.page.keyWord.step.spi.KWSRandom;
 import org.xframium.page.keyWord.step.spi.KWSReport;
 import org.xframium.page.keyWord.step.spi.KWSReturn;
 import org.xframium.page.keyWord.step.spi.KWSSQL;
+import org.xframium.page.keyWord.step.spi.KWSSelected;
 import org.xframium.page.keyWord.step.spi.KWSSet;
 import org.xframium.page.keyWord.step.spi.KWSSetContentKey;
 import org.xframium.page.keyWord.step.spi.KWSString;
@@ -199,6 +200,7 @@ public class KeyWordStepFactory
         addKeyWord( "APPLICATION", KWSApplication.class );
         addKeyWord( "FLOW", KWSFlow.class );
         addKeyWord( "RANDOM", KWSRandom.class );
+        addKeyWord( "SELECTED", KWSSelected.class );
     }
 
     /**

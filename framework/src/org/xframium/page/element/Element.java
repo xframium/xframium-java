@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
 import org.xframium.page.BY;
@@ -57,7 +58,9 @@ public interface Element
     	MULTISELECT,
     	VALIDATE,
     	BY_VALUE,
-    	BY_VISIBLE_TEXT;
+    	BY_VISIBLE_TEXT,
+    	DELAYED,
+    	PERFECTO;
     }
 	
 	/**
@@ -133,6 +136,7 @@ public interface Element
     public Map<String,String> getElementProperties();
     public String getElementProperty( String name );
     public void addSubElement( SubElement subElement );
+    public DeviceWebDriver getWebDriver();
 	
 	public BY getBy();
 	
@@ -158,6 +162,8 @@ public interface Element
 	 * @return true, if successful
 	 */
 	public boolean press();
+	
+	public boolean isSelected();
 	
 	/**
 	 * Release.

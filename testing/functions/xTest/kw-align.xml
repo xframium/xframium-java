@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-<function name="kw-align" operations="kw-attribute,kw-browser" inputPage="xTest.home" mode="module" threshold="0" active="true">
+<function name="kw-align" operations="kw-attribute,kw-browser" inputPage="xTest.home" active="true">
 <description>Test the alignment of elements on the screen</description>
 <parameter type="STATIC" name="alignOne"/>
 <step name="toggleButton" site="xTest" page="home" type="ALIGN" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">

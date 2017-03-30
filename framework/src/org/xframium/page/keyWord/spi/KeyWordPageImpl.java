@@ -22,6 +22,7 @@ package org.xframium.page.keyWord.spi;
 
 import org.xframium.page.AbstractPage;
 import org.xframium.page.ElementDescriptor;
+import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 import org.xframium.page.element.Element;
 import org.xframium.page.element.provider.ElementProvider;
@@ -31,7 +32,7 @@ import org.xframium.page.keyWord.KeyWordPage;
 /**
  * The Class KeyWordPageImpl.
  */
-public class KeyWordPageImpl extends AbstractPage implements KeyWordPage
+public class KeyWordPageImpl extends AbstractPage implements KeyWordPage, Page
 {
 
 	/** The _page name. */

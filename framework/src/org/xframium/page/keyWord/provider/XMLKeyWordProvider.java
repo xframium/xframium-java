@@ -216,16 +216,16 @@ public class XMLKeyWordProvider implements KeyWordProvider
     {
         if ( useFile.exists() || useFile.isAbsolute() )
         {
-            if (log.isInfoEnabled())
-                log.info( "Found file at [" + useFile.getAbsolutePath() + "]" );
+            if (log.isWarnEnabled())
+                log.warn( "Found file at [" + useFile.getAbsolutePath() + "]" );
             return useFile;
         }
         
         File myFile = new File( rootFolder, useFile.getPath() );
         if ( myFile.exists() )
         {
-            if (log.isInfoEnabled())
-                log.info( "Found file at [" + myFile.getAbsolutePath() + "]" );
+            if (log.isWarnEnabled())
+                log.warn( "Found file at [" + useFile.getAbsolutePath() + "]" );
             return myFile;
         }
         

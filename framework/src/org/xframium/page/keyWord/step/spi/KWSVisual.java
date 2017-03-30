@@ -44,7 +44,7 @@ public class KWSVisual extends AbstractKeyWordStep
         kwDescription = "Allows the script to perform a Visual operation";
         kwHelp = "https://www.xframium.org/keyword.html#kw-visual";
         orMapping = false;
-        category = "Visual";
+        category = "Verification";
     }
     
 	public enum VisualType 
@@ -100,7 +100,8 @@ public class KWSVisual extends AbstractKeyWordStep
 				break;			
 		}
 		Map<String, Object> params = new HashMap<>();
-		for (int i = 0; i < getParameterList().size(); i++) {
+		for (int i = 0; i < getParameterList().size(); i++) 
+		{
 			String currentParamStr = getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "";
 			int splitIndex = currentParamStr.indexOf("=");
 			if (currentParamStr.length() < 3 || splitIndex < 1) continue;
@@ -115,7 +116,13 @@ public class KWSVisual extends AbstractKeyWordStep
 			String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript(command, params) + "";
 
 			log.info( "Command Result: " + result);
-			return !"false".equals(result);
+			
+			boolean returnValue = !"false".equals(result);
+			
+			if ( returnValue )
+                ( (DeviceWebDriver) webDriver).getCloud().getCloudActionProvider().getSupportedTimers( (DeviceWebDriver) webDriver, executionContext.getTimerName(), executionContext, null );
+			
+			return returnValue;
 		}
 		catch (Exception e)
 		{

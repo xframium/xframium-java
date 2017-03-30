@@ -433,10 +433,13 @@ public class ExecutionContextTest
                     pageMap.put( keyName, passFail );
                 }
                 
-                if ( s.getStepStatus().equals( StepStatus.SUCCESS ) )
-                    passFail[ 0 ]++;
-                else if ( s.getStepStatus().equals( StepStatus.FAILURE ) )
-                    passFail[ 1 ]++;
+                if ( s != null && s.getStepStatus() != null )
+                {
+                    if ( s.getStepStatus().equals( StepStatus.SUCCESS ) )
+                        passFail[ 0 ]++;
+                    else if ( s.getStepStatus().equals( StepStatus.FAILURE ) )
+                        passFail[ 1 ]++;
+                }
                 
                 keyName = s.getStep().getSiteName() + "." + s.getStep().getPageName() + "." + s.getStep().getName();
                 ElementUsage eU = elementMap.get( keyName );
@@ -446,10 +449,13 @@ public class ExecutionContextTest
                     elementMap.put( keyName, eU );
                 }
                 
-                if ( s.getStepStatus().equals( StepStatus.SUCCESS ) )
-                    eU.setPassCount( eU.getPassCount() + 1 );
-                else if ( s.getStepStatus().equals( StepStatus.FAILURE ) )
-                    eU.setFailCount( eU.getFailCount() + 1 );
+                if ( s != null && s.getStepStatus() != null )
+                {
+                    if ( s.getStepStatus().equals( StepStatus.SUCCESS ) )
+                        eU.setPassCount( eU.getPassCount() + 1 );
+                    else if ( s.getStepStatus().equals( StepStatus.FAILURE ) )
+                        eU.setFailCount( eU.getFailCount() + 1 );
+                }
             }
             
             s.analyzePageElements( pageMap, elementMap );

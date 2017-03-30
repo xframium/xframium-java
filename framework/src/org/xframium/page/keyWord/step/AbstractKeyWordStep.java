@@ -1126,7 +1126,10 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             try
             {
                 if ( !returnValue )
-                    dumpState( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+                {
+                    if ( !sFailure.equals( StepFailure.IGNORE ) )
+                        dumpState( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+                }
             }
             catch ( Exception e )
             {
@@ -1971,7 +1974,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 else
                     screenFile = File.createTempFile( "state", ".png", useFolder );
 
-                contextMap.put( "_SCREENSHOT", screenFile.getAbsolutePath() );
+                if ( contextMap != null )
+                    contextMap.put( "_SCREENSHOT", screenFile.getAbsolutePath() );
                 executionContext.getStep().addExecutionParameter( "SCREENSHOT", screenFile.getPath() );
                 screenFile.getParentFile().mkdirs();
                 os = new BufferedOutputStream( new FileOutputStream( screenFile ) );
@@ -2058,8 +2062,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             File xmlFile = File.createTempFile( "dom-", ".xml", useFolder );
             domFile = new File( xmlFile.getParentFile(), xmlFile.getName().replace( ".xml", ".html" ) );
 
-            contextMap.put( "_DOM_XML", xmlFile.getAbsolutePath() );
-            contextMap.put( "_DOM_HTML", domFile.getAbsolutePath() );
+            if ( contextMap != null )
+            {
+                contextMap.put( "_DOM_XML", xmlFile.getAbsolutePath() );
+                contextMap.put( "_DOM_HTML", domFile.getAbsolutePath() );
+            }
 
             executionContext.getStep().addExecutionParameter( "XML", xmlFile.getPath() );
             executionContext.getStep().addExecutionParameter( "HTML", domFile.getPath() );

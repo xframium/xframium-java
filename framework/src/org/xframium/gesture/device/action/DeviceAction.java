@@ -93,7 +93,11 @@ public interface DeviceAction
 		
 		DOWNLOAD_FILE(20, "DOWNLOAD_FILE", "Get file from device to local system"),
 		
-		CONFIGURE_NETWORK(21, "CONFIGURE_NETWORK", "To set network settings on the device (wifi, data, airplanemode)");
+		CONFIGURE_NETWORK(21, "CONFIGURE_NETWORK", "To set network settings on the device (wifi, data, airplanemode)"),
+		
+		START_VITALS(22, "START_VITALS", "Start monitoring device vitals"),
+        
+		STOP_VITALS(23, "STOP_VITALS", "Stop Nmonitoring device vitals");
 	    
 	    public List<ActionType> getSupportedActions()
 	    {
@@ -117,6 +121,8 @@ public interface DeviceAction
 	        supportedList.add( ActionType.STOP_V_NET );
 	        supportedList.add( ActionType.DOWNLOAD_FILE );
 	        supportedList.add( ActionType.CONFIGURE_NETWORK );
+	        supportedList.add( ActionType.START_VITALS );
+	        supportedList.add( ActionType.STOP_VITALS );
 	        return supportedList;
 	    }
 	    

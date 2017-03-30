@@ -20,11 +20,11 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
+import java.util.HashMap;
 import java.util.Map;
-
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
-import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
@@ -33,7 +33,6 @@ import org.xframium.page.element.Element.SetMethod;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.reporting.ExecutionContextTest;
-import gherkin.Main;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -63,9 +62,10 @@ public class KWSSet extends AbstractKeyWordStep
 		if ( log.isInfoEnabled() )
 			log.info( "Attmepting to set " + getName() + " to [" + newValue + "]" );
 
-		Element elt = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
+		
 		if(option == null)
 		{
+		    Element elt = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
 			elt.setValue( newValue);
 		}
 		else 
@@ -76,6 +76,7 @@ public class KWSSet extends AbstractKeyWordStep
 			{
 				case VALIDATE:
 					
+				    Element elt = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
 					int length = -1;
 					KeyWordParameter lengthParam = getParameter( "length" );
 					if ( lengthParam != null )
@@ -97,11 +98,40 @@ public class KWSSet extends AbstractKeyWordStep
 						throw new ScriptException( "The length of was exceeded - expected " + length );
 					
 					elt.setValue( newValue );
+					break;
 					
-					
+				case PERFECTO:
+				    KeyWordParameter delayLengthParam = getParameter( "Delay" );
+				    int delayLength = 0;
+				    
+				    if ( delayLengthParam != null )
+				        delayLength = Integer.parseInt( getParameterValue( delayLengthParam, contextMap, dataMap ) );
+				    
+				    if ( log.isInfoEnabled() )
+				        log.info( "PERFECTO Type (" + delayLength + " )" );
+				    
+				    if ( delayLength > 0 )
+				    {
+    				    byte[] buffer = newValue.getBytes();
+    	                for ( int i=0; i<buffer.length; i++ )
+    	                {
+    	                    Map<String, Object> params = new HashMap<>();
+    	                    params.put( "text", new String( new byte[] { buffer[ i ] } ) );
+    	                    ( (DeviceWebDriver) webDriver ).executeScript( "mobile:typetext", params );
+    	                    try { Thread.sleep( delayLength ); } catch( Exception e ) {}
+    	                }
+				    }
+				    else
+				    {
+				        Map<String, Object> params = new HashMap<>();
+                        params.put( "text", newValue );
+				    }
+				    break;
+				    
 					
 				default:
-					elt.setValue( newValue,setMethod );
+				    Element elt2 = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
+					elt2.setValue( newValue,setMethod );
 			}
 			
 			

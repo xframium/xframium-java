@@ -37,6 +37,7 @@ import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
+import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactTime;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.content.ContentManager;
@@ -48,6 +49,7 @@ import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.XFramiumException.ExceptionType;
 import org.xframium.integrations.alm.ALMRESTConnection;
 import org.xframium.integrations.alm.entity.ALMAttachment;
@@ -58,6 +60,7 @@ import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
+import org.xframium.reporting.ExecutionContextTest.TestStatus;
 import org.xframium.spi.Device;
 import org.xframium.spi.driver.ReportiumProvider;
 
@@ -78,8 +81,20 @@ public abstract class AbstractSeleniumTest
     private static ThreadLocal<TestContext> threadContext = new ThreadLocal<TestContext>();
     
     protected ThreadLocal<TestPackage> testPackageContainer = new ThreadLocal<TestPackage>();
-
     
+    private boolean xmlMode = true;
+
+
+    public boolean isXmlMode()
+    {
+        return xmlMode;
+    }
+
+    public void setXmlMode( boolean xmlMode )
+    {
+        this.xmlMode = xmlMode;
+    }
+
     protected Log testFlow = LogFactory.getLog( "testFlow" );
     /** The name of the default device **/
 
@@ -135,7 +150,7 @@ public abstract class AbstractSeleniumTest
 
     }
 
-    public Object[][] getDeviceData( List<Device> deviceList, ITestContext testContext )
+    protected Object[][] getDeviceData( List<Device> deviceList, ITestContext testContext )
     {
         List<TestName> rawList = new ArrayList<TestName>( 10 );
         List<TestName> finalList = new ArrayList<TestName>( 10 );
@@ -147,28 +162,87 @@ public abstract class AbstractSeleniumTest
             for ( String pN : DataManager.instance().getPersonas() )
                 personaList.add( new TestKey( pN, KeyType.PERSONA ) );
         }
-
-        if ( DataManager.instance().getTests() != null && DataManager.instance().getTests().length > 0 )
+        
+        if ( xmlMode )
         {
-            for ( String pN : DataManager.instance().getTests() )
+            if ( DataManager.instance().getTests() != null && DataManager.instance().getTests().length > 0 )
             {
-                testList.add( new TestKey( pN, KeyType.TEST ) );
+                for ( String pN : DataManager.instance().getTests() )
+                {
+                    testList.add( new TestKey( pN, KeyType.TEST ) );
+                }
             }
-        }
-        else
-        {
-            for ( String pN : KeyWordDriver.instance().getTestNames() )
+            else
             {
-                testList.add( new TestKey( pN, KeyType.TEST ) );
+                for ( String pN : KeyWordDriver.instance().getTestNames() )
+                {
+                    testList.add( new TestKey( pN, KeyType.TEST ) );
+                }
             }
-        }
+        
 
-        for ( TestKey tK : testList )
-        {
-            KeyWordTest kT = KeyWordDriver.instance().getTest( tK.getKey() );
-            if ( kT.getContentKeys() != null && kT.getContentKeys().length > 0 )
+            for ( TestKey tK : testList )
             {
-                for ( String contentKey : kT.getContentKeys() )
+                KeyWordTest kT = KeyWordDriver.instance().getTest( tK.getKey() );
+                
+                if ( kT == null )
+                {
+                    log.error( "Could not find test: " + tK.getKey() );
+                    continue;
+                }
+                
+                if ( kT.getContentKeys() != null && kT.getContentKeys().length > 0 )
+                {
+                    for ( String contentKey : kT.getContentKeys() )
+                    {
+                        if ( kT.getCount() > 1 )
+                        {
+                            for ( int i = 0; i < kT.getCount(); i++ )
+                            {
+                                if ( kT.getDataDriver() != null && kT.getDataDriver().trim().length() > 0 )
+                                {
+                                    PageData[] pageData = PageDataManager.instance().getRecords( kT.getDataDriver() );
+                                    for ( PageData pD : pageData )
+                                    {
+                                        TestName testName = new TestName( tK.getKey() );
+                                        testName.setIteration( i + 1 );
+                                        testName.setTestContext( contentKey );
+                                        testName.setDataDriven( pD );
+                                        rawList.add( testName );
+                                    }
+                                }
+                                else
+                                {
+                                    TestName testName = new TestName( tK.getKey() );
+                                    testName.setIteration( i + 1 );
+                                    testName.setTestContext( contentKey );
+                                    rawList.add( testName );
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if ( kT.getDataDriver() != null && kT.getDataDriver().trim().length() > 0 )
+                            {
+                                PageData[] pageData = PageDataManager.instance().getRecords( kT.getDataDriver() );
+                                for ( PageData pD : pageData )
+                                {
+                                    TestName testName = new TestName( tK.getKey() );
+                                    testName.setTestContext( contentKey );
+                                    testName.setDataDriven( pD );
+                                    rawList.add( testName );
+                                }
+                            }
+                            else
+                            {
+                                TestName testName = new TestName( tK.getKey() );
+                                testName.setTestContext( contentKey );
+                                rawList.add( testName );
+                            }
+                        }
+                    }
+                }
+                else
                 {
                     if ( kT.getCount() > 1 )
                     {
@@ -180,8 +254,7 @@ public abstract class AbstractSeleniumTest
                                 for ( PageData pD : pageData )
                                 {
                                     TestName testName = new TestName( tK.getKey() );
-                                    testName.setIteration( i + 1 );
-                                    testName.setTestContext( contentKey );
+                                    testName.setIteration( i );
                                     testName.setDataDriven( pD );
                                     rawList.add( testName );
                                 }
@@ -189,47 +262,19 @@ public abstract class AbstractSeleniumTest
                             else
                             {
                                 TestName testName = new TestName( tK.getKey() );
-                                testName.setIteration( i + 1 );
-                                testName.setTestContext( contentKey );
-                                rawList.add( testName );
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if ( kT.getDataDriver() != null && kT.getDataDriver().trim().length() > 0 )
-                        {
-                            PageData[] pageData = PageDataManager.instance().getRecords( kT.getDataDriver() );
-                            for ( PageData pD : pageData )
-                            {
-                                TestName testName = new TestName( tK.getKey() );
-                                testName.setTestContext( contentKey );
-                                testName.setDataDriven( pD );
-                                rawList.add( testName );
-                            }
-                        }
-                        else
-                        {
-                            TestName testName = new TestName( tK.getKey() );
-                            testName.setTestContext( contentKey );
-                            rawList.add( testName );
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if ( kT.getCount() > 1 )
-                {
-                    for ( int i = 0; i < kT.getCount(); i++ )
-                    {
-                        if ( kT.getDataDriver() != null && kT.getDataDriver().trim().length() > 0 )
-                        {
-                            PageData[] pageData = PageDataManager.instance().getRecords( kT.getDataDriver() );
-                            for ( PageData pD : pageData )
-                            {
-                                TestName testName = new TestName( tK.getKey() );
                                 testName.setIteration( i );
+                                rawList.add( testName );
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if ( kT.getDataDriver() != null && kT.getDataDriver().trim().length() > 0 )
+                        {
+                            PageData[] pageData = PageDataManager.instance().getRecords( kT.getDataDriver() );
+                            for ( PageData pD : pageData )
+                            {
+                                TestName testName = new TestName( tK.getKey() );
                                 testName.setDataDriven( pD );
                                 rawList.add( testName );
                             }
@@ -237,27 +282,8 @@ public abstract class AbstractSeleniumTest
                         else
                         {
                             TestName testName = new TestName( tK.getKey() );
-                            testName.setIteration( i );
                             rawList.add( testName );
                         }
-                    }
-                }
-                else
-                {
-                    if ( kT.getDataDriver() != null && kT.getDataDriver().trim().length() > 0 )
-                    {
-                        PageData[] pageData = PageDataManager.instance().getRecords( kT.getDataDriver() );
-                        for ( PageData pD : pageData )
-                        {
-                            TestName testName = new TestName( tK.getKey() );
-                            testName.setDataDriven( pD );
-                            rawList.add( testName );
-                        }
-                    }
-                    else
-                    {
-                        TestName testName = new TestName( tK.getKey() );
-                        rawList.add( testName );
                     }
                 }
             }
@@ -310,9 +336,14 @@ public abstract class AbstractSeleniumTest
 
         StringBuilder logOut = new StringBuilder();
         
-        logOut.append( "\r\n*********************************************************************\r\nPreparing to execute the following " + finalList.size() + " tests\r\n" );
-        for ( TestName t : finalList )
-            logOut.append( "\t" + t.getTestName() + "\r\n" );
+        if ( xmlMode )
+        {
+            logOut.append( "\r\n*********************************************************************\r\nPreparing to execute the following " + finalList.size() + " tests\r\n" );
+            for ( TestName t : finalList )
+                logOut.append( "\t" + t.getTestName() + "\r\n" );
+        }
+        else
+            logOut.append( "\r\n*********************************************************************\r\nPreparing to execute\r\n" );
         
         logOut.append( "\r\nAgainst the following " ).append(  deviceList.size() ).append( " devices\r\n" );
         for ( Device d : deviceList )
@@ -320,7 +351,11 @@ public abstract class AbstractSeleniumTest
             logOut.append( "\t" + d.getEnvironment() + "\r\n" );
         }
         
-        
+        if ( finalList.isEmpty() && xmlMode )
+        {
+            log.fatal( "No scripts were defined - nothign to do!" );
+            throw new ScriptConfigurationException( "No scripts were defined - nothign to do!" );
+        }
         
         
         try
@@ -341,7 +376,8 @@ public abstract class AbstractSeleniumTest
         for ( int i = 0; i < returnArray.length; i++ )
             returnArray[i][0] = testContainer;
         
-        logOut.append( "\r\nFor a total of " ).append( returnArray.length ).append( " total execution\r\n*********************************************************************" );
+        if ( xmlMode )
+            logOut.append( "\r\nFor a total of " ).append( returnArray.length ).append( " total execution\r\n*********************************************************************" );
 
         log.warn( logOut.toString() );
         
@@ -379,6 +415,27 @@ public abstract class AbstractSeleniumTest
             testPackageContainer.set( testPackage );
 
             TestName testName = testPackage.getTestName();
+            
+            if ( !xmlMode )
+            {
+                //
+                // Stub out the test and the execution context
+                //
+                ExecutionContextTest eC = new ExecutionContextTest();
+                eC.setTestName( currentMethod.getName() );
+                
+                KeyWordTest kwt = new KeyWordTest( currentMethod.getName(), true, null, null, false, null, null, 0, currentMethod.getName() + " from " + currentMethod.getClass().getName(), null, null, null, ExecutionContext.instance().getConfigProperties(), 0, null, null, null, null, 0, 0 );
+                eC.setTest( kwt );
+                eC.setAut( ApplicationRegistry.instance().getAUT() );
+                eC.setCloud( CloudRegistry.instance().getCloud() );
+                eC.setDevice( testPackage.getConnectedDevice().getPopulatedDevice() );
+                testPackage.getConnectedDevice().getWebDriver().setExecutionContext( eC );
+                
+                testName.setTest( eC );
+            }
+                
+            
+            
             ConnectedDevice connectedDevice = testPackage.getConnectedDevice();
 
             String contentKey = testName.getContentKey();
@@ -544,6 +601,8 @@ public abstract class AbstractSeleniumTest
         finally
         {
             ((TestContainer) testArgs[0]).returnDevice( testPackage.getDevice() );
+
+            
         }
     }
 
@@ -565,6 +624,12 @@ public abstract class AbstractSeleniumTest
                 if ( primaryDevice )
                 {
                     test = testName.getTest();
+                    
+                    if ( test != null && !xmlMode )
+                    {
+                        webDriver.getExecutionContext().completeTest( testResult.isSuccess() ? TestStatus.PASSED : TestStatus.FAILED, null );
+                    }
+                    
                 }
 
                 File rootFolder = ExecutionContext.instance().getReportFolder();

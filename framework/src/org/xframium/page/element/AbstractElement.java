@@ -56,8 +56,25 @@ public abstract class AbstractElement implements Element
 	protected Log log = LogFactory.getLog( Element.class );
 	private boolean cacheNative = false;
 	private transient ExecutionContextTest executionContext;
+	
+	/** The web driver. */
+    private DeviceWebDriver webDriver;
+    
+    
 
 	protected List<SubElement> subElementList = new ArrayList<SubElement>( 10 );
+	
+	public DeviceWebDriver getWebDriver()
+    {
+        return webDriver;
+    }
+
+	public void setWebDriver( DeviceWebDriver webDriver )
+    {
+        this.webDriver = webDriver;
+        if ( webDriver != null )
+            this.executionContext = webDriver.getExecutionContext();
+    }
 	
 	protected SubElement[] getSubElement( ApplicationDescriptor appDesc, String os, DeviceWebDriver webDriver )
 	{
@@ -140,6 +157,7 @@ public abstract class AbstractElement implements Element
 
 	protected abstract Dimension _getSize();
 	protected abstract Point _getAt();
+	protected abstract boolean _isSelected();
 	protected abstract boolean _clickFor( int lengthInMillis );
 	
 	/**
@@ -857,6 +875,12 @@ public abstract class AbstractElement implements Element
         return _release();
     }
 
+	@Override
+	public boolean isSelected()
+	{
+	    return _isSelected();
+	}
+	
 	@Override
 	public boolean isFocused()
 	{

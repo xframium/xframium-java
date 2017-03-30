@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+  <import fileName="../functions/CIBC/kw-exists.xml" />
+  <import fileName="../functions/CIBC/kw-alert.xml" />
+  <import fileName="../functions/CIBC/kw-align.xml" />
+  <import fileName="../functions/CIBC/kw-attribute.xml" />
+  <import fileName="../functions/CIBC/kw-cache.xml" />
+  <import fileName="../functions/CIBC/kw-call.xml" />
+  <import fileName="../functions/CIBC/callDataChange.xml" />
+  <import fileName="../functions/CIBC/kw-compare.xml" />
+  <import fileName="../functions/CIBC/kw-checkcolor.xml" />
+  <import fileName="../functions/CIBC/kw-click.xml" />
+  <import fileName="../functions/CIBC/kw-checkcontrast.xml" />
+  <import fileName="../functions/CIBC/kw-dumpstate.xml" />
+  <import fileName="../functions/CIBC/kw-else.xml" />
+  <import fileName="../functions/CIBC/kw-execjs.xml" />
+  <import fileName="../functions/CIBC/kw-focus.xml" />
+  <import fileName="../functions/CIBC/kw-loop.xml" />
+  <import fileName="../functions/CIBC/setValueFromNumericIndex.xml" />
+  <import fileName="../functions/CIBC/setValueFromElement.xml" />
+  <import fileName="../functions/CIBC/setValue.xml" />
+  <import fileName="../functions/CIBC/setValue2.xml" />
+  <import fileName="../functions/CIBC/Report Test Success.xml" />
+  <import fileName="../functions/CIBC/setValueWithBreak.xml" />
+  <import fileName="../functions/CIBC/kw-math.xml" />
+  <import fileName="../functions/CIBC/kw-mouse.xml" />
+  <import fileName="../functions/CIBC/kw-navigate.xml" />
+  <import fileName="../functions/CIBC/kw-operator.xml" />
+  <import fileName="../functions/CIBC/orSet.xml" />
+  <import fileName="../functions/CIBC/andSet.xml" />
+  <import fileName="../functions/CIBC/kw-report.xml" />
+  <import fileName="../functions/CIBC/kw-set.xml" />
+  <import fileName="../functions/CIBC/kw-string.xml" />
+  <import fileName="../functions/CIBC/kw-get.xml" />
+  <import fileName="../functions/CIBC/kw-visible.xml" />
+  <import fileName="../functions/CIBC/kw-wait.xml" />
+  <import fileName="../functions/CIBC/kw-waitfor.xml" />
+  <import fileName="../functions/CIBC/kw-window.xml" />
+  <import fileName="../functions/CIBC/kw-browser.xml" />
+  <import fileName="../functions/CIBC/kw-execws.xml" />
+  <import fileName="../functions/CIBC/kw-visual.xml" />
+  <import fileName="../functions/CIBC/kw-flow.xml" />
+  <import fileName="../functions/CIBC/kw-random.xml" />
+  <import fileName="../functions/CIBC/kw-compare2.xml" />
+  <import fileName="../functions/CIBC/checkData.xml" />
+  <import fileName="../functions/CIBC/checkData2.xml" />
+</suite>

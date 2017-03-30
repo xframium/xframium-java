@@ -105,7 +105,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
         try
         {
             System.out.println( "***************************************************************************************" );
-            System.out.println( "*****                     xFramium version " + Initializable.VERSION + "                        *****" );
+            System.out.println( "*****                     xFramium version EC " + Initializable.VERSION + "                        *****" );
             System.out.println( "***************************************************************************************" );
             
             ExecutionConsole.instance().startUp( "0.0.0.0", 8145 );
