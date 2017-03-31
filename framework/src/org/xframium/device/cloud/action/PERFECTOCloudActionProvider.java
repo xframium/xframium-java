@@ -1,17 +1,26 @@
 package org.xframium.device.cloud.action;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.openqa.selenium.ContextAware;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.SimpleDevice;
-import org.xframium.device.artifact.ArtifactProducer;
-import org.xframium.device.artifact.api.PerfectoArtifactProducer;
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.DeviceConfigurationException;
 import org.xframium.exception.DeviceException;
@@ -47,6 +56,86 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 	        stringBuilder.append( "Unknown Action" );
 	    
 	    return stringBuilder.toString();
+	}
+	
+	private Document getExecutionReport( DeviceWebDriver webDriver )
+	{
+	    try
+        {
+            CloudDescriptor currentCloud = webDriver.getCloud();
+            
+            StringBuilder urlBuilder = new StringBuilder();
+            urlBuilder.append( "https://" ).append( currentCloud.getHostName() ).append( "/services/reports/" ).append( webDriver.getExecutionId() );
+            urlBuilder.append( "?operation=download" ).append( "&user=" ).append( currentCloud.getUserName() ).append( "&password=" ).append( currentCloud.getPassword() );
+            urlBuilder.append( "&format=xml" );
+            
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            dbFactory.setNamespaceAware( true );
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            return dBuilder.parse( new URL( urlBuilder.toString() ).openStream() );
+        }
+        catch (Exception e)
+        {
+            log.error( "Error download artifact data - " + e.getMessage());
+            return null;
+        }
+	}
+	
+	public InputStream getReport( DeviceWebDriver webDriver, String reportType )
+	{
+	    try
+        {
+            CloudDescriptor currentCloud = webDriver.getCloud();
+            
+            StringBuilder urlBuilder = new StringBuilder();
+            urlBuilder.append( "https://" ).append( currentCloud.getHostName() ).append( "/services/reports/" ).append( webDriver.getExecutionId() );
+            urlBuilder.append( "?operation=download" ).append( "&user=" ).append( currentCloud.getUserName() ).append( "&password=" ).append( currentCloud.getPassword() );
+            urlBuilder.append( "&format=xml" );
+            
+            return new URL( urlBuilder.toString() ).openStream();
+        }
+        catch (Exception e)
+        {
+            log.error( "Error downloading PERFECT execution report", e);
+            return null;
+        }
+	}
+	
+	@Override
+	public String getLog( DeviceWebDriver webDriver )
+	{
+	    try
+        {
+            Document xmlDocument = getExecutionReport( webDriver );
+            
+            NodeList nodeList = getNodes( xmlDocument, "//dataItem[@type='log']/attachment" );
+            if ( nodeList != null && nodeList.getLength() > 0 )
+            {
+                byte[] zipFile = PerfectoMobile.instance().reports().download( webDriver.getExecutionId() , nodeList.item( 0 ).getTextContent(), false );
+                ZipInputStream zipStream = new ZipInputStream( new ByteArrayInputStream( zipFile ) );
+                ZipEntry entry = zipStream.getNextEntry();
+                
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                byte[] bytesIn = new byte[ 512 ];
+                int bytesRead = 0;
+                while ( ( bytesRead = zipStream.read( bytesIn ) ) != -1 )
+                {
+                    outputStream.write( bytesIn, 0, bytesRead );
+                }
+                
+                zipStream.close();
+                
+                return outputStream.toString();
+            }
+            
+            return null;
+            
+        }
+        catch( Exception e )
+        {
+            log.error( "Error download device log data" + "e.getMessage()" );
+        }
+        return null;
 	}
 
 	@Override
@@ -129,12 +218,6 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
     public String getExecutionId( DeviceWebDriver webDriver )
     {
         return webDriver.getCapabilities().getCapability( "executionId" ) + "";
-    }
-    
-    @Override
-    public ArtifactProducer getArtifactProducer()
-    {
-        return new PerfectoArtifactProducer();
     }
     
     @Override
@@ -236,23 +319,6 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
             return o2.compareTo( o1 );
         }
         
-    }
-    
-    public static void main( String[] args )
-    {
-        PerfectoMobile.instance().setBaseUrl( "https://gmfinancial.perfectomobile.com" );
-        PerfectoMobile.instance().setUserName( "mattp@perfectomobile.com" );
-        PerfectoMobile.instance().setPassword( "MyNewJob69" );
-        
-        //ItemCollection x = PerfectoMobile.instance().repositories().list( RepositoryType.MEDIA, "PUBLIC:MyAccount/Android/Develop" );
-        
-        PERFECTOCloudActionProvider f = new PERFECTOCloudActionProvider();
-        //String fileName = f.getInstallLocation( "?LATEST:(PUBLIC:MyAccount/Android/Develop/)ANY" );
-        
-        String fileName = f.getInstallLocation( "?LATEST:(PUBLIC:MyAccount/Android/Develop/)REGEX:((?:.*)(?:myaccount-debug-2.0)\\.(\\d+)\\.(\\d+)(?:.apk))" );
-        
-        
-        System.out.println( fileName );
     }
     
     private String getInstallLocation( String installLocation )
