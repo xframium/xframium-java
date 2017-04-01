@@ -8,6 +8,7 @@
 <script src="http://xframium.org/output/assets/js/ui-bootstrap-tpls-2.1.4.js"></script>
 <script src="http://xframium.org/output/assets/js/angular-ui-tree.js"></script>
 <script src="./Test.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 <link href="http://www.xframium.org/output/assets/css/toolkit-inverse.css" rel="stylesheet">
@@ -201,7 +202,7 @@ iframe {
                     </ol>
                 </div>
             </uib-tab>
-            <uib-tab heading="Timing" active="true" ng-if="!angular.equals( [], $scope.timings )">
+            <uib-tab heading="Timing" active="true" ng-if="( timings.length > 0 )">
                 <div data-nodrag>
                   <span class="pull-right btn btn-primary" style="margin-right: 16px" ng-click="downloadCSV()">Download CSV</span>
                   <br>
@@ -210,114 +211,7 @@ iframe {
 
                 <div data-nodrag><br></div>
                   
-                <div data-nodrag>
-                              
-                  <table ng-model="timings"  class="table" style="width:100%">
-                    <tr>
-                      <th style="text-align:left">Script</th>
-                      <th style="text-align:left">ExecId</th>
-                      <th style="text-align:left">Time Start</th> 
-                      <th style="text-align:left">Time End</th>
-                      <th style="text-align:left">Time Start Formatted</th>
-                      <th style="text-align:left">Time End Formatted</th>
-                      <th style="text-align:left">PM User</th>
-                      <th style="text-align:left">User</th> 
-                      <th style="text-align:left">Data</th>
-                      <th style="text-align:left">Wifi</th>
-
-                      <th style="text-align:left">HS Id</th>
-                      <th style="text-align:left">HS Operator</th>
-                      <th style="text-align:left">HS Manufacturer</th> 
-                      <th style="text-align:left">HS Model</th>
-                      <th style="text-align:left">HS OS</th>
-                      <th style="text-align:left">HS OS Ver.</th>
-                      <th style="text-align:left">Network Carrier</th>
-                      <th style="text-align:left">Network Speed</th> 
-                      <th style="text-align:left">Latency</th>
-                      <th style="text-align:left">IN Bandwidth</th>
-
-                      <th style="text-align:left">OUT Bandwidth</th>
-                      <th style="text-align:left">Transaction Name</th>
-                      <th style="text-align:left">Transaction Time Start</th> 
-                      <th style="text-align:left">Transaction Time End</th>
-                      <th style="text-align:left">Transaction Time Start Formatted</th>
-                      <th style="text-align:left">Transaction Time End Formatted</th>
-                      <th style="text-align:left">Validation Success</th>
-                      <th style="text-align:left">Timer UX</th> 
-                      <th style="text-align:left">Request Time</th>
-                      <th style="text-align:left">Response Time</th>
-
-                      <th style="text-align:left">Request Timestamp [ms]</th>
-                      <th style="text-align:left">Response Timestamp [ms]</th>
-                      <th style="text-align:left">Vitals Timestamp</th> 
-                      <th style="text-align:left">Vitals Timestamp Formatted</th>
-                      <th style="text-align:left">Vitals CPU</th>
-                      <th style="text-align:left">Vitals Mem Free</th>
-                      <th style="text-align:left">Vitals Mem Used</th>
-                      <th style="text-align:left">Vitals Mem Cached</th> 
-                      <th style="text-align:left">City</th>
-                      <th style="text-align:left">Country</th>
-
-                      <th style="text-align:left">Mobile App Version</th>
-                      <th style="text-align:left">Environment</th>
-                      <th style="text-align:left">App Name</th>
-                      <th style="text-align:left">Web Report</th>
-                    </tr>
-
-                    <tr ng-repeat="row in timings">
-                      <td style="text-align:left">{{row.script}}</td> 
-                      <td style="text-align:left">{{row.execId}}</td>
-                      <td style="text-align:left">{{row.startTime}}</td> 
-                      <td style="text-align:left">{{row.endTime}}</td>
-                      <td style="text-align:left">{{row.startTimeFormatted}}</td>
-                      <td style="text-align:left">{{row.endTimeFormatted}}</td> 
-                      <td style="text-align:left">{{row.pmUser}}</td>
-                      <td style="text-align:left">{{row.user}}</td> 
-                      <td style="text-align:left">{{row.data}}</td>
-                      <td style="text-align:left">{{row.wifi}}</td>
-
-                      <td style="text-align:left">{{row.hsId}}</td> 
-                      <td style="text-align:left">{{row.hsOperator}}</td>
-                      <td style="text-align:left">{{row.hsManufacturer}}</td> 
-                      <td style="text-align:left">{{row.hsModel}}</td>
-                      <td style="text-align:left">{{row.hsOS}}</td>
-                      <td style="text-align:left">{{row.hsOSVer}}</td> 
-                      <td style="text-align:left">{{row.networkCarrier}}</td>
-                      <td style="text-align:left">{{row.networkSpeed}}</td> 
-                      <td style="text-align:left">{{row.latency}}</td>
-                      <td style="text-align:left">{{row.inBandwidth}}</td>
-
-                      <td style="text-align:left">{{row.outBandwidth}}</td> 
-                      <td style="text-align:left">{{row.txName}}</td>
-                      <td style="text-align:left">{{row.txTimeStart}}</td> 
-                      <td style="text-align:left">{{row.txTimeEnd}}</td>
-                      <td style="text-align:left">{{row.txTimeStartFormatted}}</td>
-                      <td style="text-align:left">{{row.txTimeEndFormatted}}</td> 
-                      <td style="text-align:left">{{row.validationSuccess}}</td>
-                      <td style="text-align:left">{{row.timerUx}}</td> 
-                      <td style="text-align:left">{{row.requestTime}}</td>
-                      <td style="text-align:left">{{row.responseTime}}</td>
-
-                      <td style="text-align:left">{{row.requestTimestamp}}</td> 
-                      <td style="text-align:left">{{row.responseTimestamp}}</td>
-                      <td style="text-align:left">{{row.vitalsTimestamp}}</td> 
-                      <td style="text-align:left">{{row.vitalsTimestampFormatted}}</td>
-                      <td style="text-align:left">{{row.vitalseCPU}}</td>
-                      <td style="text-align:left">{{row.vitalsMemFree}}</td> 
-                      <td style="text-align:left">{{row.vitalsMemUsed}}</td>
-                      <td style="text-align:left">{{row.vitalsMemCached}}</td> 
-                      <td style="text-align:left">{{row.city}}</td>
-                      <td style="text-align:left">{{row.country}}</td>
-
-                      <td style="text-align:left">{{row.mobileAppVersion}}</td> 
-                      <td style="text-align:left">{{row.environment}}</td>
-                      <td style="text-align:left">{{row.appName}}</td> 
-                      <td style="text-align:left">{{row.webReport}}</td>
-                    </tr>
-
-                  </table>
-
-                </div>
+                <div id="chart_div" style="width: 100%" ></div>
             </uib-tab> 
             </uib-tabset>
         </div>
@@ -417,6 +311,9 @@ iframe {
         $scope.formattedDuration = 0;
         $scope.selectedStep;
         $scope.timings = [];
+        $scope.graph_data = [];
+        $scope.graph_domain = [];
+        $scope.graph_time_vals = [];
     
         $scope.hasExecutionParameter = function( step, parameterName )
         {
@@ -604,6 +501,8 @@ iframe {
         $scope.walkStepToGetTimeings = function( step, txNamePrefix, testLevelData )
         {
            var txName = txNamePrefix + "." + step.step.name;
+           var duration = step.endTime.raw - step.startTime.raw;
+           var is_checkpoint = ( step.step.kw == "WAIT_FOR" );
            
            if ( step.timingMap.elapsed )
            {
@@ -630,12 +529,71 @@ iframe {
               $scope.timings.push( row );
            }
 
+           var temp = txName;
+           txName = "test";
+
+           $scope.graph_data.push( [ txName, step.startTime.raw, duration ] );
+           if ( $scope.graph_domain.indexOf( txName ) < 0 ) $scope.graph_domain.push( txName );
+           if ( $scope.graph_time_vals.indexOf( step.startTime.raw ) < 0 ) $scope.graph_time_vals.push( step.startTime.raw );
+
+           txName = temp;
+
            if ( step.stepList )
            {
               step.stepList.forEach( function( subStep ) {
                  $scope.walkStepToGetTimeings( subStep, txName, testLevelData );
               });
            } 
+        }
+
+        $scope.drawGraph = function()
+        {
+           var sorted_names = $scope.graph_domain.sort();
+           console.log( "aaa--> " + JSON.stringify( sorted_names ) );
+           var sorted_start_times = $scope.graph_time_vals.sort();
+           console.log( "bbb--> " + JSON.stringify( sorted_start_times ) );
+           var base_time = sorted_start_times[0];                                  
+
+           var data = new Array(sorted_start_times.length);
+           for( i = 0; i < data.length; ++i )
+           {
+              // Create one row
+              var row = new Array(sorted_names.length + 1);
+              row.forEach(function (eleI, indexI, arrI) {
+                 arrI[indexI] = 'a';
+              });
+
+              data[i] = row;
+           }
+           console.log( "ccc--> " + JSON.stringify( data ) ); 
+
+           data.forEach( function( arr, index ) { arr[0] = sorted_start_times[index] - base_time; return null; } );
+           console.log( "ddd--> " + JSON.stringify( data ) ); 
+           $scope.graph_data.forEach( function( ele ) { data[ sorted_start_times.indexOf(ele[1]) ][ sorted_names.indexOf(ele[0]) + 1] = ele[2]; return null; } );
+           console.log( "eee--> " + JSON.stringify( data ) ); 
+
+           var gdata = new google.visualization.DataTable();
+           gdata.addColumn('number', 'X');                                                            
+           sorted_names.forEach( function(ele) { gdata.addColumn('number', ele); } );
+           
+           gdata.addRows( data );
+
+           var options = {
+              hAxis: {
+                title: 'Offset from test start (ms)'
+              },
+              vAxis: {
+                title: 'Duration (ms)'
+              },
+              series: {
+                1: {curveType: 'function'}
+              },
+              width: 1000,
+              height: 750
+           };
+
+           var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+           chart.draw(gdata, options);                                                            
         }
 
         $scope.downloadCSV = function()
@@ -666,7 +624,17 @@ iframe {
             $scope.duration = $scope.testData.endTime.raw - $scope.testData.startTime.raw;
             $scope.formattedDuration = $scope.createDuration($scope.duration);
             $scope.getTimings();
-        }
+
+            //
+            // Init Google Charts
+            //
+
+            google.charts.load('current', {packages: ['corechart', 'line']});
+            google.charts.setOnLoadCallback($scope.drawGraph);
+            
+            $scope.drawGraph();                                                       
+       }
+                                                                       
 
         $scope.createDuration = function( duration )
         {
