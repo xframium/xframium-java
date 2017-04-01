@@ -61,18 +61,11 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 	private Document getExecutionReport( DeviceWebDriver webDriver )
 	{
 	    try
-        {
-            CloudDescriptor currentCloud = webDriver.getCloud();
-            
-            StringBuilder urlBuilder = new StringBuilder();
-            urlBuilder.append( "https://" ).append( currentCloud.getHostName() ).append( "/services/reports/" ).append( webDriver.getExecutionId() );
-            urlBuilder.append( "?operation=download" ).append( "&user=" ).append( currentCloud.getUserName() ).append( "&password=" ).append( currentCloud.getPassword() );
-            urlBuilder.append( "&format=xml" );
-            
+        {  
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             dbFactory.setNamespaceAware( true );
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            return dBuilder.parse( new URL( urlBuilder.toString() ).openStream() );
+            return dBuilder.parse( getReport( webDriver, "xml" ) );
         }
         catch (Exception e)
         {
@@ -88,7 +81,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
             CloudDescriptor currentCloud = webDriver.getCloud();
             
             StringBuilder urlBuilder = new StringBuilder();
-            urlBuilder.append( "https://" ).append( currentCloud.getHostName() ).append( "/services/reports/" ).append( webDriver.getExecutionId() );
+            urlBuilder.append( "https://" ).append( currentCloud.getHostName() ).append( "/services/reports/" ).append( webDriver.getReportKey());
             urlBuilder.append( "?operation=download" ).append( "&user=" ).append( currentCloud.getUserName() ).append( "&password=" ).append( currentCloud.getPassword() );
             urlBuilder.append( "&format=xml" );
             
@@ -111,7 +104,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
             NodeList nodeList = getNodes( xmlDocument, "//dataItem[@type='log']/attachment" );
             if ( nodeList != null && nodeList.getLength() > 0 )
             {
-                byte[] zipFile = PerfectoMobile.instance().reports().download( webDriver.getExecutionId() , nodeList.item( 0 ).getTextContent(), false );
+                byte[] zipFile = PerfectoMobile.instance().reports().download( webDriver.getReportKey() , nodeList.item( 0 ).getTextContent(), false );
                 ZipInputStream zipStream = new ZipInputStream( new ByteArrayInputStream( zipFile ) );
                 ZipEntry entry = zipStream.getNextEntry();
                 
@@ -133,7 +126,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         }
         catch( Exception e )
         {
-            log.error( "Error download device log data" + "e.getMessage()" );
+            log.error( "Error download device log data", e );
         }
         return null;
 	}
