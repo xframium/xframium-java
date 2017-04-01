@@ -1,11 +1,26 @@
 package org.xframium.device.cloud.action;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.openqa.selenium.ContextAware;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.SimpleDevice;
-import org.xframium.device.artifact.ArtifactProducer;
-import org.xframium.device.artifact.api.PerfectoArtifactProducer;
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.DeviceConfigurationException;
 import org.xframium.exception.DeviceException;
@@ -15,14 +30,20 @@ import org.xframium.integrations.common.PercentagePoint;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.bean.Execution;
 import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
+import org.xframium.integrations.perfectoMobile.rest.bean.Item;
+import org.xframium.integrations.perfectoMobile.rest.bean.ItemCollection;
+import org.xframium.integrations.perfectoMobile.rest.services.Repositories.RepositoryType;
 import org.xframium.integrations.perfectoMobile.rest.services.WindTunnel.TimerPolicy;
 import org.xframium.page.BY;
 import org.xframium.page.element.Element;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
+import edu.emory.mathcs.backport.java.util.Collections;
 
 public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 {
+    private static final Pattern REPO_PATTERN = Pattern.compile( "\\?(\\w*):\\(([^\\\\)]*)\\)(\\w*)(?::\\((.*))*" );
+    
 	/** The Constant PLATFORM_NAME. */
 	public static final String PLATFORM_NAME = "platformName";
 	
@@ -35,6 +56,86 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 	        stringBuilder.append( "Unknown Action" );
 	    
 	    return stringBuilder.toString();
+	}
+	
+	private Document getExecutionReport( DeviceWebDriver webDriver )
+	{
+	    try
+        {
+            CloudDescriptor currentCloud = webDriver.getCloud();
+            
+            StringBuilder urlBuilder = new StringBuilder();
+            urlBuilder.append( "https://" ).append( currentCloud.getHostName() ).append( "/services/reports/" ).append( webDriver.getExecutionId() );
+            urlBuilder.append( "?operation=download" ).append( "&user=" ).append( currentCloud.getUserName() ).append( "&password=" ).append( currentCloud.getPassword() );
+            urlBuilder.append( "&format=xml" );
+            
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            dbFactory.setNamespaceAware( true );
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            return dBuilder.parse( new URL( urlBuilder.toString() ).openStream() );
+        }
+        catch (Exception e)
+        {
+            log.error( "Error download artifact data - " + e.getMessage());
+            return null;
+        }
+	}
+	
+	public InputStream getReport( DeviceWebDriver webDriver, String reportType )
+	{
+	    try
+        {
+            CloudDescriptor currentCloud = webDriver.getCloud();
+            
+            StringBuilder urlBuilder = new StringBuilder();
+            urlBuilder.append( "https://" ).append( currentCloud.getHostName() ).append( "/services/reports/" ).append( webDriver.getExecutionId() );
+            urlBuilder.append( "?operation=download" ).append( "&user=" ).append( currentCloud.getUserName() ).append( "&password=" ).append( currentCloud.getPassword() );
+            urlBuilder.append( "&format=xml" );
+            
+            return new URL( urlBuilder.toString() ).openStream();
+        }
+        catch (Exception e)
+        {
+            log.error( "Error downloading PERFECT execution report", e);
+            return null;
+        }
+	}
+	
+	@Override
+	public String getLog( DeviceWebDriver webDriver )
+	{
+	    try
+        {
+            Document xmlDocument = getExecutionReport( webDriver );
+            
+            NodeList nodeList = getNodes( xmlDocument, "//dataItem[@type='log']/attachment" );
+            if ( nodeList != null && nodeList.getLength() > 0 )
+            {
+                byte[] zipFile = PerfectoMobile.instance().reports().download( webDriver.getExecutionId() , nodeList.item( 0 ).getTextContent(), false );
+                ZipInputStream zipStream = new ZipInputStream( new ByteArrayInputStream( zipFile ) );
+                ZipEntry entry = zipStream.getNextEntry();
+                
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                byte[] bytesIn = new byte[ 512 ];
+                int bytesRead = 0;
+                while ( ( bytesRead = zipStream.read( bytesIn ) ) != -1 )
+                {
+                    outputStream.write( bytesIn, 0, bytesRead );
+                }
+                
+                zipStream.close();
+                
+                return outputStream.toString();
+            }
+            
+            return null;
+            
+        }
+        catch( Exception e )
+        {
+            log.error( "Error download device log data" + "e.getMessage()" );
+        }
+        return null;
 	}
 
 	@Override
@@ -120,12 +221,6 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
     }
     
     @Override
-    public ArtifactProducer getArtifactProducer()
-    {
-        return new PerfectoArtifactProducer();
-    }
-    
-    @Override
     public void disableLogging( DeviceWebDriver webDriver )
     {
         PerfectoMobile.instance().device().startDebug( webDriver.getExecutionId(), webDriver.getDeviceName() );
@@ -184,6 +279,121 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         else 
             throw new DeviceConfigurationException( "Failed to install application " + appDesc.getName() );
         
+    }
+    
+    private class RegexComparator implements Comparator<String>
+    {
+        private Pattern regex;
+        public RegexComparator( Pattern regex )
+        {
+            this.regex = regex;
+        }
+        
+        @Override
+        public int compare( String o1, String o2 )
+        {
+            Matcher m1 = regex.matcher( o2 );
+            Matcher m2 = regex.matcher( o1 );
+            
+            if ( m1.find() && m2.find() )
+            {
+                for ( int i=1; i<=m1.groupCount(); i++ )
+                {
+                    int compareValue = m1.group( i ).compareTo( m2.group( i ) );
+                    if ( compareValue != 0 )
+                        return compareValue;
+     
+                }
+            }
+            
+            return 0;
+        }
+    }
+    
+    private class AnyComparator implements Comparator<String>
+    {
+
+        @Override
+        public int compare( String o1, String o2 )
+        {
+            return o2.compareTo( o1 );
+        }
+        
+    }
+    
+    private String getInstallLocation( String installLocation )
+    {
+
+        if ( installLocation.startsWith( "?" ) )
+        {
+            //
+            // This is a repository lookup
+            //
+            Matcher m = REPO_PATTERN.matcher( installLocation );
+            if ( !m.matches() )
+                throw new IllegalArgumentException( "Your install location must be in the format of LATEST:(LOCATION)REGEX|ANY:(FILTER CRITERIA)");
+            
+            String lookupMethod = m.group( 1 );
+            if ( !lookupMethod.equals( "LATEST" ) )
+                throw new IllegalArgumentException( "Unsupported lookup method: " + lookupMethod );
+            
+            String location = m.group( 2 );
+            String filterType = m.group( 3 );
+            
+            String filter = null;
+            if ( filterType.equals( "REGEX" ) )
+                filter = m.group( 4 ).substring( 0, m.group( 4 ).length() - 1 );
+            
+            ItemCollection itemList = PerfectoMobile.instance().repositories().list( RepositoryType.MEDIA, location );
+            
+            List<String> fileList = new ArrayList<String>( 10 );
+            
+            if ( itemList != null && itemList.getItemList() != null )
+            {
+                for ( Item item : itemList.getItemList() )
+                    fileList.add( item.getTextContext() );
+            }
+            
+            System.out.println( fileList );
+            
+            Iterator<String> fI = fileList.iterator();
+            switch( filterType )
+            {
+                case "REGEX":
+                    //
+                    // First, remove any who does not match
+                    //
+                    Pattern filterPattern = Pattern.compile( filter );
+                    
+                    while ( fI.hasNext() )
+                    {
+                        String currentValue = fI.next();
+                        if ( !filterPattern.matcher( currentValue ).matches() )
+                            fI.remove();
+                    }
+                    
+                    //
+                    // Then order each individual group
+                    //
+                    Collections.sort( fileList, new RegexComparator( filterPattern ) );
+                    break;
+                    
+                    
+                case "ANY":
+                    while ( fI.hasNext() )
+                    {
+                        String currentValue = fI.next();
+                        if ( currentValue.equals( location ) )
+                            fI.remove();
+                    }
+                    Collections.sort( fileList, new AnyComparator() );
+                    break;
+            }
+            
+            return fileList.get( 0 );
+        }
+        else
+            return installLocation;
     }
 
     @Override

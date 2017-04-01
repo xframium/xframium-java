@@ -220,6 +220,11 @@ public class ApplicationDescriptor
 	    return url != null && !url.trim().isEmpty();
 	}
 	
+	public ApplicationDescriptor()
+    {
+        
+    }
+	
 	/**
 	 * Instantiates a new application descriptor.
 	 *
