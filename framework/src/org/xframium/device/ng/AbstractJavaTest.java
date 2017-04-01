@@ -23,6 +23,8 @@
  */
 package org.xframium.device.ng;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
@@ -114,7 +116,7 @@ public abstract class AbstractJavaTest extends AbstractSeleniumTest
      */
     public KeyWordStep createStep( String keyword, String pageName, String elementName, String[] parameterList )
     {
-        KeyWordStep step = KeyWordStepFactory.instance().createStep( elementName, pageName, true, keyword, null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, null, null, null, null, null, false, false, null, null, null, null );
+        KeyWordStep step = KeyWordStepFactory.instance().createStep( elementName, pageName, true, keyword, null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, keyword, null, null, null, null, false, false, null, null, null, null );
         
         if ( parameterList != null )
         {
@@ -140,11 +142,13 @@ public abstract class AbstractJavaTest extends AbstractSeleniumTest
      * @return true, if successful
      * @throws Exception the exception
      */
-    public boolean executeStep( KeyWordStep step, DeviceWebDriver webDriver ) throws Exception
+    public Map<String,Object> executeStep( KeyWordStep step, DeviceWebDriver webDriver ) throws Exception
     {
         KeyWordPage p = new KeyWordPageImpl();
         p.setPageName( step.getPageName() );
-        return step.executeStep( p, webDriver, null, null, null, null, webDriver.getExecutionContext() );
+        Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
+        contextMap.put( "RESULT", step.executeStep( p, webDriver, contextMap, null, null, null, webDriver.getExecutionContext() ) );
+        return contextMap;
     }
     
     /**
@@ -157,11 +161,13 @@ public abstract class AbstractJavaTest extends AbstractSeleniumTest
      * @param webDriver The webDriver for the active run
      * @return The created step
      */
-    public boolean executeStep( String keyword, String pageName, String elementName, String[] parameterList, DeviceWebDriver webDriver ) throws Exception
+    public Map<String,Object> executeStep( String keyword, String pageName, String elementName, String[] parameterList, DeviceWebDriver webDriver ) throws Exception
     {
         KeyWordPage p = new KeyWordPageImpl();
         p.setPageName( pageName );
-        return createStep( keyword, pageName, elementName, parameterList ).executeStep( p, webDriver, null, null, null, null, webDriver.getExecutionContext() );
+        Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
+        contextMap.put( "RESULT", createStep( keyword, pageName, elementName, parameterList ).executeStep( p, webDriver, null, null, null, null, webDriver.getExecutionContext() ) );
+        return contextMap;
     }
     
     /**

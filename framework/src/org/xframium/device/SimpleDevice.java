@@ -91,6 +91,7 @@ public class SimpleDevice implements Device
 	    simpleDevice.tagNames.addAll( this.tagNames );
 	    simpleDevice.capabilities.putAll( this.capabilities );
 	    simpleDevice.capList.addAll( this.capList );
+	    simpleDevice.generateEnv();
 	    return simpleDevice;
 	}
 	
@@ -137,7 +138,7 @@ public class SimpleDevice implements Device
     private void generateEnv()
 	{
 	    StringBuilder stringBuilder = new StringBuilder();
-        if ( model != null )
+        if ( model != null && ( browserName == null || browserName.trim().isEmpty() ) )
             stringBuilder.append( model.replace( ".*", "" ) );
 
 	    

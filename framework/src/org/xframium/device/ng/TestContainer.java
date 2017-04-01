@@ -109,7 +109,6 @@ public class TestContainer
                             testFlow.warn(  "Device Invalidated: " + useDevice.getEnvironment() );
                             TestPackage tP = new TestPackage( testName, useDevice, runKey );
                             DeviceWebDriver webDriver = new DeviceWebDriver( null, false, useDevice );
-                            webDriver.setArtifactProducer( getCloudActionProvider( currentCloud ).getArtifactProducer() );
                             tP.setConnectedDevice( new ConnectedDevice( webDriver, useDevice, null ) );
                             return tP;
                         }
@@ -165,7 +164,6 @@ public class TestContainer
                             testFlow.warn(  "Device Invalidated: " + useDevice.getEnvironment() );
                             TestPackage tP = new TestPackage( testName, useDevice, runKey );
                             DeviceWebDriver webDriver = new DeviceWebDriver( null, false, useDevice );
-                            webDriver.setArtifactProducer( getCloudActionProvider( currentCloud ).getArtifactProducer() );
                             tP.setConnectedDevice( new ConnectedDevice( webDriver, useDevice, null ) );
                             return tP;
                         }

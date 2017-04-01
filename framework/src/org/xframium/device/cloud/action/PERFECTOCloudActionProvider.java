@@ -263,9 +263,9 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         Execution appExec = null;
         
         if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
-            appExec = PerfectoMobile.instance().application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getIosInstallation(), instrumentApp ? "instrument" : "noinstrument" );
+            appExec = PerfectoMobile.instance().application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), getInstallLocation( appDesc.getIosInstallation() ), instrumentApp ? "instrument" : "noinstrument" );
         else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-            appExec = PerfectoMobile.instance().application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getAndroidInstallation(), instrumentApp ? "instrument" : "noinstrument" );
+            appExec = PerfectoMobile.instance().application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), getInstallLocation( appDesc.getAndroidInstallation() ), instrumentApp ? "instrument" : "noinstrument" );
         else
             throw new DeviceConfigurationException( "Could not install application to " + webDriver.getPopulatedDevice().getEnvironment() + "(" + webDriver.getDevice().getDeviceName() + ")" );
         

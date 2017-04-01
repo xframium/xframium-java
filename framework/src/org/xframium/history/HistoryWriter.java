@@ -26,11 +26,6 @@ public class HistoryWriter
         this.rootFolder = rootFolder;
     }
     
-    public static void main( String[] args )
-    {
-        new HistoryWriter( new File( "C:\\Users\\Allen\\git\\fordPass\\fordPass\\fordPass-out" ) ).updateHistory();
-    }
-    
     public void updateHistory()
     {
         File[] suiteList = rootFolder.listFiles( new FolderFilter() );

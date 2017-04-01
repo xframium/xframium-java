@@ -92,14 +92,14 @@ public class WebHome extends AbstractJavaTest
         String beforeClick = wPage.getElement( WebHomePage.TOGGLE_VALUE ).getValue();
         wPage.getElement( WebHomePage.TOGGLE_BUTTON ).click();
         String afterClick = wPage.getElement( WebHomePage.TOGGLE_VALUE ).getValue();
-        Assert.assertFalse( executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + beforeClick, "Value Two==" + afterClick }, webDriver ) );
+        Assert.assertTrue( (Boolean) executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + beforeClick, "Value Two==" + afterClick }, webDriver ).get( "RESULT" ) );
         dumpState( webDriver );
         
         stopStep( testName, StepStatus.SUCCESS, null );
         
         startStep( testName, "Step Two", "Testing Attributes" );
         String typeAttribute = wPage.getElement( WebHomePage.TOGGLE_BUTTON ).getAttribute( "type" );
-        Assert.assertTrue( executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + typeAttribute, "Value Two==button" }, webDriver ) );
+        Assert.assertTrue( (Boolean) executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + typeAttribute, "Value Two==button" }, webDriver ).get( "RESULT" ) );
         stopStep( testName, StepStatus.SUCCESS, null );
         dumpState( webDriver, "afterAttribute", 5, 5 );
         
@@ -139,14 +139,14 @@ public class WebHome extends AbstractJavaTest
         String beforeClick = wPage.getElement( WebHomePage.TOGGLE_VALUE ).getValue();
         wPage.getElement( WebHomePage.TOGGLE_BUTTON ).click();
         String afterClick = wPage.getElement( WebHomePage.TOGGLE_VALUE ).getValue();
-        Assert.assertFalse( executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + beforeClick, "Value Two==" + afterClick }, webDriver ) );
+        Assert.assertFalse( (Boolean) executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + beforeClick, "Value Two==" + afterClick }, webDriver ).get( "RESULT" ) );
         dumpState( webDriver );
         
         stopStep( testName, StepStatus.SUCCESS, null );
         
         startStep( testName, "Step Two", "Testing Attributes" );
         String typeAttribute = wPage.getElement( WebHomePage.TOGGLE_BUTTON ).getAttribute( "type" );
-        Assert.assertTrue( executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + typeAttribute, "Value Two==button" }, webDriver ) );
+        Assert.assertTrue( (Boolean) executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + typeAttribute, "Value Two==button" }, webDriver ).get( "RESULT" ) );
         stopStep( testName, StepStatus.SUCCESS, null );
         dumpState( webDriver, "afterAttribute", 5, 5 );
         
@@ -189,14 +189,14 @@ public class WebHome extends AbstractJavaTest
         String beforeClick = webDriver.findElement( By.id( "singleModel" ) ).getText();
         webDriver.findElement( By.xpath( "//button[text()='Toggle Value']" ) ).click();
         String afterClick = webDriver.findElement( By.id( "singleModel" ) ).getText();
-        Assert.assertFalse( executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + beforeClick, "Value Two==" + afterClick }, webDriver ) );
+        Assert.assertFalse( (Boolean) executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + beforeClick, "Value Two==" + afterClick }, webDriver ).get( "RESULT" ) );
         dumpState( webDriver );
         
         stopStep( testName, StepStatus.SUCCESS, null );
         
         startStep( testName, "Step Two", "Testing Attributes" );
         String typeAttribute = webDriver.findElement( By.xpath( "//button[text()='Toggle Value']" ) ).getAttribute( "type" );
-        Assert.assertTrue( executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + typeAttribute, "Value Two==button" }, webDriver ) );
+        Assert.assertTrue( (Boolean) executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + typeAttribute, "Value Two==button" }, webDriver ).get( "RESULT" ) );
         stopStep( testName, StepStatus.SUCCESS, null );
         dumpState( webDriver, "afterAttribute", 5, 5 );
         

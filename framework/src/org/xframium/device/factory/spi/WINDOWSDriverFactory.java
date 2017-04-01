@@ -26,17 +26,11 @@ package org.xframium.device.factory.spi;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.DeviceManager;
-import org.xframium.device.artifact.api.PerfectoArtifactProducer;
 import org.xframium.device.cloud.CloudDescriptor;
-import org.xframium.device.cloud.CloudRegistry;
-import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.factory.AbstractDriverFactory;
 import org.xframium.device.factory.DeviceWebDriver;
-import org.xframium.exception.DeviceConfigurationException;
 import org.xframium.spi.Device;
 import io.appium.java_client.ios.IOSDriver;
 
@@ -81,7 +75,6 @@ public class WINDOWSDriverFactory extends AbstractDriverFactory
 			
 			webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
 			webDriver.setDeviceName( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
-            webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );
             webDriver.setCloud( useCloud );
             
 			return webDriver;

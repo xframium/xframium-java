@@ -348,7 +348,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         for ( XArtifact a : xRoot.getDriver().getArtifact() )
         {
             if ( a.isActive() )
-                driverC.addArtifact( ArtifactType.valueOf( a.getType().toUpperCase() ) );
+                driverC.addArtifact( a.getType().toUpperCase() );
         }
         
         return true;
@@ -929,7 +929,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         if ( personaNames != null && !personaNames.isEmpty() )
             dC.setPerfectoPersonas( personaNames );
         
-        dC.setDisplayReport( Boolean.parseBoolean( getValue( "driver.displayResults", xRoot.getDriver().isDisplayResults() + "", configProperties ) ) );
+        dC.setDisplayReport(getValue( "driver.displayResults", xRoot.getDriver().getDisplayResults() + "", configProperties ) );
         dC.setSmartCaching( xRoot.getDriver().isCachingEnabled() );
         if ( xRoot.getSecurity() != null )
         {

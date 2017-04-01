@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
   <site name="xTest">
+  
+  
+  
     <page name="home" class="org.xframium.page.keyWord.KeyWordPage">
       <element name="toggleButtonWeb" value="//button[text()='Toggle Value']" descriptor="XPATH" />
       <element name="toggleButtonNative" value="//button[text()='Toggle Value']" descriptor="XPATH" />

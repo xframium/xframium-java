@@ -1,11 +1,13 @@
 package org.xframium.device.cloud.action;
 
+import java.util.Date;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
-import org.xframium.device.artifact.ArtifactProducer;
-import org.xframium.device.artifact.api.SeleniumArtifactProducer;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.integrations.common.PercentagePoint;
@@ -49,12 +51,40 @@ public class SAUCELABSCloudActionProvider extends AbstractCloudActionProvider
     }
     
     @Override
+    public String getLog( DeviceWebDriver webDriver )
+    {
+        try
+        {
+            LogEntries logEntries = webDriver.manage().logs().get( LogType.BROWSER );
+            if ( logEntries != null )
+            {
+                StringBuilder logBuilder = new StringBuilder();
+                for ( LogEntry logEntry : logEntries )
+                    logBuilder.append( dateFormat.format( new Date( logEntry.getTimestamp() ) ) ).append( ": " ).append( logEntry.getMessage() ).append( "\r\n" );
+
+                logBuilder.toString();
+            }
+            return null;
+        }
+        catch ( Exception e )
+        {
+            log.info( "Could not generate device logs" );
+            return null;
+        }
+        
+    }
+    
+    @Override
     public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device )
     {
         String uAgent = (String) webDriver.executeScript("return navigator.userAgent;");
         UserAgent userAgent = new UserAgent( uAgent );
         device.setBrowserName( userAgent.getBrowser().getName() );
         device.setManufacturer( userAgent.getOperatingSystem().getManufacturer().getName() );
+        String[] osSplit = userAgent.getOperatingSystem().getName().split( " " );
+        device.setOs( osSplit[ 0 ].toUpperCase() );
+        if ( osSplit.length > 1 )
+            device.setOsVersion( userAgent.getOperatingSystem().getName().split( " " )[ 1 ].toUpperCase() );
         
         Dimension winDim = webDriver.manage().window().getSize();
         if ( winDim != null )
@@ -70,14 +100,6 @@ public class SAUCELABSCloudActionProvider extends AbstractCloudActionProvider
     {
         return ( (RemoteWebDriver) webDriver.getNativeDriver() ).getSessionId().toString();
     }
-    
-    @Override
-    public ArtifactProducer getArtifactProducer()
-    {
-        return new SeleniumArtifactProducer();
-    }
-    
-    
     
     @Override
     public void disableLogging( DeviceWebDriver webDriver )

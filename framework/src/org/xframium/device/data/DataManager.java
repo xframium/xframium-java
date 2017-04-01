@@ -27,8 +27,6 @@ import java.io.File;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.artifact.ArtifactType;
-import org.xframium.device.artifact.ArtifactProducer;
-import org.xframium.device.artifact.api.PerfectoArtifactProducer;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -78,14 +76,9 @@ public class DataManager
 	/** The persona names. */
 	private String[] personaNames;
 	
-	/** The artifact producer. */
-	private ArtifactProducer artifactProducer = new PerfectoArtifactProducer();
-	
 	/** The report folder. */
 	private File reportFolder;
 	
-	/** The automatic downloads. */
-	private ArtifactType[] automaticDownloads = new ArtifactType[] { ArtifactType.EXECUTION_REPORT_HTML, ArtifactType.CONSOLE_LOG, ArtifactType.FAILURE_SOURCE, ArtifactType.EXECUTION_RECORD_HTML, ArtifactType.EXECUTION_RECORD_CSV };
 
 	/**
 	 * Sets the tests.
@@ -151,26 +144,6 @@ public class DataManager
 		
 		dataProvider.readData();
 	}
-	
-	/**
-	 * Sets the artifact producer.
-	 *
-	 * @param artifactProducer the new artifact producer
-	 */
-	public void setArtifactProducer( ArtifactProducer artifactProducer )
-	{
-		this.artifactProducer = artifactProducer;
-	}
-
-	/**
-	 * Gets the artifact producer.
-	 *
-	 * @return the artifact producer
-	 */
-	public ArtifactProducer getArtifactProducer()
-	{
-		return artifactProducer;
-	}
 
 	/**
 	 * Gets the report folder.
@@ -191,43 +164,5 @@ public class DataManager
 	{
 		System.setProperty( "__outputFolder", reportFolder.getAbsolutePath() );
 		this.reportFolder = reportFolder;
-	}
-
-	/**
-	 * Gets the automatic downloads.
-	 *
-	 * @return the automatic downloads
-	 */
-	public ArtifactType[] getAutomaticDownloads()
-	{
-		return automaticDownloads;
-	}
-	
-	public boolean isArtifactEnabled( ArtifactType isType )
-	{
-	    if ( automaticDownloads == null )
-	        return false;
-	    
-	    for ( ArtifactType aType : automaticDownloads )
-	    {
-	        if ( aType.equals( isType ) )
-	            return true;
-	    }
-	    
-	    return false;
-	}
-
-	/**
-	 * Sets the automatic downloads.
-	 *
-	 * @param automaticDownloads the new automatic downloads
-	 */
-	public void setAutomaticDownloads( ArtifactType[] automaticDownloads )
-	{
-		this.automaticDownloads = automaticDownloads;
-	}
-	
-	
-
-	
+	}	
 }

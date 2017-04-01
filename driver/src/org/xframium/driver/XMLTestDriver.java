@@ -23,23 +23,19 @@ package org.xframium.driver;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
-import org.testng.ITestContext;
 import org.testng.annotations.Test;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
-import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.device.ng.TestContainer;
 import org.xframium.device.ng.TestName;
 import org.xframium.device.ng.TestPackage;
-import org.xframium.exception.DeviceAcquisitionException;
 import org.xframium.exception.DeviceException;
 import org.xframium.exception.FilteredException;
 import org.xframium.exception.ScriptConfigurationException;
@@ -49,8 +45,6 @@ import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.reporting.ExecutionContextTest.TestStatus;
-import org.xframium.spi.PropertyProvider;
-import org.xframium.spi.driver.ReportiumProvider;
 import com.perfecto.reportium.client.ReportiumClientFactory;
 import com.perfecto.reportium.model.PerfectoExecutionContext;
 import com.perfecto.reportium.model.Project;
@@ -163,7 +157,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
                 return;
             }
 
-            if ( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) )
+            if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
             {
                 if ( cD.getProvider().equals( "SAUCELABS" ) )
                 {
@@ -184,7 +178,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
 
             if ( testPackage.getConnectedDevice().getWebDriver().getCloud().getProvider().equals( "PERFECTO" ) )
             {
-                if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM )  )
+                if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM.name() )  )
                 {
                     //
                     // Reportium Integration
@@ -220,7 +214,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
             {
                 if ( returnValue )
                 {
-                    if ( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) )
+                    if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
                     {
                         if ( cD.getProvider().equals( "SAUCELABS" ) )
                         {
@@ -229,7 +223,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
                         }
                     }
 
-                    if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
+                    if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
                     {
                         if ( testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
                         {
@@ -242,7 +236,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
                 }
                 else
                 {
-                    if ( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) )
+                    if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
                     {
                         if ( cD.getProvider().equals( "SAUCELABS" ) )
                         {
@@ -251,7 +245,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
                         }
                     }
 
-                    if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
+                    if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
                     {
                         if ( testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
                         {

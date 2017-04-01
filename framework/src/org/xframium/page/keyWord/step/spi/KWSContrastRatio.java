@@ -121,12 +121,23 @@ public class KWSContrastRatio extends AbstractKeyWordStep
 		if ( contrastRatio < minContrast || contrastRatio > maxContrast )
 		{
 		    String contrastMessage = "The contrast for [" + getName() + "] should be between [#" + Integer.toHexString( minColor ) + "] and [" + Integer.toHexString( maxColor ) + "] was [" + contrastRatio + "] and fell outside of the expected range";
-		    ArtifactManager.instance().notifyArtifactListeners( ArtifactType.WCAG_REPORT, new WCAGRecord( getPageName(), getName(), WCAGType.ContrastVerification, System.currentTimeMillis(), System.currentTimeMillis() - fileKey, false, imagePath, minContrast + "-" + maxContrast, contrastRatio + "", contrastMessage ) );
 		    
+		    executionContext.addExecutionParameter( "WCAGStatus", "false" );
+            executionContext.addExecutionParameter( "WCAGType", WCAGType.ContrastVerification.name() );
+            executionContext.addExecutionParameter( "WCAGImage", imagePath );
+            executionContext.addExecutionParameter( "WCAGContrastRange", minContrast + "-" + maxContrast );
+            executionContext.addExecutionParameter( "WCAGContrast", contrastRatio + "" );
+            executionContext.addExecutionParameter( "WCAGError", contrastMessage );
 			throw new ScriptException( contrastMessage );
 		}
 		else
-		    ArtifactManager.instance().notifyArtifactListeners( ArtifactType.WCAG_REPORT, new WCAGRecord( getPageName(), getName(), WCAGType.ContrastVerification, System.currentTimeMillis(), System.currentTimeMillis() - fileKey, true, imagePath, minContrast + "-" + maxContrast, contrastRatio + "", "OK" ) );
+		{
+		    executionContext.addExecutionParameter( "WCAGStatus", "true" );
+            executionContext.addExecutionParameter( "WCAGType", WCAGType.ContrastVerification.name() );
+            executionContext.addExecutionParameter( "WCAGImage", imagePath );
+            executionContext.addExecutionParameter( "WCAGContrastRange", minContrast + "-" + maxContrast );
+            executionContext.addExecutionParameter( "WCAGContrast", contrastRatio + "" );
+		}
 		
 		if ( getContext() != null )
 		{

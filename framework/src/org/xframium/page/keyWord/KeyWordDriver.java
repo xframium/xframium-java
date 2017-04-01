@@ -516,7 +516,7 @@ public class KeyWordDriver
         boolean returnValue = true;
         PageManager.instance().getPageCache().clear();
 
-        ExecutionContextTest executionContext = new ExecutionContextTest();
+        ExecutionContextTest executionContext = ( (DeviceWebDriver) webDriver ).getExecutionContext();
         Map<String, PageData> dataMap = new HashMap<String, PageData>( 10 );
         Map<String, Page> pageMap = new HashMap<String, Page>( 10 );
         Map<String, Object> contextMap = new HashMap<String, Object>( 10 );

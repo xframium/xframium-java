@@ -150,12 +150,23 @@ public class KWSCheckColor extends AbstractKeyWordStep
 				if ( blueChange > 0 )
 					stringBuilder.append( "The BLUE channel was off by " + blueChange + "% " );
 				
-				ArtifactManager.instance().notifyArtifactListeners( ArtifactType.WCAG_REPORT, new WCAGRecord( getPageName(), getName(), WCAGType.ColorVerification, System.currentTimeMillis(), System.currentTimeMillis() - fileKey, false, imagePath, colorCode, Integer.toHexString( elementColor ), stringBuilder.toString() ) );
+				executionContext.addExecutionParameter( "WCAGStatus", "false" );
+				executionContext.addExecutionParameter( "WCAGType", WCAGType.ColorVerification.name() );
+				executionContext.addExecutionParameter( "WCAGImage", imagePath );
+				executionContext.addExecutionParameter( "WCAGExpectedColor", colorCode );
+				executionContext.addExecutionParameter( "WCAGActualColor", Integer.toHexString( elementColor ) );
+				executionContext.addExecutionParameter( "WCAGError", stringBuilder.toString() );
 				
 				throw new ScriptException( stringBuilder.toString() );
 			}
 			else
-			    ArtifactManager.instance().notifyArtifactListeners( ArtifactType.WCAG_REPORT, new WCAGRecord( getPageName(), getName(), WCAGType.ColorVerification, System.currentTimeMillis(), System.currentTimeMillis() - fileKey, true, imagePath, colorCode, Integer.toHexString( elementColor ), "OK" ) );
+			{
+			    executionContext.addExecutionParameter( "WCAGStatus", "true" );
+                executionContext.addExecutionParameter( "WCAGType", WCAGType.ColorVerification.name() );
+                executionContext.addExecutionParameter( "WCAGImage", imagePath );
+                executionContext.addExecutionParameter( "WCAGExpectedColor", colorCode );
+                executionContext.addExecutionParameter( "WCAGActualColor", Integer.toHexString( elementColor ) );
+			}
 		}
 		
 		return true;

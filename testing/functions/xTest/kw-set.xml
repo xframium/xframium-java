@@ -1,62 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-<function name="kw-set" active="true">
-<description>null</description>
-<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="SET_VALUE"/>
-</step>
-<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="SET_VALUE"/>
-<parameter type="STATIC" value="value"/>
-</step>
-<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="NEW SET_VALUE"/>
-<parameter type="STATIC" value="DEFAULT"/>
-</step>
-<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="NEW SET_VALUE"/>
-<parameter type="STATIC" value="value"/>
-</step>
-<step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="xxx"/>
-<parameter type="STATIC" value="SINGLE"/>
-</step>
-<step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="NEW SET_VALUExxx"/>
-<parameter type="STATIC" value="value"/>
-</step>
-<step name="selectBox" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="2"/>
-</step>
-<step name="selectBox" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="Two"/>
-</step>
-<step name="selectBox" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="Three"/>
-</step>
-<step name="selectBox" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="Three"/>
-</step>
-<step name="selectBox" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="2"/>
-<parameter type="STATIC" value="BY_VALUE"/>
-</step>
-<step name="selectBox" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="Two"/>
-</step>
-<step name="selectBox" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="Three"/>
-<parameter type="STATIC" value="BY_VISIBLE_TEXT"/>
-</step>
-<step name="selectBox" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="Three"/>
-</step>
-<step name="dumpState" site="xTest" page="home" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
-<step name="bsSelectUL" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="Bootstrap Four"/>
-</step>
-<step name="bsSelectValue" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="bsFour"/>
-</step>
-</function>
+  <function name="kw-set" active="true">
+    <description>null</description>
+    <step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="SET_VALUE" />
+    </step>
+    <step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="SET_VALUE" />
+      <parameter type="STATIC" value="value" />
+    </step>
+    <step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="NEW SET_VALUE" />
+      <parameter type="STATIC" value="DELAYED" />
+    </step>
+    <step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="NEW SET_VALUE" />
+      <parameter type="STATIC" value="value" />
+    </step>
+    <step name="focusId" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="xxx" />
+      <parameter type="STATIC" value="SINGLE" />
+    </step>
+    <step name="focusId" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="NEW SET_VALUExxx" />
+      <parameter type="STATIC" value="value" />
+    </step>
+    <step name="selectBox" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="2" />
+    </step>
+    <step name="selectBox" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="Two" />
+    </step>
+    <step name="selectBox" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="Three" />
+    </step>
+    <step name="selectBox" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="Three" />
+    </step>
+    <step name="selectBox" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="2" />
+      <parameter type="STATIC" value="BY_VALUE" />
+    </step>
+    <step name="selectBox" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="Two" />
+    </step>
+    <step name="selectBox" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="Three" />
+      <parameter type="STATIC" value="BY_VISIBLE_TEXT" />
+    </step>
+    <step name="selectBox" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="Three" />
+    </step>
+    <step name="dumpState" site="xTest" page="home" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" />
+    <step name="bsSelectUL" site="xTest" page="home" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="Bootstrap Four" />
+    </step>
+    <step name="bsSelectValue" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="bsFour" />
+    </step>
+  </function>
 </suite>

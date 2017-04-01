@@ -48,7 +48,6 @@
   <import fileName="./xTest/Window Keyword.xml" />
   <import fileName="./xTest/Perfecto SET Test.xml" />
   <import fileName="./xTest/Comparison Test.xml" />
-  <import fileName="./xTest/new test.xml" />
   <import fileName="./xTest/Checkbox Test.xml" />
   <import fileName="../functions/functions-xTest.xml" />
 </suite>

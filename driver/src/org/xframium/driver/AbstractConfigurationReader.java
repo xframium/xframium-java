@@ -2,13 +2,11 @@ package org.xframium.driver;
 
 import java.awt.Desktop;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -19,6 +17,8 @@ import org.openqa.selenium.WebDriver;
 import org.testng.TestNG;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.artifact.ArtifactManager;
+import org.xframium.artifact.ArtifactTime;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.container.ApplicationContainer;
 import org.xframium.container.CloudContainer;
@@ -30,7 +30,6 @@ import org.xframium.container.SuiteContainer;
 import org.xframium.debugger.DebugManager;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
-import org.xframium.device.artifact.Artifact;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
@@ -375,18 +374,18 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             PageManager.instance().setStoreImages( true );
             PageManager.instance().setImageLocation( new File( configFolder, driverC.getReportFolder() ).getAbsolutePath() );
             
-            if ( driverC.isArtifactEnabled( ArtifactType.CONSOLE_LOG ) )
+            if ( driverC.isArtifactEnabled( ArtifactType.CONSOLE_LOG.name() ) )
             {
                 ThreadedFileHandler threadedHandler = new ThreadedFileHandler();
                 threadedHandler.configureHandler( Level.INFO );
             }
             
-            if ( System.getProperty( "X_DEBUGGER" ) != null && System.getProperty( "X_DEBUGGER" ).equals( "true" ) && !driverC.isArtifactEnabled( ArtifactType.DEBUGGER ) )
+            if ( System.getProperty( "X_DEBUGGER" ) != null && System.getProperty( "X_DEBUGGER" ).equals( "true" ) && !driverC.isArtifactEnabled( ArtifactType.DEBUGGER.name() ) )
             {
-                driverC.addArtifact( ArtifactType.DEBUGGER );
+                driverC.addArtifact( ArtifactType.DEBUGGER.name() );
             }
             
-            if ( driverC.isArtifactEnabled( ArtifactType.DEBUGGER ) )
+            if ( driverC.isArtifactEnabled( ArtifactType.DEBUGGER.name() ) )
             {
                 String debuggerHost = System.getProperty( "X_DEBUGGER_HOST" );
                 if ( debuggerHost == null )
@@ -398,13 +397,20 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                 KeyWordDriver.instance().addStepListener( DebugManager.instance() );
             }
             
-            DataManager.instance().setAutomaticDownloads( driverC.getArtifactList().toArray( new ArtifactType[0] ) );
+
+            if ( driverC.getArtifactList() != null )
+            {
+                for ( String artifactType : driverC.getArtifactList() )
+                {
+                    ArtifactManager.instance().enableArtifact( artifactType );
+                }
+            }
             
             DataManager.instance().setPersonas( driverC.getPerfectoPersonas().toArray( new String[ 0 ] ) );
             PageManager.instance().setWindTunnelEnabled( driverC.isPerfectoWindTunnel() );
             DeviceManager.instance().setDryRun( driverC.isDryRun() );
             
-            displayResults = driverC.isDisplayReport();
+            ArtifactManager.instance().setDisplayArtifact( driverC.getDisplayReport() );
             DeviceManager.instance().setCachingEnabled( driverC.isSmartCaching() );
             String stepTags = driverC.getStepTags();
             if ( stepTags != null && !stepTags.isEmpty() )
@@ -505,78 +511,24 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
 
     public void afterSuite()
     {
-        if ( DataManager.instance().isArtifactEnabled( ArtifactType.GRID_REPORT ) )
+        ExecutionContext.instance().setEndTime( new Date( System.currentTimeMillis()) );
+        List<String> aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.AFTER_SUITE );
+        
+        if ( aList != null )
         {
-            generateGridReport( ExecutionContext.instance().getReportFolder() );
+            for ( String artifactType : aList )
+            {
+                ArtifactManager.instance().generateArtifact( artifactType, ExecutionContext.instance().getReportFolder().getAbsolutePath(), null );
+            }
         }
         
-        if ( ExecutionContext.instance().isEnabled() )
+        aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.AFTER_SUITE_ARTIFACTS );
+        
+        if ( aList != null )
         {
-            ExecutionContext.instance().setEndTime( new Date( System.currentTimeMillis() ) );
-            ExecutionContext.instance().popupateSystemProperties();
-            
-            if ( DataManager.instance().isArtifactEnabled( ArtifactType.GRID_REPORT ) )
+            for ( String artifactType : aList )
             {
-                ExecutionContext.instance().setGridUrl( "grid.html" );
-            }
-
-            String outputData = "var testData = " + new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ), ExecutionContext.instance(), 0 ) ) + ";";
-            Artifact jsArtifact = new Artifact( "Suite.js", outputData.getBytes() );
-            jsArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
-
-            new HistoryWriter( DataManager.instance().getReportFolder() ).updateHistory();
-
-            StringBuilder stringBuffer = new StringBuilder();
-            InputStream inputStream = null;
-            try
-            {
-                if ( System.getProperty( "reportTemplateFolder" ) == null )
-                {
-                    if ( System.getProperty( "reportTemplate" ) == null )
-                        inputStream = this.getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/dark/Suite.html" );
-                    else
-                        inputStream = this.getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/Suite.html" );
-                }
-                else
-                    inputStream = new FileInputStream( new File( System.getProperty( "reportTemplateFolder" ), "Suite.html" ) );
-
-                int bytesRead = 0;
-                byte[] buffer = new byte[512];
-
-                while ( (bytesRead = inputStream.read( buffer )) > 0 )
-                {
-                    stringBuffer.append( new String( buffer, 0, bytesRead ) );
-                }
-
-                Artifact indexArtifact = new Artifact( "index.html", stringBuffer.toString().getBytes() );
-                indexArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
-
-                File htmlFile = new File( ExecutionContext.instance().getReportFolder(), "index.html" );
-
-                try
-                {
-                    if ( htmlFile.exists() )
-                        Desktop.getDesktop().browse( htmlFile.toURI() );
-                }
-                catch ( Exception e )
-                {
-                    e.printStackTrace();
-                }
-            }
-            catch ( Exception e )
-            {
-                log.error( "Error generating INDEX", e );
-
-            }
-            finally
-            {
-                try
-                {
-                    inputStream.close();
-                }
-                catch ( Exception e )
-                {
-                }
+                ArtifactManager.instance().generateArtifact( artifactType, ExecutionContext.instance().getReportFolder().getParent(), null );
             }
         }
     }
@@ -587,7 +539,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         ExecutionContext.instance().isEnabled();
         try
         {
-            if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )
+            if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER.name() ) )
             {
                 String debuggerHost = System.getProperty( "X_DEBUGGER_HOST" );
                 if ( debuggerHost == null )
@@ -602,7 +554,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             afterSuite();
 
             
-            if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER ) )
+            if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.DEBUGGER.name() ) )
                 DebugManager.instance().shutDown();
 
         }
@@ -614,88 +566,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         return true;
     }
 
-    public boolean generateGridReport( File rootFolder )
-    {
-        File artifactFolder = new File( rootFolder, "artifacts" );
-        
-        File[] fileList = artifactFolder.listFiles( new GRIDFileFilter() );
-        
-        if ( fileList == null )
-            return true;
-        
-        Map<String,List<String>> fileMap = new HashMap<String,List<String>>( 20 );
-        
-        for ( File file : fileList )
-        {
-            String[] fileParts = file.getName().split( "-" );
-            List<String> gridList = fileMap.get( fileParts[ 1 ] );
-            if ( gridList == null )
-            {
-                gridList = new ArrayList<String>( 10 );
-                fileMap.put( fileParts[ 1 ], gridList );
-            }
-            
-            gridList.add( file.getName() );
-        }
-        
-        String outputData = "var testData = " + new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ), fileMap, 0 ) ) + ";";
-        
-        Artifact jsArtifact = new Artifact( "Grid.js", outputData.getBytes() );
-        jsArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
-        
-        StringBuilder stringBuffer = new StringBuilder();
-        InputStream inputStream = null;
-        try
-        {
-            if ( System.getProperty( "reportTemplateFolder" ) == null )
-            {
-                if ( System.getProperty( "reportTemplate" ) == null )
-                    inputStream = getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/dark/Grid.html" );
-                else
-                    inputStream = getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/Grid.html" );
-            }
-            else
-                inputStream = new FileInputStream( new File( System.getProperty( "reportTemplateFolder" ), "Grid.html" ) );
-
-            int bytesRead = 0;
-            byte[] buffer = new byte[512];
-
-            while ( (bytesRead = inputStream.read( buffer )) > 0 )
-            {
-                stringBuffer.append( new String( buffer, 0, bytesRead ) );
-            }
-
-            Artifact indexArtifact = new Artifact( "grid.html", stringBuffer.toString().getBytes() );
-            indexArtifact.writeToDisk( ExecutionContext.instance().getReportFolder() );
-        }
-        catch ( Exception e )
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                inputStream.close();
-            }
-            catch ( Exception e )
-            {
-            }
-        }
-        
-        return true;
-    }
-
-    private static class GRIDFileFilter implements FileFilter
-    {
-
-        @Override
-        public boolean accept( File pathname )
-        {
-            return pathname.getName().startsWith( "grid" );
-        }
-        
-    }
+    
     
     protected File findFile( File rootFolder, File useFile )
     {
