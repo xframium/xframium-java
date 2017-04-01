@@ -6,12 +6,12 @@ import org.xframium.artifact.AbstractArtifact;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.factory.DeviceWebDriver;
 
-public class WCAGArtifact extends AbstractArtifact
+public class ImagingArtifact extends AbstractArtifact
 {
-    private static final String FILE_NAME = "WCAG.html";
-    public WCAGArtifact()
+    private static final String FILE_NAME = "imaging.html";
+    public ImagingArtifact()
     {
-        setArtifactType( ArtifactType.WCAG_REPORT.name() );
+        setArtifactType( ArtifactType.IMAGING_ANALYSIS.name() );
     }
     
     @Override
@@ -20,7 +20,7 @@ public class WCAGArtifact extends AbstractArtifact
         InputStream inputStream = null;
         try
         {
-            inputStream = getTemplate( "wcag.html" );
+            inputStream = getTemplate( "Imaging.html" );
             return writeToDisk( rootFolder, FILE_NAME, inputStream );
         }
         catch( Exception e )

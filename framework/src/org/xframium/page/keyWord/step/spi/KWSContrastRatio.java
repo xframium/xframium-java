@@ -21,27 +21,26 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import org.openqa.selenium.WebDriver;
-import org.xframium.artifact.ArtifactManager;
-import org.xframium.artifact.ArtifactType;
 import org.xframium.container.SuiteContainer;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
+import org.xframium.imaging.ImagingActionType;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
 import org.xframium.page.Page;
-import org.xframium.page.PageManager;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
-import org.xframium.wcag.WCAGRecord;
-import org.xframium.wcag.WCAGRecord.WCAGType;
 
 // TODO: Auto-generated Javadoc
 /**
  * <b>Keyword(s):</b> <code>VERIFY_CONTRAST</code><br>
  * The verify contrast is used to locate an element on the screen and perform a Lumenosity analysis on it.  The Lumenosity calculate
- * is derived from the WCAG 2.0 standard.  The returned value will be between 0 and 21.  Please refer to the WCAG 2.0 specification for 
+ * is derived from the Imaging 2.0 standard.  The returned value will be between 0 and 21.  Please refer to the Imaging 2.0 specification for 
  * a definition of the values  Note that PageManager can be configured to dump these images to disk 
  * for analysis purposes.<br><br>
 
@@ -67,7 +66,7 @@ public class KWSContrastRatio extends AbstractKeyWordStep
     public KWSContrastRatio()
     {
         kwName = "Luminosity validation";
-        kwDescription = "Allows thte script to analyze the named element using the WCAG 2.0 algorithm and validates its success against the WCAG 2.0 success criteria";
+        kwDescription = "Allows thte script to analyze the named element using the Imaging 2.0 algorithm and validates its success against the Imaging 2.0 success criteria";
         kwHelp = "https://www.xframium.org/keyword.html#kw-checkcontrast";
         category = "Verification";
     }
@@ -87,9 +86,20 @@ public class KWSContrastRatio extends AbstractKeyWordStep
 		
 		
 		BufferedImage elementValue = (BufferedImage)getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getImage( resolution );
-		String imagePath = null;
-		if ( elementValue != null )
-			imagePath = PageManager.instance().writeImage( elementValue, fileKey + "-" + getName() + ".png" );
+		String fileName = fileKey + "-" + getName() + ".png";
+        File imageFile = new File ( new File( ExecutionContext.instance().getReportFolder(), "artifacts" ), fileName );
+        if ( elementValue != null )
+        {
+            try
+            {
+                imageFile.getParentFile().mkdirs();
+                ImageIO.write( elementValue, "png", imageFile );
+            }
+            catch( Exception e )
+            {
+                
+            }
+        }
 
 		
 		int minColor = 0;
@@ -122,21 +132,24 @@ public class KWSContrastRatio extends AbstractKeyWordStep
 		{
 		    String contrastMessage = "The contrast for [" + getName() + "] should be between [#" + Integer.toHexString( minColor ) + "] and [" + Integer.toHexString( maxColor ) + "] was [" + contrastRatio + "] and fell outside of the expected range";
 		    
-		    executionContext.addExecutionParameter( "WCAGStatus", "false" );
-            executionContext.addExecutionParameter( "WCAGType", WCAGType.ContrastVerification.name() );
-            executionContext.addExecutionParameter( "WCAGImage", imagePath );
-            executionContext.addExecutionParameter( "WCAGContrastRange", minContrast + "-" + maxContrast );
-            executionContext.addExecutionParameter( "WCAGContrast", contrastRatio + "" );
-            executionContext.addExecutionParameter( "WCAGError", contrastMessage );
+		   
+		    executionContext.getStep().addExecutionParameter( "ImagingStatus", "false" );
+            executionContext.getStep().addExecutionParameter( "ImagingType", ImagingActionType.ContrastVerification.name() );
+            executionContext.getStep().addExecutionParameter( "ImagingImage", "../../artifacts/" + fileName  );
+            executionContext.getStep().addExecutionParameter( "ImagingImage_ABS", imageFile.getAbsolutePath()  );
+            executionContext.getStep().addExecutionParameter( "ImagingContrastRange", minContrast + "-" + maxContrast );
+            executionContext.getStep().addExecutionParameter( "ImagingContrast", contrastRatio + "" );
+            executionContext.getStep().addExecutionParameter( "ImagingError", contrastMessage );
 			throw new ScriptException( contrastMessage );
 		}
 		else
 		{
-		    executionContext.addExecutionParameter( "WCAGStatus", "true" );
-            executionContext.addExecutionParameter( "WCAGType", WCAGType.ContrastVerification.name() );
-            executionContext.addExecutionParameter( "WCAGImage", imagePath );
-            executionContext.addExecutionParameter( "WCAGContrastRange", minContrast + "-" + maxContrast );
-            executionContext.addExecutionParameter( "WCAGContrast", contrastRatio + "" );
+		    executionContext.getStep().addExecutionParameter( "ImagingStatus", "true" );
+            executionContext.getStep().addExecutionParameter( "ImagingType", ImagingActionType.ContrastVerification.name() );
+            executionContext.getStep().addExecutionParameter( "ImagingImage", "../../artifacts/" + fileName  );
+            executionContext.getStep().addExecutionParameter( "ImagingImage_ABS", imageFile.getAbsolutePath()  );
+            executionContext.getStep().addExecutionParameter( "ImagingContrastRange", minContrast + "-" + maxContrast );
+            executionContext.getStep().addExecutionParameter( "ImagingContrast", contrastRatio + "" );
 		}
 		
 		if ( getContext() != null )

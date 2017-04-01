@@ -58,10 +58,11 @@ public abstract class AbstractArtifact implements Artifact
                 rootFile.mkdirs();
             
             File returnFile =  _generateArtifact( rootFile, webDriver );
-            if ( returnFile == null && webDriver.getExecutionContext().getElementParameter( artifactType + "_" + URL ) == null )
+            
+            if ( returnFile == null && (webDriver == null || webDriver.getExecutionContext().getElementParameter( artifactType + "_" + URL ) == null ) )
                 return null;
             
-            if ( webDriver != null )
+            if ( webDriver != null)
             {
                 if ( returnFile != null )
                 {
@@ -71,7 +72,6 @@ public abstract class AbstractArtifact implements Artifact
                 
                 webDriver.getExecutionContext().addExecutionParameter( artifactType, "enabled" );
             }
-            
             
             if ( artifactType.equals( ArtifactManager.instance().getDisplayArtifact() ) )
             {

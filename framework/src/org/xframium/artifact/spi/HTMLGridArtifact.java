@@ -30,6 +30,7 @@ public class HTMLGridArtifact extends AbstractArtifact
         {
             ExecutionContext.instance().setGridUrl( "Grid.html" );
             inputStream = getTemplate( "Grid.html" );
+            
             return writeToDisk( rootFolder, FILE_NAME, inputStream );
         }
         catch( Exception e )

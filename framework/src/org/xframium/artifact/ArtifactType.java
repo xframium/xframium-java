@@ -55,7 +55,7 @@ public enum ArtifactType
     FAILURE_SOURCE_HTML( 8, "FAILURE_SOURCE_HTML", "Extract device state on failure and convert to HTML" ),
     
     /** The execution report. */
-    WCAG_REPORT ( 9, "WCAG_REPORT", "WCAG Analysis report" ),
+    IMAGING_ANALYSIS ( 9, "Imaging Analysis", "DEtailed image analysis from imaging steps" ),
     
     /** The device log. */
     DEVICE_LOG( 10, "DEVICE_LOG", "Extract platform logs for debugging" ),
@@ -117,7 +117,7 @@ public enum ArtifactType
         supportedList.add( ArtifactType.EXECUTION_REPORT_XML );
         supportedList.add( ArtifactType.FAILURE_SOURCE );
         supportedList.add( ArtifactType.FAILURE_SOURCE_HTML );
-        supportedList.add( ArtifactType.WCAG_REPORT );
+        supportedList.add( ArtifactType.IMAGING_ANALYSIS );
         supportedList.add( ArtifactType.DEVICE_LOG );
         supportedList.add( ArtifactType.CONSOLE_LOG );
         supportedList.add( ArtifactType.EXECUTION_RECORD_HTML );

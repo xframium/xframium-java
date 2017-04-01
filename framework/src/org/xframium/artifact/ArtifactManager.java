@@ -46,7 +46,7 @@ import org.xframium.artifact.spi.PerfectoReportingServices;
 import org.xframium.artifact.spi.PerfectoWindTunnel;
 import org.xframium.artifact.spi.PerfectoXMLReport;
 import org.xframium.artifact.spi.SauceLabsReportingServices;
-import org.xframium.artifact.spi.WCAGArtifact;
+import org.xframium.artifact.spi.ImagingArtifact;
 import org.xframium.artifact.spi.XMLSourceArtifact;
 import org.xframium.device.factory.DeviceWebDriver;
 
@@ -94,7 +94,7 @@ public class ArtifactManager
         registerArtifact( ArtifactTime.ON_FAILURE, ArtifactType.FAILURE_SOURCE_HTML.name(), HTMLSourceArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.CONSOLE_LOG.name(), ConsoleLogArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.DEVICE_LOG.name(), DeviceLogArtifact.class );
-        registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.WCAG_REPORT.name(), WCAGArtifact.class );
+        registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.IMAGING_ANALYSIS.name(), ImagingArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.ADD_TO_CSV.name(), CSVDataArtifact.class );
         registerArtifact( ArtifactTime.AFTER_ARTIFACTS, ArtifactType.EXECUTION_RECORD_JSON.name(), JSONArtifact.class );
         registerArtifact( ArtifactTime.AFTER_ARTIFACTS, ArtifactType.EXECUTION_RECORD_HTML.name(), DefaultReportingArtifact.class );
@@ -103,8 +103,8 @@ public class ArtifactManager
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.EXECUTION_REPORT_PDF.name(), PerfectoPDFReport.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.EXECUTION_REPORT.name(), PerfectoPDFReport.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.EXECUTION_REPORT_CSV.name(), PerfectoCSVReport.class );
-        registerArtifact( ArtifactTime.AFTER_SUITE, ArtifactType.GRID_REPORT.name(), JSONGridArtifact.class );
-        registerArtifact( ArtifactTime.AFTER_SUITE, ArtifactType.GRID_HTML.name(), HTMLGridArtifact.class );
+        registerArtifact( ArtifactTime.BEFORE_SUITE_ARTIFACTS, ArtifactType.GRID_REPORT.name(), JSONGridArtifact.class );
+        registerArtifact( ArtifactTime.BEFORE_SUITE_ARTIFACTS, ArtifactType.GRID_HTML.name(), HTMLGridArtifact.class );
         registerArtifact( ArtifactTime.AFTER_SUITE, ArtifactType.EXECUTION_SUITE_HTML.name(), DefaultSuiteReportingArtifact.class );
         registerArtifact( ArtifactTime.AFTER_SUITE, ArtifactType.EXECUTION_SUITE_JSON.name(), JSONSuiteArtifact.class );
         registerArtifact( ArtifactTime.AFTER_SUITE_ARTIFACTS, ArtifactType.EXECUTION_HISTORY_HTML.name(), DefaultHistoryReportingArtifact.class );

@@ -39,5 +39,7 @@ public enum ArtifactTime
     
     AFTER_ARTIFACTS,
     
-    AFTER_SUITE_ARTIFACTS
+    AFTER_SUITE_ARTIFACTS,
+    
+    BEFORE_SUITE_ARTIFACTS
 }

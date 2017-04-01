@@ -1,8 +1,6 @@
 package org.xframium.driver;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,7 +39,6 @@ import org.xframium.gesture.GestureManager;
 import org.xframium.gesture.device.action.DeviceActionManager;
 import org.xframium.gesture.device.action.spi.perfecto.PerfectoDeviceActionFactory;
 import org.xframium.gesture.factory.spi.PerfectoGestureFactory;
-import org.xframium.history.HistoryWriter;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.rest.bean.factory.BeanManager;
 import org.xframium.integrations.rest.bean.factory.XMLBeanFactory;
@@ -61,7 +58,6 @@ import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
 import org.xframium.utility.SeleniumSessionManager;
-import com.xframium.serialization.SerializationManager;
 
 public abstract class AbstractConfigurationReader implements ConfigurationReader
 {
@@ -512,7 +508,16 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     public void afterSuite()
     {
         ExecutionContext.instance().setEndTime( new Date( System.currentTimeMillis()) );
-        List<String> aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.AFTER_SUITE );
+        List<String> aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.BEFORE_SUITE_ARTIFACTS );
+        if ( aList != null )
+        {
+            for ( String artifactType : aList )
+            {
+                ArtifactManager.instance().generateArtifact( artifactType, ExecutionContext.instance().getReportFolder().getAbsolutePath(), null );
+            }
+        }
+        
+        aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.AFTER_SUITE );
         
         if ( aList != null )
         {
@@ -521,6 +526,8 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                 ArtifactManager.instance().generateArtifact( artifactType, ExecutionContext.instance().getReportFolder().getAbsolutePath(), null );
             }
         }
+        
+        
         
         aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.AFTER_SUITE_ARTIFACTS );
         

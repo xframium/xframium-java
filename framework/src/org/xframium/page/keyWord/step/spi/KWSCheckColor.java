@@ -21,22 +21,21 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
-import org.xframium.artifact.ArtifactManager;
-import org.xframium.artifact.ArtifactType;
 import org.xframium.container.SuiteContainer;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
+import org.xframium.imaging.ImagingActionType;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
 import org.xframium.page.Page;
-import org.xframium.page.PageManager;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
-import org.xframium.wcag.WCAGRecord;
-import org.xframium.wcag.WCAGRecord.WCAGType;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -115,9 +114,20 @@ public class KWSCheckColor extends AbstractKeyWordStep
 		}
 		
 		BufferedImage elementValue = (BufferedImage)getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getImage( resolution );
-		String imagePath = null;
+		String fileName = fileKey + "-" + getName() + ".png";
+		File imageFile = new File ( new File( ExecutionContext.instance().getReportFolder(), "artifacts" ), fileName );
 		if ( elementValue != null )
-			imagePath = PageManager.instance().writeImage( elementValue, fileKey + "-" + getName() + ".png" );
+		{
+		    try
+		    {
+		        imageFile.getParentFile().mkdirs();
+		        ImageIO.write( elementValue, "png", imageFile );
+		    }
+		    catch( Exception e )
+		    {
+		        
+		    }
+		}
 		
 		
 		int elementColor = elementValue.getRGB( location.getX(), location.getY() );
@@ -150,22 +160,24 @@ public class KWSCheckColor extends AbstractKeyWordStep
 				if ( blueChange > 0 )
 					stringBuilder.append( "The BLUE channel was off by " + blueChange + "% " );
 				
-				executionContext.addExecutionParameter( "WCAGStatus", "false" );
-				executionContext.addExecutionParameter( "WCAGType", WCAGType.ColorVerification.name() );
-				executionContext.addExecutionParameter( "WCAGImage", imagePath );
-				executionContext.addExecutionParameter( "WCAGExpectedColor", colorCode );
-				executionContext.addExecutionParameter( "WCAGActualColor", Integer.toHexString( elementColor ) );
-				executionContext.addExecutionParameter( "WCAGError", stringBuilder.toString() );
+				executionContext.getStep().addExecutionParameter( "ImagingStatus", "false" );
+				executionContext.getStep().addExecutionParameter( "ImagingType", ImagingActionType.ColorVerification.name() );
+				executionContext.getStep().addExecutionParameter( "ImagingImage", "../../artifacts/" + fileName  );
+				executionContext.getStep().addExecutionParameter( "ImagingImage_ABS", imageFile.getAbsolutePath()  );
+				executionContext.getStep().addExecutionParameter( "ImagingExpectedColor", colorCode );
+				executionContext.getStep().addExecutionParameter( "ImagingActualColor", Integer.toHexString( elementColor ) );
+				executionContext.getStep().addExecutionParameter( "ImagingError", stringBuilder.toString() );
 				
 				throw new ScriptException( stringBuilder.toString() );
 			}
 			else
 			{
-			    executionContext.addExecutionParameter( "WCAGStatus", "true" );
-                executionContext.addExecutionParameter( "WCAGType", WCAGType.ColorVerification.name() );
-                executionContext.addExecutionParameter( "WCAGImage", imagePath );
-                executionContext.addExecutionParameter( "WCAGExpectedColor", colorCode );
-                executionContext.addExecutionParameter( "WCAGActualColor", Integer.toHexString( elementColor ) );
+			    executionContext.getStep().addExecutionParameter( "ImagingStatus", "true" );
+                executionContext.getStep().addExecutionParameter( "ImagingType", ImagingActionType.ColorVerification.name() );
+                executionContext.getStep().addExecutionParameter( "ImagingImage", "../../artifacts/" + fileName  );
+                executionContext.getStep().addExecutionParameter( "ImagingImage_ABS", imageFile.getAbsolutePath()  );
+                executionContext.getStep().addExecutionParameter( "ImagingExpectedColor", colorCode );
+                executionContext.getStep().addExecutionParameter( "ImagingActualColor", Integer.toHexString( elementColor ) );
 			}
 		}
 		

@@ -4,7 +4,7 @@
   <application provider="XML" name="xTest" fileName="applicationRegistry.xml" />
   <devices provider="XML" fileName="deviceRegistry.xml">
   </devices>
-  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" phase="1001" domain="PROFESSIONAL_SERVICES" testNames="State Test">
+  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" phase="1001" domain="PROFESSIONAL_SERVICES" testNames="State Test,Verify Color Test,Verify Contrast Test">
     <property name="xFramium General KeyWord Test.count">3</property>
     <property name="selenium.timeouts.implicitWait">5000</property>
     <property name="alm.serverUrl">http://alm.perfectomobilelab.net:8080/qcbin</property>
@@ -15,7 +15,7 @@
     <propertyAdapter className="org.xframium.device.property.SeleniumPropertyAdapter" />
     <artifact type="FAILURE_SOURCE" />
     <artifact type="DEVICE_LOG" />
-    <artifact type="WCAG_REPORT" />
+    <artifact type="IMAGING_ANALYSIS" />
     <artifact type="EXECUTION_RECORD_HTML" />
     <artifact type="CONSOLE_LOG" />
     <artifact type="GRID_REPORT" />
