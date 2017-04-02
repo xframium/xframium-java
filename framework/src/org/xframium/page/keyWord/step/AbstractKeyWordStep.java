@@ -1129,7 +1129,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 if ( !returnValue )
                 {
                     if ( !sFailure.equals( StepFailure.IGNORE ) )
-                        dumpState( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+                        dumpState( webDriver, contextMap, dataMap, executionContext );
                 }
             }
             catch ( Exception e )
@@ -1931,7 +1931,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         return rtn;
     }
 
-    protected void dumpState( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
+    public void dumpState(WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, ExecutionContextTest executionContext )
     {
         String checkPointName = null;
         int historicalCount = -1;

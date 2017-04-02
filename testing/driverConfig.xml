@@ -4,7 +4,7 @@
   <application provider="XML" name="xTest" fileName="applicationRegistry.xml" />
   <devices provider="XML" fileName="deviceRegistry.xml">
   </devices>
-  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" phase="1001" domain="PROFESSIONAL_SERVICES" testNames="State Test,Verify Color Test,Verify Contrast Test">
+  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" phase="1001" domain="PROFESSIONAL_SERVICES">
     <property name="xFramium General KeyWord Test.count">3</property>
     <property name="selenium.timeouts.implicitWait">5000</property>
     <property name="alm.serverUrl">http://alm.perfectomobilelab.net:8080/qcbin</property>

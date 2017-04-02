@@ -485,10 +485,10 @@ public class ExecutionContextTest
         }
     }
 
-    public void completeStep( StepStatus stepStatus, Throwable throwable )
+    public boolean completeStep( StepStatus stepStatus, Throwable throwable )
     {
         if ( currentStep == null )
-            return;
+            return false;
         currentStep.setEndTime( System.currentTimeMillis() );
         currentStep.setStepStatus( stepStatus );
         currentStep.setThrowable( throwable );
@@ -496,6 +496,8 @@ public class ExecutionContextTest
             currentStep = currentStep.getParentStep();
         else
             currentStep = null;
+        
+        return true;
     }
     
     public void completeTest( TestStatus testStatus, Throwable testException )

@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -49,19 +50,23 @@ import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
-import org.xframium.exception.XFramiumException.ExceptionType;
-import org.xframium.integrations.alm.ALMRESTConnection;
-import org.xframium.integrations.alm.entity.ALMAttachment;
-import org.xframium.integrations.alm.entity.ALMDefect;
+import org.xframium.exception.ScriptException;
+import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordPage;
+import org.xframium.page.keyWord.KeyWordParameter;
+import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
+import org.xframium.page.keyWord.KeyWordStep;
+import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.keyWord.spi.KeyWordPageImpl;
+import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.reporting.ExecutionContextTest.TestStatus;
 import org.xframium.spi.Device;
-import org.xframium.spi.driver.ReportiumProvider;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -415,8 +420,7 @@ public abstract class AbstractSeleniumTest
 
             TestName testName = testPackage.getTestName();
             
-            File artifactFolder = new File( testPackage.getConnectedDevice().getDevice().getEnvironment(), testName.getTestName() );
-            testPackage.getConnectedDevice().getWebDriver().setArtifactFolder( artifactFolder );
+            
             
             if ( !xmlMode )
             {
@@ -426,16 +430,23 @@ public abstract class AbstractSeleniumTest
                 ExecutionContextTest eC = new ExecutionContextTest();
                 eC.setTestName( currentMethod.getName() );
                 
+                CloudDescriptor cD = CloudRegistry.instance().getCloud();
+                if ( testPackage.getDevice().getCloud() != null && !testPackage.getDevice().getCloud().trim().isEmpty() )
+                    cD = CloudRegistry.instance().getCloud( testPackage.getDevice().getCloud() );
+                
                 KeyWordTest kwt = new KeyWordTest( currentMethod.getName(), true, null, null, false, null, null, 0, currentMethod.getName() + " from " + currentMethod.getClass().getName(), null, null, null, ExecutionContext.instance().getConfigProperties(), 0, null, null, null, null, 0, 0 );
                 eC.setTest( kwt );
                 eC.setAut( ApplicationRegistry.instance().getAUT() );
-                eC.setCloud( CloudRegistry.instance().getCloud() );
+                eC.setCloud( cD );
                 eC.setDevice( testPackage.getConnectedDevice().getPopulatedDevice() );
                 testPackage.getConnectedDevice().getWebDriver().setExecutionContext( eC );
-                
+                testName.setTestName( currentMethod.getName() );
                 
                 testName.setTest( eC );
             }
+            
+            File artifactFolder = new File( testPackage.getConnectedDevice().getDevice().getEnvironment(), testName.getTestName() );
+            testPackage.getConnectedDevice().getWebDriver().setArtifactFolder( artifactFolder );
                 
             
             
@@ -531,6 +542,16 @@ public abstract class AbstractSeleniumTest
         }
     }
 
+    private String exceptionToString(Throwable t )
+    {
+        StringBuilder s = new StringBuilder();
+        s.append( t.toString() ).append(  "\r\n" );
+        for( StackTraceElement e : t.getStackTrace() )
+            s.append( "\t" ).append( e.toString() ).append( "\r\n" );
+        
+        return s.toString();
+    }
+    
     /**
      * After method.
      *
@@ -556,6 +577,20 @@ public abstract class AbstractSeleniumTest
 
             if ( testPackage.getConnectedDevice().getWebDriver() != null && testPackage.getConnectedDevice().getWebDriver().isConnected() )
             {
+                testPackage.getConnectedDevice().getWebDriver().getExecutionContext().setSessionId( testPackage.getConnectedDevice().getWebDriver().getExecutionId() );
+                if ( !testResult.isSuccess() )
+                {
+                    if ( testResult.getThrowable() != null )
+                    {
+                        if ( testPackage.getConnectedDevice().getWebDriver().getExecutionContext().getStep() != null )
+                        {
+                            log.error( "Uncaught test failure", testResult.getThrowable() );
+                            testPackage.getConnectedDevice().getWebDriver().getExecutionContext().getStep().getStep().dumpState( testPackage.getConnectedDevice().getWebDriver(), new HashMap<String,Object>(0), new HashMap<String,PageData>(0), testPackage.getConnectedDevice().getWebDriver().getExecutionContext() );
+                            testPackage.getConnectedDevice().getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, new ScriptException( exceptionToString( testResult.getThrowable() ) ) );
+                        }
+                    }
+                }
+                
                 try
                 {
                     if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG.name() ) )
@@ -606,6 +641,100 @@ public abstract class AbstractSeleniumTest
 
             
         }
+    }
+    
+    /**
+     * Captures the state (image and source) of the running application
+     *
+     * @param webDriver the web driver
+     * @throws Exception the exception
+     */
+    public void dumpState( DeviceWebDriver webDriver ) throws Exception
+    {
+        createStep( "STATE", "", "", new String[ 0 ]).executeStep( null, webDriver, null, null, null, null, webDriver.getExecutionContext() );
+    }
+    
+    /**
+     * Captures the state (image and source) of the running application and compares it for deviation against the previous historical values
+     *
+     * @param webDriver the web driver
+     * @param name the name
+     * @param historicalCount The number of historical records to compare to
+     * @param deviationPercentage The amount of image deviation from 0 to 100
+     * @throws Exception the exception
+     */
+    public void dumpState( DeviceWebDriver webDriver, String name, int historicalCount, int deviationPercentage) throws Exception
+    {
+        KeyWordStep step = createStep( "STATE", "", "", new String[ 0 ]);
+        step.addParameter( new KeyWordParameter( ParameterType.STATIC, name, "checkPointName", null ) );
+        step.addParameter( new KeyWordParameter( ParameterType.STATIC, historicalCount + "", "historicalCount", null ) );
+        step.addParameter( new KeyWordParameter( ParameterType.STATIC, deviationPercentage + "", "deviationPercentage", null ) );
+        step.executeStep( null, webDriver, null, null, null, null, webDriver.getExecutionContext() );
+    }
+    
+    /**
+     * Creates a KeyWord step to be used in a Java test
+     *
+     * @param keyword The name of the keyword
+     * @param pageName the page name
+     * @param elementName the element name
+     * @param parameterList A list of parameter to pass to the keyword.  User name==value for named parameters
+     * @return The created step
+     */
+    public KeyWordStep createStep( String keyword, String pageName, String elementName, String[] parameterList )
+    {
+        KeyWordStep step = KeyWordStepFactory.instance().createStep( elementName, pageName, true, keyword, null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, keyword, null, null, null, null, false, false, null, null, null, null );
+        
+        if ( parameterList != null )
+        {
+            for ( String s : parameterList )
+            {
+                String[] sArray = s.split( "==" );
+                if ( s.contains( "==" ) )
+                    step.addParameter( new KeyWordParameter( ParameterType.STATIC, sArray.length > 1 ? sArray[1] : "{EMPTY}", sArray[0], null ) );
+                else
+                    step.addParameter( new KeyWordParameter( ParameterType.STATIC, s, null, null ) );
+            }
+        }
+        
+        return step;
+        
+    }
+    
+    /**
+     * Execute a keyword step
+     *
+     * @param step the step
+     * @param webDriver the web driver
+     * @return true, if successful
+     * @throws Exception the exception
+     */
+    public Map<String,Object> executeStep( KeyWordStep step, DeviceWebDriver webDriver ) throws Exception
+    {
+        KeyWordPage p = new KeyWordPageImpl();
+        p.setPageName( step.getPageName() );
+        Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
+        contextMap.put( "RESULT", step.executeStep( p, webDriver, contextMap, null, null, null, webDriver.getExecutionContext() ) );
+        return contextMap;
+    }
+    
+    /**
+     * Creates and executes a KeyWord step
+     *
+     * @param keyword The name of the keyword
+     * @param pageName the page name
+     * @param elementName the element name
+     * @param parameterList A list of parameter to pass to the keyword.  User name==value for named parameters
+     * @param webDriver The webDriver for the active run
+     * @return The created step
+     */
+    public Map<String,Object> executeStep( String keyword, String pageName, String elementName, String[] parameterList, DeviceWebDriver webDriver ) throws Exception
+    {
+        KeyWordPage p = new KeyWordPageImpl();
+        p.setPageName( pageName );
+        Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
+        contextMap.put( "RESULT", createStep( keyword, pageName, elementName, parameterList ).executeStep( p, webDriver, null, null, null, null, webDriver.getExecutionContext() ) );
+        return contextMap;
     }
 
     private void cleanUpConnectedDevice( String name, TestName testName, ConnectedDevice device, ITestResult testResult, boolean primaryDevice, TestPackage testPackage )

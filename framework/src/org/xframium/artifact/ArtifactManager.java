@@ -119,7 +119,7 @@ public class ArtifactManager
     
     public void registerArtifact( ArtifactTime artifactTime, String aType, Class artifactImplementation )
     {
-        artifactMap.put( aType, artifactImplementation );
+        artifactMap.put( aType.toUpperCase(), artifactImplementation );
         classTimeMap.put( artifactImplementation, artifactTime );
         
         List<Class> timeList = timeMap.get( artifactTime );

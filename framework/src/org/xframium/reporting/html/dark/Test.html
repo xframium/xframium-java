@@ -16,54 +16,54 @@
 <link href="http://www.xframium.org/output/assets/css/angular-ui-tree.css" rel="stylesheet">
 <style>
 iframe {
-	background-color: #eaeae1;
+    background-color: #eaeae1;
 }
 
 .abscenter {
-	margin: auto;
-	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
 }
 
 .textOutline {
-	text-shadow: -1px -1px 0 #999999, 1px -1px 0 #999999, -1px 1px 0 #999999,
-		1px 1px 0 #999999;
-	color: rgb(255, 255, 255);
+    text-shadow: -1px -1px 0 #999999, 1px -1px 0 #999999, -1px 1px 0 #999999,
+        1px 1px 0 #999999;
+    color: rgb(255, 255, 255);
 }
 
 .pass {
-	color: #1bc98e;
+    color: #1bc98e;
 }
 
 .fail {
-	color: #e64759;
+    color: #e64759;
 }
 
 .pageName {
-	color: #e4d836;
+    color: #e4d836;
 }
 
 .elementName {
-	color: #e4d836;
+    color: #e4d836;
 }
 
 .passStep {
-	background-color: rgba(27, 201, 142, 0.2)
+    background-color: rgba(27, 201, 142, 0.2)
 }
 
 .ignoreStep {
-	background-color: rgba(228, 216, 54, 0.2)
+    background-color: rgba(228, 216, 54, 0.2)
 }
 
 .failStep {
-	background-color: rgba(230, 71, 89, 0.2)
+    background-color: rgba(230, 71, 89, 0.2)
 }
 
 .linkStep {
-	background-color: rgba(28, 168, 221, 0.2)
+    background-color: rgba(28, 168, 221, 0.2)
 }
 
 .filteredStep {
@@ -135,9 +135,11 @@ iframe {
                 </ol>
             </div>
             </uib-tab> 
-            <uib-tab heading="{{artifactTabs[ key ]}}" ng-repeat="(key,value) in testData.executionParameters" ng-if="artifactTabs[ key ] != null"> 
-                <iframe src="{{testData.executionParameters[ key + '_FILE' ]}}" frameborder="0" height="500" width="100%">
-                </iframe> 
+            <uib-tab heading="{{artifactTabs[ key ] == null ? key.substring( 4 ) : artifactTabs[ key ]}}" ng-repeat="(key,value) in testData.executionParameters" ng-if="artifactTabs[ key ] != null || (key.startsWith( 'TAB_' ) && !key.endsWith( '_PATH' ) && !key.endsWith( '_FILE' ))"> 
+                <iframe ng-if="testData.executionParameters[ key + '_FILE' ] != null" src="{{testData.executionParameters[ key + '_FILE' ]}}" frameborder="0" height="500" width="100%">
+                </iframe>
+                <iframe ng-if="testData.executionParameters[ key + '_ARTIFACT_URL' ] != null" src="{{testData.executionParameters[ key + '_FILE' ]}}" frameborder="0" height="500" width="100%">
+                </iframe>  
             </uib-tab> 
             <uib-tab heading="Links" active="true">
             <div ui-tree id="tree-root" class="scrollable" style="max-height: 700px">
@@ -249,7 +251,7 @@ iframe {
     <div class="panel-body">
         <div class="row">
             <div class="col-md-4">
-                <a hRef="file://{{selectedStep.executionParameter.SCREENSHOT}}" target="_blank"><img width="100%" src="file://{{selectedStep.executionParameter.SCREENSHOT}}" class="img-rounded" /></a>
+                <a hRef="file://{{selectedStep.executionParameter.SCREENSHOT}}" target="_blank"><img width="100%" src="{{selectedStep.executionParameter.SCREENSHOT}}" class="img-rounded" /></a>
             </div>
             <div class="col-md-8" ng-if="selectedStep.throwable != 'null'">
                 <span class="text-danger">{{selectedStep.throwable}}</span>
@@ -265,6 +267,8 @@ iframe {
         </div>
     </div>
 </div>
+
+artifactTabs[ key ] != null || ((key.startsWith( 'TAB_' ) && !key.endsWith( '_PATH' ) && !key.endsWith( '_FILE' ))
 </script>
 <script>
     //

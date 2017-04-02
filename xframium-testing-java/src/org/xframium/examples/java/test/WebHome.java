@@ -7,9 +7,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
+import org.xframium.artifact.AbstractArtifact;
+import org.xframium.artifact.ArtifactManager;
+import org.xframium.artifact.ArtifactTime;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.ng.AbstractJavaTest;
 import org.xframium.device.ng.TestContainer;
@@ -19,14 +23,57 @@ import org.xframium.driver.ConfigurationReader;
 import org.xframium.driver.TXTConfigurationReader;
 import org.xframium.driver.XMLConfigurationReader;
 import org.xframium.examples.java.page.WebHomePage;
-import org.xframium.page.Page;
-import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.step.spi.KWSCompare2.CompareType;
+import org.xframium.reporting.ExecutionContextStep;
 
 public class WebHome extends AbstractJavaTest
 {
+    
+    //
+    // A sample artifact class demonstrating the ability to create and link your own artifacts
+    //
+    public static class WebHomeArtifact extends AbstractArtifact
+    {
+        
+        public WebHomeArtifact()
+        {
+            //
+            // Starting with TAB_ adds a new tab to the report. Neither creates the artifact but does not link it 
+            //
+            setArtifactType( "TAB_WEBHOME" );
+        }
+        
+        private void addStep( ExecutionContextStep step, StringBuilder stepMap, String indentAppend )
+        {
+            stepMap.append( indentAppend ).append( step.getStep().getName() ).append( "(" ).append(  step.getStep().getKw() ).append( ")" ).append( "\r\n" );
+            if ( step.getStepList() != null && !step.getStepList().isEmpty() )
+            {
+                String newAppend = indentAppend + "   ";
+                for ( ExecutionContextStep s : step.getStepList() )
+                {
+                    addStep( s, stepMap, newAppend );
+                }
+            }
+        }
+
+        @Override
+        protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver ) throws Exception
+        {
+            StringBuilder stepMap = new StringBuilder();
+            
+            for ( ExecutionContextStep s : webDriver.getExecutionContext().getStepList() )
+            {
+                addStep( s, stepMap, "" );
+            }
+
+            return writeToDisk( rootFolder, "webHomeArtifact.txt", stepMap.toString().getBytes() );
+
+        }
+    }
+    
+    
     /**
      * The class that configuration your setupSuite method should contain a reference to the ConfigurationReader. This will be used by
      * the afterSuite method to cleanup up the code
@@ -37,8 +84,14 @@ public class WebHome extends AbstractJavaTest
      * The setupSuite method allows you to use the xFramium configuration XML or property file.
      */
     @BeforeSuite
-    public void setupSuite()
+    public void setupSuite( ITestContext tC )
     {
+        //
+        // Register our Test Artifact
+        //
+        
+        ArtifactManager.instance().registerArtifact( ArtifactTime.AFTER_TEST, "TAB_WEBHOME", WebHomeArtifact.class );
+
         //
         // Specify your xFramium configuration file here as TXT or XML
         //
@@ -92,6 +145,9 @@ public class WebHome extends AbstractJavaTest
         String beforeClick = wPage.getElement( WebHomePage.TOGGLE_VALUE ).getValue();
         wPage.getElement( WebHomePage.TOGGLE_BUTTON ).click();
         String afterClick = wPage.getElement( WebHomePage.TOGGLE_VALUE ).getValue();
+        
+        
+        
         Assert.assertTrue( (Boolean) executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + beforeClick, "Value Two==" + afterClick }, webDriver ).get( "RESULT" ) );
         dumpState( webDriver );
         
@@ -189,8 +245,13 @@ public class WebHome extends AbstractJavaTest
         String beforeClick = webDriver.findElement( By.id( "singleModel" ) ).getText();
         webDriver.findElement( By.xpath( "//button[text()='Toggle Value']" ) ).click();
         String afterClick = webDriver.findElement( By.id( "singleModel" ) ).getText();
+        
+        Assert.assertTrue( false );
+        
         Assert.assertFalse( (Boolean) executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + beforeClick, "Value Two==" + afterClick }, webDriver ).get( "RESULT" ) );
         dumpState( webDriver );
+        
+        
         
         stopStep( testName, StepStatus.SUCCESS, null );
         

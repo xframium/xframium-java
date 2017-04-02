@@ -79,6 +79,8 @@ public interface KeyWordStep
 	public boolean isOrMapping();
 	
 	
+	public void dumpState(WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, ExecutionContextTest executionContext );
+	
 	/**
 	 * Gets the link id.
 	 *
