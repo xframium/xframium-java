@@ -12,6 +12,11 @@
 <parameter type="STATIC" value="7"/>
 <parameter type="STATIC" value="21"/>
 </step>
+<step name="colorContrastAA" site="xTest" page="home" type="VERIFY_CONTRAST" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="IGNORE">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="20"/>
+<parameter type="STATIC" value="21"/>
+</step>
 <step name="colorContrastAA" site="xTest" page="home" type="VERIFY_CONTRAST" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
 <parameter type="STATIC" value="high"/>
 <parameter type="STATIC" value="4.5"/>

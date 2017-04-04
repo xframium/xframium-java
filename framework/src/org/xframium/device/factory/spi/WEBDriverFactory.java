@@ -189,7 +189,6 @@ public class WEBDriverFactory extends AbstractDriverFactory
             if ( useCloud.getProvider().equals( "PERFECTO" ) )
                 webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
             
-            webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );
             webDriver.setCloud( useCloud );
 
             if ( ApplicationRegistry.instance().getAUT() != null && ApplicationRegistry.instance().getAUT().getUrl() != null && !ApplicationRegistry.instance().getAUT().getUrl().isEmpty() )

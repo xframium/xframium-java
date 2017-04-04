@@ -192,7 +192,7 @@
     <attribute name="tagNames" type="string" use="optional" />
     <attribute name="embeddedServer" type="boolean" use="optional" default="false" />
     <attribute name="dryRun" type="boolean" use="optional" default="false" />
-    <attribute name="displayResults" type="boolean" use="optional" default="true" />
+    <attribute name="displayResults" type="string" use="optional" default="EXECUTION_SUITE_HTML" />
     <attribute name="outputFolder" type="string" use="required" />
     <attribute name="suiteName" type="string" use="optional" />
     <attribute name="phase" type="string" use="optional" />

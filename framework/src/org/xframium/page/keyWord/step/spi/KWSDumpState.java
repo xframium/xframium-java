@@ -47,7 +47,7 @@ public class KWSDumpState extends AbstractKeyWordStep
 	{
 	    
         
-        dumpState( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+        dumpState( webDriver, contextMap, dataMap, executionContext );
         
         return true;
 	}

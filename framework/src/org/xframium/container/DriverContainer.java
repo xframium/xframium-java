@@ -12,7 +12,7 @@ public class DriverContainer
 {
     private List<String> perfectoPersonas = new ArrayList<String>( 20 );
     private boolean perfectoWindTunnel = false;
-    private boolean displayReport = false;
+    private String displayReport = null;
     private boolean smartCaching = false;
     private boolean dryRun = false;
     private boolean embeddedServer = false;
@@ -33,7 +33,7 @@ public class DriverContainer
     private String deviceInterrupts = "";
     private Map<String,String> propertyMap = new HashMap<String,String>( 20 );
     private String reportFolder;
-    private List<ArtifactType> artifactList = new ArrayList<ArtifactType>( 20 );
+    private List<String> artifactList = new ArrayList<String>( 20 );
     private boolean secureCloud = false;
     
 
@@ -159,14 +159,14 @@ public class DriverContainer
         this.reportFolder = reportFolder;
     }
 
-    public List<ArtifactType> getArtifactList()
+    public List<String> getArtifactList()
     {
         return artifactList;
     }
 
-    public boolean isArtifactEnabled( ArtifactType aType )
+    public boolean isArtifactEnabled( String aType )
     {
-        for ( ArtifactType a : artifactList )
+        for ( String a : artifactList )
         {
             if ( a.equals( aType ) )
                 return true;
@@ -185,7 +185,7 @@ public class DriverContainer
             {
                 try
                 {
-                    this.artifactList.add( ArtifactType.valueOf( artifact.toUpperCase() ) );
+                    this.artifactList.add( artifact.toUpperCase() );
                 }
                 catch( Exception e )
                 {
@@ -195,12 +195,12 @@ public class DriverContainer
         }
     }
     
-    public void addArtifact( ArtifactType artifactType )
+    public void addArtifact( String artifactType )
     {
         artifactList.add( artifactType );
     }
     
-    public void setArtifactList( List<ArtifactType> artifactList )
+    public void setArtifactList( List<String> artifactList )
     {
         this.artifactList = artifactList;
     }
@@ -245,12 +245,12 @@ public class DriverContainer
         this.perfectoWindTunnel = perfectoWindTunnel;
     }
 
-    public boolean isDisplayReport()
+    public String getDisplayReport()
     {
         return displayReport;
     }
 
-    public void setDisplayReport( boolean displayReport )
+    public void setDisplayReport( String displayReport )
     {
         this.displayReport = displayReport;
     }

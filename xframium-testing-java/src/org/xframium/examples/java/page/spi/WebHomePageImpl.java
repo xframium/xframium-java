@@ -11,5 +11,18 @@ public class WebHomePageImpl extends AbstractPage implements WebHomePage
         // TODO Auto-generated method stub
 
     }
+    
+    public void testKeyword()
+    {
+        try
+        {
+            executeStep( "COMPARE2", "page", "element", new String[ 0 ] );
+        }
+        catch( Exception e )
+        {
+            
+        }
+        
+    }
 
 }

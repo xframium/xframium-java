@@ -31,10 +31,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.content.ContentManager;
 import org.xframium.device.DeviceManager;
-import org.xframium.device.artifact.api.PerfectoArtifactProducer;
 import org.xframium.device.cloud.CloudDescriptor;
-import org.xframium.device.cloud.CloudRegistry;
-import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.factory.AbstractDriverFactory;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.DeviceConfigurationException;
@@ -137,7 +134,6 @@ public class IOSDriverFactory extends AbstractDriverFactory
             }
 			
 			
-            webDriver.setArtifactProducer( getCloudActionProvider( useCloud ).getArtifactProducer() );
             webDriver.setCloud( useCloud );
             
 			return webDriver;

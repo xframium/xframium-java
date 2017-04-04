@@ -24,9 +24,18 @@ package org.xframium.page;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.element.Element;
+import org.xframium.page.keyWord.KeyWordPage;
+import org.xframium.page.keyWord.KeyWordParameter;
+import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
+import org.xframium.page.keyWord.KeyWordStep;
+import org.xframium.page.keyWord.KeyWordStep.StepFailure;
+import org.xframium.page.keyWord.spi.KeyWordPageImpl;
+import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc
@@ -120,7 +129,7 @@ public abstract class AbstractPage implements Page
     
     
     /**
-     * Gets the page name.  This will extract the Clas simple name
+     * Gets the page name.  This will extract the Class simple name
      *
      * @return the page name
      */
@@ -135,6 +144,71 @@ public abstract class AbstractPage implements Page
     public final void setDriver( Object webDriver )
     {
     	this.webDriver = webDriver;
+    }
+    
+    /**
+     * Creates a KeyWord step to be used in a Java test
+     *
+     * @param keyword The name of the keyword
+     * @param pageName the page name
+     * @param elementName the element name
+     * @param parameterList A list of parameter to pass to the keyword.  User name==value for named parameters
+     * @return The created step
+     */
+    protected KeyWordStep createStep( String keyword, String pageName, String elementName, String[] parameterList )
+    {
+        KeyWordStep step = KeyWordStepFactory.instance().createStep( elementName, pageName, true, keyword, null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, keyword, null, null, null, null, false, false, null, null, null, null );
+        
+        if ( parameterList != null )
+        {
+            for ( String s : parameterList )
+            {
+                String[] sArray = s.split( "==" );
+                if ( s.contains( "==" ) )
+                    step.addParameter( new KeyWordParameter( ParameterType.STATIC, sArray.length > 1 ? sArray[1] : "{EMPTY}", sArray[0], null ) );
+                else
+                    step.addParameter( new KeyWordParameter( ParameterType.STATIC, s, null, null ) );
+            }
+        }
+        
+        return step;
+        
+    }
+    
+    /**
+     * Execute a keyword step
+     *
+     * @param step the step
+     * @param webDriver the web driver
+     * @return true, if successful
+     * @throws Exception the exception
+     */
+    protected Map<String,Object> executeStep( KeyWordStep step ) throws Exception
+    {
+        KeyWordPage p = new KeyWordPageImpl();
+        p.setPageName( step.getPageName() );
+        Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
+        contextMap.put( "RESULT", step.executeStep( p, ( (DeviceWebDriver) webDriver ), contextMap, null, null, null, ( (DeviceWebDriver) webDriver ).getExecutionContext() ) );
+        return contextMap;
+    }
+    
+    /**
+     * Creates and executes a KeyWord step
+     *
+     * @param keyword The name of the keyword
+     * @param pageName the page name
+     * @param elementName the element name
+     * @param parameterList A list of parameter to pass to the keyword.  User name==value for named parameters
+     * @param webDriver The webDriver for the active run
+     * @return The created step
+     */
+    protected Map<String,Object> executeStep( String keyword, String pageName, String elementName, String[] parameterList ) throws Exception
+    {
+        KeyWordPage p = new KeyWordPageImpl();
+        p.setPageName( pageName );
+        Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
+        contextMap.put( "RESULT", createStep( keyword, pageName, elementName, parameterList ).executeStep( p, ( (DeviceWebDriver) webDriver ), contextMap, null, null, null, ( (DeviceWebDriver) webDriver ).getExecutionContext() ) );
+        return contextMap;
     }
     
     

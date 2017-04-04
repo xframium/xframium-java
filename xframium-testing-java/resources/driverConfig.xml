@@ -14,6 +14,9 @@
     <artifact type="EXECUTION_RECORD_JSON" />
     <artifact type="CONSOLE_LOG" />
     <artifact type="GRID_REPORT" />
+    <artifact type="TAB_WEBHOME" />
+    <artifact type="SAUCE_LABS" />
+    <artifact type="REPORTIUM" />
   </driver>
   <model provider="XML" siteName="xTest" fileName="page-home.xml" />
 </xFramium>

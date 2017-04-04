@@ -568,7 +568,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
         if ( personaNames != null && !personaNames.isEmpty() )
             dC.setPerfectoPersonas( personaNames );
         
-        dC.setDisplayReport( Boolean.parseBoolean( configProperties.get( "driver.displayResults" ) ) );
+        dC.setDisplayReport( configProperties.get( "driver.displayResults" ) );
         dC.setSmartCaching( Boolean.parseBoolean( configProperties.get( "driver.enableCaching" ) ) );
         dC.setEmbeddedServer( Boolean.parseBoolean( configProperties.get( "driver.embeddedServer" ) ) );
         dC.setSecureCloud( Boolean.parseBoolean( configProperties.get( "security.secureCloud" ) ) );

@@ -79,9 +79,6 @@ public class PageManager
     /** The execution listeners. */
     private List<ExecutionListener> executionListeners = new ArrayList<ExecutionListener>( 20 );
 
-    /** The execution log. */
-
-    private ThreadLocal<List<ExecutionRecord>> executionLog = new ThreadLocal<List<ExecutionRecord>>();
 
     /** The local exception. */
     private ThreadLocal<Throwable> localException = new ThreadLocal<Throwable>();

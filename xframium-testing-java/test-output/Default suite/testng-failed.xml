@@ -6,10 +6,11 @@
       <class name="org.xframium.examples.java.test.WebHome">
         <methods>
           <include name="beforeMethod"/>
+          <include name="testXFramiumWithJavaPOM" invocation-numbers="0 1"/>
           <include name="afterMethod"/>
           <include name="afterSuite"/>
           <include name="setupSuite"/>
-          <include name="testXFramiumWithKWPOM" invocation-numbers="0 1"/>
+          <include name="testNativeSeleniumAppium" invocation-numbers="0 1"/>
         </methods>
       </class> <!-- org.xframium.examples.java.test.WebHome -->
     </classes>

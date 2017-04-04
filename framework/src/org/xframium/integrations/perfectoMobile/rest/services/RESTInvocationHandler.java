@@ -37,6 +37,7 @@ import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.exception.DeviceException;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
+import org.xframium.integrations.perfectoMobile.rest.bean.ItemCollection;
 import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.NameOverride;
 import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.Operation;
 import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.Parameter;
@@ -44,6 +45,7 @@ import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.Pa
 import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.PerfectoCommand;
 import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.ResourceID;
 import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.ServiceDescriptor;
+import org.xframium.integrations.perfectoMobile.rest.services.Repositories.RepositoryType;
 import org.xframium.integrations.rest.bean.Bean;
 import org.xframium.integrations.rest.bean.factory.BeanManager;
 
@@ -65,6 +67,8 @@ public class RESTInvocationHandler implements InvocationHandler
 	
 	/** The log. */
 	private Log log = LogFactory.getLog( RESTInvocationHandler.class );
+	
+	
 	
 	/* (non-Javadoc)
 	 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])

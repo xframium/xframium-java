@@ -32,6 +32,14 @@
       <parameter type="CONTEXT" name="new parameter" value="decimalValue" />
       <parameter type="STATIC" name="new parameter" value="123.99" />
     </step>
+    
+    <step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="toggleButtonValue" />
+    
+    <step name="CONTAINS" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="CONTEXT" name="Original Value" value="toggleButtonValue" />
+      <parameter type="STATIC" name="Value" value="le Va" />
+    </step>
+    
     <step name="CONTAINS" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
       <parameter type="STATIC" name="Original Value" value="my lower back" />
       <parameter type="STATIC" name="Value" value="back" />
@@ -50,7 +58,6 @@
     <step name="SUBSTR" site="xTest" page="home" type="REPORT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="ourValue">
       <parameter type="CONTEXT" name="Original Value" value="ourValue" />
     </step>
-    
     
     
     <step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">

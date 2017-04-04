@@ -1,7 +1,6 @@
 package org.xframium.device.cloud.action;
 
-import org.openqa.selenium.WebElement;
-import org.xframium.device.artifact.ArtifactProducer;
+import java.io.InputStream;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.integrations.common.PercentagePoint;
 import org.xframium.page.BY;
@@ -13,7 +12,6 @@ public interface CloudActionProvider
 {
     public boolean startApp( String executionId, String deviceId, String appName, String appIdentifier );
     public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device );
-    public ArtifactProducer getArtifactProducer();
     public void enabledLogging( DeviceWebDriver webDriver );
     public void disableLogging( DeviceWebDriver webDriver );
     public String getExecutionId( DeviceWebDriver webDriver );
@@ -31,5 +29,8 @@ public interface CloudActionProvider
     public void stopTimer( DeviceWebDriver webDriver, String timerId, ExecutionContextTest executionContext );
 
     public void tap( DeviceWebDriver webDriver, PercentagePoint location, int lengthInMillis );
+    public String getLog( DeviceWebDriver webDriver );
+    
+    public InputStream getReport( DeviceWebDriver webDriver, String reportType );
     
 }

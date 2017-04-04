@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -38,31 +39,34 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactTime;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.content.ContentManager;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
-import org.xframium.device.artifact.Artifact;
-import org.xframium.device.artifact.ArtifactProducer;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
-import org.xframium.exception.XFramiumException.ExceptionType;
-import org.xframium.integrations.alm.ALMRESTConnection;
-import org.xframium.integrations.alm.entity.ALMAttachment;
-import org.xframium.integrations.alm.entity.ALMDefect;
+import org.xframium.exception.ScriptException;
+import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordPage;
+import org.xframium.page.keyWord.KeyWordParameter;
+import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
+import org.xframium.page.keyWord.KeyWordStep;
+import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.keyWord.spi.KeyWordPageImpl;
+import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.reporting.ExecutionContextTest.TestStatus;
 import org.xframium.spi.Device;
-import org.xframium.spi.driver.ReportiumProvider;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -416,6 +420,8 @@ public abstract class AbstractSeleniumTest
 
             TestName testName = testPackage.getTestName();
             
+            
+            
             if ( !xmlMode )
             {
                 //
@@ -424,15 +430,23 @@ public abstract class AbstractSeleniumTest
                 ExecutionContextTest eC = new ExecutionContextTest();
                 eC.setTestName( currentMethod.getName() );
                 
+                CloudDescriptor cD = CloudRegistry.instance().getCloud();
+                if ( testPackage.getDevice().getCloud() != null && !testPackage.getDevice().getCloud().trim().isEmpty() )
+                    cD = CloudRegistry.instance().getCloud( testPackage.getDevice().getCloud() );
+                
                 KeyWordTest kwt = new KeyWordTest( currentMethod.getName(), true, null, null, false, null, null, 0, currentMethod.getName() + " from " + currentMethod.getClass().getName(), null, null, null, ExecutionContext.instance().getConfigProperties(), 0, null, null, null, null, 0, 0 );
                 eC.setTest( kwt );
                 eC.setAut( ApplicationRegistry.instance().getAUT() );
-                eC.setCloud( CloudRegistry.instance().getCloud() );
+                eC.setCloud( cD );
                 eC.setDevice( testPackage.getConnectedDevice().getPopulatedDevice() );
                 testPackage.getConnectedDevice().getWebDriver().setExecutionContext( eC );
+                testName.setTestName( currentMethod.getName() );
                 
                 testName.setTest( eC );
             }
+            
+            File artifactFolder = new File( testPackage.getConnectedDevice().getDevice().getEnvironment(), testName.getTestName() );
+            testPackage.getConnectedDevice().getWebDriver().setArtifactFolder( artifactFolder );
                 
             
             
@@ -464,7 +478,7 @@ public abstract class AbstractSeleniumTest
             {
                 try
                 {
-                    if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
+                    if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG.name() ) )
                         connectedDevice.getWebDriver().getCloud().getCloudActionProvider().enabledLogging( connectedDevice.getWebDriver() );
                 }
                 catch ( Exception e )
@@ -528,6 +542,16 @@ public abstract class AbstractSeleniumTest
         }
     }
 
+    private String exceptionToString(Throwable t )
+    {
+        StringBuilder s = new StringBuilder();
+        s.append( t.toString() ).append(  "\r\n" );
+        for( StackTraceElement e : t.getStackTrace() )
+            s.append( "\t" ).append( e.toString() ).append( "\r\n" );
+        
+        return s.toString();
+    }
+    
     /**
      * After method.
      *
@@ -553,9 +577,23 @@ public abstract class AbstractSeleniumTest
 
             if ( testPackage.getConnectedDevice().getWebDriver() != null && testPackage.getConnectedDevice().getWebDriver().isConnected() )
             {
+                testPackage.getConnectedDevice().getWebDriver().getExecutionContext().setSessionId( testPackage.getConnectedDevice().getWebDriver().getExecutionId() );
+                if ( !testResult.isSuccess() )
+                {
+                    if ( testResult.getThrowable() != null )
+                    {
+                        if ( testPackage.getConnectedDevice().getWebDriver().getExecutionContext().getStep() != null )
+                        {
+                            log.error( "Uncaught test failure", testResult.getThrowable() );
+                            testPackage.getConnectedDevice().getWebDriver().getExecutionContext().getStep().getStep().dumpState( testPackage.getConnectedDevice().getWebDriver(), new HashMap<String,Object>(0), new HashMap<String,PageData>(0), testPackage.getConnectedDevice().getWebDriver().getExecutionContext() );
+                            testPackage.getConnectedDevice().getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, new ScriptException( exceptionToString( testResult.getThrowable() ) ) );
+                        }
+                    }
+                }
+                
                 try
                 {
-                    if ( DataManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG ) )
+                    if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG.name() ) )
                         testPackage.getConnectedDevice().getWebDriver().getCloud().getCloudActionProvider().disableLogging( testPackage.getConnectedDevice().getWebDriver() );
 
                 }
@@ -586,7 +624,6 @@ public abstract class AbstractSeleniumTest
 
             try
             {
-                DeviceManager.instance().clearAllArtifacts();
                 Thread.currentThread().setName( "xF-Idle Thread" );
             }
             catch ( Exception e )
@@ -605,6 +642,100 @@ public abstract class AbstractSeleniumTest
             
         }
     }
+    
+    /**
+     * Captures the state (image and source) of the running application
+     *
+     * @param webDriver the web driver
+     * @throws Exception the exception
+     */
+    public void dumpState( DeviceWebDriver webDriver ) throws Exception
+    {
+        createStep( "STATE", "", "", new String[ 0 ]).executeStep( null, webDriver, null, null, null, null, webDriver.getExecutionContext() );
+    }
+    
+    /**
+     * Captures the state (image and source) of the running application and compares it for deviation against the previous historical values
+     *
+     * @param webDriver the web driver
+     * @param name the name
+     * @param historicalCount The number of historical records to compare to
+     * @param deviationPercentage The amount of image deviation from 0 to 100
+     * @throws Exception the exception
+     */
+    public void dumpState( DeviceWebDriver webDriver, String name, int historicalCount, int deviationPercentage) throws Exception
+    {
+        KeyWordStep step = createStep( "STATE", "", "", new String[ 0 ]);
+        step.addParameter( new KeyWordParameter( ParameterType.STATIC, name, "checkPointName", null ) );
+        step.addParameter( new KeyWordParameter( ParameterType.STATIC, historicalCount + "", "historicalCount", null ) );
+        step.addParameter( new KeyWordParameter( ParameterType.STATIC, deviationPercentage + "", "deviationPercentage", null ) );
+        step.executeStep( null, webDriver, null, null, null, null, webDriver.getExecutionContext() );
+    }
+    
+    /**
+     * Creates a KeyWord step to be used in a Java test
+     *
+     * @param keyword The name of the keyword
+     * @param pageName the page name
+     * @param elementName the element name
+     * @param parameterList A list of parameter to pass to the keyword.  User name==value for named parameters
+     * @return The created step
+     */
+    public KeyWordStep createStep( String keyword, String pageName, String elementName, String[] parameterList )
+    {
+        KeyWordStep step = KeyWordStepFactory.instance().createStep( elementName, pageName, true, keyword, null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, keyword, null, null, null, null, false, false, null, null, null, null );
+        
+        if ( parameterList != null )
+        {
+            for ( String s : parameterList )
+            {
+                String[] sArray = s.split( "==" );
+                if ( s.contains( "==" ) )
+                    step.addParameter( new KeyWordParameter( ParameterType.STATIC, sArray.length > 1 ? sArray[1] : "{EMPTY}", sArray[0], null ) );
+                else
+                    step.addParameter( new KeyWordParameter( ParameterType.STATIC, s, null, null ) );
+            }
+        }
+        
+        return step;
+        
+    }
+    
+    /**
+     * Execute a keyword step
+     *
+     * @param step the step
+     * @param webDriver the web driver
+     * @return true, if successful
+     * @throws Exception the exception
+     */
+    public Map<String,Object> executeStep( KeyWordStep step, DeviceWebDriver webDriver ) throws Exception
+    {
+        KeyWordPage p = new KeyWordPageImpl();
+        p.setPageName( step.getPageName() );
+        Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
+        contextMap.put( "RESULT", step.executeStep( p, webDriver, contextMap, null, null, null, webDriver.getExecutionContext() ) );
+        return contextMap;
+    }
+    
+    /**
+     * Creates and executes a KeyWord step
+     *
+     * @param keyword The name of the keyword
+     * @param pageName the page name
+     * @param elementName the element name
+     * @param parameterList A list of parameter to pass to the keyword.  User name==value for named parameters
+     * @param webDriver The webDriver for the active run
+     * @return The created step
+     */
+    public Map<String,Object> executeStep( String keyword, String pageName, String elementName, String[] parameterList, DeviceWebDriver webDriver ) throws Exception
+    {
+        KeyWordPage p = new KeyWordPageImpl();
+        p.setPageName( pageName );
+        Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
+        contextMap.put( "RESULT", createStep( keyword, pageName, elementName, parameterList ).executeStep( p, webDriver, null, null, null, null, webDriver.getExecutionContext() ) );
+        return contextMap;
+    }
 
     private void cleanUpConnectedDevice( String name, TestName testName, ConnectedDevice device, ITestResult testResult, boolean primaryDevice, TestPackage testPackage )
     {
@@ -619,8 +750,6 @@ public abstract class AbstractSeleniumTest
             if ( webDriver != null )
             {
 
-                String runKey = primaryDevice ? testName.getTestName() : testName.getTestName() + "-" + name;
-
                 if ( primaryDevice )
                 {
                     test = testName.getTest();
@@ -632,46 +761,22 @@ public abstract class AbstractSeleniumTest
                     
                 }
 
-                File rootFolder = ExecutionContext.instance().getReportFolder();
+                if ( DataManager.instance().getReportFolder() == null )
+                    DataManager.instance().setReportFolder( new File( "." ) );
+                
+                File rootFolder = new File( ExecutionContext.instance().getReportFolder(), webDriver.getArtifactFolder().getPath() );
+                //rootFolder = new File( rootFolder, primaryDevice ? testName.getTestName() : testName.getTestName() + "-" + name );
                 rootFolder.mkdirs();
-
                 try
                 {
                     if ( webDriver.isConnected() && !testResult.isSuccess() )
                     {
-
-                        if ( DataManager.instance().getAutomaticDownloads() != null )
+                        List<String> aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.ON_FAILURE );
+                        if ( aList != null )
                         {
-                            if ( webDriver instanceof ArtifactProducer )
+                            for ( String artifactType : aList )
                             {
-                                if ( DataManager.instance().getReportFolder() == null )
-                                    DataManager.instance().setReportFolder( new File( "." ) );
-
-                                for ( ArtifactType aType : DataManager.instance().getAutomaticDownloads() )
-                                {
-                                    if ( aType.getTime() == ArtifactTime.ON_FAILURE )
-                                    {
-                                        if ( testFlow.isInfoEnabled() )
-                                            testFlow.info( Thread.currentThread().getName() + ":Writing out failure artifact " + aType );
-                                        try
-                                        {
-                                            Artifact currentArtifact = ((ArtifactProducer) webDriver).getArtifact( webDriver, aType, device, runKey, testResult.getStatus() == ITestResult.SUCCESS, test );
-                                            if ( currentArtifact != null )
-                                            {
-                                                if ( test != null )
-                                                {
-                                                    test.addExecutionParameter( aType.name(), currentArtifact.getArtifactName() );
-                                                    test.addExecutionParameter( aType.name() + "_FILE", new File( currentArtifact.getArtifactName() ).getName() );
-                                                }
-                                                currentArtifact.writeToDisk( rootFolder );
-                                            }
-                                        }
-                                        catch ( Exception e )
-                                        {
-                                            testFlow.error( Thread.currentThread().getName() + ":Error acquiring Artifacts ", e );
-                                        }
-                                    }
-                                }
+                                ArtifactManager.instance().generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver );
                             }
                         }
                     }
@@ -688,158 +793,33 @@ public abstract class AbstractSeleniumTest
                     {
                     }
                 }
-
-                if ( DataManager.instance().getAutomaticDownloads() != null )
+                
+                if ( webDriver.isConnected() )
                 {
-                    if ( webDriver.isConnected() && webDriver instanceof ArtifactProducer )
-                    {
-                        if ( DataManager.instance().getReportFolder() == null )
-                            DataManager.instance().setReportFolder( new File( "." ) );
-
-                        for ( ArtifactType aType : DataManager.instance().getAutomaticDownloads() )
-                        {
-                            if ( aType.getTime() == ArtifactTime.AFTER_TEST )
-                            {
-                                if ( testFlow.isInfoEnabled() )
-                                    testFlow.info( Thread.currentThread().getName() + ":Writing out after artifact " + aType );
-                                try
-                                {
-                                    Artifact currentArtifact = ((ArtifactProducer) webDriver).getArtifact( webDriver, aType, device, runKey, testResult.getStatus() == ITestResult.SUCCESS, test );
-                                    if ( currentArtifact != null )
-                                    {
-                                        if ( test != null )
-                                        {
-                                            test.addExecutionParameter( aType.name(), currentArtifact.getArtifactName() );
-                                            test.addExecutionParameter( aType.name() + "_FILE", new File( currentArtifact.getArtifactName() ).getName() );
-                                        }
-                                        currentArtifact.writeToDisk( rootFolder );
-                                    }
-                                }
-                                catch ( Exception e )
-                                {
-                                    log.error( "Error acquiring Artifacts ", e );
-                                }
-                            }
-                        }
-                    }
-
-                    //
-                    // Cloud specific artifacts
-                    //
-                    CloudDescriptor currentCloud = CloudRegistry.instance().getCloud();
-                    if ( device.getDevice().getCloud() != null && !device.getDevice().getCloud().isEmpty() )
-                        currentCloud = CloudRegistry.instance().getCloud( device.getDevice().getCloud() );
-                    String cloudProvider = currentCloud.getProvider();
-
+                    List<String> aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.AFTER_TEST );
                     
-                    if ( webDriver.isConnected() )
+                    if ( aList != null )
                     {
-                        //
-                        // Perfecto Wind Tunnel
-                        //
-                        String wtUrl = ((DeviceWebDriver) webDriver).getWindTunnelReport();
-                        if ( test != null && cloudProvider.equals( "PERFECTO" ) && wtUrl != null && !wtUrl.isEmpty() )
-                            test.addExecutionParameter( "PERFECTO_WT", wtUrl );
-    
-                        //
-                        // Saucelabs integration
-                        //
-                        if ( test != null )
+                        for ( String artifactType : aList )
                         {
-                            if ( DataManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS ) && cloudProvider.equals( "SAUCELABS" ) )
-                                test.addExecutionParameter( "SAUCELABS", "https://saucelabs.com/beta/tests/" + test.getSessionId() + "/commands#0" );
-    
-                            if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) && ((DeviceWebDriver) webDriver).isConnected() && cloudProvider.equals( "PERFECTO" ) )
-                            {
-                                if ( ((ReportiumProvider) webDriver).getReportiumClient() != null )
-                                {
-                                    test.addExecutionParameter( "REPORTIUM", ((ReportiumProvider) webDriver).getReportiumClient().getReportUrl() );
-                                }
-                            }
-                        }
-                    }
-                    
-                    if ( test != null )
-                    {
-                        ExceptionType eType = test.getExceptionType();
-                        
-                        try
-                        {
-                            if ( webDriver.isConnected() && !testResult.isSuccess() &&  DataManager.instance().isArtifactEnabled( ArtifactType.ALM_DEFECT ) && eType != null && eType.equals( ExceptionType.SCRIPT ) )
-                            {
-                                //
-                                // ALM Integration
-                                //
-                                ALMDefect almDefect = new ALMDefect();
-                                almDefect.setAssignedTo( ExecutionContext.instance().getConfigProperties().get( "alm.assignedTo" ) );
-                                almDefect.setDescription( test.getMessageDetail() );
-                                almDefect.setDetectedBy( ExecutionContext.instance().getConfigProperties().get( "alm.userName" ) );
-                                almDefect.setDetectedInCycle( ExecutionContext.instance().getPhase() );
-                                almDefect.setDetectedInEnvironment( ExecutionContext.instance().getAut().getEnvironment() );
-                                almDefect.setDetectedInRelease( ((int) ExecutionContext.instance().getAut().getVersion()) + "" );
-
-                                almDefect.setPriority( test.getTest().getPriority() );
-                                almDefect.setSeverity( test.getTest().getSeverity() );
-                                almDefect.setStatus( ExecutionContext.instance().getConfigProperties().get( "alm.defectStatus" ) );
-                                almDefect.setSummary( test.getMessage() );
-                                List<ALMAttachment> artifactList = new ArrayList<ALMAttachment>( 10 );
-                                for ( ArtifactType a : ArtifactType.CONSOLE_LOG.getSupported() )
-                                {
-                                    if ( test.getExecutionParameter( a.name() + "_FILE" ) != null )
-                                    {
-                                        artifactList.add( new ALMAttachment( new File( rootFolder, test.getTestName() + System.getProperty( "file.separator" ) + test.getDevice().getKey() + System.getProperty( "file.separator" ) + test.getExecutionParameter( a.name() + "_FILE" ) ), null, "", a.getDescription() ) );
-                                    }
-                                }
-                                
-                                String screenShot = test.getScreenShotLocation();
-                                if ( screenShot != null )
-                                {
-                                    artifactList.add( new ALMAttachment( new File( screenShot ), null, "", "SCREENSHOT" ) );
-                                }
-                                
-                                almDefect.setAttachments( artifactList.toArray( new ALMAttachment[ 0 ] ) );
-                                ALMRESTConnection arc = new ALMRESTConnection( ExecutionContext.instance().getConfigProperties().get( "alm.serverUrl" ), ExecutionContext.instance().getDomain(), ExecutionContext.instance().getSuiteName() );
-                                arc.login( ExecutionContext.instance().getConfigProperties().get( "alm.userName" ), ExecutionContext.instance().getConfigProperties().get( "alm.password" ) );
-                                if ( log.isInfoEnabled() )
-                                    log.info( "ALM: " + almDefect.toXML() );
-                                String almDefectUrl = arc.addDefect( almDefect );
-                                
-                                
-                                test.addExecutionParameter( "ALM_DEFECT", almDefectUrl + "?login-form-required=y" );
-                                arc.logout();
-                                
-                                
-                            }
-                            
-
-                        }
-                        catch ( Exception e )
-                        {
-                            log.error( "Error Update ALM - " + e );
-                        }
-                        
-                        try
-                        {
-                            if ( testFlow.isInfoEnabled() )
-                                testFlow.info( Thread.currentThread().getName() + ":Writing out default artifact" );
-                            test.popupateSystemProperties();
-                            Artifact currentArtifact = ((ArtifactProducer) webDriver).getArtifact( webDriver, ArtifactType.EXECUTION_RECORD_JSON, device, runKey, testResult.getStatus() == ITestResult.SUCCESS, test );
-                            if ( currentArtifact != null )
-                                currentArtifact.writeToDisk( rootFolder );
-                            
-                            currentArtifact = ((ArtifactProducer) webDriver).getArtifact( webDriver, ArtifactType.EXECUTION_RECORD_HTML, device, runKey, testResult.getStatus() == ITestResult.SUCCESS, test );
-                            if ( currentArtifact != null )
-                                currentArtifact.writeToDisk( rootFolder );
-                        }
-                        catch( Exception e )
-                        {
-                            log.error( "Error creating xFramium reports - " + e );
+                            ArtifactManager.instance().generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver );
                         }
                     }
                 }
-            }
+                
+                if ( webDriver.isConnected() )
+                {
+                    List<String> aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.AFTER_ARTIFACTS );
+                    if ( aList != null )
+                    {
+                        for ( String artifactType : aList )
+                        {
+                            ArtifactManager.instance().generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver );
+                        }
+                    }
+                }
 
-            
+            }
         }
         finally
         {

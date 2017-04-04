@@ -45,6 +45,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.application.ApplicationVersion;
+import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.container.SuiteContainer;
 import org.xframium.content.ContentManager;
@@ -913,7 +914,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
                 if ( ((DeviceWebDriver) webDriver).getCloud().getProvider().equals( "PERFECTO" ) )
                 {
-                    if ( DataManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM ) )
+                    if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
                     {
                         if ( ((ReportiumProvider) webDriver).getReportiumClient() != null )
                         {
@@ -1128,7 +1129,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 if ( !returnValue )
                 {
                     if ( !sFailure.equals( StepFailure.IGNORE ) )
-                        dumpState( pageObject, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+                        dumpState( webDriver, contextMap, dataMap, executionContext );
                 }
             }
             catch ( Exception e )
@@ -1930,7 +1931,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         return rtn;
     }
 
-    protected void dumpState( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
+    public void dumpState(WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, ExecutionContextTest executionContext )
     {
         String checkPointName = null;
         int historicalCount = -1;
@@ -1975,8 +1976,13 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     screenFile = File.createTempFile( "state", ".png", useFolder );
 
                 if ( contextMap != null )
-                    contextMap.put( "_SCREENSHOT", screenFile.getAbsolutePath() );
-                executionContext.getStep().addExecutionParameter( "SCREENSHOT", screenFile.getPath() );
+                {
+                    contextMap.put( "_SCREENSHOT_ABS", screenFile.getAbsolutePath() );
+                    contextMap.put( "_SCREENSHOT", "../../artifacts/" + screenFile.getName() );
+                }
+                
+                executionContext.getStep().addExecutionParameter( "SCREENSHOT_ABS", screenFile.getPath() );
+                executionContext.getStep().addExecutionParameter( "SCREENSHOT", "../../artifacts/" + screenFile.getName() );
                 screenFile.getParentFile().mkdirs();
                 os = new BufferedOutputStream( new FileOutputStream( screenFile ) );
                 os.write( screenShot );
@@ -2040,8 +2046,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             }
             catch ( Exception e )
             {
-                e.printStackTrace();
-                throw new ScriptException( "Error taking screenshot" );
+                log.warn( "Error taking screenshot", e );
+                throw new ScriptException( e.getMessage() );
             }
             finally
             {
@@ -2064,12 +2070,16 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
             if ( contextMap != null )
             {
-                contextMap.put( "_DOM_XML", xmlFile.getAbsolutePath() );
-                contextMap.put( "_DOM_HTML", domFile.getAbsolutePath() );
+                contextMap.put( "_DOM_XML_ABS", xmlFile.getAbsolutePath() );
+                contextMap.put( "_DOM_XML", "../../artifacts/" + xmlFile.getName() );
+                contextMap.put( "_DOM_HTML_ABS", domFile.getAbsolutePath() );
+                contextMap.put( "_DOM_HTML", "../../artifacts/" + domFile.getName() );
             }
 
-            executionContext.getStep().addExecutionParameter( "XML", xmlFile.getPath() );
-            executionContext.getStep().addExecutionParameter( "HTML", domFile.getPath() );
+            executionContext.getStep().addExecutionParameter( "XML_ABS", xmlFile.getPath() );
+            executionContext.getStep().addExecutionParameter( "HTML_ABS", domFile.getPath() );
+            executionContext.getStep().addExecutionParameter( "XML", "../../artifacts/" + xmlFile.getName() );
+            executionContext.getStep().addExecutionParameter( "HTML", "../../artifacts/" + domFile.getName() );
 
             String pageSource = webDriver.getPageSource();
             outputStream = new FileOutputStream( xmlFile );

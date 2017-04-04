@@ -1,8 +1,6 @@
 package org.xframium.device.cloud.action;
 
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.xframium.device.artifact.ArtifactProducer;
-import org.xframium.device.artifact.api.SeleniumArtifactProducer;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.integrations.common.PercentagePoint;
 import org.xframium.page.BY;
@@ -26,6 +24,13 @@ public class WINDOWSCloudActionProvider extends AbstractCloudActionProvider
             default:
                 return true;
         }
+    }
+	
+	@Override
+    public String getLog( DeviceWebDriver webDriver )
+    {
+        return null;
+        
     }
 	
 	@Override
@@ -54,12 +59,6 @@ public class WINDOWSCloudActionProvider extends AbstractCloudActionProvider
     public String getExecutionId( DeviceWebDriver webDriver )
     {
         return ( (RemoteWebDriver) webDriver.getNativeDriver() ).getSessionId().toString();
-    }
-    
-    @Override
-    public ArtifactProducer getArtifactProducer()
-    {
-        return new SeleniumArtifactProducer();
     }
     
     @Override

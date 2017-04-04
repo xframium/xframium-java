@@ -15,4 +15,6 @@ public interface WebHomePage extends Page
     
     @ElementDefinition
     public static final String DELETE_BUTTON = "deleteButton";
+    
+    public void testKeyword();
 }

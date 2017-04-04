@@ -24,6 +24,7 @@
 package org.xframium.device.factory;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,11 +66,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xframium.application.ApplicationDescriptor;
-import org.xframium.artifact.ArtifactType;
-import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
-import org.xframium.device.artifact.Artifact;
-import org.xframium.device.artifact.ArtifactProducer;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.interrupt.DeviceInterrupt;
 import org.xframium.device.interrupt.DeviceInterruptThread;
@@ -95,7 +92,7 @@ import io.appium.java_client.AppiumDriver;
  * The Class DeviceWebDriver.
  */
 public class DeviceWebDriver
-        implements HasCapabilities, WebDriver, JavascriptExecutor, ContextAware, ExecuteMethod, ArtifactProducer, NativeDriverProvider, PropertyProvider, TakesScreenshot, DeviceProvider, HasInputDevices, CachingDriver, ReportiumProvider, HasTouchScreen
+        implements HasCapabilities, WebDriver, JavascriptExecutor, ContextAware, ExecuteMethod, NativeDriverProvider, PropertyProvider, TakesScreenshot, DeviceProvider, HasInputDevices, CachingDriver, ReportiumProvider, HasTouchScreen
 {
 
     
@@ -136,8 +133,18 @@ public class DeviceWebDriver
     private ApplicationDescriptor aut;
     
     private ExecutionContextTest executionContext;
-
     
+    private File artifactFolder = null;
+    
+    public void setArtifactFolder( File artifactFolder )
+    {
+        this.artifactFolder = artifactFolder;
+    }
+    
+    public File getArtifactFolder()
+    {
+        return artifactFolder;
+    }
     
     public boolean isReportingElement()
     {
@@ -172,6 +179,11 @@ public class DeviceWebDriver
     public long getPageLoadTimeout()
     {
         return pageLoadTimeout;
+    }
+    
+    public String getLog()
+    {
+        return DeviceManager.instance().getLog();
     }
 
     public ApplicationDescriptor getAut()
@@ -226,8 +238,6 @@ public class DeviceWebDriver
     /** The context handles. */
     private Set<String> contextHandles;
 
-    /** The artifact producer. */
-    private ArtifactProducer artifactProducer;
 
     /** The log. */
     protected Log log = LogFactory.getLog( DeviceWebDriver.class );
@@ -362,17 +372,6 @@ public class DeviceWebDriver
             diThread = new DeviceInterruptThread( interruptList, this );
             new Thread( diThread ).start();
         }
-    }
-
-    /**
-     * Sets the artifact producer.
-     *
-     * @param artifactProducer
-     *            the new artifact producer
-     */
-    public void setArtifactProducer( ArtifactProducer artifactProducer )
-    {
-        this.artifactProducer = artifactProducer;
     }
 
     /**
@@ -868,55 +867,6 @@ public class DeviceWebDriver
         }
         else
             throw new IllegalArgumentException( "Attempting to execution a remote command on an unsupported driver" );
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.perfectoMobile.device.artifact.ArtifactProducer#getArtifact(org.
-     * openqa.selenium.WebDriver,
-     * com.perfectoMobile.device.artifact.ArtifactProducer.ArtifactType,
-     * com.perfectoMobile.device.ConnectedDevice)
-     */
-    public Artifact getArtifact( WebDriver webDriver, ArtifactType aType, ConnectedDevice connectedDevice, String testName, boolean success, ExecutionContextTest test )
-    {
-        if ( artifactProducer != null )
-        {
-            Map<String, String> parameterMap = new HashMap<String, String>( 3 );
-            parameterMap.put( EXECUTION_ID, executionId );
-            parameterMap.put( REPORT_KEY, reportKey );
-            parameterMap.put( DEVICE_NAME, deviceName );
-            parameterMap.put( WIND_TUNNEL, windTunnelReport );
-            return artifactProducer.getArtifact( webDriver, aType, parameterMap, connectedDevice, testName, success, test );
-        }
-        else
-            return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.perfectoMobile.device.artifact.ArtifactProducer#getArtifact(org.
-     * openqa.selenium.WebDriver,
-     * com.perfectoMobile.device.artifact.ArtifactProducer.ArtifactType,
-     * java.util.Map, com.perfectoMobile.device.ConnectedDevice)
-     */
-    public Artifact getArtifact( WebDriver webDriver, ArtifactType aType, Map<String, String> parameterMap, ConnectedDevice connectedDevice, String testName, boolean success, ExecutionContextTest test )
-    {
-        if ( artifactProducer != null )
-        {
-            if ( parameterMap == null )
-                parameterMap = new HashMap<String, String>( 3 );
-
-            parameterMap.put( EXECUTION_ID, executionId );
-            parameterMap.put( REPORT_KEY, reportKey );
-            parameterMap.put( DEVICE_NAME, deviceName );
-            parameterMap.put( WIND_TUNNEL, windTunnelReport );
-
-            return artifactProducer.getArtifact( webDriver, aType, parameterMap, connectedDevice, testName, success, test );
-        }
-        else
-            return null;
     }
 
     /*

@@ -58,6 +58,15 @@ public interface Repositories extends PerfectoService
 	public ItemCollection getRepositorys( @ResourceID RepositoryType rType );
 
 	/**
+     * Gets the repositorys.
+     *
+     * @param rType the r type
+     * @return the repositorys
+     */
+    @Operation( operationName="list" )
+    public ItemCollection list( @ResourceID RepositoryType rType, @ResourceID String folderName );
+	
+	/**
 	 * Download.
 	 *
 	 * @param rType the r type
@@ -77,5 +86,6 @@ public interface Repositories extends PerfectoService
 	 */
 	@Operation( operationName="delete" )
 	public byte[] delete( @ResourceID RepositoryType rType, @ResourceID String fileKey );
+	
 	
 }

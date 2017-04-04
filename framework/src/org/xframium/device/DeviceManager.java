@@ -35,9 +35,6 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
-import org.xframium.artifact.ArtifactListener;
-import org.xframium.artifact.ArtifactManager;
-import org.xframium.artifact.ArtifactType;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.data.DataProvider.DriverType;
 import org.xframium.device.data.NamedDataProvider;
@@ -47,8 +44,6 @@ import org.xframium.device.ng.RunContainer.RunStatus;
 import org.xframium.device.ng.TestContainer;
 import org.xframium.device.ng.TestPackage;
 import org.xframium.device.property.PropertyAdapter;
-import org.xframium.exception.XFramiumException;
-import org.xframium.page.ExecutionRecord;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordParameter;
@@ -60,7 +55,6 @@ import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextStep;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
-import org.xframium.spi.RunListener;
 import com.xframium.serialization.SerializationManager;
 import com.xframium.serialization.json.ReflectionSerializer;
 
@@ -68,7 +62,7 @@ import com.xframium.serialization.json.ReflectionSerializer;
 /**
  * The Class DeviceManager.
  */
-public class DeviceManager implements ArtifactListener
+public class DeviceManager
 {
     /** The singleton. */
     private static DeviceManager singleton = new DeviceManager();
@@ -81,7 +75,6 @@ public class DeviceManager implements ArtifactListener
     /** Stores an instance to a log handler */
     private ThreadLocal<StringBuffer> logHandler = new ThreadLocal<StringBuffer>();
 
-    private ThreadLocal<Map<ArtifactType, List<Object>>> artifactMap = new ThreadLocal<Map<ArtifactType, List<Object>>>();
 
     private String deviceInterrupts;
 
@@ -219,44 +212,7 @@ public class DeviceManager implements ArtifactListener
                 p.applyInstanceProperties( configurationProperties, webDriver );
         }
     }
-
-    public void addArtifactRecord( ArtifactType aType, Object value )
-    {
-        if ( artifactMap.get() == null )
-            artifactMap.set( new HashMap<ArtifactType, List<Object>>( 10 ) );
-
-        List<Object> artifactList = artifactMap.get().get( aType );
-        if ( artifactList == null )
-        {
-            artifactList = new ArrayList<Object>( 10 );
-            artifactMap.get().put( aType, artifactList );
-        }
-
-        artifactList.add( value );
-    }
-
-    public List<Object> getArtifacts( ArtifactType aType )
-    {
-        if ( artifactMap.get() == null )
-            return null;
-
-        return artifactMap.get().get( aType );
-    }
-
-    public void clearArtifacts( ArtifactType aType )
-    {
-        if ( artifactMap.get() == null )
-            return;
-
-        if ( artifactMap.get().get( aType ) != null )
-            artifactMap.get().get( aType ).clear();
-    }
-
-    public void clearAllArtifacts()
-    {
-        artifactMap.set( new HashMap<ArtifactType, List<Object>>( 10 ) );
-    }
-
+    
     public void addLog( String logMessage )
     {
         if ( logHandler.get() == null )
@@ -309,8 +265,6 @@ public class DeviceManager implements ArtifactListener
      */
     private DeviceManager()
     {
-        ArtifactManager.instance().addArtifactListener( this );
-
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ExecutionContext.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ExecutionContextTest.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ExecutionContextStep.class, new ReflectionSerializer() );
@@ -342,10 +296,6 @@ public class DeviceManager implements ArtifactListener
     /** The retry count. */
     private int retryCount = 3;
 
-    
-
-    /** The run listeners. */
-    private List<RunListener> runListeners = new ArrayList<RunListener>( 20 );
 
     /** The caching enabled. */
     private boolean cachingEnabled = false;
@@ -411,183 +361,7 @@ public class DeviceManager implements ArtifactListener
         return executionId.get();
     }
 
-    /**
-     * Adds the run listener.
-     *
-     * @param runListener
-     *            the run listener
-     */
-    public void addRunListener( RunListener runListener )
-    {
-        runListeners.add( runListener );
-    }
-
-    /**
-     * Removes the run listener.
-     *
-     * @param runListener
-     *            the run listener
-     */
-    public void removeRunListener( RunListener runListener )
-    {
-        runListeners.remove( runListener );
-    }
-
-    /**
-     * Notify before run.
-     *
-     * @param currentDevice
-     *            the current device
-     * @param runKey
-     *            the run key
-     * @return true, if successful
-     */
-    private boolean notifyBeforeRun( Device currentDevice, String runKey )
-    {
-        for ( RunListener runListener : runListeners )
-        {
-            try
-            {
-                if ( !runListener.beforeRun( currentDevice, runKey ) )
-                    return false;
-            }
-            catch ( Exception e )
-            {
-                log.error( "Error executing run listener", e );
-            }
-        }
-
-        return true;
-    }
-
-    private boolean notifyValidateDevice( Device currentDevice, String runKey )
-    {
-        for ( RunListener runListener : runListeners )
-        {
-            try
-            {
-                if ( !runListener.validateDevice( currentDevice, runKey ) )
-                    return false;
-            }
-            catch ( Exception e )
-            {
-                log.error( "Error executing run listener", e );
-            }
-        }
-
-        return true;
-    }
-
-    private void notifySkipRun( Device currentDevice, String runKey )
-    {
-        for ( RunListener runListener : runListeners )
-        {
-            try
-            {
-                runListener.skipRun( currentDevice, runKey );
-            }
-            catch ( Exception e )
-            {
-                log.error( "Error executing run listener", e );
-            }
-        }
-    }
-
-    /**
-     * Notify after run.
-     *
-     * @param currentDevice
-     *            the current device
-     * @param runKey
-     *            the run key
-     * @param successful
-     *            the successful
-     */
-    private void notifyAfterRun( Device currentDevice, String runKey, boolean successful )
-    {
-        for ( RunListener runListener : runListeners )
-        {
-            try
-            {
-                int stepsPassed = 0;
-                int stepsFailed = 0;
-                int stepsIgnored = 0;
-                long startTime = 0;
-                long stopTime = 0;
-                int scriptFailures = 0;
-                int appFailures = 0;
-                int cloudFailures = 0;
-                int configFailures = 0;
-                int filteredTests = 0;
-
-                int successFlag = successful ? 1 : 0;
-
-                if ( DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) != null && !DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ).isEmpty() )
-                {
-
-                    for ( Object item : DeviceManager.instance().getArtifacts( ArtifactType.EXECUTION_RECORD ) )
-                    {
-                        ExecutionRecord eItem = (ExecutionRecord) item;
-
-                        if ( startTime == 0 )
-                            startTime = eItem.getTimeStamp();
-
-                        if ( eItem.getTimeStamp() + eItem.getRunTime() > stopTime )
-                            stopTime = eItem.getTimeStamp() + eItem.getRunTime();
-
-                        switch ( eItem.getStatus() )
-                        {
-                            case FAILURE:
-                                stepsFailed++;
-
-                                if ( eItem.getT() != null )
-                                {
-                                    if ( eItem.getT() instanceof XFramiumException )
-                                    {
-                                        switch ( ((XFramiumException) eItem.getT()).getType() )
-                                        {
-
-                                            case CLOUD:
-                                                cloudFailures++;
-                                                break;
-
-                                            case CONFIGURATION:
-                                                configFailures++;
-                                                break;
-
-                                            case SCRIPT:
-                                                scriptFailures++;
-                                                break;
-
-                                            case FILTERED:
-                                                successFlag = 2;
-                                                filteredTests++;
-                                                break;
-                                        }
-                                    }
-                                }
-
-                                break;
-
-                            case FAILURE_IGNORED:
-                                stepsIgnored++;
-                                break;
-                            case REPORT:
-                            case SUCCESS:
-                                stepsPassed++;
-                                break;
-                        }
-                    }
-                }
-
-                runListener.afterRun( currentDevice, runKey, successFlag, stepsPassed, stepsFailed, stepsIgnored, startTime, stopTime, scriptFailures, configFailures, appFailures, cloudFailures, filteredTests );
-            }
-            catch ( Exception e )
-            {
-                log.error( "Error executing run listener", e );
-            }
-        }
-    }
+    
 
     /**
      * Sets the retry count.
@@ -664,14 +438,6 @@ public class DeviceManager implements ArtifactListener
                 return null;
             }
 
-            //
-            // Notify any listeners about this device acquisition and
-            // allow them to cancel it
-            //
-            if ( !notifyValidateDevice( currentDevice, runKey ) )
-            {
-                return null;
-            }
 
             if ( attachDevice && !dryRun )
             {
@@ -692,8 +458,6 @@ public class DeviceManager implements ArtifactListener
 
                     if ( webDriver != null )
                     {
-                        notifyBeforeRun( currentDevice, testPackage.getRunKey() );
-
                         if ( testFlow.isDebugEnabled() )
                             testFlow.debug( Thread.currentThread().getName() + ": WebDriver Created - Creating Connected Device for " + currentDevice );
 
@@ -914,21 +678,9 @@ public class DeviceManager implements ArtifactListener
     {
         if ( testFlow.isInfoEnabled() )
             testFlow.info( Thread.currentThread().getName() + ": Adding run " + testPackage.getRunKey() + " to " + currentDevice.getEnvironment() );
-        try
-        {
-            testContainer.completeTest( testPackage.getTestName(), testPackage.getRunKey(), success ? RunStatus.COMPLETED : RunStatus.FAILED );
-        }
-        finally
-        {
-            try
-            {
-                notifyAfterRun( currentDevice, testPackage.getRunKey(), success );
-            }
-            catch( Exception e )
-            {
-                e.printStackTrace();
-            }
-        }
+
+        testContainer.completeTest( testPackage.getTestName(), testPackage.getRunKey(), success ? RunStatus.COMPLETED : RunStatus.FAILED );
+
     }
 
     /**

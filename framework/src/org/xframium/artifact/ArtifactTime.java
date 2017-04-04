@@ -33,5 +33,13 @@ public enum ArtifactTime
     NOOP,
     
     /** The after test. */
-    AFTER_TEST
+    AFTER_TEST,
+    
+    AFTER_SUITE,
+    
+    AFTER_ARTIFACTS,
+    
+    AFTER_SUITE_ARTIFACTS,
+    
+    BEFORE_SUITE_ARTIFACTS
 }

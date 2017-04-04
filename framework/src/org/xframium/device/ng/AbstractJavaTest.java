@@ -23,6 +23,8 @@
  */
 package org.xframium.device.ng;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
@@ -103,93 +105,7 @@ public abstract class AbstractJavaTest extends AbstractSeleniumTest
         testName.getTest().completeStep( stepStatus, e );
     }
     
-    /**
-     * Creates a KeyWord step to be used in a Java test
-     *
-     * @param keyword The name of the keyword
-     * @param pageName the page name
-     * @param elementName the element name
-     * @param parameterList A list of parameter to pass to the keyword.  User name==value for named parameters
-     * @return The created step
-     */
-    public KeyWordStep createStep( String keyword, String pageName, String elementName, String[] parameterList )
-    {
-        KeyWordStep step = KeyWordStepFactory.instance().createStep( elementName, pageName, true, keyword, null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, null, null, null, null, null, false, false, null, null, null, null );
-        
-        if ( parameterList != null )
-        {
-            for ( String s : parameterList )
-            {
-                String[] sArray = s.split( "==" );
-                if ( s.contains( "==" ) )
-                    step.addParameter( new KeyWordParameter( ParameterType.STATIC, sArray.length > 1 ? sArray[1] : "{EMPTY}", sArray[0], null ) );
-                else
-                    step.addParameter( new KeyWordParameter( ParameterType.STATIC, s, null, null ) );
-            }
-        }
-        
-        return step;
-        
-    }
     
-    /**
-     * Execute a keyword step
-     *
-     * @param step the step
-     * @param webDriver the web driver
-     * @return true, if successful
-     * @throws Exception the exception
-     */
-    public boolean executeStep( KeyWordStep step, DeviceWebDriver webDriver ) throws Exception
-    {
-        KeyWordPage p = new KeyWordPageImpl();
-        p.setPageName( step.getPageName() );
-        return step.executeStep( p, webDriver, null, null, null, null, webDriver.getExecutionContext() );
-    }
     
-    /**
-     * Creates and executes a KeyWord step
-     *
-     * @param keyword The name of the keyword
-     * @param pageName the page name
-     * @param elementName the element name
-     * @param parameterList A list of parameter to pass to the keyword.  User name==value for named parameters
-     * @param webDriver The webDriver for the active run
-     * @return The created step
-     */
-    public boolean executeStep( String keyword, String pageName, String elementName, String[] parameterList, DeviceWebDriver webDriver ) throws Exception
-    {
-        KeyWordPage p = new KeyWordPageImpl();
-        p.setPageName( pageName );
-        return createStep( keyword, pageName, elementName, parameterList ).executeStep( p, webDriver, null, null, null, null, webDriver.getExecutionContext() );
-    }
     
-    /**
-     * Captures the state (image and source) of the running application
-     *
-     * @param webDriver the web driver
-     * @throws Exception the exception
-     */
-    public void dumpState( DeviceWebDriver webDriver ) throws Exception
-    {
-        createStep( "STATE", "", "", new String[ 0 ]).executeStep( null, webDriver, null, null, null, null, webDriver.getExecutionContext() );
-    }
-    
-    /**
-     * Captures the state (image and source) of the running application and compares it for deviation against the previous historical values
-     *
-     * @param webDriver the web driver
-     * @param name the name
-     * @param historicalCount The number of historical records to compare to
-     * @param deviationPercentage The amount of image deviation from 0 to 100
-     * @throws Exception the exception
-     */
-    public void dumpState( DeviceWebDriver webDriver, String name, int historicalCount, int deviationPercentage) throws Exception
-    {
-        KeyWordStep step = createStep( "STATE", "", "", new String[ 0 ]);
-        step.addParameter( new KeyWordParameter( ParameterType.STATIC, name, "checkPointName", null ) );
-        step.addParameter( new KeyWordParameter( ParameterType.STATIC, historicalCount + "", "historicalCount", null ) );
-        step.addParameter( new KeyWordParameter( ParameterType.STATIC, deviationPercentage + "", "deviationPercentage", null ) );
-        step.executeStep( null, webDriver, null, null, null, null, webDriver.getExecutionContext() );
-    }
 }

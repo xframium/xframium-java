@@ -69,7 +69,13 @@
                                         <td>
                                             <a href='{{escapeFolderName(exec.folderName)}}/index.html'>{{exec.name}}</a>
                                         </td>
-                                        <td>{{exec.device.environment}}</td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-sm-1"><img src="http://xframium.org/images/{{exec.cloud.provider}}.png" width="16" alt="{{exec.cloud.provider}}" /> </div>
+                                                <div class="col-sm-11">{{exec.device.environment}}</div>
+                                                
+                                            </div>
+                                        </td>
                                         <td>{{formatTestDuration( exec )}}</td>
                                         <td style="text-align: center">{{exec.total}}</td>
                                         <td style="padding-top: 2px;" align="center">

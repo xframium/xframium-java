@@ -31,60 +31,75 @@ public enum ArtifactType
 {
     
     /** The execution report. */
-    EXECUTION_REPORT ( ArtifactTime.AFTER_TEST, 1, "EXECUTION_REPORT", "Perfecto PDF execution report" ),
+    EXECUTION_REPORT ( 1, "EXECUTION_REPORT", "Perfecto PDF execution report" ),
     
     /** The execution report pdf. */
-    EXECUTION_REPORT_PDF ( ArtifactTime.AFTER_TEST, 2, "EXECUTION_REPORT_PDF", "Perfecto PDF execution report" ),
+    EXECUTION_REPORT_PDF ( 2, "EXECUTION_REPORT_PDF", "Perfecto PDF execution report" ),
     
     /** The execution report html. */
-    EXECUTION_REPORT_HTML ( ArtifactTime.AFTER_TEST, 3, "EXECUTION_REPORT_HTML", "Perfecto HTML execution report" ),
+    EXECUTION_REPORT_HTML ( 3, "EXECUTION_REPORT_HTML", "Perfecto HTML execution report" ),
     
     /** The execution report csv. */
-    EXECUTION_REPORT_CSV ( ArtifactTime.AFTER_TEST, 4, "EXECUTION_REPORT_CSV", "Perfecto CSV execution report" ),
+    EXECUTION_REPORT_CSV ( 4, "EXECUTION_REPORT_CSV", "Perfecto CSV execution report" ),
     
     /** The execution report xml. */
-    EXECUTION_REPORT_XML ( ArtifactTime.AFTER_TEST, 5, "EXECUTION_REPORT_XML", "Perfecto XML execution report" ),
+    EXECUTION_REPORT_XML ( 5, "EXECUTION_REPORT_XML", "Perfecto XML execution report" ),
     
     /** The execution video. */
-    EXECUTION_VIDEO( ArtifactTime.AFTER_TEST, 6, "EXECUTION_VIDEO", "Perfecto execution video" ),
+    EXECUTION_VIDEO( 6, "EXECUTION_VIDEO", "Perfecto execution video" ),
     
     /** The failure source. */
-    FAILURE_SOURCE( ArtifactTime.ON_FAILURE, 7, "FAILURE_SOURCE", "Extract device state on failure" ),
+    FAILURE_SOURCE( 7, "FAILURE_SOURCE", "Extract device state on failure" ),
     
     /** The failure source. */
-    FAILURE_SOURCE_HTML( ArtifactTime.ON_FAILURE, 8, "FAILURE_SOURCE_HTML", "Extract device state on failure and convert to HTML" ),
+    FAILURE_SOURCE_HTML( 8, "FAILURE_SOURCE_HTML", "Extract device state on failure and convert to HTML" ),
     
     /** The execution report. */
-    WCAG_REPORT ( ArtifactTime.AFTER_TEST, 9, "WCAG_REPORT", "WCAG Analysis report" ),
+    IMAGING_ANALYSIS ( 9, "Imaging Analysis", "DEtailed image analysis from imaging steps" ),
     
     /** The device log. */
-    DEVICE_LOG( ArtifactTime.AFTER_TEST, 10, "DEVICE_LOG", "Extract platform logs for debugging" ),
+    DEVICE_LOG( 10, "DEVICE_LOG", "Extract platform logs for debugging" ),
     
     /** The device log. */
-    CONSOLE_LOG( ArtifactTime.AFTER_TEST, 11, "CONSOLE_LOG", "Extract the console log of the test runner" ),
+    CONSOLE_LOG( 11, "CONSOLE_LOG", "Extract the console log of the test runner" ),
     
-    EXECUTION_RECORD_HTML( ArtifactTime.NOOP, 12, "EXECUTION_RECORD_HTML", "xFramium HTML Report" ),
+    EXECUTION_RECORD_HTML( 12, "EXECUTION_RECORD_HTML", "xFramium HTML Report and all suite and hiostory reports" ),
     
-    EXECUTION_RECORD_CSV( ArtifactTime.AFTER_TEST, 13, "EXECUTION_RECORD_CSV", "xFramium CSV Report" ),
+    EXECUTION_RECORD_CSV( 13, "EXECUTION_RECORD_CSV", "xFramium CSV Report" ),
     
-    EXECUTION_RECORD( ArtifactTime.NOOP, 14, "EXECUTION_RECORD", "xFramium Report" ),
+    EXECUTION_RECORD( 14, "EXECUTION_RECORD", "xFramium Report" ),
     
-    EXECUTION_TIMING( ArtifactTime.AFTER_TEST, 15, "EXECUTION_TIMING", "Extract execution timings" ),
+    EXECUTION_TIMING( 15, "EXECUTION_TIMING", "Extract execution timings" ),
     
-    EXECUTION_DEFINITION( ArtifactTime.AFTER_TEST, 16, "EXECUTION_DEFINITION", "xFramium execution definition report"),
+    EXECUTION_DEFINITION( 16, "EXECUTION_DEFINITION", "xFramium execution definition report"),
     
-    DEBUGGER( ArtifactTime.NOOP, 17, "DEBUGGER", "xFramium integrated web-based debugger" ),
+    DEBUGGER( 17, "DEBUGGER", "xFramium integrated web-based debugger" ),
     
-    SAUCE_LABS( ArtifactTime.NOOP, 18, "SAUCE_LABS", "SauceLabs reporting integrations" ),
+    SAUCE_LABS( 18, "SAUCE_LABS", "SauceLabs reporting integrations" ),
     
-    REPORTIUM( ArtifactTime.NOOP, 19, "REPORTIUM", "Perfeto reporting integrations" ),
+    REPORTIUM( 19, "REPORTIUM", "Perfecto reporting integrations" ),
     
-    EXECUTION_RECORD_JSON( ArtifactTime.NOOP, 20, "EXECUTION_RECORD_HTML", "xFramium JSON Report" ),
+    EXECUTION_RECORD_JSON( 20, "EXECUTION_RECORD_HTML", "xFramium JSON Report" ),
     
-    GRID_REPORT( ArtifactTime.NOOP, 21, "GRID_REPORT", "xFramium GRID Report" ),
-    ADD_TO_CSV( ArtifactTime.AFTER_TEST, 22, "CSV_REPORT_DATA", "xFramium CSV Report compiled from REPORT steps" ),
+    GRID_REPORT( 21, "GRID_REPORT", "xFramium GRID Report Source" ),
+    GRID_HTML( 24, "GRID_REPORT_HTML", "xFramium GRID Report HTML" ),
+    ADD_TO_CSV( 22, "CSV_REPORT_DATA", "xFramium CSV Report compiled from REPORT steps" ),
     
-    ALM_DEFECT( ArtifactTime.NOOP, 23, "ALM_DEFECT", "Creates a defect in HP ALM on failure" ),
+    ALM_DEFECT( 23, "ALM_DEFECT", "Creates a defect in HP ALM on failure" ),
+    
+    EXECUTION_SUITE_JSON( 25, "EXECUTION_SUITE_JSON", "xFramium Suite JSON Report" ),
+    
+    EXECUTION_SUITE_HTML( 26, "EXECUTION_SUITE_HTML", "xFramium Suite HTML Report" ),
+    
+    EXECUTION_HISTORY_JSON( 27, "EXECUTION_HISTORY_JSON", "xFramium History JSON Report" ),
+    
+    EXECUTION_HISTORY_HTML( 28, "EXECUTION_HISTORY_HTML", "xFramium History HTML Report" ),
+    
+    EXECUTION_TEST_JSON( 30, "EXECUTION_HISTORY_JSON", "xFramium Test JSON Report" ),
+    
+    EXECUTION_TEST_HTML( 31, "EXECUTION_HISTORY_HTML", "xFramium Test HTML Report" ),
+    
+    WIND_TUNNEL( 29, "WIND_TUNNEL", "Perfecto wind tunnel integrations" )
     ;
     
     /** The time. */
@@ -102,7 +117,7 @@ public enum ArtifactType
         supportedList.add( ArtifactType.EXECUTION_REPORT_XML );
         supportedList.add( ArtifactType.FAILURE_SOURCE );
         supportedList.add( ArtifactType.FAILURE_SOURCE_HTML );
-        supportedList.add( ArtifactType.WCAG_REPORT );
+        supportedList.add( ArtifactType.IMAGING_ANALYSIS );
         supportedList.add( ArtifactType.DEVICE_LOG );
         supportedList.add( ArtifactType.CONSOLE_LOG );
         supportedList.add( ArtifactType.EXECUTION_RECORD_HTML );
@@ -114,7 +129,15 @@ public enum ArtifactType
         supportedList.add( ArtifactType.SAUCE_LABS );
         supportedList.add( ArtifactType.REPORTIUM );
         supportedList.add( ArtifactType.GRID_REPORT );
+        supportedList.add( ArtifactType.GRID_HTML );
         supportedList.add( ArtifactType.ADD_TO_CSV );
+        supportedList.add( ArtifactType.EXECUTION_SUITE_JSON );
+        supportedList.add( ArtifactType.EXECUTION_SUITE_HTML );
+        supportedList.add( ArtifactType.EXECUTION_HISTORY_JSON );
+        supportedList.add( ArtifactType.EXECUTION_HISTORY_HTML );
+        supportedList.add( ArtifactType.EXECUTION_TEST_JSON );
+        supportedList.add( ArtifactType.EXECUTION_TEST_HTML );
+        supportedList.add( ArtifactType.WIND_TUNNEL );
         supportedList.add( ArtifactType.ALM_DEFECT );
 
         return supportedList;
@@ -126,22 +149,12 @@ public enum ArtifactType
      *
      * @param time the time
      */
-    ArtifactType( ArtifactTime time, int id, String name, String description )
+    ArtifactType( int id, String name, String description )
     {
         this.id = id;
         this.name= name;
         this.description = description;
         this.time = time;
-    }
-    
-    /**
-     * Gets the time.
-     *
-     * @return the time
-     */
-    public ArtifactTime getTime()
-    {
-        return time;
     }
     
     public String getDescription()
