@@ -20,10 +20,7 @@
  *******************************************************************************/
 package org.xframium.gesture.device.action.spi.perfecto;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.openqa.selenium.WebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
@@ -32,7 +29,6 @@ import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.bean.Execution;
 import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
-import org.xframium.integrations.perfectoMobile.rest.services.WindTunnel.Network;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -40,11 +36,6 @@ import org.xframium.integrations.perfectoMobile.rest.services.WindTunnel.Network
  */
 public class ConfigureNetworkAction extends AbstractDefaultAction implements DeviceAction
 {
-	
-	/** The application map. */
-	private Map<String,String> networkMap;
-	
-	private String returnValue;
 	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.gesture.device.action.AbstractDefaultAction#_executeAction(org.openqa.selenium.WebDriver, java.util.List)
@@ -56,86 +47,59 @@ public class ConfigureNetworkAction extends AbstractDefaultAction implements Dev
 		String deviceName = getDeviceName( webDriver );
 		
 		Handset localDevice = PerfectoMobile.instance().devices().getDevice( deviceName );
+		
 		if ( localDevice.getOs().toLowerCase().equals( "ios" ) )
 			throw new ScriptConfigurationException( "Configure network option is not supported for Perfecto IOS platform...");
 		
-		// Get the network setting for the Device
-		Execution getNetExec = PerfectoMobile.instance().windTunnel().getNetworkSetting(executionId, deviceName, Network.wifi);
 		
-		// Will return {airplanemode=false, wifi=true, data=false}
-		returnValue = getNetExec.getReturnValue();
-		
-		String deviceWifiMode = getNetworkOption("wifi");
-		String newwifiMode;
-		if ( parameterList.size() > 0 ){
-			String expWifiMode = (String) parameterList.get( 0 );
-			newwifiMode = expWifiMode.equalsIgnoreCase("true")?"enabled":"disabled";						
-		}else{
-			newwifiMode = deviceWifiMode.equalsIgnoreCase("true")?"enabled":"disabled";
+		if (parameterList.size()<2){
+			throw new ScriptConfigurationException( "Please supply atleast 2 parameters. Usage param-1, wifi=true param-2 airplane=true../n For Android OS version greater than 4.4");
+		}
+				
+		String wifiMode = "", dataMode = "", airplaneMode = "";		
+		for (int i = 0; i < parameterList.size(); i++) 
+		{
+			String currentParamStr = (String) parameterList.get( i );
+			int splitIndex = currentParamStr.indexOf("=");
+			if (currentParamStr.length() < 3 || splitIndex < 1) continue;
+			String key = currentParamStr.substring(0, splitIndex);
+			String value = currentParamStr.substring(splitIndex + 1);			
+			
+			
+			if (key.equalsIgnoreCase("wifi")){								
+				wifiMode = value.equalsIgnoreCase("true")?"enabled":"disabled";
+			}
+			
+			if (key.equalsIgnoreCase("data")){								
+				dataMode = value.equalsIgnoreCase("true")?"enabled":"disabled";
+			}
+			
+			if (key.equalsIgnoreCase("airplane")){								
+				airplaneMode = value.equalsIgnoreCase("true")?"enabled":"disabled";
+			}
 		}
 		
-		String deviceDataMode = getNetworkOption("data");
-		String newdataMode;
-		if ( parameterList.size() > 1 ){
-			String expDataMode = (String) parameterList.get( 1 );
-			newdataMode = expDataMode.equalsIgnoreCase("true")?"enabled":"disabled";						
-		}else{
-			newdataMode = deviceDataMode.equalsIgnoreCase("true")?"enabled":"disabled";
+		if (wifiMode.equals("") || airplaneMode.equals("")){
+			throw new ScriptConfigurationException( "Make sure wifi and airplane modes are supplied as parameters with value true or false \n Usage param-1, wifi=true param-2 airplane=true");
 		}
 		
-		String deviceAirplaneMode = getNetworkOption("airplanemode");
-		String newAirplaneMode;
-		if ( parameterList.size() > 2 ){
-			String expAirplaneDataMode = (String) parameterList.get( 2 );
-			newAirplaneMode = expAirplaneDataMode.equalsIgnoreCase("true")?"enabled":"disabled";						
+		String execStatus = "";
+		Execution confNetExe = null;
+		if (dataMode.equals("")){			
+			// For Android OS version greater than 4.4, device data cannot be set 
+			confNetExe = PerfectoMobile.instance().windTunnel().configureNetwork(executionId, deviceName, wifiMode,airplaneMode);
+			execStatus = confNetExe.getStatus();
 		}else{
-			newAirplaneMode = deviceAirplaneMode.equalsIgnoreCase("true")?"enabled":"disabled";
+			// For Android OS version 2.3 to 4.4 you need to supply wifi, data and airplane mode
+			confNetExe = PerfectoMobile.instance().windTunnel().configureNetwork(executionId, deviceName, wifiMode,dataMode,airplaneMode);
+			execStatus = confNetExe.getStatus();
 		}	
-		
-		
-		// Configure the network settings (WIFI, DATA or AIRPLANEMODE) through the below service call
-		Execution confNetExe = PerfectoMobile.instance().windTunnel().configureNetwork(executionId, deviceName, newwifiMode,newdataMode,newAirplaneMode);
-		String execStatus = confNetExe.getStatus();
 		
 		if(execStatus.indexOf("Error")>=0 || execStatus.indexOf("failed")>=0){
 			throw new ScriptException ("Failed to configure the network " + confNetExe.toString());
 		}
 		
 		return true;
-	}
-	
-	
-	
-	/**
-	 * Parses the applications.
-	 */
-	private void parseNetworksOptions()
-	{
-		networkMap = new HashMap<String,String>( 20 );
-		
-		String workingValue = returnValue;
-		workingValue = workingValue.replace( '{', ' ' ).replace( '}', ' ' ).trim();
-		String[] allOptions = workingValue.split( "," );
-		
-		for ( String network : allOptions )
-		{
-			String[] networkMode = network.trim().split( "=" );			
-			networkMap.put( networkMode[0].trim().toLowerCase(), networkMode[1].trim().toLowerCase() );
-		}
-	}
-	
-	/**
-	 * Gets the application.
-	 *
-	 * @param applicationName the application name
-	 * @return the application
-	 */
-	private String getNetworkOption(String networkOption )
-	{
-		if ( networkMap == null )
-			parseNetworksOptions();
-		
-		return networkMap.get( networkOption.toLowerCase() );
 	}
 
 }
