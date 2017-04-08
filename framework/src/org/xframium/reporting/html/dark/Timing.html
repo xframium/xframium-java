@@ -16,29 +16,39 @@
 <link href="http://www.xframium.org/output/assets/css/application.css" rel="stylesheet">
 <link href="http://www.xframium.org/output/assets/css/angular-ui-tree.css" rel="stylesheet">
 </head>
-<body ng-controller="xTimingController" data-ng-init="initialize()">
+<body ng-controller="xTimingController" data-ng-init="initialize()" class="bg-success" >
     <div class="container-fluid">
-        <div class="col-sm-12 content">
-            <div class="bg-success row" style="border-radius: 5px; margin-top: 10px; margin-bottom: 25px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; cursor: default" >
+      <div class="col-sm-12 content">
+            <div class="row" >
+                <div class="col-sm-2">
+                    <span style="color: black"> </span>
+                </div>
+                <div class="col-sm-8">
+                    <h1 class="text-primary">Timing Information</h1>
+                </div>
+                <div class="col-sm-2">
+                    <span style="color: black"> </span>
+                </div>
+            </div>
+            <div class="row" style="border-radius: 5px; margin-top: 25px; margin-bottom: 25px; padding-top: 5px; padding-bottom: 5px; cursor: default" >
                 <div class="col-sm-2">
                     <span style="color: black"> </span>
                 </div>
                 <div class="col-sm-8">
                     <div id="chart_div" style="width: 100%" ></div>
                 </div>
-                <div class="col-sm-8">
+                <div class="col-sm-2">
                     <span style="color: black"> </span>
                 </div>
-                
             </div>
-            <div class="bg-success row" style="border-radius: 5px; margin-top: 10px; margin-bottom: 25px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; cursor: default" >
-                <div class="col-sm-6">
+            <div class="row" >
+                <div class="col-sm-7">
                     <span style="color: black"> </span>
                 </div>
                 <div class="col-sm-2">
                     <span class="pull-right btn btn-primary" style="margin-right: 16px" ng-click="downloadCSV()">Download CSV</span>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <span style="color: black"> </span>
                 </div>
             </div>
@@ -172,7 +182,7 @@
            }
 
            var temp = txName;
-           txName = "test";
+           //txName = "test";
 
            $scope.graph_data.push( [ txName, step.startTime.raw, duration ] );
            if ( $scope.graph_domain.indexOf( txName ) < 0 ) $scope.graph_domain.push( txName );
@@ -191,9 +201,7 @@
         $scope.drawGraph = function()
         {
            var sorted_names = $scope.graph_domain.sort();
-           console.log( "aaa--> " + JSON.stringify( sorted_names ) );
            var sorted_start_times = $scope.graph_time_vals.sort();
-           console.log( "bbb--> " + JSON.stringify( sorted_start_times ) );
            var base_time = sorted_start_times[0];                                  
 
            var data = new Array(sorted_start_times.length);
@@ -207,12 +215,9 @@
 
               data[i] = row;
            }
-           console.log( "ccc--> " + JSON.stringify( data ) ); 
 
            data.forEach( function( arr, index ) { arr[0] = sorted_start_times[index] - base_time; return null; } );
-           console.log( "ddd--> " + JSON.stringify( data ) ); 
            $scope.graph_data.forEach( function( ele ) { data[ sorted_start_times.indexOf(ele[1]) ][ sorted_names.indexOf(ele[0]) + 1] = ele[2]; return null; } );
-           console.log( "eee--> " + JSON.stringify( data ) ); 
 
            var gdata = new google.visualization.DataTable();
            gdata.addColumn('number', 'X');                                                            
