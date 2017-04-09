@@ -97,7 +97,9 @@ public interface DeviceAction
 		
 		START_VITALS(22, "START_VITALS", "Start monitoring device vitals"),
         
-		STOP_VITALS(23, "STOP_VITALS", "Stop Nmonitoring device vitals");
+		STOP_VITALS(23, "STOP_VITALS", "Stop Nmonitoring device vitals"),
+		
+		COPY_FILE(24, "COPY_FILE", "Copies file from Perfecto repository to Device");
 	    
 	    public List<ActionType> getSupportedActions()
 	    {
@@ -123,6 +125,7 @@ public interface DeviceAction
 	        supportedList.add( ActionType.CONFIGURE_NETWORK );
 	        supportedList.add( ActionType.START_VITALS );
 	        supportedList.add( ActionType.STOP_VITALS );
+	        supportedList.add( ActionType.COPY_FILE );
 	        return supportedList;
 	    }
 	    

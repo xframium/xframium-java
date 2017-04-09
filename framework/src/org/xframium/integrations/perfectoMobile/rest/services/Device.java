@@ -155,4 +155,16 @@ public interface Device extends PerfectoService
     @Operation( operationName="command" )
     @PerfectoCommand( commandName="media", subCommandName = "get" )
     public Execution getFile( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="handsetFile" ) String handsetFile, @Parameter( name="repositoryFile" ) String repositoryFile );
+    
+    /**
+     * 
+     * @param executionId
+     * @param handsetId
+     * @param repositoryFile
+     * @param handsetFile
+     * @return
+     */
+    @Operation( operationName="command" )
+    @PerfectoCommand( commandName="media", subCommandName = "put" )
+    public Execution putFile( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="repositoryFile" ) String repositoryFile, @Parameter( name="handsetFile" ) String handsetFile );
 }
