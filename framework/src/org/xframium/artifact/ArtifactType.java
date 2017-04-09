@@ -94,12 +94,14 @@ public enum ArtifactType
     EXECUTION_HISTORY_JSON( 27, "EXECUTION_HISTORY_JSON", "xFramium History JSON Report" ),
     
     EXECUTION_HISTORY_HTML( 28, "EXECUTION_HISTORY_HTML", "xFramium History HTML Report" ),
+
+    WIND_TUNNEL( 29, "WIND_TUNNEL", "Perfecto wind tunnel integrations" ),
     
     EXECUTION_TEST_JSON( 30, "EXECUTION_HISTORY_JSON", "xFramium Test JSON Report" ),
     
     EXECUTION_TEST_HTML( 31, "EXECUTION_HISTORY_HTML", "xFramium Test HTML Report" ),
-    
-    WIND_TUNNEL( 29, "WIND_TUNNEL", "Perfecto wind tunnel integrations" )
+
+    TIMINGS( 32, "TIMINGS_HTML", "xFramium Test Timing Report" )
     ;
     
     /** The time. */
@@ -139,6 +141,7 @@ public enum ArtifactType
         supportedList.add( ArtifactType.EXECUTION_TEST_HTML );
         supportedList.add( ArtifactType.WIND_TUNNEL );
         supportedList.add( ArtifactType.ALM_DEFECT );
+        supportedList.add( ArtifactType.TIMINGS );
 
         return supportedList;
     }

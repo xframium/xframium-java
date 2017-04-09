@@ -204,17 +204,6 @@ iframe {
                     </ol>
                 </div>
             </uib-tab>
-            <uib-tab heading="Timing" active="true" ng-if="( timings.length > 0 )">
-                <div data-nodrag>
-                  <span class="pull-right btn btn-primary" style="margin-right: 16px" ng-click="downloadCSV()">Download CSV</span>
-                  <br>
-                  <br>
-                </div>
-
-                <div data-nodrag><br></div>
-                  
-                <div id="chart_div" style="width: 100%" ></div>
-            </uib-tab> 
             </uib-tabset>
         </div>
     </div>
@@ -269,16 +258,6 @@ iframe {
 </div>
 </script>
 <script>
-    //
-    // The default of 10 is too small give that we're walking all the way down the step execution tree
-    //
-
-    Error.stackTraceLimit = 100;
-
-    //
-    // Continue
-    //
-    
     var xTest = angular.module('xTest', [ 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.tree' ]);
 
     xTest.config([ '$compileProvider', function( $compileProvider )
@@ -312,10 +291,6 @@ iframe {
         $scope.duration = 0;
         $scope.formattedDuration = 0;
         $scope.selectedStep;
-        $scope.timings = [];
-        $scope.graph_data = [];
-        $scope.graph_domain = [];
-        $scope.graph_time_vals = [];
     
         $scope.hasExecutionParameter = function( step, parameterName )
         {
@@ -460,162 +435,6 @@ iframe {
 
             return total;
         }
-
-        $scope.getTimings = function()
-        {
-            var testLevelData =
-            {
-               "script": $scope.testData.testName,
-               "execId": $scope.testData.sessionId,
-               "startTime": $scope.testData.startTime.raw,
-               "endTime": $scope.testData.endTime.raw,
-               "startTimeFormatted": $scope.testData.startTime.dateTime,
-               "endTimeFormatted": $scope.testData.endTime.dateTime,
-               "pmUser": $scope.testData.cloudDescriptor.userName,
-               "user": "n/a",
-               "data": "n/a",
-               "wifi": "n/a",
-               "hsId": $scope.testData.device.deviceName,
-               "hsOperator": "n/a",
-               "hsManufacturer": $scope.testData.device.manufacturer,
-               "hsModel": $scope.testData.device.model,
-               "hsOS": $scope.testData.device.os,
-               "hsOSVer": $scope.testData.device.osVersion,
-               "networkCarrier": "n/a",
-               "networkSpeed": "",
-               "latency": "",
-               "inBandwidth": "",
-               "outBandwidth": "",  
-               "city": "n/a",
-               "country": "n/a",
-               "mobileAppVersion": "",                  
-               "environment": $scope.testData.device.environment,
-               "appName": "",                  
-               "webReport": $scope.testData.executionParameters.PERFECTO_WT
-           };
-
-           $scope.testData.stepList.forEach( function(step)
-           {
-               $scope.walkStepToGetTimeings( step, "", testLevelData );
-           });
-        }
-
-        $scope.walkStepToGetTimeings = function( step, txNamePrefix, testLevelData )
-        {
-           var txName = txNamePrefix + "." + step.step.name;
-           var duration = step.endTime.raw - step.startTime.raw;
-           var is_checkpoint = ( step.step.kw == "WAIT_FOR" );
-           
-           if ( step.timingMap.elapsed )
-           {
-              var row = Object.assign({}, testLevelData);
-
-              row.txName = txName;
-              row.txTimeStart = step.startTime.raw;
-              row.txTimeEnd = step.endTime.raw;
-              row.txTimeStartFormatted = step.startTime.dateTime;
-              row.txTimeEndFormatted = step.endTime.dateTime;
-              row.validationSuccess = ( "SUCCESS" == step.stepStatus );
-              row.timerUx = step.timingMap.ux;
-              row.requestTime = step.timingMap.device;
-              row.responseTime = step.timingMap.elapsed;
-              row.requestTimestamp = "";
-              row.responseTimestamp = "";
-              row.vitalsTimestamp = "";
-              row.vitalsTimestampFormatted = "";
-              row.vitalseCPU = "";
-              row.vitalsMemFree = "";
-              row.vitalsMemUsed = "";
-              row.vitalsMemCached = "";
-
-              $scope.timings.push( row );
-           }
-
-           var temp = txName;
-           txName = "test";
-
-           $scope.graph_data.push( [ txName, step.startTime.raw, duration ] );
-           if ( $scope.graph_domain.indexOf( txName ) < 0 ) $scope.graph_domain.push( txName );
-           if ( $scope.graph_time_vals.indexOf( step.startTime.raw ) < 0 ) $scope.graph_time_vals.push( step.startTime.raw );
-
-           txName = temp;
-
-           if ( step.stepList )
-           {
-              step.stepList.forEach( function( subStep ) {
-                 $scope.walkStepToGetTimeings( subStep, txName, testLevelData );
-              });
-           } 
-        }
-
-        $scope.drawGraph = function()
-        {
-           var sorted_names = $scope.graph_domain.sort();
-           console.log( "aaa--> " + JSON.stringify( sorted_names ) );
-           var sorted_start_times = $scope.graph_time_vals.sort();
-           console.log( "bbb--> " + JSON.stringify( sorted_start_times ) );
-           var base_time = sorted_start_times[0];                                  
-
-           var data = new Array(sorted_start_times.length);
-           for( i = 0; i < data.length; ++i )
-           {
-              // Create one row
-              var row = new Array(sorted_names.length + 1);
-              row.forEach(function (eleI, indexI, arrI) {
-                 arrI[indexI] = 'a';
-              });
-
-              data[i] = row;
-           }
-           console.log( "ccc--> " + JSON.stringify( data ) ); 
-
-           data.forEach( function( arr, index ) { arr[0] = sorted_start_times[index] - base_time; return null; } );
-           console.log( "ddd--> " + JSON.stringify( data ) ); 
-           $scope.graph_data.forEach( function( ele ) { data[ sorted_start_times.indexOf(ele[1]) ][ sorted_names.indexOf(ele[0]) + 1] = ele[2]; return null; } );
-           console.log( "eee--> " + JSON.stringify( data ) ); 
-
-           var gdata = new google.visualization.DataTable();
-           gdata.addColumn('number', 'X');                                                            
-           sorted_names.forEach( function(ele) { gdata.addColumn('number', ele); } );
-           
-           gdata.addRows( data );
-
-           var options = {
-              hAxis: {
-                title: 'Offset from test start (ms)'
-              },
-              vAxis: {
-                title: 'Duration (ms)'
-              },
-              series: {
-                1: {curveType: 'function'}
-              },
-              width: 1000,
-              height: 750
-           };
-
-           var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-           chart.draw(gdata, options);                                                            
-        }
-
-        $scope.downloadCSV = function()
-        {
-           var lineArray = [];
-
-           lineArray.push( "data:text/csv;charset=utf-8," + $scope.timingDataDownloadHeaders );                
-                                 
-           $scope.timings.forEach(function (row, index)
-           {
-             var line = $scope.timingDataDownloadCols.map( function(val) { return "\x22" + row[val] + "\x22"; } ).join(",");
-                                 
-             lineArray.push(line);
-           });
-                                 
-           var csvContent = lineArray.join("\n");
-           var encodedUri = encodeURI(csvContent);
-                                 
-           window.open(encodedUri);
-        }
                                  
         $scope.initialize = function()
         {
@@ -625,16 +444,6 @@ iframe {
             $scope.total = $scope.passed + $scope.failed + $scope.ignored;
             $scope.duration = $scope.testData.endTime.raw - $scope.testData.startTime.raw;
             $scope.formattedDuration = $scope.createDuration($scope.duration);
-            $scope.getTimings();
-
-            //
-            // Init Google Charts
-            //
-
-            google.charts.load('current', {packages: ['corechart', 'line']});
-            google.charts.setOnLoadCallback($scope.drawGraph);
-            
-            $scope.drawGraph();                                                       
        }
                                                                        
 
@@ -718,58 +527,6 @@ iframe {
             "FUNCTION" : "Execution the native {kw} {name} on {pageName}"
         };
 
-        $scope.timingDataDownloadHeaders = "\x22Script\x22,\x22ExecId\x22,\x22Time Start\x22,\x22Time End\x22,\x22Time Start Formatted\x22,\x22Time End Formatted\x22,\x22PM User\x22,\x22User\x22,\x22Data\x22,\x22Wifi\x22,\x22HS Id\x22,\x22HS Operator\x22,\x22HS Manufacturer\x22,\x22HS Model\x22,\x22HS OS\x22,\x22HS OS Ver.\x22,\x22Network Carrier\x22,\x22Network Speed\x22,\x22Latency\x22,\x22IN Bandwidth\x22,\x22OUT Bandwidth\x22,\x22Transaction Name\x22,\x22Transaction Time Start\x22,\x22Transaction Time End\x22,\x22Transaction Time Start Formatted\x22,\x22Transaction Time End Formatted\x22,\x22Validation Success\x22,\x22Timer UX\x22,\x22Request Time\x22,\x22Response Time\x22,\x22Request Timestamp [ms]\x22,\x22Response Timestamp [ms]\x22,\x22Vitals Timestamp\x22,\x22Vitals Timestamp Formatted\x22,\x22Vitals CPU\x22,\x22Vitals Mem Free\x22,\x22Vitals Mem Used\x22,\x22Vitals Mem Cached\x22,\x22City\x22,\x22Country\x22,\x22Mobile App Version\x22,\x22Environment\x22,\x22App Name\x22,\x22Web Report\x22";       
-                                 
-        $scope.timingDataDownloadCols = [
-           "script",
-           "execId",
-           "startTime",
-           "endTime",
-           "startTimeFormatted",
-           "endTimeFormatted",
-           "pmUser",
-           "user",
-           "data",
-           "wifi",
-
-           "hsId",
-           "hsOperator",
-           "hsManufacturer",
-           "hsModel",
-           "hsOS",
-           "hsOSVer",
-           "networkCarrier",
-           "networkSpeed",
-           "latency",
-           "inBandwidth",
-
-           "outBandwidth",
-           "txName",
-           "txTimeStart",
-           "txTimeEnd",
-           "txTimeStartFormatted",
-           "txTimeEndFormatted",
-           "validationSuccess",
-           "timerUx",
-           "requestTime",
-           "responseTime",
-
-           "requestTimestamp",
-           "responseTimestamp",
-           "vitalsTimestamp",
-           "vitalsTimestampFormatted",
-           "vitalseCPU",
-           "vitalsMemFree",
-           "vitalsMemUsed",
-           "vitalsMemCached",
-           "city",
-           "country",
-
-           "mobileAppVersion",
-           "environment",
-           "appName",
-           "webReport"             
-        ];
     });
 </script>
 </html>
