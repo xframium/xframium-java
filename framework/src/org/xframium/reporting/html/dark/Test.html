@@ -251,7 +251,7 @@ iframe {
     <div class="panel-body">
         <div class="row">
             <div class="col-md-4">
-                <a hRef="file://{{selectedStep.executionParameter.SCREENSHOT}}" target="_blank"><img width="100%" src="{{selectedStep.executionParameter.SCREENSHOT}}" class="img-rounded" /></a>
+                <a hRef="{{selectedStep.executionParameter.SCREENSHOT}}" target="_blank"><img width="100%" src="{{selectedStep.executionParameter.SCREENSHOT}}" class="img-rounded" /></a>
             </div>
             <div class="col-md-8" ng-if="selectedStep.throwable != 'null'">
                 <span class="text-danger">{{selectedStep.throwable}}</span>
@@ -261,14 +261,12 @@ iframe {
     <div class="panel-body">
         <div class="row">
             <div class="col-md-4"></div>
-            <div class="col-md-2" ng-if="hasExecutionParameter( selectedStep, 'XML' )" stype="text-align: center"><a hRef="file://{{selectedStep.executionParameter.XML}}" class="btn btn-primary" type="button" target="_blank">View XML</a></div>
-            <div class="col-md-2" ng-if="hasExecutionParameter( selectedStep, 'HTML' )"  stype="text-align: center"><a hRef="file://{{selectedStep.executionParameter.HTML}}" class="btn btn-success" type="button" target="_blank">View XML (as HTML)</a></div>
+            <div class="col-md-2" ng-if="hasExecutionParameter( selectedStep, 'XML' )" stype="text-align: center"><a hRef="{{selectedStep.executionParameter.XML}}" class="btn btn-primary" type="button" target="_blank">View XML</a></div>
+            <div class="col-md-2" ng-if="hasExecutionParameter( selectedStep, 'HTML' )"  stype="text-align: center"><a hRef="{{selectedStep.executionParameter.HTML}}" class="btn btn-success" type="button" target="_blank">View XML (as HTML)</a></div>
             <div class="col-md-4"></div>
         </div>
     </div>
 </div>
-
-artifactTabs[ key ] != null || ((key.startsWith( 'TAB_' ) && !key.endsWith( '_PATH' ) && !key.endsWith( '_FILE' ))
 </script>
 <script>
     //

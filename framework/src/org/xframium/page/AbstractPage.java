@@ -146,6 +146,11 @@ public abstract class AbstractPage implements Page
     	this.webDriver = webDriver;
     }
     
+    protected Object getDriver()
+    {
+        return this.webDriver;
+    }
+    
     /**
      * Creates a KeyWord step to be used in a Java test
      *
