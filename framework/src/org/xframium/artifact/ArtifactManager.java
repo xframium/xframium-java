@@ -104,7 +104,7 @@ public class ArtifactManager
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.EXECUTION_REPORT_PDF.name(), PerfectoPDFReport.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.EXECUTION_REPORT.name(), PerfectoPDFReport.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.EXECUTION_REPORT_CSV.name(), PerfectoCSVReport.class );
-        registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.TIMINGS.name(), TimingArtifact.class );
+        registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.TIMING_HTML.name(), TimingArtifact.class );
         registerArtifact( ArtifactTime.BEFORE_SUITE_ARTIFACTS, ArtifactType.GRID_REPORT.name(), JSONGridArtifact.class );
         registerArtifact( ArtifactTime.BEFORE_SUITE_ARTIFACTS, ArtifactType.GRID_HTML.name(), HTMLGridArtifact.class );
         registerArtifact( ArtifactTime.AFTER_SUITE, ArtifactType.EXECUTION_SUITE_HTML.name(), DefaultSuiteReportingArtifact.class );
@@ -121,6 +121,8 @@ public class ArtifactManager
     
     public void registerArtifact( ArtifactTime artifactTime, String aType, Class artifactImplementation )
     {
+        log.info( "Registering artifact " + aType );
+        
         artifactMap.put( aType.toUpperCase(), artifactImplementation );
         classTimeMap.put( artifactImplementation, artifactTime );
         
@@ -162,6 +164,8 @@ public class ArtifactManager
     
     public void enableArtifact( String artifactName )
     {
+        log.info( "Enabling artifact " + artifactName );
+        
         if  (ArtifactType.EXECUTION_RECORD_HTML.name().equals( artifactName ) )
         {
             for ( String defaultArtifact : DEFAULT_ARTIFACTS )

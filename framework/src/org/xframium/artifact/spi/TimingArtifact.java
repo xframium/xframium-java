@@ -11,7 +11,7 @@ public class TimingArtifact extends AbstractArtifact
     private static final String FILE_NAME = "timing.html";
     public TimingArtifact()
     {
-        setArtifactType( ArtifactType.TIMINGS.name() );
+        setArtifactType( ArtifactType.TIMING_HTML.name() );
     }
     
     @Override

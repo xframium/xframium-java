@@ -146,13 +146,13 @@
 
            $scope.testData.stepList.forEach( function(step)
            {
-               $scope.walkStepToGetTimeings( step, "", testLevelData );
+               $scope.walkStepToGetTimeings( step, testLevelData );
            });
         }
 
-        $scope.walkStepToGetTimeings = function( step, txNamePrefix, testLevelData )
+        $scope.walkStepToGetTimeings = function( step, testLevelData )
         {
-           var txName = txNamePrefix + "." + step.step.name;
+           var txName = step.step.name;
            var duration = step.endTime.raw - step.startTime.raw;
            var is_checkpoint = ( step.step.kw == "WAIT_FOR" );
            
@@ -193,7 +193,7 @@
            if ( step.stepList )
            {
               step.stepList.forEach( function( subStep ) {
-                 $scope.walkStepToGetTimeings( subStep, txName, testLevelData );
+                 $scope.walkStepToGetTimeings( subStep, testLevelData );
               });
            } 
         }
