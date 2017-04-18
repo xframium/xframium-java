@@ -147,7 +147,11 @@ iframe {
                     <li ui-tree-node ng-repeat="(key, value) in links" ng-if="testData.executionParameters[ key ] != null">
                         <div data-nodrag ui-tree-handle class="tree-node tree-node-content linkStep"
                             style="border-radius: 5px; margin-top: 5px; margin-bottom: 5px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; cursor: default">
-                            <a target="_blank" hRef="{{testData.executionParameters[ key ]}}" style="margin-left: 15px">
+                            
+                            <a ng-if="testData.executionParameters[ key + '_FILE' ] != null" target="_blank" hRef="{{testData.executionParameters[ key + '_FILE' ]}}" style="margin-left: 15px">
+                                <span data-nodrag style="cursor: default; color: white">{{value}}</span>
+                            </a>
+                            <a ng-if="testData.executionParameters[ key + '_FILE' ] == null" target="_blank" hRef="{{testData.executionParameters[ key ]}}" style="margin-left: 15px">
                                 <span data-nodrag style="cursor: default; color: white">{{value}}</span>
                             </a>
                         </div>
@@ -460,7 +464,8 @@ iframe {
         $scope.artifactTabs = {
             "DEVICE_LOG" : "Device Log",
             "CONSOLE_LOG" : "Console Log",
-            "IMAGING_ANALYSIS" : "Imaging Analysis"
+            "IMAGING_ANALYSIS" : "Imaging Analysis",
+            "TIMING_HTML" : "Performance"
         }
 
         $scope.links = {
@@ -471,7 +476,8 @@ iframe {
             "EXECUTION_REPORT_HTML_FILE" : "Perfecto Legacy Execution Report (HTML)",
             "SAUCE_LABS_ARTIFACT_URL" : "SauceLabs Report",
             "REPORTIUM_ARTIFACT_URL" : "Perfecto Execution Report",
-            "ALM_DEFECT_ARTIFACT_URL" : "HP ALM Defect Detail"
+            "ALM_DEFECT_ARTIFACT_URL" : "HP ALM Defect Detail",
+            "STATISTICS" : "Device Statistics"
         }
 
         $scope.stepMessages = {

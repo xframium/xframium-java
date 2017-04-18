@@ -130,6 +130,32 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         }
         return null;
 	}
+	
+	@Override
+    public String getVitals( DeviceWebDriver webDriver )
+    {
+        try
+        {
+            Document xmlDocument = getExecutionReport( webDriver );
+            
+            NodeList nodeList = getNodes( xmlDocument, "//dataItem[@type='monitor']/attachment" );
+            if ( nodeList != null && nodeList.getLength() > 0 )
+            {
+                byte[] zipFile = PerfectoMobile.instance().reports().download( webDriver.getReportKey() , nodeList.item( 0 ).getTextContent(), false );
+                
+                
+                return new String( zipFile );
+            }
+            
+            return null;
+            
+        }
+        catch( Exception e )
+        {
+            log.error( "Error download device log data", e );
+        }
+        return null;
+    }
 
 	@Override
 	public void tap( DeviceWebDriver webDriver, PercentagePoint location, int lengthInMillis )

@@ -22,6 +22,7 @@ package org.xframium.gesture.device.action.spi.perfecto;
 
 import java.util.List;
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
@@ -39,12 +40,15 @@ public class StartMonitorAction extends AbstractDefaultAction implements DeviceA
 	@Override
 	public boolean _executeAction( WebDriver webDriver, List<Object> parameterList )
 	{
-		String executionId = getExecutionId( webDriver );
-		String deviceName = getDeviceName( webDriver );
-		if ( parameterList !=null && parameterList.size() > 0 )
-		    PerfectoMobile.instance().windTunnel().startVitals( executionId, deviceName, parameterList.get( 0 ) + "", 5 );
-		else
-		    PerfectoMobile.instance().windTunnel().startVitals( executionId, deviceName, "all", 5 );
+	    if ( ( (DeviceWebDriver) webDriver ).getCloud().getProvider().equals( "PERFECTO" ) )
+	    {
+    		String executionId = getExecutionId( webDriver );
+    		String deviceName = getDeviceName( webDriver );
+    		if ( parameterList !=null && parameterList.size() > 0 )
+    		    PerfectoMobile.instance().windTunnel().startVitals( executionId, deviceName, parameterList.get( 0 ) + "", 5 );
+    		else
+    		    PerfectoMobile.instance().windTunnel().startVitals( executionId, deviceName, "all", 5 );
+	    }
 		return true;
 	}
 

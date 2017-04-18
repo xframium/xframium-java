@@ -180,7 +180,7 @@ public class CloudDescriptor
 		try
 		{
 		    if ( provider != null && provider.name != null && provider.name.equals( "PERFECTO" ) )
-		        return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/wd/hub";
+		        return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/perfectomobile/wd/hub";
 		    else if ( provider != null && provider.name != null && provider.name.equals( "SAUCELABS" ) )
 		    	return "http://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/wd/hub";
 		    else if ( provider != null && provider.name != null && provider.name.equals( "WINDOWS" ) )

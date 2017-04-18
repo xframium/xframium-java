@@ -40,4 +40,10 @@ public abstract class AbstractCloudActionProvider implements CloudActionProvider
         return null;
     }
     
+    @Override
+    public String getVitals( DeviceWebDriver webDriver )
+    {
+        return null;
+    }
+    
 }

@@ -100,7 +100,8 @@ public enum ArtifactType
     EXECUTION_TEST_JSON( 30, "EXECUTION_HISTORY_JSON", "xFramium Test JSON Report" ),
     
     EXECUTION_TEST_HTML( 31, "EXECUTION_HISTORY_HTML", "xFramium Test HTML Report" ),
-    TIMING_HTML( 32, "TIMING_HTML", "xFramium Test Timing Report" )
+    TIMING_HTML( 32, "TIMING_HTML", "xFramium Test Timing Report" ),
+    STATISTICS( 33, "STATISTICS", "Device Statistics" )
     ;
     
     /** The time. */
@@ -141,6 +142,7 @@ public enum ArtifactType
         supportedList.add( ArtifactType.WIND_TUNNEL );
         supportedList.add( ArtifactType.ALM_DEFECT );
         supportedList.add( ArtifactType.TIMING_HTML );
+        supportedList.add( ArtifactType.STATISTICS );
 
         return supportedList;
     }

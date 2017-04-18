@@ -35,6 +35,7 @@ import org.xframium.artifact.spi.DefaultSuiteReportingArtifact;
 import org.xframium.artifact.spi.DeviceLogArtifact;
 import org.xframium.artifact.spi.HTMLGridArtifact;
 import org.xframium.artifact.spi.HTMLSourceArtifact;
+import org.xframium.artifact.spi.ImagingArtifact;
 import org.xframium.artifact.spi.JSONArtifact;
 import org.xframium.artifact.spi.JSONGridArtifact;
 import org.xframium.artifact.spi.JSONHistoryArtifact;
@@ -47,7 +48,7 @@ import org.xframium.artifact.spi.PerfectoWindTunnel;
 import org.xframium.artifact.spi.PerfectoXMLReport;
 import org.xframium.artifact.spi.SauceLabsReportingServices;
 import org.xframium.artifact.spi.TimingArtifact;
-import org.xframium.artifact.spi.ImagingArtifact;
+import org.xframium.artifact.spi.VitalsArtifact;
 import org.xframium.artifact.spi.XMLSourceArtifact;
 import org.xframium.device.factory.DeviceWebDriver;
 
@@ -105,6 +106,7 @@ public class ArtifactManager
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.EXECUTION_REPORT.name(), PerfectoPDFReport.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.EXECUTION_REPORT_CSV.name(), PerfectoCSVReport.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.TIMING_HTML.name(), TimingArtifact.class );
+        registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.STATISTICS.name(), VitalsArtifact.class );
         registerArtifact( ArtifactTime.BEFORE_SUITE_ARTIFACTS, ArtifactType.GRID_REPORT.name(), JSONGridArtifact.class );
         registerArtifact( ArtifactTime.BEFORE_SUITE_ARTIFACTS, ArtifactType.GRID_HTML.name(), HTMLGridArtifact.class );
         registerArtifact( ArtifactTime.AFTER_SUITE, ArtifactType.EXECUTION_SUITE_HTML.name(), DefaultSuiteReportingArtifact.class );

@@ -785,12 +785,14 @@ public abstract class AbstractSeleniumTest
                 {
                     try
                     {
+                        System.err.println( "CLOSING" );
                         if ( testFlow.isInfoEnabled() )
                             testFlow.info( Thread.currentThread().getName() + ":Closing WebDriver " );
                         webDriver.close();
                     }
                     catch ( Exception e )
                     {
+                        e.printStackTrace();
                     }
                 }
                 
@@ -825,12 +827,15 @@ public abstract class AbstractSeleniumTest
         {
             try
             {
+                System.err.println( "QUITTING" );
                 if ( testFlow.isInfoEnabled() )
                     testFlow.info( Thread.currentThread().getName() + ": Quiting WebDriver " );
                 webDriver.quit();
             }
             catch ( Exception e )
             {
+                
+                e.printStackTrace();
             }
 
         }

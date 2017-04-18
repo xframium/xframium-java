@@ -30,6 +30,7 @@ public interface CloudActionProvider
 
     public void tap( DeviceWebDriver webDriver, PercentagePoint location, int lengthInMillis );
     public String getLog( DeviceWebDriver webDriver );
+    public String getVitals( DeviceWebDriver webDriver );
     
     public InputStream getReport( DeviceWebDriver webDriver, String reportType );
     
