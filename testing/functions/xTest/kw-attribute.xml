@@ -36,6 +36,10 @@
       <parameter type="STATIC" value="data-toggle" />
     </step>
     
+    <step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="attributeValue">
+      <parameter type="STATIC" value="type" />
+    </step>
+    
     <step name="toggleButton" site="xTest" page="home" type="REPORT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
       <parameter type="CONTEXT" value="targetClass" />
       <parameter type="CONTEXT" value="targetToggle" />

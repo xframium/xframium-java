@@ -225,7 +225,7 @@ public class XMLElementProvider extends AbstractElementProvider
                     //
                     for ( SimpleElement sE : ele.getElement() )
                     {
-                        SubElement subElement = new SubElement( BY.valueOf( sE.getDescriptor() ), sE.getValue(), sE.getOs(), sE.getVersion( ) == null ? null : new ApplicationVersion( sE.getVersion() ) );
+                        SubElement subElement = new SubElement( BY.valueOf( sE.getDescriptor() ), sE.getValue(), sE.getOs(), sE.getVersion( ) == null ? null : new ApplicationVersion( sE.getVersion() ), sE.getCloud(), sE.getDeviceTag() );
                         currentElement.addSubElement( subElement );
                         if ( sE.getParameter() != null )
                         {

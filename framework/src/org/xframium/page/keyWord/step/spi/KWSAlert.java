@@ -23,6 +23,7 @@ package org.xframium.page.keyWord.step.spi;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
@@ -30,8 +31,6 @@ import org.openqa.selenium.security.UserAndPassword;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xframium.container.SuiteContainer;
-import org.xframium.exception.ScriptConfigurationException;
-import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -88,8 +87,14 @@ public class KWSAlert extends AbstractKeyWordStep
 		try
 		{
 			WebDriverWait alertWait = new WebDriverWait( webDriver, 5 );
-			alertWait.until( ExpectedConditions.alertIsPresent() );
-    		Alert currentAlert = webDriver.switchTo().alert();
+			Alert currentAlert = alertWait.until( new Function<WebDriver,Alert>(){
+			    @Override
+			    public Alert apply( WebDriver t )
+			    {
+			        return ExpectedConditions.alertIsPresent().apply( t );
+			        
+			    }
+			} );
     		
     		if ( getContext() != null && !getContext().isEmpty() )
     		    contextMap.put( getContext(), currentAlert.getText() );

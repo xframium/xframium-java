@@ -121,6 +121,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
@@ -141,6 +142,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
@@ -167,6 +169,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
@@ -187,6 +190,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
@@ -207,6 +211,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
@@ -234,6 +239,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
@@ -254,6 +260,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
@@ -274,6 +281,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
@@ -294,6 +302,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
@@ -320,6 +329,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
@@ -340,6 +350,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
@@ -360,6 +371,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
@@ -386,6 +398,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
@@ -415,6 +428,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
@@ -441,6 +455,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
@@ -574,6 +589,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
@@ -590,6 +606,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
@@ -608,6 +625,7 @@ public class ReportingElementAdapter implements Element
         catch( Exception e )
         {
             getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            throw e;
         }
         
         getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );

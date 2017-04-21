@@ -34,6 +34,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.content.ContentManager;
+import org.xframium.device.cloud.CloudDescriptor.ProviderType;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
@@ -80,6 +81,9 @@ public abstract class AbstractElement implements Element
 	{
 	    List<SubElement> appList = new ArrayList<SubElement>( 10 );
 	    
+	    //
+	    // Filter by application version if specified
+	    //
 	    for ( SubElement subElement : subElementList )
 	    {
 	        if ( subElement.getVersion() != null && subElement.getVersion().isVersion( appDesc ) )
@@ -88,6 +92,9 @@ public abstract class AbstractElement implements Element
 	            appList.add( subElement );
 	    }
 	    
+	    //
+        // Filter by operating system if specified
+        //
 	    List<SubElement> osList = new ArrayList<SubElement>( 10 );
 	    for ( SubElement subElement : appList )
         {        
@@ -99,7 +106,38 @@ public abstract class AbstractElement implements Element
                 osList.add( subElement );
         }
 	    
-	    return osList.toArray( new SubElement[ 0 ] );
+	    //
+        // Filter by cloud provider if specified
+        //
+	    List<SubElement> cloudList = new ArrayList<SubElement>( 10 );
+        for ( SubElement subElement : osList )
+        {        
+            if ( subElement.getCloudProvider() != null && subElement.getCloudProvider().equals( ProviderType.valueOf( webDriver.getCloud().getProvider().toUpperCase() ) ) )
+                cloudList.add( subElement );
+            else if ( subElement.getCloudProvider() == null )
+                cloudList.add( subElement );
+        }
+        
+        //
+        // Filter by device tag is specified
+        //
+        List<SubElement> tagList = new ArrayList<SubElement>( 10 );
+        for ( SubElement subElement : cloudList )
+        {        
+            if ( subElement.getDeviceTag() != null )
+            {
+                if ( webDriver.getPopulatedDevice().getTagNames() != null )
+                for ( String tagName : webDriver.getPopulatedDevice().getTagNames() )
+                {
+                    if ( subElement.getDeviceTag().equalsIgnoreCase( tagName ) )
+                        tagList.add( subElement );
+                }
+            }
+            else if ( subElement.getDeviceTag() == null )
+                tagList.add( subElement );
+        }
+	    
+	    return tagList.toArray( new SubElement[ 0 ] );
 	}
 	
 	public void setExecutionContext( ExecutionContextTest executionContext )
@@ -761,6 +799,7 @@ public abstract class AbstractElement implements Element
         }
         catch( Exception e )
         {
+            e.printStackTrace();
             if ( e instanceof XFramiumException )
                 throw e;
             else

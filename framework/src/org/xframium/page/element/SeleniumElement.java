@@ -23,18 +23,18 @@ package org.xframium.page.element;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import javax.imageio.ImageIO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.ContextAware;
 import org.openqa.selenium.Dimension;
-import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.TakesScreenshot;
@@ -44,7 +44,9 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.HasTouchScreen;
 import org.openqa.selenium.interactions.touch.TouchActions;
+import org.openqa.selenium.remote.ProtocolHandshake;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.pagefactory.ByAll;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -54,12 +56,9 @@ import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ObjectIdentificationException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
-import org.xframium.gesture.GestureManager;
 import org.xframium.integrations.common.PercentagePoint;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
-import org.xframium.integrations.perfectoMobile.rest.bean.ImageExecution;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.ImageFormat;
-import org.xframium.integrations.perfectoMobile.rest.services.Imaging.MatchMode;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution;
 import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Screen;
 import org.xframium.integrations.perfectoMobile.rest.services.Repositories.RepositoryType;
@@ -67,7 +66,6 @@ import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.PageManager;
 import org.xframium.page.element.spi.set.SetMethodFactory;
-import org.xframium.spi.PropertyProvider;
 import org.xframium.spi.driver.CachingDriver;
 import org.xframium.spi.driver.NativeDriverProvider;
 import org.xframium.spi.driver.VisualDriverProvider;
@@ -92,8 +90,6 @@ public class SeleniumElement extends AbstractElement
     /** The Constant DEVICE_NAME. */
     private static final String DEVICE_NAME = "DEVICE_NAME";
 
-    
-
     /** The located element. */
     private WebElement locatedElement;
 
@@ -117,6 +113,11 @@ public class SeleniumElement extends AbstractElement
         element.setDriver( getWebDriver() );
         element.setDeviceContext( getDeviceContext() );
         element.subElementList.addAll( subElementList );
+        if ( elementProperties != null )
+        {
+            element.elementProperties = new HashMap<String, String>( 5 );
+            element.elementProperties.putAll( elementProperties );
+        }
         return element;
     }
 
@@ -230,7 +231,6 @@ public class SeleniumElement extends AbstractElement
         return null;
     }
 
-    
     /*
      * (non-Javadoc)
      * 
@@ -326,14 +326,38 @@ public class SeleniumElement extends AbstractElement
                 if ( subElementList != null && subElementList.size() > 0 )
                 {
                     SubElement[] subList = getSubElement( ((DeviceWebDriver) getWebDriver()).getAut(), ((DeviceWebDriver) getWebDriver()).getPopulatedDevice().getOs().toUpperCase(), (DeviceWebDriver) getWebDriver() );
-                    if ( subList.length > 0 )
+                    if ( subList.length == 1 )
                     {
+                        //
+                        // Single element found
+                        //
                         By foundBy = _useBy( subList[0].getBy(), applyToken( subList[0].getKey() ) );
 
                         if ( foundBy == null )
-                            throw new ScriptConfigurationException( "Could not locate sub-element for " + getName() + "( " + ((DeviceWebDriver) getWebDriver()).getAut().getName() + " " + ((DeviceWebDriver) getWebDriver()).getAut().getVersion() + " )" );
+                            throw new ScriptConfigurationException(
+                                    "Could not locate sub-element type for " + getName() + "( " + ((DeviceWebDriver) getWebDriver()).getAut().getName() + " " + ((DeviceWebDriver) getWebDriver()).getAut().getVersion() + " )" );
 
                         return foundBy;
+                    }
+                    else if ( subList.length > 1 )
+                    {
+                        //
+                        // Support for lookups returning at multiple levels
+                        //
+                        List<By> byList = new ArrayList<By>( subList.length );
+
+                        for ( SubElement s : subList )
+                        {
+                            By foundBy = _useBy( s.getBy(), applyToken( s.getKey() ) );
+
+                            if ( foundBy == null )
+                                throw new ScriptConfigurationException(
+                                        "Could not locate sub-element type for " + getName() + "( " + ((DeviceWebDriver) getWebDriver()).getAut().getName() + " " + ((DeviceWebDriver) getWebDriver()).getAut().getVersion() + " )" );
+
+                            byList.add( foundBy );
+                        }
+
+                        return new ByAll( byList.toArray( new By[0] ) );
                     }
                     else
                     {
@@ -376,7 +400,10 @@ public class SeleniumElement extends AbstractElement
                 return By.xpath( keyValue );
 
             case V_TEXT:
-                return By.linkText( keyValue );
+                return new ByOCR( keyValue, getElementProperties(), getWebDriver() );
+
+            case V_IMAGE:
+                return new ByImage( keyValue, getElementProperties(), getWebDriver() );
 
             case HTML:
                 HTMLElementLookup elementLookup = new HTMLElementLookup( keyValue );
@@ -876,33 +903,6 @@ public class SeleniumElement extends AbstractElement
     @Override
     protected boolean _isPresent()
     {
-        boolean returnValue = false;
-
-        if ( "V_TEXT".equals( getBy().name().toUpperCase() ) )
-        {
-            if ( getElementProperties() != null )
-            {
-                String result = ((RemoteWebDriver) ((DeviceWebDriver) getWebDriver()).getWebDriver()).executeScript( "mobile:text:find", getElementProperties() ) + "";
-                returnValue = !"false".equals( result.toLowerCase() );
-                if ( returnValue )
-                    getActionProvider().getSupportedTimers( (DeviceWebDriver) getWebDriver(), getExecutionContext().getTimerName(), getExecutionContext(), null );
-            }
-            else
-            {
-                String testValue = PerfectoMobile.instance().imaging().textExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, 50 ).getStatus();
-                returnValue = Boolean.parseBoolean( testValue ) | testValue.toUpperCase().equals( "SUCCESS" );
-                if ( returnValue )
-                    getActionProvider().getSupportedTimers( (DeviceWebDriver) getWebDriver(), getExecutionContext().getTimerName(), getExecutionContext(), null );
-            }
-
-            return returnValue;
-        }
-        else if ( "V_IMAGE".equals( getBy().name().toUpperCase() ) )
-        {
-            returnValue = Boolean.parseBoolean( PerfectoMobile.instance().imaging().imageExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, MatchMode.bounded ).getStatus() );
-            return returnValue;
-        }
-
         WebElement webElement = getElement();
         if ( webElement != null )
         {
@@ -923,83 +923,121 @@ public class SeleniumElement extends AbstractElement
     {
         long implicitWait = getWebDriver().getImplicitWait();
         getWebDriver().manage().timeouts().implicitlyWait( 1, TimeUnit.SECONDS );
-        
+
         try
         {
-            if ( "V_TEXT".equals( getBy().name().toUpperCase() ) )
+
+            try
             {
+
+                String currentContext = null;
+                if ( getWebDriver() instanceof ContextAware )
+                    currentContext = ((ContextAware) getWebDriver()).getContext();
+
+                WebDriverWait wait = new WebDriverWait( getWebDriver(), timeOut, 250 );
+
+                WebElement webElement = null;
                 boolean returnValue = false;
-                if ( getElementProperties() != null )
+
+                switch ( waitType )
                 {
-                    String result = ((RemoteWebDriver) ((DeviceWebDriver) getWebDriver()).getWebDriver()).executeScript( "mobile:text:find", getElementProperties() ) + "";
-                    returnValue = !"false".equals( result.toLowerCase() );
+                    case CLICKABLE:
+                        webElement = wait.until( new Function<WebDriver, WebElement>()
+                        {
+
+                            @Override
+                            public WebElement apply( WebDriver webDriver )
+                            {
+                                return ExpectedConditions.elementToBeClickable( useBy() ).apply( webDriver );
+                            }
+
+                        } );
+
+                        break;
+
+                    case INVISIBLE:
+                        returnValue = wait.until( new Function<WebDriver, Boolean>()
+                        {
+
+                            @Override
+                            public Boolean apply( WebDriver webDriver )
+                            {
+                                return ExpectedConditions.invisibilityOfElementLocated( useBy() ).apply( webDriver );
+                            }
+
+                        } );
+                        break;
+
+                    case PRESENT:
+                        webElement = wait.until( new Function<WebDriver, WebElement>()
+                        {
+
+                            @Override
+                            public WebElement apply( WebDriver webDriver )
+                            {
+                                return ExpectedConditions.presenceOfElementLocated( useBy() ).apply( webDriver );
+                            }
+
+                        } );
+
+                        break;
+
+                    case SELECTABLE:
+                        returnValue = wait.until( new Function<WebDriver, Boolean>()
+                        {
+
+                            @Override
+                            public Boolean apply( WebDriver webDriver )
+                            {
+                                return ExpectedConditions.elementToBeSelected( useBy() ).apply( webDriver );
+                            }
+
+                        } );
+                        break;
+
+                    case TEXT_VALUE_PRESENT:
+                        returnValue = wait.until( new Function<WebDriver, Boolean>()
+                        {
+
+                            @Override
+                            public Boolean apply( WebDriver webDriver )
+                            {
+                                return ExpectedConditions.textToBePresentInElementValue( useBy(), value ).apply( webDriver );
+                            }
+
+                        } );
+                        break;
+
+                    case VISIBLE:
+                        webElement = wait.until( new Function<WebDriver, WebElement>()
+                        {
+
+                            @Override
+                            public WebElement apply( WebDriver webDriver )
+                            {
+                                return ExpectedConditions.visibilityOfElementLocated( useBy() ).apply( webDriver );
+                            }
+
+                        } );
+                        break;
+
+
+                    default:
+                        throw new IllegalArgumentException( "Unknown Wait Condition [" + waitType + "]" );
                 }
-                else
-                {
-                    String testValue = PerfectoMobile.instance().imaging().textExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, 50 ).getStatus();
-                    if ( testValue == null )
-                        returnValue = true;
-                    else
-                        returnValue = Boolean.parseBoolean( testValue ) | testValue.toUpperCase().equals( "SUCCESS" );
-                }
-                if ( returnValue )
+
+                if ( currentContext != null && getWebDriver() instanceof ContextAware )
+                    ((ContextAware) getWebDriver()).context( currentContext );
+
+                if ( webElement != null || returnValue == true )
                     getActionProvider().getSupportedTimers( (DeviceWebDriver) getWebDriver(), getExecutionContext().getTimerName(), getExecutionContext(), null );
-                return returnValue;
+
+                return webElement != null || returnValue == true;
             }
-            else
+            catch ( Exception e )
             {
-    
-                try
-                {
-    
-                    String currentContext = null;
-                    if ( getWebDriver() instanceof ContextAware )
-                        currentContext = ((ContextAware) getWebDriver()).getContext();
-    
-                    WebDriverWait wait = new WebDriverWait( getWebDriver(), timeOut, 250 );
-                    WebElement webElement = null;
-    
-                    switch ( waitType )
-                    {
-                        case CLICKABLE:
-                            webElement = wait.until( ExpectedConditions.elementToBeClickable( useBy() ) );
-                            break;
-    
-                        case INVISIBLE:
-                            return wait.until( ExpectedConditions.invisibilityOfElementLocated( useBy() ) );
-    
-                        case PRESENT:
-    
-                            webElement = wait.until( ExpectedConditions.presenceOfElementLocated( useBy() ) );
-                            break;
-    
-                        case SELECTABLE:
-                            return wait.until( ExpectedConditions.elementToBeSelected( useBy() ) );
-    
-                        case TEXT_VALUE_PRESENT:
-                            return wait.until( ExpectedConditions.textToBePresentInElementValue( useBy(), value ) );
-    
-                        case VISIBLE:
-                            webElement = wait.until( ExpectedConditions.visibilityOfElementLocated( useBy() ) );
-                            break;
-    
-                        default:
-                            throw new IllegalArgumentException( "Unknown Wait Condition [" + waitType + "]" );
-                    }
-    
-                    if ( currentContext != null && getWebDriver() instanceof ContextAware )
-                        ((ContextAware) getWebDriver()).context( currentContext );
-    
-                    if ( webElement != null )
-                        getActionProvider().getSupportedTimers( (DeviceWebDriver) getWebDriver(), getExecutionContext().getTimerName(), getExecutionContext(), null );
-    
-                    return webElement != null;
-                }
-                catch ( Exception e )
-                {
-                    log.error( Thread.currentThread().getName() + ": Could not locate " + useBy(), e );
-                    throw new ObjectIdentificationException( getBy(), useBy() );
-                }
+                log.error( Thread.currentThread().getName() + ": Could not locate " + useBy(), e );
+                throw new ObjectIdentificationException( getBy(), useBy() );
             }
         }
         finally
@@ -1010,14 +1048,23 @@ public class SeleniumElement extends AbstractElement
                 {
                     getWebDriver().manage().timeouts().implicitlyWait( implicitWait, TimeUnit.MILLISECONDS );
                 }
-                catch( Exception e )
+                catch ( Exception e )
                 {
-                  
+
                 }
             }
         }
     }
 
+    public static void main( String[] args )
+    {
+        System.out.println(ProtocolHandshake.class
+                .getProtectionDomain()
+                .getCodeSource()
+                .getLocation()
+                .toExternalForm());
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -1041,23 +1088,8 @@ public class SeleniumElement extends AbstractElement
         {
             WebElement webElement = getElement();
 
-            if ( "V_TEXT".equals( getBy().name().toUpperCase() ) )
-            {
-                if ( getElementProperties() != null )
-                {
-                    String result = ((RemoteWebDriver) ((DeviceWebDriver) getWebDriver()).getWebDriver()).executeScript( "mobile:edit-text:set", getElementProperties() ) + "";
-                    if ( "false".equals( result.toLowerCase() ) )
-                        throw new ScriptException( "Visual set failed to execute" );
-
-                }
-                else
-                    throw new ScriptConfigurationException( "A visual set requires element properties to be specified" );
-            }
-            else
-            {
-                if ( !SetMethodFactory.instance().createSetMethod( webElement.getTagName() ).set( webElement, getWebDriver(), currentValue, setMethod.name().toUpperCase() ) )
-                    throw new ScriptException( "Could not set " + getName() + " with " + currentValue );
-            }
+            if ( !SetMethodFactory.instance().createSetMethod( webElement.getTagName() ).set( webElement, getWebDriver(), currentValue, setMethod.name().toUpperCase() ) )
+                throw new ScriptException( "Could not set " + getName() + " with " + currentValue );
         }
         finally
         {
@@ -1085,25 +1117,10 @@ public class SeleniumElement extends AbstractElement
         }
         try
         {
-            if ( "V_TEXT".equals( getBy().name().toUpperCase() ) )
-            {
-                if ( isTimed() )
-                    getActionProvider().startTimer( (DeviceWebDriver) getWebDriver(), this, getExecutionContext() );
-                createPressFromVisual( PerfectoMobile.instance().imaging().textExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, 50 ) );
-            }
-            else if ( "V_IMAGE".equals( getBy().name().toUpperCase() ) )
-            {
-                if ( isTimed() )
-                    getActionProvider().startTimer( (DeviceWebDriver) getWebDriver(), this, getExecutionContext() );
-                createPressFromVisual( PerfectoMobile.instance().imaging().imageExists( getExecutionId(), getDeviceName(), getKey(), (short) 30, MatchMode.bounded ) );
-            }
-            else
-            {
-                WebElement e = getElement();
-                if ( isTimed() )
-                    getActionProvider().startTimer( (DeviceWebDriver) getWebDriver(), this, getExecutionContext() );
-                e.click();
-            }
+            WebElement e = getElement();
+            if ( isTimed() )
+                getActionProvider().startTimer( (DeviceWebDriver) getWebDriver(), this, getExecutionContext() );
+            e.click();
         }
         finally
         {
@@ -1111,31 +1128,6 @@ public class SeleniumElement extends AbstractElement
                 ((CachingDriver) getWebDriver()).setCachingEnabled( true );
         }
 
-    }
-
-    private void createPressFromVisual( ImageExecution iExec )
-    {
-        if ( getElementProperties() != null )
-        {
-            String result = (((RemoteWebDriver) getWebDriver().getWebDriver() ) ).executeScript( "mobile:button-text:click", getElementProperties() ) + "";
-            if ( "false".equals( result.toLowerCase() ) )
-                throw new ScriptException( "Visual click failed to execute" );
-
-        }
-        else
-        {
-            if ( Boolean.parseBoolean( iExec.getStatus() ) )
-            {
-                int centerWidth = Integer.parseInt( iExec.getLeft() ) + (Integer.parseInt( iExec.getWidth() ) / 2);
-                int centerHeight = Integer.parseInt( iExec.getTop() ) + (Integer.parseInt( iExec.getHeight() ) / 2);
-
-                int useX = (int) (((double) centerWidth / (double) Integer.parseInt( iExec.getScreenWidth() )) * 100);
-                int useY = (int) (((double) centerHeight / (double) Integer.parseInt( iExec.getScreenHeight() )) * 100);
-
-                GestureManager.instance().createPress( new Point( useX, useY ) ).executeGesture( getWebDriver() );
-
-            }
-        }
     }
 
     /*
@@ -1171,7 +1163,7 @@ public class SeleniumElement extends AbstractElement
         WebElement webElement = getElement();
         return webElement.getLocation();
     }
-    
+
     @Override
     protected boolean _isSelected()
     {

@@ -25,7 +25,7 @@
   <application provider="XML" name="xTest" fileName="applicationRegistry.xml" />
   <devices provider="XML" fileName="deviceRegistry.xml" />
 
-  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" phase="1001" domain="PROFESSIONAL_SERVICES">
+  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" phase="1001" domain="PROFESSIONAL_SERVICES" testNames="xFramium Perfecto VISUAL Keyword Tests">
     <property name="xFramium General KeyWord Test.count">3</property>
     <property name="selenium.timeouts.implicitWait">5000</property>
     <propertyAdapter className="org.xframium.device.property.SeleniumPropertyAdapter" />
@@ -43,6 +43,8 @@
     <artifact type="EXECUTION_REPORT_PDF" />
     <artifact type="REPORTIUM" />
     <artifact type="WIND_TUNNEL" />
+    <artifact type="TIMING_HTML" />
+    <artifact type="STATISTICS" />
   </driver>
   <model provider="XML" siteName="xTest" fileName="objectRepository/xTest/objectRepository.xml" />
   <suite provider="XML" fileName="tests/tests-xTest.xml" />

@@ -20,6 +20,7 @@
  *******************************************************************************/
 package org.xframium.integrations.perfectoMobile.rest.services;
 
+import java.util.Map;
 import org.xframium.integrations.perfectoMobile.rest.bean.ImageExecution;
 import org.xframium.integrations.perfectoMobile.rest.services.PerfectoService.ServiceDescriptor;
 
@@ -126,7 +127,34 @@ public interface Imaging extends PerfectoService
 	@PerfectoCommand( commandName="checkpoint", subCommandName = "image" )
 	public ImageExecution imageExists( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="content" ) String content, @Parameter( name="timeout" ) Short timeout, @Parameter( name="match" ) MatchMode match );
 	
-	
+	/**
+     * Text exists.
+     *
+     * @param executionId the execution id
+     * @param handsetId the handset id
+     * @param content the content
+     * @param timeout the timeout
+     * @return the image execution
+     */
+    @Operation( operationName="command" )
+    @PerfectoCommand( commandName="checkpoint", subCommandName = "text" )
+    public ImageExecution textExists( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="content" ) String content, @ParameterMap Map<String,String> parameterMap  );
+    
+    
+    /**
+     * Image exists.
+     *
+     * @param executionId the execution id
+     * @param handsetId the handset id
+     * @param content the content
+     * @param timeout the timeout
+     * @param match the match
+     * @return the image execution
+     */
+    @Operation( operationName="command" )
+    @PerfectoCommand( commandName="checkpoint", subCommandName = "image" )
+    public ImageExecution imageExists( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="content" ) String content,  @ParameterMap Map<String,String> parameterMap );
+    
 
 	/**
 	 * Screen shot.

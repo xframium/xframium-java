@@ -228,14 +228,31 @@
           <enumeration value="EXECUTION_REPORT_CSV" />
           <enumeration value="FAILURE_SOURCE" />
           <enumeration value="FAILURE_SOURCE_HTML" />
-          <enumeration value="WCAG_REPORT" />
+          <enumeration value="IMAGING_ANALYSIS" />
           <enumeration value="DEVICE_LOG" />
+          <enumeration value="CONSOLE_LOG" />
           <enumeration value="EXECUTION_RECORD_HTML" />
           <enumeration value="EXECUTION_RECORD_CSV" />
-          <enumeration value="CONSOLE_LOG" />
-          <enumeration value="REPORTIUM" />
+          <enumeration value="EXECUTION_RECORD" />
+          <enumeration value="EXECUTION_TIMING" />
+          <enumeration value="EXECUTION_DEFINITION" />
           <enumeration value="DEBUGGER" />
           <enumeration value="SAUCE_LABS" />
+          <enumeration value="REPORTIUM" />
+          <enumeration value="EXECUTION_RECORD_JSON" />
+          <enumeration value="GRID_REPORT" />
+          <enumeration value="GRID_HTML" />
+          <enumeration value="ADD_TO_CSV" />
+          <enumeration value="ALM_DEFECT" />
+          <enumeration value="EXECUTION_SUITE_JSON" />
+          <enumeration value="EXECUTION_SUITE_HTML" />
+          <enumeration value="EXECUTION_HISTORY_JSON" />
+          <enumeration value="EXECUTION_HISTORY_HTML" />
+          <enumeration value="WIND_TUNNEL" />
+          <enumeration value="EXECUTION_TEST_JSON" />
+          <enumeration value="EXECUTION_TEST_HTML" />
+          <enumeration value="TIMING_HTML" />
+          <enumeration value="STATISTICS" />
         </restriction>
       </simpleType>
     </attribute>
@@ -396,6 +413,8 @@
     <attribute name="value" type="string" use="required" />
     <attribute name="os" type="string" use="optional" />
     <attribute name="version" type="string" use="optional" />
+    <attribute name="cloud" type="string" use="optional" />
+    <attribute name="deviceTag" type="string" use="optional" />
   </complexType>
   <complexType name="xElementParameter">
     <annotation>

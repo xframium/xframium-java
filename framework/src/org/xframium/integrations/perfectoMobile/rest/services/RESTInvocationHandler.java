@@ -114,7 +114,7 @@ public class RESTInvocationHandler implements InvocationHandler
 			if ( getAnnotation( parameterAnnotations[ i ], ResourceID.class ) != null )
 				parameterId = parameterId + SLASH + args[ i ] + "";
 			else if ( getAnnotation( parameterAnnotations[ i ], ParameterMap.class ) != null )
-				parameterMap = (Map) parameterMap;
+				parameterMap = (Map) args[i];
 			else if ( getAnnotation( parameterAnnotations[ i ], Parameter.class ) != null )
 			{
 				if ( args[ i ] != null )
@@ -181,7 +181,7 @@ public class RESTInvocationHandler implements InvocationHandler
 		if ( parameterMap != null )
 		{
 			for ( Object name : parameterMap.keySet() )
-				urlBuilder.append( "&" ).append( name ).append( "=" ).append( URLEncoder.encode( parameterMap.get( name ) + "", "UTF-8" ) );
+				urlBuilder.append( "&param." ).append( name ).append( "=" ).append( URLEncoder.encode( parameterMap.get( name ) + "", "UTF-8" ) );
 		}
 		
 		URL currentUrl = new URL( urlBuilder.toString() );

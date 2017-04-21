@@ -81,19 +81,25 @@ public class WEBDriverFactory extends AbstractDriverFactory
             }
             else
             {
-                dc.setCapability( useCloud.getCloudActionProvider().getCloudPlatformName(currentDevice), currentDevice.getOs() );
-            	dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
-                
-                dc.setCapability( MODEL, currentDevice.getModel() );
-                dc.setCapability( USER_NAME, useCloud.getUserName() );
-                dc.setCapability( PASSWORD, useCloud.getPassword() );
+                if (!useCloud.isEmbedded())
+                {
+                    dc.setCapability( useCloud.getCloudActionProvider().getCloudPlatformName(currentDevice), currentDevice.getOs() );
+                	dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
+                	dc.setCapability( MODEL, currentDevice.getModel() );
+                    dc.setCapability( USER_NAME, useCloud.getUserName() );
+                    dc.setCapability( PASSWORD, useCloud.getPassword() );
+                }
             }
 
             if ( currentDevice.getBrowserName() != null && !currentDevice.getBrowserName().isEmpty() )
                 dc.setCapability( BROWSER_NAME,  useCloud.getCloudActionProvider().getCloudBrowserName(currentDevice.getBrowserName()) );
-            if ( currentDevice.getBrowserVersion() != null && !currentDevice.getBrowserVersion().isEmpty() )
-                dc.setCapability( BROWSER_VERSION, currentDevice.getBrowserVersion() );
-            	
+            
+            if ( !useCloud.isEmbedded() )
+            {
+                if ( currentDevice.getBrowserVersion() != null && !currentDevice.getBrowserVersion().isEmpty() )
+                    dc.setCapability( BROWSER_VERSION, currentDevice.getBrowserVersion() );
+            }
+            
             for ( String name : currentDevice.getCapabilities().keySet() )
 				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
 			if ( ApplicationRegistry.instance().getAUT() != null )
@@ -104,6 +110,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
 
 			if ( useCloud.isEmbedded() )
 			{
+			    
 			    if ( currentDevice.getBrowserName() != null )
 			    {
 			        if ( log.isInfoEnabled() )

@@ -16,6 +16,11 @@ public class DeviceLogArtifact extends AbstractArtifact
     @Override
     protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver )
     {
-        return writeToDisk( rootFolder, FILE_NAME, webDriver.getCloud().getCloudActionProvider().getLog( webDriver ).getBytes() );
+        
+        String logData = webDriver.getCloud().getCloudActionProvider().getLog( webDriver );
+        if ( logData != null )
+            return writeToDisk( rootFolder, FILE_NAME, logData.getBytes() );
+        else
+            return null;
     }
 }

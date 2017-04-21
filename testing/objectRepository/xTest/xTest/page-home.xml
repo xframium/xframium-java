@@ -64,7 +64,32 @@
         <element value="//*[@id='ANDROID']" descriptor="XPATH" os="ANDROID" />
         <element value="//*[@id='WINDOWS']" descriptor="XPATH" os="WINDOWS" />
       </element>
-      <element name="Accordian Image" value="PRIVATE:/testingImage.png" descriptor="V_IMAGE" />
+      <element name="osTest2" descriptor="COMPLEX">
+        <element value="//*[@id='IOS']" descriptor="XPATH" os="IOS" />
+        <element value="//*[@id='ANDROID']" descriptor="XPATH" os="ANDROID" />
+        <element value="//*[@id='WINDOWS']" descriptor="XPATH" os="WINDOWS" />
+      </element>
+
+      <element name="Accordian" descriptor="COMPLEX">
+        <element value="//div[@id='aOpen']//accc" descriptor="XPATH" cloud="SELENIUM"/>
+        <element value="PRIVATE:/testingImage.png" descriptor="V_IMAGE" cloud="PERFECTO">
+          <parameter name="timeout" value="30"/>
+          <parameter name="match" value="Bounded"/>
+        </element>
+        <element value="Accordian Open" descriptor="V_TEXT" cloud="PERFECTO" >
+          <parameter name="timeout" value="30"/>
+        </element>
+        <element value="//div[@id='aOpen']//a" descriptor="XPATH" cloud="SELENIUM"/>
+      </element>
+
+      <element name="Accordian Image" value="PRIVATE:/testingImage.png" descriptor="V_IMAGE" >
+        <parameter name="timeout" value="30"/>
+        <parameter name="match" value="Bounded"/>
+      </element>
+      
+      <element name="Accordian Open" value="Accordian Open" descriptor="V_TEXT" >
+        <parameter name="timeout" value="30"/>
+      </element>
       <element name="TOGGLE Text" value="Toggle Value" descriptor="V_TEXT" />
       <element name="Check One" value="checkOne" descriptor="ID" />
       <element name="Check Two" value="checkTwo" descriptor="ID" />

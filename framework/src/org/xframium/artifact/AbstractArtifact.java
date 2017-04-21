@@ -93,7 +93,7 @@ public abstract class AbstractArtifact implements Artifact
         }
         catch( Exception e )
         {
-            log.warn( "Error generating artifact for " + artifactType, e );
+            log.warn( "Error generating artifact for " + artifactType + "(" + e.getMessage() + ")" );
         }
         
         return null;
@@ -106,6 +106,9 @@ public abstract class AbstractArtifact implements Artifact
     
     protected File writeToDisk( File rootFolder, String useName, InputStream inputStream )
     {
+        if ( inputStream == null )
+            return null;
+        
         this.fileName = new File( rootFolder, useName );
         
         if ( !this.fileName.getParentFile().exists() )

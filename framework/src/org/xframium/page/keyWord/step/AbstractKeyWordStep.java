@@ -838,20 +838,26 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 //
                 // Device tagging implementation
                 //
-                if ( deviceTags != null && deviceTags.length > 0 && PageManager.instance().getDeviceTag( webDriver ) != null && PageManager.instance().getDeviceTag( webDriver ).length > 0 )
+                
+                if ( deviceTags != null && deviceTags.length > 0 )
                 {
                     boolean tagFound = false;
                     for ( String localTag : deviceTags )
                     {
-                        for ( String deviceTag : PageManager.instance().getDeviceTag( webDriver ) )
+                        if ( ( (DeviceWebDriver) webDriver ).getDevice().getTagNames() != null && ( (DeviceWebDriver) webDriver ).getDevice().getTagNames().length > 0 )
                         {
-                            if ( localTag.toUpperCase().trim().equals( deviceTag.toUpperCase() ) )
+                            for ( String deviceTag : ( (DeviceWebDriver) webDriver ).getDevice().getTagNames() )
                             {
-                                tagFound = true;
-                                break;
+                                if ( localTag.toUpperCase().trim().equals( deviceTag.toUpperCase() ) )
+                                {
+                                    tagFound = true;
+                                    break;
+                                }
                             }
+                            if ( tagFound )
+                                break;
                         }
-                        if ( tagFound )
+                        else
                             break;
                     }
     

@@ -162,6 +162,12 @@ public class CloudRegistry
         }
     }
 	
+	public static void main( String[] args )
+    {
+	    System.setProperty( "webdriver.gecko.driver", "c:\\projects\\tools\\selenium\\geckodriver.exe" );
+        new CloudRegistry().startEmbeddedCloud();
+    }
+	
 	public void startEmbeddedCloud()
 	{
 	    try
@@ -173,8 +179,8 @@ public class CloudRegistry
 	        
 	        if ( !isListening( "127.0.0.1", 4444 ) )
 	        {
-                _server = new SeleniumServer( new StandaloneConfiguration( ) );
-                _server.boot();
+	            SeleniumServer.main( new String[] { "-browserTimeout",  "0",  "-debug", "true", "-port", "4444", "-role", "standalone", "-timeout", "1800" } );
+	            
 	        }
 	        else
 	            log.warn( "There is already an EMBEDDED server listening - we will use that instance" );

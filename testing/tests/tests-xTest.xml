@@ -66,7 +66,7 @@
   <import fileName="./xTest/Visual Test.xml" />
   <import fileName="./xTest/Wait Test.xml" />
   <import fileName="./xTest/Wait For Test.xml" />
-  <import fileName="./xTest/Window Keyword.xml" />
+ 
   <import fileName="./xTest/Perfecto SET Test.xml" />
   <import fileName="./xTest/Comparison Test.xml" />
   <import fileName="./xTest/Checkbox Test.xml" />

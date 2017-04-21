@@ -785,39 +785,32 @@ public abstract class AbstractSeleniumTest
                 {
                     try
                     {
-                        System.err.println( "CLOSING" );
                         if ( testFlow.isInfoEnabled() )
                             testFlow.info( Thread.currentThread().getName() + ":Closing WebDriver " );
                         webDriver.close();
                     }
                     catch ( Exception e )
                     {
-                        e.printStackTrace();
+                        
                     }
                 }
                 
-                if ( webDriver.isConnected() )
+                List<String> aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.AFTER_TEST );
+                
+                if ( aList != null )
                 {
-                    List<String> aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.AFTER_TEST );
-                    
-                    if ( aList != null )
+                    for ( String artifactType : aList )
                     {
-                        for ( String artifactType : aList )
-                        {
-                            ArtifactManager.instance().generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver );
-                        }
+                        ArtifactManager.instance().generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver );
                     }
                 }
-                
-                if ( webDriver.isConnected() )
+            
+                aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.AFTER_ARTIFACTS );
+                if ( aList != null )
                 {
-                    List<String> aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.AFTER_ARTIFACTS );
-                    if ( aList != null )
+                    for ( String artifactType : aList )
                     {
-                        for ( String artifactType : aList )
-                        {
-                            ArtifactManager.instance().generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver );
-                        }
+                        ArtifactManager.instance().generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver );
                     }
                 }
 
@@ -827,7 +820,6 @@ public abstract class AbstractSeleniumTest
         {
             try
             {
-                System.err.println( "QUITTING" );
                 if ( testFlow.isInfoEnabled() )
                     testFlow.info( Thread.currentThread().getName() + ": Quiting WebDriver " );
                 webDriver.quit();
@@ -835,7 +827,6 @@ public abstract class AbstractSeleniumTest
             catch ( Exception e )
             {
                 
-                e.printStackTrace();
             }
 
         }

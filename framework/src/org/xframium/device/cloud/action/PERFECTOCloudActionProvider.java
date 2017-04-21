@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -15,6 +16,9 @@ import java.util.zip.ZipInputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.openqa.selenium.ContextAware;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.Rectangle;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xframium.application.ApplicationDescriptor;
@@ -30,6 +34,7 @@ import org.xframium.integrations.common.PercentagePoint;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.bean.Execution;
 import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
+import org.xframium.integrations.perfectoMobile.rest.bean.ImageExecution;
 import org.xframium.integrations.perfectoMobile.rest.bean.Item;
 import org.xframium.integrations.perfectoMobile.rest.bean.ItemCollection;
 import org.xframium.integrations.perfectoMobile.rest.services.Repositories.RepositoryType;
@@ -56,6 +61,30 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 	        stringBuilder.append( "Unknown Action" );
 	    
 	    return stringBuilder.toString();
+	}
+	
+	@Override
+	public Rectangle findImage( DeviceWebDriver webDriver, String imageName, Map<String, String> propertyMap )
+	{
+	    
+	    ImageExecution imageExec = PerfectoMobile.instance().imaging().imageExists( webDriver.getExecutionId(), webDriver.getDeviceName(), imageName, propertyMap );
+	    
+	    if ( imageExec != null && Boolean.parseBoolean( imageExec.getStatus() ) )
+	        return new Rectangle( new Point( Integer.parseInt( imageExec.getLeft() ), Integer.parseInt( imageExec.getTop() ) ), new Dimension( Integer.parseInt( imageExec.getWidth() ), Integer.parseInt( imageExec.getHeight() ) ) );
+	    
+	    return null;
+	}
+	
+	@Override
+	public Rectangle findText( DeviceWebDriver webDriver, String text, Map<String, String> propertyMap )
+	{
+	    ImageExecution imageExec = PerfectoMobile.instance().imaging().textExists( webDriver.getExecutionId(), webDriver.getDeviceName(), text, propertyMap );
+	    
+	    
+	    if ( imageExec != null && Boolean.parseBoolean( imageExec.getStatus() ) )
+            return new Rectangle( new Point( Integer.parseInt( imageExec.getLeft() ), Integer.parseInt( imageExec.getTop() ) ), new Dimension( Integer.parseInt( imageExec.getWidth() ), Integer.parseInt( imageExec.getHeight() ) ) );
+	    
+	    return null;
 	}
 	
 	private Document getExecutionReport( DeviceWebDriver webDriver )
@@ -89,7 +118,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         }
         catch (Exception e)
         {
-            log.error( "Error downloading PERFECT execution report", e);
+            log.error( "Error downloading PERFECT execution report " + e.getMessage());
             return null;
         }
 	}

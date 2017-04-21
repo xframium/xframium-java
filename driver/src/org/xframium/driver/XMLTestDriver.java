@@ -98,7 +98,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
                 boolean osFound = false;
                 for ( String localOs : osArray )
                 {
-                    if ( localOs.toUpperCase().trim().equals( deviceOs.toUpperCase() ) )
+                    if ( deviceOs.toUpperCase().contains( localOs.trim().toUpperCase() ) )
                     {
                         osFound = true;
                         break;
