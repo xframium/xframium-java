@@ -46,7 +46,6 @@ import org.openqa.selenium.interactions.HasTouchScreen;
 import org.openqa.selenium.interactions.touch.TouchActions;
 import org.openqa.selenium.remote.ProtocolHandshake;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.pagefactory.ByAll;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -325,7 +324,7 @@ public class SeleniumElement extends AbstractElement
             case COMPLEX:
                 if ( subElementList != null && subElementList.size() > 0 )
                 {
-                    SubElement[] subList = getSubElement( ((DeviceWebDriver) getWebDriver()).getAut(), ((DeviceWebDriver) getWebDriver()).getPopulatedDevice().getOs().toUpperCase(), (DeviceWebDriver) getWebDriver() );
+                    SubElement[] subList = getSubElement( ((DeviceWebDriver) getWebDriver()).getAut(), ((DeviceWebDriver) getWebDriver()).getPopulatedDevice().getOs().toLowerCase(), (DeviceWebDriver) getWebDriver() );
                     if ( subList.length == 1 )
                     {
                         //
@@ -335,7 +334,7 @@ public class SeleniumElement extends AbstractElement
 
                         if ( foundBy == null )
                             throw new ScriptConfigurationException(
-                                    "Could not locate sub-element type for " + getName() + "( " + ((DeviceWebDriver) getWebDriver()).getAut().getName() + " " + ((DeviceWebDriver) getWebDriver()).getAut().getVersion() + " )" );
+                                    "Could not locate sub-element type for " + getName() );
 
                         return foundBy;
                     }
@@ -352,16 +351,16 @@ public class SeleniumElement extends AbstractElement
 
                             if ( foundBy == null )
                                 throw new ScriptConfigurationException(
-                                        "Could not locate sub-element type for " + getName() + "( " + ((DeviceWebDriver) getWebDriver()).getAut().getName() + " " + ((DeviceWebDriver) getWebDriver()).getAut().getVersion() + " )" );
+                                        "Could not locate sub-element type for " + getName()  );
 
                             byList.add( foundBy );
                         }
 
-                        return new ByAll( byList.toArray( new By[0] ) );
+                        return new ByCollection( byList.toArray( new By[0] ) );
                     }
                     else
                     {
-                        throw new ScriptConfigurationException( "Could not locate sub-element for " + getName() + "( " + ((DeviceWebDriver) getWebDriver()).getPopulatedDevice().getOs() + " )" );
+                        throw new ScriptConfigurationException( "Could not locate sub-element for " + getName() + "( " + ((DeviceWebDriver) getWebDriver()).getPopulatedDevice().getOs() + "," + ((DeviceWebDriver) getWebDriver()).getCloud().getProvider() + ", " + ((DeviceWebDriver) getWebDriver()).getAut().getName() + " (" + ((DeviceWebDriver) getWebDriver()).getAut().getVersion() + ") )" );
                     }
                 }
                 else
@@ -772,12 +771,7 @@ public class SeleniumElement extends AbstractElement
      */
     protected String _getStyle( String styleProperty )
     {
-        long startTime = System.currentTimeMillis();
-        WebElement currentElement = getElement();
-
-        String returnValue = getElement().getCssValue( styleProperty );
-
-        return returnValue;
+        return getElement().getCssValue( styleProperty );
     }
 
     /*
@@ -789,6 +783,9 @@ public class SeleniumElement extends AbstractElement
     protected String _getValue()
     {
         WebElement currentElement = getElement();
+        
+        if ( currentElement.getTagName() == null )
+            return null;
 
         String returnValue = null;
         switch ( currentElement.getTagName().toUpperCase() )

@@ -140,6 +140,9 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         {
             log.info( "Driver: Configuring Driver" );
             final DriverContainer driverC = configureDriver( customConfig );
+            
+            driverC.setPropertyAdapters( DeviceManager.instance().getPropertyAdapters() );
+            
             suiteName = driverC.getSuiteName();
             
             DeviceManager.instance().setInitializationName( driverC.getBeforeDevice() );

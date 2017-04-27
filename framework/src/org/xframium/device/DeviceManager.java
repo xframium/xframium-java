@@ -194,6 +194,15 @@ public class DeviceManager
     {
         propertyAdapterList.add( propertyAdapter );
     }
+    
+    public Class[] getPropertyAdapters()
+    {
+        List<Class> pA = new ArrayList<Class>( 10 );
+        for ( PropertyAdapter a : propertyAdapterList )
+            pA.add( a.getClass() );
+        
+        return pA.toArray( new Class[ 0 ] );
+    }
 
     public void notifyPropertyAdapter( Map<String, String> configurationProperties )
     {

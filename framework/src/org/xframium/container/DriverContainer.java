@@ -26,6 +26,7 @@ public class DriverContainer
     private String beforeTest;
     private String afterTest;
     private String beforeDevice;
+    private Class[] propertyAdapters;
     
     private DriverType driverType;
     private List<TagContainer> extractors = new ArrayList<TagContainer>( 10 );
@@ -36,6 +37,17 @@ public class DriverContainer
     private List<String> artifactList = new ArrayList<String>( 20 );
     private boolean secureCloud = false;
     
+    
+
+    public Class[] getPropertyAdapters()
+    {
+        return propertyAdapters;
+    }
+
+    public void setPropertyAdapters( Class[] propertyAdapters )
+    {
+        this.propertyAdapters = propertyAdapters;
+    }
 
     public String getDomain()
     {

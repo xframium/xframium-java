@@ -98,9 +98,7 @@ public abstract class AbstractElement implements Element
 	    List<SubElement> osList = new ArrayList<SubElement>( 10 );
 	    for ( SubElement subElement : appList )
         {        
-            if ( subElement.getOs() != null && subElement.getOs().contains( os ) )
-                osList.add( subElement );
-            else if ( subElement.getOs() != null && subElement.getOs().equalsIgnoreCase( os ))
+            if ( subElement.getOs() != null && subElement.getOs().toLowerCase().contains( os ) )
                 osList.add( subElement );
             else if ( subElement.getOs() == null )
                 osList.add( subElement );
