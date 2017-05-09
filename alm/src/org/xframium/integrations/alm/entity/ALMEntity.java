@@ -24,7 +24,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -65,8 +70,27 @@ public abstract class ALMEntity
         String Label();
     }
     
+    private Map<String,ALMData> fieldMap = new HashMap<String,ALMData>( 10 );
+    
+    public void addCustomData( String fieldName, ALMData almData )
+    {
+        fieldMap.put( fieldName, almData );
+    }
+    
+    public ALMData getCustomData( String fieldName )
+    {
+        return fieldMap.get( fieldName );
+    }
+    
+    public Collection<ALMData> getCustomFields()
+    {
+        return fieldMap.values();
+    }
+    
     /** The entity type. */
     private String entityType;
+    
+    
     
     /**
      * Instantiates a new ALM entity.
@@ -104,6 +128,8 @@ public abstract class ALMEntity
         xml.append( "<Entity Type=\"" ).append( entityType ).append( "\">" );
         xml.append( "<Fields>" );
         
+        List<String> fieldOverride = new ArrayList<String>( 10 );
+        
         for ( Field f : fieldList )
         {
             boolean accessibleValue = f.isAccessible();
@@ -112,27 +138,59 @@ public abstract class ALMEntity
             if ( almField != null )
             {
                 Object currentValue = f.get( this );
-                if ( currentValue != null )
+                ALMData almData = getCustomData( almField.PhysicalName() );
+                
+                if ( almData != null )
                 {
+                    //
+                    // Override a field or data
+                    //
+                    xml.append( "<Field Name=\"" ).append( almData.getName() ).append( "\">" );
+                    fieldOverride.add( almField.PhysicalName() );
+                    
+                    if ( almData.getValue() != null )
+                        currentValue = almData.getValue();
+                    
+                }
+                else
                     xml.append( "<Field Name=\"" ).append( almField.Name() ).append( "\">" );
                     
-                    if ( currentValue instanceof String )
-                        xml.append( "<Value>" ).append(  currentValue ).append( "</Value>" );
-                    else if ( currentValue instanceof Date )
-                        xml.append( "<Value>" ).append( dateOnly.format( ( (Date) currentValue ) ) ).append( "</Value>" );
-                    
-                    xml.append( "</Field>" );
-                }
+                
+                if ( currentValue instanceof String )
+                    xml.append( "<Value>" ).append(  currentValue ).append( "</Value>" );
+                else if ( currentValue instanceof Date )
+                    xml.append( "<Value>" ).append( dateOnly.format( ( (Date) currentValue ) ) ).append( "</Value>" );
+                
+                xml.append( "</Field>" );
             }
             
             f.setAccessible( accessibleValue );
+        }
+        
+        //
+        // Now, add the custom fields
+        //
+        for( String key : fieldMap.keySet() )
+        {
+            if ( fieldOverride.contains( key ) )
+                continue;
+            
+            ALMData almData = fieldMap.get( key );
+            Object currentValue = almData.getValue();
+            
+            xml.append( "<Field Name=\"" ).append( almData.getName() ).append( "\">" );
+            
+            if ( currentValue instanceof String )
+                xml.append( "<Value>" ).append(  currentValue ).append( "</Value>" );
+            else if ( currentValue instanceof Date )
+                xml.append( "<Value>" ).append( dateOnly.format( ( (Date) currentValue ) ) ).append( "</Value>" );
+            xml.append( "</Field>" );
         }
         
         xml.append( "</Fields>" );
         xml.append( "</Entity>" );
         
         return xml.toString();
-        
     }
     
     

@@ -26,6 +26,7 @@ package org.xframium.device.factory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
@@ -95,7 +98,7 @@ public class DeviceWebDriver
         implements HasCapabilities, WebDriver, JavascriptExecutor, ContextAware, ExecuteMethod, NativeDriverProvider, PropertyProvider, TakesScreenshot, DeviceProvider, HasInputDevices, CachingDriver, ReportiumProvider, HasTouchScreen
 {
 
-    
+    private static Pattern FORMAT_PATTERN = Pattern.compile( "\\{([\\w\\.]*)\\}" );
     private List<DeviceInterrupt> interruptList;
 
     private DeviceInterruptThread diThread = null;
@@ -140,6 +143,89 @@ public class DeviceWebDriver
     {
         this.artifactFolder = artifactFolder;
     }
+    
+    public String getValue( String valueDescriptor )
+    {
+        String[] valueMap = valueDescriptor.split( "\\." );
+        
+        switch( valueMap[ 0 ] )
+        {
+            case "device":
+                return _getValue( populatedDevice, valueMap, 1 );
+                
+            case "data":
+                try
+                {
+                    return executionContext.getDataMap().get( valueMap[ 0 ] ).get( valueMap[ 1 ] ).toString();
+                }
+                catch( Exception e )
+                {
+                    log.error( "Could not locate data object " + valueDescriptor, e );
+                }
+                
+            case "test":
+                return _getValue( executionContext, valueMap, 1 );
+        }
+        
+        return null;
+    }
+    
+    private String _getValue( Object currentObject, String[] valueArray, int position )
+    {
+        try
+        {
+            Class currentClass = currentObject.getClass();
+            Field currentField = currentClass.getDeclaredField( valueArray[ position ] );
+            
+            boolean iA = currentField.isAccessible();
+            currentField.setAccessible( true );
+            
+            Object newObject = currentField.get( currentObject );
+            
+            if ( position == valueArray.length - 1 )
+            {
+                if ( newObject != null )
+                    return newObject.toString();
+                else
+                    return null;
+            }
+            
+            currentField.setAccessible( iA );
+            
+            return _getValue( newObject, valueArray, position+1 );
+            
+        }
+        catch( Exception e )
+        {
+            log.error( "Could not find field " + valueArray[ position ] + " on " + currentObject.getClass().getName(), e );
+            return null;
+        }
+    }
+    
+    public String toFormattedString( String template )
+    {
+        List<String> templateArray = new ArrayList<String>( 10 );
+        
+        
+        Matcher templateMatcher = FORMAT_PATTERN.matcher( template );
+        
+        while ( templateMatcher.find() )
+            templateArray.add( templateMatcher.group( 1 ) );
+        
+        
+        String newValue = template;
+        
+        for ( String fieldName : templateArray )
+        {
+            String replaceValue = getValue( fieldName );
+            
+            if ( replaceValue != null )
+                newValue = newValue.replaceAll( "\\{" + fieldName + "\\}", replaceValue );
+        }
+        
+        return newValue;
+    }
+    
     
     public File getArtifactFolder()
     {

@@ -680,6 +680,11 @@ public class KeyWordDriver
         }
         finally
         {
+            
+            String testValue = "{test.throwable.detailMessage}\r\n\r\nUser id: {data.authData.userName}\r\nPassword: {data.authData.password}\r\nDevice: {device.environment}\r\nOS: {device.os}\r\n";
+            
+            System.out.println( ((DeviceWebDriver) webDriver ).toFormattedString( testValue ) );
+            
             if ( !contextMap.containsKey( "XF_TEST_STATUS" ) )
                 contextMap.put( "XF_TEST_STATUS", "UNKNOWN" );
             if ( testStarted )

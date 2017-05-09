@@ -3,17 +3,23 @@ package org.xframium.artifact.spi;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.xframium.artifact.AbstractArtifact;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.XFramiumException.ExceptionType;
 import org.xframium.integrations.alm.ALMRESTConnection;
 import org.xframium.integrations.alm.entity.ALMAttachment;
+import org.xframium.integrations.alm.entity.ALMData;
 import org.xframium.integrations.alm.entity.ALMDefect;
 import org.xframium.reporting.ExecutionContext;
 
 public class ALMDefectArtifact extends AbstractArtifact
 {
+    private static Pattern CUSTOM_PATTERN = Pattern.compile( "(\\w*)\\((\\w*)\\,(\\w*)\\)=(\\w*)" );
+    private static Pattern OVERRIDE_PATTERN = Pattern.compile( "(\\w*)\\((\\w*)\\,(\\w*)\\)" ); 
+    
     public ALMDefectArtifact()
     {
         setArtifactType( ArtifactType.ALM_DEFECT.name() );
@@ -39,6 +45,44 @@ public class ALMDefectArtifact extends AbstractArtifact
             almDefect.setSeverity( webDriver.getExecutionContext().getTest().getSeverity() );
             almDefect.setStatus( ExecutionContext.instance().getConfigProperties().get( "alm.defectStatus" ) );
             almDefect.setSummary( webDriver.getExecutionContext().getMessage() );
+            
+            //
+            // Add custom fields with static values
+            //
+            String almCustomFields = ExecutionContext.instance().getConfigProperties().get( "alm.defectCustomFields" );
+            if ( almCustomFields != null && !almCustomFields.isEmpty() )
+            {
+                for ( String fieldDef : almCustomFields.split( ":" ) )
+                {
+                    Matcher fieldMatcher = CUSTOM_PATTERN.matcher( fieldDef );
+                    
+                    if ( fieldMatcher.find() )
+                    {
+                        ALMData almData = new ALMData( fieldMatcher.group( 1 ), fieldMatcher.group( 3 ), fieldMatcher.group( 2 ), fieldMatcher.group( 4 ) );    
+                        almDefect.addCustomData( almData.getPhysicalName(), almData );
+                    }
+                }
+            }
+            
+            // Override fields names
+            //
+            //
+            String almOverrideFields = ExecutionContext.instance().getConfigProperties().get( "alm.defectOverrideFields" );
+            if ( almOverrideFields != null && !almOverrideFields.isEmpty() )
+            {
+                for ( String fieldDef : almOverrideFields.split( ":" ) )
+                {
+                    Matcher fieldMatcher = OVERRIDE_PATTERN.matcher( fieldDef );
+                    
+                    if ( fieldMatcher.find() )
+                    {
+                        ALMData almData = new ALMData( fieldMatcher.group( 1 ), fieldMatcher.group( 3 ), fieldMatcher.group( 2 ), null );    
+                        almDefect.addCustomData( almData.getPhysicalName(), almData );
+                    }
+                }
+            }
+            
+            
             List<ALMAttachment> artifactList = new ArrayList<ALMAttachment>( 10 );
             for ( ArtifactType a : ArtifactType.CONSOLE_LOG.getSupported() )
             {

@@ -28,9 +28,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.FlowException;
 import org.xframium.exception.ObjectConfigurationException;
-import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
@@ -520,6 +520,8 @@ public class KeyWordTest
         if ( timed )
             PageManager.instance().addExecutionTiming( executionId, deviceName, getName(), System.currentTimeMillis() - startTime, StepStatus.SUCCESS, description, threshold );
 
+        
+        
         return stepSuccess;
     }
 

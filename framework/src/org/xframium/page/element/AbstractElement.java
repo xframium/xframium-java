@@ -105,10 +105,23 @@ public abstract class AbstractElement implements Element
         }
 	    
 	    //
+        // Filter by device os version
+        //
+	    List<SubElement> osVersionList = new ArrayList<SubElement>( 10 );
+        for ( SubElement subElement : osList )
+        {        
+            if ( subElement.getOs() != null && subElement.getOs().toLowerCase().contains( os ) )
+                osVersionList.add( subElement );
+            else if ( subElement.getOs() == null )
+                osVersionList.add( subElement );
+        }
+        
+	    
+	    //
         // Filter by cloud provider if specified
         //
 	    List<SubElement> cloudList = new ArrayList<SubElement>( 10 );
-        for ( SubElement subElement : osList )
+        for ( SubElement subElement : osVersionList )
         {        
             if ( subElement.getCloudProvider() != null && subElement.getCloudProvider().equals( ProviderType.valueOf( webDriver.getCloud().getProvider().toUpperCase() ) ) )
                 cloudList.add( subElement );
@@ -134,6 +147,8 @@ public abstract class AbstractElement implements Element
             else if ( subElement.getDeviceTag() == null )
                 tagList.add( subElement );
         }
+        
+        
 	    
 	    return tagList.toArray( new SubElement[ 0 ] );
 	}
