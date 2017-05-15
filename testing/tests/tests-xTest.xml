@@ -1,25 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    xFramium
-   
-    Copyright 2017 by Moreland Labs LTD (http://www.morelandlabs.com)
-   
-    Some open source application is free software: you can redistribute 
-    it and/or modify it under the terms of the GNU General Public 
-    License as published by the Free Software Foundation, either 
-    version 3 of the License, or (at your option) any later version.
-     
-    Some open source application is distributed in the hope that it will 
-    be useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
-    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-     
-    You should have received a copy of the GNU General Public License
-    along with xFramium.  If not, see <http://www.gnu.org/licenses/>.
-   
-    @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>
- -->
-
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
   <import fileName="./xTest/xFramium 2nd Device.xml" />
   <import fileName="./xTest/xFramium GRID dumpstate.xml" />
@@ -31,8 +10,6 @@
   <import fileName="./xTest/xFramium Page Element Context.xml" />
   <import fileName="./xTest/xFramium Dump State Test.xml" />
   <import fileName="./xTest/xFramium Dump State Historical Test.xml" />
-  <import fileName="./xTest/xFramium device tag Step Filter.xml" />
-  <import fileName="./xTest/xFramium Module Test.xml" />
   <import fileName="./xTest/xFramium Perfecto VISUAL Keyword Tests.xml" />
   <import fileName="./xTest/xFramium Flow Control.xml" />
   <import fileName="./xTest/Alert Test.xml" />
@@ -66,7 +43,6 @@
   <import fileName="./xTest/Visual Test.xml" />
   <import fileName="./xTest/Wait Test.xml" />
   <import fileName="./xTest/Wait For Test.xml" />
- 
   <import fileName="./xTest/Perfecto SET Test.xml" />
   <import fileName="./xTest/Comparison Test.xml" />
   <import fileName="./xTest/Checkbox Test.xml" />

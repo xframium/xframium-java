@@ -1,104 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    xFramium
-   
-    Copyright 2017 by Moreland Labs LTD (http://www.morelandlabs.com)
-   
-    Some open source application is free software: you can redistribute 
-    it and/or modify it under the terms of the GNU General Public 
-    License as published by the Free Software Foundation, either 
-    version 3 of the License, or (at your option) any later version.
-     
-    Some open source application is distributed in the hope that it will 
-    be useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
-    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-     
-    You should have received a copy of the GNU General Public License
-    along with xFramium.  If not, see <http://www.gnu.org/licenses/>.
-   
-    @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>
- -->
-
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-  <function name="kw-string" active="true">
-    <description>Tests the individual operations of the STRING2 keyword</description>
-    <step name="colorCheck" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="trimmedValue" />
-    <step name="TRIM" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="trimmedValue">
-      <parameter type="CONTEXT" name="Original Value" value="trimmedValue" />
-    </step>
-    <step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="CONTEXT" name="new parameter" value="trimmedValue" />
-      <parameter type="STATIC" name="new parameter" value="Test Color" />
-    </step>
-    <step name="UPPER" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="upperValue">
-      <parameter type="STATIC" name="Original Value" value="Test Color" />
-    </step>
-    <step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="CONTEXT" name="new parameter" value="upperValue" />
-      <parameter type="STATIC" name="new parameter" value="TEST COLOR" />
-    </step>
-    <step name="LOWER" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="lowerValue">
-      <parameter type="STATIC" name="Original Value" value="Test Color" />
-    </step>
-    <step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="CONTEXT" name="new parameter" value="lowerValue" />
-      <parameter type="STATIC" name="new parameter" value="test color" />
-    </step>
-    <step name="DECIMAL" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="decimalValue">
-      <parameter type="STATIC" name="Original Value" value="123.999999" />
-      <parameter type="STATIC" name="Decimal Format" value="#.##" />
-    </step>
-    <step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="CONTEXT" name="new parameter" value="decimalValue" />
-      <parameter type="STATIC" name="new parameter" value="123.99" />
-    </step>
-    
-    <step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="toggleButtonValue" />
-    
-    <step name="CONTAINS" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="CONTEXT" name="Original Value" value="toggleButtonValue" />
-      <parameter type="STATIC" name="Value" value="le Va" />
-    </step>
-    
-    <step name="CONTAINS" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Original Value" value="my lower back" />
-      <parameter type="STATIC" name="Value" value="back" />
-    </step>
-    <step name="DATE" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="newDate">
-      <parameter type="STATIC" name="Original Value" value="December 25 2014" />
-      <parameter type="STATIC" name="Format" value="MM/dd/yyyy" />
-    </step>
-    
-    <step name="SUBSTR" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="ourValue">
-      <parameter type="CONTEXT" name="Original Value" value="newDate" />
-      <parameter type="STATIC" name="Begin" value="0" />
-      <parameter type="STATIC" name="End" value="2" />
-    </step>
-    
-    <step name="SUBSTR" site="xTest" page="home" type="REPORT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="ourValue">
-      <parameter type="CONTEXT" name="Original Value" value="ourValue" />
-    </step>
-    
-    
-    <step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="CONTEXT" name="new parameter" value="newDate" />
-      <parameter type="STATIC" name="new parameter" value="12/25/2014" />
-    </step>
-    <step name="DATE" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="newDate2">
-      <parameter type="STATIC" name="Format" value="MM/dd/yyyy" />
-    </step>
-    <step name="REPORT" site="xTest" page="home" type="REPORT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="CONTEXT" name="newDate2" value="newDate2" />
-    </step>
-    <step name="CONCAT" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="fullString">
-      <parameter type="STATIC" name="new parameter" value="Stuck" />
-      <parameter type="STATIC" name="new parameter" value="---" />
-      <parameter type="STATIC" name="new parameter" value="Together" />
-    </step>
-    <step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="CONTEXT" name="new parameter" value="fullString" />
-      <parameter type="STATIC" name="new parameter" value="Stuck---Together" />
-    </step>
-  </function>
+<function name="kw-string" active="true">
+<description>Tests the individual operations of the STRING2 keyword</description>
+<step name="colorCheck" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="trimmedValue"/>
+<step name="TRIM" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="trimmedValue">
+<parameter type="CONTEXT" name="Original Value" value="trimmedValue"/>
+</step>
+<step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="CONTEXT" name="new parameter" value="trimmedValue"/>
+<parameter type="STATIC" name="new parameter" value="Test Color"/>
+</step>
+<step name="UPPER" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="upperValue">
+<parameter type="STATIC" name="Original Value" value="Test Color"/>
+</step>
+<step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="CONTEXT" name="new parameter" value="upperValue"/>
+<parameter type="STATIC" name="new parameter" value="TEST COLOR"/>
+</step>
+<step name="LOWER" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="lowerValue">
+<parameter type="STATIC" name="Original Value" value="Test Color"/>
+</step>
+<step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="CONTEXT" name="new parameter" value="lowerValue"/>
+<parameter type="STATIC" name="new parameter" value="test color"/>
+</step>
+<step name="DECIMAL" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="decimalValue">
+<parameter type="STATIC" name="Original Value" value="123.999999"/>
+<parameter type="STATIC" name="Decimal Format" value="#.##"/>
+</step>
+<step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="CONTEXT" name="new parameter" value="decimalValue"/>
+<parameter type="STATIC" name="new parameter" value="123.99"/>
+</step>
+<step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="toggleButtonValue"/>
+<step name="CONTAINS" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="CONTEXT" name="Original Value" value="toggleButtonValue"/>
+<parameter type="STATIC" name="Value" value="le Va"/>
+</step>
+<step name="CONTAINS" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Original Value" value="my lower back"/>
+<parameter type="STATIC" name="Value" value="back"/>
+</step>
+<step name="DATE" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="newDate">
+<parameter type="STATIC" name="Original Value" value="December 25 2014"/>
+<parameter type="STATIC" name="Format" value="MM/dd/yyyy"/>
+</step>
+<step name="SUBSTR" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="ourValue">
+<parameter type="CONTEXT" name="Original Value" value="newDate"/>
+<parameter type="STATIC" name="Begin" value="0"/>
+<parameter type="STATIC" name="End" value="2"/>
+</step>
+<step name="SUBSTR" site="xTest" page="home" type="REPORT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="ourValue">
+<parameter type="CONTEXT" name="Original Value" value="ourValue"/>
+</step>
+<step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="CONTEXT" name="new parameter" value="newDate"/>
+<parameter type="STATIC" name="new parameter" value="12/25/2014"/>
+</step>
+<step name="DATE" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="newDate2">
+<parameter type="STATIC" name="Format" value="MM/dd/yyyy"/>
+</step>
+<step name="REPORT" site="xTest" page="home" type="REPORT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="CONTEXT" name="newDate2" value="newDate2"/>
+</step>
+<step name="CONCAT" site="xTest" page="home" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="fullString">
+<parameter type="STATIC" name="new parameter" value="Stuck"/>
+<parameter type="STATIC" name="new parameter" value="---"/>
+<parameter type="STATIC" name="new parameter" value="Together"/>
+</step>
+<step name="Undefined" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="CONTEXT" name="new parameter" value="fullString"/>
+<parameter type="STATIC" name="new parameter" value="Stuck---Together"/>
+</step>
+</function>
 </suite>

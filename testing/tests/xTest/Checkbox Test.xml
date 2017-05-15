@@ -1,48 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    xFramium
-   
-    Copyright 2017 by Moreland Labs LTD (http://www.morelandlabs.com)
-   
-    Some open source application is free software: you can redistribute 
-    it and/or modify it under the terms of the GNU General Public 
-    License as published by the Free Software Foundation, either 
-    version 3 of the License, or (at your option) any later version.
-     
-    Some open source application is distributed in the hope that it will 
-    be useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
-    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-     
-    You should have received a copy of the GNU General Public License
-    along with xFramium.  If not, see <http://www.gnu.org/licenses/>.
-   
-    @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>
- -->
-
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-  <test name="Checkbox Test" timed="false" threshold="0" active="true" priority="1" severity="1">
-    <description>Test for check boxes</description>
-    <step name="NAVIGATE" site="xTest" page="home" type="BROWSER" active="false" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="The URL to navigate to" value="http://www.xframium.org/testing.html" />
-    </step>
-    <step name="Check One" site="xTest" page="home" type="SELECTED" active="true" threshold="0" timed="false" inverse="true" wait="0" />
-    <step name="Check Two" site="xTest" page="home" type="SELECTED" active="true" threshold="0" timed="false" inverse="true" wait="0" />
-    <step name="Check Three" site="xTest" page="home" type="SELECTED" active="true" threshold="0" timed="false" inverse="false" wait="0" />
-    <step name="Chech Four" site="xTest" page="home" type="SELECTED" active="true" threshold="0" timed="false" inverse="true" wait="0" />
-    <step name="Check Five" site="xTest" page="home" type="SELECTED" active="true" threshold="0" timed="false" inverse="true" wait="0" />
-    
-    <step name="Check One" site="xTest" page="home" type="STATE" active="true" threshold="0" timed="false" inverse="true" wait="0" />
-    
-    <step name="allChecks" site="xTest" page="home" type="LOOP" active="true" threshold="0" timed="false" inverse="false" wait="0">
-      <parameter type="STATIC" name="Loop Iterator" value="allChecks" />
-      <parameter type="STATIC" name="Function Name" value="checkData" />
-    </step>
-    
-    <step name="allChecks" site="xTest" page="home" type="LOOP" active="true" threshold="0" timed="false" inverse="false" wait="0">
-      <parameter type="STATIC" name="Loop Iterator" value="allChecks" />
-      <parameter type="STATIC" name="Function Name" value="checkData2" />
-    </step>
-    <step name="Check Five" site="xTest" page="home" type="WAIT" active="true" threshold="0" timed="false" inverse="true" wait="10000" />
-  </test>
+<test name="Checkbox Test" timed="false" threshold="0" active="true" priority="1" severity="1">
+<description>Test for check boxes</description>
+<step name="NAVIGATE" site="xTest" page="home" type="BROWSER" active="false" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="The URL to navigate to" value="http://www.xframium.org/testing.html"/>
+</step>
+<step name="Check One" site="xTest" page="home" type="SELECTED" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR"/>
+<step name="Check Two" site="xTest" page="home" type="SELECTED" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR"/>
+<step name="Check Three" site="xTest" page="home" type="SELECTED" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="Chech Four" site="xTest" page="home" type="SELECTED" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR"/>
+<step name="Check Five" site="xTest" page="home" type="SELECTED" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR"/>
+<step name="Check One" site="xTest" page="home" type="STATE" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR"/>
+<step name="allChecks" site="xTest" page="home" type="LOOP" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Loop Iterator" value="allChecks"/>
+<parameter type="STATIC" name="Function Name" value="checkData"/>
+</step>
+<step name="allChecks" site="xTest" page="home" type="LOOP" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Loop Iterator" value="allChecks"/>
+<parameter type="STATIC" name="Function Name" value="checkData2"/>
+</step>
+<step name="Check Five" site="xTest" page="home" type="WAIT" active="true" threshold="0" timed="false" inverse="true" wait="10000" failureMode="ERROR"/>
+</test>
 </suite>

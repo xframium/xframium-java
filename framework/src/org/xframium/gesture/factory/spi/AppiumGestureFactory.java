@@ -24,6 +24,7 @@ import org.xframium.gesture.Gesture;
 import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.gesture.factory.AbstractGestureFactory;
 import org.xframium.gesture.factory.GestureFactory;
+import org.xframium.gesture.factory.spi.appium.DragDropGesture;
 import org.xframium.gesture.factory.spi.appium.KeyBoardGesture;
 import org.xframium.gesture.factory.spi.appium.KeyPressGesture;
 import org.xframium.gesture.factory.spi.appium.PressGesture;
@@ -77,6 +78,11 @@ public class AppiumGestureFactory extends AbstractGestureFactory implements Gest
 				returnGesture = new KeyBoardGesture();
 				returnGesture.setParameters( parameterList );
 				break;
+				
+			case DRAGDROP:
+			    returnGesture = new DragDropGesture();
+			    returnGesture.setParameters( parameterList );
+			    break;
 		}
 		
 		return returnGesture;

@@ -26,12 +26,14 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.ScreenOrientation;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.gesture.AbstractDragDropGesture.InitialDragDropAction;
 import org.xframium.gesture.Gesture.Direction;
 import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.gesture.factory.GestureFactory;
 import org.xframium.gesture.factory.spi.AppiumGestureFactory;
 import org.xframium.gesture.factory.spi.PerfectoGestureFactory;
 import org.xframium.gesture.factory.spi.SeleniumGestureFactory;
+import org.xframium.page.element.Element;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -142,6 +144,16 @@ public class GestureManager
             default:
                 return null;
         }
+    }
+    
+    public Gesture createDragDrop( InitialDragDropAction dropAction, Element fromElement, Element toElement )
+    {
+        return modifyGestureFactory().createGesture( GestureType.DRAGDROP, new Object[] { fromElement, toElement, dropAction } );
+    }
+    
+    public Gesture createDragDrop( Element fromElement, Element toElement )
+    {
+        return modifyGestureFactory().createGesture( GestureType.DRAGDROP, new Object[] { fromElement, toElement, InitialDragDropAction.PRESS } );
     }
 
     /**

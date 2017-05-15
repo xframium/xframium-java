@@ -1,45 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- xFramium Copyright 2017 by Moreland Labs LTD (http://www.morelandlabs.com) Some open source application is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, 
-  either version 3 of the License, or (at your option) any later version. Some open source application is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-  PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with xFramium. If not, see <http://www.gnu.org/licenses/>. @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+> -->
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-  <function name="kw-checkcolor" active="true">
-    <description>null</description>
-    <step name="alertButton" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" value="high" />
-      <parameter type="STATIC" value="5,5" />
-    </step>
-    <step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" value="high" />
-      <parameter type="STATIC" value="5,5" />
-      <parameter type="STATIC" value="#337ab7" />
-      <parameter type="STATIC" value="0" />
-    </step>
-    <step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="alertColor">
-      <parameter type="STATIC" value="high" />
-      <parameter type="STATIC" value="5,5" />
-    </step>
-    <step name="checkColor" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="CONTEXT" value="alertColor" />
-      <parameter type="STATIC" value="-13403465" />
-    </step>
-    <step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" value="high" />
-      <parameter type="STATIC" value="5,5" />
-      <parameter type="STATIC" value="51,122,183" />
-      <parameter type="STATIC" value="5" />
-    </step>
-    <step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" value="high" />
-      <parameter type="STATIC" value="5,5" />
-      <parameter type="STATIC" value="-13403465" />
-      <parameter type="STATIC" value="5" />
-    </step>
-    <step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" value="high" />
-      <parameter type="STATIC" value="5,5" />
-      <parameter type="STATIC" value="#000000" />
-      <parameter type="STATIC" value="0" />
-    </step>
-  </function>
+<function name="kw-checkcolor" active="true">
+<description>null</description>
+<step name="alertButton" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="5,5"/>
+</step>
+<step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="5,5"/>
+<parameter type="STATIC" value="#337ab7"/>
+<parameter type="STATIC" value="0"/>
+</step>
+<step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="alertColor">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="5,5"/>
+</step>
+<step name="checkColor" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="CONTEXT" value="alertColor"/>
+<parameter type="STATIC" value="-13403465"/>
+</step>
+<step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="5,5"/>
+<parameter type="STATIC" value="51,122,183"/>
+<parameter type="STATIC" value="5"/>
+</step>
+<step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="5,5"/>
+<parameter type="STATIC" value="-13403465"/>
+<parameter type="STATIC" value="5"/>
+</step>
+<step name="colorCheck" site="xTest" page="home" type="VERIFY_COLOR" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="high"/>
+<parameter type="STATIC" value="5,5"/>
+<parameter type="STATIC" value="#000000"/>
+<parameter type="STATIC" value="0"/>
+</step>
+</function>
 </suite>

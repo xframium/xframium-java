@@ -22,7 +22,7 @@
 
 <data>
   <recordType name="callTest">
-    <record name="one" value="one" />
+    <record active="true" name="one" value="one" height="100" length="25" />
   </recordType>
   
   <recordType name="dataLoop">
@@ -33,6 +33,7 @@
   
   <recordType name="parentData">
     <record name="one" value="one" childRecord="|childRecords:[value='childOne']|" />
+    <record name="two" value="two" childRecord="|childRecords:[value='childTwo']|" />
     <record name="two" value="two" childRecord="|childRecords:[value='childTwo']|" />
   </recordType>
   

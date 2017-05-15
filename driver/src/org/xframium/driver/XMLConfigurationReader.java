@@ -1242,6 +1242,21 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             ProxyRegistry.instance().setProxyHost(xRoot.getProxy().getProxyHost());
             ProxyRegistry.instance().setProxyPort(xRoot.getProxy().getProxyPort());
             ProxyRegistry.instance().setIgnoreHost(xRoot.getProxy().getProxyIgnoreHost());
+            ProxyRegistry.instance().setProxyUser( xRoot.getProxy().getProxyUser() );
+            ProxyRegistry.instance().setProxyPassword( xRoot.getProxy().getProxyPassword() );
+            if ( xRoot.getProxy().getProxyAuthenticator() != null && !xRoot.getProxy().getProxyAuthenticator().isEmpty() )
+            {
+                try
+                {
+                    ProxyRegistry.instance().setProxyAuthenticator( Class.forName( xRoot.getProxy().getProxyAuthenticator() ) );
+                }
+                catch( Exception e )
+                {
+                    log.error( "Could not create proxy authenticator class defined as " + xRoot.getProxy().getProxyAuthenticator(), e );
+                }
+            }
+            
+            ProxyRegistry.instance().registerAuthenticator();
         }
         return true;
     }

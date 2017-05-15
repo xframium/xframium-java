@@ -162,12 +162,6 @@ public class CloudRegistry
         }
     }
 	
-	public static void main( String[] args )
-    {
-	    System.setProperty( "webdriver.gecko.driver", "c:\\projects\\tools\\selenium\\geckodriver.exe" );
-        new CloudRegistry().startEmbeddedCloud();
-    }
-	
 	public void startEmbeddedCloud()
 	{
 	    try

@@ -57,7 +57,9 @@ public interface Gesture
 		KEYPRESS(6, "KEYPRESS", "Send a key press"),
 		
 		/** The keypress. */
-		HIDE_KEYBOARD(7, "HIDE_KEYBOARD", "Hide the keyboard");
+		HIDE_KEYBOARD(7, "HIDE_KEYBOARD", "Hide the keyboard"),
+		
+		DRAGDROP(8, "DRAGDROP", "Drag one element onto another element");
 	    
 	    private GestureType( int id, String name, String description )
 	    {
@@ -79,7 +81,7 @@ public interface Gesture
 	        gestureList.add( GestureType.PINCH );
 	        gestureList.add( GestureType.ROTATE );
 	        gestureList.add( GestureType.KEYPRESS );
-	        gestureList.add( GestureType.HIDE_KEYBOARD );
+	        gestureList.add( GestureType.DRAGDROP );
 	        return gestureList;
 	    }
 	    

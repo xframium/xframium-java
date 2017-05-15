@@ -30,6 +30,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.xframium.page.data.DefaultPageData;
 import org.xframium.page.data.PageData;
+import org.xframium.page.data.PageDataManager;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -46,7 +47,7 @@ public class ExcelPageDataProvider extends AbstractPageDataProvider
 	
 	/** The tab names. */
 	private String tabNames;
-
+	
 	/**
 	 * Instantiates a new XML page data provider.
 	 *
@@ -213,6 +214,7 @@ public class ExcelPageDataProvider extends AbstractPageDataProvider
 					}
 					catch( Exception e )
 					{
+					    e.printStackTrace();
 					    log.error( "Ignoring Row: " + e.getMessage() );
 					}
 				}

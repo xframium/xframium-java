@@ -35,7 +35,13 @@ public class ALMDefectArtifact extends AbstractArtifact
             //
             ALMDefect almDefect = new ALMDefect();
             almDefect.setAssignedTo( ExecutionContext.instance().getConfigProperties().get( "alm.assignedTo" ) );
-            almDefect.setDescription( webDriver.getExecutionContext().getMessageDetail() );
+            
+            String descriptionTemplate = ExecutionContext.instance().getConfigProperties().get( "alm.defect.template.BG_DESCRIPTION" );
+            if ( descriptionTemplate != null )
+                almDefect.setDescription( webDriver.toFormattedString( descriptionTemplate ) );
+            else
+                almDefect.setDescription( webDriver.getExecutionContext().getMessageDetail() );
+            
             almDefect.setDetectedBy( ExecutionContext.instance().getConfigProperties().get( "alm.userName" ) );
             almDefect.setDetectedInCycle( ExecutionContext.instance().getPhase() );
             almDefect.setDetectedInEnvironment( ExecutionContext.instance().getAut().getEnvironment() );
@@ -44,7 +50,12 @@ public class ALMDefectArtifact extends AbstractArtifact
             almDefect.setPriority( webDriver.getExecutionContext().getTest().getPriority() );
             almDefect.setSeverity( webDriver.getExecutionContext().getTest().getSeverity() );
             almDefect.setStatus( ExecutionContext.instance().getConfigProperties().get( "alm.defectStatus" ) );
-            almDefect.setSummary( webDriver.getExecutionContext().getMessage() );
+            
+            String summaryTemplate = ExecutionContext.instance().getConfigProperties().get( "alm.defect.template.BG_SUMMARY" );
+            if ( summaryTemplate != null )
+                almDefect.setSummary( webDriver.toFormattedString( summaryTemplate ) );
+            else
+                almDefect.setSummary( webDriver.getExecutionContext().getMessage() );
             
             //
             // Add custom fields with static values

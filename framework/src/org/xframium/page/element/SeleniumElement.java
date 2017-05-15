@@ -712,8 +712,6 @@ public class SeleniumElement extends AbstractElement
             By useBy = useBy();
             if ( useBy != null )
             {
-                if ( log.isInfoEnabled() )
-                    log.info( Thread.currentThread().getName() + ": Locating element by [" + getBy() + "] using [" + getKey() + "]" + (fromContext != null ? (" from [" + fromContext.getNative() + "]") : "") );
 
                 WebElement webElement = null;
 
@@ -729,12 +727,12 @@ public class SeleniumElement extends AbstractElement
                         webElement = ((WebDriver) getWebDriver()).findElement( useBy() );
                 }
 
-                if ( log.isInfoEnabled() )
+                if ( log.isDebugEnabled() )
                 {
                     if ( webElement == null )
-                        log.info( Thread.currentThread().getName() + ": Could not locate by [" + getBy() + "] using [" + getKey() + "]" );
+                        log.debug( Thread.currentThread().getName() + ": Could not locate by [" + getBy() + "] using [" + getKey() + "]" );
                     else
-                        log.info( Thread.currentThread().getName() + ": Element " + getKey() + " Located" );
+                        log.debug( Thread.currentThread().getName() + ": Element " + getKey() + " Located" );
                 }
 
                 if ( isCacheNative() )

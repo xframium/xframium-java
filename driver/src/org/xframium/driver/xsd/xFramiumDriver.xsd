@@ -34,9 +34,12 @@
     </annotation>
     <simpleContent>
       <extension base="string">
-        <attribute name="proxyHost" type="string" use="optional" />
-        <attribute name="proxyPort" type="string" use="optional" />
+        <attribute name="proxyHost" type="string" use="required" />
+        <attribute name="proxyPort" type="string" use="required" />
         <attribute name="proxyIgnoreHost" type="string" use="optional" />
+        <attribute name="proxyUser" type="string" use="optional" />
+        <attribute name="proxyPassword" type="string" use="optional" />
+        <attribute name="proxyAuthenticator" type="string" use="optional" />
       </extension>
     </simpleContent>
   </complexType>

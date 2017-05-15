@@ -24,6 +24,7 @@ import org.xframium.gesture.Gesture;
 import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.gesture.factory.AbstractGestureFactory;
 import org.xframium.gesture.factory.GestureFactory;
+import org.xframium.gesture.factory.spi.selenium.DragDropGesture;
 import org.xframium.gesture.factory.spi.selenium.KeyPressGesture;
 
 // TODO: Auto-generated Javadoc
@@ -67,7 +68,10 @@ public class SeleniumGestureFactory extends AbstractGestureFactory implements Ge
 				returnGesture.setParameters( parameterList );
 				break;
 				
-				
+			case DRAGDROP:
+			    returnGesture = new DragDropGesture();
+			    returnGesture.setParameters( parameterList );
+				break;
 			/*case HIDE_KEYBOARD:
 				returnGesture = new KeyBoardGesture();
 				returnGesture.setParameters( parameterList );

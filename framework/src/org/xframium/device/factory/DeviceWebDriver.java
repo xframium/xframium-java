@@ -162,6 +162,7 @@ public class DeviceWebDriver
                 {
                     log.error( "Could not locate data object " + valueDescriptor, e );
                 }
+                break;
                 
             case "test":
                 return _getValue( executionContext, valueMap, 1 );
@@ -607,6 +608,9 @@ public class DeviceWebDriver
      */
     public List<WebElement> findElements( By by )
     {
+        if ( log.isInfoEnabled() )
+            log.info( Thread.currentThread().getName() + ": Locating element using [" + by + "]" );
+        
         if ( cachingEnabled && cachedDocument == null )
             cacheData();
 
@@ -674,6 +678,9 @@ public class DeviceWebDriver
      */
     public WebElement findElement( By by )
     {
+        if ( log.isInfoEnabled() )
+            log.info( Thread.currentThread().getName() + ": Locating element using [" + by + "]" );
+        
         if ( by instanceof ByXPath )
         {
             if ( cachingEnabled && cachedDocument == null )

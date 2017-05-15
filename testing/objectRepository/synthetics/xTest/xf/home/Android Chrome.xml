@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+<head>
+    <style type="text/css">/*<![CDATA[*/
+[uib-typeahead-popup].dropdown-menu{display:block;}
+/*]]>*/</style>
+    <style type="text/css">/*<![CDATA[*/
+.uib-time input{width:50px;}
+/*]]>*/</style>
+    <style type="text/css">/*<![CDATA[*/
+[uib-tooltip-popup].tooltip.top-left > .tooltip-arrow,[uib-tooltip-popup].tooltip.top-right > .tooltip-arrow,[uib-tooltip-popup].tooltip.bottom-left > .tooltip-arrow,[uib-tooltip-popup].tooltip.bottom-right > .tooltip-arrow,[uib-tooltip-popup].tooltip.left-top > .tooltip-arrow,[uib-tooltip-popup].tooltip.left-bottom > .tooltip-arrow,[uib-tooltip-popup].tooltip.right-top > .tooltip-arrow,[uib-tooltip-popup].tooltip.right-bottom > .tooltip-arrow,[uib-tooltip-html-popup].tooltip.top-left > .tooltip-arrow,[uib-tooltip-html-popup].tooltip.top-right > .tooltip-arrow,[uib-tooltip-html-popup].tooltip.bottom-left > .tooltip-arrow,[uib-tooltip-html-popup].tooltip.bottom-right > .tooltip-arrow,[uib-tooltip-html-popup].tooltip.left-top > .tooltip-arrow,[uib-tooltip-html-popup].tooltip.left-bottom > .tooltip-arrow,[uib-tooltip-html-popup].tooltip.right-top > .tooltip-arrow,[uib-tooltip-html-popup].tooltip.right-bottom > .tooltip-arrow,[uib-tooltip-template-popup].tooltip.top-left > .tooltip-arrow,[uib-tooltip-template-popup].tooltip.top-right > .tooltip-arrow,[uib-tooltip-template-popup].tooltip.bottom-left > .tooltip-arrow,[uib-tooltip-template-popup].tooltip.bottom-right > .tooltip-arrow,[uib-tooltip-template-popup].tooltip.left-top > .tooltip-arrow,[uib-tooltip-template-popup].tooltip.left-bottom > .tooltip-arrow,[uib-tooltip-template-popup].tooltip.right-top > .tooltip-arrow,[uib-tooltip-template-popup].tooltip.right-bottom > .tooltip-arrow,[uib-popover-popup].popover.top-left > .arrow,[uib-popover-popup].popover.top-right > .arrow,[uib-popover-popup].popover.bottom-left > .arrow,[uib-popover-popup].popover.bottom-right > .arrow,[uib-popover-popup].popover.left-top > .arrow,[uib-popover-popup].popover.left-bottom > .arrow,[uib-popover-popup].popover.right-top > .arrow,[uib-popover-popup].popover.right-bottom > .arrow,[uib-popover-html-popup].popover.top-left > .arrow,[uib-popover-html-popup].popover.top-right > .arrow,[uib-popover-html-popup].popover.bottom-left > .arrow,[uib-popover-html-popup].popover.bottom-right > .arrow,[uib-popover-html-popup].popover.left-top > .arrow,[uib-popover-html-popup].popover.left-bottom > .arrow,[uib-popover-html-popup].popover.right-top > .arrow,[uib-popover-html-popup].popover.right-bottom > .arrow,[uib-popover-template-popup].popover.top-left > .arrow,[uib-popover-template-popup].popover.top-right > .arrow,[uib-popover-template-popup].popover.bottom-left > .arrow,[uib-popover-template-popup].popover.bottom-right > .arrow,[uib-popover-template-popup].popover.left-top > .arrow,[uib-popover-template-popup].popover.left-bottom > .arrow,[uib-popover-template-popup].popover.right-top > .arrow,[uib-popover-template-popup].popover.right-bottom > .arrow{top:auto;bottom:auto;left:auto;right:auto;margin:0;}[uib-popover-popup].popover,[uib-popover-html-popup].popover,[uib-popover-template-popup].popover{display:block !important;}
+/*]]>*/</style>
+    <style type="text/css">/*<![CDATA[*/
+.uib-datepicker-popup.dropdown-menu{display:block;float:none;margin:0;}.uib-button-bar{padding:10px 9px 2px;}
+/*]]>*/</style>
+    <style type="text/css">/*<![CDATA[*/
+.uib-position-measure{display:block !important;visibility:hidden !important;position:absolute !important;top:-9999px !important;left:-9999px !important;}.uib-position-scrollbar-measure{position:absolute !important;top:-9999px !important;width:50px !important;height:50px !important;overflow:scroll !important;}.uib-position-body-scrollbar-measure{overflow:scroll !important;}
+/*]]>*/</style>
+    <style type="text/css">/*<![CDATA[*/
+.uib-datepicker .uib-title{width:100%;}.uib-day button,.uib-month button,.uib-year button{min-width:100%;}.uib-left,.uib-right{width:100%}
+/*]]>*/</style>
+    <style type="text/css">/*<![CDATA[*/
+.ng-animate.item:not(.left):not(.right){-webkit-transition:0s ease-in-out left;transition:0s ease-in-out left}
+/*]]>*/</style>
+    <style type="text/css">/*<![CDATA[*/
+@charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}
+/*]]>*/</style>
+    <meta charset="ISO-8859-1" />
+    <title>xFramium Testing</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js">/*<![CDATA[*//*]]>*/</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js">/*<![CDATA[*//*]]>*/</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js">/*<![CDATA[*//*]]>*/</script>
+    <script src="/js/selection-model.min.js">/*<![CDATA[*//*]]>*/</script>
+    <script src="/js/ui-bootstrap-tpls-2.1.3.min.js">/*<![CDATA[*//*]]>*/</script>
+    <link href="/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous" />
+  </head>
+<body ng-controller="xFramiumTesting" class="ng-scope">
+    <div class="container-fluid">
+      <nav class="navbar navbar-default">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">xFramium Testing</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="#">Nav One</a>
+            </li>
+            <li>
+              <a href="#">Nav Two</a>
+            </li>
+            <li>
+              <a href="#">Nav Three</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <div class="row">
+        <div class="col-md-3">
+          <div>
+            <pre id="singleModel" class="ng-binding">1</pre>
+            <button type="button" class="btn btn-primary ng-pristine ng-untouched ng-valid ng-not-empty active" ng-model="singleModel" uib-btn-checkbox="" btn-checkbox-true="1" btn-checkbox-false="0">Toggle Value</button>
+            <input type="text" id="focusId" />
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div id="elementList">
+            <pre>Value One</pre>
+            <pre>Value Two</pre>
+            <pre>Value Three</pre>
+          </div>
+          <div id="colorCheck" class="bg-primary">&#38;#160;&#38;#160;&#38;#160;Test Color</div>
+          <div id="colorContrastAA" style="color: #757575">Double AA</div>
+          <div id="colorContrast" style="color: #d2d2d2">Contrast Fail</div>
+          <div>
+            <a href="/testing2.html" id="testingTwo">Testing 2</a>
+          </div>
+          <div>
+            <a href="/testing2.html" id="_testingTwo" target="_blank">Testing 2</a>
+          </div>
+          <div>
+            <select id="selectBox">
+              <option value="-1">Negative</option>
+              <option value="1">One</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+            </select>
+          </div>
+          <div>
+            <div class="btn-group dropdown" uib-dropdown="">
+              <button id="bsDropdownButton" type="button" class="btn btn-default ng-binding">Select</button>
+              <button type="button" class="btn btn-default dropdown-toggle" uib-dropdown-toggle="" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only"></span>
+              </button>
+              <ul class="dropdown-menu" uib-dropdown-menu="" role="menu" aria-labelledby="split-button">
+                <li>
+                  <a ng-click="bsDropdown=&#38;apos;bsOne&#38;apos;">Bootstrap One</a>
+                </li>
+                <li>
+                  <a ng-click="bsDropdown=&#38;apos;bsTwo&#38;apos;">Bootstrap Two</a>
+                </li>
+                <li>
+                  <a ng-click="bsDropdown=&#38;apos;bsThree&#38;apos;">Bootstrap Three</a>
+                </li>
+                <li>
+                  <a ng-click="bsDropdown=&#38;apos;bsFour&#38;apos;">Bootstrap Four</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-primary" ng-click="showAlert()">Alert Button</button>
+          <button type="button" class="btn btn-primary" ng-click="showConfirm()">Confirm Button</button>
+          <pre id="confirmValue" class="ng-binding"></pre>
+          <button type="button" class="btn btn-primary" ng-click="showPrompt()">Prompt Button</button>
+          <pre id="promptValue" class="ng-binding"></pre>
+          <pre id="IOS">iPhone</pre>
+          <pre id="ANDROID">Android</pre>
+          <pre id="WINDOWS">Windows</pre>
+          <pre id="V1">Version 1</pre>
+          <pre id="V2">Version 2</pre>
+        </div>
+        <div class="col-md-3">
+          <uib-accordion close-others="oneAtATime">
+            <div role="tablist" class="panel-group" ng-transclude="">
+              <div uib-accordion-group="" class="panel-info ng-scope ng-isolate-scope panel" heading="Accordian Open" id="aOpen">
+                <div role="tab" id="accordiongroup-5-2710-tab" aria-selected="" class="panel-heading" ng-keypress="toggleOpen($event)">
+                  <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" href="" aria-expanded="" aria-controls="accordiongroup-5-2710-panel" class="accordion-toggle" ng-click="toggleOpen()" uib-accordion-transclude="heading" ng-disabled="isDisabled" uib-tabindex-toggle="">
+                      <span uib-accordion-header="" ng-class="{&#38;apos;text-muted&#38;apos;: isDisabled}" class="ng-binding">Accordian Open</span>
+                    </a>
+                  </h4>
+                </div>
+                <div id="accordiongroup-5-2710-panel" aria-labelledby="accordiongroup-5-2710-tab" aria-hidden="true" role="tabpanel" class="panel-collapse collapse" uib-collapse="!isOpen" aria-expanded="false" style="height: 0px;">
+                  <div class="panel-body" ng-transclude="">
+                    <p class="ng-scope">Here is a button to find</p>
+                    <button class="btn btn-danger ng-scope" id="deleteButton">Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </uib-accordion>
+          <div>
+            Check One
+            <input type="checkbox" id="checkOne" />
+          </div>
+          <div>
+            Check Two
+            <input type="checkbox" id="checkTwo" />
+          </div>
+          <div>
+            Check Three
+            <input type="checkbox" id="checkThree" checked="" />
+          </div>
+          <div>
+            Check Four
+            <input type="checkbox" id="checkFour" />
+          </div>
+          <div>
+            Check Five
+            <input type="checkbox" id="checkFive" />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <iframe src="/testing2.html" name="frameName" id="testingTwoFrame"></iframe>
+        </div>
+      </div>
+    </div>
+    <script>/*<![CDATA[*/
+      var xTesting = angular.module('xTesting', [ 'ngAnimate', 'ngSanitize', 'ui.bootstrap' ]);
+      xTesting.controller( 'xFramiumTesting', function XFramiumController($scope, $interval, $uibModal) {
+      $scope.singleModel = 1;
+      $scope.confirmValue;
+      $scope.promptValue;
+      $scope.bsDropdown = 'Select';;
+      $scope.showAlert = function()
+      {
+      alert( "Alert Message" );
+      }
+      $scope.showConfirm = function()
+      {
+      $scope.confirmValue = window.confirm( "Confirm Message" );
+      }
+      $scope.showPrompt = function()
+      {
+      $scope.promptValue = window.prompt( "Confirm Message" );
+      }
+      });
+    /*]]>*/</script>
+  </body>
+</html>

@@ -36,6 +36,7 @@ import org.xframium.device.factory.AbstractDriverFactory;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.DeviceConfigurationException;
 import org.xframium.spi.Device;
+import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 
 // TODO: Auto-generated Javadoc
@@ -98,8 +99,7 @@ public class IOSDriverFactory extends AbstractDriverFactory
                 log.debug( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 			
 			webDriver = new DeviceWebDriver( new IOSDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
-			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
-			
+			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );	
 			
 			Capabilities caps = ( (IOSDriver) webDriver.getWebDriver() ).getCapabilities();
 			webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
@@ -132,7 +132,6 @@ public class IOSDriverFactory extends AbstractDriverFactory
 			    String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
 	            webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );
             }
-			
 			
             webDriver.setCloud( useCloud );
             

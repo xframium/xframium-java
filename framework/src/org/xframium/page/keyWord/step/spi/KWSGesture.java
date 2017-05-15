@@ -27,6 +27,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.gesture.AbstractDragDropGesture.InitialDragDropAction;
 import org.xframium.gesture.Gesture.Direction;
 import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.gesture.GestureManager;
@@ -75,6 +76,17 @@ public class KWSGesture extends AbstractKeyWordStep
 		
 		switch( GestureType.valueOf( gestureName[0] ) )
 		{
+		    case DRAGDROP:
+		        
+		        Element fromElement = getElement( pageObject, contextMap, webDriver, dataMap, (String) getParameterValue( getParameter( "From" ), contextMap, dataMap ), executionContext );
+		        Element toElement = getElement( pageObject, contextMap, webDriver, dataMap, (String) getParameterValue( getParameter( "To" ), contextMap, dataMap ), executionContext );
+		        InitialDragDropAction initialAction = InitialDragDropAction.PRESS;
+		        if ( getParameter( "Initial Action" ) != null )
+		            initialAction = InitialDragDropAction.valueOf( (String) getParameterValue( getParameter( "Initial Action" ), contextMap, dataMap ) );
+		        
+		        GestureManager.instance().createDragDrop( initialAction, fromElement, toElement ).executeGesture( webDriver, webElement );
+		            
+		        
 			case PINCH:
 				if ( getParameterList().size() == 4 )
 				{

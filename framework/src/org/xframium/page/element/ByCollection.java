@@ -51,7 +51,7 @@ public class ByCollection extends By implements Serializable
     @Override
     public String toString()
     {
-        StringBuilder stringBuilder = new StringBuilder( "By.all(" );
+        StringBuilder stringBuilder = new StringBuilder( "By.collection(" );
         stringBuilder.append( "{" );
 
         boolean first = true;

@@ -1,106 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    xFramium
-   
-    Copyright 2017 by Moreland Labs LTD (http://www.morelandlabs.com)
-   
-    Some open source application is free software: you can redistribute 
-    it and/or modify it under the terms of the GNU General Public 
-    License as published by the Free Software Foundation, either 
-    version 3 of the License, or (at your option) any later version.
-     
-    Some open source application is distributed in the hope that it will 
-    be useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
-    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-     
-    You should have received a copy of the GNU General Public License
-    along with xFramium.  If not, see <http://www.gnu.org/licenses/>.
-   
-    @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>
- -->
-
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-  <function name="kw-compare2" active="true">
-    <description>Added tests for compare2</description>
-    
-    <step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="toggleButtonValue" />
-    
-    <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Value One" value="Toggle Value" />
-      <parameter type="CONTEXT" name="Value Two" value="toggleButtonValue" />
-      <parameter type="STATIC" name="Operator" value="EQUALS" />
-    </step>
-    
-    <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Value One" value="Test" />
-      <parameter type="STATIC" name="Value Two" value="Test" />
-      <parameter type="STATIC" name="Operator" value="EQUALS" />
-    </step>
-    <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
-      <parameter type="STATIC" name="Value One" value="Test" />
-      <parameter type="STATIC" name="Value Two" value="Test2" />
-      <parameter type="STATIC" name="Operator" value="EQUALS" />
-    </step>
-    <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Value One" value="Test" />
-      <parameter type="STATIC" name="Value Two" value="Test2" />
-      <parameter type="STATIC" name="Operator" value="Less" />
-    </step>
-    <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Value One" value="Test2" />
-      <parameter type="STATIC" name="Value Two" value="Test" />
-      <parameter type="STATIC" name="Operator" value="Greater" />
-    </step>
-    <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="LOG_IGNORE">
-      <parameter type="STATIC" name="Value One" value="Test" />
-      <parameter type="STATIC" name="Value Two" value="Test2" />
-      <parameter type="STATIC" name="Operator" value="Greater" />
-    </step>
-    <step name="INTEGER" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Value One" value="1" />
-      <parameter type="STATIC" name="Value Two" value="1" />
-      <parameter type="STATIC" name="Operator" value="EQUALS" />
-    </step>
-    <step name="INTEGER" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Value One" value="1" />
-      <parameter type="STATIC" name="Value Two" value="2" />
-      <parameter type="STATIC" name="Operator" value="less" />
-    </step>
-    <step name="INTEGER" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Value One" value="2" />
-      <parameter type="STATIC" name="Value Two" value="1" />
-      <parameter type="STATIC" name="Operator" value="Greater" />
-    </step>
-    <step name="DECIMAL" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Value One" value="1.0" />
-      <parameter type="STATIC" name="Value Two" value="1.0" />
-      <parameter type="STATIC" name="Operator" value="EQUALS" />
-    </step>
-    <step name="DECIMAL" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Value One" value="3.1415" />
-      <parameter type="STATIC" name="Value Two" value="1.00000002" />
-      <parameter type="STATIC" name="Operator" value="Greater" />
-    </step>
-    <step name="DECIMAL" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Value One" value="1.0" />
-      <parameter type="STATIC" name="Value Two" value="1.00002" />
-      <parameter type="STATIC" name="Operator" value="LESS" />
-    </step>
-    <step name="DATE" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Value One" value="Jan 1 2016" />
-      <parameter type="STATIC" name="Value Two" value="1/1/2016" />
-      <parameter type="STATIC" name="Operator" value="EQUALS" />
-    </step>
-    <step name="DATE" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Value One" value="christmas" />
-      <parameter type="STATIC" name="Value Two" value="new years" />
-      <parameter type="STATIC" name="Operator" value="Less" />
-    </step>
-    <step name="DATE" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Value One" value="12/25/2017" />
-      <parameter type="STATIC" name="Value Two" value="12/25/2016" />
-      <parameter type="STATIC" name="Operator" value="Greater" />
-    </step>
-  </function>
+<function name="kw-compare2" active="true">
+<description>Added tests for compare2</description>
+<step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="toggleButtonValue"/>
+<step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Value One" value="Toggle Value"/>
+<parameter type="CONTEXT" name="Value Two" value="toggleButtonValue"/>
+<parameter type="STATIC" name="Operator" value="EQUALS"/>
+</step>
+<step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Value One" value="Test"/>
+<parameter type="STATIC" name="Value Two" value="Test"/>
+<parameter type="STATIC" name="Operator" value="EQUALS"/>
+</step>
+<step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
+<parameter type="STATIC" name="Value One" value="Test"/>
+<parameter type="STATIC" name="Value Two" value="Test2"/>
+<parameter type="STATIC" name="Operator" value="EQUALS"/>
+</step>
+<step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Value One" value="Test"/>
+<parameter type="STATIC" name="Value Two" value="Test2"/>
+<parameter type="STATIC" name="Operator" value="Less"/>
+</step>
+<step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Value One" value="Test2"/>
+<parameter type="STATIC" name="Value Two" value="Test"/>
+<parameter type="STATIC" name="Operator" value="Greater"/>
+</step>
+<step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="LOG_IGNORE">
+<parameter type="STATIC" name="Value One" value="Test"/>
+<parameter type="STATIC" name="Value Two" value="Test2"/>
+<parameter type="STATIC" name="Operator" value="Greater"/>
+</step>
+<step name="INTEGER" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Value One" value="1"/>
+<parameter type="STATIC" name="Value Two" value="1"/>
+<parameter type="STATIC" name="Operator" value="EQUALS"/>
+</step>
+<step name="INTEGER" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Value One" value="1"/>
+<parameter type="STATIC" name="Value Two" value="2"/>
+<parameter type="STATIC" name="Operator" value="less"/>
+</step>
+<step name="INTEGER" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Value One" value="2"/>
+<parameter type="STATIC" name="Value Two" value="1"/>
+<parameter type="STATIC" name="Operator" value="Greater"/>
+</step>
+<step name="DECIMAL" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Value One" value="1.0"/>
+<parameter type="STATIC" name="Value Two" value="1.0"/>
+<parameter type="STATIC" name="Operator" value="EQUALS"/>
+</step>
+<step name="DECIMAL" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Value One" value="3.1415"/>
+<parameter type="STATIC" name="Value Two" value="1.00000002"/>
+<parameter type="STATIC" name="Operator" value="Greater"/>
+</step>
+<step name="DECIMAL" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Value One" value="1.0"/>
+<parameter type="STATIC" name="Value Two" value="1.00002"/>
+<parameter type="STATIC" name="Operator" value="LESS"/>
+</step>
+<step name="DATE" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Value One" value="Jan 1 2016"/>
+<parameter type="STATIC" name="Value Two" value="1/1/2016"/>
+<parameter type="STATIC" name="Operator" value="EQUALS"/>
+</step>
+<step name="DATE" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Value One" value="christmas"/>
+<parameter type="STATIC" name="Value Two" value="new years"/>
+<parameter type="STATIC" name="Operator" value="Less"/>
+</step>
+<step name="DATE" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Value One" value="12/25/2017"/>
+<parameter type="STATIC" name="Value Two" value="12/25/2016"/>
+<parameter type="STATIC" name="Operator" value="Greater"/>
+</step>
+</function>
 </suite>

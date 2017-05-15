@@ -110,6 +110,11 @@ public class CleanApplicationAction extends AbstractDefaultAction implements Dev
         {
             if ( localDevice.getOs().toLowerCase().equals( "android" ) )
                 PerfectoMobile.instance().application().clean( executionId, deviceName, appDesc.getName(), appDesc.getAndroidIdentifier() );
+            else if ( localDevice.getOs().toLowerCase().equals( "ios" ) )
+            {
+                PerfectoMobile.instance().application().uninstall( executionId, deviceName, appDesc.getName(), appDesc.getAndroidIdentifier() );
+                PerfectoMobile.instance().application().install( executionId, deviceName, appDesc.getIosInstallation(), "instrument" );
+            }
             else
                 log.warn( "Could not clean application on " + localDevice.getOs() );
         }
