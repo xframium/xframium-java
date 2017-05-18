@@ -95,6 +95,7 @@ public class ArtifactManager
         registerArtifact( ArtifactTime.ON_FAILURE, ArtifactType.FAILURE_SOURCE.name(), XMLSourceArtifact.class );
         registerArtifact( ArtifactTime.ON_FAILURE, ArtifactType.FAILURE_SOURCE_HTML.name(), HTMLSourceArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.CONSOLE_LOG.name(), ConsoleLogArtifact.class );
+        registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.STATISTICS.name(), VitalsArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.DEVICE_LOG.name(), DeviceLogArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.IMAGING_ANALYSIS.name(), ImagingArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.ADD_TO_CSV.name(), CSVDataArtifact.class );
@@ -106,7 +107,7 @@ public class ArtifactManager
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.EXECUTION_REPORT.name(), PerfectoPDFReport.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.EXECUTION_REPORT_CSV.name(), PerfectoCSVReport.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.TIMING_HTML.name(), TimingArtifact.class );
-        registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.STATISTICS.name(), VitalsArtifact.class );
+        
         registerArtifact( ArtifactTime.BEFORE_SUITE_ARTIFACTS, ArtifactType.GRID_REPORT.name(), JSONGridArtifact.class );
         registerArtifact( ArtifactTime.BEFORE_SUITE_ARTIFACTS, ArtifactType.GRID_HTML.name(), HTMLGridArtifact.class );
         registerArtifact( ArtifactTime.AFTER_SUITE, ArtifactType.EXECUTION_SUITE_HTML.name(), DefaultSuiteReportingArtifact.class );
@@ -125,7 +126,7 @@ public class ArtifactManager
     {
         log.info( "Registering artifact " + aType );
         
-        artifactMap.put( aType.toUpperCase(), artifactImplementation );
+        artifactMap.put( aType, artifactImplementation );
         classTimeMap.put( artifactImplementation, artifactTime );
         
         List<Class> timeList = timeMap.get( artifactTime );

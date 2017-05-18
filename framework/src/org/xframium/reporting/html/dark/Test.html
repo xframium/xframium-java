@@ -8,7 +8,6 @@
 <script src="http://xframium.org/output/assets/js/ui-bootstrap-tpls-2.1.4.js"></script>
 <script src="http://xframium.org/output/assets/js/angular-ui-tree.js"></script>
 <script src="./Test.js"></script>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 <link href="http://www.xframium.org/output/assets/css/toolkit-inverse.css" rel="stylesheet">
@@ -136,9 +135,9 @@ iframe {
             </div>
             </uib-tab> 
             <uib-tab heading="{{artifactTabs[ key ] == null ? key.substring( 4 ) : artifactTabs[ key ]}}" ng-repeat="(key,value) in testData.executionParameters" ng-if="artifactTabs[ key ] != null || (key.startsWith( 'TAB_' ) && !key.endsWith( '_PATH' ) && !key.endsWith( '_FILE' ))"> 
-                <iframe ng-if="testData.executionParameters[ key + '_FILE' ] != null" src="{{testData.executionParameters[ key + '_FILE' ]}}" frameborder="0" height="500" width="100%">
+                <iframe ng-if="testData.executionParameters[ key + '_FILE' ] != null" src="{{testData.executionParameters[ key + '_FILE' ]}}" frameborder="0" height="1024" width="100%">
                 </iframe>
-                <iframe ng-if="testData.executionParameters[ key + '_ARTIFACT_URL' ] != null" src="{{testData.executionParameters[ key + '_FILE' ]}}" frameborder="0" height="500" width="100%">
+                <iframe ng-if="testData.executionParameters[ key + '_ARTIFACT_URL' ] != null" src="{{testData.executionParameters[ key + '_FILE' ]}}" frameborder="0" height="1024" width="100%">
                 </iframe>  
             </uib-tab> 
             <uib-tab heading="Links" active="true">

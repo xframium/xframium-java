@@ -77,6 +77,7 @@ public class KeyWordPageImpl extends AbstractPage implements KeyWordPage, Page
         {
             myElement = myElement.cloneElement();
             myElement.setDriver( webDriver );
+            elementProvider.setCachedElement( myElement, elementDescriptor );
             return myElement;
         }
 	}

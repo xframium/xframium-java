@@ -21,7 +21,6 @@ import org.xframium.application.CSVApplicationProvider;
 import org.xframium.application.ExcelApplicationProvider;
 import org.xframium.application.SQLApplicationProvider;
 import org.xframium.application.XMLApplicationProvider;
-import org.xframium.artifact.ArtifactType;
 import org.xframium.container.ApplicationContainer;
 import org.xframium.container.CloudContainer;
 import org.xframium.container.DeviceContainer;
@@ -1096,7 +1095,12 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         
         for ( XParameter p : pList )
         {
-            KeyWordParameter kp = new KeyWordParameter( ParameterType.valueOf( p.getType() ), p.getValue(), null, null );
+            
+            ParameterType ptype = ParameterType.STATIC;
+            if ( p.getType() != null )
+                ptype = ParameterType.valueOf( p.getType() );
+            
+            KeyWordParameter kp = new KeyWordParameter( ptype, p.getValue(), null, null );
             
             if ( p.getToken() != null && !p.getToken().isEmpty() )
             {
@@ -1215,11 +1219,45 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         }
         return true;
     }
-
+    
+    private Element previousElement = null;
+    private ElementDescriptor previousElementDescriptor = null;
+    
     @Override
+    public void setCachedElement( Element cachedElement, ElementDescriptor elementDescriptor )
+    {
+        this.previousElement = cachedElement;
+        this.previousElementDescriptor = elementDescriptor;
+        
+    }
+    
     public Element getElement( ElementDescriptor elementDescriptor )
     {
-        return elementMap.get(  elementDescriptor.toString() );
+        
+        if ( previousElement != null && previousElementDescriptor != null && elementDescriptor.equals( previousElementDescriptor ) )
+        {
+            return previousElement;
+        }
+        else
+        {
+            previousElement = null;
+            previousElementDescriptor = null;
+        }
+        
+        Element returnElement = null;
+        if ( internalElementProvider != null )
+            returnElement = internalElementProvider.getElement( elementDescriptor );
+        
+        if ( returnElement == null )
+            returnElement = elementMap.get(  elementDescriptor.toString() );
+        
+        if ( returnElement != null )
+        {
+           previousElement = returnElement;
+           previousElementDescriptor = elementDescriptor;
+        }
+        
+        return returnElement;
     }
     
     @Override
@@ -1259,6 +1297,14 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             ProxyRegistry.instance().registerAuthenticator();
         }
         return true;
+    }
+
+    private ElementProvider internalElementProvider;
+    @Override
+    public void addElementProvider( ElementProvider elementProvider )
+    {
+        this.internalElementProvider = elementProvider;
+        
     }
 
 }

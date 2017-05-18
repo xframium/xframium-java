@@ -46,13 +46,57 @@ public abstract class AbstractElementProvider implements ElementProvider
 	/** The log. */
 	protected Log log = LogFactory.getLog(ElementProvider.class);
 	
+	private ElementProvider internalElementProvider = null;
+	
+	private Element previousElement = null;
+	private ElementDescriptor previousElementDescriptor = null;
+	
+	@Override
+	public void setCachedElement( Element cachedElement, ElementDescriptor elementDescriptor )
+	{
+	    this.previousElement = cachedElement;
+	    this.previousElementDescriptor = elementDescriptor;
+	    
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.element.provider.ElementProvider#getElement(com.perfectoMobile.page.ElementDescriptor)
 	 */
 	@Override
 	public Element getElement( ElementDescriptor elementDescriptor )
 	{
-		return _getElement( elementDescriptor );
+	    if ( previousElement != null && previousElementDescriptor != null && elementDescriptor.equals( previousElementDescriptor ) )
+	    {
+	        return previousElement;
+	    }
+	    else
+	    {
+	        previousElement = null;
+	        previousElementDescriptor = null;
+	    }
+	    
+	    Element returnElement = null;
+	    if ( internalElementProvider != null )
+	        returnElement = internalElementProvider.getElement( elementDescriptor );
+	    
+	    if ( returnElement == null )
+	        returnElement = _getElement( elementDescriptor );
+	    
+	    if ( returnElement != null )
+	    {
+	       previousElement = returnElement;
+	       
+	       previousElementDescriptor = elementDescriptor;
+	    }
+	    
+	    return returnElement;
+	}
+	
+	@Override
+	public void addElementProvider( ElementProvider elementProvider )
+	{
+	    this.internalElementProvider = elementProvider;
+	    
 	}
 	
 	private boolean initialized = false;

@@ -39,8 +39,6 @@ public class ElementDescriptor
 	/** The element name. */
 	private String elementName;
 	
-	private String os;
-	
 	
 	
 	
@@ -52,6 +50,17 @@ public class ElementDescriptor
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public boolean equals( Object obj )
+	{
+	    if ( obj instanceof ElementDescriptor )
+	    {
+	        ElementDescriptor eD = (ElementDescriptor) obj;
+	        return eD.toString().equals( toString() );
+	    }
+	    
+	    return super.equals( obj );
+	}
 	
 	/**
 	 * Instantiates a new element descriptor.

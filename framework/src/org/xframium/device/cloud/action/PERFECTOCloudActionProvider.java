@@ -197,12 +197,14 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 	{
 	    if( timerId == null )
 	        return false;
-	    
+
+	    executionContext.getStep().addTiming( "perfecto.timerStart", executionContext.getTimerStart() );
 	    executionContext.getStep().addTiming( (type != null && !type.isEmpty()) ? "ux." + type : "ux", PerfectoMobile.instance().windTunnel().getTimer( webDriver.getExecutionId(), timerId, "ux", "milliseconds" ).getReturnValue() );
 	    executionContext.getStep().addTiming( (type != null && !type.isEmpty()) ? "device." + type : "device", PerfectoMobile.instance().windTunnel().getTimer( webDriver.getExecutionId(), timerId, "device", "milliseconds" ).getReturnValue() );
 	    executionContext.getStep().addTiming( (type != null && !type.isEmpty()) ? "system." + type : "system", PerfectoMobile.instance().windTunnel().getTimer( webDriver.getExecutionId(), timerId, "system", "milliseconds" ).getReturnValue() );
 	    executionContext.getStep().addTiming( (type != null && !type.isEmpty()) ? "elapsed." + type : "elapsed", PerfectoMobile.instance().windTunnel().getTimer( webDriver.getExecutionId(), timerId, "elapsed", "milliseconds" ).getReturnValue() );
 	    stopTimer( webDriver, timerId, executionContext );
+	    executionContext.getStep().addTiming( "perfecto.timerStop", System.currentTimeMillis() );
 	    return true;
 	}
 	

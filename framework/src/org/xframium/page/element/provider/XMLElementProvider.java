@@ -102,7 +102,7 @@ public class XMLElementProvider extends AbstractElementProvider
 		if ( fileName == null )
 		{
 			if ( log.isInfoEnabled() )
-				log.info( "Reading from CLASSPATH as CSVElementProvider.elementFile" );
+				log.info( "Reading from CLASSPATH as XMLElementProvider.elementFile" );
 			readElements( getClass().getClassLoader().getResourceAsStream( resourceName ) );
 		}
 		else

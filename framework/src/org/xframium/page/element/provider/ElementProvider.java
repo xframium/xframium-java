@@ -44,4 +44,8 @@ public interface ElementProvider
 	List<SiteContainer> getSiteList();
 	
 	public String getSiteName();
+	
+	public void addElementProvider( ElementProvider elementProvider );
+	
+	public void setCachedElement( Element cachedElement, ElementDescriptor elementDescriptor );
 }

@@ -100,6 +100,8 @@ public class SeleniumElement extends AbstractElement
 
     /** The use visual driver. */
     private boolean useVisualDriver = false;
+    
+    private boolean clonedElement = false;
 
     /*
      * (non-Javadoc)
@@ -108,6 +110,11 @@ public class SeleniumElement extends AbstractElement
      */
     public Element cloneElement()
     {
+        //
+        // If we already cloned this once then don't need to again
+        //
+        if ( clonedElement )
+            return this;
         SeleniumElement element = new SeleniumElement( getBy(), getRawKey(), getElementName(), getPageName(), getContextElement(), locatedElement, index );
         element.setDriver( getWebDriver() );
         element.setDeviceContext( getDeviceContext() );
@@ -117,6 +124,7 @@ public class SeleniumElement extends AbstractElement
             element.elementProperties = new HashMap<String, String>( 5 );
             element.elementProperties.putAll( elementProperties );
         }
+        element.clonedElement = true;
         return element;
     }
 
@@ -269,6 +277,7 @@ public class SeleniumElement extends AbstractElement
         Element myElement = PageManager.instance().getElementProvider().getElement( elementDescriptor );
         myElement.setDriver( getWebDriver() );
         myElement = myElement.cloneElement();
+        PageManager.instance().getElementProvider().setCachedElement( myElement, elementDescriptor );
         myElement.setExecutionContext( getExecutionContext() );
         return myElement;
     }

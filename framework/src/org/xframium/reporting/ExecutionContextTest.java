@@ -156,6 +156,8 @@ public class ExecutionContextTest
         this.messageDetail = messageDetail;
     }
 
+    private long timerStart;
+    
     public String getTimerName()
     {
         return timerName;
@@ -164,6 +166,12 @@ public class ExecutionContextTest
     public void setTimerName( String timerName )
     {
         this.timerName = timerName;
+        timerStart = System.currentTimeMillis();
+    }
+    
+    public long getTimerStart()
+    {
+        return timerStart;
     }
     
     public void clearTimer()

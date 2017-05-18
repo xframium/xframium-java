@@ -59,8 +59,6 @@ public class WINDOWSDriverFactory extends AbstractDriverFactory
 			URL hubUrl = new URL( useCloud.getCloudUrl() );
 	
 			
-			//dc.setCapability( APPLICATION, ApplicationRegistry.instance().getAUT().getUrl() );
-			
 			for ( String name : currentDevice.getCapabilities().keySet() )
 				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
 			
@@ -72,6 +70,9 @@ public class WINDOWSDriverFactory extends AbstractDriverFactory
 			
 			
 			Capabilities caps = ( (IOSDriver) webDriver.getWebDriver() ).getCapabilities();
+			
+			if ( useCloud.getProvider().equals( "PERFECTO" ) && caps.getCapability( "windTunnelReportUrl" ) != null )
+                webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
 			
 			webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
 			webDriver.setDeviceName( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );

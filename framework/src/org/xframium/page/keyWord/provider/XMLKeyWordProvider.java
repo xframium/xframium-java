@@ -404,7 +404,9 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	    
 	    for ( Parameter p : pList )
 	    {
-	        ParameterType ptype = ParameterType.valueOf( p.getType() );
+	        ParameterType ptype = ParameterType.STATIC;
+	        if ( p.getType() != null )
+	            ptype = ParameterType.valueOf( p.getType() );
 	        KeyWordParameter kp = new KeyWordParameter( ptype, p.getValue(), p.getName(), p.getUsage() );
 	        
 	        if ( p.getToken() != null && !p.getToken().isEmpty() )

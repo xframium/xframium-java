@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.xframium.application.ApplicationDescriptor.AppType;
 import org.xframium.device.cloud.action.CloudActionProvider;
+import org.xframium.reporting.ExecutionContext;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -180,7 +181,13 @@ public class CloudDescriptor
 		try
 		{
 		    if ( provider != null && provider.name != null && provider.name.equals( "PERFECTO" ) )
-		        return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/perfectomobile/wd/hub";
+		    {
+		        String enableFastWeb =ExecutionContext.instance().getConfigProperties().get( "perfecto.enableFastWeb" );
+		        if ( enableFastWeb != null && Boolean.parseBoolean( enableFastWeb ) )
+		            return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/perfectomobile/wd/hub/fast";
+		        else
+		            return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/perfectomobile/wd/hub";
+		    }
 		    else if ( provider != null && provider.name != null && provider.name.equals( "SAUCELABS" ) )
 		    	return "http://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/wd/hub";
 		    else if ( provider != null && provider.name != null && provider.name.equals( "WINDOWS" ) )

@@ -32,6 +32,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.factory.MorelandWebElement;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
@@ -126,8 +127,6 @@ public class KWSBrowser extends AbstractKeyWordStep
     @Override
     public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception
     {
-        if ( log.isDebugEnabled() )
-            log.debug( "Execution Function " + getName() );
 
         if ( getName().toUpperCase().startsWith( SwitchType.SWITCH_TO_ELEMENT.name ) )
         {
@@ -168,6 +167,8 @@ public class KWSBrowser extends AbstractKeyWordStep
                     webDriver.close();
                     break;
                 case NAVIGATE:
+                    if ( isTimed() )   
+                        ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider().startTimer( (DeviceWebDriver) webDriver, null, executionContext);
                     webDriver.navigate().to( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
                     break;
 
@@ -213,9 +214,13 @@ public class KWSBrowser extends AbstractKeyWordStep
                     break;
 
                 case BACK:
+                    if ( isTimed() )   
+                        ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider().startTimer( (DeviceWebDriver) webDriver, null, executionContext);
                     webDriver.navigate().back();
                     break;
                 case FORWARD:
+                    if ( isTimed() )   
+                        ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider().startTimer( (DeviceWebDriver) webDriver, null, executionContext);
                     webDriver.navigate().forward();
                     break;
                 case REFRESH:

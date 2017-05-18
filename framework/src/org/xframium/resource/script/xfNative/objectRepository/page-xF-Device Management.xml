@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
+<site name="xF_Native">
+  <page name="xF-Device Management">
+    <element name="xF-Developer" value="//UIATableCell[@name='{developer}']" descriptor="XPATH"/>
+    <element name="xF-Trust" value="//UIATableCell[contains( @name, 'Trust ')]" descriptor="XPATH"/>
+    <element name="xF-Trust Button" value="//UIAButton[@name='Trust']" descriptor="XPATH"/>
+  </page>
+</site></elementDefinition>

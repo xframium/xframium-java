@@ -67,6 +67,7 @@ public abstract class AbstractArtifact implements Artifact
                 if ( returnFile != null )
                 {
                     webDriver.getExecutionContext().addExecutionParameter( artifactType + "_FILE", returnFile.getName() );
+                    webDriver.getExecutionContext().addExecutionParameter( artifactType + "_ABS", returnFile.getAbsolutePath() );
                     webDriver.getExecutionContext().addExecutionParameter( artifactType + "_PATH", returnFile.getPath() );
                 }
                 
@@ -93,7 +94,7 @@ public abstract class AbstractArtifact implements Artifact
         }
         catch( Exception e )
         {
-            log.warn( "Error generating artifact for " + artifactType + "(" + e.getMessage() + ")" );
+            log.warn( "Error generating artifact for " + artifactType + "(" + e.getMessage() + ")", e );
         }
         
         return null;

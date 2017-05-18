@@ -15,6 +15,7 @@ import org.openqa.selenium.WebDriver;
 import org.testng.TestNG;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.application.XMLApplicationProvider;
 import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactTime;
 import org.xframium.artifact.ArtifactType;
@@ -49,9 +50,11 @@ import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.element.provider.ElementProvider;
+import org.xframium.page.element.provider.XMLElementProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
 import org.xframium.page.keyWord.step.SyntheticStep;
 import org.xframium.page.listener.KeyWordListener;
 import org.xframium.reporting.ExecutionContext;
@@ -326,6 +329,13 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                 ApplicationRegistry.instance().setAUT( appContainer.getApplicationName() );
             }
             
+            //
+            // Add the build in applications
+            //
+            XMLApplicationProvider internalApplications = new XMLApplicationProvider( "org/xframium/resource/script/applications/applicationRegistry.xml" );
+            for ( ApplicationDescriptor aD : internalApplications.readData() )
+                ApplicationRegistry.instance().addApplicationDescriptor( aD );
+            
             
             
             log.info( "Application: Configured as " + ApplicationRegistry.instance().getAUT().getName() );
@@ -347,13 +357,29 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             log.info( "Data: Configuring Test Cases" );
             SuiteContainer sC = configureTestCases( pdp, true );
-            
             if ( sC == null ) 
                 return;
+            
+            
+            //
+            // Add the internal fucntions
+            //
+            XMLKeyWordProvider internalFunctions = new XMLKeyWordProvider( "org/xframium/resource/script/xfNative/functions/functions-xfNative.xml", driverC.getPropertyMap() );
+            SuiteContainer sCInternal = internalFunctions.readData( true );
+            sC.getFunctionList().addAll( sCInternal.getFunctionList() );
+            
+            
             
             log.info( "Page: Configuring Object Repository" );
             ElementProvider eP = configurePageManagement( sC );
             if ( eP == null ) return;
+            
+            //
+            // Add the internal opbject repository
+            //
+            XMLElementProvider internalObjectRepository = new XMLElementProvider( "org/xframium/resource/script/xfNative/objectRepository/site-xfNative.xml" );
+            eP.addElementProvider( internalObjectRepository );
+            
             
             PageManager.instance().setSiteName( sC.getSiteName() );
             log.info( "Extracted " + sC.getTestList().size() + " test cases (" + sC.getActiveTestList().size() + " active)" );

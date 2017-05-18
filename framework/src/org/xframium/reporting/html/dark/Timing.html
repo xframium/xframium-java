@@ -9,293 +9,161 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
 <script src="http://xframium.org/output/assets/js/angular-chart.js"></script>
 <script src="./Test.js"></script>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 <link href="http://www.xframium.org/output/assets/css/toolkit-inverse.css" rel="stylesheet">
 <link href="http://www.xframium.org/output/assets/css/application.css" rel="stylesheet">
 <link href="http://www.xframium.org/output/assets/css/angular-ui-tree.css" rel="stylesheet">
 </head>
-<body ng-controller="xTimingController" data-ng-init="initialize()" class="bg-success" >
+<body ng-controller="xTimingController" data-ng-init="initialize()">
     <div class="container-fluid">
-      <div class="col-sm-12 content">
-            <div class="row" >
-                <div class="col-sm-2">
-                    <span style="color: black"> </span>
-                </div>
-                <div class="col-sm-8">
-                    <h1 class="text-primary">Timing Information</h1>
-                </div>
-                <div class="col-sm-2">
-                    <span style="color: black"> </span>
-                </div>
-            </div>
-            <div class="row" style="border-radius: 5px; margin-top: 25px; margin-bottom: 25px; padding-top: 5px; padding-bottom: 5px; cursor: default" >
-                <div class="col-sm-2">
-                    <span style="color: black"> </span>
-                </div>
-                <div class="col-sm-8">
-                    <div id="chart_div" style="width: 100%" ></div>
-                </div>
-                <div class="col-sm-2">
-                    <span style="color: black"> </span>
-                </div>
-            </div>
-            <div class="row" >
-                <div class="col-sm-7">
-                    <span style="color: black"> </span>
-                </div>
-                <div class="col-sm-2">
-                    <span class="pull-right btn btn-primary" style="margin-right: 16px" ng-click="downloadCSV()">Download CSV</span>
-                </div>
-                <div class="col-sm-3">
-                    <span style="color: black"> </span>
-                </div>
-            </div>
-
+        <div class="col-sm-12 content">
+            <canvas class="chart chart-bar" chart-data="timingData" chart-labels="timingLabels" chart-options="chartOptions" chart-colors="chartColors"></canvas>
         </div>
+        <div class="col-sm-5"></div>
+        <div class="col-sm-2" style="text-align: center; margin-top: 25px">
+            <span class="btn btn-primary"  ng-click="downloadCSV()">Download Timing Report</span>
+        </div>
+        <div class="col-sm-5"></div>
     </div>
 </body>
 <script>
-    //
-    // The default of 10 is too small give that we're walking all the way down the step execution tree
-    //
+    var xGrid = angular.module('xImage', [ 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'chart.js' ]);
 
-    Error.stackTraceLimit = 100;
+    xGrid
+            .controller(
+                    'xTimingController',
+                    function XImageController( $scope, $uibModal )
+                    {
+                        $scope.testData = testData.pageData;
 
-    //
-    // Continue
-    //
-    
-    var xGrid = angular.module('xImage', [ 'ngAnimate', 'ngSanitize', 'ui.bootstrap' ]);
+                        $scope.timingLabels = [];
+                        $scope.timingData = [];
+                        $scope.timings = [];
 
-    xGrid.controller('xTimingController', function XImageController( $scope, $uibModal )
-    {
-        $scope.testData = testData.pageData;
-    
-        $scope.timings = [];
-        $scope.graph_data = [];
-        $scope.graph_domain = [];
-        $scope.graph_time_vals = [];
+                        $scope.initialize = function()
+                        {
+                            $scope.getTimings();
 
-        $scope.initialize = function()
-        {
-            $scope.getTimings();
+                            console.log($scope.timingLabels);
 
-            //
-            // Init Google Charts
-            //
+                        }
 
-            google.charts.load('current', {packages: ['corechart', 'line']});
-            google.charts.setOnLoadCallback($scope.drawGraph);
-            
-            $scope.drawGraph();
-        }
+                        $scope.downloadCSV = function()
+                        {
+                            var lineArray = [];
 
-        $scope.downloadCSV = function()
-        {
-           var lineArray = [];
+                            lineArray.push("data:text/csv;charset=utf-8," + $scope.timingDataDownloadHeaders);
 
-           lineArray.push( "data:text/csv;charset=utf-8," + $scope.timingDataDownloadHeaders );                
-                                 
-           $scope.timings.forEach(function (row, index)
-           {
-             var line = $scope.timingDataDownloadCols.map( function(val) { return "\x22" + row[val] + "\x22"; } ).join(",");
-                                 
-             lineArray.push(line);
-           });
-                                 
-           var csvContent = lineArray.join("\n");
-           var encodedUri = encodeURI(csvContent);
-                                 
-           window.open(encodedUri);
-        }
+                            $scope.timings.forEach(function( row, index )
+                            {
+                                var line = $scope.timingDataDownloadCols.map(function( val )
+                                {
+                                    return "\x22" + row[val] + "\x22";
+                                }).join(",");
 
-        $scope.getTimings = function()
-        {
-            var testLevelData =
-            {
-               "script": $scope.testData.testName,
-               "execId": $scope.testData.sessionId,
-               "startTime": $scope.testData.startTime.raw,
-               "endTime": $scope.testData.endTime.raw,
-               "startTimeFormatted": $scope.testData.startTime.dateTime,
-               "endTimeFormatted": $scope.testData.endTime.dateTime,
-               "pmUser": $scope.testData.cloudDescriptor.userName,
-               "user": "n/a",
-               "data": "n/a",
-               "wifi": "n/a",
-               "hsId": $scope.testData.device.deviceName,
-               "hsOperator": "n/a",
-               "hsManufacturer": $scope.testData.device.manufacturer,
-               "hsModel": $scope.testData.device.model,
-               "hsOS": $scope.testData.device.os,
-               "hsOSVer": $scope.testData.device.osVersion,
-               "networkCarrier": "n/a",
-               "networkSpeed": "",
-               "latency": "",
-               "inBandwidth": "",
-               "outBandwidth": "",  
-               "city": "n/a",
-               "country": "n/a",
-               "mobileAppVersion": "",                  
-               "environment": $scope.testData.device.environment,
-               "appName": "",                  
-               "webReport": $scope.testData.executionParameters.PERFECTO_WT
-           };
+                                lineArray.push(line);
+                            });
 
-           $scope.testData.stepList.forEach( function(step)
-           {
-               $scope.walkStepToGetTimeings( step, testLevelData );
-           });
-        }
+                            var csvContent = lineArray.join("\n");
+                            var encodedUri = encodeURI(csvContent);
 
-        $scope.walkStepToGetTimeings = function( step, testLevelData )
-        {
-           var txName = step.step.name;
-           var duration = step.endTime.raw - step.startTime.raw;
-           var is_checkpoint = ( step.step.kw == "WAIT_FOR" );
-           
-           if ( step.timingMap.elapsed )
-           {
-              var row = Object.assign({}, testLevelData);
+                            window.open(encodedUri);
+                        }
 
-              row.txName = txName;
-              row.txTimeStart = step.startTime.raw;
-              row.txTimeEnd = step.endTime.raw;
-              row.txTimeStartFormatted = step.startTime.dateTime;
-              row.txTimeEndFormatted = step.endTime.dateTime;
-              row.validationSuccess = ( "SUCCESS" == step.stepStatus );
-              row.timerUx = step.timingMap.ux;
-              row.requestTime = step.timingMap.device;
-              row.responseTime = step.timingMap.elapsed;
-              row.requestTimestamp = "";
-              row.responseTimestamp = "";
-              row.vitalsTimestamp = "";
-              row.vitalsTimestampFormatted = "";
-              row.vitalseCPU = "";
-              row.vitalsMemFree = "";
-              row.vitalsMemUsed = "";
-              row.vitalsMemCached = "";
+                        $scope.getTimings = function()
+                        {
+                            var testLevelData = {
+                                "script" : $scope.testData.testName,
+                                "execId" : $scope.testData.sessionId,
+                                "startTime" : $scope.testData.startTime.raw,
+                                "endTime" : $scope.testData.endTime.raw,
+                                "startTimeFormatted" : $scope.testData.startTime.dateTime,
+                                "endTimeFormatted" : $scope.testData.endTime.dateTime,
+                                "pmUser" : $scope.testData.cloudDescriptor.userName,
+                                "user" : "n/a",
+                                "data" : "n/a",
+                                "wifi" : "n/a",
+                                "hsId" : $scope.testData.device.deviceName,
+                                "hsOperator" : "n/a",
+                                "hsManufacturer" : $scope.testData.device.manufacturer,
+                                "hsModel" : $scope.testData.device.model,
+                                "hsOS" : $scope.testData.device.os,
+                                "hsOSVer" : $scope.testData.device.osVersion,
+                                "networkCarrier" : "n/a",
+                                "networkSpeed" : "",
+                                "latency" : "",
+                                "inBandwidth" : "",
+                                "outBandwidth" : "",
+                                "city" : "n/a",
+                                "country" : "n/a",
+                                "mobileAppVersion" : "",
+                                "environment" : $scope.testData.device.environment,
+                                "appName" : "",
+                                "webReport" : $scope.testData.executionParameters.PERFECTO_WT
+                            };
 
-              $scope.timings.push( row );
-           }
+                            $scope.testData.stepList.forEach(function( step )
+                            {
+                                $scope.walkStepToGetTimeings(step, testLevelData);
+                            });
+                        }
 
-           var temp = txName;
-           //txName = "test";
+                        $scope.walkStepToGetTimeings = function( step, testLevelData )
+                        {
+                            var txName = step.step.name;
+                            var duration = step.endTime.raw - step.startTime.raw;
+                            var is_checkpoint = (step.step.kw == "WAIT_FOR");
 
-           $scope.graph_data.push( [ txName, step.startTime.raw, duration ] );
-           if ( $scope.graph_domain.indexOf( txName ) < 0 ) $scope.graph_domain.push( txName );
-           if ( $scope.graph_time_vals.indexOf( step.startTime.raw ) < 0 ) $scope.graph_time_vals.push( step.startTime.raw );
+                            if ( step.timingMap.elapsed ) {
+                                var row = Object.assign({}, testLevelData);
 
-           txName = temp;
+                                row.txName = txName;
+                                row.txTimeStart = step.startTime.raw;
+                                row.txTimeEnd = step.endTime.raw;
+                                row.txTimeStartFormatted = step.startTime.dateTime;
+                                row.txTimeEndFormatted = step.endTime.dateTime;
+                                row.validationSuccess = ("SUCCESS" == step.stepStatus);
+                                row.timerUx = step.timingMap.ux;
+                                row.requestTime = step.timingMap.device;
+                                row.responseTime = step.timingMap.elapsed;
+                                row.requestTimestamp = "";
+                                row.responseTimestamp = "";
+                                row.vitalsTimestamp = "";
+                                row.vitalsTimestampFormatted = "";
+                                row.vitalseCPU = "";
+                                row.vitalsMemFree = "";
+                                row.vitalsMemUsed = "";
+                                row.vitalsMemCached = "";
 
-           if ( step.stepList )
-           {
-              step.stepList.forEach( function( subStep ) {
-                 $scope.walkStepToGetTimeings( subStep, testLevelData );
-              });
-           } 
-        }
+                                $scope.timings.push(row);
+                            }
 
-        $scope.drawGraph = function()
-        {
-           var sorted_names = $scope.graph_domain.sort();
-           var sorted_start_times = $scope.graph_time_vals.sort();
-           var base_time = sorted_start_times[0];                                  
+                            if ( step.step.timed ) {
+                                $scope.timingLabels.push(txName);
+                                $scope.timingData.push(duration);
+                            }
 
-           var data = new Array(sorted_start_times.length);
-           for( i = 0; i < data.length; ++i )
-           {
-              // Create one row
-              var row = new Array(sorted_names.length + 1);
-              row.forEach(function (eleI, indexI, arrI) {
-                 arrI[indexI] = 'a';
-              });
+                            if ( step.stepList ) {
+                                step.stepList.forEach(function( subStep )
+                                {
+                                    $scope.walkStepToGetTimeings(subStep, testLevelData);
+                                });
+                            }
+                        }
 
-              data[i] = row;
-           }
+                        $scope.timingDataDownloadHeaders = "\x22Script\x22,\x22ExecId\x22,\x22Time Start\x22,\x22Time End\x22,\x22Time Start Formatted\x22,\x22Time End Formatted\x22,\x22PM User\x22,\x22User\x22,\x22Data\x22,\x22Wifi\x22,\x22HS Id\x22,\x22HS Operator\x22,\x22HS Manufacturer\x22,\x22HS Model\x22,\x22HS OS\x22,\x22HS OS Ver.\x22,\x22Network Carrier\x22,\x22Network Speed\x22,\x22Latency\x22,\x22IN Bandwidth\x22,\x22OUT Bandwidth\x22,\x22Transaction Name\x22,\x22Transaction Time Start\x22,\x22Transaction Time End\x22,\x22Transaction Time Start Formatted\x22,\x22Transaction Time End Formatted\x22,\x22Validation Success\x22,\x22Timer UX\x22,\x22Request Time\x22,\x22Response Time\x22,\x22Request Timestamp [ms]\x22,\x22Response Timestamp [ms]\x22,\x22Vitals Timestamp\x22,\x22Vitals Timestamp Formatted\x22,\x22Vitals CPU\x22,\x22Vitals Mem Free\x22,\x22Vitals Mem Used\x22,\x22Vitals Mem Cached\x22,\x22City\x22,\x22Country\x22,\x22Mobile App Version\x22,\x22Environment\x22,\x22App Name\x22,\x22Web Report\x22";
 
-           data.forEach( function( arr, index ) { arr[0] = sorted_start_times[index] - base_time; return null; } );
-           $scope.graph_data.forEach( function( ele ) { data[ sorted_start_times.indexOf(ele[1]) ][ sorted_names.indexOf(ele[0]) + 1] = ele[2]; return null; } );
+                        $scope.timingDataDownloadCols = [ "script", "execId", "startTime", "endTime", "startTimeFormatted", "endTimeFormatted", "pmUser", "user", "data", "wifi",
 
-           var gdata = new google.visualization.DataTable();
-           gdata.addColumn('number', 'X');                                                            
-           sorted_names.forEach( function(ele) { gdata.addColumn('number', ele); } );
-           
-           gdata.addRows( data );
+                        "hsId", "hsOperator", "hsManufacturer", "hsModel", "hsOS", "hsOSVer", "networkCarrier", "networkSpeed", "latency", "inBandwidth",
 
-           var options = {
-              hAxis: {
-                title: 'Offset from test start (ms)'
-              },
-              vAxis: {
-                title: 'Duration (ms)'
-              },
-              series: {
-                1: {curveType: 'function'}
-              },
-              width: 1000,
-              height: 750
-           };
+                        "outBandwidth", "txName", "txTimeStart", "txTimeEnd", "txTimeStartFormatted", "txTimeEndFormatted", "validationSuccess", "timerUx", "requestTime", "responseTime",
 
-           var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-           chart.draw(gdata, options);                                                            
-        }
-    
-        $scope.timingDataDownloadHeaders = "\x22Script\x22,\x22ExecId\x22,\x22Time Start\x22,\x22Time End\x22,\x22Time Start Formatted\x22,\x22Time End Formatted\x22,\x22PM User\x22,\x22User\x22,\x22Data\x22,\x22Wifi\x22,\x22HS Id\x22,\x22HS Operator\x22,\x22HS Manufacturer\x22,\x22HS Model\x22,\x22HS OS\x22,\x22HS OS Ver.\x22,\x22Network Carrier\x22,\x22Network Speed\x22,\x22Latency\x22,\x22IN Bandwidth\x22,\x22OUT Bandwidth\x22,\x22Transaction Name\x22,\x22Transaction Time Start\x22,\x22Transaction Time End\x22,\x22Transaction Time Start Formatted\x22,\x22Transaction Time End Formatted\x22,\x22Validation Success\x22,\x22Timer UX\x22,\x22Request Time\x22,\x22Response Time\x22,\x22Request Timestamp [ms]\x22,\x22Response Timestamp [ms]\x22,\x22Vitals Timestamp\x22,\x22Vitals Timestamp Formatted\x22,\x22Vitals CPU\x22,\x22Vitals Mem Free\x22,\x22Vitals Mem Used\x22,\x22Vitals Mem Cached\x22,\x22City\x22,\x22Country\x22,\x22Mobile App Version\x22,\x22Environment\x22,\x22App Name\x22,\x22Web Report\x22";       
-                                 
-        $scope.timingDataDownloadCols = [
-           "script",
-           "execId",
-           "startTime",
-           "endTime",
-           "startTimeFormatted",
-           "endTimeFormatted",
-           "pmUser",
-           "user",
-           "data",
-           "wifi",
+                        "requestTimestamp", "responseTimestamp", "vitalsTimestamp", "vitalsTimestampFormatted", "vitalseCPU", "vitalsMemFree", "vitalsMemUsed", "vitalsMemCached", "city", "country",
 
-           "hsId",
-           "hsOperator",
-           "hsManufacturer",
-           "hsModel",
-           "hsOS",
-           "hsOSVer",
-           "networkCarrier",
-           "networkSpeed",
-           "latency",
-           "inBandwidth",
+                        "mobileAppVersion", "environment", "appName", "webReport" ];
 
-           "outBandwidth",
-           "txName",
-           "txTimeStart",
-           "txTimeEnd",
-           "txTimeStartFormatted",
-           "txTimeEndFormatted",
-           "validationSuccess",
-           "timerUx",
-           "requestTime",
-           "responseTime",
-
-           "requestTimestamp",
-           "responseTimestamp",
-           "vitalsTimestamp",
-           "vitalsTimestampFormatted",
-           "vitalseCPU",
-           "vitalsMemFree",
-           "vitalsMemUsed",
-           "vitalsMemCached",
-           "city",
-           "country",
-
-           "mobileAppVersion",
-           "environment",
-           "appName",
-           "webReport"             
-        ];
-
-    });
+                    });
 </script>
 </html>

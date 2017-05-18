@@ -47,7 +47,7 @@ public class StartMonitorAction extends AbstractDefaultAction implements DeviceA
     		if ( parameterList !=null && parameterList.size() > 0 )
     		    PerfectoMobile.instance().windTunnel().startVitals( executionId, deviceName, parameterList.get( 0 ) + "", 5 );
     		else
-    		    PerfectoMobile.instance().windTunnel().startVitals( executionId, deviceName, "all", 5 );
+    		    PerfectoMobile.instance().windTunnel().startVitals( executionId, deviceName, "Device", 5 );
 	    }
 		return true;
 	}
