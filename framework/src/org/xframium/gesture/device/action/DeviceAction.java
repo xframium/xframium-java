@@ -99,7 +99,9 @@ public interface DeviceAction
         
 		STOP_VITALS(23, "STOP_VITALS", "Stop Nmonitoring device vitals"),
 		
-		COPY_FILE(24, "COPY_FILE", "Copies file from Perfecto repository to Device");
+		COPY_FILE(24, "COPY_FILE", "Copies file from Perfecto repository to Device"),
+		
+		HOME(25, "HOME", "Returns to the home screen");
 	    
 	    public List<ActionType> getSupportedActions()
 	    {
@@ -126,6 +128,7 @@ public interface DeviceAction
 	        supportedList.add( ActionType.START_VITALS );
 	        supportedList.add( ActionType.STOP_VITALS );
 	        supportedList.add( ActionType.COPY_FILE );
+	        supportedList.add( ActionType.HOME );
 	        return supportedList;
 	    }
 	    
