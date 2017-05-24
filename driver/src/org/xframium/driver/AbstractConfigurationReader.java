@@ -353,7 +353,8 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             log.info( "Data: Configuring Data Driven Testing" );
             PageDataProvider pdp = configureData();
             
-            PageDataManager.instance().setPageDataProvider( pdp );
+            if ( pdp != null )
+                PageDataManager.instance().setPageDataProvider( pdp );
             
             log.info( "Data: Configuring Test Cases" );
             SuiteContainer sC = configureTestCases( pdp, true );
@@ -620,7 +621,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     protected void runTest( String outputFolder, Class theTest, SuiteContainer sC )
     {
         int threadCount = Integer.parseInt( System.getProperty( "xF-ThreadCount", "10" ) );
-        int verboseLevel = Integer.parseInt( System.getProperty( "xF-VerboseLevel", "1" ) );
+        int verboseLevel = Integer.parseInt( System.getProperty( "xF-VerboseLevel", "10" ) );
 
         TestNG testNg = new TestNG( true );
         testNg.setVerbose( verboseLevel );

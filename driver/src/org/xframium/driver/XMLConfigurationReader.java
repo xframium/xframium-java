@@ -86,6 +86,7 @@ import org.xframium.page.Page;
 import org.xframium.page.activity.ActivityInitiator;
 import org.xframium.page.activity.ActivityValidator;
 import org.xframium.page.activity.PageActivity;
+import org.xframium.page.data.PageDataManager;
 import org.xframium.page.data.provider.ExcelPageDataProvider;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.data.provider.SQLPageDataProvider;
@@ -834,6 +835,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                             Parser bddParser = new Parser( xmlFormatter );
                             bddParser.parse( test.getDescription().getValue(), "", 0 );
                             sC.setDataProvider( xmlFormatter );
+                            PageDataManager.instance().setPageDataProvider( xmlFormatter );
                         }
                         else if ( test.getType().equals( "CSV" ) )
                         {
@@ -911,7 +913,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             }
         }
         
-        if ( sC != null )
+        if ( sC != null && pdp != null )
             sC.setDataProvider( pdp );
         return sC;
     }
