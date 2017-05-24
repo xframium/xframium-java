@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.xframium</groupId>
   <artifactId>xframium-driver</artifactId>
-  <version>1.0.11-SNAPSHOT</version>
+  <version>1.0.11</version>
   <name>XFramium Driver</name>
   <repositories>
     <repository>
@@ -49,7 +49,7 @@
               <Built-By>Moreland Labs, Ltd.</Built-By>
               <Permissions>all-permissions</Permissions>
               <Implementation-Title>xFramium</Implementation-Title>
-              <Implementation-Version>Pallas (1.0.7)</Implementation-Version>
+              <Implementation-Version>Apollo (1.0.11)</Implementation-Version>
               <Implementation-Vendor>Moreland Labs, Ltd.</Implementation-Vendor>
             </manifestEntries>
           </archive>
@@ -114,7 +114,7 @@
     <dependency>
       <groupId>org.xframium</groupId>
       <artifactId>xframium-java</artifactId>
-      <version>1.0.11-SNAPSHOT</version>
+      <version>1.0.11</version>
     </dependency>
   </dependencies>
 </project>
