@@ -1222,28 +1222,28 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         return true;
     }
     
-    private Element previousElement = null;
-    private ElementDescriptor previousElementDescriptor = null;
+    private ThreadLocal<Element> previousElement = new ThreadLocal<Element>();
+    private ThreadLocal<ElementDescriptor> previousElementDescriptor = new ThreadLocal<ElementDescriptor>();
     
     @Override
     public void setCachedElement( Element cachedElement, ElementDescriptor elementDescriptor )
     {
-        this.previousElement = cachedElement;
-        this.previousElementDescriptor = elementDescriptor;
+        this.previousElement.set( cachedElement );
+        this.previousElementDescriptor.set( elementDescriptor );
         
     }
     
     public Element getElement( ElementDescriptor elementDescriptor )
     {
         
-        if ( previousElement != null && previousElementDescriptor != null && elementDescriptor.equals( previousElementDescriptor ) )
+        if ( previousElement.get() != null && previousElementDescriptor.get() != null && elementDescriptor.equals( previousElementDescriptor.get() ) )
         {
-            return previousElement;
+            return previousElement.get();
         }
         else
         {
-            previousElement = null;
-            previousElementDescriptor = null;
+            previousElement.set( null );
+            previousElementDescriptor.set( null );
         }
         
         Element returnElement = null;
@@ -1255,8 +1255,8 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         
         if ( returnElement != null )
         {
-           previousElement = returnElement;
-           previousElementDescriptor = elementDescriptor;
+            previousElement.set( returnElement );
+            previousElementDescriptor.set( elementDescriptor );
         }
         
         return returnElement;

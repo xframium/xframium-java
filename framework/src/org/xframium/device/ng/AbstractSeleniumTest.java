@@ -764,11 +764,12 @@ public abstract class AbstractSeleniumTest
                 if ( DataManager.instance().getReportFolder() == null )
                     DataManager.instance().setReportFolder( new File( "." ) );
                 
-                File rootFolder = new File( ExecutionContext.instance().getReportFolder(), webDriver.getArtifactFolder().getPath() );
-                //rootFolder = new File( rootFolder, primaryDevice ? testName.getTestName() : testName.getTestName() + "-" + name );
-                rootFolder.mkdirs();
+                File rootFolder = null;
                 try
                 {
+                    rootFolder = new File( ExecutionContext.instance().getReportFolder(), webDriver.getArtifactFolder().getPath() );
+                    rootFolder.mkdirs();
+                    
                     if ( webDriver.isConnected() && !testResult.isSuccess() )
                     {
                         List<String> aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.ON_FAILURE );

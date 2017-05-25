@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.xframium</groupId>
   <artifactId>xframium-java</artifactId>
-  <version>1.0.11</version>
+  <version>1.0.12-SNAPSHOT</version>
   <name>xframium-java</name>
   <repositories>
     <repository>
@@ -99,17 +99,17 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>3.3.1</version>
+      <version>3.4.0</version>
     </dependency>
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-api</artifactId>
-      <version>3.3.1</version>
+      <version>3.4.0</version>
     </dependency>
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-server</artifactId>
-      <version>3.3.1</version>
+      <version>3.4.0</version>
     </dependency>
     <dependency>
       <groupId>io.appium</groupId>
@@ -165,12 +165,12 @@
     <dependency>
       <groupId>com.perfectomobile</groupId>
       <artifactId>intellij-connector</artifactId>
-      <version>9.2.0.0</version>
+      <version>10.3.0.1</version>
     </dependency>
     <dependency>
       <groupId>com.perfecto.reporting-sdk</groupId>
       <artifactId>reportium-testng</artifactId>
-      <version>1.1.14</version>
+      <version>1.1.15</version>
       <exclusions>
         <exclusion>
           <groupId>org.seleniumhq.selenium</groupId>
@@ -181,12 +181,12 @@
     <dependency>
       <groupId>com.perfectomobile</groupId>
       <artifactId>pm-webdriver</artifactId>
-      <version>9.2.0.1</version>
+      <version>10.3.0.4</version>
     </dependency>
     <dependency>
       <groupId>com.perfectomobile</groupId>
       <artifactId>http-client</artifactId>
-      <version>9.2.0.1</version>
+      <version>10.3.0.4</version>
     </dependency>
     <dependency>
       <groupId>info.cukes</groupId>

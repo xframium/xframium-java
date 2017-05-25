@@ -33,6 +33,7 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.xframium.Initializable;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
@@ -128,12 +129,12 @@ public class WEBDriverFactory extends AbstractDriverFactory
 			                
 			                if ( System.getProperty( "webdriver.gecko.driver" ) == null )
 			                {
-			                    driverFile = new File( DataManager.instance().getReportFolder(), "geckodriver.exe" );
+			                    driverFile = new File( DataManager.instance().getReportFolder(), "geckodriver-" + Initializable.VERSION + ".exe" );
 			                    
 			                    if ( !driverFile.exists() )
 			                    {
 			                        log.warn( "Downloading http://xframium.org/driver/geckodriver.exe to " + driverFile.getAbsolutePath() );
-			                        driverFile = downloadFile( new URL( "http://xframium.org/driver/geckodriver.exe" ), driverFile );
+			                        driverFile = downloadFile( new URL( "http://xframium.org/driver/geckodriver-" + Initializable.VERSION + ".exe" ), driverFile );
 			                    }
 			                    
 			                    if ( driverFile.exists() )
@@ -147,12 +148,12 @@ public class WEBDriverFactory extends AbstractDriverFactory
                                 log.info( "webdriver.chrome.driver=" +  System.getProperty( "webdriver.chrome.driver" ) );
 			                if ( System.getProperty( "webdriver.chrome.driver" ) == null )
                             {
-			                    driverFile = new File( DataManager.instance().getReportFolder(), "chromedriver.exe" );
+			                    driverFile = new File( DataManager.instance().getReportFolder(), "chromedriver-" + Initializable.VERSION + ".exe" );
 			                    
                                 if ( !driverFile.exists() )
                                 {
                                     log.warn( "Downloading http://xframium.org/driver/chromedriver.exe to " + driverFile.getAbsolutePath() );
-                                    driverFile = downloadFile( new URL( "http://xframium.org/driver/chromedriver.exe" ), driverFile );
+                                    driverFile = downloadFile( new URL( "http://xframium.org/driver/chromedriver-" + Initializable.VERSION + ".exe" ), driverFile );
                                 }
                                 
                                 if ( driverFile.exists() )
@@ -164,12 +165,12 @@ public class WEBDriverFactory extends AbstractDriverFactory
                                 log.info( "webdriver.ie.driver=" +  System.getProperty( "webdriver.ie.driver" ) );
 			                if ( System.getProperty( "webdriver.ie.driver" ) == null )
                             {
-			                    driverFile = new File( DataManager.instance().getReportFolder(), "IEDriverServer.exe" );
+			                    driverFile = new File( DataManager.instance().getReportFolder(), "IEDriverServer-" + Initializable.VERSION + ".exe" );
 			                    
                                 if ( !driverFile.exists() )
                                 {
                                     log.warn( "Downloading http://xframium.org/driver/IEDriverServer.exe to " + driverFile.getAbsolutePath() );
-                                    driverFile = downloadFile( new URL( "http://xframium.org/driver/IEDriverServer.exe" ), driverFile );
+                                    driverFile = downloadFile( new URL( "http://xframium.org/driver/IEDriverServer-" + Initializable.VERSION + ".exe" ), driverFile );
                                 }
                                 
                                 if ( driverFile.exists() )
