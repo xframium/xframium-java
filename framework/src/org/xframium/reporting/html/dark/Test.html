@@ -158,6 +158,7 @@ iframe {
                 </ol>
             </div>
             </uib-tab> 
+            
             <uib-tab heading="Data" active="true" ng-if="!angular.equals( {}, testData.dataMap )">
             <div ui-tree id="tree-root" class="scrollable">
                 <ol ui-tree-nodes ng-model="links">
@@ -181,6 +182,37 @@ iframe {
                 </ol>
             </div>
             </uib-tab>
+            <uib-tab heading="Capabilities" active="true">
+            <span ng-if="testData.c != null">
+            <h2>Desired</h2>
+            <div ui-tree id="tree-root" class="scrollable">
+                <ol ui-tree-nodes ng-model="links">
+                    <li ui-tree-node ng-repeat="(key,value) in testData.c" >
+                        <div data-nodrag ui-tree-handle class="tree-node tree-node-content linkStep" style="border-radius: 5px; margin-top: 5px; margin-bottom: 5px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; cursor: default">
+                            <span data-nodrag style="cursor: default; color: white">{{key}}</span>
+                        </div>
+                        
+                        <span data-nodrag style="cursor: default; color: white; margin-left: 25px">{{value}}</span>
+                    </li>
+                </ol>
+            </div>
+            </span>
+            
+            <span ng-if="testData.dC != null">
+            <h2 style="margin-top: 25px">Derived</h2>            
+            <div ui-tree id="tree-root" class="scrollable">
+                <ol ui-tree-nodes ng-model="links">
+                    <li ui-tree-node ng-repeat="(key,value) in testData.dC" >
+                        <div data-nodrag ui-tree-handle class="tree-node tree-node-content linkStep" style="border-radius: 5px; margin-top: 5px; margin-bottom: 5px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; cursor: default">
+                            <span data-nodrag style="cursor: default; color: white">{{key}}</span>
+                        </div>
+                        
+                        <span data-nodrag style="cursor: default; color: white; margin-left: 25px">{{value}}</span>
+                    </li>
+                </ol>
+            </div>
+            </span>
+            </uib-tab> 
             <uib-tab heading="Pages" active="true" ng-if="!angular.equals( {}, testData.pageMap )">
             <div ui-tree id="tree-root" class="scrollable">
                 <ol ui-tree-nodes ng-model="links">

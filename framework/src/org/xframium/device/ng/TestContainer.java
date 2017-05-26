@@ -80,11 +80,6 @@ public class TestContainer
         {
             Device useDevice = getDevice();
             
-            CloudDescriptor currentCloud = CloudRegistry.instance().getCloud();
-            if ( useDevice.getCloud() != null && !useDevice.getCloud().isEmpty() )
-                currentCloud = CloudRegistry.instance().getCloud( useDevice.getCloud() );
-
-            
             for ( int i=0; i<testList.size(); i++ )
             {
                 testName = getTest( currentMethod );
@@ -108,7 +103,7 @@ public class TestContainer
                         {
                             testFlow.warn(  "Device Invalidated: " + useDevice.getEnvironment() );
                             TestPackage tP = new TestPackage( testName, useDevice, runKey );
-                            DeviceWebDriver webDriver = new DeviceWebDriver( null, false, useDevice );
+                            DeviceWebDriver webDriver = new DeviceWebDriver( null, false, useDevice, null );
                             tP.setConnectedDevice( new ConnectedDevice( webDriver, useDevice, null ) );
                             return tP;
                         }
@@ -163,7 +158,7 @@ public class TestContainer
                         {
                             testFlow.warn(  "Device Invalidated: " + useDevice.getEnvironment() );
                             TestPackage tP = new TestPackage( testName, useDevice, runKey );
-                            DeviceWebDriver webDriver = new DeviceWebDriver( null, false, useDevice );
+                            DeviceWebDriver webDriver = new DeviceWebDriver( null, false, useDevice, null );
                             tP.setConnectedDevice( new ConnectedDevice( webDriver, useDevice, null ) );
                             return tP;
                         }

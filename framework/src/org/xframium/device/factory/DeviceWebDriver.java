@@ -61,6 +61,7 @@ import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.interactions.TouchScreen;
 import org.openqa.selenium.logging.Logs;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.ExecuteMethod;
 import org.openqa.selenium.remote.RemoteExecuteMethod;
@@ -127,6 +128,7 @@ public class DeviceWebDriver
     private long implicitWait = 0;
     private long scriptTimeout = 0;
     private long pageLoadTimeout = 0;
+    private DesiredCapabilities dC;
     
     private boolean reportingElement = false;
     
@@ -251,6 +253,9 @@ public class DeviceWebDriver
     public void setExecutionContext( ExecutionContextTest executionContext )
     {
         this.executionContext = executionContext;
+        
+        this.executionContext.setDesiredCapabilities( dC );
+        this.executionContext.setDerivedCapabilities( getCapabilities() );
     }
 
     public long getImplicitWait()
@@ -429,20 +434,22 @@ public class DeviceWebDriver
      * @param currentDevice
      *            the current device
      */
-    public DeviceWebDriver( WebDriver webDriver, boolean cachingEnabled, Device currentDevice )
+    public DeviceWebDriver( WebDriver webDriver, boolean cachingEnabled, Device currentDevice, DesiredCapabilities dC )
     {
         this.webDriver = webDriver;
         this.cachingEnabled = cachingEnabled;
         this.currentDevice = currentDevice;
         this.syntheticConnection = false;
+        this.dC = dC;
     }
     
-    public DeviceWebDriver( String xmlData, Device currentDevice )
+    public DeviceWebDriver( String xmlData, Device currentDevice, DesiredCapabilities dC )
     {
         this.cachingEnabled = true;
         readXML( xmlData );
         this.currentDevice = currentDevice;
         this.syntheticConnection = true;
+        this.dC = dC;
     }
 
     public boolean isConnected()

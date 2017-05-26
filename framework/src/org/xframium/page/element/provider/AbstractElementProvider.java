@@ -67,6 +67,7 @@ public abstract class AbstractElementProvider implements ElementProvider
 	{
 	    if ( previousElement.get() != null && previousElementDescriptor.get() != null && elementDescriptor.equals( previousElementDescriptor.get() ) )
 	    {
+	        log.warn( "CACHED VALUE " + elementDescriptor.toString() );
 	        return previousElement.get();
 	    }
 	    else

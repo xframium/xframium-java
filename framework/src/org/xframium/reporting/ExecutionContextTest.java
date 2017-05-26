@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import org.openqa.selenium.Capabilities;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.exception.XFramiumException;
@@ -55,6 +56,8 @@ public class ExecutionContextTest
     private Map<String,String> sPMap = new HashMap<String,String>( 10 );
     private ApplicationDescriptor aut;
     private StringBuilder csvOutput = new StringBuilder();
+    private Map<String,?> c = null;
+    private Map<String,?> dC = null;
     
     private String timerName;
     
@@ -95,7 +98,21 @@ public class ExecutionContextTest
     {
         return csvOutput.toString();
     }
+
+
+    public void setDesiredCapabilities( Capabilities c )
+    {
+        if ( c != null )
+            this.c = c.asMap();
+    }
     
+
+    public void setDerivedCapabilities( Capabilities c )
+    {
+        if ( c != null )
+            this.dC = c.asMap();
+    }
+
     public Map<String,Object> toMap()
     {
         Map<String,Object> asMap = new HashMap<String,Object>( 20 );
@@ -129,6 +146,7 @@ public class ExecutionContextTest
         Collections.sort( elementUsage, new FailureComparator() );
         asMap.put( "elementUsage", elementUsage );
         asMap.put( "elementUsageMap", elementUsageMap );
+
         
         return asMap;
     }
