@@ -138,6 +138,10 @@ public abstract class ALMEntity
             if ( almField != null )
             {
                 Object currentValue = f.get( this );
+                
+                if ( currentValue == null )
+                    continue;
+                
                 ALMData almData = getCustomData( almField.PhysicalName() );
                 
                 if ( almData != null )
@@ -177,6 +181,8 @@ public abstract class ALMEntity
             
             ALMData almData = fieldMap.get( key );
             Object currentValue = almData.getValue();
+            if ( currentValue == null )
+                continue;
             
             xml.append( "<Field Name=\"" ).append( almData.getName() ).append( "\">" );
             

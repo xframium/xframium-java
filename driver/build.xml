@@ -63,7 +63,7 @@
 		
 		<for param="jarFile">
 			<path>
-				<fileset dir="${libRoot}" includes="xfram*.jar" />
+				<fileset dir="${libRoot}" includes="*.jar" />
 			</path>
 			<sequential>
 				<echo message="Reorganizing @{jarFile}" />

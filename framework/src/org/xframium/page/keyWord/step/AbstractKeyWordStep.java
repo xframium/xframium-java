@@ -787,7 +787,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 //
                 if ( os != null )
                 {
-                    String deviceOs = executionContext.getDevice().getOs();
+                    String deviceOs = ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getOs();
                     if ( deviceOs == null )
                     {
                         throw new FilteredException( "A Required OS of [" + os + "] was specified however the OS of the device could not be determined" );

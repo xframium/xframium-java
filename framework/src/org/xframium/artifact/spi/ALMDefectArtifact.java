@@ -28,7 +28,7 @@ public class ALMDefectArtifact extends AbstractArtifact
     @Override
     protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver ) throws Exception
     {
-        if ( webDriver.isConnected() && webDriver.getExecutionContext().getExceptionType() != null && webDriver.getExecutionContext().getExceptionType().equals( ExceptionType.SCRIPT ) )
+        if ( webDriver.isConnected() && !webDriver.getExecutionContext().getStatus() && webDriver.getExecutionContext().getExceptionType() != null && webDriver.getExecutionContext().getExceptionType().equals( ExceptionType.SCRIPT ) )
         {
             //
             // ALM Integration
@@ -44,11 +44,18 @@ public class ALMDefectArtifact extends AbstractArtifact
             
             almDefect.setDetectedBy( ExecutionContext.instance().getConfigProperties().get( "alm.userName" ) );
             almDefect.setDetectedInCycle( ExecutionContext.instance().getPhase() );
-            almDefect.setDetectedInEnvironment( ExecutionContext.instance().getAut().getEnvironment() );
-            almDefect.setDetectedInRelease( ((int) ExecutionContext.instance().getAut().getVersion()) + "" );
+            if ( ExecutionContext.instance().getAut().getEnvironment() != null )
+                almDefect.setDetectedInEnvironment( ExecutionContext.instance().getAut().getEnvironment() );
+            
+            if ( ExecutionContext.instance().getAut().getVersion() > 0 )
+                almDefect.setDetectedInRelease( ((int) ExecutionContext.instance().getAut().getVersion()) + "" );
 
-            almDefect.setPriority( webDriver.getExecutionContext().getTest().getPriority() );
-            almDefect.setSeverity( webDriver.getExecutionContext().getTest().getSeverity() );
+            if ( webDriver.getExecutionContext().getTest().getPriority() > 0 )
+                almDefect.setPriority( webDriver.getExecutionContext().getTest().getPriority() );
+            
+            if ( webDriver.getExecutionContext().getTest().getSeverity() > 0 )
+                almDefect.setSeverity( webDriver.getExecutionContext().getTest().getSeverity() );
+            
             almDefect.setStatus( ExecutionContext.instance().getConfigProperties().get( "alm.defectStatus" ) );
             
             String summaryTemplate = ExecutionContext.instance().getConfigProperties().get( "alm.defect.template.BG_SUMMARY" );
@@ -97,9 +104,9 @@ public class ALMDefectArtifact extends AbstractArtifact
             List<ALMAttachment> artifactList = new ArrayList<ALMAttachment>( 10 );
             for ( ArtifactType a : ArtifactType.CONSOLE_LOG.getSupported() )
             {
-                if ( webDriver.getExecutionContext().getExecutionParameter( a.name() + "_FILE" ) != null )
+                if ( webDriver.getExecutionContext().getExecutionParameter( a.name() + "_ABS" ) != null )
                 {
-                    artifactList.add( new ALMAttachment( new File( rootFolder, webDriver.getExecutionContext().getTestName() + System.getProperty( "file.separator" ) + webDriver.getExecutionContext().getDevice().getKey() + System.getProperty( "file.separator" ) + webDriver.getExecutionContext().getExecutionParameter( a.name() + "_FILE" ) ), null, "", a.getDescription() ) );
+                    artifactList.add( new ALMAttachment( new File( webDriver.getExecutionContext().getExecutionParameter( a.name() + "_ABS" ) ), null, "", a.getDescription() ) );
                 }
             }
             

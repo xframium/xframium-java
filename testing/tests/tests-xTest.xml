@@ -12,6 +12,7 @@
   <import fileName="./xTest/xFramium Dump State Historical Test.xml" />
   <import fileName="./xTest/xFramium Perfecto VISUAL Keyword Tests.xml" />
   <import fileName="./xTest/xFramium Flow Control.xml" />
+  <import fileName="./xTest/xFramium NATIVE Functions.xml" />
   <import fileName="./xTest/Alert Test.xml" />
   <import fileName="./xTest/Align Test.xml" />
   <import fileName="./xTest/Attribute Test.xml" />

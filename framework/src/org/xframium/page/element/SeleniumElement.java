@@ -126,6 +126,7 @@ public class SeleniumElement extends AbstractElement
             element.elementProperties = new HashMap<String, String>( 5 );
             element.elementProperties.putAll( elementProperties );
         }
+
         element.clonedElement = true;
         return element;
     }

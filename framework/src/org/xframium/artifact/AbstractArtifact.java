@@ -94,7 +94,7 @@ public abstract class AbstractArtifact implements Artifact
         }
         catch( Exception e )
         {
-            log.warn( "Error generating artifact for " + artifactType + "(" + e.getMessage() + ")" );
+            log.warn( "Error generating artifact for " + artifactType + "(" + e.getMessage() + ")", e );
         }
         
         return null;

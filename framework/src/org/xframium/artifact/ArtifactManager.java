@@ -117,7 +117,7 @@ public class ArtifactManager
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.REPORTIUM.name(), PerfectoReportingServices.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.SAUCE_LABS.name(), SauceLabsReportingServices.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.WIND_TUNNEL.name(), PerfectoWindTunnel.class );
-        registerArtifact( ArtifactTime.ON_FAILURE, ArtifactType.ALM_DEFECT.name(), ALMDefectArtifact.class );
+        registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.ALM_DEFECT.name(), ALMDefectArtifact.class );
         registerArtifact( ArtifactTime.AFTER_ARTIFACTS, ArtifactType.EXECUTION_TEST_JSON.name(), JSONArtifact.class );
         registerArtifact( ArtifactTime.AFTER_ARTIFACTS, ArtifactType.EXECUTION_TEST_HTML.name(), DefaultReportingArtifact.class );
     }
@@ -228,7 +228,7 @@ public class ArtifactManager
         }
         catch( Exception e )
         {
-            log.warn( "Error generating artifact for " + artifactType, e );
+            log.warn( "Error generating artifact for " + artifactType );
         }
         
         return null;

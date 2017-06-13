@@ -211,7 +211,7 @@
     <dependency>
       <groupId>org.xframium</groupId>
       <artifactId>alm</artifactId>
-      <version>1.0.1</version>
+      <version>1.0.4</version>
     </dependency>
     <dependency>
       <groupId>org.bytedeco.javacpp-presets</groupId>
