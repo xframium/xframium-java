@@ -512,8 +512,8 @@
     <attribute name="deviceTags" type="string" use="optional" />
     <attribute name="os" type="string" use="optional" />
     <attribute name="count" type="int" use="optional" default="0" />
-    <attribute name="priority" type="int" use="optional" default="1" />
-    <attribute name="severity" type="int" use="optional" default="1" />
+    <attribute name="priority" type="int" use="optional" default="0" />
+    <attribute name="severity" type="int" use="optional" default="0" />
   </complexType>
   
   <complexType name="xFunction">

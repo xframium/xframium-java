@@ -17,8 +17,8 @@ import org.xframium.reporting.ExecutionContext;
 
 public class ALMDefectArtifact extends AbstractArtifact
 {
-    private static Pattern CUSTOM_PATTERN = Pattern.compile( "(\\w*)\\((\\w*)\\,(\\w*)\\)=(\\w*)" );
-    private static Pattern OVERRIDE_PATTERN = Pattern.compile( "(\\w*)\\((\\w*)\\,(\\w*)\\)" ); 
+    private static Pattern CUSTOM_PATTERN = Pattern.compile( "(.*)\\((.*)\\,(.*)\\)=(\\w*)" );
+    private static Pattern OVERRIDE_PATTERN = Pattern.compile( "(.*)\\((.*)\\,(\\w*)\\)" ); 
     
     public ALMDefectArtifact()
     {
@@ -50,11 +50,29 @@ public class ALMDefectArtifact extends AbstractArtifact
             if ( ExecutionContext.instance().getAut().getVersion() > 0 )
                 almDefect.setDetectedInRelease( ((int) ExecutionContext.instance().getAut().getVersion()) + "" );
 
+            
+            String defaultPriorityValue = ExecutionContext.instance().getConfigProperties().get( "alm.priority" );
+            int defaultPriority = 1;
+            if ( defaultPriorityValue != null && !defaultPriorityValue.isEmpty() )
+                defaultPriority = Integer.parseInt( defaultPriorityValue );
+            
             if ( webDriver.getExecutionContext().getTest().getPriority() > 0 )
                 almDefect.setPriority( webDriver.getExecutionContext().getTest().getPriority() );
+            else
+                almDefect.setPriority( defaultPriority );
+
+            
+            String defaultSeverityValue = ExecutionContext.instance().getConfigProperties().get( "alm.severity" );
+            int defaultSeverity = 1;
+            if ( defaultSeverityValue != null && !defaultSeverityValue.isEmpty() )
+                defaultSeverity = Integer.parseInt( defaultSeverityValue );
             
             if ( webDriver.getExecutionContext().getTest().getSeverity() > 0 )
                 almDefect.setSeverity( webDriver.getExecutionContext().getTest().getSeverity() );
+            else
+                almDefect.setSeverity( defaultSeverity );
+            
+            
             
             almDefect.setStatus( ExecutionContext.instance().getConfigProperties().get( "alm.defectStatus" ) );
             
@@ -76,7 +94,15 @@ public class ALMDefectArtifact extends AbstractArtifact
                     
                     if ( fieldMatcher.find() )
                     {
-                        ALMData almData = new ALMData( fieldMatcher.group( 1 ), fieldMatcher.group( 3 ), fieldMatcher.group( 2 ), fieldMatcher.group( 4 ) );    
+                        ALMData almData = new ALMData( fieldMatcher.group( 1 ), fieldMatcher.group( 3 ), fieldMatcher.group( 2 ), fieldMatcher.group( 4 ) );
+                        //
+                        // Allow the data to be formatted
+                        //
+                        String customData = ExecutionContext.instance().getConfigProperties().get( "alm.defect.template." + almData.getPhysicalName() );
+                        if ( customData != null )
+                            almData.setValue( webDriver.toFormattedString( customData ) );
+                        
+                            
                         almDefect.addCustomData( almData.getPhysicalName(), almData );
                     }
                 }

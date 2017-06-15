@@ -113,10 +113,10 @@ public class SeleniumElement extends AbstractElement
         //
         // If we already cloned this once then don't need to again
         //
-        if ( clonedElement )
-        {
-            return this;
-        }
+        //if ( clonedElement )
+        //{
+        //    return this;
+        //}
         SeleniumElement element = new SeleniumElement( getBy(), getRawKey(), getElementName(), getPageName(), getContextElement(), locatedElement, index );
         element.setDriver( getWebDriver() );
         element.setDeviceContext( getDeviceContext() );

@@ -457,7 +457,7 @@ public class Test {
      */
     public int getPriority() {
         if (priority == null) {
-            return  1;
+            return  0;
         } else {
             return priority;
         }
@@ -485,7 +485,7 @@ public class Test {
      */
     public int getSeverity() {
         if (severity == null) {
-            return  1;
+            return  0;
         } else {
             return severity;
         }

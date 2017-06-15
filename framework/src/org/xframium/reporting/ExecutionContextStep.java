@@ -210,16 +210,19 @@ public class ExecutionContextStep
     
     public String getScreenShotLocation()
     {
-
-        for ( ExecutionContextStep eS : stepList )
+        
+        if ( !getStatus() && executionParameter.containsKey( "SCREENSHOT_ABS" ) )
+            return executionParameter.get( "SCREENSHOT_ABS" );
+        else
         {
-            if ( !eS.getStatus() && executionParameter.containsKey( "SCREENSHOT_ABS" ) )
-                return executionParameter.get( "SCREENSHOT_ABS" );
-            else if ( eS.getStepList() != null && eS.getStepList().size() > 0 )
+            if ( stepList != null )
             {
-                String screenShot = eS.getScreenShotLocation();
-                if ( screenShot != null )
-                    return screenShot;
+                for ( ExecutionContextStep eS : stepList )
+                {
+                    String screenShot = eS.getScreenShotLocation();
+                    if ( screenShot != null )
+                        return screenShot;
+                }
             }
         }
         
