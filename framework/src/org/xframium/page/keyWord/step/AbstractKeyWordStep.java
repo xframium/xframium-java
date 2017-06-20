@@ -1155,6 +1155,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 {
                     case ERROR:
 
+                        if ( executionContext.getFailedStep() == null )
+                            executionContext.setFailedStep( this );
                         
                         if ( currentError == null )
                         {
@@ -1188,6 +1190,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                                 PerfectoMobile.instance().windTunnel().addPointOfInterest( getExecutionId( webDriver ), getPoi() + "(" + getPageName() + "." + getName() + ")", Status.failure );
                         }
 
+                        executionContext.setFailedStep( null );
                         returnValue = !subFailure;
 
                 }
