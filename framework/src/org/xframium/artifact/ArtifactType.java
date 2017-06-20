@@ -55,7 +55,7 @@ public enum ArtifactType
     FAILURE_SOURCE_HTML( 8, "FAILURE_SOURCE_HTML", "Extract device state on failure and convert to HTML" ),
     
     /** The execution report. */
-    IMAGING_ANALYSIS ( 9, "Imaging Analysis", "DEtailed image analysis from imaging steps" ),
+    IMAGING_ANALYSIS ( 9, "IMAGING_ANALYSIS", "Detailed image analysis from imaging steps" ),
     
     /** The device log. */
     DEVICE_LOG( 10, "DEVICE_LOG", "Extract platform logs for debugging" ),

@@ -173,12 +173,34 @@ public class DeviceWebDriver
         return null;
     }
     
+    private Field getField( String fieldName, Class currentClass )
+    {
+        try
+        {
+            Field currentField = currentClass.getDeclaredField( fieldName );
+            if ( currentField != null )
+                return currentField;
+            else
+            {
+                if ( currentClass.getSuperclass() != null )
+                    return getField( fieldName, currentClass.getSuperclass() );
+            }
+        }
+        catch( Exception e )
+        {
+            if ( currentClass.getSuperclass() != null )
+                return getField( fieldName, currentClass.getSuperclass() );
+        }
+        
+        return null;
+    }
+    
     private String _getValue( Object currentObject, String[] valueArray, int position )
     {
         try
         {
             Class currentClass = currentObject.getClass();
-            Field currentField = currentClass.getDeclaredField( valueArray[ position ] );
+            Field currentField = getField( valueArray[ position ], currentClass );
             
             boolean iA = currentField.isAccessible();
             currentField.setAccessible( true );
@@ -200,7 +222,7 @@ public class DeviceWebDriver
         }
         catch( Exception e )
         {
-            log.error( "Could not find field " + valueArray[ position ] + " on " + currentObject.getClass().getName(), e );
+            log.error( "Could not find field " + valueArray[ position ] + " on " + currentObject.getClass().getName() );
             return null;
         }
     }

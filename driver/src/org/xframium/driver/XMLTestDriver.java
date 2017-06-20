@@ -263,6 +263,8 @@ public class XMLTestDriver extends AbstractSeleniumTest
             if ( currentException != null )
                 throw currentException;
 
+            
+            
             Assert.assertTrue( returnValue );
         }
     }

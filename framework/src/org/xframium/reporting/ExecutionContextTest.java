@@ -58,6 +58,7 @@ public class ExecutionContextTest
     private StringBuilder csvOutput = new StringBuilder();
     private Map<String,?> c = null;
     private Map<String,?> dC = null;
+    private KeyWordStep failedStep = null;
     
     private String timerName;
     
@@ -77,6 +78,18 @@ public class ExecutionContextTest
         }
     }
     
+    
+    
+    public KeyWordStep getFailedStep()
+    {
+        return failedStep;
+    }
+
+    public void setFailedStep( KeyWordStep failedStep )
+    {
+        this.failedStep = failedStep;
+    }
+
     public void addToCSV( String line )
     {
         csvOutput.append( line ).append( "\r\n" );
