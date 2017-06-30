@@ -1,16 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deviceRegistry xsi:schemaLocation="http://www.xframium.org/deviceRegistry http://www.xframium.org/xsd/deviceManagement/deviceRegistry.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.xframium.org/deviceRegistry">
-<device browserName="firefox" os="windows_nt" model="Firefox" manufacturer="Mozilla" availableDevices="3" driverType="WEB" name="windows_nt firefox" cloud="EMBEDDED" active="true"/>
-<device browserName="chrome" os="windows_nt" model="Chrome" manufacturer="Google" availableDevices="3" driverType="WEB" name="windows_nt chrome" cloud="EMBEDDED" active="true"/>
-<device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Windows 8.1 chrome 53" cloud="saucelabs" active="true"/>
-<device os="iOS" model="iPhone-7" tagNames="Perfecto" manufacturer="Apple" availableDevices="1" driverType="WEB" name="iPhone-7 iOS" cloud="Perfectom" active="false"/>
-<device os="iOS" model="iPhone-7 Plus" tagNames="Perfecto" manufacturer="Apple" availableDevices="1" driverType="WEB" name="iPhone-7 Plus iOS" cloud="perfecto" active="false"/>
-<device browserName="Chrome" os="Android" model="Galaxy.*" tagNames="Perfecto" manufacturer="Samsung" availableDevices="1" driverType="WEB" name="Android Chrome" cloud="perfecto" active="true"/>
-<device browserName="Browser" os="Android" osVersion="4.4" model="Galaxy S6" manufacturer="Samsung" availableDevices="1" driverType="WEB" name="Android 4.4 Browser" cloud="saucelabs" active="false"><capability name="deviceName" class="STRING">Google Nexus 7 HD Emulator</capability>
-<capability name="appiumVersion" class="STRING">1.5.3</capability>
-<capability name="platform" class="STRING">ANDROID</capability>
-</device>
-<device browserVersion="53" browserName="Chrome" os="Windows" osVersion="10" model="chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Windows 10 Chrome 53" cloud="perfecto" active="false"/>
-<device id="A5644C053ACE2EB950A3FB74949CA716B23E5DDF" os="iOS" model="iPhone-6" tagNames="Perfecto" manufacturer="Apple" availableDevices="1" driverType="WEB" name="iPhone-6 iOS" cloud="perfectom" active="true"/>
-<device id="076164908B998B9944CE5E3A50E1028D5708AAEF" os="iOS" model="iPhone-6" manufacturer="Apple" driverType="WEB" name="iPhone-6 iOS 07616" cloud="perfectom" active="true"/>
 </deviceRegistry>

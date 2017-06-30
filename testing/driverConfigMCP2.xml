@@ -1,0 +1,40 @@
+<xFramium xmlns="http://www.xframium.org/xFramiumDriver" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/xFramiumDriver http://www.xframium.org/xsd/xFramiumDriver.xsd">
+<cloud provider="XML" fileName="cloudRegistry.xml" name="ford"/>
+<application provider="XML" fileName="applicationRegistry.xml" name="xTest"/>
+<devices provider="XML" fileName="deviceRegistry.xml"/>
+<driver suiteName="xTest" type="WEB" outputFolder="test-output" displayResults="true" domain="PROFESSIONAL_SERVICES" dryRun="false" embeddedServer="true" testNames="Visible Test">
+<property name="xFramium General KeyWord Test.count">3</property>
+<property name="selenium.timeouts.implicitWait">5000</property>
+<artifact type="FAILURE_SOURCE" />
+<artifact type="DEVICE_LOG" />
+<artifact type="IMAGING_ANALYSIS" />
+<artifact type="EXECUTION_RECORD_HTML" />
+<artifact type="CONSOLE_LOG" />
+<artifact type="GRID_REPORT" />
+<artifact type="GRID_HTML" />
+<artifact type="SAUCE_LABS" />
+<artifact type="EXECUTION_REPORT_CSV" />
+<artifact type="EXECUTION_REPORT_XML" />
+<artifact type="EXECUTION_REPORT_HTML" />
+<artifact type="EXECUTION_REPORT_PDF" />
+<artifact type="REPORTIUM" />
+<artifact type="WIND_TUNNEL" />
+<artifact type="TIMING_HTML" />
+<artifact type="STATISTICS" />
+<extractor name="ANCHOR" descriptor="//a[@href!='#']"><description>HTML anchor tags</description></extractor>
+<extractor name="BUTTON" descriptor="//button"><description>HTML button tags</description></extractor>
+<extractor name="INPUT" descriptor="//input[@type!='hidden']"><description>HTML Input Tags</description></extractor>
+<extractor name="IOS button" descriptor="//UIAButton"><description>Apple IOS buttons</description></extractor>
+<extractor name="IOS switch" descriptor="//UIASwitch"><description>Apple IOS buttons</description></extractor>
+<extractor name="IOS table cell" descriptor="//UIATableCell"><description>Apple IOS table cell</description></extractor>
+<extractor name="IOS text field" descriptor="//UIATextField"><description>Apple IOS test field</description></extractor>
+<extractor name="Android button" descriptor="//android.widget.Button"><description>Android button</description></extractor>
+<extractor name="Android text field" descriptor="//android.widget.EditText"><description>Android text field</description></extractor>
+<extractor name="Windows Button" descriptor="//Button"><description>A Windows XAML Button</description></extractor>
+<extractor name="Windows Text" descriptor="//Text"><description>A Windows XAML Text Field</description></extractor>
+<extractor name="Windows List" descriptor="//List"><description>A Windows XAML List</description></extractor>
+</driver><model provider="XML" fileName="./objectRepository/xTest/objectRepository.xml" siteName="xTest"/>
+<suite provider="XML" fileName="./tests/tests-xTest.xml"/>
+<dependencies afterTest="Report Test Success"/>
+<data provider="XML" fileName="./data/testData.xml"/>
+</xFramium>
