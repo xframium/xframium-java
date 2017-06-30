@@ -21,11 +21,11 @@
  -->
 
 <xFramium xmlns="http://www.xframium.org/xFramiumDriver" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/xFramiumDriver http://www.xframium.org/xsd/xFramiumDriver.xsd">
-  <cloud provider="XML" fileName="cloudRegistry.xml" name="saucelabs" />
+  <cloud provider="XML" fileName="cloudRegistry.xml" name="ford" />
   <application provider="XML" name="xTest" fileName="applicationRegistry.xml" />
-  <devices provider="XML" fileName="deviceRegistry.xml" />
+  <devices provider="RESERVED" fileName="deviceRegistry.xml" />
 
-  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" phase="1001" domain="PROFESSIONAL_SERVICES" testNames="SET Test">
+  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" phase="1001" domain="PROFESSIONAL_SERVICES" testNames="Visible Test" >
     <property name="xFramium General KeyWord Test.count">3</property>
     <property name="selenium.timeouts.implicitWait">5000</property>
     <propertyAdapter className="org.xframium.device.property.SeleniumPropertyAdapter" />
