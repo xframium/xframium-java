@@ -7,6 +7,7 @@
   <artifactId>xframium-java</artifactId>
   <version>1.0.12-SNAPSHOT</version>
   <name>xframium-java</name>
+
   <repositories>
     <repository>
       <id>xframium</id>

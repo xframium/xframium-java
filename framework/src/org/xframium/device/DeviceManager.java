@@ -55,6 +55,7 @@ import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextStep;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
+import com.google.common.collect.ImmutableSet;
 import com.xframium.serialization.SerializationManager;
 import com.xframium.serialization.json.ReflectionSerializer;
 
@@ -462,7 +463,7 @@ public class DeviceManager
                     
                     if ( testPackage.getTestName().getPersonaName() != null && !testPackage.getTestName().getPersonaName().isEmpty() )
                         currentDevice.addCapability( "windTunnelPersona", testPackage.getTestName().getPersonaName(), "STRING" );
-
+                    
                     webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice );
 
                     if ( webDriver != null )

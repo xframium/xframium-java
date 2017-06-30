@@ -236,6 +236,21 @@ public class KeyWordDriver
             log.warn( "After Test notifications failed", e );
         }
     }
+    
+    public void notifyAfterArtifacts( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC  )
+    {
+        try
+        {
+            for ( KeyWordListener k : stepListenerList )
+            {
+                k.afterArtifacts( webDriver, keyWordTest, contextMap, dataMap, pageMap, stepPass, sC, eC );
+            }
+        }
+        catch ( Exception e )
+        {
+            log.warn( "After artifact notifications failed", e );
+        }
+    }
 
     /**
      * Adds the test.

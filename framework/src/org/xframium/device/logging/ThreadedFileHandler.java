@@ -40,16 +40,19 @@ public class ThreadedFileHandler extends Handler
     
     public void configureHandler( Level baseLevel )
     {
+        
+        
+        Handler[] hList = LogManager.getLogManager().getLogger( "" ).getHandlers();
+        for ( Handler h : hList )
+        {
+            if ( h instanceof ThreadedFileHandler )
+                return;
+        }
+        
         setLevel( baseLevel );
         setFormatter( new SimpleFormatter() );
         
         LogManager.getLogManager().getLogger( "" ).addHandler( this );
-        //LogManager.getLogManager().getLogger( "" ).setLevel( baseLevel );
-        //if ( LogManager.getLogManager().getLogger( X_NAMESPACE ) != null )
-        //{
-	    //    LogManager.getLogManager().getLogger( X_NAMESPACE ).setLevel( baseLevel );
-	    //    LogManager.getLogManager().getLogger( X_NAMESPACE ).addHandler( this );
-        //}
     }
     
     @Override

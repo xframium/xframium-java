@@ -142,6 +142,11 @@ public class ExecutionContext
         return executionSummary;
     }
 
+    public void resetReportFolder()
+    {
+        reportFolder = null;
+    }
+    
     public File getReportFolder()
     {
         if ( reportFolder == null )
