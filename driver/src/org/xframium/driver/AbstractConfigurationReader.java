@@ -71,6 +71,16 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     
     private SuiteContainer suiteContainer;
 
+    public SuiteContainer getSuiteContainer()
+    {
+        return suiteContainer;
+    }
+
+    public void setSuiteContainer( SuiteContainer suiteContainer )
+    {
+        this.suiteContainer = suiteContainer;
+    }
+
     public abstract boolean readFile( InputStream inputStream );
 
     public abstract boolean readFile( File configFile );
@@ -106,9 +116,9 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     protected abstract Map<String,String> getConfigurationProperties();
 
     @Override
-    public void readConfiguration( File configurationFile, boolean runTest )
+    public SuiteContainer readConfiguration( File configurationFile, boolean runTest )
     {
-        readConfiguration( configurationFile, runTest, null );
+        return readConfiguration( configurationFile, runTest, null );
         
     }
     
@@ -130,7 +140,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     }
     
     @Override
-    public void readConfiguration( File configFile, boolean runTest, Map<String, String> customConfig )
+    public SuiteContainer readConfiguration( File configFile, boolean runTest, Map<String, String> customConfig )
     {
         configFolder = configFile.getParentFile();
         
@@ -203,6 +213,13 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                         // TODO Auto-generated method stub
                         
                     }
+                    
+                    @Override
+                    public void afterArtifacts( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC )
+                    {
+                        // TODO Auto-generated method stub
+                        
+                    }
                 });
             }
             
@@ -256,6 +273,13 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                         // TODO Auto-generated method stub
                         
                     }
+                    
+                    @Override
+                    public void afterArtifacts( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC )
+                    {
+                        // TODO Auto-generated method stub
+                        
+                    }
                 });
             }
             
@@ -305,7 +329,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             log.info( "Device: Extract " + dC.getActiveDevices().size() + " active devices and " + dC.getInactiveDevices().size() + " inactive devices" );
             
             if ( dC.getActiveDevices().isEmpty() ) 
-                return;
+                return null;
             
             for ( Device d : dC.getActiveDevices() )
                 DeviceManager.instance().registerDevice( d );
@@ -320,7 +344,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             log.info( "Application: Configuring Application Registry" );
             ApplicationContainer appContainer = configureApplication();
             if ( appContainer == null )
-                return;
+                return null;
             else
             {
                 for ( ApplicationDescriptor aD : appContainer.getAppList() )
@@ -341,14 +365,14 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             log.info( "Application: Configured as " + ApplicationRegistry.instance().getAUT().getName() );
             
             log.info( "Third Party: Configuring Third Party Library Support" );
-            if ( !configureThirdParty() ) return;
+            if ( !configureThirdParty() ) return null;
             
             
             log.info( "Content: Configuring Content Engine" );
-            if ( !configureContent() ) return;
+            if ( !configureContent() ) return null;
             
             log.info( "Property Adapter:  Configuring Property Adapters" );
-            if ( !configurePropertyAdapters() ) return;
+            if ( !configurePropertyAdapters() ) return null;
             
             log.info( "Data: Configuring Data Driven Testing" );
             PageDataProvider pdp = configureData();
@@ -359,7 +383,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             log.info( "Data: Configuring Test Cases" );
             SuiteContainer sC = configureTestCases( pdp, true );
             if ( sC == null ) 
-                return;
+                return null;
             
             
             //
@@ -373,7 +397,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             log.info( "Page: Configuring Object Repository" );
             ElementProvider eP = configurePageManagement( sC );
-            if ( eP == null ) return;
+            if ( eP == null ) return null;
             
             //
             // Add the internal opbject repository
@@ -394,7 +418,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
 
             log.info( "Artifact: Configuring Artifact Production" );
-            if ( !configureArtifacts( driverC ) ) return;
+            if ( !configureArtifacts( driverC ) ) return null;
             
             DataManager.instance().setReportFolder( new File( configFolder, driverC.getReportFolder() ) );
             PageManager.instance().setStoreImages( true );
@@ -516,7 +540,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
 
             } );
             
-            if ( driverC.isEmbeddedServer() )
+            if ( runTest && driverC.isEmbeddedServer() )
                 CloudRegistry.instance().startEmbeddedCloud();
             
             ExecutionContext.instance().setSuiteName( (driverC.getSuiteName() != null && !driverC.getSuiteName().isEmpty()) ? driverC.getSuiteName() : ApplicationRegistry.instance().getAUT().getName() );
@@ -533,6 +557,8 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         {
             e.printStackTrace();
         }
+        
+        return suiteContainer;
     }
 
     public void afterSuite()

@@ -230,6 +230,7 @@ public class ALMRESTConnection
 
     private ALMResponse doHttp( String type, String url, String queryString, byte[] data, Map<String, String> headers, Map<String, String> cookies ) throws Exception
     {
+        log.warn( "1.0.4" );
 
         if ( (queryString != null) && !queryString.isEmpty() )
             url += "?" + queryString;

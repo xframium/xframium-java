@@ -161,7 +161,7 @@ public abstract class ALMEntity
                     
                 
                 if ( currentValue instanceof String )
-                    xml.append( "<Value>" ).append(  currentValue ).append( "</Value>" );
+                    xml.append( "<Value>" ).append( escapeXML( (String) currentValue ) ).append( "</Value>" );
                 else if ( currentValue instanceof Date )
                     xml.append( "<Value>" ).append( dateOnly.format( ( (Date) currentValue ) ) ).append( "</Value>" );
                 
@@ -184,10 +184,15 @@ public abstract class ALMEntity
             if ( currentValue == null )
                 continue;
             
+            
+            
             xml.append( "<Field Name=\"" ).append( almData.getName() ).append( "\">" );
             
             if ( currentValue instanceof String )
-                xml.append( "<Value>" ).append(  currentValue ).append( "</Value>" );
+            {
+                
+                xml.append( "<Value>" ).append( escapeXML( (String) currentValue ) ).append( "</Value>" );
+            }
             else if ( currentValue instanceof Date )
                 xml.append( "<Value>" ).append( dateOnly.format( ( (Date) currentValue ) ) ).append( "</Value>" );
             xml.append( "</Field>" );
@@ -197,6 +202,28 @@ public abstract class ALMEntity
         xml.append( "</Entity>" );
         
         return xml.toString();
+    }
+    
+    private static int[][] CHAR_LIST = new int[][] { { 0, 9 }, { 11, 13 }, {128, 255 }, {38, 39 } };
+    
+    /**
+     * Replaces the XML escape characters to XML numeric replacement
+     * @param xmlIn - String
+     * @return String
+     */
+    private static String escapeXML( String xmlIn )
+    {
+        String xmlOut = xmlIn;
+        for ( int[] currentArray : CHAR_LIST )
+        {
+           
+            for ( int i=currentArray[ 0 ]; i<currentArray[ 1 ]; i++ )
+            {
+                xmlOut = xmlOut.replace( new String( new byte[] { (byte)i } ), "&#" + i + ";" );
+            }
+        }
+        
+        return xmlOut;
     }
     
     

@@ -14,8 +14,8 @@ import org.xframium.page.element.provider.ElementProvider;
 
 public interface ConfigurationReader
 {
-    public void readConfiguration( File configurationFile, boolean runTest );
-    public void readConfiguration( File configurationFile, boolean runTest, Map<String,String> customConfig );
+    public SuiteContainer  readConfiguration( File configurationFile, boolean runTest );
+    public SuiteContainer readConfiguration( File configurationFile, boolean runTest, Map<String,String> customConfig );
     public boolean executeTest( SuiteContainer sC );
     public boolean readFile( InputStream inputStream );
     public boolean readFile( File configFile );
@@ -31,4 +31,5 @@ public interface ConfigurationReader
     public boolean configureContent();
     public String getSuiteName();
     public void afterSuite();
+    public SuiteContainer getSuiteContainer();
 }

@@ -56,8 +56,8 @@ xConsole.service("xConsoleService", function($http, $location) {
 			request = $http({
 				method : "get",
 				url : "/executionConsole/folderList",
-				params : { "folderName" : folderName,
-					       "folderDelta" : folderDelta
+				params : { "folderName" : cleanString( folderName ),
+					       "folderDelta" : cleanString( folderDelta )
 				}
 			});
 		}
