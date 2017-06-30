@@ -149,6 +149,12 @@ public class DebugManager implements KeyWordListener
         String executionId = ((DeviceWebDriver) webDriver).getExecutionId();
         completedTests.put( executionId, activeTests.remove( executionId ) );
     }
+    
+    @Override
+    public void afterArtifacts( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC )
+    {
+       
+    }
 
     public void launchBrowser( String ipAddress, int portNumber )
     {

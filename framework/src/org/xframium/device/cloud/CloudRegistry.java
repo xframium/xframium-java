@@ -119,7 +119,18 @@ public class CloudRegistry
 		cut = cloudMap.get( cloudName );
 		
 		if ( cut == null )
-			throw new IllegalArgumentException( "Unknown cloud Identifier " + cloudName );
+		{
+
+		    if ( cloudName.equals( "EMBEDDED" ) )
+		    {
+		        CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( "EMBEDDED", "", "", "127.0.0.1:4444", "", "0", "", null, "SELENIUM", "SELENIUM", "SELENIUM" ) );
+		        cut = cloudMap.get( cloudName );
+		        if ( cut == null )
+		            throw new IllegalArgumentException( "Unknown cloud Identifier " + cloudName );
+		    }
+		    else
+		        throw new IllegalArgumentException( "Unknown cloud Identifier " + cloudName );
+		}
 		
 		if ( log.isInfoEnabled() )
 			log.info( "cloud Under Test set to " + cut );
@@ -179,7 +190,9 @@ public class CloudRegistry
 	        else
 	            log.warn( "There is already an EMBEDDED server listening - we will use that instance" );
 
-            CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( "EMBEDDED", "", "", "127.0.0.1:4444", "", "0", "", null, "SELENIUM", "SELENIUM", "SELENIUM" ) );
+	        if ( !cloudMap.containsKey( "EMBEDDED" ))
+	            CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( "EMBEDDED", "", "", "127.0.0.1:4444", "", "0", "", null, "SELENIUM", "SELENIUM", "SELENIUM" ) );
+	        
             embeddedGrid=true;
         }
         catch( Exception e )

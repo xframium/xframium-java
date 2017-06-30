@@ -622,9 +622,12 @@ public abstract class AbstractSeleniumTest
                 cleanUpConnectedDevice( name, testPackage.getTestName(), device, testResult, true, testPackage );
             }
 
+            
+
             try
             {
                 Thread.currentThread().setName( "xF-Idle Thread" );
+                KeyWordDriver.instance().notifyAfterArtifacts( testPackage.getConnectedDevice().getWebDriver(), testPackage.getConnectedDevice().getWebDriver().getExecutionContext().getTest(), null, null, null, testPackage.getConnectedDevice().getWebDriver().getExecutionContext().getStatus(), null, testPackage.getConnectedDevice().getWebDriver().getExecutionContext() );
             }
             catch ( Exception e )
             {
