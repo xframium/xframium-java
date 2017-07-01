@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deviceRegistry xsi:schemaLocation="http://www.xframium.org/deviceRegistry http://www.xframium.org/xsd/deviceManagement/deviceRegistry.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.xframium.org/deviceRegistry">
-<device id="883A694706D73CD320FEFEC47F3ECF69BD97C9CD" os="iOS" model="iPhone-6 Plus" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="Apple iPhone-6 Plus 883A694706D73CD320FEFEC47F3ECF69BD97C9CD" cloud="fordm" active="true" />
+<device id="883A694706D73CD320FEFEC47F3ECF69BD97C9CD" os="iOS" model="iPhone-6 Plus" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="Apple iPhone-6 Plus 883A694706D73CD320FEFEC47F3ECF69BD97C9CD" cloud="fordm" active="false" />
   		<device id="A5E90D15B2D270F2DE66486B4CE31A7D324A104E" os="IOS" model="iPhone-6 Plus" manufacturer="Apple" driverType="APPIUM" name="Apple iPhone-6 Plus - IOS A5E90D15B2D270F2DE66486B4CE31A7D324A104E" cloud="fordm" active="false"/>
 		<device id="801D1457" os="ANDROID" model="Galaxy S7" manufacturer="Samsung" driverType="APPIUM" name="Samsung Galaxy S7 - ANDROID 801D1457" cloud="fordm" active="false"/>
 		<device id="22DA473129BBF7735D0CB04F8E39C901F852FF77" os="iOS" model="iPhone-6S" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="Apple iPhone-6S 22DA473129BBF7735D0CB04F8E39C901F852FF77" cloud="fordm" active="false" />

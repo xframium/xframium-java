@@ -1,6 +1,6 @@
 <xFramium xmlns="http://www.xframium.org/xFramiumDriver" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/xFramiumDriver http://www.xframium.org/xsd/xFramiumDriver.xsd">
 <cloud provider="XML" fileName="cloudRegistry.xml" name="fordm"/>
-<application provider="XML" fileName="applicationRegistry.xml" name="xTest"/>
+<application provider="XML" fileName="applicationRegistry.xml" name="NOOP"/>
 <devices provider="XML" fileName="deviceRegistry.xml"/>
 <driver suiteName="xTest" type="APPIUM" outputFolder="test-output" displayResults="true" domain="PROFESSIONAL_SERVICES" dryRun="false" embeddedServer="false" testNames="xFramium NATIVE KeyWord Test, xFramium NATIVE Data, xFramium NATIVE Airplane, xFramium NATIVE Location, xFramium NATIVE Wifi">
 <property name="xFramium General KeyWord Test.count">3</property>
