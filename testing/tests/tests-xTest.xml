@@ -16,6 +16,8 @@
   <import fileName="./xTest/xFramium NATIVE Airplane.xml" />
   <import fileName="./xTest/xFramium NATIVE Data.xml" />
   <import fileName="./xTest/xFramium NATIVE Location.xml" />
+    <import fileName="./xTest/xFramium NATIVE Functions.xml" />
+    <import fileName="./xTest/xFramium NATIVE KeyWord Test.xml" />
   <!-- <import fileName="./xTest/Alert Test.xml" />
   <import fileName="./xTest/Align Test.xml" />
   <import fileName="./xTest/Attribute Test.xml" />
