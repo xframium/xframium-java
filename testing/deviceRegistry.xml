@@ -1,3 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deviceRegistry xsi:schemaLocation="http://www.xframium.org/deviceRegistry http://www.xframium.org/xsd/deviceManagement/deviceRegistry.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.xframium.org/deviceRegistry">
+<device id="883A694706D73CD320FEFEC47F3ECF69BD97C9CD" os="iOS" model="iPhone-6 Plus" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="Apple iPhone-6 Plus 883A694706D73CD320FEFEC47F3ECF69BD97C9CD" cloud="Partners-mcp" active="true" />
+  		<device id="A5E90D15B2D270F2DE66486B4CE31A7D324A104E" os="IOS" model="iPhone-6 Plus" manufacturer="Apple" driverType="APPIUM" name="Apple iPhone-6 Plus - IOS A5E90D15B2D270F2DE66486B4CE31A7D324A104E" cloud="Ford-NAM" active="false"/>
+		<device id="801D1457" os="ANDROID" model="Galaxy S7" manufacturer="Samsung" driverType="APPIUM" name="Samsung Galaxy S7 - ANDROID 801D1457" cloud="Ford-NAM" active="false"/>
+		<device id="22DA473129BBF7735D0CB04F8E39C901F852FF77" os="iOS" model="iPhone-6S" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="Apple iPhone-6S 22DA473129BBF7735D0CB04F8E39C901F852FF77" cloud="Partners-mcp" active="false" />
+		<device id="955B0252C50AFBAFF240E6AC814CF4FB1E9F03CF" os="iOS" model="iPhone-7" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="Apple iPhone-7 955B0252C50AFBAFF240E6AC814CF4FB1E9F03CFf" cloud="Partners-mcp" active="false" />
+		<device id="0E6FBDEEF6C5EECEF71F66904FC4EFDA3F803682" os="iOS" model="iPhone-5S" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="Apple iPhone-5S 0E6FBDEEF6C5EECEF71F66904FC4EFDA3F803682" cloud="Partners-mcp" active="false" />
+		<device id="A7302271E86090808BEB998BA2639AB18C5773A4" os="iOS" model="iPhone-6 Plus" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="Apple iPhone-6 Plus A7302271E86090808BEB998BA2639AB18C5773A4" cloud="Partners-mcp" active="false" />
+		<device id="4E529680175ABE8E1A6EBA73651E3D08998533CA" os="iOS" model="iPhone-6" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="Apple iPhone-6 4E529680175ABE8E1A6EBA73651E3D08998533CA" cloud="Partners-mcp" active="false" />
+		<device id="02157DF2A1B46C22" os="Android" model="Galaxy S6" manufacturer="Samsung" availableDevices="1" driverType="APPIUM" name="Samsung Galaxy S6 02157DF2A1B46C22" cloud="Partners-mcp" active="true" />
+		<device id="1015FA7BCD813803" os="Android" model="Galaxy S6" manufacturer="Samsung" availableDevices="1" driverType="APPIUM" name="Samsung Galaxy S6 1015FA7BCD813803" cloud="Partners-mcp" active="false" />
+		<device id="0815F883325E0704" os="Android" model="Galaxy S6" manufacturer="Samsung" availableDevices="1" driverType="APPIUM" name="Samsung Galaxy S6 0815F883325E0704" cloud="Partners-mcp" active="false" />
+		
+		<device id="632E9899" os="Android" model="Galaxy S5" manufacturer="Samsung" driverType="APPIUM" availableDevices="1" name="Samsung Galaxy S5 632E9899" cloud="Partners-mcp" active="false" />
+		<device id="14962E4CCA7487011AC3256667209C7AD0FF523E" os="iOS" model="iPhone-6" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="Apple iPhone-6 14962E4CCA7487011AC3256667209C7AD0FF523E" cloud="Ford-NAM" active="false" />
+		<device id="076164908B998B9944CE5E3A50E1028D5708AAEF" os="iOS" model="iPhone-6" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="Apple iPhone-6 076164908B998B9944CE5E3A50E1028D5708AAEF" cloud="Partners-mcp" active="false" />
+		
+		<device os="iOS" model="iPhone.*" manufacturer="Apple" availableDevices="5" driverType="APPIUM" name="Apple iPhone" cloud="Partners-mcp" active="true"  />
+        <device os="Android" model="Galaxy S.*" manufacturer="Samsung" availableDevices="5" driverType="APPIUM" name="Samsung Galaxy S" cloud="Partners-mcp" active="true" />
+        		    
+		    
+        <device os="iOS" model="iPhone.*" manufacturer="Apple" availableDevices="7" driverType="APPIUM" name="Apple iPhone" cloud="Ford-NAM" active="true"  />
+        <device os="Android" model="Galaxy S.*" manufacturer="Samsung" availableDevices="7" driverType="APPIUM" name="Samsung Galaxy S" cloud="Ford-NAM" active="true" />
+   <device id="544E84947DBD8880131D15FD21CF6B0161FBA725" os="iOS" model="iPhone-6 Plus" manufacturer="Apple" availableDevices="1" driverType="WEB" name="Apple iPhone-6 Plus 544E84947DBD8880131D15FD21CF6B0161FBA725" cloud="fordm" active="true" />
+
 </deviceRegistry>

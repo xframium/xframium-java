@@ -1,8 +1,11 @@
 <xFramium xmlns="http://www.xframium.org/xFramiumDriver" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/xFramiumDriver http://www.xframium.org/xsd/xFramiumDriver.xsd">
-<cloud provider="XML" fileName="cloudRegistry.xml" name="fordm"/>
-<application provider="XML" fileName="applicationRegistry.xml" name="xTest"/>
-<devices provider="XML" fileName="deviceRegistry.xml"/>
-<driver suiteName="xTest" type="WEB" outputFolder="test-output" displayResults="true" domain="PROFESSIONAL_SERVICES" dryRun="false" embeddedServer="true" testNames="Visible Test">
+
+<cloud provider="XML" fileName="cloudRegistry.xml" name="perfectom"/>
+<application provider="XML" fileName="applicationRegistry.xml" name="NOOP"/>
+<devices provider="XML" fileName="applicationRegistry.xml"/>
+
+ 
+<driver suiteName="xTest" type="WEB" outputFolder="test-output" displayResults="true" domain="PROFESSIONAL_SERVICES" dryRun="false" embeddedServer="true" testNames="SET Test">
 <property name="xFramium General KeyWord Test.count">3</property>
 <property name="selenium.timeouts.implicitWait">5000</property>
 <artifact type="FAILURE_SOURCE" />
@@ -33,8 +36,18 @@
 <extractor name="Windows Button" descriptor="//Button"><description>A Windows XAML Button</description></extractor>
 <extractor name="Windows Text" descriptor="//Text"><description>A Windows XAML Text Field</description></extractor>
 <extractor name="Windows List" descriptor="//List"><description>A Windows XAML List</description></extractor>
-</driver><model provider="XML" fileName="./objectRepository/xTest/objectRepository.xml" siteName="xTest"/>
+<model provider="XML" fileName="./objectRepository/xTest/objectRepository.xml" siteName="xTest"/>
 <suite provider="XML" fileName="./tests/tests-xTest.xml"/>
 <dependencies afterTest="Report Test Success"/>
 <data provider="XML" fileName="./data/testData.xml"/>
+
+
+
+
+  <model provider="XML" siteName="xTest" fileName="objectRepository/xTest/objectRepository.xml" />
+  <suite provider="XML" fileName="tests/tests-xTest.xml" />
+  <dependencies afterTest="Report Test Success" />
+  <data fileName="pageData/pageData.xml" />
+  </driver>
 </xFramium>
+
