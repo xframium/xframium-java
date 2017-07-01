@@ -143,7 +143,7 @@
         <jar href="lib/xframium-serialization-2.0.6.jar" />
         <jar href="lib/xml-apis-1.4.01.jar" />
         <jar href="lib/xmlbeans-2.6.0.jar" />
-        <jar href="xframium-driver-1.0.12-SNAPSHOT.jar"/>
+        <jar href="xframium-driver-1.0.12c-SNAPSHOT.jar"/>
     </resources>
     <java version="1.6+" max-heap-size="1G"/>
     <application-desc main-class="org.xframium.console.http.ExecutionConsole"/>
