@@ -27,5 +27,4 @@
         <device os="Android" model="Galaxy S.*" manufacturer="Samsung" availableDevices="7" driverType="APPIUM" name="Samsung Galaxy S" cloud="fordm" active="false" />
         <device id="544E84947DBD8880131D15FD21CF6B0161FBA725" os="iOS" model="iPhone-6 Plus" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="Apple iPhone-6 Plus 544E84947DBD8880131D15FD21CF6B0161FBA725" cloud="fordm" active="false" />
 
-
 </deviceRegistry>
