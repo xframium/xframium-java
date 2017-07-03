@@ -19,8 +19,8 @@
 		<device os="iOS" model="iPhone.*" manufacturer="Apple" availableDevices="5" driverType="APPIUM" name="Apple iPhone" cloud="fordm" active="false"  />
         <device os="Android" model="Galaxy S.*" manufacturer="Samsung" availableDevices="5" driverType="APPIUM" name="Samsung Galaxy S" cloud="fordm" active="false" />
         
-        <device os="iOS" model="" manufacturer="Apple" availableDevices="5" driverType="APPIUM" name="Apple Devices" cloud="fordm" active="true"  />
-        <device os="Android" model="" manufacturer="" availableDevices="5" driverType="APPIUM" name="Android Devices" cloud="fordm" active="true" />
+        <device os="iOS" model="" manufacturer="Apple" availableDevices="2" driverType="APPIUM" name="Apple Devices" cloud="fordm" active="true"  />
+        <device os="Android" model="" manufacturer="" availableDevices="2" driverType="APPIUM" name="Android Devices" cloud="fordm" active="true" />
               		    
 		    
         <device os="iOS" model="iPhone.*" manufacturer="Apple" availableDevices="7" driverType="APPIUM" name="Apple iPhone" cloud="fordm" active="false"  />
