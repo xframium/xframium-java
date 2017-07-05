@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+<function name="xF-Set Data Mode" active="true">
+<description>This is a sample function</description>
+<parameter type="STATIC" name="xF-state" value="false"/>
+<step name="xF-Launch Settings" site="xF_Native" page="Search" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="xF-state" value="true"/>
+</step>
+<step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="CLICK" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="xF-Search Text Box.VISIBLE" site="xF_Native" page="xF_Settings" type="WAIT_FOR" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="SET" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Value" value="Data"/>
+</step>
+<step name="xF-Cellular" site="xF_Native" page="xF_Settings" type="VISIBLE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="new parameter" value="10"/>
+<parameter type="STATIC" name="new parameter" value="UP"/>
+</step>
+<step name="xF-Cellular" site="xF_Native" page="xF_Settings" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="Title.VISIBLE" site="xF_Native" page="xF-Cellular" type="WAIT_FOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Wait Time" value="5"/>
+</step>
+<step name="xF-Cellular Mode" site="xF_Native" page="xF-Cellular" type="ATTRIBUTE" active="true" os="IOS" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="xF-Cellular Mode">
+<parameter type="STATIC" name="Attribute Name" value="value"/>
+</step>
+<step name="xF-Cellular Mode" site="xF_Native" page="xF-Cellular" type="ATTRIBUTE" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="xF-Cellular Mode">
+<parameter type="STATIC" name="Attribute Name" value="checked"/>
+</step>
+<step name="STRING" site="xF_Native" page="Search" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
+<parameter type="CONTEXT" name="Value One" value="xF-state"/>
+<parameter type="STATIC" name="Value Two" value="true"/>
+<parameter type="STATIC" name="Operator" value="EQUALS"/>
+<step name="Undefined" site="xF_Native" page="Search" type="OPERATOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
+<parameter type="STATIC" name="Operator Type" value="OR"/>
+<parameter type="CONTEXT" name="Condition 1A" value="xF-Cellular Mode"/>
+<parameter type="STATIC" name="Condition 1B" value="false"/>
+<parameter type="CONTEXT" name="Condition 2A" value="xF-Cellular Mode"/>
+<parameter type="STATIC" name="Condition 2B" value="0"/>
+<step name="xF-Cellular Mode" site="xF_Native" page="xF-Cellular" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+</step>
+<step name="Undefined" site="New Test" page="Search" type="ELSE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<step name="Undefined" site="New Test" page="Search" type="OPERATOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
+<parameter type="STATIC" name="Operator Type" value="OR"/>
+<parameter type="CONTEXT" name="Condition 1A" value="xF-Cellular Mode"/>
+<parameter type="STATIC" name="Condition 1B" value="true"/>
+<parameter type="CONTEXT" name="Condition 2A" value="xF-Cellular Mode"/>
+<parameter type="STATIC" name="Condition 2B" value="1"/>
+<step name="xF-Cellular Mode" site="xF_Native" page="xF-Cellular" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="xF-OK Button.CLICKABLE" site="xF_Native" page="xF-Cellular" type="WAIT_FOR" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="Wait Time" value="12"/>
+<step name="xF-OK Button" site="xF_Native" page="xF-Cellular" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+</step>
+</step>
+</step>
+</step>
+</function>
+</suite>

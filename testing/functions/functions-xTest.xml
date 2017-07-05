@@ -43,11 +43,11 @@
   <import fileName="../functions/xTest/kw-compare2.xml" />
   <import fileName="../functions/xTest/checkData.xml" />
   <import fileName="../functions/xTest/checkData2.xml" />
-    <import fileName="org/xframium/resource/script/xfNative/functions/xF-Set Airplane Mode.xml" />
-  <import fileName="org/xframium/resource/script/xfNative/functions/xF-Launch Settings.xml" />
-  <import fileName="org/xframium/resource/script/xfNative/functions/xF-Set WiFi Mode.xml" />
-  <import fileName="org/xframium/resource/script/xfNative/functions/xF-Set Notifications Mode.xml" />
-  <import fileName="org/xframium/resource/script/xfNative/functions/xF-Set Location Mode.xml" />
-  <import fileName="org/xframium/resource/script/xfNative/functions/xF-Trust Developer.xml" />
-  <import fileName="org/xframium/resource/script/xfNative/functions/xF-Set Data Mode.xml" />
+  <import fileName="../functions/xTest/xF-Set Airplane Mode.xml" />
+  <import fileName="../functions/xTest/xF-Launch Settings.xml" />
+  <import fileName="../functions/xTest/xF-Set WiFi Mode.xml" />
+  <import fileName="../functions/xTest/xF-Set Notifications Mode.xml" />
+  <import fileName="../functions/xTest/xF-Set Location Mode.xml" />
+  <import fileName="../functions/xTest/xF-Trust Developer.xml" />
+  <import fileName="../functions/xTest/xF-Set Data Mode.xml" />
 </suite>

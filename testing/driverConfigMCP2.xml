@@ -21,7 +21,6 @@
 <artifact type="WIND_TUNNEL" />
 <artifact type="TIMING_HTML" />
 <artifact type="STATISTICS" />
-
 <extractor name="ANCHOR" descriptor="//a[@href!='#']"><description>HTML anchor tags</description></extractor>
 <extractor name="BUTTON" descriptor="//button"><description>HTML button tags</description></extractor>
 <extractor name="INPUT" descriptor="//input[@type!='hidden']"><description>HTML Input Tags</description></extractor>
