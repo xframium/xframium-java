@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
+  <import fileName="xF_Native/page-xF_Settings.xml" />
+  <import fileName="xF_Native/page-xF_Wi-Fi.xml" />
+  <import fileName="xF_Native/page-xF_Notifications.xml" />
+  <import fileName="xF_Native/page-xF_Notification.xml" />
+  <import fileName="xF_Native/page-xF-Application Notifications.xml" />
+  <import fileName="xF_Native/page-xF_Location.xml" />
+  <import fileName="xF_Native/page-xF-General.xml" />
+  <import fileName="xF_Native/page-xF-Device Management.xml" />
+  <import fileName="xF_Native/page-xF-Cellular.xml" />
+</elementDefinition>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
+<site name="xF_Native">
+  <page name="xF-Application Notifications">
+    <element name="Title" value="//android.widget.TextView[@resource-id='android:id/action_bar_title'][@text='Application notifications']" descriptor="XPATH"/>
+    <element name="xF-Notification Link" value="//android.widget.TextView[@text='{notification}']" descriptor="XPATH"/>
+  </page>
+</site></elementDefinition>

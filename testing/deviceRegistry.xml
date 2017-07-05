@@ -18,19 +18,19 @@
 		 -->
 	<!-- 	<device os="iOS" model="iPhone.*" manufacturer="Apple" availableDevices="5" driverType="APPIUM" name="Apple iPhone" cloud="fordm" active="false"  />
         <device os="Android" model="Galaxy S.*" manufacturer="Samsung" availableDevices="5" driverType="APPIUM" name="Samsung Galaxy S" cloud="fordm" active="false" />
-        
+        --> 
         <device os="iOS" model="iPhone.*" manufacturer="Apple" availableDevices="5" driverType="APPIUM" name="Apple Devices" cloud="fordmeu" active="true"  />
         <device os="Android" model="Galaxy S.*" manufacturer="Samsung" availableDevices="5" driverType="APPIUM" name="Android Devices" cloud="fordmeu" active="true" />
               		    
 
-        <device id="544E84947DBD8880131D15FD21CF6B0161FBA725" os="iOS" model="iPhone-6 Plus" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="Apple iPhone-6 Plus 544E84947DBD8880131D15FD21CF6B0161FBA725" cloud="fordm" active="false" />
+   <!--      <device id="544E84947DBD8880131D15FD21CF6B0161FBA725" os="iOS" model="iPhone-6 Plus" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="Apple iPhone-6 Plus 544E84947DBD8880131D15FD21CF6B0161FBA725" cloud="fordm" active="false" />
  -->
-		<device id="8BC98B51F0DBC6A10B7C5131411EF6116BFAFDE3" os="iOS" manufacturer="Apple" model="Apple iPhone 4S" driverType="APPIUM" name="Apple iPhone 4S" cloud="fordmeu" active="true" />
-		<device id="22435C8B7FF6ED9C42F4D6EA84EA425E628D75C2" os="iOS" manufacturer="Apple" model="Apple iPhone 6" driverType="APPIUM" name="Apple iPhone 6" cloud="fordmeu" active="true" />
-		<device id="00D78DBF0CB05564" manufacturer="Google" model="Google Nexus 5X" driverType="APPIUM" name="Google Nexus 5X" os="android" cloud="fordmeu" active="true" />
-		<device id="CVH7N16709000239" manufacturer="Google" model="Google Nexus 6P" driverType="APPIUM" name="Google Nexus 6P" os="android" cloud="fordmeu" active="true" />
-		<device id="FA578YJ01018" manufacturer="HTC" model="HTC One M9" driverType="APPIUM" name="HTC One M9" cloud="fordmeu" active="true" />
-		<device id="CE041714A1453A2C05" manufacturer="Samsung" model="Galaxy S8" driverType="APPIUM" name="Samsung Galaxy S8" cloud="fordmeu" active="true" />
-		<device id="LGH815122A2A69" manufacturer="LG" model="LG G4" driverType="APPIUM" name="LG G4" cloud="fordmeu" active="true" />
+		<device id="8BC98B51F0DBC6A10B7C5131411EF6116BFAFDE3" os="iOS" manufacturer="Apple" model="iPhone 4S" driverType="APPIUM" name="Apple iPhone 4S 1" cloud="fordmeu" active="true" />
+		<device id="22435C8B7FF6ED9C42F4D6EA84EA425E628D75C2" os="iOS" manufacturer="Apple" model="iPhone 6" driverType="APPIUM" name="Apple iPhone 6 2" cloud="fordmeu" active="true" />
+		<!-- <device id="00D78DBF0CB05564" manufacturer="Google" model="Nexus 5X" driverType="APPIUM" name="Google Nexus 5X 3" os="android" cloud="fordmeu" active="true" />
+		<device id="CVH7N16709000239" manufacturer="Google" model="Nexus 6P" driverType="APPIUM" name="Google Nexus 6P 4" os="android" cloud="fordmeu" active="true" />
+		<device id="FA578YJ01018" manufacturer="HTC" model="HTC One M9" driverType="APPIUM" name="HTC One M9 5" cloud="fordmeu" active="true" />
+		<device id="CE041714A1453A2C05" manufacturer="Samsung" model="Galaxy S8" driverType="APPIUM" name="Samsung Galaxy S8 6" cloud="fordmeu" active="true" />
+		<device id="LGH815122A2A69" manufacturer="LG" model="LG G4" driverType="APPIUM" name="G4 7" cloud="fordmeu" active="true" /> -->
 
 </deviceRegistry>
