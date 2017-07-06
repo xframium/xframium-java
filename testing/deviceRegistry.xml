@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deviceRegistry xsi:schemaLocation="http://www.xframium.org/deviceRegistry http://www.xframium.org/xsd/deviceManagement/deviceRegistry.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.xframium.org/deviceRegistry">
-
-       
-        <device os="iOS" model="iPhone.*" manufacturer="Apple" availableDevices="5" driverType="APPIUM" name="Apple Devices" cloud="fordmeu" active="true"  />
-        <device os="Android" model="Galaxy S.*" manufacturer="Samsung" availableDevices="5" driverType="APPIUM" name="Android Devices" cloud="fordmeu" active="true" />
-              		    
-
-        <device id="544E84947DBD8880131D15FD21CF6B0161FBA725" os="iOS" model="iPhone-6 Plus" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="Apple iPhone-6 Plus 544E84947DBD8880131D15FD21CF6B0161FBA725" cloud="fordm" active="false" />
-
-		<device id="8BC98B51F0DBC6A10B7C5131411EF6116BFAFDE3" os="iOS" manufacturer="Apple" model="iPhone 4S" driverType="APPIUM" name="Apple iPhone 4S 1" cloud="fordmeu" active="true" />
-		<device id="22435C8B7FF6ED9C42F4D6EA84EA425E628D75C2" os="iOS" manufacturer="Apple" model="iPhone 6" driverType="APPIUM" name="Apple iPhone 6 2" cloud="fordmeu" active="true" />
-		<device id="00D78DBF0CB05564" manufacturer="Google Nexus" model="5X" driverType="APPIUM" name="Google Nexus 5X 3" os="android" cloud="fordmeu" active="true" />
-		<device id="CVH7N16709000239" manufacturer="Google Nexus" model="6P" driverType="APPIUM" name="Google Nexus 6P 4" os="android" cloud="fordmeu" active="true" />
-		<device id="FA578YJ01018" manufacturer="HTC" model="One M9" driverType="APPIUM" os="Android" name="HTC One M9 5" cloud="fordmeu" active="true" />
-		<device id="CE041714A1453A2C05" manufacturer="Samsung" os="Android" model="Galaxy S8" driverType="APPIUM" name="Samsung Galaxy S8 6" cloud="fordmeu" active="true" />
-		<device id="LGH815122A2A69" manufacturer="LG" model="LG G4" os="Android" driverType="APPIUM" name="G4 7" cloud="fordmeu" active="true" />
- 
+<device os="iOS" model="iPhone.*" manufacturer="Apple" availableDevices="5" driverType="APPIUM" name="iPhone iOS" cloud="fordmeu" active="true"/>
+<device os="Android" model="Galaxy S.*" manufacturer="Samsung" availableDevices="5" driverType="APPIUM" name="Galaxy S Android" cloud="fordmeu" active="true"/>
+<device id="544E84947DBD8880131D15FD21CF6B0161FBA725" os="iOS" model="iPhone-6 Plus" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="iPhone-6 Plus iOS" cloud="fordm" active="false"/>
+<device id="8BC98B51F0DBC6A10B7C5131411EF6116BFAFDE3" os="iOS" model="iPhone 4S" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="iPhone 4S iOS" cloud="fordmeu" active="true"/>
+<device id="22435C8B7FF6ED9C42F4D6EA84EA425E628D75C2" os="iOS" model="iPhone 6" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="iPhone 6 iOS" cloud="fordmeu" active="true"/>
+<device id="00D78DBF0CB05564" os="android" model="5X" manufacturer="Google Nexus" availableDevices="1" driverType="APPIUM" name="5X android" cloud="fordmeu" active="true"/>
+<device id="CVH7N16709000239" os="android" model="6P" manufacturer="Google Nexus" availableDevices="1" driverType="APPIUM" name="6P android" cloud="fordmeu" active="true"/>
+<device id="FA578YJ01018" os="Android" model="One M9" manufacturer="HTC" availableDevices="1" driverType="APPIUM" name="One M9 Android" cloud="fordmeu" active="true"/>
+<device id="CE041714A1453A2C05" os="Android" model="Galaxy S8" manufacturer="Samsung" availableDevices="1" driverType="APPIUM" name="Galaxy S8 Android" cloud="fordmeu" active="true"/>
+<device id="LGH815122A2A69" os="Android" model="LG G4" manufacturer="LG" availableDevices="1" driverType="APPIUM" name="LG G4 Android" cloud="fordmeu" active="true"/>
 </deviceRegistry>
