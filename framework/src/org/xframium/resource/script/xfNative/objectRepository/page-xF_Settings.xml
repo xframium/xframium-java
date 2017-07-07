@@ -10,9 +10,20 @@
         <element value="//UIAStaticText[@name='Wi-Fi']" descriptor="XPATH" os="IOS" />
         <element value="//android.widget.TextView[@text='Wi-Fi']" descriptor="XPATH" os="ANDROID" />
       </element>
-      <element name="xF-Search Button" value="//*[@resource-id='com.android.settings:id/search']" descriptor="XPATH"/>
+
+      <element name="xF-Search Button" descriptor="COMPLEX">
+        <element value="//*[@resource-id='com.android.settings:id/search']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.Button[@content-desc='Search']" descriptor="XPATH" os="ANDROID" />
+        <element value="//*[@resource-id='com.android.settings:id/imageButton']" descriptor="XPATH" os="ANDROID" />
+        
+      </element>
       
-      <element name="xF-Search Text Box" value="//*[@resource-id='android:id/search_src_text']" descriptor="XPATH" />
+      <element name="xF-Search Text Box" descriptor="COMPLEX" >
+        <element value="//*[@resource-id='android:id/search_src_text']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.EditText" descriptor="XPATH" os="ANDROID" />
+        
+      </element>
+
       
       <element name="xF-Airplane Mode OK" value="//UIAButton[@name='OK']" descriptor="XPATH" />
       <element name="xF-Airplane Mode Menu" value="//android.widget.TextView[@text='Airplane mode']" descriptor="XPATH" />
