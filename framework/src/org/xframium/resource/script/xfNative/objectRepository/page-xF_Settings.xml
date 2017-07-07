@@ -41,6 +41,7 @@
       <element name="xF-General" value="//UIATableCell[@name='General']" descriptor="XPATH" />
       <element name="xF-Cellular" descriptor="COMPLEX">
         <element value="//UIATableCell[@name='Cellular']" descriptor="XPATH" os="IOS" />
+        <element value="//UIATableCell[@name='Mobile Data']" descriptor="XPATH" os="IOS" />
         <element value="//android.widget.TextView[@text='Data usage']" descriptor="XPATH" os="ANDROID" />
       </element>
     </page>

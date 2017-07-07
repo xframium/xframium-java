@@ -2,7 +2,12 @@
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
 <function name="xF-Set Data Mode" active="true">
 <description>This is a sample function</description>
+<parameter type="STATIC" name="xF-state" value="true"/>
 <step name="xF-Launch Settings" site="xF_Native" page="Search" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="xF-Cellular" site="xF_Native" page="xF_Settings" type="VISIBLE" active="false" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" name="new parameter" value="10"/>
+<parameter type="STATIC" name="new parameter" value="UP"/>
+</step>
 <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="CLICK" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
 <step name="xF-Search Text Box.VISIBLE" site="xF_Native" page="xF_Settings" type="WAIT_FOR" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
 <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="SET" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
