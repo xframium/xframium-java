@@ -12,7 +12,7 @@
     
     
     <step name="xF-Cellular" site="xF_Native" page="xF_Settings" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0">
-      <parameter type="STATIC" name="new parameter" value="10" />
+      <parameter type="STATIC" name="new parameter" value="1" />
       <parameter type="STATIC" name="new parameter" value="UP" />
     </step>
     <step name="xF-Cellular" site="xF_Native" page="xF_Settings" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" />
