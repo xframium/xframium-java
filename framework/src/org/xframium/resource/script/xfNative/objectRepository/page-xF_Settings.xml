@@ -21,7 +21,6 @@
       <element name="xF-Search Text Box" descriptor="COMPLEX" >
         <element value="//*[@resource-id='android:id/search_src_text']" descriptor="XPATH" os="ANDROID" />
         <element value="//android.widget.EditText" descriptor="XPATH" os="ANDROID" />
-        
       </element>
 
       
