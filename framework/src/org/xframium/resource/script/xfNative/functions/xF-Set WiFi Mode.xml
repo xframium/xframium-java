@@ -16,7 +16,7 @@
           <parameter type="STATIC" name="Wait Time" value="12" />
         </step>
         <step name="xF_Wi-Fi" site="xF_Native" page="xF_Settings" type="ELSE" active="true" threshold="0" timed="true" inverse="false" wait="0" >
-            <step name="xF_Wi-Fi Back" site="xF_Native" page="xF_Wi-Fi" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" />
+            <step name="xF_Wi-Fi Back" site="xF_Native" page="xF_Wi-Fi" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" os="ANDROID"/>
         </step>
     </step>
     
