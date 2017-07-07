@@ -4,6 +4,7 @@
     <page name="xF_Settings" class="org.xframium.page.keyWord.KeyWordPage">
       <element name="xF_Airplane Mode" descriptor="COMPLEX">
         <element value="//UIASwitch[@name='Airplane Mode']" descriptor="XPATH" os="IOS" />
+        <element value="//*[@resource-id='android:id/list']/android.widget.LinearLayout[1]//android.widget.Switch" descriptor="XPATH" os="ANDROID" />
         <element value="//android.widget.Switch" descriptor="XPATH" os="ANDROID" />
       </element>
       <element name="xF_Wi-Fi" descriptor="COMPLEX">

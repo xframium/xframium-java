@@ -41,7 +41,7 @@
         <parameter type="CONTEXT" name="Condition 2A" value="xF-Location State" />
         <parameter type="STATIC" name="Condition 2B" value="false" />
         <step name="xF-Location Mode" site="xF_Native" page="xF_Location" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" />
-        <step name="xF-Agree.CLICKABLE" site="xF_Native" page="xF_Location" type="WAIT_FOR" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0">
+        <step name="xF-Agree.CLICKABLE" site="xF_Native" page="xF_Location" type="WAIT_FOR" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
           <parameter type="STATIC" name="Wait Time" value="12" />
           <step name="xF-Agree" site="xF_Native" page="xF_Location" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" />
         </step>
