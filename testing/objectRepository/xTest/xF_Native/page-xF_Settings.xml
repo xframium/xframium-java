@@ -11,10 +11,10 @@
 <element value="//android.widget.TextView[@text='Wi-Fi']" descriptor="XPATH" os="ANDROID"/>
 </element>
     <element name="xF-Search Button" value="//*[@resource-id='com.android.settings:id/search']" descriptor="COMPLEX">
-<element value="//*[@resource-id='com.android.settings:id/search']" descriptor="XPATH" version="android" os="Android"/>
+<element value="//*[@resource-id='com.android.settings:id/search']" descriptor="XPATH" version="android" os="ANDROID"/>
 </element>
     <element name="xF-Search Text Box" descriptor="COMPLEX">
-<element value="//*[@resource-id='android:id/search_src_text']" descriptor="XPATH" version="android" os="Android"/>
+<element value="//*[@resource-id='android:id/search_src_text']" descriptor="XPATH" version="android" os="ANDROID"/>
 </element>
     <element name="xF-Airplane Mode OK" value="//UIAButton[@name='OK']" descriptor="XPATH"/>
     <element name="xF-Airplane Mode Menu" value="//android.widget.TextView[@text='Airplane mode']" descriptor="XPATH"/>

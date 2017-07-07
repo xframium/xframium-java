@@ -50,4 +50,5 @@
   <import fileName="../functions/xTest/xF-Set Location Mode.xml" />
   <import fileName="../functions/xTest/xF-Trust Developer.xml" />
   <import fileName="../functions/xTest/xF-Set Data Mode.xml" />
+  <import fileName="../functions/xTest/xF-Android Settings.xml" />
 </suite>
