@@ -8,7 +8,9 @@
         <element value="//UIANavigationBar[@name='Mobile Data']/UIAStaticText[1]" descriptor="XPATH" os="IOS" />
         <element value="//UIANavigationBar[@name='Mobile Data']" descriptor="XPATH" os="IOS" />
         <element value="//android.widget.TextView[@text='DATA USAGE']" descriptor="XPATH" os="ANDROID" />
+          <element value="//android.widget.ListView[@resource-id='android:id/list']/android.widget.TextView[1]/following::android.widget.TextView[1]" descriptor="XPATH" os="ANDROID" />
         <element value="//UIATableCell[@name='Mobile Data']" descriptor="XPATH" os="IOS" />
+       
       </element>
       <element name="xF-Cellular Mode" descriptor="COMPLEX">
         <element value="//UIASwitch[@name='Cellular Data']" descriptor="XPATH" os="IOS" />
@@ -18,6 +20,12 @@
         <element value="//android.widget.ListView[@resource-id='android:id/list']/android.widget.TextView[1]/following::android.widget.Switch[1]" descriptor="XPATH" version="android1" os="ANDROID" />
       </element>
       <element name="xF-OK Button" value="//android.widget.Button[@text='OK']" descriptor="XPATH" />
+      
+      <element name="xF-Cellular Close" descriptor="COMPLEX">
+        <element value="// android.widget.imageview[@resource-id='android:id/search_close_btn']" descriptor="XPATH" os="ANDROID" />
+      
+      
+      android.widget.imageview
     </page>
   </site>
 </elementDefinition>

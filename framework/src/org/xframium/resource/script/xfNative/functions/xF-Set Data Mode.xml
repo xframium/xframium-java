@@ -11,7 +11,8 @@
     </step>
      <step name="Undefined" site="New Test" page="Search" type="ELSE" active="true" threshold="0" timed="false" inverse="false" wait="0">
      
-    <step name="xF-Cellular" site="xF_Native" page="xF_Settings" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="LOG_IGNORE"/>
+    <step name="xF-Cellular Close" site="xF_Native" page="xF_Settings" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="LOG_IGNORE"/>
+      <step name="xF-Cellular Close" site="xF_Native" page="xF_Settings" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="LOG_IGNORE"/>
       
     </step>
      
