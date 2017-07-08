@@ -5,9 +5,9 @@
     <element name="Title" descriptor="COMPLEX">
 <element value="//UIANavigationBar[1]/UIAStaticText[@name='Cellular']" descriptor="XPATH" os="IOS"/>
 <element value="//android.widget.TextView[@text='Data usage']" descriptor="XPATH" os="ANDROID"/>
-<element value="//UIANavigationBar[@name='Mobile Data']/UIAStaticText[1]" descriptor="XPATH" version="ios" os="IOS"/>
+<element value="//UIANavigationBar[@name='Mobile Data']/UIAStaticText[1]" descriptor="XPATH"  os="IOS"/>
  <element value="//UIANavigationBar[@name='Mobile Data']" descriptor="XPATH" os="IOS" />
-<element value="//android.widget.TextView[@text='DATA USAGE']" descriptor="XPATH" os="ANDROID"/
+<element value="//android.widget.TextView[@text='DATA USAGE']" descriptor="XPATH" os="ANDROID"/>
 <element value="//UIATableCell[@name='Mobile Data']" descriptor="XPATH" os="IOS" />
 </element>
 
