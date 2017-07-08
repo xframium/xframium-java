@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
-  <site name="xF_Native">
-    <page name="xF-Cellular">
-      <element name="Title" descriptor="COMPLEX">
-        <element value="//UIANavigationBar[1]/UIAStaticText[@name='Cellular']" descriptor="XPATH" os="IOS" />
-        <element value="//android.widget.TextView[@text='Data usage']" descriptor="XPATH" os="ANDROID" />
-        <element value="//UIANavigationBar[@name='Mobile Data']" descriptor="XPATH" os="IOS" />
-      </element>
-      <element name="xF-Cellular Mode" descriptor="COMPLEX">
-        <element value="//UIASwitch[@name='Cellular Data']" descriptor="XPATH" os="IOS" />
-        <element value="//UIASwitch[@name='Mobile Data']" descriptor="XPATH" os="IOS" />
-        <element value="//android.widget.LinearLayout[@resource-id='com.android.settings:id/network_switches']/android.widget.LinearLayout[1]//android.widget.Switch" descriptor="XPATH" os="ANDROID" />
-      </element>
-      <element name="xF-OK Button" value="//android.widget.Button[@text='OK']" descriptor="XPATH" />
-    </page>
-  </site>
-</elementDefinition>
+<site name="xF_Native">
+  <page name="xF-Cellular" class="org.xframium.page.keyWord.KeyWordPage">
+    <element name="Title" descriptor="COMPLEX">
+<element value="//UIANavigationBar[1]/UIAStaticText[@name='Cellular']" descriptor="XPATH" os="IOS"/>
+<element value="//android.widget.TextView[@text='Data usage']" descriptor="XPATH" os="ANDROID"/>
+<element value="//UIANavigationBar[@name='Mobile Data']/UIAStaticText[1]" descriptor="XPATH" version="ios" os="IOS"/>
+ <element value="//UIANavigationBar[@name='Mobile Data']" descriptor="XPATH" os="IOS" />
+</element>
+    <element name="xF-Cellular Mode" descriptor="COMPLEX">
+<element value="//UIASwitch[@name='Cellular Data']" descriptor="XPATH" os="IOS"/>
+<element value="//android.widget.LinearLayout[@resource-id='com.android.settings:id/network_switches']/android.widget.LinearLayout[1]//android.widget.Switch" descriptor="XPATH" os="ANDROID"/>
+<element value="//UIASwitch[@name='Mobile Data']" descriptor="XPATH" version="ios4" os="IOS"/>
+<element value="//android.widget.Switch[@resource-id='android:id/switch_widget']" descriptor="XPATH" version="android1" os="ANDROID"/>
+</element>
+    <element name="xF-OK Button" value="//android.widget.Button[@text='OK']" descriptor="XPATH"/>
+  </page>
+</site>
+  
+
+  
+  </elementDefinition>
