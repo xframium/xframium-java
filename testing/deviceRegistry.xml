@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <deviceRegistry xsi:schemaLocation="http://www.xframium.org/deviceRegistry http://www.xframium.org/xsd/deviceManagement/deviceRegistry.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.xframium.org/deviceRegistry">
-<device os="iOS" model="iPhone.*" manufacturer="Apple" availableDevices="5" driverType="APPIUM" name="iPhone iOS" cloud="fordmeu" active="true"/>
+<device os="iOS" model="iPhone.*" manufacturer="Apple" availableDevices="5" driverType="APPIUM" name="iPhone iOS" cloud="fordmeu" active="false"/>
 <device os="Android" model="Galaxy S.*" manufacturer="Samsung" availableDevices="5" driverType="APPIUM" name="Galaxy S Android" cloud="fordmeu" active="false"/>
 <device id="544E84947DBD8880131D15FD21CF6B0161FBA725" os="iOS" model="iPhone-6 Plus" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="iPhone-6 Plus iOS" cloud="fordm" active="false"/>
 <device id="8BC98B51F0DBC6A10B7C5131411EF6116BFAFDE3" os="iOS" model="iPhone 4S" manufacturer="Apple" availableDevices="1" driverType="APPIUM" name="iPhone 4S iOS" cloud="fordmeu" active="true"/>
