@@ -23,9 +23,8 @@
       
       <element name="xF-Cellular Close" descriptor="COMPLEX">
         <element value="// android.widget.imageview[@resource-id='android:id/search_close_btn']" descriptor="XPATH" os="ANDROID" />
+      </element>
       
-      
-      android.widget.imageview
     </page>
   </site>
 </elementDefinition>

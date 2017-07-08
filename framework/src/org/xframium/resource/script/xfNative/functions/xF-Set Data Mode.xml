@@ -9,27 +9,28 @@
     <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="SET" os="ANDROID" >
         <parameter type="STATIC" name="Value" value="Data" />
     </step>
-     <step name="Undefined" site="New Test" page="Search" type="ELSE" active="true" threshold="0" timed="false" inverse="false" wait="0">
+   <!--   <step name="Undefined" site="New Test" page="Search" type="ELSE" active="true" threshold="0" timed="false" inverse="false" wait="0" os="ANDROID">
      <step name="STATUS" site="New Test" page="Search" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0"/>
     <step name="xF-Cellular Close" site="xF_Native" page="xF_Settings" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" os="ANDROID"/>
       <step name="xF-Cellular Close" site="xF_Native" page="xF_Settings" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" os="ANDROID" />
       
-    </step>
+    </step> -->
      
-    
+    <step name="STATUS" site="New Test" page="Search" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0"/>
     <step name="xF-Cellular" site="xF_Native" page="xF_Settings" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0">
       <parameter type="STATIC" name="new parameter" value="1" />
       <parameter type="STATIC" name="new parameter" value="UP" />
     </step>
+    <step name="STATUS" site="New Test" page="Search" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0"/>
     <step name="xF-Cellular" site="xF_Native" page="xF_Settings" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" />
     <step name="Title.VISIBLE" site="xF_Native" page="xF-Cellular" type="WAIT_FOR" active="true" threshold="0" timed="false" inverse="false" wait="0">
       <parameter type="STATIC" name="Wait Time" value="5" />
     </step>
     <step name="xF-Cellular Mode" site="xF_Native" page="xF-Cellular" type="ATTRIBUTE" active="true" os="IOS" threshold="0" timed="false" inverse="false" wait="0" context="xF-Cellular Mode">
-      <parameter type="STATIC" name="Attribute Name" value="value" />
+      <parameter type="STATIC" name="value" value="value" />
     </step>
     <step name="xF-Cellular Mode" site="xF_Native" page="xF-Cellular" type="ATTRIBUTE" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0" context="xF-Cellular Mode">
-      <parameter type="STATIC" name="Attribute Name" value="checked" />
+      <parameter type="STATIC" name="checked" value="checked" />
     </step>
     <step name="STRING" site="New Test" page="Search" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
       <parameter type="CONTEXT" name="Value One" value="xF-state" />
