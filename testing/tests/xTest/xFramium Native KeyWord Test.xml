@@ -2,8 +2,7 @@
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
 <test name="xFramium NATIVE KeyWord Test" dataProvider="callTest" timed="false" threshold="0" active="true" priority="0" severity="0">
 <description>Tests the general keywords that apply to both Web and Native applications across web and mobile devices</description>
-<step name="START_VITALS" site="xTest" page="home" type="DEVICE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="LOG_IGNORE"/>
-<step name="MAXIMIZE" site="xTest" page="home" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="LOG_IGNORE"/>
+
 <step name="xFramium NATIVE Wifi" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="LOG_IGNORE"/>
 <step name="xFramium NATIVE Airplane" site="xTest" page="home" type="CALL2" active="true" os="WINDOWS,MACOS" threshold="0" timed="false" inverse="false" wait="0" failureMode="LOG_IGNORE"/>
 <step name="xFramium NATIVE Data" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="LOG_IGNORE"/>
