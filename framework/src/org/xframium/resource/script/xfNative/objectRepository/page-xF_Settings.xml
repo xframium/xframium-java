@@ -24,8 +24,10 @@
       <element name="xF-Airplane Mode Menu" value="//android.widget.TextView[@text='Airplane mode']" descriptor="XPATH" />
       <element name="xF-Notifications" descriptor="COMPLEX">
         <element value="//UIAStaticText[@name='Notifications']" descriptor="XPATH" os="IOS" />
+        <element value="//android.widget.TextView[@text='Notifications']" descriptor="XPATH" os="ANDROID" />
         <element value="//android.widget.TextView[@text='Sounds and notifications']" descriptor="XPATH" os="ANDROID" />
         <element value="//android.widget.TextView[@text='Sound and notification']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.TextView[@text='App notifications']" descriptor="XPATH" os="ANDROID" />
       </element>
       <element name="xF-Location" descriptor="COMPLEX">
         <element value="//android.widget.TextView[@text='Location']" descriptor="XPATH" os="ANDROID" />

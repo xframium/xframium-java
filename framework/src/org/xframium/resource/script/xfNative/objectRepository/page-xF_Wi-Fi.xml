@@ -4,6 +4,7 @@
     <page name="xF_Wi-Fi" class="org.xframium.page.keyWord.KeyWordPage">
      <element name="xF_Wi-Fi Back" descriptor="COMPLEX">
         <element value="//*[@resource-id='com.android.settings:id/imageButton']" descriptor="XPATH" os="ANDROID" />
+        <element value="//*[@content-desc='Navigate up']" descriptor="XPATH" os="ANDROID" />
      </element>
       <element name="xF_Wi-Fi Title" descriptor="COMPLEX">
         <element value="//UIANavigationBar[@name='Wi-Fi']" descriptor="XPATH" os="IOS" />
