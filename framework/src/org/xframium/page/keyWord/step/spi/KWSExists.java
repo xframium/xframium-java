@@ -81,7 +81,10 @@ public class KWSExists extends AbstractKeyWordStep
                 {
                     currentElement = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
                     if ( currentElement.isPresent() )
+                    {
                         returnValue = true;
+                        break;
+                    }
                 }
                 catch ( Exception e )
                 {

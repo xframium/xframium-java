@@ -21,12 +21,13 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
-
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.exception.ScriptException;
 import org.xframium.gesture.Gesture.Direction;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
+import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.reporting.ExecutionContextTest;
 
@@ -57,9 +58,10 @@ public class KWSVisible extends AbstractKeyWordStep
 			int searchCount = Integer.parseInt( getParameterValue(getParameterList().get(0), contextMap, dataMap) + "" );
 			for ( int i=0; i<searchCount; i++)
 			{
+			    Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
 				try
 				{
-					if ( getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).isVisible() )
+					if ( currentElement.isVisible() )
 						return true;
 				}
 				catch( Exception e )
@@ -70,7 +72,8 @@ public class KWSVisible extends AbstractKeyWordStep
 				scroll( Direction.valueOf( getParameterValue(getParameterList().get(1), contextMap, dataMap) + "" ), webDriver);
 
 			}
-			return false;
+			
+			throw new ScriptException( "Could not locate [" + getElement( pageObject, contextMap, webDriver, dataMap, executionContext ) + "] after scrolling " + searchCount + " times" );
 		}
 		else
 		{
