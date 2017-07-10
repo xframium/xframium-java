@@ -15,8 +15,8 @@
     
    <step name="Undefined" site="New Test" page="Search" type="ELSE" active="true" threshold="0" timed="false" inverse="false" wait="0" os="ANDROID">
      <step name="STATUS" site="New Test" page="Search" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" os="ANDROID"/>
-    <step name="xF-Cellular Close" site="xF_Native" page="xF_Settings" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" os="ANDROID"/>
-      <step name="xF-Cellular Close" site="xF_Native" page="xF_Settings" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" os="ANDROID" />
+    <step name="xF-Cellular Close" site="xF_Native" page="xF_Settings" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE" os="ANDROID"/>
+      <step name="xF-Cellular Close" site="xF_Native" page="xF_Settings" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE" os="ANDROID" />
       
     </step>
     </step>
@@ -58,9 +58,9 @@
           <parameter type="CONTEXT" name="Condition 2A" value="xF-Cellular Mode" />
           <parameter type="STATIC" name="Condition 2B" value="1" />
           <step name="xF-Cellular Mode" site="xF_Native" page="xF-Cellular" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" />
-          <step name="xF-OK Button.CLICKABLE" site="xF_Native" page="xF-Cellular" type="WAIT_FOR" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0">
+          <step name="xF-OK Button.CLICKABLE" site="xF_Native" page="xF-Cellular" type="WAIT_FOR" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0" failureMode="LOG_IGNORE" >
             <parameter type="STATIC" name="Wait Time" value="12" />
-            <step name="xF-OK Button" site="xF_Native" page="xF-Cellular" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" />
+            <step name="xF-OK Button" site="xF_Native" page="xF-Cellular" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="LOG_IGNORE" />
           </step>
         </step>
       </step>

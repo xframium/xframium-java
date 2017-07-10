@@ -40,6 +40,7 @@
         <element value="//UIATableCell[@name='Cellular']" descriptor="XPATH" os="IOS" />
         <element value="//UIATableCell[@name='Mobile Data']" descriptor="XPATH" os="IOS" />
         <element value="//android.widget.TextView[@text='Data usage']" descriptor="XPATH" os="ANDROID" />
+         <element value="//android.widget.TextView[@text='Mobile data']" descriptor="XPATH" os="ANDROID" />
       </element>
     </page>
   </site>
