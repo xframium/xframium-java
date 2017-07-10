@@ -6,5 +6,6 @@
   <import fileName="./xTest/xFramium NATIVE Location.xml" />
   <import fileName="./xTest/xFramium NATIVE KeyWord Test.xml" />
   <import fileName="./xTest/xFramium NATIVE Notifications.xml" />
- 
+  <import fileName="./xTest/xFramium NATIVE Notifications Android.xml" />
+  <import fileName="../functions/functions-xTest.xml" />
 </suite>
