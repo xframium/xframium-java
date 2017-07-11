@@ -9,7 +9,7 @@
     <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="SET" os="ANDROID" failureMode="LOG_IGNORE">
         <parameter type="STATIC" name="Value" value="Location" />
     </step>
-    <step name="Status" site="xF_Native" page="xF_Settings" type="STATE" failureMode="LOG_IGNORE" />
+  
     <step name="xF-Location" site="xF_Native" page="xF_Settings" type="VISIBLE" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0">
       <parameter type="STATIC" name="new parameter" value="10" />
       <parameter type="STATIC" name="new parameter" value="UP" />
