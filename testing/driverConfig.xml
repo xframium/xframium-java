@@ -25,7 +25,7 @@
   <application provider="XML" name="xTest" fileName="applicationRegistry.xml" />
   <devices provider="RESERVED" fileName="deviceRegistry.xml" />
 
-  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" phase="1001" domain="PROFESSIONAL_SERVICES" testNames="Visible Test" >
+  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" phase="1001" domain="PROFESSIONAL_SERVICES" testNames="xFramium NATIVE Notifications" >
     <property name="xFramium General KeyWord Test.count">3</property>
     <property name="selenium.timeouts.implicitWait">5000</property>
     <propertyAdapter className="org.xframium.device.property.SeleniumPropertyAdapter" />
