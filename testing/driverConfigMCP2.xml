@@ -2,6 +2,7 @@
 <cloud provider="XML" fileName="cloudRegistry.xml" name="fordmeu"/>
 <application provider="XML" fileName="applicationRegistry.xml" name="NOOP"/>
 <devices provider="XML" fileName="deviceRegistry.xml"/>
+
 <driver suiteName="xTest" type="APPIUM" outputFolder="test-output" displayResults="true" dryRun="false" embeddedServer="false" testNames="xFramium NATIVE Location,xFramium NATIVE Data,xFramium NATIVE WiFi,xFramium NATIVE Notifications,xFramium NATIVE Airplane">
 <property name="xFramium NATIVE KeyWord Test.count">3</property>
 <property name="selenium.timeouts.implicitWait">5000</property>
