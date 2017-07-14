@@ -23,11 +23,11 @@
 <xFramium xmlns="http://www.xframium.org/xFramiumDriver" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/xFramiumDriver http://www.xframium.org/xsd/xFramiumDriver.xsd">
   <cloud provider="XML" fileName="/var/lib/jenkins/cloudRegistry.xml" name="saucelabs" />
 
-  <application provider="LOCAL" name="Google Search Test" appPackage="" bundleId="" url="http://xframium.org/testing.html" iosInstall="" androidInstall="" />
+  <application provider="LOCAL" name="xFramium Testing" appPackage="" bundleId="" url="http://xframium.org/testing.html" iosInstall="" androidInstall="" />
 
   <devices provider="LOCAL">
-    <device name="Firefox Local" manufacturer="Mozilla" model="Firefox" active="false" availableDevices="1" os="Windows" browserName="firefox" osVersion="8.1" browserVersion="46" cloud="EMBEDDED" tagNames="testTag,goodClick" />
-    <device name="Chrome Local" manufacturer="Google" model="Chrome" active="false" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" cloud="EMBEDDED" >
+    <device name="Firefox Local" manufacturer="Mozilla" model="Firefox" active="true" availableDevices="1" os="Windows" browserName="firefox" osVersion="8.1" browserVersion="46" cloud="EMBEDDED" tagNames="testTag,goodClick" />
+    <device name="Chrome Local" manufacturer="Google" model="Chrome" active="true" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" cloud="EMBEDDED" >
       <objectCapability name="chrometest">
         <capabilities factoryName="ChromeOptions">
           <options name="arguments">--disable-extensions</options>
@@ -50,7 +50,7 @@
     </device>
     
     <device name="IE Local" manufacturer="Microsoft" model="IE" active="false" availableDevices="1" os="Windows" browserName="internet explorer" osVersion="8.1" cloud="EMBEDDED" />
-    <device name="Samsung S5 Perfecto" manufacturer="Samsung" model="Galaxy S5" os="Android" active="false" availableDevices="1"  cloud="perfecto" browserName="Chrome" />
+    <device name="Samsung S5 Perfecto" manufacturer="Samsung" model="Galaxy S5" os="Android" active="true" availableDevices="1"  cloud="perfecto" browserName="Chrome" />
     <device name="Samsung S5 SauceLabs" manufacturer="Samsung" model="Galaxy S5" os="Android" osVersion="4.4" active="false" availableDevices="1" cloud="saucelabs" browserName="Browser" >
       <capability name="deviceName">Google Nexus 7 HD Emulator</capability>
       <capability name="appiumVersion">1.5.3</capability>
