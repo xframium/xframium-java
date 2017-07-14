@@ -36,13 +36,15 @@ public class SQLUtil
     // Class Data
     //
 
-    private static final Map<String,String>[] EMPTY_MAP_ARRAY = new Map[0];
-    
+    private static final Map<String, String>[] EMPTY_MAP_ARRAY = new Map[0];
+
     //
     // Implementation
     //
     /**
-     * This method establishes the DB connection, executes the SQL statement and returns an array of Object
+     * This method establishes the DB connection, executes the SQL statement and
+     * returns an array of Object
+     * 
      * @param username
      * @param password
      * @param url
@@ -52,13 +54,7 @@ public class SQLUtil
      * @return object
      * @throws Exception
      */
-    public static Object[][] getResults( String username,
-                                         String password,
-                                         String url,
-                                         String driver,
-                                         String query,
-                                         String[] params )
-        throws Exception
+    public static Object[][] getResults( String username, String password, String url, String driver, String query, String[] params ) throws Exception
     {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -73,7 +69,7 @@ public class SQLUtil
             if ( params != null )
             {
                 int offset = 1;
-                for( String param : params )
+                for ( String param : params )
                     pstmt.setString( offset++, param );
             }
 
@@ -83,19 +79,36 @@ public class SQLUtil
         }
         finally
         {
-            try { rs.close(); }
-            catch( Throwable e ) {}
+            try
+            {
+                rs.close();
+            }
+            catch ( Throwable e )
+            {
+            }
 
-            try { pstmt.close(); }
-            catch( Throwable e ) {}
-            
-            try { conn.close(); }
-            catch( Throwable e ) {}
+            try
+            {
+                pstmt.close();
+            }
+            catch ( Throwable e )
+            {
+            }
+
+            try
+            {
+                conn.close();
+            }
+            catch ( Throwable e )
+            {
+            }
         }
     }
 
     /**
-     * This method establishes the DB connection, executes a query and returns results in a map
+     * This method establishes the DB connection, executes a query and returns
+     * results in a map
+     * 
      * @param username
      * @param password
      * @param url
@@ -105,13 +118,7 @@ public class SQLUtil
      * @return Map
      * @throws Exception
      */
-    public static Map<String,String>[] getRow( String username,
-                              String password,
-                              String url,
-                              String driver,
-                              String query,
-                              String[] params )
-        throws Exception
+    public static Map<String, String>[] getRow( String username, String password, String url, String driver, String query, String[] params ) throws Exception
     {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -119,17 +126,14 @@ public class SQLUtil
 
         try
         {
-            conn = getConnection( username,
-                                  password,
-                                  url,
-                                  driver );
+            conn = getConnection( username, password, url, driver );
 
             pstmt = conn.prepareStatement( query );
 
             if ( params != null )
             {
                 int offset = 1;
-                for( String param : params )
+                for ( String param : params )
                 {
                     pstmt.setString( offset++, param );
                 }
@@ -141,19 +145,36 @@ public class SQLUtil
         }
         finally
         {
-            try { rs.close(); }
-            catch( Throwable e ) {}
+            try
+            {
+                rs.close();
+            }
+            catch ( Throwable e )
+            {
+            }
 
-            try { pstmt.close(); }
-            catch( Throwable e ) {}
-            
-            try { conn.close(); }
-            catch( Throwable e ) {}
+            try
+            {
+                pstmt.close();
+            }
+            catch ( Throwable e )
+            {
+            }
+
+            try
+            {
+                conn.close();
+            }
+            catch ( Throwable e )
+            {
+            }
         }
     }
 
     /**
-     * This method establishes the DB connection, executes the SQL statement and returns the modified row count
+     * This method establishes the DB connection, executes the SQL statement and
+     * returns the modified row count
+     * 
      * @param username
      * @param password
      * @param url
@@ -163,32 +184,23 @@ public class SQLUtil
      * @return Map
      * @throws Exception
      */
-    public static int execute( String username,
-                                 String password,
-                                 String url,
-                                 String driver,
-                                 String statement,
-                                 String[] params )
-        throws Exception
+    public static int execute( String username, String password, String url, String driver, String statement, String[] params ) throws Exception
     {
         int rtn = 0;
-        
+
         Connection conn = null;
         PreparedStatement pstmt = null;
 
         try
         {
-            conn = getConnection( username,
-                                  password,
-                                  url,
-                                  driver );
+            conn = getConnection( username, password, url, driver );
 
             pstmt = conn.prepareStatement( statement );
 
             if ( params != null )
             {
                 int offset = 1;
-                for( String param : params )
+                for ( String param : params )
                 {
                     pstmt.setString( offset++, param );
                 }
@@ -200,11 +212,21 @@ public class SQLUtil
         }
         finally
         {
-            try { pstmt.close(); }
-            catch( Throwable e ) {}
-            
-            try { conn.close(); }
-            catch( Throwable e ) {}
+            try
+            {
+                pstmt.close();
+            }
+            catch ( Throwable e )
+            {
+            }
+
+            try
+            {
+                conn.close();
+            }
+            catch ( Throwable e )
+            {
+            }
         }
 
         return rtn;
@@ -216,6 +238,7 @@ public class SQLUtil
 
     /**
      * Gets the DB connection
+     * 
      * @param username
      * @param password
      * @param url
@@ -223,43 +246,38 @@ public class SQLUtil
      * @return Connection
      * @throws Exception
      */
-    private static Connection getConnection( String username,
-                                             String password,
-                                             String url,
-                                             String driver )
-        throws Exception
+    private static Connection getConnection( String username, String password, String url, String driver ) throws Exception
     {
         Connection conn = null;
 
         Class.forName( driver );
 
-        conn = DriverManager.getConnection( url,
-                                            username,
-                                            password );
+        conn = DriverManager.getConnection( url, username, password );
 
         return conn;
     }
 
     /**
-     * This method converts the result set to a two dimensional array Object 
-     * @param rs - ResultSet
+     * This method converts the result set to a two dimensional array Object
+     * 
+     * @param rs
+     *            - ResultSet
      * @return Object[][]
      * @throws Exception
      */
-    private static Object[][] consume( ResultSet rs )
-        throws Exception
+    private static Object[][] consume( ResultSet rs ) throws Exception
     {
         ResultSetMetaData rsmd = rs.getMetaData();
         ArrayList results = new ArrayList();
         int colCount = rsmd.getColumnCount();
 
-        while( rs.next() )
+        while ( rs.next() )
         {
-            Object[] row = new Object[ colCount ];
+            Object[] row = new Object[colCount];
 
-            for( int i = 1; i <= colCount; ++i )
+            for ( int i = 1; i <= colCount; ++i )
             {
-                row[ i - 1 ] = rs.getObject( i );
+                row[i - 1] = rs.getObject( i );
             }
 
             results.add( row );
@@ -270,37 +288,39 @@ public class SQLUtil
 
     /**
      * This method converts result set to an array of Map
-     * @param rs - ResultSet
+     * 
+     * @param rs
+     *            - ResultSet
      * @return Map[]
      * @throws Exception
      */
-    private static Map<String,String>[] consume2( ResultSet rs )
-        throws Exception
+    private static Map<String, String>[] consume2( ResultSet rs ) throws Exception
     {
         ResultSetMetaData rsmd = rs.getMetaData();
-        List<Map<String,String>> results = new ArrayList<Map<String,String>>( 10 );
+        List<Map<String, String>> results = new ArrayList<Map<String, String>>( 10 );
         int colCount = rsmd.getColumnCount();
 
-        while( rs.next() )
+        while ( rs.next() )
         {
-            Map<String,String> row = new HashMap<String,String>();
+            Map<String, String> row = new HashMap<String, String>();
 
-            for( int i = 1; i <= colCount; ++i )
+            for ( int i = 1; i <= colCount; ++i )
             {
                 String val = String.valueOf( rs.getObject( i ) );
-                
+
                 row.put( rsmd.getColumnName( i ), val );
-                row.put( i+ "", val );
+                row.put( i + "", val );
             }
 
             results.add( row );
         }
 
         return toOutArray2( results );
-     }
+    }
 
     /**
      * Converts List of Array to a two dimensional object
+     * 
      * @param listOfArray
      * @param colCount
      * @return Object[][]
@@ -308,9 +328,9 @@ public class SQLUtil
     private static Object[][] toOutArray( List<String[]> listOfArray, int colCount )
     {
         int length = listOfArray.size();
-        Object[][] rtn = new Object[ length ][colCount ];
+        Object[][] rtn = new Object[length][colCount];
 
-        for( int i = 0; i < rtn.length; ++i )
+        for ( int i = 0; i < rtn.length; ++i )
         {
             rtn[i] = (Object[]) listOfArray.get( i );
         }
@@ -320,11 +340,12 @@ public class SQLUtil
 
     /**
      * Converts List of Maps to a Map array
+     * 
      * @param listOfMaps
      * @return Map[]
      */
-    private static Map<String,String>[] toOutArray2( List<Map<String,String>> listOfMaps )
+    private static Map<String, String>[] toOutArray2( List<Map<String, String>> listOfMaps )
     {
-        return (Map<String,String>[]) listOfMaps.toArray( EMPTY_MAP_ARRAY );
+        return (Map<String, String>[]) listOfMaps.toArray( EMPTY_MAP_ARRAY );
     }
 }

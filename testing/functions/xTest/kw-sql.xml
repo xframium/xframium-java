@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+  <function name="kw-sql" active="true">
+    <description>This will test the SQL keyword using an in-memory Derby database</description>
+    <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="CREATE TABLE XF_TEST ( ID INT, NAME VARCHAR(24), PASSWORD VARCHAR(24) )" />
+    </step>
+    <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0">
+      <parameter type="STATIC" value="INSERT INTO XF_TEST (ID, NAME, PASSWORD) VALUES ( 1, 'ALLEN', 'PASSWORD' )" />
+    </step>
+    <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0">
+      <parameter type="STATIC" value="INSERT INTO XF_TEST (ID, NAME, PASSWORD) VALUES ( 2, 'MATT', 'PASSWORD' )" />
+    </step>
+    <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0">
+      <parameter type="STATIC" value="INSERT INTO XF_TEST (ID, NAME, PASSWORD) VALUES ( 3, 'JOHN', 'PASS' )" />
+    </step>
+    <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0" context="XF_SQL_1">
+      <parameter type="STATIC" value="SELECT ID, NAME, PASSWORD FROM XF_TEST WHERE ID = 1" />
+    </step>
+    <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0">
+      <parameter type="CONTEXT" name="Value One" value="XF_SQL_1_NAME" />
+      <parameter type="STATIC" name="Value Two" value="ALLEN" />
+      <parameter type="STATIC" name="Operator" value="EQUALS" />
+    </step>
+    <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0" context="XF_SQL_2">
+      <parameter type="STATIC" value="SELECT ID, NAME, PASSWORD FROM XF_TEST WHERE ID = ?" />
+      <parameter type="STATIC" value="2" />
+    </step>
+    <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0">
+      <parameter type="CONTEXT" name="Value One" value="XF_SQL_2_NAME" />
+      <parameter type="STATIC" name="Value Two" value="MATT" />
+      <parameter type="STATIC" name="Operator" value="EQUALS" />
+    </step>
+    <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0" context="XF_SQL_3">
+      <parameter type="STATIC" value="SELECT ID, NAME, PASSWORD FROM XF_TEST WHERE ID = {id}">
+        <token type="STATIC" name="id" value="3" />
+      </parameter>
+    </step>
+    <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0">
+      <parameter type="CONTEXT" name="Value One" value="XF_SQL_3_NAME" />
+      <parameter type="STATIC" name="Value Two" value="JOHN" />
+      <parameter type="STATIC" name="Operator" value="EQUALS" />
+    </step>
+  </function>
+</suite>

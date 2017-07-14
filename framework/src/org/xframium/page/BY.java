@@ -64,7 +64,10 @@ public enum BY
 	/** The html. */
     PROP( 10, "PROP", "A simple proeprty based locator working only on attributes of a tag" ),
     
-    COMPLEX( 11, "COMPLEX", "A combination of multiple lookup types with additional attributes for fine grained control");
+    COMPLEX( 11, "COMPLEX", "A combination of multiple lookup types with additional attributes for fine grained control"),
+    
+    NATURAL( 12, "NATURAL", "A natural language expression engine for element identification")
+    ;
 	
 	/** The id. */
 	private int id;
@@ -118,6 +121,7 @@ public enum BY
 	    byList.add( HTML );
 	    byList.add( PROP );
 	    byList.add( COMPLEX );
+	    byList.add( NATURAL );
 	    return byList;
 	}
 	

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-
   <import fileName="./xTest/xFramium NATIVE Wifi.xml" />
   <import fileName="./xTest/xFramium NATIVE Airplane.xml" />
   <import fileName="./xTest/xFramium NATIVE Data.xml" />
@@ -8,7 +7,6 @@
   <import fileName="./xTest/xFramium NATIVE KeyWord Test.xml" />
   <import fileName="./xTest/xFramium NATIVE Notifications.xml" />
   <import fileName="./xTest/xFramium NATIVE Notifications Android.xml" />
-
   <import fileName="./xTest/xFramium 2nd Device.xml" />
   <import fileName="./xTest/xFramium GRID dumpstate.xml" />
   <import fileName="./xTest/xFramium Step Tags.xml" />
@@ -21,6 +19,7 @@
   <import fileName="./xTest/xFramium Dump State Historical Test.xml" />
   <import fileName="./xTest/xFramium Perfecto VISUAL Keyword Tests.xml" />
   <import fileName="./xTest/xFramium Flow Control.xml" />
+  <import fileName="./xTest/xFramium Natural Descriptors.xml" />
   <import fileName="./xTest/Alert Test.xml" />
   <import fileName="./xTest/Align Test.xml" />
   <import fileName="./xTest/Attribute Test.xml" />
@@ -55,7 +54,6 @@
   <import fileName="./xTest/Perfecto SET Test.xml" />
   <import fileName="./xTest/Comparison Test.xml" />
   <import fileName="./xTest/Checkbox Test.xml" />
-  <import fileName="./xTest/xFramium NATIVE Functions.xml" />
+  <import fileName="./xTest/SQL Test.xml" />
   <import fileName="../functions/functions-xTest.xml" />
- 
 </suite>

@@ -169,7 +169,8 @@ public class KWSBrowser extends AbstractKeyWordStep
                 case NAVIGATE:
                     if ( isTimed() )   
                         ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider().startTimer( (DeviceWebDriver) webDriver, null, executionContext);
-                    webDriver.navigate().to( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
+                    
+                    webDriver.get( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
                     break;
 
                 case MAXIMIZE:

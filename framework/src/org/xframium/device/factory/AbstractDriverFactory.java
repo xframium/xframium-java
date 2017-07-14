@@ -104,6 +104,7 @@ public abstract class AbstractDriverFactory implements DriverFactory
         
         DeviceWebDriver webDriver = _createDriver( currentDevice, useCloud );
 
+
         if ( webDriver != null )
         {
             try

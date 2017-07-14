@@ -184,8 +184,8 @@ public class CloudRegistry
 	        
 	        if ( !isListening( "127.0.0.1", 4444 ) )
 	        {
-	            SeleniumServer.main( new String[] { "-browserTimeout",  "0",  "-debug", "true", "-port", "4444", "-role", "standalone", "-timeout", "1800" } );
-	            
+	            _server = new SeleniumServer( new StandaloneConfiguration() );
+	            _server.boot();
 	        }
 	        else
 	            log.warn( "There is already an EMBEDDED server listening - we will use that instance" );

@@ -60,6 +60,10 @@ public class TestDriver
             
             for ( SuiteListener l : listenerList )
                 l.afterSuite( configReader.getSuiteName(), configFile, ExecutionContext.instance().getReportFolder() );
+            
+            
+            if ( CloudRegistry.instance().isEmbeddedGrid() )
+                CloudRegistry.instance().shutdown();
         }
         catch( Exception e )
         {

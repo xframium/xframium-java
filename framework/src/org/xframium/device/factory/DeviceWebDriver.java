@@ -48,6 +48,7 @@ import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.ContextAware;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
@@ -130,6 +131,9 @@ public class DeviceWebDriver
     private long pageLoadTimeout = 0;
     private DesiredCapabilities dC;
     
+    private double widthModifier;
+    private double heightModifier;
+    
     private boolean reportingElement = false;
     
     private DeviceOptions deviceOptions = null;
@@ -146,6 +150,16 @@ public class DeviceWebDriver
         this.artifactFolder = artifactFolder;
     }
     
+    public double getWidthModifier()
+    {
+        return widthModifier;
+    }
+
+    public double getHeightModifier()
+    {
+        return heightModifier;
+    }
+
     public String getValue( String valueDescriptor )
     {
         String[] valueMap = valueDescriptor.split( "\\." );
@@ -172,7 +186,7 @@ public class DeviceWebDriver
         
         return null;
     }
-    
+
     private Field getField( String fieldName, Class currentClass )
     {
         try
@@ -608,6 +622,34 @@ public class DeviceWebDriver
     public void get( String url )
     {
         webDriver.get( url );
+        
+        try
+        {
+            double outerHeight = Integer.parseInt( executeScript( "return window.outerHeight;" ) + "" );
+            double outerWidth = Integer.parseInt( executeScript( "return window.outerWidth;" ) + "" );
+            
+            Dimension windowSize = manage().window().getSize();
+            Object f = executeScript( "return window.outerHeight;" );
+            heightModifier = (double) windowSize.getHeight() / outerHeight;
+            widthModifier = (double) windowSize.getWidth() / outerWidth;
+            
+        }
+        catch( Exception e )
+        {
+            log.warn( "Could not extract height/width modifiers" );
+            heightModifier = 1;
+            widthModifier = 1;
+        }
+    }
+    
+    public int getModifiedX( int currentX )
+    {
+        return (int) (currentX * widthModifier);
+    }
+    
+    public int getModifiedY( int currentY )
+    {
+        return (int) (currentY * heightModifier);
     }
 
     /*

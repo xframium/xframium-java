@@ -409,6 +409,9 @@ public class SeleniumElement extends AbstractElement
 
             case XPATH:
                 return By.xpath( keyValue );
+                
+            case NATURAL:
+                return new ByNaturalLanguage( keyValue, getWebDriver() );
 
             case V_TEXT:
                 return new ByOCR( keyValue, getElementProperties(), getWebDriver() );
@@ -696,6 +699,16 @@ public class SeleniumElement extends AbstractElement
             return null;
     }
 
+    public int getModifiedX( int currentX )
+    {
+        return (int) (currentX * getWebDriver().getWidthModifier());
+    }
+    
+    public int getModifiedY( int currentY )
+    {
+        return (int) (currentY * getWebDriver().getHeightModifier());
+    }
+    
     /**
      * Gets the element.
      *
