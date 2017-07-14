@@ -62,11 +62,10 @@
     <artifact type="CONSOLE_LOG" />
   </driver>
 
-  <model provider="XML" siteName="xTest" fileName="objectRepository/pageElements.xml" />
-
-  <suite provider="XML" fileName="tests.xml" />
-
-  <data fileName="pageData/pageData.xml" />
+  <model provider="XML" fileName="./objectRepository/xTest/objectRepository.xml" siteName="xTest" />
+  <suite provider="XML" fileName="./tests/tests-xTest.xml" />
+  <dependencies afterTest="Report Test Success" />
+  <data provider="XML" fileName="./data/testData.xml" />
 </xFramium>
 
 
