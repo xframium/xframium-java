@@ -26,8 +26,8 @@
   <application provider="LOCAL" name="xFramium Testing" appPackage="" bundleId="" url="http://xframium.org/testing.html" iosInstall="" androidInstall="" />
 
   <devices provider="LOCAL">
-    <device name="Firefox Local" manufacturer="Mozilla" model="Firefox" active="true" availableDevices="1" os="Windows" browserName="firefox" osVersion="8.1" browserVersion="46" cloud="EMBEDDED" tagNames="testTag,goodClick" />
-    <device name="Chrome Local" manufacturer="Google" model="Chrome" active="true" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" cloud="EMBEDDED" >
+    <device name="Firefox Local" manufacturer="Mozilla" model="Firefox" active="true" availableDevices="1" os="Windows" browserName="firefox" osVersion="8.1" browserVersion="46" cloud="WIN" tagNames="testTag,goodClick" />
+    <device name="Chrome Local" manufacturer="Google" model="Chrome" active="true" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" cloud="WIN" >
       <objectCapability name="chrometest">
         <capabilities factoryName="ChromeOptions">
           <options name="arguments">--disable-extensions</options>
