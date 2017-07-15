@@ -34,7 +34,7 @@
         </capabilities>
       </objectCapability>
     </device>
-    <device name="Chrome SauceLabs" manufacturer="Google" model="Chrome" active="true" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" browserVersion="53" cloud="saucelabs" >
+    <device name="Chrome SauceLabs" manufacturer="Google" model="Chrome" active="false" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" browserVersion="53" cloud="saucelabs" >
       <objectCapability name="chrometest">
         <capabilities factoryName="ChromeOptions">
           <options name="arguments">--disable-extensions</options>
