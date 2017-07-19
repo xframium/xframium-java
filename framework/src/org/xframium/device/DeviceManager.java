@@ -25,7 +25,6 @@ package org.xframium.device;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,6 +43,8 @@ import org.xframium.device.ng.RunContainer.RunStatus;
 import org.xframium.device.ng.TestContainer;
 import org.xframium.device.ng.TestPackage;
 import org.xframium.device.property.PropertyAdapter;
+import org.xframium.exception.DeviceException;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordParameter;
@@ -55,7 +56,6 @@ import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextStep;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
-import com.google.common.collect.ImmutableSet;
 import com.xframium.serialization.SerializationManager;
 import com.xframium.serialization.json.ReflectionSerializer;
 
@@ -649,14 +649,9 @@ public class DeviceManager
             {
             }
 
-            if ( log.isDebugEnabled() )
-                log.debug( Thread.currentThread().getName() + ": Releasing unused Device Semaphore for " + currentDevice );
+            throw new DeviceException( "Could not connect to alternate device defined as " + deviceName );
         }
-        finally
-        {
-            if ( log.isDebugEnabled() )
-                log.debug( Thread.currentThread().getName() + ": Releasing Device Manager Lock" );
-        }
+
         return rtn;
     }
 
