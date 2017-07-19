@@ -576,6 +576,8 @@ public class DeviceManager
 
                 rtn = new ConnectedDevice( webDriver, currentDevice, "" );
             }
+            else
+                throw new IllegalStateException( "Coudl not connect" );
         }
         catch ( Exception e )
         {
@@ -630,6 +632,8 @@ public class DeviceManager
                 DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
                 rtn = new ConnectedDevice( webDriver, currentDevice, null );
             }
+            else
+                throw new IllegalStateException( "Coudl not connect" );
         }
         catch ( Exception e )
         {
