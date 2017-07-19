@@ -508,37 +508,6 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             else
                 DataManager.instance().setTests( testArray.toArray( new String[0] ) );
             
-            //
-            // add in support for multiple devices
-            //
-
-            PageManager.instance().setAlternateWebDriverSource( new SeleniumSessionManager()
-            {
-                public WebDriver getAltWebDriver( String name )
-                {
-                    WebDriver rtn = null;
-
-                    ConnectedDevice device = AbstractSeleniumTest.getConnectedDevice( name );
-
-                    if ( device != null )
-                    {
-                        rtn = device.getWebDriver();
-                    }
-
-                    return rtn;
-                }
-
-                public void registerAltWebDriver( String name, String deviceId )
-                {
-                    AbstractSeleniumTest.registerSecondaryDeviceOnName( name, deviceId );
-                }
-                
-                public void registerInactiveWebDriver(String name) 
-                {
-                    AbstractSeleniumTest.registerInactiveDeviceOnName( name );
-                }
-
-            } );
             
             if ( runTest && driverC.isEmbeddedServer() )
                 CloudRegistry.instance().startEmbeddedCloud();

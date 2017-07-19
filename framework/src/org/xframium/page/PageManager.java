@@ -98,9 +98,6 @@ public class PageManager
     /** The page cache. */
     private ThreadLocal<Map<Class, Page>> pageCache = new ThreadLocal<Map<Class, Page>>();
 
-    /** The alt driver source. */
-    private SeleniumSessionManager altDriverSource = null;
-
     private String[] tagNames;
 
     private Properties outputFormatter = new Properties();
@@ -567,27 +564,6 @@ public class PageManager
             log.warn( "No Execution ID could be located" );
 
         return executionId;
-    }
-
-    /**
-     * Gets the alternate web driver source.
-     *
-     * @return the alternate web driver source
-     */
-    public SeleniumSessionManager getAlternateWebDriverSource()
-    {
-        return altDriverSource;
-    }
-
-    /**
-     * Sets the alternate web driver source.
-     *
-     * @param src
-     *            the new alternate web driver source
-     */
-    public void setAlternateWebDriverSource( SeleniumSessionManager src )
-    {
-        altDriverSource = src;
     }
 
 }

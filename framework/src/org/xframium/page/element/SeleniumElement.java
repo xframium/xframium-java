@@ -1075,15 +1075,6 @@ public class SeleniumElement extends AbstractElement
             }
         }
     }
-
-    public static void main( String[] args )
-    {
-        System.out.println(ProtocolHandshake.class
-                .getProtectionDomain()
-                .getCodeSource()
-                .getLocation()
-                .toExternalForm());
-    }
     
     /*
      * (non-Javadoc)

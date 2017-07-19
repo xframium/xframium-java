@@ -49,6 +49,7 @@ import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.container.SuiteContainer;
 import org.xframium.content.ContentManager;
+import org.xframium.device.ConnectedDevice;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.FilteredException;
@@ -771,6 +772,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         long startTime = System.currentTimeMillis();
         boolean returnValue = false;
 
+        WebDriver alternateWebDriver = null;
         try
         {
             Exception stepException = null;
@@ -909,11 +911,23 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     log.info( Thread.currentThread().getName() + ": Executing Step " + name + "(" + getClass().getSimpleName() + ")" + (linkId != null ? " linked to " + linkId : "") );
     
                 
-                WebDriver altWebDriver = getAltWebDriver();
+                if ( getDevice() != null && !getDevice().trim().isEmpty() )
+                {
+                    //
+                    // Use an alternate device for this step
+                    //
+                    ConnectedDevice alternateDevice = executionContext.getDeviceMap().get( getDevice() );
+                    if ( alternateDevice != null )
+                        alternateWebDriver = alternateDevice.getWebDriver();
+                    else
+                        throw new ScriptConfigurationException( "The device [" + getDevice()  + "] was referenced but does not exist or has not been added using an ADD_DEVICE command" );
+                }
+                 
+                //WebDriver altWebDriver = getAltWebDriver();
                 //
                 // Listener integrations for individual steps
                 //
-                if ( !KeyWordDriver.instance().notifyBeforeStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, sC, executionContext ) )
+                if ( !KeyWordDriver.instance().notifyBeforeStep( alternateWebDriver != null ? alternateWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, sC, executionContext ) )
                 {
                     throw new FilteredException( "Test Step was skipped due to a failed step notification listener" );
                 }
@@ -930,7 +944,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 }
 
                 
-                returnValue = _executeStep( pageObject, ((altWebDriver != null) ? altWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext );
+                returnValue = _executeStep( pageObject, ((alternateWebDriver != null) ? alternateWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext );
 
                 //
                 // If threshold was specified then make sure we cam in under it
@@ -943,7 +957,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     }
                 }
 
-                KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, sC, executionContext );
+                KeyWordDriver.instance().notifyAfterStep( alternateWebDriver != null ? alternateWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, sC, executionContext );
 
             }
             catch ( KWSLoopBreak lb )
@@ -962,8 +976,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 returnValue = false;
                 try
                 {
-                    WebDriver altWebDriver = getAltWebDriver();
-                    KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, StepStatus.SUCCESS, sC, executionContext );
+                    KeyWordDriver.instance().notifyAfterStep( alternateWebDriver != null ? alternateWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, StepStatus.SUCCESS, sC, executionContext );
                 }
                 catch ( Exception e2 )
                 {
@@ -977,8 +990,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 returnValue = false;
                 try
                 {
-                    WebDriver altWebDriver = getAltWebDriver();
-                    KeyWordDriver.instance().notifyAfterStep( altWebDriver != null ? altWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, StepStatus.FAILURE, sC, executionContext );
+                    KeyWordDriver.instance().notifyAfterStep( alternateWebDriver != null ? alternateWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, StepStatus.FAILURE, sC, executionContext );
                 }
                 catch ( Exception e2 )
                 {
@@ -1912,33 +1924,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         this.waitTime = waitAfter;
     }
 
-    //
-    // Helpers
-    //
-
-    /**
-     * Gets the alt web driver.
-     *
-     * @return the alt web driver
-     */
-    private WebDriver getAltWebDriver()
-    {
-        WebDriver rtn = null;
-
-        String deviceName = getDevice();
-
-        if ( (PageManager.instance().getAlternateWebDriverSource() != null) && (deviceName != null) && (!"null".equals( deviceName )) )
-        {
-            rtn = PageManager.instance().getAlternateWebDriverSource().getAltWebDriver( deviceName );
-
-            if ( rtn == null )
-            {
-                throw new IllegalArgumentException( "Device: " + deviceName + " is not registered" );
-            }
-        }
-
-        return rtn;
-    }
 
     public void dumpState(WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, ExecutionContextTest executionContext )
     {

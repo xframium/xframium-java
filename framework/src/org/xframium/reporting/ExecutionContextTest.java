@@ -13,6 +13,7 @@ import java.util.Properties;
 import java.util.TreeMap;
 import org.openqa.selenium.Capabilities;
 import org.xframium.application.ApplicationDescriptor;
+import org.xframium.device.ConnectedDevice;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.exception.XFramiumException;
 import org.xframium.exception.XFramiumException.ExceptionType;
@@ -60,6 +61,8 @@ public class ExecutionContextTest
     private Map<String,?> dC = null;
     private KeyWordStep failedStep = null;
     
+    private Map<String,ConnectedDevice> deviceMap = new HashMap<String,ConnectedDevice>( 5 );
+    
     private String timerName;
     
     private Map<String,Integer[]> callMap = new HashMap<String,Integer[]>( 10 );
@@ -80,6 +83,17 @@ public class ExecutionContextTest
     
     
     
+    
+    public Map<String, ConnectedDevice> getDeviceMap()
+    {
+        return deviceMap;
+    }
+
+    public void setDeviceMap( Map<String, ConnectedDevice> deviceMap )
+    {
+        this.deviceMap = deviceMap;
+    }
+
     public KeyWordStep getFailedStep()
     {
         return failedStep;

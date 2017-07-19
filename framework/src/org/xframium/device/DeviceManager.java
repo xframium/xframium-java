@@ -547,64 +547,48 @@ public class DeviceManager
      *            the persona name
      * @return The next available device or null if no device are available
      */
-    public ConnectedDevice getUnconfiguredDevice( Method currentMethod, String testContext, String personaName, String deviceId )
+    public ConnectedDevice getUnconfiguredDevice( String deviceId )
     {
         ConnectedDevice rtn = null;
         Device currentDevice = NamedDataProvider.lookupDeviceById( deviceId, driverType );
 
-        String runKey = currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() + (testContext != null ? ("." + testContext) : "");
-        if ( personaName != null && !personaName.isEmpty() )
-            runKey = runKey + "." + personaName;
+        DeviceWebDriver webDriver = null;
+        try
+        {
+            if ( log.isDebugEnabled() )
+                log.debug( "Attempting to create WebDriver instance for " + currentDevice );
 
-        //if ( ((analyticsMap.get( currentDevice.getKey() ) == null) || (!analyticsMap.get( currentDevice.getKey() ).hasRun( runKey ))) && (!activeRuns.containsKey( currentDevice.getKey() + "." + runKey )) )
-        //{
-            DeviceWebDriver webDriver = null;
-            try
+
+            webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice );
+
+            if ( webDriver != null )
             {
                 if ( log.isDebugEnabled() )
-                    log.debug( "Attempting to create WebDriver instance for " + currentDevice );
+                    log.debug( "WebDriver Created - Creating Connected Device for " + currentDevice );
 
-                if ( personaName != null && !personaName.isEmpty() )
-                    currentDevice.addCapability( "windTunnelPersona", personaName, "STRING" );
+                DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
 
-                webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice );
-
-                if ( webDriver != null )
-                {
-                    if ( log.isDebugEnabled() )
-                        log.debug( "WebDriver Created - Creating Connected Device for " + currentDevice );
-
-                    DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
-
-                    //activeRuns.put( currentDevice.getKey() + "." + runKey, true );
-
-                    rtn = new ConnectedDevice( webDriver, currentDevice, personaName );
-                }
+                rtn = new ConnectedDevice( webDriver, currentDevice, "" );
             }
-            catch ( Exception e )
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error creating factory instance", e );
+            try
             {
-                log.error( "Error creating factory instance", e );
-                try
-                {
-                    webDriver.close();
-                }
-                catch ( Exception e2 )
-                {
-                }
-                try
-                {
-                    webDriver.quit();
-                }
-                catch ( Exception e2 )
-                {
-                }
+                webDriver.close();
             }
-        //}
-//        else
-//        {
-//            if ( log.isDebugEnabled() )
-//                log.debug( Thread.currentThread().getName() + ": Releasing unused Device Semaphore for " + currentDevice );
-//        }
+            catch ( Exception e2 )
+            {
+            }
+            try
+            {
+                webDriver.quit();
+            }
+            catch ( Exception e2 )
+            {
+            }
+        }
 
         return rtn;
     }

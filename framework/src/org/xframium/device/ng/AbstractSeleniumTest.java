@@ -78,11 +78,6 @@ public abstract class AbstractSeleniumTest
     /** The log. */
     protected static Log log = LogFactory.getLog( AbstractSeleniumTest.class );
 
-    /** The set of devices in use on this thread. */
-    private static ThreadLocal<HashMap<String, ConnectedDevice>> threadDevices = new ThreadLocal<HashMap<String, ConnectedDevice>>();
-
-    /** The test context running on this thread. */
-    private static ThreadLocal<TestContext> threadContext = new ThreadLocal<TestContext>();
     
     protected ThreadLocal<TestPackage> testPackageContainer = new ThreadLocal<TestPackage>();
     
@@ -486,12 +481,6 @@ public abstract class AbstractSeleniumTest
                     e.printStackTrace();
                 }
             }
-
-            TestContext ctx = new TestContext();
-            ctx.currentMethod = currentMethod;
-            ctx.testArgs = testArgs;
-
-            threadContext.set( ctx );
         }
         catch ( Exception e )
         {
@@ -499,48 +488,6 @@ public abstract class AbstractSeleniumTest
         }
     }
 
-    public static ConnectedDevice getConnectedDevice( String name )
-    {
-        HashMap<String, ConnectedDevice> map = getDeviceMap();
-
-        return map.get( name );
-    }
-
-    public static void registerSecondaryDeviceOnName( String name, String deviceId )
-    {
-        TestContext ctx = threadContext.get();
-
-        if ( ctx != null )
-        {
-            if ( log.isInfoEnabled() )
-                log.info( "Attempting to acquire device for " + ctx.currentMethod.getName() );
-
-            ConnectedDevice connectedDevice = DeviceManager.instance().getUnconfiguredDevice( ctx.currentMethod, ((TestName) ctx.testArgs[0]).getTestName(), ((TestName) ctx.testArgs[0]).getPersonaName(), deviceId );
-
-            if ( connectedDevice != null )
-            {
-                putConnectedDevice( name, connectedDevice );
-            }
-        }
-    }
-
-    public static void registerInactiveDeviceOnName( String name )
-    {
-        TestContext ctx = threadContext.get();
-
-        if ( ctx != null )
-        {
-            if ( log.isInfoEnabled() )
-                log.info( "Attempting to acquire Inactive device for " + ctx.currentMethod.getName() );
-
-            ConnectedDevice connectedDevice = DeviceManager.instance().getInactiveDevice( name );
-
-            if ( connectedDevice != null )
-            {
-                putConnectedDevice( name, connectedDevice );
-            }
-        }
-    }
 
     private String exceptionToString(Throwable t )
     {
@@ -571,8 +518,7 @@ public abstract class AbstractSeleniumTest
         {
             
             
-            HashMap<String, ConnectedDevice> map = getDevicesToCleanUp();
-            threadContext.set( null );
+            Map<String, ConnectedDevice> map = testPackage.getTestName().getTest().getDeviceMap();
             Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null);
 
             if ( testPackage.getConnectedDevice().getWebDriver() != null && testPackage.getConnectedDevice().getWebDriver().isConnected() )
@@ -841,39 +787,39 @@ public abstract class AbstractSeleniumTest
     // Helpers
     //
 
-    private static class TestContext
-    {
-        public Method currentMethod = null;
-        public Object[] testArgs = null;
-    }
+//    private static class TestContext
+//    {
+//        public Method currentMethod = null;
+//        public Object[] testArgs = null;
+//    }
 
-    private static void putConnectedDevice( String name, ConnectedDevice device )
-    {
-        HashMap<String, ConnectedDevice> map = getDeviceMap();
-
-        map.put( name, device );
-    }
-
-    private static HashMap<String, ConnectedDevice> getDeviceMap()
-    {
-        HashMap<String, ConnectedDevice> map = threadDevices.get();
-
-        if ( map == null )
-        {
-            map = new HashMap<String, ConnectedDevice>();
-
-            threadDevices.set( map );
-        }
-
-        return map;
-    }
-
-    private HashMap<String, ConnectedDevice> getDevicesToCleanUp()
-    {
-        HashMap<String, ConnectedDevice> map = threadDevices.get();
-
-        threadDevices.set( null );
-
-        return map;
-    }
+//    private static void putConnectedDevice( String name, ConnectedDevice device )
+//    {
+//        HashMap<String, ConnectedDevice> map = getDeviceMap();
+//
+//        map.put( name, device );
+//    }
+//
+//    private static HashMap<String, ConnectedDevice> getDeviceMap()
+//    {
+//        HashMap<String, ConnectedDevice> map = threadDevices.get();
+//
+//        if ( map == null )
+//        {
+//            map = new HashMap<String, ConnectedDevice>();
+//
+//            threadDevices.set( map );
+//        }
+//
+//        return map;
+//    }
+//
+//    private HashMap<String, ConnectedDevice> getDevicesToCleanUp()
+//    {
+//        HashMap<String, ConnectedDevice> map = threadDevices.get();
+//
+//        threadDevices.set( null );
+//
+//        return map;
+//    }
 }
