@@ -550,7 +550,13 @@ public class DeviceManager
     public ConnectedDevice getUnconfiguredDevice( String deviceId )
     {
         ConnectedDevice rtn = null;
+        
+        
+        
         Device currentDevice = NamedDataProvider.lookupDeviceById( deviceId, driverType );
+        
+        if ( log.isInfoEnabled() )
+            log.info( "Attempting to register an alternate device as " + deviceId + " using " + currentDevice );
 
         DeviceWebDriver webDriver = null;
         try
@@ -563,8 +569,8 @@ public class DeviceManager
 
             if ( webDriver != null )
             {
-                if ( log.isDebugEnabled() )
-                    log.debug( "WebDriver Created - Creating Connected Device for " + currentDevice );
+                if ( log.isInfoEnabled() )
+                    log.info( "Registered alternate connected device as " + deviceId );
 
                 DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
 
@@ -608,6 +614,9 @@ public class DeviceManager
         Device currentDevice = deviceMap.get( deviceName );
         DeviceWebDriver webDriver = null;
 
+        if ( log.isInfoEnabled() )
+            log.info( "Attempting to register an alternate device as " + deviceName + " using " + currentDevice );
+        
         try
         {
             webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice );
@@ -615,8 +624,8 @@ public class DeviceManager
             if ( webDriver != null )
             {
 
-                if ( log.isDebugEnabled() )
-                    log.debug( "WebDriver Created - Creating Connected Device for " + currentDevice );
+                if ( log.isInfoEnabled() )
+                    log.info( "Registered alternate connected device as " + deviceName );
 
                 DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
                 rtn = new ConnectedDevice( webDriver, currentDevice, null );
