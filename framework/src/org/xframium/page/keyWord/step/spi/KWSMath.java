@@ -96,12 +96,12 @@ public class KWSMath extends AbstractKeyWordStep
 	    {
 	        
 
-	        String currentParameter = getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "";
+	        String currentParameter = getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) + "";
 	        
 	        if ( getParameterList().get( i ).getValue().startsWith( "=" ) )
 	        {
 	            KeyWordParameter localParam = new KeyWordParameter( getParameterList().get( i ).getType(), getParameterList().get( i ).getValue().substring( 1 ), null, null );
-	            compareToString = getParameterValue( localParam, contextMap, dataMap ) + "";
+	            compareToString = getParameterValue( localParam, contextMap, dataMap, executionContext.getxFID() ) + "";
 	        }
 	        else
 	        {

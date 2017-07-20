@@ -84,7 +84,7 @@ public class KWSAttribute extends AbstractKeyWordStep
 		
 		if ( getParameterList().size() == 1 )
 		{
-		    String attributeName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+		    String attributeName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "";
 		    if ( attributeName.toLowerCase().startsWith( STYLE ) )
 		        attributeValue = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getStyle( attributeName.substring( STYLE.length() ) );
 		    else
@@ -93,13 +93,13 @@ public class KWSAttribute extends AbstractKeyWordStep
 		}
 		else
 		{
-		    String attributeName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+		    String attributeName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "";
             if ( attributeName.toLowerCase().startsWith( STYLE ) )
                 attributeValue = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getStyle( attributeName.substring( STYLE.length() ) );
             else
                 attributeValue = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getAttribute( attributeName );
             
-			compareTo = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
+			compareTo = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() );
 			if ( !attributeValue.equals( compareTo ) )
 				throw new ScriptException( "ATTRIBUTE Expected [" + compareTo + "] but found [" + attributeValue + "]" );
 		}

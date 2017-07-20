@@ -32,10 +32,11 @@ public class ThreadedFileHandler extends Handler
 {
     
     private static final String X_NAMESPACE = "org.xframium";
-    
-    public ThreadedFileHandler()
+    private String xFID;
+    public ThreadedFileHandler( String xFID )
     {
         LogFactory.getLog( X_NAMESPACE );
+        this.xFID = xFID;
     }
     
     public void configureHandler( Level baseLevel )
@@ -59,7 +60,7 @@ public class ThreadedFileHandler extends Handler
     public void publish( LogRecord record )
     {
         if ( isLoggable( record ) )
-            DeviceManager.instance().addLog( getFormatter().format( record ) );
+            DeviceManager.instance( xFID ).addLog( getFormatter().format( record ) );
         
     }
 

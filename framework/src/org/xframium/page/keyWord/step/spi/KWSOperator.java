@@ -60,14 +60,14 @@ public class KWSOperator extends AbstractKeyWordStep
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception
 	{
 	    boolean returnValue = false;
-	    OPERATOR operator = OPERATOR.valueOf( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
+	    OPERATOR operator = OPERATOR.valueOf( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
 	    switch( operator )
 	    {
 	        case AND:
 	            for ( int i=1; i<getParameterList().size(); i+=2 )
 	            {
-	                String valueOne = getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "";
-	                String valueTwo = getParameterValue( getParameterList().get( i + 1 ), contextMap, dataMap ) + "";
+	                String valueOne = getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) + "";
+	                String valueTwo = getParameterValue( getParameterList().get( i + 1 ), contextMap, dataMap, executionContext.getxFID() ) + "";
 	                if ( !valueOne.equals( valueTwo ) )
 	                    throw new ScriptException( "[" + valueOne + "] was not equal to [" + valueTwo + "]" );
 	                
@@ -78,8 +78,8 @@ public class KWSOperator extends AbstractKeyWordStep
 	            
 	            for ( int i=1; i<getParameterList().size(); i+=2 )
                 {
-                    String valueOne = getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "";
-                    String valueTwo = getParameterValue( getParameterList().get( i + 1 ), contextMap, dataMap ) + "";
+                    String valueOne = getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) + "";
+                    String valueTwo = getParameterValue( getParameterList().get( i + 1 ), contextMap, dataMap, executionContext.getxFID() ) + "";
                     returnValue = valueOne.equals( valueTwo );
                     if ( returnValue )
                         return true;
@@ -92,8 +92,8 @@ public class KWSOperator extends AbstractKeyWordStep
 	        case XOR:
                 for ( int i=1; i<getParameterList().size(); i+=2 )
                 {
-                    String valueOne = getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "";
-                    String valueTwo = getParameterValue( getParameterList().get( i + 1 ), contextMap, dataMap ) + "";
+                    String valueOne = getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) + "";
+                    String valueTwo = getParameterValue( getParameterList().get( i + 1 ), contextMap, dataMap, executionContext.getxFID() ) + "";
                     if ( valueOne.equals( valueTwo ) )
                     {
                         if ( returnValue )

@@ -64,5 +64,5 @@ public interface DataProvider
 	/**
 	 * Read data.
 	 */
-	public List<Device> readData();
+	public List<Device> readData( String xFID );
 }

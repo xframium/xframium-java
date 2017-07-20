@@ -34,6 +34,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
     private PageDataProvider pageDataProvider;
     private Section currentSection = Section.FEATURE;
     private Map<String,String> configProperties;
+    private String xFID;
     
     private enum Section
     {
@@ -43,10 +44,11 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
         OUTLINE,
     }
     
-    public XMLFormatter( PageDataProvider pageDataProvider, Map<String,String> configProperties )
+    public XMLFormatter( PageDataProvider pageDataProvider, Map<String,String> configProperties, String xFID )
     {
         this.pageDataProvider = pageDataProvider;
         this.configProperties = configProperties;
+        this.xFID = xFID;
     }
     
     @Override
@@ -79,9 +81,9 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
     public void eof()
     {
         for ( KeyWordTest xTest : scenarioList )
-            KeyWordDriver.instance().addTest( xTest );
+            KeyWordDriver.instance( xFID ).addTest( xTest );
         
-        KeyWordDriver.instance().addPage( PageManager.instance().getSiteName(), "bdd", KeyWordPage.class );
+        KeyWordDriver.instance( xFID ).addPage( PageManager.instance().getSiteName(), "bdd", KeyWordPage.class );
 
     }
 

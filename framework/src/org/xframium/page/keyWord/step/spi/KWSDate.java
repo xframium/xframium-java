@@ -46,7 +46,7 @@ public class KWSDate extends AbstractKeyWordStep
         try
         {
             // Verify if the parameter-1 values are correct
-            String switchType = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+            String switchType = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "";
             
             switch ( SwitchType.valueOf( switchType ) )
             {
@@ -54,8 +54,8 @@ public class KWSDate extends AbstractKeyWordStep
                     if ( getParameterList().size() < 3 )
                         throw new IllegalArgumentException( "Please provide the date value to be added or substracted from current date" );
                     
-                    dateFormat  = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";                    
-                    dateValue = new Integer(getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "").intValue();
+                    dateFormat  = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "";                    
+                    dateValue = new Integer(getParameterValue( getParameterList().get( 2 ), contextMap, dataMap, executionContext.getxFID() ) + "").intValue();
                     
                     dateFormatObj = new SimpleDateFormat(dateFormat);         		   
          		   	Calendar currentCal = Calendar.getInstance();
@@ -66,8 +66,8 @@ public class KWSDate extends AbstractKeyWordStep
                     if ( getParameterList().size() < 4 )
                         throw new IllegalArgumentException( "Please provide the date value to be added or substracted from current date" );
                     
-                    dateFormat  = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
-                    dateValue = new Integer(getParameterValue( getParameterList().get( 3 ), contextMap, dataMap ) + "").intValue();                    
+                    dateFormat  = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "";
+                    dateValue = new Integer(getParameterValue( getParameterList().get( 3 ), contextMap, dataMap, executionContext.getxFID() ) + "").intValue();                    
                     dateFormatObj = new SimpleDateFormat(dateFormat);         		   
          		    Calendar customCalendar = new GregorianCalendar(2013,0,31);         		   
          		    customCalendar.add(Calendar.DATE,dateValue);

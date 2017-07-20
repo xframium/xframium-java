@@ -32,6 +32,8 @@ public interface ContentProvider
 	 * Read page data.
 	 */
 	public void readContent();
+	public String getxFID();
+    public void setxFID( String xFID );
 	
 	
 }

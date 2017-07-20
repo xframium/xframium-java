@@ -106,7 +106,7 @@ public class KWSVisual extends AbstractKeyWordStep
 		Map<String, Object> params = new HashMap<>();
 		for (int i = 0; i < getParameterList().size(); i++) 
 		{
-			String currentParamStr = getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "";
+			String currentParamStr = getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) + "";
 			int splitIndex = currentParamStr.indexOf("=");
 			if (currentParamStr.length() < 3 || splitIndex < 1) continue;
 			String key = currentParamStr.substring(0, splitIndex);

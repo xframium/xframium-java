@@ -9,7 +9,7 @@ import org.openqa.selenium.support.ui.Select;
 public class ULSetMethod extends AbstractSetMethod
 {
     @Override
-    public boolean _set( WebElement webElement, WebDriver webDriver, String value, String setType )
+    public boolean _set( WebElement webElement, WebDriver webDriver, String value, String setType, String xFID )
     {
         List<WebElement> dropdownToggle = webElement.findElements( By.xpath( "./preceding-sibling::*[@uib-dropdown-toggle]" ) );
         if ( dropdownToggle.isEmpty() )

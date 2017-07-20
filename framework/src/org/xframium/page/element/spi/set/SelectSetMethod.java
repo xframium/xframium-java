@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.Select;
 public class SelectSetMethod extends AbstractSetMethod
 {
     @Override
-    public boolean _set( WebElement webElement, WebDriver webDriver, String value, String setType )
+    public boolean _set( WebElement webElement, WebDriver webDriver, String value, String setType, String xFID )
     {
         if ( setType.equals( "DEFAULT" ) )
         {

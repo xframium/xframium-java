@@ -55,6 +55,8 @@ public class XMLContentProvider extends AbstractContentProvider
 	/** The resource name. */
 	private String resourceName;
 	
+	
+	
 	/**
 	 * Instantiates a new XML element provider.
 	 *
@@ -125,7 +127,7 @@ public class XMLContentProvider extends AbstractContentProvider
 				throw new IllegalArgumentException( "A model must be specified at content/model" );
 			
 			String[] items = modelNode.getTextContent().split( "," );
-			ContentManager.instance().setMatrixData( items );
+			ContentManager.instance(xFID).setMatrixData( items );
 						
 			NodeList nodeList = getNodes( xmlDocument, "//content/record");
 			
@@ -146,9 +148,9 @@ public class XMLContentProvider extends AbstractContentProvider
 					values[ x ] = nodeList.item( i ).getAttributes().getNamedItem( items[ x ] ).getNodeValue();
 				}
 				
-				ContentData contentData = new DefaultContentData( keyName, values );
+				ContentData contentData = new DefaultContentData( keyName, values, ContentManager.instance( xFID ) );
 				
-				ContentManager.instance().addContentData( contentData );
+				ContentManager.instance( xFID ).addContentData( contentData );
 			}
 			
 		}

@@ -57,7 +57,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
      * .perfectoMobile.device.Device)
      */
     @Override
-    protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud )
+    protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID )
     {
         DeviceWebDriver webDriver = null;
         try
@@ -70,7 +70,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
                 dc = new DesiredCapabilities( "", "", Platform.ANY );
             
             
-            DeviceManager.instance().setCurrentCloud( useCloud );
+            DeviceManager.instance( xFID ).setCurrentCloud( useCloud );
             
             URL hubUrl = new URL( useCloud.getCloudUrl() );
 
@@ -103,10 +103,10 @@ public class WEBDriverFactory extends AbstractDriverFactory
             
             for ( String name : currentDevice.getCapabilities().keySet() )
 				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
-			if ( ApplicationRegistry.instance().getAUT() != null )
+			if ( ApplicationRegistry.instance( xFID ).getAUT() != null )
 			{
-                for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
-                	dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
+                for ( String name : ApplicationRegistry.instance( xFID ).getAUT().getCapabilities().keySet() )
+                	dc = setCapabilities(ApplicationRegistry.instance( xFID ).getAUT().getCapabilities().get( name ), dc, name);
 			}
 
 			if ( useCloud.isEmbedded() )
@@ -185,7 +185,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
             if ( log.isWarnEnabled() )
                 log.warn( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
             
-            webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice, dc );
+            webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance( xFID ).isCachingEnabled(), currentDevice, dc );
             webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 
             Capabilities caps = ((RemoteWebDriver) webDriver.getWebDriver()).getCapabilities();
@@ -198,13 +198,13 @@ public class WEBDriverFactory extends AbstractDriverFactory
             
             webDriver.setCloud( useCloud );
 
-            if ( ApplicationRegistry.instance().getAUT() != null && ApplicationRegistry.instance().getAUT().getUrl() != null && !ApplicationRegistry.instance().getAUT().getUrl().isEmpty() )
+            if ( ApplicationRegistry.instance( xFID ).getAUT() != null && ApplicationRegistry.instance( xFID ).getAUT().getUrl() != null && !ApplicationRegistry.instance( xFID ).getAUT().getUrl().isEmpty() )
             {
-                if ( ApplicationRegistry.instance().getAUT().isAutoStart() )
-                    useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver );
+                if ( ApplicationRegistry.instance( xFID ).getAUT().isAutoStart() )
+                    useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance( xFID ).getAUT().getName(), webDriver, xFID );
                 
-                webDriver.setAut( ApplicationRegistry.instance().getAUT() );
-                String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
+                webDriver.setAut( ApplicationRegistry.instance( xFID ).getAUT() );
+                String interruptString = ApplicationRegistry.instance( xFID ).getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance( xFID ).getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance( xFID ).getDeviceInterrupts();
                 webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );
             }
 
@@ -212,7 +212,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
         }
         catch ( Exception e )
         {
-            log.fatal( "Could not connect to " + currentDevice + " (" + e.getMessage() + ")" );
+            log.fatal( "Could not connect to " + currentDevice + " (" + e.getMessage() + ")", e );
             log.debug( e );
             if ( webDriver != null )
             {

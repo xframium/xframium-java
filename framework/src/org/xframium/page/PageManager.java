@@ -415,11 +415,7 @@ public class PageManager
      */
     public void addExecutionTiming( String executionId, String deviceName, String methodName, long runLength, StepStatus status, String description, int threshold )
     {
-        if ( isWindTunnelEnabled() )
-        {
-            PerfectoMobile.instance().windTunnel().addTimerReport( executionId, methodName, (int) runLength, ((status.equals( StepStatus.SUCCESS ) || (status.equals( StepStatus.FAILURE_IGNORED ))) ? Status.success : Status.failure), description,
-                    threshold );
-        }
+
     }
 
     /**

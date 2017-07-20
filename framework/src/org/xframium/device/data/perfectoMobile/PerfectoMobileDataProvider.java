@@ -75,12 +75,12 @@ public class PerfectoMobileDataProvider implements DataProvider
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.device.data.DataProvider#readData()
 	 */
-	public List<Device> readData()
+	public List<Device> readData( String xFID )
 	{
 	    List<Device> deviceList = new ArrayList<Device>( 10 );
 		try
 		{
-			URL deviceURL = new URL( "https://" + CloudRegistry.instance().getCloud().getHostName() + "/services/handsets?operation=list&user=" + CloudRegistry.instance().getCloud().getUserName() + "&password=" + CloudRegistry.instance().getCloud().getPassword() );
+			URL deviceURL = new URL( "https://" + CloudRegistry.instance(xFID).getCloud().getHostName() + "/services/handsets?operation=list&user=" + CloudRegistry.instance(xFID).getCloud().getUserName() + "&password=" + CloudRegistry.instance(xFID).getCloud().getPassword() );
 			
 			if ( log.isInfoEnabled() )
 				log.info( "Reading Devices from " + deviceURL.toString() );

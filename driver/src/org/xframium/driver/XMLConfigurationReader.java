@@ -1,4 +1,4 @@
- package org.xframium.driver;
+package org.xframium.driver;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,6 +39,7 @@ import org.xframium.device.SimpleDevice;
 import org.xframium.device.cloud.CSVCloudProvider;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudProvider;
+import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.cloud.EncryptedCloudProvider;
 import org.xframium.device.cloud.ExcelCloudProvider;
 import org.xframium.device.cloud.SQLCloudProvider;
@@ -541,11 +542,11 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         switch ( xRoot.getContent().getProvider() )
         {
             case "XML":
-                ContentManager.instance().setContentProvider( new XMLContentProvider( findFile( configFolder, new File( xRoot.getContent().getFileName() ) ) ) );
+                ContentManager.instance(xFID).setContentProvider( new XMLContentProvider( findFile( configFolder, new File( xRoot.getContent().getFileName() ) ) ) );
                 break;
 
             case "SQL":
-                ContentManager.instance().setContentProvider( new SQLContentProvider( configProperties.get( JDBC[0] ),
+                ContentManager.instance(xFID).setContentProvider( new SQLContentProvider( configProperties.get( JDBC[0] ),
                                                                                       configProperties.get( JDBC[1] ),
                                                                                       configProperties.get( JDBC[2] ),
                                                                                       configProperties.get( JDBC[3] ),
@@ -561,7 +562,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 for ( int i = 0; i < lookupString.length; i++ )
                     lookupColumns[i] = Integer.parseInt( lookupString[i].trim() );
 
-                ContentManager.instance().setContentProvider( new ExcelContentProvider( findFile( configFolder, new File( xRoot.getContent().getFileName() ) ), configProperties.get( "pageManagement.content.tabName" ), keyColumn, lookupColumns ) );
+                ContentManager.instance(xFID).setContentProvider( new ExcelContentProvider( findFile( configFolder, new File( xRoot.getContent().getFileName() ) ), configProperties.get( "pageManagement.content.tabName" ), keyColumn, lookupColumns ) );
                 break;
 
         }
@@ -576,24 +577,24 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         switch ( xRoot.getDevices().getProvider() )
         {
             case "PERFECTO_PLUGIN":
-                deviceList = new PerfectoMobilePluginProvider( configProperties.get( "deviceManagement.deviceList" ) + "", DriverType.valueOf( xRoot.getDriver().getType() ), configProperties.get( "deviceManagement.pluginType" ) ).readData();
+                deviceList = new PerfectoMobilePluginProvider( configProperties.get( "deviceManagement.deviceList" ) + "", DriverType.valueOf( xRoot.getDriver().getType() ), configProperties.get( "deviceManagement.pluginType" ) ).readData( xFID );
                 break;
             
             case "RESERVED":
-                deviceList = new PerfectoMobileDataProvider( new ReservedHandsetValidator(), DriverType.valueOf( xRoot.getDriver().getType() ) ).readData();
+                deviceList = new PerfectoMobileDataProvider( new ReservedHandsetValidator( CloudRegistry.instance( xFID ).getCloud().getUserName() ), DriverType.valueOf( xRoot.getDriver().getType() ) ).readData( xFID );
                 break;
 
             case "AVAILABLE":
-                deviceList = new PerfectoMobileDataProvider( new AvailableHandsetValidator(), DriverType.valueOf( xRoot.getDriver().getType() ) ).readData();
+                deviceList = new PerfectoMobileDataProvider( new AvailableHandsetValidator(), DriverType.valueOf( xRoot.getDriver().getType() ) ).readData( xFID );
                 break;
 
             case "CSV":
-                deviceList = new CSVDataProvider( findFile( configFolder, new File( xRoot.getDevices().getFileName() ) ), DriverType.valueOf( xRoot.getDriver().getType() ) ).readData();
+                deviceList = new CSVDataProvider( findFile( configFolder, new File( xRoot.getDevices().getFileName() ) ), DriverType.valueOf( xRoot.getDriver().getType() ) ).readData( xFID );
                 break;
 
             case "XML":
 
-                deviceList =  new XMLDataProvider( findFile( configFolder, new File( xRoot.getDevices().getFileName() ) ), DriverType.valueOf( xRoot.getDriver().getType() ) ).readData();
+                deviceList =  new XMLDataProvider( findFile( configFolder, new File( xRoot.getDevices().getFileName() ) ), DriverType.valueOf( xRoot.getDriver().getType() ) ).readData( xFID );
                 break;
 
             case "SQL":
@@ -603,11 +604,11 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                                                                       configProperties.get( JDBC[3] ),
                                                                       configProperties.get( OPT_DEVICE[0] ),
                                                                       configProperties.get( OPT_DEVICE[1] ),
-                                                                      DriverType.valueOf( xRoot.getDriver().getType())).readData();
+                                                                      DriverType.valueOf( xRoot.getDriver().getType())).readData( xFID );
                 break;
 
             case "EXCEL":
-                deviceList = new ExcelDataProvider( findFile( configFolder, new File( xRoot.getDevices().getFileName() ) ), configProperties.get( "deviceManagement.tabName" ), DriverType.valueOf( xRoot.getDriver().getType() ) ).readData();
+                deviceList = new ExcelDataProvider( findFile( configFolder, new File( xRoot.getDevices().getFileName() ) ), configProperties.get( "deviceManagement.tabName" ), DriverType.valueOf( xRoot.getDriver().getType() ) ).readData( xFID );
                 break;
 
             case "NAMED":
@@ -617,7 +618,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     System.err.println( "******* Property [deviceManagement.deviceList] was not specified" );
                     System.exit( -1 );
                 }
-                deviceList = new NamedDataProvider( devices, DriverType.valueOf( xRoot.getDriver().getType() ) ).readData();
+                deviceList = new NamedDataProvider( devices, DriverType.valueOf( xRoot.getDriver().getType() ) ).readData( xFID );
                 break;
                 
             case "LOCAL":
@@ -792,7 +793,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         {
             try
             {
-                DeviceManager.instance().registerPropertyAdapter( (PropertyAdapter) Class.forName( xProp.getClassName() ).newInstance() );
+                DeviceManager.instance( xFID ).registerPropertyAdapter( (PropertyAdapter) Class.forName( xProp.getClassName() ).newInstance() );
             }
             catch( Exception e )
             {
@@ -800,8 +801,8 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             }
         }
         
-        DeviceManager.instance().setConfigurationProperties( configProperties );
-        DeviceManager.instance().notifyPropertyAdapter( configProperties );
+        DeviceManager.instance(xFID ).setConfigurationProperties( configProperties );
+        DeviceManager.instance(xFID ).notifyPropertyAdapter( configProperties );
         return true;
     }
 
@@ -831,7 +832,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                         
                         if ( test.getType().equals( "BDD" ) )
                         {
-                            XMLFormatter xmlFormatter = new XMLFormatter( sC.getDataProvider(), configProperties );
+                            XMLFormatter xmlFormatter = new XMLFormatter( sC.getDataProvider(), configProperties, xFID );
                             Parser bddParser = new Parser( xmlFormatter );
                             bddParser.parse( test.getDescription().getValue(), "", 0 );
                             sC.setDataProvider( xmlFormatter );

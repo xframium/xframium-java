@@ -100,8 +100,8 @@ public class KWSCheckColor extends AbstractKeyWordStep
 			throw new ScriptConfigurationException( "Verify Color must have 3 parameters - Resolution, location(x, y) and color" );
 		
 		long fileKey = System.currentTimeMillis();
-		Resolution resolution = Resolution.valueOf( ( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" ).toLowerCase() );
-		Point location = createPoint( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" );
+		Resolution resolution = Resolution.valueOf( ( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" ).toLowerCase() );
+		Point location = createPoint( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
 		int percentDeviation = 0;
 		String colorCode = null;
 		
@@ -109,8 +109,8 @@ public class KWSCheckColor extends AbstractKeyWordStep
 		{
 			if ( log.isInfoEnabled() )
 				log.info( "Extracted information for color comparison" );
-			colorCode = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "";
-			percentDeviation = Integer.parseInt( getParameterValue( getParameterList().get( 3 ), contextMap, dataMap ) + "" );
+			colorCode = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap, executionContext.getxFID() ) + "";
+			percentDeviation = Integer.parseInt( getParameterValue( getParameterList().get( 3 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
 		}
 		
 		BufferedImage elementValue = (BufferedImage)getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getImage( resolution );

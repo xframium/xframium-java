@@ -15,7 +15,7 @@ public class TimingArtifact extends AbstractArtifact
     }
     
     @Override
-    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver )
+    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver, String xFID )
     {
         InputStream inputStream = null;
         try

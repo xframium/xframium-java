@@ -107,7 +107,7 @@ public class KWSWindow extends AbstractKeyWordStep
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception
 	{
 		// Verify if the parameter-1 values are correct
-		String switchType = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+		String switchType = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "";
 		String switchExpValue = "";
 
 		switch ( SwitchType.valueOf( switchType ) )
@@ -115,17 +115,17 @@ public class KWSWindow extends AbstractKeyWordStep
 		case BY_WINTITLE:
 			if ( getParameterList().size() < 2 )
 				throw new ScriptConfigurationException( "Please provide the title for the window as a parameter" );
-			switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+			switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "";
 			return verifySwitchWindow( webDriver, switchType, switchExpValue );
 		case BY_WINURL:
 			if ( getParameterList().size() < 2 )
 				throw new ScriptConfigurationException( "Please provide the URL for the window as a parameter" );
-			switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+			switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "";
 			return verifySwitchWindow( webDriver, switchType, switchExpValue );
 		case BY_FRAME:
 			if ( getParameterList().size() < 2 )
 				throw new ScriptConfigurationException( "Please provide the Frame id for the Frame as a parameter" );
-			switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+			switchExpValue = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "";
 			webDriver.switchTo().frame( switchExpValue );
 			break;
 		case BY_NUMBER:
@@ -134,7 +134,7 @@ public class KWSWindow extends AbstractKeyWordStep
 			{
 				if ( getParameterList().size() < 2 )
                     throw new Exception();
-				frameNumber = Integer.parseInt(getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "");
+				frameNumber = Integer.parseInt(getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "");
 			}
 			catch (IllegalArgumentException e)
 			{
@@ -175,7 +175,7 @@ public class KWSWindow extends AbstractKeyWordStep
 		    String pageTitle = webDriver.getTitle();
 		    if ( getParameterList().size() > 1 )
 		    {
-		        String compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+		        String compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "";
 		        if ( !compareTo.equals( pageTitle ) )
 		        {
 		            throw new ScriptException( "Expected Title of [" + compareTo + "] but received [" + pageTitle + "]" );
@@ -194,7 +194,7 @@ public class KWSWindow extends AbstractKeyWordStep
             String currentUrl = webDriver.getCurrentUrl();
             if ( getParameterList().size() > 1 )
             {
-                String compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+                String compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "";
                 if ( !compareTo.equals( currentUrl ) )
                 {
                     throw new ScriptException( "Expected Title of [" + compareTo + "] but received [" + currentUrl + "]" );

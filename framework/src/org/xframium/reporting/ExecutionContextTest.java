@@ -35,6 +35,7 @@ public class ExecutionContextTest
         SKIPPED;
     }
 
+    private String xFID = null;
     private ExceptionType exceptionType;
     private KeyWordTest test;
     private String testName;
@@ -84,6 +85,16 @@ public class ExecutionContextTest
     
     
     
+    public String getxFID()
+    {
+        return xFID;
+    }
+
+    public void setxFID( String xFID )
+    {
+        this.xFID = xFID;
+    }
+
     public Map<String, ConnectedDevice> getDeviceMap()
     {
         return deviceMap;
@@ -433,7 +444,7 @@ public class ExecutionContextTest
         
         for ( KeyWordParameter p : step.getParameterList() )
         {
-            currentStep.addParameterValue( step.getParameterValue( p, contextMap, dataMap ) + "" );
+            currentStep.addParameterValue( step.getParameterValue( p, contextMap, dataMap, getxFID() ) + "" );
         }
     }
 

@@ -336,11 +336,11 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             {
                 case "XML":
                     validateProperties( configProperties, CONTENT );
-                    ContentManager.instance().setContentProvider( new XMLContentProvider( findFile( configFolder, new File( configProperties.get( CONTENT[1] ) ) ) ) );
+                    ContentManager.instance(xFID).setContentProvider( new XMLContentProvider( findFile( configFolder, new File( configProperties.get( CONTENT[1] ) ) ) ) );
                     break;
 
                 case "SQL":
-                    ContentManager.instance().setContentProvider( new SQLContentProvider( configProperties.get( JDBC[0] ),
+                    ContentManager.instance(xFID).setContentProvider( new SQLContentProvider( configProperties.get( JDBC[0] ),
                                                                                           configProperties.get( JDBC[1] ),
                                                                                           configProperties.get( JDBC[2] ),
                                                                                           configProperties.get( JDBC[3] ),
@@ -357,7 +357,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                     for ( int i = 0; i < lookupString.length; i++ )
                         lookupColumns[i] = Integer.parseInt( lookupString[i].trim() );
 
-                    ContentManager.instance().setContentProvider( new ExcelContentProvider( findFile( configFolder, new File( configProperties.get( CONTENT[1] ) ) ), configProperties.get( "pageManagement.content.tabName" ), keyColumn, lookupColumns ) );
+                    ContentManager.instance(xFID).setContentProvider( new ExcelContentProvider( findFile( configFolder, new File( configProperties.get( CONTENT[1] ) ) ), configProperties.get( "pageManagement.content.tabName" ), keyColumn, lookupColumns ) );
                     break;
 
             }
@@ -374,17 +374,17 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
         switch ( (configProperties.get( DEVICE[0] )).toUpperCase() )
         {
             case "PERFECTO_PLUGIN":
-                deviceList = new PerfectoMobilePluginProvider( configProperties.get( "deviceManagement.deviceList" ) + "", DriverType.valueOf( configProperties.get( DEVICE[1] ) ), configProperties.get( "deviceManagement.pluginType" ) ).readData();
+                deviceList = new PerfectoMobilePluginProvider( configProperties.get( "deviceManagement.deviceList" ) + "", DriverType.valueOf( configProperties.get( DEVICE[1] ) ), configProperties.get( "deviceManagement.pluginType" ) ).readData( xFID );
                 break;
             
             case "RESERVED":
                 validateProperties( configProperties, DEVICE );
-                deviceList = new PerfectoMobileDataProvider( new ReservedHandsetValidator(), DriverType.valueOf( configProperties.get( DEVICE[1] ) ) ).readData();
+                deviceList = new PerfectoMobileDataProvider( new ReservedHandsetValidator( xFID ), DriverType.valueOf( configProperties.get( DEVICE[1] ) ) ).readData( xFID );
                 break;
 
             case "AVAILABLE":
                 validateProperties( configProperties, DEVICE );
-                deviceList = new PerfectoMobileDataProvider( new AvailableHandsetValidator(), DriverType.valueOf( configProperties.get( DEVICE[1] ) ) ).readData();
+                deviceList = new PerfectoMobileDataProvider( new AvailableHandsetValidator(), DriverType.valueOf( configProperties.get( DEVICE[1] ) ) ).readData( xFID );
                 break;
 
             case "CSV":
@@ -395,7 +395,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                     System.err.println( "******* Property [deviceManagement.fileName] was not specified" );
                     System.exit( -1 );
                 }
-                deviceList = new CSVDataProvider( findFile( configFolder, new File( fileName ) ), DriverType.valueOf( configProperties.get( DEVICE[1] ) ) ).readData();
+                deviceList = new CSVDataProvider( findFile( configFolder, new File( fileName ) ), DriverType.valueOf( configProperties.get( DEVICE[1] ) ) ).readData( xFID );
                 break;
 
             case "XML":
@@ -406,7 +406,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                     System.err.println( "******* Property [deviceManagement.fileName] was not specified" );
                     System.exit( -1 );
                 }
-                deviceList = new XMLDataProvider( findFile( configFolder, new File( xmlFileName ) ), DriverType.valueOf( configProperties.get( DEVICE[1] ) ) ).readData();
+                deviceList = new XMLDataProvider( findFile( configFolder, new File( xmlFileName ) ), DriverType.valueOf( configProperties.get( DEVICE[1] ) ) ).readData( xFID );
                 break;
 
             case "SQL":
@@ -416,7 +416,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                                                                       configProperties.get( JDBC[3] ),
                                                                       configProperties.get( OPT_DEVICE[0] ),
                                                                       configProperties.get( OPT_DEVICE[1] ),
-                                                                      DriverType.valueOf( configProperties.get( DEVICE[1] ))).readData();
+                                                                      DriverType.valueOf( configProperties.get( DEVICE[1] ))).readData( xFID );
                 break;
 
             case "EXCEL":
@@ -424,7 +424,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                 validateProperties( configProperties, new String[] { "deviceManagement.tabName", "deviceManagement.fileName" } );
                 String excelFile = configProperties.get( "deviceManagement.fileName" );
 
-                deviceList = new ExcelDataProvider( findFile( configFolder, new File( excelFile ) ), configProperties.get( "deviceManagement.tabName" ), DriverType.valueOf( configProperties.get( DEVICE[1] ) ) ).readData();
+                deviceList = new ExcelDataProvider( findFile( configFolder, new File( excelFile ) ), configProperties.get( "deviceManagement.tabName" ), DriverType.valueOf( configProperties.get( DEVICE[1] ) ) ).readData( xFID );
                 break;
 
             case "NAMED":
@@ -435,7 +435,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
                     System.err.println( "******* Property [deviceManagement.deviceList] was not specified" );
                     System.exit( -1 );
                 }
-                deviceList = new NamedDataProvider( devices, DriverType.valueOf( configProperties.get( DEVICE[1] ) ) ).readData();
+                deviceList = new NamedDataProvider( devices, DriverType.valueOf( configProperties.get( DEVICE[1] ) ) ).readData( xFID );
                 break;
 
             default:
@@ -490,7 +490,7 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             {
                 try
                 {
-                    DeviceManager.instance().registerPropertyAdapter( (PropertyAdapter) Class.forName( adapterName ).newInstance() );
+                    DeviceManager.instance(xFID ).registerPropertyAdapter( (PropertyAdapter) Class.forName( adapterName ).newInstance() );
                 }
                 catch ( Exception e )
                 {
@@ -500,8 +500,8 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
             }
         }
 
-        DeviceManager.instance().setConfigurationProperties( configProperties );
-        DeviceManager.instance().notifyPropertyAdapter( configProperties );
+        DeviceManager.instance(xFID ).setConfigurationProperties( configProperties );
+        DeviceManager.instance(xFID ).notifyPropertyAdapter( configProperties );
         return true;
     }
 

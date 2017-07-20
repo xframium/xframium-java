@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xframium.page.keyWord.KeyWordDriver;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -34,16 +35,22 @@ public class ApplicationRegistry
 {
 	
 	/** The singleton. */
-	private static ApplicationRegistry singleton = new ApplicationRegistry();
+	private static Map<String,ApplicationRegistry> singleton = new HashMap<String,ApplicationRegistry>(5);
 
 	/**
 	 * Instance.
 	 *
 	 * @return the application registry
 	 */
-	public static ApplicationRegistry instance()
+	public static ApplicationRegistry instance( String xFID )
 	{
-		return singleton;
+	    if ( singleton.containsKey( xFID ) )
+            return singleton.get( xFID );
+        else
+        {
+            singleton.put( xFID, new ApplicationRegistry() );
+            return singleton.get( xFID );
+        }
 	}
 
 	/**

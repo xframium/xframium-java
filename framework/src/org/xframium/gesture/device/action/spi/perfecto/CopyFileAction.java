@@ -21,13 +21,12 @@
 package org.xframium.gesture.device.action.spi.perfecto;
 
 import java.util.List;
-
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
-
 import com.beust.jcommander.ParameterException;
 
 // TODO: Auto-generated Javadoc
@@ -57,7 +56,7 @@ public class CopyFileAction extends AbstractDefaultAction implements DeviceActio
 
 		// Copy File from repository to device
 		try {
-			PerfectoMobile.instance().device().putFile(executionId, deviceName, repFilePath, deviceFilePath);
+			PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).device().putFile(executionId, deviceName, repFilePath, deviceFilePath);
 		} catch (Exception e) {
 			throw new ScriptConfigurationException("Unable to copy the file from repository path - " + repFilePath
 					+ " to the device path - " + deviceFilePath);

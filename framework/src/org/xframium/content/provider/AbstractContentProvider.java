@@ -32,6 +32,17 @@ public abstract class AbstractContentProvider implements ContentProvider
 	
 	/** The log. */
 	protected Log log = LogFactory.getLog(ContentProvider.class);
+	protected String xFID;
+    public String getxFID()
+    {
+        return xFID;
+    }
+    public void setxFID( String xFID )
+    {
+        this.xFID = xFID;
+    }
+	
+	
 	
 
 

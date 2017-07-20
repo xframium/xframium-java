@@ -96,17 +96,17 @@ public class KWSApplication extends AbstractKeyWordStep
         {
 	        case CLOSE:
 	            ( (DeviceWebDriver) webDriver ).setAut( null );
-	            return cP.closeApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap ) + "", (DeviceWebDriver)webDriver );
+	            return cP.closeApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver );
 	            
 	        case INSTALL:
-	            return cP.installApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap ) + "", (DeviceWebDriver)webDriver, Boolean.parseBoolean( getParameterValue( getParameter( "Instrument" ), contextMap, dataMap ) + "" ) );
+	            return cP.installApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver, Boolean.parseBoolean( getParameterValue( getParameter( "Instrument" ), contextMap, dataMap, executionContext.getxFID() ) + "" ) );
 	            
 	        case OPEN:
 	            if ( isTimed() )
                     cP.startTimer( (DeviceWebDriver) webDriver, null, executionContext );
-	            if ( cP.openApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap ) + "", (DeviceWebDriver)webDriver ) )
+	            if ( cP.openApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver, ((DeviceWebDriver)webDriver ).getxFID() ) )
 	            {
-	                ( (DeviceWebDriver) webDriver ).setAut( ApplicationRegistry.instance().getApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap ) + "" ) );
+	                ( (DeviceWebDriver) webDriver ).setAut( ApplicationRegistry.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).getApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "" ) );
 	                return true;
 	            }
 	            else 
@@ -114,7 +114,7 @@ public class KWSApplication extends AbstractKeyWordStep
 	             
 	            
 	        case UNINSTALL:
-	            return cP.uninstallApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap ) + "", (DeviceWebDriver)webDriver );
+	            return cP.uninstallApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver );
         }
 		
 		return false;

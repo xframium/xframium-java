@@ -94,7 +94,7 @@ public class ExcelDataProvider implements DataProvider
 	 * 
 	 * @see com.perfectoMobile.device.data.DataProvider#readData()
 	 */
-	public List<Device> readData()
+	public List<Device> readData( String xFID )
 	{
 		if (fileName == null)
 		{

@@ -73,8 +73,21 @@ public class SuiteContainer
     private List<KeyWordTest> functionList = new ArrayList<KeyWordTest>( 10 );
     private PageDataProvider dataProvider;
     private Map<String, List<KeyWordTest>> tagMap = new HashMap<String, List<KeyWordTest>>( 10 );
+    private String xFID;
 
     private String siteName;
+
+    
+    
+    public String getxFID()
+    {
+        return xFID;
+    }
+
+    public void setxFID( String xFID )
+    {
+        this.xFID = xFID;
+    }
 
     public String getSiteName()
     {

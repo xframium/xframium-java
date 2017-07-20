@@ -22,6 +22,7 @@ package org.xframium.gesture.device.action.spi.perfecto;
 
 import java.util.List;
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
@@ -46,7 +47,7 @@ public class ConfigureNetworkAction extends AbstractDefaultAction implements Dev
 		String executionId = getExecutionId( webDriver );
 		String deviceName = getDeviceName( webDriver );
 		
-		Handset localDevice = PerfectoMobile.instance().devices().getDevice( deviceName );
+		Handset localDevice = PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).devices().getDevice( deviceName );
 		
 		if ( localDevice.getOs().toLowerCase().equals( "ios" ) )
 			throw new ScriptConfigurationException( "Configure network option is not supported for Perfecto IOS platform...");
@@ -87,11 +88,11 @@ public class ConfigureNetworkAction extends AbstractDefaultAction implements Dev
 		Execution confNetExe = null;
 		if (dataMode.equals("")){			
 			// For Android OS version greater than 4.4, device data cannot be set 
-			confNetExe = PerfectoMobile.instance().windTunnel().configureNetwork(executionId, deviceName, wifiMode,airplaneMode);
+			confNetExe = PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).windTunnel().configureNetwork(executionId, deviceName, wifiMode,airplaneMode);
 			execStatus = confNetExe.getStatus();
 		}else{
 			// For Android OS version 2.3 to 4.4 you need to supply wifi, data and airplane mode
-			confNetExe = PerfectoMobile.instance().windTunnel().configureNetwork(executionId, deviceName, wifiMode,dataMode,airplaneMode);
+			confNetExe = PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).windTunnel().configureNetwork(executionId, deviceName, wifiMode,dataMode,airplaneMode);
 			execStatus = confNetExe.getStatus();
 		}	
 		

@@ -110,12 +110,12 @@ public class KWSAlert extends AbstractKeyWordStep
     		        break;
     		        
     		    case SEND_KEYS:
-    		        currentAlert.sendKeys( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
+    		        currentAlert.sendKeys( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
     		        currentAlert.accept();
     		        break;
 
     		    case AUTHENTICATE:
-    		        currentAlert.authenticateUsing( new UserAndPassword(  getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "",  getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" ) );
+    		        currentAlert.authenticateUsing( new UserAndPassword(  getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "",  getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "" ) );
                     break;
     		        
     		    default:

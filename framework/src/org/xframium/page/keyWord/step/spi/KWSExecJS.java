@@ -55,7 +55,7 @@ public class KWSExecJS extends AbstractKeyWordStep
                 
         if ( getParameterList().size() == 1 )
         {
-            script = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
+            script = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() );
             if ( !( script instanceof String ) )
                 throw new ScriptConfigurationException( "Script value must be of type String" );
         }

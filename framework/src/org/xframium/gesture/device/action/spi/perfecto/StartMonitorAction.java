@@ -45,9 +45,9 @@ public class StartMonitorAction extends AbstractDefaultAction implements DeviceA
     		String executionId = getExecutionId( webDriver );
     		String deviceName = getDeviceName( webDriver );
     		if ( parameterList !=null && parameterList.size() > 0 )
-    		    PerfectoMobile.instance().windTunnel().startVitals( executionId, deviceName, parameterList.get( 0 ) + "", 5 );
+    		    PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).windTunnel().startVitals( executionId, deviceName, parameterList.get( 0 ) + "", 5 );
     		else
-    		    PerfectoMobile.instance().windTunnel().startVitals( executionId, deviceName, "Device", 5 );
+    		    PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).windTunnel().startVitals( executionId, deviceName, "Device", 5 );
 	    }
 		return true;
 	}

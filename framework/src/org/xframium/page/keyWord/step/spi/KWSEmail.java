@@ -79,7 +79,7 @@ public class KWSEmail extends AbstractKeyWordStep
             SendEmailProvider sendProvider = null;
             KeyWordParameter providerName = getParameter( PROVIDER );
             if ( providerName != null )
-                sendProvider = EmailProviderFactory.instance().getSendProvider( getParameterValue( providerName, contextMap, dataMap ) + "" );
+                sendProvider = EmailProviderFactory.instance().getSendProvider( getParameterValue( providerName, contextMap, dataMap, executionContext.getxFID() ) + "" );
             else
                 sendProvider = EmailProviderFactory.instance().getSendProvider();
             
@@ -87,17 +87,17 @@ public class KWSEmail extends AbstractKeyWordStep
             for ( KeyWordParameter kP : getParameterList() )
             {
                 if ( !PROVIDER.equals( kP.getName() ) && !FROM.equals( kP.getName() ) && !TO.equals( kP.getName() ) && !SUBJECT.equals( kP.getName() ) && !BODY.equals( kP.getName() ) )
-                    propertyMap.put( kP.getName(), getParameterValue( kP, contextMap, dataMap ) + "" );
+                    propertyMap.put( kP.getName(), getParameterValue( kP, contextMap, dataMap, executionContext.getxFID() ) + "" );
             }
             
-            return sendProvider.sendEmail( getParameterValue( getParameter( FROM ), contextMap, dataMap ) + "", (getParameterValue( getParameter( TO ), contextMap, dataMap ) + "").split(","), getParameterValue( getParameter( SUBJECT ), contextMap, dataMap ) + "", getParameterValue( getParameter( BODY ), contextMap, dataMap ) + "", propertyMap );
+            return sendProvider.sendEmail( getParameterValue( getParameter( FROM ), contextMap, dataMap, executionContext.getxFID() ) + "", (getParameterValue( getParameter( TO ), contextMap, dataMap, executionContext.getxFID() ) + "").split(","), getParameterValue( getParameter( SUBJECT ), contextMap, dataMap, executionContext.getxFID() ) + "", getParameterValue( getParameter( BODY ), contextMap, dataMap, executionContext.getxFID() ) + "", propertyMap );
         }
         else if ( getName().toUpperCase().equals( "RECEIVE" ) )
         {
             ReceiveEmailProvider receiveProvider = null;
             KeyWordParameter providerName = getParameter( PROVIDER );
             if ( providerName != null )
-                receiveProvider = EmailProviderFactory.instance().getReceiveProvider( getParameterValue( providerName, contextMap, dataMap ) + "" );
+                receiveProvider = EmailProviderFactory.instance().getReceiveProvider( getParameterValue( providerName, contextMap, dataMap, executionContext.getxFID() ) + "" );
             else
                 receiveProvider = EmailProviderFactory.instance().getReceiveProvider();
             List<MessageFilter> messageFilter = new ArrayList<MessageFilter>( 10 );
@@ -108,27 +108,27 @@ public class KWSEmail extends AbstractKeyWordStep
                 {
                     if ( FILTER_AGE.equals( kP.getName() ) )
                     {
-                        messageFilter.add( new AgeMessageFilter( Integer.parseInt( getParameterValue( kP, contextMap, dataMap ) + "" ) ) );
+                        messageFilter.add( new AgeMessageFilter( Integer.parseInt( getParameterValue( kP, contextMap, dataMap, executionContext.getxFID() ) + "" ) ) );
                         continue;
                     }
                     
                     if ( FILTER_FROM.equals( kP.getName() ) )
                     {
-                        messageFilter.add( new FromMessageFilter( getParameterValue( kP, contextMap, dataMap ) + "" ) );
+                        messageFilter.add( new FromMessageFilter( getParameterValue( kP, contextMap, dataMap, executionContext.getxFID() ) + "" ) );
                         continue;
                     }
                     
                     if ( FILTER_SUBJECT.equals( kP.getName() ) )
                     {
-                        messageFilter.add( new SubjectMessageFilter( getParameterValue( kP, contextMap, dataMap ) + "" ) );
+                        messageFilter.add( new SubjectMessageFilter( getParameterValue( kP, contextMap, dataMap, executionContext.getxFID() ) + "" ) );
                         continue;
                     }
                     
-                    propertyMap.put( kP.getName(), getParameterValue( kP, contextMap, dataMap ) + "" );
+                    propertyMap.put( kP.getName(), getParameterValue( kP, contextMap, dataMap, executionContext.getxFID() ) + "" );
                 }
             }
                         
-            MessageWrapper messageWrapper = receiveProvider.getEmail( getParameterValue( getParameter( HOST ), contextMap, dataMap ) + "", messageFilter.toArray( new MessageFilter[ 0 ] ), propertyMap );
+            MessageWrapper messageWrapper = receiveProvider.getEmail( getParameterValue( getParameter( HOST ), contextMap, dataMap, executionContext.getxFID() ) + "", messageFilter.toArray( new MessageFilter[ 0 ] ), propertyMap );
             
             if ( messageWrapper != null )
             {

@@ -67,7 +67,7 @@ public class KWSNavigate extends  AbstractKeyWordStep {
 		Boolean success = false;
 		
 		try{
-			String NavigateType = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+			String NavigateType = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "";
 
 			switch ( NavigationType.valueOf( NavigateType ) )
 			{

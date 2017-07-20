@@ -129,9 +129,9 @@ public class SQLContentProvider extends AbstractContentProvider
                 String key = (String) keys.next();
                 List valset = (List) contentMap.get( key );
 
-                ContentData contentData = new DefaultContentData( key, (String[]) valset.toArray(STR_ARR) );
+                ContentData contentData = new DefaultContentData( key, (String[]) valset.toArray(STR_ARR), ContentManager.instance( xFID ) );
 				
-                ContentManager.instance().addContentData( contentData );
+                ContentManager.instance( xFID ).addContentData( contentData );
             }
         }
         catch( Exception e )

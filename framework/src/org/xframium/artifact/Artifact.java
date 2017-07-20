@@ -6,5 +6,5 @@ import org.xframium.device.factory.DeviceWebDriver;
 public interface Artifact
 {
     public static final String URL  = "ARTIFACT_URL";
-    File generateArtifact( String rootFolder, DeviceWebDriver webDriver );
+    File generateArtifact( String rootFolder, DeviceWebDriver webDriver, String xFID );
 }

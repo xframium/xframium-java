@@ -51,11 +51,12 @@ import org.xframium.artifact.spi.TimingArtifact;
 import org.xframium.artifact.spi.VitalsArtifact;
 import org.xframium.artifact.spi.XMLSourceArtifact;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.page.keyWord.KeyWordDriver;
 
 public class ArtifactManager
 {
     /** The singleton. */
-    private static ArtifactManager singleton = new ArtifactManager();
+    private static Map<String,ArtifactManager> singleton = new HashMap<String,ArtifactManager>(5);
 
     private String displayArtifact = null; 
 
@@ -77,9 +78,15 @@ public class ArtifactManager
      *
      * @return the RunDetails
      */
-    public static ArtifactManager instance()
+    public static ArtifactManager instance( String xFID )
     {
-        return singleton;
+        if ( singleton.containsKey( xFID ) )
+            return singleton.get( xFID );
+        else
+        {
+            singleton.put( xFID, new ArtifactManager() );
+            return singleton.get( xFID );
+        }
     }
     
     private Log log = LogFactory.getLog( ArtifactManager.class );
@@ -207,7 +214,7 @@ public class ArtifactManager
         return enabledArtifactMap.get( aTime );
     }
     
-    public Artifact generateArtifact( String artifactType, String rootFolder, DeviceWebDriver webDriver )
+    public Artifact generateArtifact( String artifactType, String rootFolder, DeviceWebDriver webDriver, String xFID )
     {
         Class artifactImpl = artifactMap.get( artifactType );
         
@@ -220,7 +227,7 @@ public class ArtifactManager
         try
         {
             Artifact artifact = (Artifact)artifactImpl.newInstance();
-            if ( artifact.generateArtifact( rootFolder, webDriver ) != null )
+            if ( artifact.generateArtifact( rootFolder, webDriver, xFID ) != null )
                 return artifact;
             else
                 return null;

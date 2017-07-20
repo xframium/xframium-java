@@ -73,7 +73,7 @@ public class KeyWordDriver
     private Map<String, List<KeyWordTest>> tagMap = new HashMap<String, List<KeyWordTest>>( 10 );
 
     /** The singleton. */
-    private static KeyWordDriver singleton = new KeyWordDriver();
+    private static Map<String,KeyWordDriver> singleton = new HashMap<String,KeyWordDriver>(5);
 
     /** The configuration properties **/
     private Properties configProperties = new Properties();
@@ -85,9 +85,21 @@ public class KeyWordDriver
      *
      * @return the key word driver
      */
-    public static KeyWordDriver instance()
+    public static KeyWordDriver instance( String xFID )
     {
-        return singleton;
+        if ( singleton.containsKey( xFID ) )
+            return singleton.get( xFID );
+        else
+        {
+            singleton.put( xFID, new KeyWordDriver( xFID ) );
+            return singleton.get( xFID );
+        }
+    }
+    
+    private String xFID;
+    public KeyWordDriver( String xFID )
+    {
+        this.xFID = xFID;
     }
 
     public void clear()
@@ -525,13 +537,13 @@ public class KeyWordDriver
      * @throws Exception
      *             the exception
      */
-    public ExecutionContextTest executeTest( TestName testName, WebDriver webDriver, SuiteContainer sC ) throws Exception
+    public ExecutionContextTest executeTest( TestName testName, DeviceWebDriver webDriver, SuiteContainer sC ) throws Exception
     {
         boolean testStarted = false;
         boolean returnValue = true;
         PageManager.instance().getPageCache().clear();
 
-        ExecutionContextTest executionContext = ( (DeviceWebDriver) webDriver ).getExecutionContext();
+        ExecutionContextTest executionContext = webDriver.getExecutionContext();
         Map<String, PageData> dataMap = new HashMap<String, PageData>( 10 );
         Map<String, Page> pageMap = new HashMap<String, Page>( 10 );
         Map<String, Object> contextMap = new HashMap<String, Object>( 10 );
@@ -547,13 +559,13 @@ public class KeyWordDriver
                 throw new TestConfigurationException( testName.getTestName() );
             
             executionContext.setTest( test );
-            executionContext.setDevice( ( (DeviceWebDriver) webDriver ).getPopulatedDevice() );
-            executionContext.setCloud( ( (DeviceWebDriver) webDriver ).getCloud() );
+            executionContext.setDevice( webDriver.getPopulatedDevice() );
+            executionContext.setCloud( webDriver.getCloud() );
             
             executionContext.setDataMap( dataMap );
             executionContext.setPageMap( pageMap );
             executionContext.setContextMap( contextMap );
-            executionContext.setSessionId( ( (DeviceWebDriver) webDriver ).getExecutionId() );
+            executionContext.setSessionId( webDriver.getExecutionId() );
             executionContext.setTestName( testName.getTestName() );
         
             if ( log.isInfoEnabled() )
@@ -626,7 +638,7 @@ public class KeyWordDriver
             
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Alerting Listeners" );
-            if ( !KeyWordDriver.instance().notifyBeforeTest( webDriver, test, contextMap, dataMap, pageMap, sC, executionContext ) )
+            if ( !KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).notifyBeforeTest( webDriver, test, contextMap, dataMap, pageMap, sC, executionContext ) )
             {
                 log.warn( "Test was skipped due to a failed test notification listener" );
                 contextMap.put( "XF_TEST_STATUS", TestStatus.SKIPPED.name() );
@@ -634,19 +646,21 @@ public class KeyWordDriver
                 return executionContext;
             }
             
+            String xFID = webDriver.getExecutionContext().getxFID();
+            
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Processing Initialization" );
-            if ( DeviceManager.instance().getInitializationName() != null )
+            if ( DeviceManager.instance( xFID ).getInitializationName() != null )
             {
-                KeyWordTest initTest = KeyWordDriver.instance().getTest( DeviceManager.instance().getInitializationName() );
+                KeyWordTest initTest = KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).getTest( DeviceManager.instance( xFID ).getInitializationName() );
                 if ( initTest != null )
                 {
-                    if ( !DeviceManager.instance().isDeviceInitialized( ( (DeviceWebDriver) webDriver ).getPopulatedDevice() ) )
+                    if ( !DeviceManager.instance( xFID ).isDeviceInitialized( webDriver.getPopulatedDevice() ) )
                     {
-                        logConsole( "Execution Initialization Method " + DeviceManager.instance().getInitializationName() + " on " + ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getEnvironment() + "(" + ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getDeviceName() + ")" );
+                        logConsole( "Execution Initialization Method " + DeviceManager.instance( xFID ).getInitializationName() + " on " + webDriver.getPopulatedDevice().getEnvironment() + "(" + webDriver.getPopulatedDevice().getDeviceName() + ")" );
                         executionContext.startStep( new SyntheticStep( "Device Initialization", "CALL2" ), contextMap, dataMap );
                         returnValue = initTest.executeTest( webDriver, contextMap, dataMap, pageMap, sC, executionContext );
-                        DeviceManager.instance().setDeviceInitialized( ( (DeviceWebDriver) webDriver ).getPopulatedDevice() );
+                        DeviceManager.instance( xFID ).setDeviceInitialized( webDriver.getPopulatedDevice() );
                         executionContext.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
                     }  
                 }
@@ -703,7 +717,7 @@ public class KeyWordDriver
             if ( !contextMap.containsKey( "XF_TEST_STATUS" ) )
                 contextMap.put( "XF_TEST_STATUS", "UNKNOWN" );
             if ( testStarted )
-                KeyWordDriver.instance().notifyAfterTest( webDriver, test, contextMap, dataMap, pageMap, returnValue, sC, executionContext );
+                KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).notifyAfterTest( webDriver, test, contextMap, dataMap, pageMap, returnValue, sC, executionContext );
             
             for ( String key : dataMap.keySet() )
             {

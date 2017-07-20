@@ -47,7 +47,7 @@ public class StopMonitorAction extends AbstractDefaultAction implements DeviceAc
         {
             String executionId = getExecutionId( webDriver );
             String deviceName = getDeviceName( webDriver );
-            PerfectoMobile.instance().windTunnel().stopVitals( executionId, deviceName );
+            PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).windTunnel().stopVitals( executionId, deviceName );
         }
         return true;
     }

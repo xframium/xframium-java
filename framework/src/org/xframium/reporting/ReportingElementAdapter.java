@@ -437,20 +437,20 @@ public class ReportingElementAdapter implements Element
     }
 
     @Override
-    public void setValue( String currentValue )
+    public void setValue( String currentValue, String xFID )
     {
-        setValue( currentValue, SetMethod.DEFAULT );
+        setValue( currentValue, SetMethod.DEFAULT, xFID );
     }
 
     @Override
-    public void setValue( String currentValue, SetMethod setMethod )
+    public void setValue( String currentValue, SetMethod setMethod, String xFID )
     {
         KeyWordStep step = createStep( "SET" );
         step.addParameter( new KeyWordParameter( ParameterType.STATIC, currentValue, "", "" ) );
         getWebDriver().getExecutionContext().startStep( step, null, null );
         try
         {
-            baseElement.setValue( currentValue, setMethod );
+            baseElement.setValue( currentValue, setMethod, xFID );
         }
         catch( Exception e )
         {

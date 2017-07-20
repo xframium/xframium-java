@@ -14,7 +14,7 @@ public class VitalsArtifact extends AbstractArtifact
     }
     
     @Override
-    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver )
+    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver, String xFID )
     {
         return writeToDisk( rootFolder, FILE_NAME, webDriver.getCloud().getCloudActionProvider().getVitals( webDriver ).getBytes() );
     }

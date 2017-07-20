@@ -48,14 +48,14 @@ public class KWSReturn extends AbstractKeyWordStep
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
 		
-		Object compare = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
+		Object compare = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() );
 		
 		if ( log.isDebugEnabled() )
 			log.debug( "Validation value for comparison [" + compare + "]" );
 		
 		try
 		{
-			Object[] parameterArray = getParameters( contextMap, dataMap );
+			Object[] parameterArray = getParameters( contextMap, dataMap, executionContext.getxFID() );
 			Method method = findMethod( pageObject.getClass(), getName(), parameterArray );
 			Object elementValue = method.invoke( pageObject, parameterArray );
 			
@@ -63,7 +63,7 @@ public class KWSReturn extends AbstractKeyWordStep
 			{
 				if ( getParameterList().size() == 1 )
 				{
-					Object compareTo = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
+					Object compareTo = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() );
 					if ( !elementValue.equals( compareTo ) )
 						return false;
 				}

@@ -28,6 +28,7 @@ import java.util.Map;
  */
 public interface Initializable
 {
+    public static ThreadLocal<String> xFID = new ThreadLocal<String>();
 	public static final String VERSION = "1.0.12-DEVELOPMENT";
 	/**
 	 * Initialize.

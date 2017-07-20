@@ -20,6 +20,7 @@
  *******************************************************************************/
 package org.xframium.gesture.device.action.spi.perfecto;
 
+import java.util.List;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.application.ApplicationDescriptor;
@@ -30,8 +31,6 @@ import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
 import org.xframium.utility.BrowserCacheLogic;
-
-import java.util.List;
 
 /**
  * The Class CleanApplicationAction.
@@ -53,9 +52,9 @@ public class CleanApplicationAction extends AbstractDefaultAction implements Dev
 
         String applicationName = (String) parameterList.get( 0 );
 
-        ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
+        ApplicationDescriptor appDesc = ApplicationRegistry.instance( ( (DeviceWebDriver) webDriver).getxFID() ).getApplication( applicationName );
 
-        Handset localDevice = PerfectoMobile.instance().devices().getDevice( deviceName );
+        Handset localDevice = PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).devices().getDevice( deviceName );
 
         if ( appDesc == null || (appDesc.getUrl() != null && !appDesc.getUrl().isEmpty()) )
         {
@@ -109,11 +108,11 @@ public class CleanApplicationAction extends AbstractDefaultAction implements Dev
         else
         {
             if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-                PerfectoMobile.instance().application().clean( executionId, deviceName, appDesc.getName(), appDesc.getAndroidIdentifier() );
+                PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).application().clean( executionId, deviceName, appDesc.getName(), appDesc.getAndroidIdentifier() );
             else if ( localDevice.getOs().toLowerCase().equals( "ios" ) )
             {
-                PerfectoMobile.instance().application().uninstall( executionId, deviceName, appDesc.getName(), appDesc.getAndroidIdentifier() );
-                PerfectoMobile.instance().application().install( executionId, deviceName, appDesc.getIosInstallation(), "instrument" );
+                PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).application().uninstall( executionId, deviceName, appDesc.getName(), appDesc.getAndroidIdentifier() );
+                PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).application().install( executionId, deviceName, appDesc.getIosInstallation(), "instrument" );
             }
             else
                 log.warn( "Could not clean application on " + localDevice.getOs() );

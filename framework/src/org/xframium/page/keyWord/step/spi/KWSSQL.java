@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
@@ -57,13 +58,13 @@ public class KWSSQL extends AbstractKeyWordStep
     private static final String[] JDBC = new String[] { "jdbc.username", "jdbc.password", "jdbc.url", "jdbc.driverClassName" };
     private static final String[] EMPTY = new String[0];
 
-    private String getProperty( String connectionName, String propertyName )
+    private String getProperty( String connectionName, String propertyName, WebDriver webDriver )
     {
         String useName = propertyName;
         if ( connectionName != null )
             useName = connectionName + "." + propertyName;
         
-        return KeyWordDriver.instance().getConfigProperties().getProperty( useName );
+        return KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).getConfigProperties().getProperty( useName );
     }
 
     /*
@@ -85,7 +86,7 @@ public class KWSSQL extends AbstractKeyWordStep
         int paramCount = getParameterList().size();
         
         KeyWordParameter namedConnection = getParameter( "connectionName" );
-        String connectionName = namedConnection != null ? getParameterValue( namedConnection, contextMap, dataMap ) : null;
+        String connectionName = namedConnection != null ? getParameterValue( namedConnection, contextMap, dataMap, executionContext.getxFID() ) : null;
         
         if ( paramCount < 1 )
         {
@@ -94,7 +95,7 @@ public class KWSSQL extends AbstractKeyWordStep
         else
         {
 
-            query = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
+            query = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() );
             ArrayList<String> paramList = new ArrayList<String>();
             if ( getParameterList().size() > 1 )
             {
@@ -102,7 +103,7 @@ public class KWSSQL extends AbstractKeyWordStep
                 for ( int i=1; i<getParameterList().size(); i++ )
                 {
                     if ( !"connectionName".equals( getParameterList().get( i ).getName() ) )
-                        paramList.add( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) );
+                        paramList.add( getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) );
                 }
             }
             
@@ -112,7 +113,7 @@ public class KWSSQL extends AbstractKeyWordStep
 
         try
         {
-            log.info( "Executing [" + query + "] against [" + getProperty( connectionName, JDBC[2] ) + "] as [" + getProperty( connectionName, JDBC[3] ) + "]" );
+            log.info( "Executing [" + query + "] against [" + getProperty( connectionName, JDBC[2], webDriver ) + "] as [" + getProperty( connectionName, JDBC[3], webDriver ) + "]" );
             
             //
             // OK, now we need to look at the statement to see if we're reading or writing
@@ -121,7 +122,7 @@ public class KWSSQL extends AbstractKeyWordStep
             if ( query.trim().toUpperCase().startsWith( "SELECT" ))
             {
                 
-                Map[] resultsArr = SQLUtil.getRow( getProperty( connectionName, JDBC[0] ), getProperty( connectionName, JDBC[1] ) , getProperty( connectionName, JDBC[2] ) , getProperty( connectionName, JDBC[3] ), query, query_params );
+                Map[] resultsArr = SQLUtil.getRow( getProperty( connectionName, JDBC[0], webDriver ), getProperty( connectionName, JDBC[1], webDriver ) , getProperty( connectionName, JDBC[2], webDriver ) , getProperty( connectionName, JDBC[3], webDriver ), query, query_params );
                         
                 Map<String,String> results = resultsArr[0];
                 
@@ -191,7 +192,7 @@ public class KWSSQL extends AbstractKeyWordStep
                 //
                 // We only capture the update count here
                 //
-                int row_count = SQLUtil.execute( getProperty( connectionName, JDBC[0] ), getProperty( connectionName, JDBC[1] ) , getProperty( connectionName, JDBC[2] ) , getProperty( connectionName, JDBC[3] ), query, query_params );
+                int row_count = SQLUtil.execute( getProperty( connectionName, JDBC[0], webDriver ), getProperty( connectionName, JDBC[1], webDriver ) , getProperty( connectionName, JDBC[2], webDriver ) , getProperty( connectionName, JDBC[3], webDriver ), query, query_params );
 
                 if ( getContext() != null && !getContext().isEmpty() )
                 {

@@ -145,6 +145,11 @@ public class DeviceWebDriver
     
     private File artifactFolder = null;
     
+    public String getxFID()
+    {
+        return executionContext.getxFID();
+    }
+    
     public void setArtifactFolder( File artifactFolder )
     {
         this.artifactFolder = artifactFolder;
@@ -311,7 +316,7 @@ public class DeviceWebDriver
     
     public String getLog()
     {
-        return DeviceManager.instance().getLog();
+        return DeviceManager.instance( executionContext.getxFID() ).getLog();
     }
 
     public ApplicationDescriptor getAut()
@@ -523,7 +528,6 @@ public class DeviceWebDriver
     public void setExecutionId( String executionId )
     {
         this.executionId = executionId;
-        DeviceManager.instance().setExecutionId( executionId );
 
         if ( log.isInfoEnabled() )
             log.info( "Execution ID recorded as [" + executionId + "]" );

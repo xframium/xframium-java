@@ -26,7 +26,7 @@ public class ALMDefectArtifact extends AbstractArtifact
     }
     
     @Override
-    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver ) throws Exception
+    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver, String xFID ) throws Exception
     {
         if ( webDriver.isConnected() && !webDriver.getExecutionContext().getStatus() && webDriver.getExecutionContext().getExceptionType() != null && webDriver.getExecutionContext().getExceptionType().equals( ExceptionType.SCRIPT ) )
         {

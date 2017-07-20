@@ -66,10 +66,7 @@ import com.xframium.serialization.json.ReflectionSerializer;
 public class DeviceManager
 {
     /** The singleton. */
-    private static DeviceManager singleton = new DeviceManager();
-
-    /** The execution id. */
-    private ThreadLocal<String> executionId = new ThreadLocal<String>();
+    private static Map<String,DeviceManager> singleton = new HashMap<String,DeviceManager>( 3 );
 
     private ThreadLocal<CloudDescriptor> currentCloud = new ThreadLocal<CloudDescriptor>();
 
@@ -265,9 +262,15 @@ public class DeviceManager
      *
      * @return the device manager
      */
-    public static DeviceManager instance()
+    public static DeviceManager instance( String xFID )
     {
-        return singleton;
+        if ( singleton.containsKey( xFID ) )
+            return singleton.get( xFID );
+        else
+        {
+            singleton.put( xFID, new DeviceManager() );
+            return singleton.get( xFID );
+        }
     }
 
     /**
@@ -349,28 +352,6 @@ public class DeviceManager
     {
         this.dryRun = dryRun;
     }
-
-    /**
-     * Sets the execution id.
-     *
-     * @param executionId
-     *            the new execution id
-     */
-    public void setExecutionId( String executionId )
-    {
-        this.executionId.set( executionId );
-    }
-
-    /**
-     * Gets the execution id.
-     *
-     * @return the execution id
-     */
-    public String getExecutionId()
-    {
-        return executionId.get();
-    }
-
     
 
     /**
@@ -464,14 +445,14 @@ public class DeviceManager
                     if ( testPackage.getTestName().getPersonaName() != null && !testPackage.getTestName().getPersonaName().isEmpty() )
                         currentDevice.addCapability( "windTunnelPersona", testPackage.getTestName().getPersonaName(), "STRING" );
                     
-                    webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice );
+                    webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice, testPackage.getxFID() );
 
                     if ( webDriver != null )
                     {
                         if ( testFlow.isDebugEnabled() )
                             testFlow.debug( Thread.currentThread().getName() + ": WebDriver Created - Creating Connected Device for " + currentDevice );
 
-                        DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
+                        notifyPropertyAdapter( configurationProperties, webDriver );
 
                         return new ConnectedDevice( webDriver, currentDevice, testPackage.getTestName().getPersonaName() );
                     }
@@ -547,13 +528,13 @@ public class DeviceManager
      *            the persona name
      * @return The next available device or null if no device are available
      */
-    public ConnectedDevice getUnconfiguredDevice( String deviceId )
+    public ConnectedDevice getUnconfiguredDevice( String deviceId, String xFID )
     {
         ConnectedDevice rtn = null;
         
         
         
-        Device currentDevice = NamedDataProvider.lookupDeviceById( deviceId, driverType );
+        Device currentDevice = NamedDataProvider.lookupDeviceById( deviceId, driverType, xFID );
         
         if ( log.isInfoEnabled() )
             log.info( "Attempting to register an alternate device as " + deviceId + " using " + currentDevice );
@@ -565,14 +546,14 @@ public class DeviceManager
                 log.debug( "Attempting to create WebDriver instance for " + currentDevice );
 
 
-            webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice );
+            webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice, xFID );
 
             if ( webDriver != null )
             {
                 if ( log.isInfoEnabled() )
                     log.info( "Registered alternate connected device as " + deviceId );
 
-                DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
+                notifyPropertyAdapter( configurationProperties, webDriver );
 
                 rtn = new ConnectedDevice( webDriver, currentDevice, "" );
             }
@@ -609,7 +590,7 @@ public class DeviceManager
      *            name of the device which has to be connected
      * @return The next available device or null if no device are available
      */
-    public ConnectedDevice getInactiveDevice( String deviceName )
+    public ConnectedDevice getInactiveDevice( String deviceName, String xFID )
     {
         ConnectedDevice rtn = null;
 
@@ -621,7 +602,7 @@ public class DeviceManager
         
         try
         {
-            webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice );
+            webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice, xFID );
 
             if ( webDriver != null )
             {
@@ -629,7 +610,7 @@ public class DeviceManager
                 if ( log.isInfoEnabled() )
                     log.info( "Registered alternate connected device as " + deviceName );
 
-                DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
+                notifyPropertyAdapter( configurationProperties, webDriver );
                 rtn = new ConnectedDevice( webDriver, currentDevice, null );
             }
             else

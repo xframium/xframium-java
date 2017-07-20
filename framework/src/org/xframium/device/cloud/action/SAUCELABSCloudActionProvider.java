@@ -25,7 +25,7 @@ public class SAUCELABSCloudActionProvider extends AbstractCloudActionProvider
 	public static final String PLATFORM_NAME_MOBILE  = "platformName";
 
     @Override
-    public boolean startApp( String executionId, String deviceId, String appName, String appIdentifier )
+    public boolean startApp( DeviceWebDriver webDriver, String executionId, String deviceId, String appName, String appIdentifier )
     {
         return true;
     }
@@ -154,9 +154,9 @@ public class SAUCELABSCloudActionProvider extends AbstractCloudActionProvider
     }
 
     @Override
-    public boolean openApplication( String applicationName, DeviceWebDriver webDriver )
+    public boolean openApplication( String applicationName, DeviceWebDriver webDriver, String xFID )
     {
-        ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
+        ApplicationDescriptor appDesc = ApplicationRegistry.instance(xFID).getApplication( applicationName );
         
         if ( appDesc == null )
             throw new ScriptConfigurationException( "The Application " + applicationName + " does not exist" );

@@ -22,6 +22,7 @@ package org.xframium.gesture.device.action.spi.perfecto;
 
 import java.util.List;
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.common.Location;
@@ -46,7 +47,7 @@ public class LocationAction extends AbstractDefaultAction implements DeviceActio
 		String longitude = (String) parameterList.get( 0 );
 		String latitude = (String) parameterList.get( 1 );
 		
-		PerfectoMobile.instance().device().setLocation( executionId, deviceName, new Location( longitude, latitude ) );
+		PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).device().setLocation( executionId, deviceName, new Location( longitude, latitude ) );
 		return true;
 	}
 

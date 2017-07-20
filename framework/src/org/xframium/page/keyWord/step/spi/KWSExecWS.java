@@ -89,7 +89,7 @@ public class KWSExecWS extends AbstractKeyWordStep
         WebServiceClientUtil.CallDetails callDetails = null;
         WebServiceClientUtil.ResponceDetails responceDetails = null;
                         
-        callDetails = loadCallDetails( getParameterList(), contextMap, dataMap );
+        callDetails = loadCallDetails( getParameterList(), contextMap, dataMap, executionContext );
         if ( !callDetails.isValid() )
         {
             throwCallDetailsException( callDetails );
@@ -150,7 +150,7 @@ public class KWSExecWS extends AbstractKeyWordStep
     // Helpers
     //
 
-    private WebServiceClientUtil.CallDetails loadCallDetails( List<KeyWordParameter> paramList, Map<String, Object> contextMap, Map<String, PageData> dataMap )
+    private WebServiceClientUtil.CallDetails loadCallDetails( List<KeyWordParameter> paramList, Map<String, Object> contextMap, Map<String, PageData> dataMap, ExecutionContextTest executionContext )
     {
         WebServiceClientUtil.CallDetails rtn = new WebServiceClientUtil.CallDetails();
 
@@ -169,43 +169,43 @@ public class KWSExecWS extends AbstractKeyWordStep
             {
                 case TOKEN_URL:
                 {
-                    rtn.setUrl( (String) getParameterValue( param, contextMap, dataMap ) );
+                    rtn.setUrl( (String) getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) );
                     break;
                 }
 
                 case TOKEN_METHOD:
                 {
-                    rtn.setMethod( (String) getParameterValue( param, contextMap, dataMap ) );
+                    rtn.setMethod( (String) getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) );
                     break;
                 }
 
                 case TOKEN_TYPE:
                 {
-                    rtn.setType( (String) getParameterValue( param, contextMap, dataMap ) );
+                    rtn.setType( (String) getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) );
                     break;
                 }
 
                 case TOKEN_MEDIA_TYPE:
                 {
-                    rtn.setMediaType( (String) getParameterValue( param, contextMap, dataMap ) );
+                    rtn.setMediaType( (String) getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) );
                     break;
                 }
 
                 case TOKEN_UNAME:
                 {
-                    rtn.setUsername( (String) getParameterValue( param, contextMap, dataMap ) );
+                    rtn.setUsername( (String) getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) );
                     break;
                 }
 
                 case TOKEN_PWD:
                 {
-                    rtn.setPassword( (String) getParameterValue( param, contextMap, dataMap ) );
+                    rtn.setPassword( (String) getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) );
                     break;
                 }
 
                 case TOKEN_PAYLOAD:
                 {
-                    rtn.setPayload( (String) getParameterValue( param, contextMap, dataMap ));
+                    rtn.setPayload( (String) getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ));
                     break;
                 }
 
@@ -225,7 +225,7 @@ public class KWSExecWS extends AbstractKeyWordStep
                     WebServiceClientUtil.CallParameter cparam = new WebServiceClientUtil.CallParameter();
                     
                     cparam.setName( param.getName() );
-                    cparam.setValue( (String) getParameterValue( param, contextMap, dataMap ) );
+                    cparam.setValue( (String) getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) );
                     rtn.getParameters().add( cparam );
                     
                     break;

@@ -29,7 +29,7 @@ public class SMSDeviceInterrupt extends AbstractDeviceInterrupt
     @Override
     public void interruptDevice( DeviceWebDriver webDriver )
     {
-        PerfectoMobile.instance().device().sendText( executionId, "Test from SMSDeviceInterrupt", deviceId );
+        PerfectoMobile.instance( webDriver.getxFID()).device().sendText( executionId, "Test from SMSDeviceInterrupt", deviceId );
     }
 
 }

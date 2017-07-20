@@ -112,7 +112,7 @@ public class SQLDataProvider implements DataProvider
         }
     }
 
-    public List<Device> readData()
+    public List<Device> readData( String xFID )
     {
         List<Device> deviceList = new ArrayList<Device>( 10 );
         try

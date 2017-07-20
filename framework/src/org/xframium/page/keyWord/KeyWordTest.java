@@ -480,7 +480,7 @@ public class KeyWordTest
                     if ( log.isInfoEnabled() )
                         log.info( "Creating Page [" + siteName + "." + step.getPageName() + "]" );
 
-                    page = PageManager.instance().createPage( KeyWordDriver.instance().getPage(step.getSiteName() != null && step.getSiteName().trim().length() > 0 ? step.getSiteName() : PageManager.instance().getSiteName(), step.getPageName() ), webDriver );
+                    page = PageManager.instance().createPage( KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).getPage(step.getSiteName() != null && step.getSiteName().trim().length() > 0 ? step.getSiteName() : PageManager.instance().getSiteName(), step.getPageName() ), webDriver );
                     if ( page == null )
                     {
                         

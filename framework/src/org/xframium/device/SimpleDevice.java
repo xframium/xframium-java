@@ -29,9 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
-import org.xframium.device.cloud.CloudRegistry;
-import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
-import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
 import org.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc
@@ -200,7 +197,7 @@ public class SimpleDevice implements Device
 	 * @param active the active
 	 * @param deviceName the device name
 	 */
-	public SimpleDevice( String key, String manufacturer, String model, String os, String osVersion, String browserName, String browserVersion, int availableDevices, String driverType, boolean active, String deviceName )
+	public SimpleDevice( String key, String manufacturer, String model, String os, String osVersion, String browserName, String browserVersion, int availableDevices, String driverType, boolean active, String deviceName)
 	{
 		super();
 		this.key = key;
@@ -215,25 +212,7 @@ public class SimpleDevice implements Device
 		if ( availableDevices < 0)
 		{
 		    availableDevices = 0;
-		    if ( CloudRegistry.instance().getCloud().getProvider() != null && CloudRegistry.instance().getCloud().getProvider().equals( "PERFECTO" ) )
-            {
-                for ( Handset hs : PerfectoMobile.instance().devices().getDevices( false ).getHandsetList() )
-                {
-                    if ( !compareValues( manufacturer, hs.getManufacturer() ) )
-                        continue;
-                    
-                    if ( !compareValues( model, hs.getModel() ) )
-                        continue;
-                    
-                    if ( !compareValues( os, hs.getOs() ) )
-                        continue;
-                    
-                    if ( !compareValues( osVersion, hs.getOsVersion() ) )
-                        continue;
-                    
-                    availableDevices++;
-                }
-            }
+		    
 		}
 		
 		this.driverType = driverType;

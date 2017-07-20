@@ -67,7 +67,7 @@ public class KWSCache extends AbstractKeyWordStep
 		    boolean toState = !( (CachingDriver) webDriver ).isCachingEnabled();
 		    
 		    if ( enabled != null )
-		        toState = Boolean.parseBoolean( getParameterValue( enabled, contextMap, dataMap ) );
+		        toState = Boolean.parseBoolean( getParameterValue( enabled, contextMap, dataMap, executionContext.getxFID() ) );
 		    
 		    if ( log.isInfoEnabled() )
 		    {

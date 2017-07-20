@@ -197,12 +197,12 @@ public class SeleniumElement extends AbstractElement
 
                 String cloudName = ((DeviceWebDriver) getWebDriver()).getDevice().getCloud();
                 if ( cloudName == null || cloudName.trim().isEmpty() )
-                    cloudName = CloudRegistry.instance().getCloud().getName();
+                    cloudName = CloudRegistry.instance(((DeviceWebDriver) getWebDriver()).getxFID()).getCloud().getName();
 
-                if ( CloudRegistry.instance().getCloud( cloudName ).getProvider().equals( "PERFECTO" ) )
+                if ( CloudRegistry.instance(((DeviceWebDriver) getWebDriver()).getxFID()).getCloud( cloudName ).getProvider().equals( "PERFECTO" ) )
                 {
-                    PerfectoMobile.instance().imaging().screenShot( getExecutionId(), getDeviceName(), fileKey, Screen.primary, ImageFormat.png, imageResolution );
-                    imageData = PerfectoMobile.instance().repositories().download( RepositoryType.MEDIA, fileKey );
+                    PerfectoMobile.instance( getWebDriver().getxFID() ).imaging().screenShot( getExecutionId(), getDeviceName(), fileKey, Screen.primary, ImageFormat.png, imageResolution );
+                    imageData = PerfectoMobile.instance( getWebDriver().getxFID() ).repositories().download( RepositoryType.MEDIA, fileKey );
                 }
                 else
                 {
@@ -1083,7 +1083,7 @@ public class SeleniumElement extends AbstractElement
      * String)
      */
     @Override
-    protected void _setValue( String currentValue, SetMethod setMethod )
+    protected void _setValue( String currentValue, SetMethod setMethod, String xFID )
     {
         boolean enableCache = false;
         if ( getWebDriver() instanceof CachingDriver )
@@ -1099,7 +1099,7 @@ public class SeleniumElement extends AbstractElement
         {
             WebElement webElement = getElement();
 
-            if ( !SetMethodFactory.instance().createSetMethod( webElement.getTagName() ).set( webElement, getWebDriver(), currentValue, setMethod.name().toUpperCase() ) )
+            if ( !SetMethodFactory.instance().createSetMethod( webElement.getTagName() ).set( webElement, getWebDriver(), currentValue, setMethod.name().toUpperCase(), xFID ) )
                 throw new ScriptException( "Could not set " + getName() + " with " + currentValue );
         }
         finally

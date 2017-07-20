@@ -49,7 +49,7 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 	 * @see com.perfectoMobile.device.factory.AbstractDriverFactory#_createDriver(com.perfectoMobile.device.Device)
 	 */
 	@Override
-	protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud )
+	protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID )
 	{
 		DeviceWebDriver webDriver = null;
 		try
@@ -57,7 +57,7 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 			DesiredCapabilities dc = new DesiredCapabilities( "", "", Platform.ANY );
 			
             
-            DeviceManager.instance().setCurrentCloud( useCloud );
+            DeviceManager.instance( xFID ).setCurrentCloud( useCloud );
             URL hubUrl = new URL( useCloud.getCloudUrl() );
 
 			if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )
@@ -77,18 +77,18 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 			for ( String name : currentDevice.getCapabilities().keySet() )
 				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
 			
-			if ( ApplicationRegistry.instance().getAUT() != null )
+			if ( ApplicationRegistry.instance(xFID).getAUT() != null )
 			{
-    			for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
-    				dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
+    			for ( String name : ApplicationRegistry.instance(xFID).getAUT().getCapabilities().keySet() )
+    				dc = setCapabilities(ApplicationRegistry.instance(xFID).getAUT().getCapabilities().get( name ), dc, name);
 			}
 			
 			dc.setCapability( AUTOMATION_NAME, "Appium" );
 			
-            if (( ContentManager.instance().getCurrentContentKey() != null ) &&
-                ( ContentManager.instance().getContentValue( Device.LOCALE ) != null ))
+            if (( ContentManager.instance(xFID).getCurrentContentKey() != null ) &&
+                ( ContentManager.instance(xFID).getContentValue( Device.LOCALE ) != null ))
             {
-                String localeToConfigure = ContentManager.instance().getContentValue( Device.LOCALE );
+                String localeToConfigure = ContentManager.instance(xFID).getContentValue( Device.LOCALE );
 
                 dc.setCapability( Device.LOCALE, localeToConfigure );
             }		
@@ -96,7 +96,7 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
             if ( log.isDebugEnabled() )
                 log.debug( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 			
-			webDriver = new DeviceWebDriver( new AndroidDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice, dc );
+			webDriver = new DeviceWebDriver( new AndroidDriver( hubUrl, dc ), DeviceManager.instance( xFID ).isCachingEnabled(), currentDevice, dc );
 	
 			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 			
@@ -108,26 +108,26 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
                 webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
 			webDriver.context( "NATIVE_APP" );
 			
-			if( ApplicationRegistry.instance().getAUT() != null && ApplicationRegistry.instance().getAUT().getAndroidIdentifier() != null && !ApplicationRegistry.instance().getAUT().getAndroidIdentifier().isEmpty() )
+			if( ApplicationRegistry.instance(xFID).getAUT() != null && ApplicationRegistry.instance(xFID).getAUT().getAndroidIdentifier() != null && !ApplicationRegistry.instance(xFID).getAUT().getAndroidIdentifier().isEmpty() )
             {
-			    if ( ApplicationRegistry.instance().getAUT().isAutoStart() && ( (AndroidDriver) webDriver.getNativeDriver() ).isAppInstalled( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() ) )
+			    if ( ApplicationRegistry.instance(xFID).getAUT().isAutoStart() && ( (AndroidDriver) webDriver.getNativeDriver() ).isAppInstalled( ApplicationRegistry.instance(xFID).getAUT().getAndroidIdentifier() ) )
                 {
-                    if ( !useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver ) )
-                        throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
+                    if ( !useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance(xFID).getAUT().getName(), webDriver, xFID ) )
+                        throw new DeviceConfigurationException( ApplicationRegistry.instance(xFID).getAUT().getAndroidIdentifier() );
                 }
                 else
                 {
-                    if ( ApplicationRegistry.instance().getAUT().isAutoStart() )
+                    if ( ApplicationRegistry.instance(xFID).getAUT().isAutoStart() )
                     {
-                        useCloud.getCloudActionProvider().installApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver, false );
-                        if ( !useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver ) )
-                            throw new DeviceConfigurationException( ApplicationRegistry.instance().getAUT().getAndroidIdentifier() );
+                        useCloud.getCloudActionProvider().installApplication( ApplicationRegistry.instance(xFID).getAUT().getName(), webDriver, false );
+                        if ( !useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance(xFID).getAUT().getName(), webDriver, xFID ) )
+                            throw new DeviceConfigurationException( ApplicationRegistry.instance(xFID).getAUT().getAndroidIdentifier() );
                     }
                 }
 			    
-			    webDriver.setAut( ApplicationRegistry.instance().getAUT() );
+			    webDriver.setAut( ApplicationRegistry.instance(xFID).getAUT() );
 			    
-			    String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
+			    String interruptString = ApplicationRegistry.instance(xFID).getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance(xFID).getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance( xFID ).getDeviceInterrupts();
 	            webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );
             }
 			

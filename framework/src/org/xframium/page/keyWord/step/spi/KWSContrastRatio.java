@@ -80,9 +80,9 @@ public class KWSContrastRatio extends AbstractKeyWordStep
 			throw new ScriptConfigurationException( "Verify Color must have 3 parameters" );
 		
 		long fileKey = System.currentTimeMillis();
-		Resolution resolution = Resolution.valueOf( ( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" ).toLowerCase() );
-		double minContrast = Double.parseDouble( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" );
-		double maxContrast = Double.parseDouble( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" );
+		Resolution resolution = Resolution.valueOf( ( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" ).toLowerCase() );
+		double minContrast = Double.parseDouble( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
+		double maxContrast = Double.parseDouble( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
 		
 		
 		BufferedImage elementValue = (BufferedImage)getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getImage( resolution );

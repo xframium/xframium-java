@@ -23,6 +23,7 @@ package org.xframium.page.keyWord.step.spi;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptException;
 import org.xframium.gesture.Gesture.Direction;
 import org.xframium.page.BY;
@@ -74,7 +75,7 @@ public class KWSExists extends AbstractKeyWordStep
 
         if ( getParameterList().size() == 2 )
         {
-            int searchCount = Integer.parseInt( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
+            int searchCount = Integer.parseInt( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
             for ( int i = 0; i < searchCount; i++ )
             {
                 try
@@ -90,7 +91,7 @@ public class KWSExists extends AbstractKeyWordStep
                 {
 
                 }
-                scroll( Direction.valueOf( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" ), webDriver );
+                scroll( Direction.valueOf( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "" ), ( (DeviceWebDriver) webDriver ) );
             }
         }
         else

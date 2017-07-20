@@ -53,30 +53,30 @@ public class KWSAddDevice extends AbstractKeyWordStep
         Object deviceName = null;
         
         if ( getParameterList().size() == 1 ) {
-        	deviceName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
+        	deviceName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() );
         	
         	if ( !( deviceName instanceof String ) )
                 throw new ScriptConfigurationException( "Device name must be of type String" );
         	
-        	if ( DeviceManager.instance().getDevice(deviceName.toString()) == null )
+        	if ( DeviceManager.instance( executionContext.getxFID() ).getDevice(deviceName.toString()) == null )
         		throw new ScriptConfigurationException( "Device Name should be configured in DeviceRegistry with inactive status" );
         		
-        	executionContext.getDeviceMap().put( deviceName + "", DeviceManager.instance().getInactiveDevice( deviceName + "" ) );
+        	executionContext.getDeviceMap().put( deviceName + "", DeviceManager.instance( executionContext.getxFID() ).getInactiveDevice( deviceName + "", executionContext.getxFID()  ) );
         }
         else if ( getParameterList().size() == 2 )
         {
-        	name = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
+        	name = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() );
 	        
         	if ( !( name instanceof String ) )
         		throw new ScriptConfigurationException( "Device name must be of type String" );
 	
-        	deviceId = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap );
+        	deviceId = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() );
 	        
         	if ( !( deviceId instanceof String ) )
 	        	throw new ScriptConfigurationException( "Device id must be of type String" );
         	
         	
-        	executionContext.getDeviceMap().put( deviceName + "", DeviceManager.instance().getUnconfiguredDevice( deviceName + "" ) );
+        	executionContext.getDeviceMap().put( deviceName + "", DeviceManager.instance( executionContext.getxFID() ).getUnconfiguredDevice( deviceName + "",  executionContext.getxFID()  ) );
         }
 	    else
 	    {

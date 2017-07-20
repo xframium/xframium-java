@@ -22,6 +22,7 @@ package org.xframium.gesture.factory.spi.perfecto;
 
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.AbstractTwoFingerGesture;
 import org.xframium.integrations.common.PercentagePoint;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
@@ -57,7 +58,7 @@ public class TwoFingerGesture extends AbstractTwoFingerGesture
 					y = getEndOne().getY() * webElement.getSize().getHeight() + webElement.getLocation().getY();
 					Point swipeEnd = new Point( x, y );
 					
-					PerfectoMobile.instance().gestures().pinch( executionId, deviceName, new PercentagePoint( swipeStart.getX(), swipeStart.getY(), false ), new PercentagePoint( swipeEnd.getX(), swipeEnd.getY(), false ) );
+					PerfectoMobile.instance(( (DeviceWebDriver) webDriver ).getxFID() ).gestures().pinch( executionId, deviceName, new PercentagePoint( swipeStart.getX(), swipeStart.getY(), false ), new PercentagePoint( swipeEnd.getX(), swipeEnd.getY(), false ) );
 					return true;
 				}
 				else
@@ -67,7 +68,7 @@ public class TwoFingerGesture extends AbstractTwoFingerGesture
 				}
 			}
 
-			PerfectoMobile.instance().gestures().pinch( executionId, deviceName, new PercentagePoint( getStartOne().getX(), getStartOne().getY() ), new PercentagePoint( getEndOne().getX(), getEndOne().getY() ) );
+			PerfectoMobile.instance(( (DeviceWebDriver) webDriver ).getxFID() ).gestures().pinch( executionId, deviceName, new PercentagePoint( getStartOne().getX(), getStartOne().getY() ), new PercentagePoint( getEndOne().getX(), getEndOne().getY() ) );
 			return true;
 		}
 		else

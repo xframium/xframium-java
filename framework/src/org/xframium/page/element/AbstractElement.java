@@ -216,7 +216,7 @@ public abstract class AbstractElement implements Element
 	 *
 	 * @param currentValue the current value
 	 */
-	protected abstract void _setValue( String currentValue, SetMethod setMethod );
+	protected abstract void _setValue( String currentValue, SetMethod setMethod, String xFID );
 
 	/**
 	 * _get value.
@@ -494,7 +494,7 @@ public abstract class AbstractElement implements Element
         while ( matcher.find() )
         {
             String contentKey = matcher.group( 1 );
-            String replacementValue = ContentManager.instance().getContentValue( contentKey );
+            String replacementValue = ContentManager.instance( webDriver.getxFID() ).getContentValue( contentKey );
             
             if ( replacementValue != null )
                 keyValue = keyValue.replace( "!{" + contentKey + "}", replacementValue );
@@ -791,14 +791,14 @@ public abstract class AbstractElement implements Element
 	 * @see com.perfectoMobile.page.element.Element#setValue(java.lang.String)
 	 */
 	@Override
-	public void setValue( String currentValue )
+	public void setValue( String currentValue, String xFID)
 	{
 	    
-		setValue( currentValue, SetMethod.DEFAULT );
+		setValue( currentValue, SetMethod.DEFAULT, xFID);
 	}
 	
 	@Override
-	public void setValue( String currentValue, SetMethod setMethod )
+	public void setValue( String currentValue, SetMethod setMethod, String xFID )
 	{
 	    
 	    
@@ -807,7 +807,7 @@ public abstract class AbstractElement implements Element
         boolean success = false;
         try
         {
-            _setValue( currentValue, setMethod );
+            _setValue( currentValue, setMethod, xFID );
             success = true;
         }
         catch( Exception e )

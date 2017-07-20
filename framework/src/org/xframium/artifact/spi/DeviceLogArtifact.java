@@ -14,7 +14,7 @@ public class DeviceLogArtifact extends AbstractArtifact
     }
     
     @Override
-    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver )
+    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver, String xFID )
     {
         
         String logData = webDriver.getCloud().getCloudActionProvider().getLog( webDriver );

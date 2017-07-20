@@ -141,7 +141,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
     
     private ExecutionConsole() 
     {
-        KeyWordDriver.instance().addStepListener( this );
+        //KeyWordDriver.instance().addStepListener( this );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( KeyWordStep.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( KWSClick.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( AbstractKeyWordStep.class, new ReflectionSerializer() );
@@ -314,7 +314,6 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
     @Override
     public void beforeSuite( String suiteName, File fileName )
     {
-        DeviceManager.instance().clear();
         testExecuting = true;
         executionMap.clear();
         syncMap.clear();

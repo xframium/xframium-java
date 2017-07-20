@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
@@ -53,7 +54,7 @@ public class DownloadFileAction extends AbstractDefaultAction implements DeviceA
 		String repFilePath = "PRIVATE:" + repFileName;
 		
 		// Copy file from device to Perfecto Repository
-		PerfectoMobile.instance().device().getFile( executionId, deviceName, deviceFilePath, repFilePath );
+		PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).device().getFile( executionId, deviceName, deviceFilePath, repFilePath );
 		
 		String destinationFolderPath;
 		
@@ -65,7 +66,7 @@ public class DownloadFileAction extends AbstractDefaultAction implements DeviceA
 		// Download the file from repository to local
 		byte[] imageData;
 		try{
-			imageData = PerfectoMobile.instance().repositories().download( RepositoryType.MEDIA, repFilePath );
+			imageData = PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).repositories().download( RepositoryType.MEDIA, repFilePath );
 		}catch(Exception ex){
 			throw new IllegalArgumentException( "Could not download the file " + repFileName + "from Perfecto repository path", ex );
 		}
@@ -89,7 +90,7 @@ public class DownloadFileAction extends AbstractDefaultAction implements DeviceA
 		}	
 		
 		// Delete file from repository
-		PerfectoMobile.instance().repositories().delete(RepositoryType.MEDIA, repFilePath );
+		PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).repositories().delete(RepositoryType.MEDIA, repFilePath );
 		
 		return true;
 	}

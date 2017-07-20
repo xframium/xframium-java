@@ -137,12 +137,12 @@ public class DataManager
 	 *
 	 * @param dataProvider the data provider
 	 */
-	public void readData( DataProvider dataProvider )
+	public void readData( DataProvider dataProvider, String xFID )
 	{
 		if ( log.isInfoEnabled() )
 			log.info( "Reading Device Data from " + dataProvider );
 		
-		dataProvider.readData();
+		dataProvider.readData(xFID);
 	}
 
 	/**

@@ -160,7 +160,7 @@ public class ExcelContentProvider extends AbstractContentProvider
 			{
 			    headerList[ i-1 ] = getCellValue( headerRow.getCell( i ) );
 			}
-			ContentManager.instance().setMatrixData( headerList );
+			ContentManager.instance( xFID ).setMatrixData( headerList );
 			
 			for (int i = 1; i <= sheet.getLastRowNum(); i++)
 			{
@@ -175,9 +175,9 @@ public class ExcelContentProvider extends AbstractContentProvider
 					valueList[ x ] = getCellValue( currentRow.getCell( lookupColumns[ x ] ) );
 				}
 				
-				ContentData contentData = new DefaultContentData( keyName, valueList );
+				ContentData contentData = new DefaultContentData( keyName, valueList, ContentManager.instance( xFID ) );
 				
-				ContentManager.instance().addContentData( contentData );	
+				ContentManager.instance( xFID ).addContentData( contentData );	
 			}
 
 			

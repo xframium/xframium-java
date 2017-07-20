@@ -68,18 +68,18 @@ public class NamedDataProvider implements DataProvider
      * 
      * @see com.perfectoMobile.device.data.DataProvider#readData()
      */
-    public List<Device> readData()
+    public List<Device> readData( String xFID )
     {
         List<Device> deviceList = new ArrayList<Device>( 10 );
         for ( String device : namedResources )
         {
-            deviceList.add( lookupDeviceById( device, driverType ) );
+            deviceList.add( lookupDeviceById( device, driverType, xFID ) );
         }
 
         return deviceList;
     }
 
-    public static Device lookupDeviceById( String device, DriverType driverType )
+    public static Device lookupDeviceById( String device, DriverType driverType, String xFID )
     {
         if ( device.equals( "FIREFOX" ) )
         {
@@ -94,7 +94,7 @@ public class NamedDataProvider implements DataProvider
             return new SimpleDevice( device, "Microsoft", "Windows", "Windows", null, "internet explorer", null, 1, "WEB", true, device );
         }
 
-        Handset handset = PerfectoMobile.instance().devices().getDevice( device );
+        Handset handset = PerfectoMobile.instance(xFID).devices().getDevice( device );
 
         String driverName = "";
         switch ( driverType )

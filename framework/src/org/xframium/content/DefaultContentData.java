@@ -32,6 +32,7 @@ public class DefaultContentData implements ContentData
 	
 	/** The matrix data. */
 	private String[] matrixData;
+	private ContentManager contentManager;
 	
 	/**
 	 * Instantiates a new default content data.
@@ -39,10 +40,11 @@ public class DefaultContentData implements ContentData
 	 * @param name the name
 	 * @param matrixData the matrix data
 	 */
-	public DefaultContentData( String name, String[] matrixData )
+	public DefaultContentData( String name, String[] matrixData, ContentManager contentManager )
 	{
 		this.matrixData = matrixData;
 		this.name = name;
+		this.contentManager = contentManager;
 	}
 	
 	/* (non-Javadoc)
@@ -72,7 +74,7 @@ public class DefaultContentData implements ContentData
 	@Override
 	public String getValue( String matrixName )
 	{
-		Integer matrixPosition = ContentManager.instance().getMatrixPosition( matrixName );
+		Integer matrixPosition = contentManager.getMatrixPosition( matrixName );
 		if ( matrixPosition != null && matrixData != null && matrixData.length > matrixPosition )
 			return matrixData[ matrixPosition ];
 		else

@@ -61,7 +61,7 @@ public class KWSCommand extends AbstractKeyWordStep
 		for (int i = 0; i < getParameterList().size(); i++) 
 		{
 			String currentName = getParameterList().get( i ).getName();
-			String currentValue = getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "";
+			String currentValue = getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) + "";
 
 			params.put(currentName, currentValue);
 		}

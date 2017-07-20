@@ -47,8 +47,8 @@ public class KWSCompare extends AbstractKeyWordStep
 
 		if ( getParameterList().size() == 2 )
 		{
-			Object compareFrom = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
-			Object compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap );
+			Object compareFrom = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() );
+			Object compareTo = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() );
 			if ( !compareFrom.equals( compareTo ) )
 				throw new ScriptException( "COMPARE Expected [" + compareFrom + "] but found [" + compareTo + "]" );
 		}

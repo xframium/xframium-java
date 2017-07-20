@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 import org.testng.Assert;
+import org.testng.ITestContext;
 import org.testng.annotations.Test;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactManager;
@@ -61,17 +62,32 @@ public class XMLTestDriver extends AbstractSeleniumTest
         
         TestName testName = testPackage.getTestName();
         
-        KeyWordTest test = KeyWordDriver.instance().getTest( testName.getRawName() );
+        KeyWordTest test = KeyWordDriver.instance( testPackage.getxFID() ).getTest( testName.getRawName() );
         if ( test == null )
             throw new ScriptConfigurationException( "The Test Name " + testName.getRawName() + " does not exist" );
         
         ExecutionContextTest executionContextTest = new ExecutionContextTest();
+        executionContextTest.setxFID( testContainer.getxFID() );
         
+   
         testPackage.getConnectedDevice().getWebDriver().setExecutionContext( executionContextTest );
         
-        CloudDescriptor cD = CloudRegistry.instance().getCloud();
+        if ( testPackage.getConnectedDevice().getWebDriver().isConnected() )
+        {
+            try
+            {
+                if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.DEVICE_LOG.name() ) )
+                    testPackage.getConnectedDevice().getWebDriver().getCloud().getCloudActionProvider().enabledLogging( testPackage.getConnectedDevice().getWebDriver() );
+            }
+            catch ( Exception e )
+            {
+                e.printStackTrace();
+            }
+        }
+        
+        CloudDescriptor cD = CloudRegistry.instance(executionContextTest.getxFID()).getCloud();
         if ( testPackage.getDevice().getCloud() != null && !testPackage.getDevice().getCloud().trim().isEmpty() )
-            cD = CloudRegistry.instance().getCloud( testPackage.getDevice().getCloud() );
+            cD = CloudRegistry.instance(executionContextTest.getxFID()).getCloud( testPackage.getDevice().getCloud() );
         
         if ( !testPackage.getConnectedDevice().getWebDriver().isConnected() )
         {
@@ -151,13 +167,13 @@ public class XMLTestDriver extends AbstractSeleniumTest
                 }
             }
 
-            if ( DeviceManager.instance().isDryRun() )
+            if ( DeviceManager.instance( testContainer.getxFID() ).isDryRun() )
             {
                 log.info( "This would have executed " + testName.getTestName() );
                 return;
             }
 
-            if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
+            if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
             {
                 if ( cD.getProvider().equals( "SAUCELABS" ) )
                 {
@@ -178,18 +194,18 @@ public class XMLTestDriver extends AbstractSeleniumTest
 
             if ( testPackage.getConnectedDevice().getWebDriver().getCloud().getProvider().equals( "PERFECTO" ) )
             {
-                if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM.name() )  )
+                if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.REPORTIUM.name() )  )
                 {
                     //
                     // Reportium Integration
                     //
-                    String[] tags = new String[] { "xFramium", CloudRegistry.instance().getCloud().getUserName(), ApplicationRegistry.instance().getAUT().getName(), PageManager.instance().getSiteName() };
+                    String[] tags = new String[] { "xFramium", CloudRegistry.instance(executionContextTest.getxFID()).getCloud().getUserName(), testPackage.getConnectedDevice().getWebDriver().getAut().getName(), PageManager.instance().getSiteName() };
                     if ( test.getTags() != null && test.getTags().length > 0 )
                     {
                         for ( String tag : test.getTags() )
                             ArrayUtils.add( tags, tag );
                     }
-                    PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder().withProject( new Project( ApplicationRegistry.instance().getAUT().getName(), ApplicationRegistry.instance().getAUT().getVersion() + "" ) ).withContextTags( tags )
+                    PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder().withProject( new Project( testPackage.getConnectedDevice().getWebDriver().getAut().getName(), testPackage.getConnectedDevice().getWebDriver().getAut().getVersion() + "" ) ).withContextTags( tags )
                             .withWebDriver( testPackage.getConnectedDevice().getWebDriver() ).build();
                     testPackage.getConnectedDevice().getWebDriver().setReportiumClient( new ReportiumClientFactory().createPerfectoReportiumClient( perfectoExecutionContext ) );
 
@@ -202,7 +218,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
                 testPackage.getConnectedDevice().getWebDriver().setProperty( "testDescription", test.getDescription() );
 
             testFlow.info( Thread.currentThread().getName() + ": Executing " + testPackage.getRunKey() + " against " + testPackage.getConnectedDevice().getDevice().getKey() );
-            executionContextTest = KeyWordDriver.instance().executeTest( testName, testPackage.getConnectedDevice().getWebDriver(), null );
+            executionContextTest = KeyWordDriver.instance( testPackage.getxFID() ).executeTest( testName, testPackage.getConnectedDevice().getWebDriver(), null );
             testFlow.info( Thread.currentThread().getName() + ": Completed Executing " + testPackage.getRunKey() + " against " + executionContextTest.getDevice().getKey() );
             returnValue = executionContextTest.getStatus();
             testName.setTest( executionContextTest );
@@ -214,7 +230,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
             {
                 if ( returnValue )
                 {
-                    if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
+                    if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
                     {
                         if ( cD.getProvider().equals( "SAUCELABS" ) )
                         {
@@ -223,7 +239,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
                         }
                     }
 
-                    if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
+                    if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
                     {
                         if ( testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
                         {
@@ -236,7 +252,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
                 }
                 else
                 {
-                    if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
+                    if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
                     {
                         if ( cD.getProvider().equals( "SAUCELABS" ) )
                         {
@@ -245,7 +261,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
                         }
                     }
 
-                    if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
+                    if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
                     {
                         if ( testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
                         {

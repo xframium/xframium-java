@@ -12,7 +12,7 @@ import org.xframium.spi.Device;
 
 public interface CloudActionProvider
 {
-    public boolean startApp( String executionId, String deviceId, String appName, String appIdentifier );
+    public boolean startApp( DeviceWebDriver webdriver, String executionId, String deviceId, String appName, String appIdentifier );
     public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device );
     public void enabledLogging( DeviceWebDriver webDriver );
     public void disableLogging( DeviceWebDriver webDriver );
@@ -22,7 +22,7 @@ public interface CloudActionProvider
     
     public boolean installApplication( String applicationName, DeviceWebDriver webDriver, boolean instrumentApp );
     public boolean uninstallApplication( String applicationName, DeviceWebDriver webDriver );
-    public boolean openApplication( String applicationName, DeviceWebDriver webDriver );
+    public boolean openApplication( String applicationName, DeviceWebDriver webDriver, String xFID );
     public boolean closeApplication( String applicationName, DeviceWebDriver webDriver );
     public boolean isDescriptorSupported( BY descriptorType );
     

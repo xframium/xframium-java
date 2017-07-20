@@ -21,6 +21,7 @@
 package org.xframium.gesture.factory.spi.perfecto;
 
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.AbstractRotateGesture;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.services.Device.ScreenOrientation;
@@ -42,7 +43,7 @@ public class RotateGesture extends AbstractRotateGesture
 		String deviceName = getDeviceName( webDriver );
 		if ( executionId != null )
 		{
-			PerfectoMobile.instance().device().rotate( executionId, deviceName, ScreenOrientation.valueOf( getOrientation().name().toLowerCase() ) );
+			PerfectoMobile.instance(( (DeviceWebDriver) webDriver ).getxFID() ).device().rotate( executionId, deviceName, ScreenOrientation.valueOf( getOrientation().name().toLowerCase() ) );
 			return true;
 		}
 		else

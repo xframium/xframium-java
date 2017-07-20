@@ -67,16 +67,16 @@ public class KWSReport extends AbstractKeyWordStep
 		for ( int i=0; i<getParameterList().size(); i++ )
 		{
 		    if ( !"ADD_TO_CSV".equals( getParameterList().get( i ).getName() ) )
-		        reportData.append( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) ).append( "\t" );
+		        reportData.append( getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) ).append( "\t" );
 		}
 		
-		if ( getParameter( "ADD_TO_CSV" ) != null && Boolean.parseBoolean( getParameterValue( getParameter( "ADD_TO_CSV" ), contextMap, dataMap ) ) )
+		if ( getParameter( "ADD_TO_CSV" ) != null && Boolean.parseBoolean( getParameterValue( getParameter( "ADD_TO_CSV" ), contextMap, dataMap, executionContext.getxFID() ) ) )
 		{
 		    List<String> dataList = new ArrayList<String>( 10 );
 		    for ( int i=0; i<getParameterList().size(); i++ )
 	        {
 	            if ( !"ADD_TO_CSV".equals( getParameterList().get( i ).getName() ) )
-	                dataList.add( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) );
+	                dataList.add( getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) );
 	        }
 		    executionContext.addToCSV( dataList.toArray( new String[ 0 ] ) );
 		}
