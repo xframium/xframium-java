@@ -9,12 +9,12 @@
     <device browserName="firefox" model="Firefox" manufacturer="Mozilla" availableDevices="12" driverType="WEB" name="windows_nt firefox" cloud="grid" active="true" />
     <device browserName="chrome" os="WIN8_1" model="Chrome" manufacturer="Google" availableDevices="12" driverType="WEB" name="windows_nt chrome" cloud="grid" active="true" />
     <device browserName="chrome" os="WIN8_1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Chrome Local" cloud="grid" active="false" />
-    <device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Windows 8.1 chrome 53" cloud="saucelabs" active="true" />
+    <device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Windows 8.1 chrome 53" cloud="saucelabs" active="false" />
     <device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Chrome Saucelabs" cloud="saucelabs" active="false" />
     <device os="iOS" model="iPhone-7" tagNames="Perfecto" manufacturer="Apple" availableDevices="1" driverType="WEB" name="iPhone-7 iOS" cloud="perfecto" active="false" />
     <device os="iOS" model="iPhone-7 Plus" tagNames="Perfecto" manufacturer="Apple" availableDevices="1" driverType="WEB" name="iPhone-7 Plus iOS" cloud="perfecto" active="false" />
-    <device os="iOS" model="iPhone.*" tagNames="Perfecto" manufacturer="Apple" availableDevices="2" driverType="WEB" name="iPhone iOS" cloud="perfecto" active="true" />
-    <device browserName="Chrome" os="Android" model="Galaxy.*" tagNames="Perfecto" manufacturer="Samsung" availableDevices="1" driverType="WEB" name="Android Chrome" cloud="perfecto" active="true" />
+    <device os="iOS" model="iPhone.*" tagNames="Perfecto" manufacturer="Apple" availableDevices="2" driverType="WEB" name="iPhone iOS" cloud="perfecto" active="false" />
+    <device browserName="Chrome" os="Android" model="Galaxy.*" tagNames="Perfecto" manufacturer="Samsung" availableDevices="1" driverType="WEB" name="Android Chrome" cloud="perfecto" active="false" />
     <device browserName="Browser" os="Android" osVersion="4.4" model="Galaxy S6" manufacturer="Samsung" availableDevices="1" driverType="WEB" name="Android 4.4 Browser" cloud="saucelabs" active="false">
       <capability name="deviceName" class="STRING">Google Nexus 7 HD Emulator</capability>
       <capability name="appiumVersion" class="STRING">1.5.3</capability>
