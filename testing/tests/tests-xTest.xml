@@ -4,7 +4,6 @@
   <import fileName="./xTest/xFramium NATIVE Airplane.xml" />
   <import fileName="./xTest/xFramium NATIVE Data.xml" />
   <import fileName="./xTest/xFramium NATIVE Location.xml" />
-  <import fileName="./xTest/xFramium Native KeyWord Test.xml" />
   <import fileName="./xTest/xFramium NATIVE Notifications.xml" />
   <import fileName="./xTest/xFramium NATIVE Notifications Android.xml" />
   <import fileName="./xTest/xFramium 2nd Device.xml" />

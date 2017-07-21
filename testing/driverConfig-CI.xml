@@ -6,15 +6,15 @@
   <cloud provider="XML" fileName="/var/lib/jenkins/cloudRegistry.xml" name="saucelabs" />
   <application provider="LOCAL" name="xFramium Testing" appPackage="" bundleId="" url="http://xframium.org/testing.html" iosInstall="" androidInstall="" />
   <devices provider="LOCAL">
-    <device browserName="firefox" model="Firefox" manufacturer="Mozilla" availableDevices="12" driverType="WEB" name="windows_nt firefox" cloud="grid" active="true" />
-    <device browserName="chrome" os="WIN8_1" model="Chrome" manufacturer="Google" availableDevices="12" driverType="WEB" name="windows_nt chrome" cloud="grid" active="true" />
+    <device browserName="firefox" model="Firefox" manufacturer="Mozilla" availableDevices="5" driverType="WEB" name="windows_nt firefox" cloud="grid" active="true" />
+    <device browserName="chrome" os="WIN8_1" model="Chrome" manufacturer="Google" availableDevices="5" driverType="WEB" name="windows_nt chrome" cloud="grid" active="true" />
     <device browserName="chrome" os="WIN8_1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Chrome Local" cloud="grid" active="false" />
-    <device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Windows 8.1 chrome 53" cloud="saucelabs" active="false" />
+    <device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Windows 8.1 chrome 53" cloud="saucelabs" active="true" />
     <device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Chrome Saucelabs" cloud="saucelabs" active="false" />
     <device os="iOS" model="iPhone-7" tagNames="Perfecto" manufacturer="Apple" availableDevices="1" driverType="WEB" name="iPhone-7 iOS" cloud="perfecto" active="false" />
     <device os="iOS" model="iPhone-7 Plus" tagNames="Perfecto" manufacturer="Apple" availableDevices="1" driverType="WEB" name="iPhone-7 Plus iOS" cloud="perfecto" active="false" />
-    <device os="iOS" model="iPhone.*" tagNames="Perfecto" manufacturer="Apple" availableDevices="2" driverType="WEB" name="iPhone iOS" cloud="perfecto" active="false" />
-    <device browserName="Chrome" os="Android" model="Galaxy.*" tagNames="Perfecto" manufacturer="Samsung" availableDevices="1" driverType="WEB" name="Android Chrome" cloud="perfecto" active="false" />
+    <device os="iOS" model="iPhone.*" tagNames="Perfecto" manufacturer="Apple" availableDevices="4" driverType="WEB" name="iPhone iOS" cloud="perfecto" active="true" />
+    <device browserName="Chrome" os="Android" model="Galaxy.*" tagNames="Perfecto" manufacturer="Samsung" availableDevices="3" driverType="WEB" name="Android Chrome" cloud="perfecto" active="false" />
     <device browserName="Browser" os="Android" osVersion="4.4" model="Galaxy S6" manufacturer="Samsung" availableDevices="1" driverType="WEB" name="Android 4.4 Browser" cloud="saucelabs" active="false">
       <capability name="deviceName" class="STRING">Google Nexus 7 HD Emulator</capability>
       <capability name="appiumVersion" class="STRING">1.5.3</capability>
@@ -23,7 +23,22 @@
     <device browserVersion="53" browserName="Chrome" os="Windows" osVersion="10" model="chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Windows 10 Chrome 53" cloud="perfecto" active="false" />
   </devices>
   <driver type="WEB" outputFolder="test-output" displayResults="true">
+    <artifact type="FAILURE_SOURCE" />
+    <artifact type="DEVICE_LOG" />
+    <artifact type="IMAGING_ANALYSIS" />
+    <artifact type="EXECUTION_RECORD_HTML" />
     <artifact type="CONSOLE_LOG" />
+    <artifact type="GRID_REPORT" />
+    <artifact type="GRID_HTML" />
+    <artifact type="SAUCE_LABS" />
+    <artifact type="EXECUTION_REPORT_CSV" />
+    <artifact type="EXECUTION_REPORT_XML" />
+    <artifact type="EXECUTION_REPORT_HTML" />
+    <artifact type="EXECUTION_REPORT_PDF" />
+    <artifact type="REPORTIUM" />
+    <artifact type="WIND_TUNNEL" />
+    <artifact type="TIMING_HTML" />
+    <artifact type="STATISTICS" />
   </driver>
   <model provider="XML" fileName="./objectRepository/xTest/objectRepository.xml" siteName="xTest" />
   <suite provider="XML" fileName="./tests/tests-xTest.xml" />
