@@ -2,7 +2,7 @@
   <cloud provider="XML" fileName="cloudRegistry.xml" name="ford" />
   <application provider="XML" fileName="applicationRegistry.xml" name="xTest" />
   <devices provider="XML" fileName="deviceRegistry.xml" />
-  <driver suiteName="xTest" type="WEB" outputFolder="test-output" displayResults="true" domain="PROFESSIONAL_SERVICES" dryRun="false" embeddedServer="true">
+  <driver suiteName="xTest" type="WEB" outputFolder="test-output" displayResults="true" domain="PROFESSIONAL_SERVICES" dryRun="false" embeddedServer="true" testNames="Checkbox Test">
     <property name="jdbc.password"></property>
     <property name="xxx.jdbc.url">jdbc:derby:memory:mll;create=true</property>
     <property name="xxx.jdbc.username"></property>

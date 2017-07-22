@@ -308,8 +308,8 @@ public class KeyWordDriver
     {
         if ( test.isActive() )
         {
-            if ( log.isDebugEnabled() )
-                log.debug( "Adding function [" + test.getName() + "]" );
+            if ( log.isInfoEnabled() )
+                log.info( "Adding function [" + test.getName() + "]" );
             functionMap.put( test.getName(), test );
         }
     }

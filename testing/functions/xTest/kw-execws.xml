@@ -1,46 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-<function name="kw-execws" active="true">
-<description></description>
-<step name="SOAP Call" site="xTest" page="Home" type="EXECWS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="soap">
-<parameter type="STATIC" name="url" value="http://www.webservicex.net/FinanceService.asmx"/>
-<parameter type="STATIC" name="method" value="POST"/>
-<parameter type="STATIC" name="media-type" value="text/xml"/>
-<parameter type="STATIC" name="type" value="SOAP"/>
-<parameter type="FILE" name="payload"><token type="STATIC" name="loanAmount" value="100000"/>
-<token type="STATIC" name="extraCost" value="0"/>
-<token type="STATIC" name="interestRate" value="5"/>
-<token type="STATIC" name="months" value="360"/>
-</parameter>
-<parameter type="STATIC" name="type" value="xml" usage="OUTPUT"/>
-<parameter type="STATIC" name="var1" value="//APRResult" usage="OUTPUT"/>
-<parameter type="STATIC" name="var2" value="//APRResult" usage="OUTPUT"/>
-<parameter type="STATIC" name="var3" value="//APRResult" usage="OUTPUT"/>
-</step>
-<step name="compare" site="xTest" page="home" type="REPORT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="CONTEXT" value="soap_var1"/>
-<parameter type="CONTEXT" value="soap_var2"/>
-<parameter type="CONTEXT" value="soap_var3"/>
-</step>
-<step name="compare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="536.82162301213975"/>
-<parameter type="CONTEXT" value="soap_var1"/>
-</step>
-<step name="REST Call" site="xTest" page="Home" type="EXECWS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="rest">
-<parameter type="STATIC" name="url" value="http://www.webservicex.net/FinanceService.asmx/APR?LoanAmount={loanAmount}&amp;ExtraCost={extraCost}&amp;InterestRate={interestRate}&amp;Months={months}"><token type="STATIC" name="loanAmount" value="100000"/>
-<token type="STATIC" name="extraCost" value="15000"/>
-<token type="STATIC" name="interestRate" value="5"/>
-<token type="STATIC" name="months" value="360"/>
-</parameter>
-<parameter type="STATIC" name="method" value="GET"/>
-<parameter type="STATIC" name="media-type" value="text/xml"/>
-<parameter type="STATIC" name="type" value="REST"/>
-<parameter type="STATIC" name="type" value="xml" usage="OUTPUT"/>
-<parameter type="STATIC" name="var1" value="//double" usage="OUTPUT"/>
-</step>
-<step name="compare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="617.34486646396078"/>
-<parameter type="CONTEXT" value="rest_var1"/>
-</step>
-</function>
+  <function name="kw-execws" active="true">
+    <description></description>
+    <step name="SOAP Call" site="xTest" page="Home" type="EXECWS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="soap">
+      <parameter type="STATIC" name="url" value="http://www.webservicex.net/FinanceService.asmx" />
+      <parameter type="STATIC" name="method" value="POST" />
+      <parameter type="STATIC" name="media-type" value="text/xml" />
+      <parameter type="STATIC" name="type" value="SOAP" />
+      <parameter type="FILE" name=".payload" value="../ws-payload.xml">
+        <token type="STATIC" name="loanAmount" value="100000" />
+        <token type="STATIC" name="extraCost" value="0" />
+        <token type="STATIC" name="interestRate" value="5" />
+        <token type="STATIC" name="months" value="360" />
+      </parameter>
+      <parameter type="STATIC" name="type" value="xml" usage="OUTPUT" />
+      <parameter type="STATIC" name="var1" value="//APRResult" usage="OUTPUT" />
+      <parameter type="STATIC" name="var2" value="//APRResult" usage="OUTPUT" />
+      <parameter type="STATIC" name="var3" value="//APRResult" usage="OUTPUT" />
+    </step>
+    <step name="compare" site="xTest" page="home" type="REPORT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="CONTEXT" value="soap_var1" />
+      <parameter type="CONTEXT" value="soap_var2" />
+      <parameter type="CONTEXT" value="soap_var3" />
+    </step>
+    <step name="compare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="536.82162301213975" />
+      <parameter type="CONTEXT" value="soap_var1" />
+    </step>
+    <step name="REST Call" site="xTest" page="Home" type="EXECWS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="rest">
+      <parameter type="STATIC" name="url" value="http://www.webservicex.net/FinanceService.asmx/APR?LoanAmount={loanAmount}&amp;ExtraCost={extraCost}&amp;InterestRate={interestRate}&amp;Months={months}">
+        <token type="STATIC" name="loanAmount" value="100000" />
+        <token type="STATIC" name="extraCost" value="15000" />
+        <token type="STATIC" name="interestRate" value="5" />
+        <token type="STATIC" name="months" value="360" />
+      </parameter>
+      <parameter type="STATIC" name="method" value="GET" />
+      <parameter type="STATIC" name="media-type" value="text/xml" />
+      <parameter type="STATIC" name="type" value="REST" />
+      <parameter type="STATIC" name="type" value="xml" usage="OUTPUT" />
+      <parameter type="STATIC" name="var1" value="//double" usage="OUTPUT" />
+    </step>
+    <step name="compare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" value="617.34486646396078" />
+      <parameter type="CONTEXT" value="rest_var1" />
+    </step>
+  </function>
 </suite>

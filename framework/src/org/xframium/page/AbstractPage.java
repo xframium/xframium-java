@@ -141,7 +141,7 @@ public abstract class AbstractPage implements Page
     /* (non-Javadoc)
      * @see com.perfectoMobile.page.Page#setDriver(java.lang.Object)
      */
-    public final void setDriver( Object webDriver )
+    public void setDriver( Object webDriver )
     {
     	this.webDriver = webDriver;
     }

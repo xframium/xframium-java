@@ -324,9 +324,9 @@ public class DeviceWebDriver
         return aut;
     }
 
-    public void setAut( ApplicationDescriptor aut )
+    public void setAut( ApplicationDescriptor aut, String xFID )
     {
-        ExecutionContext.instance( executionContext.getxFID() ).setAut( aut );
+        ExecutionContext.instance( xFID ).setAut( aut );
         this.aut = aut;
     }
 

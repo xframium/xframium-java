@@ -14,6 +14,7 @@
   <import fileName="../functions/xTest/kw-dumpstate.xml" />
   <import fileName="../functions/xTest/kw-else.xml" />
   <import fileName="../functions/xTest/kw-execjs.xml" />
+  <import fileName="../functions/xTest/kw-execws.xml" />
   <import fileName="../functions/xTest/kw-focus.xml" />
   <import fileName="../functions/xTest/kw-loop.xml" />
   <import fileName="../functions/xTest/setValueFromNumericIndex.xml" />

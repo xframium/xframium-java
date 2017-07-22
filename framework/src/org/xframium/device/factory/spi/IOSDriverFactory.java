@@ -127,7 +127,7 @@ public class IOSDriverFactory extends AbstractDriverFactory
 			        }
 			    }
 			    
-			    webDriver.setAut( ApplicationRegistry.instance( xFID ).getAUT() );
+			    webDriver.setAut( ApplicationRegistry.instance( xFID ).getAUT(), xFID );
 			    
 			    String interruptString = ApplicationRegistry.instance( xFID ).getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance( xFID ).getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance( xFID ).getDeviceInterrupts();
 	            webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );

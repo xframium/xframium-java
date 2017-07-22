@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
+import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.cloud.action.CloudActionProvider;
@@ -95,7 +96,7 @@ public class KWSApplication extends AbstractKeyWordStep
 	    switch ( ApplicationAction.valueOf( getName().toUpperCase() ) )
         {
 	        case CLOSE:
-	            ( (DeviceWebDriver) webDriver ).setAut( null );
+	            ( (DeviceWebDriver) webDriver ).setAut( null, sC.getxFID() );
 	            return cP.closeApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver );
 	            
 	        case INSTALL:
@@ -106,7 +107,9 @@ public class KWSApplication extends AbstractKeyWordStep
                     cP.startTimer( (DeviceWebDriver) webDriver, null, executionContext );
 	            if ( cP.openApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver, ((DeviceWebDriver)webDriver ).getxFID() ) )
 	            {
-	                ( (DeviceWebDriver) webDriver ).setAut( ApplicationRegistry.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).getApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "" ) );
+	                ApplicationRegistry aR = ApplicationRegistry.instance( ( (DeviceWebDriver) webDriver ).getxFID() );
+	                ApplicationDescriptor aD = aR.getApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "" );
+	                ( (DeviceWebDriver) webDriver ).setAut( aD, executionContext.getxFID() );
 	                return true;
 	            }
 	            else 

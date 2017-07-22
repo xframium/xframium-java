@@ -5,7 +5,6 @@
 <step name="aOpen" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
 <step name="deleteButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
 <step name="deleteButton" site="xTest" page="home" type="VISIBLE" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR"/>
-<step name="Wi-Fi" site="Settings" page="Home" type="VISIBLE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
 <step name="aOpen" site="xTest" page="home" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="1000" failureMode="ERROR"/>
 <step name="deleteButton" site="xTest" page="home" type="VISIBLE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
 <step name="aOpen" site="xTest" page="home" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="1000" failureMode="ERROR"/>

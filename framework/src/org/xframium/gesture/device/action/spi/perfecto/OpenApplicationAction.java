@@ -67,7 +67,7 @@ public class OpenApplicationAction extends AbstractDefaultAction implements Devi
     		    webDriver.findElement(By.tagName("body")).sendKeys(selectLinkOpeninNewTab);
     		
     		webDriver.get( appDesc.getUrl() );
-    		( (DeviceWebDriver) webDriver ).setAut( appDesc );
+    		( (DeviceWebDriver) webDriver ).setAut( appDesc,  ( (DeviceWebDriver) webDriver ).getxFID()  );
     		    
 		}
 		else
@@ -88,7 +88,7 @@ public class OpenApplicationAction extends AbstractDefaultAction implements Devi
     		        if ( webDriver instanceof ContextAware )
     	                ( ( ContextAware ) webDriver ).context( "NATIVE_APP" );
     		        
-    		        ( (DeviceWebDriver) webDriver ).setAut( appDesc );
+    		        ( (DeviceWebDriver) webDriver ).setAut( appDesc,  ( (DeviceWebDriver) webDriver ).getxFID()  );
     		        return true;
     		    }
     		    else

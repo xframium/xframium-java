@@ -24,7 +24,7 @@
 <parameter type="CONTEXT" value="attributeValue"/>
 </step>
 <step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="none"/>
+<parameter type="STATIC" value="center"/>
 <parameter type="STATIC" value="STYLE.text-align"/>
 </step>
 <step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="attributeStyleValue">
