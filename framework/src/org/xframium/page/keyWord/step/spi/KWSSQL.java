@@ -135,7 +135,7 @@ public class KWSSQL extends AbstractKeyWordStep
 	                Map resultMap = null;
 	                String mapKey = null;
 	                String mapValue = null;
-	                PageDataProvider dp = PageDataManager.instance().getDataProvider();
+	                PageDataProvider dp = PageDataManager.instance(sC.getxFID()).getDataProvider();
 	                dp.addRecordType(getContext(), false);
 	                
 	                for (int i=1; i<resultsArr.length; i++) {

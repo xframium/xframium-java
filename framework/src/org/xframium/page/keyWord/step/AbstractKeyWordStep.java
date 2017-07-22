@@ -43,7 +43,6 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.xframium.application.ApplicationRegistry;
 import org.xframium.application.ApplicationVersion;
 import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactType;
@@ -95,7 +94,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     {
         kwImpl = getClass().getName();
         kw = KeyWordStepFactory.instance().getKW( getClass() );
-        natualLanguage = PageManager.instance().getFormattedMessage( getClass().getSimpleName() );
+        natualLanguage = PageManager.getFormattedMessage( getClass().getSimpleName() );
         category = "Other";
     }
 
@@ -689,7 +688,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 if ( log.isDebugEnabled() )
                     log.debug( Thread.currentThread().getName() + ": CONTEXT element found as " + currentElement );
 
-                ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance().getSiteName(), getPageName(), elementName );
+                ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance( executionContext.getxFID() ).getSiteName(), getPageName(), elementName );
                 Element myElement = pageObject.getElement( elementDescriptor ).cloneElement();
                 
 
@@ -722,10 +721,10 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 if ( log.isInfoEnabled() )
                     log.info( Thread.currentThread().getName() + ": Cloning Element " + useName + " on page " + pageName );
 
-                ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance().getSiteName(), pageName, useName );
+                ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance( executionContext.getxFID() ).getSiteName(), pageName, useName );
                 Element originalElement = pageObject.getElement( elementDescriptor ).cloneElement();
                 if ( originalElement == null )
-                    throw new ObjectConfigurationException( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance().getSiteName(), pageName, useName );
+                    throw new ObjectConfigurationException( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance( executionContext.getxFID() ).getSiteName(), pageName, useName );
 
                 Element clonedElement = originalElement.cloneElement();
                 clonedElement.setDriver( webDriver );
@@ -744,7 +743,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             {
                 try
                 {
-                    ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance().getSiteName(), pageName, useName );
+                    ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance( executionContext.getxFID() ).getSiteName(), pageName, useName );
                     Element elt = pageObject.getElement( elementDescriptor ).cloneElement();
                     elt.setDriver( webDriver );
                     elt.setCacheNative( true );
@@ -754,7 +753,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 }
                 catch ( NullPointerException e )
                 {
-                    throw new ObjectConfigurationException( siteName == null ? PageManager.instance().getSiteName() : siteName, pageName, useName );
+                    throw new ObjectConfigurationException( siteName == null ? PageManager.instance( executionContext.getxFID() ).getSiteName() : siteName, pageName, useName );
                 }
             }
         }
@@ -872,12 +871,12 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 //
                 // Check for tag names
                 //
-                if ( tagNames != null && tagNames.length > 0 && PageManager.instance().getTagNames() != null && PageManager.instance().getTagNames().length > 0 )
+                if ( tagNames != null && tagNames.length > 0 && PageManager.instance( executionContext.getxFID() ).getTagNames() != null && PageManager.instance( executionContext.getxFID() ).getTagNames().length > 0 )
                 {
                     boolean tagEnabled = false;
                     for ( String tagName : tagNames )
                     {
-                        for ( String useTag : PageManager.instance().getTagNames() )
+                        for ( String useTag : PageManager.instance( executionContext.getxFID() ).getTagNames() )
                         {
                             if ( tagName.equals( useTag ) )
                             {
@@ -1157,7 +1156,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             
             executionContext.completeStep( stepStatus, stepException );
 
-            if ( PageManager.instance().isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
+            if ( PageManager.instance( executionContext.getxFID() ).isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
                 PerfectoMobile.instance( ((DeviceWebDriver)webDriver).getxFID()).windTunnel().addPointOfInterest( getExecutionId( webDriver ), getPoi() + "(" + getPageName() + "." + getName() + ")", returnValue ? Status.success : Status.failure );
 
             if ( !returnValue )
@@ -1180,7 +1179,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                             if ( isTimed() )
                                 recordTimings( (DeviceWebDriver)webDriver, executionContext, System.currentTimeMillis(), StepStatus.FAILURE );
 
-                            if ( PageManager.instance().isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
+                            if ( PageManager.instance( executionContext.getxFID() ).isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
                                 PerfectoMobile.instance(((DeviceWebDriver)webDriver).getxFID()).windTunnel().addPointOfInterest( getExecutionId( webDriver ), getPoi() + "(" + getPageName() + "." + getName() + ")", Status.failure );
                         }
                         log.error( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed", currentError );
@@ -1198,7 +1197,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                             if ( isTimed() )
                                 recordTimings( (DeviceWebDriver)webDriver, executionContext, System.currentTimeMillis(), StepStatus.FAILURE );
 
-                            if ( PageManager.instance().isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
+                            if ( PageManager.instance( executionContext.getxFID() ).isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
                                 PerfectoMobile.instance(((DeviceWebDriver)webDriver).getxFID()).windTunnel().addPointOfInterest( getExecutionId( webDriver ), getPoi() + "(" + getPageName() + "." + getName() + ")", Status.failure );
                         }
 
@@ -1267,7 +1266,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             }
         }
         
-        if ( PageManager.instance().isWindTunnelEnabled() )
+        if ( PageManager.instance( executionContext.getxFID() ).isWindTunnelEnabled() )
             PerfectoMobile.instance(webDriver.getxFID()).windTunnel().addTimerReport( webDriver.getExecutionId(), getPageName() + "." + getName() + "." + getClass().getSimpleName(), (int) runLength, ((status.equals( StepStatus.SUCCESS ) || (status.equals( StepStatus.FAILURE_IGNORED ))) ? Status.success : Status.failure), description, threshold );
         
         
@@ -1794,7 +1793,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      */
     public String getExecutionId( WebDriver webDriver )
     {
-        return PageManager.instance().getExecutionId( webDriver );
+        return PageManager.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).getExecutionId( webDriver );
     }
 
     /**
@@ -1806,7 +1805,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      */
     public String getDeviceOs( WebDriver webDriver )
     {
-        return PageManager.instance().getDeviceOs( webDriver );
+        return PageManager.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).getDeviceOs( webDriver );
     }
 
     /**
@@ -1818,7 +1817,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      */
     public String getDeviceName( WebDriver webDriver )
     {
-        return PageManager.instance().getDeviceName( webDriver );
+        return PageManager.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).getDeviceName( webDriver );
     }
 
     /**
@@ -1936,7 +1935,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         checkPointName = getParameterValue( getParameter( "checkPointName" ), contextMap, dataMap, executionContext.getxFID() );
         if ( checkPointName != null )
         {
-            checkPointFolder = new File( DataManager.instance().getReportFolder(), "historicalComparison" );
+            checkPointFolder = new File( DataManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getReportFolder(), "historicalComparison" );
             checkPointFolder = new File( checkPointFolder, ((DeviceWebDriver) webDriver).getDevice().getKey() );
 
             String hCount = getParameterValue( getParameter( "historicalCount" ), contextMap, dataMap, executionContext.getxFID() );
@@ -1950,7 +1949,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             }
         }
 
-        File rootFolder = ExecutionContext.instance().getReportFolder();
+        File rootFolder = ExecutionContext.instance(( (DeviceWebDriver) webDriver ).getxFID()).getReportFolder(( (DeviceWebDriver) webDriver ).getxFID());
         File useFolder = new File( rootFolder, "artifacts" );
         useFolder.mkdirs();
 

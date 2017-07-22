@@ -122,25 +122,22 @@ public class CSVElementProvider extends AbstractElementProvider
 				if ( getSiteName() == null )
                     setSiteName( lineData[ 0 ] );
 				
-				if ( lineData[ 0 ].equals( PageManager.instance().getSiteName() ) )
-				{
-					ElementDescriptor elementDescriptor = new ElementDescriptor( lineData[ 0 ],  lineData[ 1 ],  lineData[ 2 ] );
-					
-					String contextName = null;
-					if ( lineData.length > 5 )
-						contextName = lineData[ 5 ];
-					
-					Element currentElement = ElementFactory.instance().createElement( BY.valueOf( lineData[ 3 ] ), lineData[ 4 ].replace( "$$", ","), lineData[ 2 ], lineData[ 1 ], contextName );
-					
-					if ( lineData.length > 6 )
-                        currentElement.setDeviceContext( lineData[ 6 ] );
-					
-					if ( log.isDebugEnabled() )
-						log.debug( "Adding CSV Element using [" + elementDescriptor.toString() + "] as [" + currentElement );
-					
-					elementsRead = elementsRead & validateElement( elementDescriptor, currentElement );
-					elementMap.put(elementDescriptor.toString(), currentElement );
-				}
+				ElementDescriptor elementDescriptor = new ElementDescriptor( lineData[ 0 ],  lineData[ 1 ],  lineData[ 2 ] );
+				
+				String contextName = null;
+				if ( lineData.length > 5 )
+					contextName = lineData[ 5 ];
+				
+				Element currentElement = ElementFactory.instance().createElement( BY.valueOf( lineData[ 3 ] ), lineData[ 4 ].replace( "$$", ","), lineData[ 2 ], lineData[ 1 ], contextName );
+				
+				if ( lineData.length > 6 )
+                    currentElement.setDeviceContext( lineData[ 6 ] );
+				
+				if ( log.isDebugEnabled() )
+					log.debug( "Adding CSV Element using [" + elementDescriptor.toString() + "] as [" + currentElement );
+				
+				elementsRead = elementsRead & validateElement( elementDescriptor, currentElement );
+				elementMap.put(elementDescriptor.toString(), currentElement );
 			}
 			
 			setInitialized( elementsRead );

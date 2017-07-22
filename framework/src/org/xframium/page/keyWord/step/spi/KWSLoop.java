@@ -172,7 +172,7 @@ public class KWSLoop extends AbstractKeyWordStep
 				}
 				else
 				{
-				    dataTable = PageDataManager.instance().getRecords( tableName );
+				    dataTable = PageDataManager.instance(sC.getxFID()).getRecords( tableName );
 				    String[] tableParts = tableName.split(  "\\." );
 				    tableName = tableParts[ tableParts.length - 1 ];
 				}

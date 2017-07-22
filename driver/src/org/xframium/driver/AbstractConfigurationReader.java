@@ -70,6 +70,18 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     protected boolean displayResults = true;
     protected String xFID = null;
     
+    
+    
+    public String getxFID()
+    {
+        return xFID;
+    }
+
+    public void setxFID( String xFID )
+    {
+        this.xFID = xFID;
+    }
+
     private SuiteContainer suiteContainer;
 
     public SuiteContainer getSuiteContainer()
@@ -144,6 +156,9 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     public SuiteContainer readConfiguration( File configFile, boolean runTest, Map<String, String> customConfig )
     {
         xFID = customConfig.get( "xF-ID" );
+        
+        log.info( "xF ID: " + xFID );
+        
         configFolder = configFile.getParentFile();
         
         if ( !readFile( configFile ) )
@@ -380,7 +395,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             PageDataProvider pdp = configureData();
             
             if ( pdp != null )
-                PageDataManager.instance().setPageDataProvider( pdp );
+                PageDataManager.instance( xFID ).setPageDataProvider( pdp );
             
             log.info( "Data: Configuring Test Cases" );
             SuiteContainer sC = configureTestCases( pdp, true );
@@ -409,7 +424,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             eP.addElementProvider( internalObjectRepository );
             
             
-            PageManager.instance().setSiteName( sC.getSiteName() );
+            PageManager.instance( xFID ).setSiteName( sC.getSiteName() );
             log.info( "Extracted " + sC.getTestList().size() + " test cases (" + sC.getActiveTestList().size() + " active)" );
 
             for ( ModelContainer mC : sC.getModel() )
@@ -417,15 +432,15 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             KeyWordDriver.instance( xFID ).loadTests( sC );
             
-            PageManager.instance().setElementProvider( eP );
+            PageManager.instance( xFID ).setElementProvider( eP );
             
 
             log.info( "Artifact: Configuring Artifact Production" );
             if ( !configureArtifacts( driverC ) ) return null;
             
-            DataManager.instance().setReportFolder( new File( configFolder, driverC.getReportFolder() ) );
-            PageManager.instance().setStoreImages( true );
-            PageManager.instance().setImageLocation( new File( configFolder, driverC.getReportFolder() ).getAbsolutePath() );
+            DataManager.instance( xFID ).setReportFolder( new File( configFolder, driverC.getReportFolder() ) );
+            PageManager.instance( xFID ).setStoreImages( true );
+            PageManager.instance( xFID ).setImageLocation( new File( configFolder, driverC.getReportFolder() ).getAbsolutePath() );
             
             if ( driverC.isArtifactEnabled( ArtifactType.CONSOLE_LOG.name() ) )
             {
@@ -459,15 +474,15 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                 }
             }
             
-            DataManager.instance().setPersonas( driverC.getPerfectoPersonas().toArray( new String[ 0 ] ) );
-            PageManager.instance().setWindTunnelEnabled( driverC.isPerfectoWindTunnel() );
+            DataManager.instance( xFID ).setPersonas( driverC.getPerfectoPersonas().toArray( new String[ 0 ] ) );
+            PageManager.instance( xFID ).setWindTunnelEnabled( driverC.isPerfectoWindTunnel() );
             DeviceManager.instance( xFID ).setDryRun( driverC.isDryRun() );
             
             ArtifactManager.instance( xFID ).setDisplayArtifact( driverC.getDisplayReport() );
             DeviceManager.instance( xFID ).setCachingEnabled( driverC.isSmartCaching() );
             String stepTags = driverC.getStepTags();
             if ( stepTags != null && !stepTags.isEmpty() )
-                PageManager.instance().setTagNames( stepTags );
+                PageManager.instance( xFID ).setTagNames( stepTags );
             
             Properties props = new Properties();
             props.putAll( driverC.getPropertyMap() );
@@ -494,7 +509,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             if ( tagNames != null && !tagNames.isEmpty() )
             {
                 DeviceManager.instance( xFID ).setTagNames( tagNames.split( "," ) );
-                ExecutionContext.instance().setTestTags( tagNames.split( "," ) );
+                ExecutionContext.instance( xFID ).setTestTags( tagNames.split( "," ) );
                 Collection<KeyWordTest> testList = KeyWordDriver.instance( xFID ).getTaggedTests( tagNames.split( "," ) );
 
                 if ( testList.isEmpty() )
@@ -507,18 +522,18 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             }
             
             if ( testArray.size() == 0 )
-                DataManager.instance().setTests( KeyWordDriver.instance( xFID ).getTestNames() );
+                DataManager.instance( xFID ).setTests( KeyWordDriver.instance( xFID ).getTestNames() );
             else
-                DataManager.instance().setTests( testArray.toArray( new String[0] ) );
+                DataManager.instance( xFID ).setTests( testArray.toArray( new String[0] ) );
             
             
             if ( runTest && driverC.isEmbeddedServer() )
                 CloudRegistry.instance( xFID ).startEmbeddedCloud();
             
-            ExecutionContext.instance().setSuiteName( (driverC.getSuiteName() != null && !driverC.getSuiteName().isEmpty()) ? driverC.getSuiteName() : ApplicationRegistry.instance( xFID ).getAUT().getName() );
-            ExecutionContext.instance().setPhase( driverC.getPhase() );
-            ExecutionContext.instance().setDomain( driverC.getDomain() );
-            ExecutionContext.instance().setConfigProperties( getConfigurationProperties() );
+            ExecutionContext.instance( xFID ).setSuiteName( (driverC.getSuiteName() != null && !driverC.getSuiteName().isEmpty()) ? driverC.getSuiteName() : ApplicationRegistry.instance( xFID ).getAUT().getName() );
+            ExecutionContext.instance( xFID ).setPhase( driverC.getPhase() );
+            ExecutionContext.instance( xFID ).setDomain( driverC.getDomain() );
+            ExecutionContext.instance( xFID ).setConfigProperties( getConfigurationProperties() );
             
             if ( runTest )
                 executeTest( sC );
@@ -535,13 +550,13 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
 
     public void afterSuite()
     {
-        ExecutionContext.instance().setEndTime( new Date( System.currentTimeMillis()) );
+        ExecutionContext.instance( xFID ).setEndTime( new Date( System.currentTimeMillis()) );
         List<String> aList = ArtifactManager.instance( xFID ).getEnabledArtifacts( ArtifactTime.BEFORE_SUITE_ARTIFACTS );
         if ( aList != null )
         {
             for ( String artifactType : aList )
             {
-                ArtifactManager.instance( xFID ).generateArtifact( artifactType, ExecutionContext.instance().getReportFolder().getAbsolutePath(), null, xFID );
+                ArtifactManager.instance( xFID ).generateArtifact( artifactType, ExecutionContext.instance( xFID ).getReportFolder( xFID ).getAbsolutePath(), null, xFID );
             }
         }
         
@@ -551,7 +566,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         {
             for ( String artifactType : aList )
             {
-                ArtifactManager.instance( xFID ).generateArtifact( artifactType, ExecutionContext.instance().getReportFolder().getAbsolutePath(), null, xFID );
+                ArtifactManager.instance( xFID ).generateArtifact( artifactType, ExecutionContext.instance( xFID ).getReportFolder( xFID ).getAbsolutePath(), null, xFID );
             }
         }
         
@@ -563,15 +578,15 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
         {
             for ( String artifactType : aList )
             {
-                ArtifactManager.instance( xFID ).generateArtifact( artifactType, ExecutionContext.instance().getReportFolder().getParent(), null, xFID );
+                ArtifactManager.instance( xFID ).generateArtifact( artifactType, ExecutionContext.instance( xFID ).getReportFolder( xFID ).getParent(), null, xFID );
             }
         }
     }
     
     public boolean executeTest( SuiteContainer sC )
     {
-        log.info( "Go: Executing Tests" );
-        ExecutionContext.instance().isEnabled();
+        log.info( "Go: Executing Tests: " + xFID );
+        ExecutionContext.instance( xFID ).isEnabled();
         try
         {
             if ( ArtifactManager.instance( xFID ).isArtifactEnabled( ArtifactType.DEBUGGER.name() ) )

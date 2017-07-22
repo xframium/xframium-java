@@ -24,9 +24,11 @@
 package org.xframium.device.data;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.xframium.artifact.ArtifactType;
+import org.xframium.page.keyWord.KeyWordDriver;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -36,27 +38,22 @@ public class DataManager
 {
 	
 	/** The singleton. */
-	private static DataManager singleton = new DataManager();
+	private static Map<String,DataManager> singleton = new HashMap<String,DataManager>(3);
 
 	/**
 	 * Instance.
 	 *
 	 * @return the data manager
 	 */
-	public static DataManager instance()
+	public static DataManager instance( String xFID )
 	{
-		return singleton;
-	}
-	
-	private String testTags;
-	public void setTestTags( String testTags )
-	{
-	    this.testTags = testTags;
-	}
-	
-	public String getTestTags()
-	{
-	    return testTags;
+	    if ( singleton.containsKey( xFID ) )
+            return singleton.get( xFID );
+        else
+        {
+            singleton.put( xFID, new DataManager() );
+            return singleton.get( xFID );
+        }
 	}
 
 	/**

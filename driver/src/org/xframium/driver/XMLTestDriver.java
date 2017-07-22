@@ -199,7 +199,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
                     //
                     // Reportium Integration
                     //
-                    String[] tags = new String[] { "xFramium", CloudRegistry.instance(executionContextTest.getxFID()).getCloud().getUserName(), testPackage.getConnectedDevice().getWebDriver().getAut().getName(), PageManager.instance().getSiteName() };
+                    String[] tags = new String[] { "xFramium", CloudRegistry.instance(executionContextTest.getxFID()).getCloud().getUserName(), testPackage.getConnectedDevice().getWebDriver().getAut().getName(), PageManager.instance(executionContextTest.getxFID()).getSiteName() };
                     if ( test.getTags() != null && test.getTags().length > 0 )
                     {
                         for ( String tag : test.getTags() )

@@ -77,7 +77,7 @@ public abstract class AbstractJavaTest extends AbstractSeleniumTest
      */
     public Page createPage( String pageName, DeviceWebDriver webDriver )
     {
-        KeyWordPage wPage = (KeyWordPage) PageManager.instance().createPage( KeyWordPage.class, webDriver );
+        KeyWordPage wPage = (KeyWordPage) PageManager.instance( webDriver.getxFID() ).createPage( KeyWordPage.class, webDriver );
         wPage.setPageName( pageName );
         return wPage;
     }
@@ -90,7 +90,7 @@ public abstract class AbstractJavaTest extends AbstractSeleniumTest
      */
     public Page createPage( Class pageInterface, DeviceWebDriver webDriver )
     {
-        return (Page) PageManager.instance().createPage( pageInterface, webDriver );
+        return (Page) PageManager.instance( webDriver.getxFID() ).createPage( pageInterface, webDriver );
     }
     
     /**

@@ -585,7 +585,7 @@ public abstract class AbstractElement implements Element
 		finally
 		{
 			if ( timed )
-				PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".getValue()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+				PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".getValue()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
 		}
 		return returnValue;
 	}
@@ -614,7 +614,7 @@ public abstract class AbstractElement implements Element
         finally
         {
             if ( timed )
-                PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".getStyle()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+                PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".getStyle()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
         }
         return returnValue;
     }
@@ -643,7 +643,7 @@ public abstract class AbstractElement implements Element
 		finally
 		{
 			if ( timed )
-				PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".isVisible()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+				PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".isVisible()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
 		}
 		return returnValue;
 	}
@@ -673,7 +673,7 @@ public abstract class AbstractElement implements Element
 		finally
 		{
 			if ( timed )
-				PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".isPresent()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+				PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".isPresent()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
 		}
 		return returnValue;
 	}
@@ -697,7 +697,7 @@ public abstract class AbstractElement implements Element
         finally
         {
             if ( timed )
-                PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".waitForVisible()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+                PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".waitForVisible()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
         }
         return returnValue;
     }
@@ -753,7 +753,7 @@ public abstract class AbstractElement implements Element
 		finally
 		{
 			if ( timed )
-				PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".getAttribute()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+				PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".getAttribute()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
 		}
 		return returnValue;
 	}
@@ -782,7 +782,7 @@ public abstract class AbstractElement implements Element
 		finally
 		{
 			if ( timed )
-				PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".getImage()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+				PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".getImage()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
 		}
 		return returnValue;
 	}
@@ -821,7 +821,7 @@ public abstract class AbstractElement implements Element
         finally
         {
             if ( timed )
-                PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".setValue(" + currentValue + ")", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+                PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".setValue(" + currentValue + ")", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
         }
 	    
 	}
@@ -877,7 +877,7 @@ public abstract class AbstractElement implements Element
 		finally
 		{			
 			if ( timed )
-				PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".click()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+				PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".click()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
 		}
 	}
 

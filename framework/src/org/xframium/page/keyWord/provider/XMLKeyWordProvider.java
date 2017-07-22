@@ -256,7 +256,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	            }
 	            else if ( imp.getFileName().toLowerCase().endsWith( ".bdd" ) )
 	            {
-	                Parser bddParser = new Parser( new XMLFormatter( PageDataManager.instance().getDataProvider(), configProperties, sC.getxFID() ) );
+	                Parser bddParser = new Parser( new XMLFormatter( PageDataManager.instance(sC.getxFID()).getDataProvider(), configProperties, sC.getxFID() ) );
 	                
 	                byte[] buffer = new byte[512];
 	                int bytesRead = 0;

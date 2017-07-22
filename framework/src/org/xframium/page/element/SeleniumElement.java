@@ -272,15 +272,15 @@ public class SeleniumElement extends AbstractElement
     private Element getElement( String elementName )
     {
 
-        ElementDescriptor elementDescriptor = new ElementDescriptor( PageManager.instance().getSiteName(), getPageName(), elementName );
+        ElementDescriptor elementDescriptor = new ElementDescriptor( PageManager.instance( getWebDriver().getxFID() ).getSiteName(), getPageName(), elementName );
 
         if ( log.isDebugEnabled() )
             log.debug( Thread.currentThread().getName() + ": Attempting to locate element using [" + elementDescriptor.toString() + "]" );
 
-        Element myElement = PageManager.instance().getElementProvider().getElement( elementDescriptor );
+        Element myElement = PageManager.instance( getWebDriver().getxFID() ).getElementProvider().getElement( elementDescriptor );
         myElement.setDriver( getWebDriver() );
         myElement = myElement.cloneElement();
-        PageManager.instance().getElementProvider().setCachedElement( myElement, elementDescriptor );
+        PageManager.instance( getWebDriver().getxFID() ).getElementProvider().setCachedElement( myElement, elementDescriptor );
         myElement.setExecutionContext( getExecutionContext() );
         return myElement;
     }

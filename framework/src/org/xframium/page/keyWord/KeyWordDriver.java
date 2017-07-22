@@ -157,7 +157,7 @@ public class KeyWordDriver
         if ( siteName != null )
             useName = siteName + "." + pageName;
         else
-            useName = PageManager.instance().getSiteName() + "." + pageName;
+            useName = PageManager.instance(xFID).getSiteName() + "." + pageName;
         if ( log.isInfoEnabled() )
             log.info( "Mapping Page [" + useName + "] to [" + pageClass.getName() + "]" );
         pageMap.put( useName, pageClass );
@@ -400,7 +400,7 @@ public class KeyWordDriver
                     {
                         dpMe = dataProvider.substring( 0, dataProvider.indexOf( "." ) );
                         String recordName = dataProvider.substring( dataProvider.indexOf( "." ) + 1 );
-                        pageData = PageDataManager.instance().getPageData( dpMe, recordName );
+                        pageData = PageDataManager.instance( executionContext.getxFID() ).getPageData( dpMe, recordName );
                     }
                     else if ( dataProvider.contains( "=" ) )
                     {
@@ -409,7 +409,7 @@ public class KeyWordDriver
                         String realName = aliasMap[ 0 ];
                         String alias = aliasMap[ 1 ];
                         
-                        pageData = PageDataManager.instance().getPageData( realName );
+                        pageData = PageDataManager.instance( executionContext.getxFID() ).getPageData( realName );
                         
                         if ( log.isInfoEnabled() )
                             log.info( "Adding Alias " + alias + " for " + realName );
@@ -417,7 +417,7 @@ public class KeyWordDriver
                     }
                     else
                     {
-                        pageData = PageDataManager.instance().getPageData( dataProvider );
+                        pageData = PageDataManager.instance( executionContext.getxFID() ).getPageData( dataProvider );
                     }
 
                     if ( pageData == null )
@@ -541,7 +541,7 @@ public class KeyWordDriver
     {
         boolean testStarted = false;
         boolean returnValue = true;
-        PageManager.instance().getPageCache().clear();
+        PageManager.instance(xFID).getPageCache().clear();
 
         ExecutionContextTest executionContext = webDriver.getExecutionContext();
         Map<String, PageData> dataMap = new HashMap<String, PageData>( 10 );
@@ -586,10 +586,10 @@ public class KeyWordDriver
                         {
                             dpMe = typeId[0];
                             String recordName = dataProvider.substring( dataProvider.indexOf( "." ) + 1 );
-                            pageData = PageDataManager.instance().getPageData( typeId[0], recordName );
+                            pageData = PageDataManager.instance(xFID).getPageData( typeId[0], recordName );
                         }
                         else
-                            pageData = PageDataManager.instance().getPageData( dataProvider );
+                            pageData = PageDataManager.instance(xFID).getPageData( dataProvider );
                     }
                     else
                     {
@@ -600,14 +600,14 @@ public class KeyWordDriver
                             String realName = aliasMap[ 0 ];
                             String alias = aliasMap[ 1 ];
                             
-                            pageData = PageDataManager.instance().getPageData( realName );
+                            pageData = PageDataManager.instance(xFID).getPageData( realName );
                             
                             if ( log.isInfoEnabled() )
                                 log.info( "Adding Alias " + alias + " for " + realName );
                             dataMap.put( alias, pageData );
                         }
                         else
-                            pageData = PageDataManager.instance().getPageData( dataProvider );
+                            pageData = PageDataManager.instance(xFID).getPageData( dataProvider );
                     }
                     if ( pageData == null )
                     {
@@ -721,7 +721,7 @@ public class KeyWordDriver
             
             for ( String key : dataMap.keySet() )
             {
-                PageDataManager.instance().putPageData( dataMap.get( key ) );
+                PageDataManager.instance(xFID).putPageData( dataMap.get( key ) );
             }
         }
     }

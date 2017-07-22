@@ -182,7 +182,7 @@ public class CloudDescriptor
 		{
 		    if ( provider != null && provider.name != null && provider.name.equals( "PERFECTO" ) )
 		    {
-		        String enableFastWeb =ExecutionContext.instance().getConfigProperties().get( "perfecto.enableFastWeb" );
+		        String enableFastWeb = "false";
 		        if ( enableFastWeb != null && Boolean.parseBoolean( enableFastWeb ) )
 		            return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/perfectomobile/wd/hub/fast";
 		        else

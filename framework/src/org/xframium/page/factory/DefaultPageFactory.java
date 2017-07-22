@@ -45,7 +45,12 @@ import org.xframium.reporting.ExecutionContextTest;
  */
 public class DefaultPageFactory extends LocalPageFactory implements InvocationHandler
 {
-
+    private String xFID;
+    public DefaultPageFactory( String xFID )
+    {
+        this.xFID = xFID;
+    }
+    
     /** The Constant TYPE. */
     private static final String TYPE = "TYPE";
 
@@ -140,28 +145,28 @@ public class DefaultPageFactory extends LocalPageFactory implements InvocationHa
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable 
 	{
 		
-		Page currentService = PageManager.instance().getPageCache().get( proxy.getClass() );
+		Page currentService = PageManager.instance( xFID ).getPageCache().get( proxy.getClass() );
 		
 		if ( currentService == null )
 		{
 		    currentService = super._createPage( (Class<Page>) proxy.getClass().getInterfaces()[0], webDriver);
-		    PageManager.instance().getPageCache().put(  proxy.getClass(), currentService );
+		    PageManager.instance( xFID ).getPageCache().put(  proxy.getClass(), currentService );
 		}
 		 
 		Method methodImplemenation = findMethod( currentService.getClass(), method.getName(), args );
 		
 		if ( methodImplemenation != null )
 		{
-			String methodKeyName = PageManager.instance().getSiteName() + "." + proxy.getClass().getInterfaces()[0].getSimpleName() + "." + method.getName();
+			String methodKeyName = PageManager.instance( xFID ).getSiteName() + "." + proxy.getClass().getInterfaces()[0].getSimpleName() + "." + method.getName();
 			
-			PageManager.instance().beforeExecution( methodKeyName );
+			PageManager.instance( xFID ).beforeExecution( methodKeyName );
 				
 			long startTime = System.currentTimeMillis();
 			Object returnValue = methodImplemenation.invoke( currentService, args );
 			long runLength = System.currentTimeMillis() - startTime;
 			
 
-			PageManager.instance().afterExecution( methodKeyName, runLength );
+			PageManager.instance( xFID ).afterExecution( methodKeyName, runLength );
 			
 			return returnValue;
 		}

@@ -72,7 +72,7 @@ public class TestDriver
             configReader.readConfiguration( configFile, true, customConfig );
             
             for ( SuiteListener l : listenerList )
-                l.afterSuite( configReader.getSuiteName(), configFile, ExecutionContext.instance().getReportFolder() );
+                l.afterSuite( configReader.getSuiteName(), configFile, ExecutionContext.instance( xFID ).getReportFolder( xFID ) );
             
             
             

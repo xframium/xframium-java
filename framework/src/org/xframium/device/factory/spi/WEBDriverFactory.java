@@ -129,7 +129,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
 			                
 			                if ( System.getProperty( "webdriver.gecko.driver" ) == null )
 			                {
-			                    driverFile = new File( DataManager.instance().getReportFolder(), "geckodriver-" + Initializable.VERSION + ".exe" );
+			                    driverFile = new File( DataManager.instance( xFID ).getReportFolder(), "geckodriver-" + Initializable.VERSION + ".exe" );
 			                    
 			                    if ( !driverFile.exists() )
 			                    {
@@ -148,7 +148,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
                                 log.info( "webdriver.chrome.driver=" +  System.getProperty( "webdriver.chrome.driver" ) );
 			                if ( System.getProperty( "webdriver.chrome.driver" ) == null )
                             {
-			                    driverFile = new File( DataManager.instance().getReportFolder(), "chromedriver-" + Initializable.VERSION + ".exe" );
+			                    driverFile = new File( DataManager.instance( xFID ).getReportFolder(), "chromedriver-" + Initializable.VERSION + ".exe" );
 			                    
                                 if ( !driverFile.exists() )
                                 {
@@ -165,7 +165,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
                                 log.info( "webdriver.ie.driver=" +  System.getProperty( "webdriver.ie.driver" ) );
 			                if ( System.getProperty( "webdriver.ie.driver" ) == null )
                             {
-			                    driverFile = new File( DataManager.instance().getReportFolder(), "IEDriverServer-" + Initializable.VERSION + ".exe" );
+			                    driverFile = new File( DataManager.instance( xFID ).getReportFolder(), "IEDriverServer-" + Initializable.VERSION + ".exe" );
 			                    
                                 if ( !driverFile.exists() )
                                 {

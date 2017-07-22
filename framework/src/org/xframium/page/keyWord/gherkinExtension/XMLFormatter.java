@@ -83,7 +83,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
         for ( KeyWordTest xTest : scenarioList )
             KeyWordDriver.instance( xFID ).addTest( xTest );
         
-        KeyWordDriver.instance( xFID ).addPage( PageManager.instance().getSiteName(), "bdd", KeyWordPage.class );
+        KeyWordDriver.instance( xFID ).addPage( PageManager.instance( xFID ).getSiteName(), "bdd", KeyWordPage.class );
 
     }
 

@@ -61,7 +61,7 @@ public class DownloadFileAction extends AbstractDefaultAction implements DeviceA
 		if ( parameterList.size() > 1 )
 			destinationFolderPath = System.getProperty("user.dir") + File.separator + (String) parameterList.get( 1 );
 		else
-			destinationFolderPath = ExecutionContext.instance().getReportFolder().getAbsolutePath();
+			destinationFolderPath = ExecutionContext.instance(( (DeviceWebDriver) webDriver ).getxFID()).getReportFolder(( (DeviceWebDriver) webDriver ).getxFID()).getAbsolutePath();
 				
 		// Download the file from repository to local
 		byte[] imageData;

@@ -43,6 +43,7 @@ import org.xframium.integrations.perfectoMobile.rest.services.WindTunnel.Status;
 import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.factory.DefaultPageFactory;
 import org.xframium.page.factory.PageFactory;
+import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.listener.ExecutionListener;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.spi.PropertyProvider;
@@ -68,7 +69,7 @@ public class PageManager
     private static final String DEVICE_NAME = "DEVICE_NAME";
 
     /** The singleton. */
-    private static PageManager singleton = new PageManager();
+    private static Map<String,PageManager> singleton = new HashMap<String,PageManager>(5);
 
     /** The site name. */
     private String siteName;
@@ -84,7 +85,7 @@ public class PageManager
     private ThreadLocal<Throwable> localException = new ThreadLocal<Throwable>();
 
     /** The page factory. */
-    private PageFactory pageFactory = new DefaultPageFactory();
+    private PageFactory pageFactory = null;
 
     /** The wind tunnel enabled. */
     private boolean windTunnelEnabled = false;
@@ -100,19 +101,19 @@ public class PageManager
 
     private String[] tagNames;
 
-    private Properties outputFormatter = new Properties();
+    private static Properties outputFormatter = new Properties();
 
     public String[] getTagNames()
     {
         return tagNames;
     }
 
-    public void addOutputFormatter( String name, String formatter )
+    public static void addOutputFormatter( String name, String formatter )
     {
         outputFormatter.put( name, formatter );
     }
     
-    public String getFormattedMessage( String name )
+    public static String getFormattedMessage( String name )
     {
     	return outputFormatter.getProperty( name );
     }
@@ -211,56 +212,32 @@ public class PageManager
         this.imageLocation = imageLocation;
     }
 
-    /**
-     * Write image.
-     *
-     * @param image
-     *            the image
-     * @param fileName
-     *            the file name
-     * @return the string
-     */
-    public String writeImage( BufferedImage image, String fileName )
-    {
-        try
-        {
-            File outputFile = null;
-            if ( imageLocation != null )
-                outputFile = new File( new File( imageLocation, System.getProperty( "file.separator" ) + "wcag" ), fileName );
-            else
-                outputFile = new File( new File( ExecutionContext.instance().getReportFolder(),  "wcag" ), fileName );
-
-            outputFile.getParentFile().mkdirs();
-            ImageIO.write( image, "png", outputFile );
-
-            return outputFile.getAbsolutePath();
-        }
-        catch ( Exception e )
-        {
-            e.printStackTrace();
-            return null;
-        }
-
-    }
 
     /**
      * Instance to the Page Manager singleton.
      *
      * @return the page manager
      */
-    public static PageManager instance()
+    public static PageManager instance( String xFID )
     {
-        return singleton;
+        if ( singleton.containsKey( xFID ) )
+            return singleton.get( xFID );
+        else
+        {
+            singleton.put( xFID, new PageManager( xFID ) );
+            return singleton.get( xFID );
+        }
     }
 
     /**
      * Instantiates a new page manager.
      */
-    private PageManager()
+    private PageManager( String xFID )
     {
         try
         {
             outputFormatter.load( getClass().getResourceAsStream( "outputFormatter.properties" ) );
+            pageFactory = new DefaultPageFactory( xFID );
         }
         catch ( Exception e )
         {

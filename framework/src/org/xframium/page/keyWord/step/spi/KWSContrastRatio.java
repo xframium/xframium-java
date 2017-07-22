@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
 import org.xframium.imaging.ImagingActionType;
@@ -87,7 +88,7 @@ public class KWSContrastRatio extends AbstractKeyWordStep
 		
 		BufferedImage elementValue = (BufferedImage)getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getImage( resolution );
 		String fileName = fileKey + "-" + getName() + ".png";
-        File imageFile = new File ( new File( ExecutionContext.instance().getReportFolder(), "artifacts" ), fileName );
+        File imageFile = new File ( new File( ExecutionContext.instance(( (DeviceWebDriver) webDriver ).getxFID()).getReportFolder(( (DeviceWebDriver) webDriver ).getxFID()), "artifacts" ), fileName );
         if ( elementValue != null )
         {
             try

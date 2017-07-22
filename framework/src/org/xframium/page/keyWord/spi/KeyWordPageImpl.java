@@ -56,11 +56,6 @@ public class KeyWordPageImpl extends AbstractPage implements KeyWordPage, Page
 	    this.siteName = siteName;
 	}
 	
-	public KeyWordPageImpl()
-    {
-        this( PageManager.instance().getElementProvider(), PageManager.instance().getSiteName() );
-    }
-	
 	@Override
 	public Element getElement( ElementDescriptor elementDescriptor )
 	{

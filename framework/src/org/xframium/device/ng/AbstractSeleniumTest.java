@@ -54,6 +54,7 @@ import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
+import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
@@ -159,17 +160,17 @@ public abstract class AbstractSeleniumTest
         List<TestKey> personaList = new ArrayList<TestKey>( 10 );
         List<TestKey> testList = new ArrayList<TestKey>( 10 );
 
-        if ( DataManager.instance().getPersonas() != null && DataManager.instance().getPersonas().length > 0 )
+        if ( DataManager.instance( xFID ).getPersonas() != null && DataManager.instance( xFID ).getPersonas().length > 0 )
         {
-            for ( String pN : DataManager.instance().getPersonas() )
+            for ( String pN : DataManager.instance( xFID ).getPersonas() )
                 personaList.add( new TestKey( pN, KeyType.PERSONA ) );
         }
         
         if ( xmlMode )
         {
-            if ( DataManager.instance().getTests() != null && DataManager.instance().getTests().length > 0 )
+            if ( DataManager.instance( xFID ).getTests() != null && DataManager.instance( xFID ).getTests().length > 0 )
             {
-                for ( String pN : DataManager.instance().getTests() )
+                for ( String pN : DataManager.instance( xFID ).getTests() )
                 {
                     testList.add( new TestKey( pN, KeyType.TEST ) );
                 }
@@ -203,7 +204,7 @@ public abstract class AbstractSeleniumTest
                             {
                                 if ( kT.getDataDriver() != null && kT.getDataDriver().trim().length() > 0 )
                                 {
-                                    PageData[] pageData = PageDataManager.instance().getRecords( kT.getDataDriver() );
+                                    PageData[] pageData = PageDataManager.instance( xFID ).getRecords( kT.getDataDriver() );
                                     for ( PageData pD : pageData )
                                     {
                                         TestName testName = new TestName( tK.getKey() );
@@ -226,7 +227,7 @@ public abstract class AbstractSeleniumTest
                         {
                             if ( kT.getDataDriver() != null && kT.getDataDriver().trim().length() > 0 )
                             {
-                                PageData[] pageData = PageDataManager.instance().getRecords( kT.getDataDriver() );
+                                PageData[] pageData = PageDataManager.instance( xFID ).getRecords( kT.getDataDriver() );
                                 for ( PageData pD : pageData )
                                 {
                                     TestName testName = new TestName( tK.getKey() );
@@ -252,7 +253,7 @@ public abstract class AbstractSeleniumTest
                         {
                             if ( kT.getDataDriver() != null && kT.getDataDriver().trim().length() > 0 )
                             {
-                                PageData[] pageData = PageDataManager.instance().getRecords( kT.getDataDriver() );
+                                PageData[] pageData = PageDataManager.instance( xFID ).getRecords( kT.getDataDriver() );
                                 for ( PageData pD : pageData )
                                 {
                                     TestName testName = new TestName( tK.getKey() );
@@ -273,7 +274,7 @@ public abstract class AbstractSeleniumTest
                     {
                         if ( kT.getDataDriver() != null && kT.getDataDriver().trim().length() > 0 )
                         {
-                            PageData[] pageData = PageDataManager.instance().getRecords( kT.getDataDriver() );
+                            PageData[] pageData = PageDataManager.instance( xFID ).getRecords( kT.getDataDriver() );
                             for ( PageData pD : pageData )
                             {
                                 TestName testName = new TestName( tK.getKey() );
@@ -432,7 +433,7 @@ public abstract class AbstractSeleniumTest
                 if ( testPackage.getDevice().getCloud() != null && !testPackage.getDevice().getCloud().trim().isEmpty() )
                     cD = CloudRegistry.instance(tC.getxFID()).getCloud( testPackage.getDevice().getCloud() );
                 
-                KeyWordTest kwt = new KeyWordTest( currentMethod.getName(), true, null, null, false, null, null, 0, currentMethod.getName() + " from " + currentMethod.getClass().getName(), null, null, null, ExecutionContext.instance().getConfigProperties(), 0, null, null, null, null, 0, 0 );
+                KeyWordTest kwt = new KeyWordTest( currentMethod.getName(), true, null, null, false, null, null, 0, currentMethod.getName() + " from " + currentMethod.getClass().getName(), null, null, null, ExecutionContext.instance(tC.getxFID()).getConfigProperties(), 0, null, null, null, null, 0, 0 );
                 eC.setTest( kwt );
                 eC.setAut( ApplicationRegistry.instance(tC.getxFID()).getAUT() );
                 eC.setCloud( cD );
@@ -550,7 +551,7 @@ public abstract class AbstractSeleniumTest
             if ( testFlow.isInfoEnabled() )
                 testFlow.info( Thread.currentThread().getName() + ": Adding Execution for " + testPackage.getRunKey() + " - " + testPackage.getTestName().getTest().getDevice().getKey() + " - " + testPackage.getDevice().getKey() + " - "+ testPackage + " - " + testPackage.getTestName() );
             
-            ExecutionContext.instance().addExecution( testPackage.getTestName().getTest() );
+            ExecutionContext.instance( testPackage.getxFID() ).addExecution( testPackage.getTestName().getTest() );
             
             while ( (keys != null) && (keys.hasNext()) )
             {
@@ -652,7 +653,7 @@ public abstract class AbstractSeleniumTest
      */
     public Map<String,Object> executeStep( KeyWordStep step, DeviceWebDriver webDriver ) throws Exception
     {
-        KeyWordPage p = new KeyWordPageImpl();
+        KeyWordPage p = new KeyWordPageImpl(PageManager.instance(webDriver.getxFID()).getElementProvider(), PageManager.instance(webDriver.getxFID()).getSiteName());
         p.setPageName( step.getPageName() );
         Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
         contextMap.put( "RESULT", step.executeStep( p, webDriver, contextMap, null, null, null, webDriver.getExecutionContext() ) );
@@ -671,7 +672,7 @@ public abstract class AbstractSeleniumTest
      */
     public Map<String,Object> executeStep( String keyword, String pageName, String elementName, String[] parameterList, DeviceWebDriver webDriver ) throws Exception
     {
-        KeyWordPage p = new KeyWordPageImpl();
+        KeyWordPage p = new KeyWordPageImpl(PageManager.instance(webDriver.getxFID()).getElementProvider(), PageManager.instance(webDriver.getxFID()).getSiteName());
         p.setPageName( pageName );
         Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
         contextMap.put( "RESULT", createStep( keyword, pageName, elementName, parameterList ).executeStep( p, webDriver, null, null, null, null, webDriver.getExecutionContext() ) );
@@ -702,13 +703,13 @@ public abstract class AbstractSeleniumTest
                     
                 }
 
-                if ( DataManager.instance().getReportFolder() == null )
-                    DataManager.instance().setReportFolder( new File( "." ) );
+                if ( DataManager.instance( testPackage.getxFID() ).getReportFolder() == null )
+                    DataManager.instance( testPackage.getxFID() ).setReportFolder( new File( "." ) );
                 
                 File rootFolder = null;
                 try
                 {
-                    rootFolder = new File( ExecutionContext.instance().getReportFolder(), webDriver.getArtifactFolder().getPath() );
+                    rootFolder = new File( ExecutionContext.instance( testPackage.getxFID() ).getReportFolder( testPackage.getxFID() ), webDriver.getArtifactFolder().getPath() );
                     rootFolder.mkdirs();
                     
                     if ( webDriver.isConnected() && !testResult.isSuccess() )

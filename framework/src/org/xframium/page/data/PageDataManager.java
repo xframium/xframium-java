@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.data.provider.XMLPageDataProvider;
+import org.xframium.page.keyWord.KeyWordDriver;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -34,16 +35,22 @@ public class PageDataManager
 {
     
 	/** The singleton. */
-	private static PageDataManager singleton = new PageDataManager();
+	private static Map<String,PageDataManager> singleton = new HashMap<String,PageDataManager>(5);
 
     /**
      * Instance.
      *
      * @return the page data manager
      */
-    public static PageDataManager instance()
+    public static PageDataManager instance( String xFID )
     {
-        return singleton;
+        if ( singleton.containsKey( xFID ) )
+            return singleton.get( xFID );
+        else
+        {
+            singleton.put( xFID, new PageDataManager() );
+            return singleton.get( xFID );
+        }
     }
 
     /**

@@ -279,7 +279,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
         eContain.setFullTestName( eC.getTestName() );
         eContain.setDevice( eC.getDevice() );
         eContain.setStartTime( System.currentTimeMillis() );
-        eContain.setRootFolder( ExecutionContext.instance().getReportFolder().getAbsolutePath() );
+        eContain.setRootFolder( ExecutionContext.instance(( (DeviceWebDriver) webDriver ).getxFID()).getReportFolder(( (DeviceWebDriver) webDriver ).getxFID()).getAbsolutePath() );
         executionMap.put( executionId, eContain );
         
         return true;
@@ -317,7 +317,6 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
         testExecuting = true;
         executionMap.clear();
         syncMap.clear();
-        ExecutionContext.instance().clear();
     }
 
     @Override

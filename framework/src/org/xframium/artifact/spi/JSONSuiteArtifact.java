@@ -19,7 +19,7 @@ public class JSONSuiteArtifact extends AbstractArtifact
     @Override
     protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver, String xFID )
     {
-        return writeToDisk( rootFolder, FILE_NAME, ("var testData = " + new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ), ExecutionContext.instance(), 0 ) ) + ";").getBytes() );
+        return writeToDisk( rootFolder, FILE_NAME, ("var testData = " + new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ), ExecutionContext.instance( xFID ), 0 ) ) + ";").getBytes() );
     }
     
     

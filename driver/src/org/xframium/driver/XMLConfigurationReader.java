@@ -836,7 +836,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                             Parser bddParser = new Parser( xmlFormatter );
                             bddParser.parse( test.getDescription().getValue(), "", 0 );
                             sC.setDataProvider( xmlFormatter );
-                            PageDataManager.instance().setPageDataProvider( xmlFormatter );
+                            PageDataManager.instance( xFID ).setPageDataProvider( xmlFormatter );
                         }
                         else if ( test.getType().equals( "CSV" ) )
                         {
@@ -941,15 +941,15 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         dC.setStepTags( getValue( "driver.stepTags", xRoot.getDriver().getStepTags(), configProperties ) );
 
         dC.getPropertyMap().putAll( configProperties );
-        dC.setEmbeddedServer( xRoot.getDriver().isEmbeddedServer() );
+        dC.setEmbeddedServer( Boolean.parseBoolean( getValue( "driver.embeddedServer", xRoot.getDriver().isEmbeddedServer() + "", configProperties ) ) );
         dC.setDriverType( DriverType.valueOf( xRoot.getDriver().getType() ) );
         dC.setDeviceTags( getValue( "driver.deviceTags", xRoot.getDriver().getDeviceTags(), configProperties ) );
         
         if ( xRoot.getDependencies() != null )
         {
-            dC.setBeforeDevice( xRoot.getDependencies().getBeforeDevice() );
-            dC.setBeforeTest( xRoot.getDependencies().getBeforeTest() );
-            dC.setAfterTest( xRoot.getDependencies().getAfterTest() );
+            dC.setBeforeDevice( getValue( "driver.beforeDevice", xRoot.getDependencies().getBeforeDevice(), configProperties ) );
+            dC.setBeforeTest( getValue( "driver.beforeTest", xRoot.getDependencies().getBeforeTest(), configProperties ) );
+            dC.setAfterTest( getValue( "driver.afterTest", xRoot.getDependencies().getAfterTest(), configProperties ) );
         }
         
         if ( xRoot.getDriver().getExtractors() != null )
