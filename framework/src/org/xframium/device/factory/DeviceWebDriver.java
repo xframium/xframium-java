@@ -316,7 +316,9 @@ public class DeviceWebDriver
     
     public String getLog()
     {
-        return DeviceManager.instance( executionContext.getxFID() ).getLog();
+        String log = DeviceManager.instance( executionContext.getxFID() ).getLog();
+        DeviceManager.instance( executionContext.getxFID() ).clearLog();
+        return log;
     }
 
     public ApplicationDescriptor getAut()

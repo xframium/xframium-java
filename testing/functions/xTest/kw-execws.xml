@@ -7,7 +7,7 @@
       <parameter type="STATIC" name="method" value="POST" />
       <parameter type="STATIC" name="media-type" value="text/xml" />
       <parameter type="STATIC" name="type" value="SOAP" />
-      <parameter type="FILE" name=".payload" value="../ws-payload.xml">
+      <parameter type="FILE" name="payload" value="../ws-payload.xml">
         <token type="STATIC" name="loanAmount" value="100000" />
         <token type="STATIC" name="extraCost" value="0" />
         <token type="STATIC" name="interestRate" value="5" />

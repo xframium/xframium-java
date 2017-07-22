@@ -25,6 +25,7 @@ import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.ng.TestName;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
@@ -61,7 +62,9 @@ public class KWSAddDevice extends AbstractKeyWordStep
         	if ( DeviceManager.instance( executionContext.getxFID() ).getDevice(deviceName.toString()) == null )
         		throw new ScriptConfigurationException( "Device Name should be configured in DeviceRegistry with inactive status" );
         		
-        	executionContext.getDeviceMap().put( deviceName + "", DeviceManager.instance( executionContext.getxFID() ).getInactiveDevice( deviceName + "", executionContext.getxFID()  ) );
+        	ConnectedDevice wD = DeviceManager.instance( executionContext.getxFID() ).getInactiveDevice( deviceName + "", executionContext.getxFID()  );
+        	wD.getWebDriver().setExecutionContext( executionContext );
+        	executionContext.getDeviceMap().put( deviceName + "", wD );
         }
         else if ( getParameterList().size() == 2 )
         {
@@ -75,8 +78,9 @@ public class KWSAddDevice extends AbstractKeyWordStep
         	if ( !( deviceId instanceof String ) )
 	        	throw new ScriptConfigurationException( "Device id must be of type String" );
         	
-        	
-        	executionContext.getDeviceMap().put( deviceName + "", DeviceManager.instance( executionContext.getxFID() ).getUnconfiguredDevice( deviceName + "",  executionContext.getxFID()  ) );
+        	ConnectedDevice wD = DeviceManager.instance( executionContext.getxFID() ).getUnconfiguredDevice( deviceName + "",  executionContext.getxFID()  );
+            wD.getWebDriver().setExecutionContext( executionContext );
+            executionContext.getDeviceMap().put( deviceName + "", wD );
         }
 	    else
 	    {

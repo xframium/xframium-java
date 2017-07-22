@@ -96,7 +96,7 @@ public class KWSApplication extends AbstractKeyWordStep
 	    switch ( ApplicationAction.valueOf( getName().toUpperCase() ) )
         {
 	        case CLOSE:
-	            ( (DeviceWebDriver) webDriver ).setAut( null, sC.getxFID() );
+	            ( (DeviceWebDriver) webDriver ).setAut( null, executionContext.getxFID() );
 	            return cP.closeApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver );
 	            
 	        case INSTALL:

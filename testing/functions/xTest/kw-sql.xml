@@ -2,17 +2,17 @@
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
   <function name="kw-sql" active="true">
     <description>This will test the SQL keyword using an in-memory Derby database</description>
-    <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+    <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
       <parameter type="STATIC" value="CREATE TABLE XF_TEST ( ID INT, NAME VARCHAR(24), PASSWORD VARCHAR(24) )" />
-    </step>
-    <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0">
-      <parameter type="STATIC" value="INSERT INTO XF_TEST (ID, NAME, PASSWORD) VALUES ( 1, 'ALLEN', 'PASSWORD' )" />
-    </step>
-    <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0">
-      <parameter type="STATIC" value="INSERT INTO XF_TEST (ID, NAME, PASSWORD) VALUES ( 2, 'MATT', 'PASSWORD' )" />
-    </step>
-    <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0">
-      <parameter type="STATIC" value="INSERT INTO XF_TEST (ID, NAME, PASSWORD) VALUES ( 3, 'JOHN', 'PASS' )" />
+      <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0">
+        <parameter type="STATIC" value="INSERT INTO XF_TEST (ID, NAME, PASSWORD) VALUES ( 1, 'ALLEN', 'PASSWORD' )" />
+      </step>
+      <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0">
+        <parameter type="STATIC" value="INSERT INTO XF_TEST (ID, NAME, PASSWORD) VALUES ( 2, 'MATT', 'PASSWORD' )" />
+      </step>
+      <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0">
+        <parameter type="STATIC" value="INSERT INTO XF_TEST (ID, NAME, PASSWORD) VALUES ( 3, 'JOHN', 'PASS' )" />
+      </step>
     </step>
     <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0" context="XF_SQL_1">
       <parameter type="STATIC" value="SELECT ID, NAME, PASSWORD FROM XF_TEST WHERE ID = 1" />
