@@ -59,27 +59,54 @@
           <step name="xF-Automatic Time" site="xF_Native" page="xF_Date-Time" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" />
         </step>
         <step name="xF-Date" site="xF_Native" page="xF_Date-Time" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="xF-Auto" os="IOS">
-          <step name="DATE" site="xF_Native" page="xF_Date-Time" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="monthYear">
-            <parameter type="STATIC" name="Format" value="EEE MMM dd" />
-            <parameter type="CONTEXT" name="Original Value" value="xF-Date" />
+          <step name="Day" site="xF_Native" page="xF_Date-Time" type="AT" context="at" />
+          <step name="add" site="xF_Native" page="xF_Date-Time" type="MATH" context="y">
+            <parameter type="CONTEXT" value="at.centery" />
+            <parameter type="STATIC" value="50" />
           </step>
-
+          <step name="DATE" site="xF_Native" page="xF_Date-Time" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="now">
+            <parameter type="STATIC" name="Format" value="d MMM yyyy HH:mm:ss" />
+          </step>
+          <step name="DAYS_BETWEEN" site="xF_Native" page="xF_Date-Time" type="DATE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="clickCount">
+            <parameter type="CONTEXT" name="Value One" value="now" />
+            <parameter type="CONTEXT" name="Value Two" value="xF-Date" />
+          </step>
           <step name="DATE" site="New Test" page="Search" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
             <parameter type="CONTEXT" name="Value One" value="xF-Date" />
             <parameter type="CONTEXT" name="Value Two" value="now" />
             <parameter type="STATIC" name="Operator" value="LESS" />
-            <step name="Day" site="xF_Native" page="xF_Date-Time" type="SET">
-              <parameter type="CONTEXT" name="Value" value="monthYear" />
-              <parameter type="STATIC" name="Set Method" value="UP_FIRST" />
+            <step name="subtract" site="xF_Native" page="xF_Date-Time" type="MATH" context="y">
+              <parameter type="CONTEXT" value="at.centery%" />
+              <parameter type="STATIC" value="3" />
             </step>
             <step name="else" type="ELSE" page="Search">
-              <step name="Day" site="xF_Native" page="xF_Date-Time" type="SET">
-                <parameter type="CONTEXT" name="Value" value="monthYear" />
-                <parameter type="STATIC" name="Set Method" value="DOWN_FIRST" />
+              <step name="add" site="xF_Native" page="xF_Date-Time" type="MATH" context="y">
+                <parameter type="CONTEXT" value="at.centery%" />
+                <parameter type="STATIC" value="3" />
               </step>
             </step>
           </step>
-
+          <step name="DECIMAL" site="xF_Native" page="xF_Date-Time" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="y">
+            <parameter type="STATIC" name="Decimal Format" value="#" />
+            <parameter name="Original Value" type="CONTEXT" value="y" />
+          </step>
+          <step name="report" site="xTest" page="home" type="REPORT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+            <parameter type="CONTEXT" value="at.centerx%" />
+            <parameter type="CONTEXT" value="at.centery%" />
+            <parameter type="CONTEXT" value="y" />
+          </step>
+          <step name="CONCAT" site="xF_Native" page="xF_Date-Time" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="clickLocation">
+            <parameter type="CONTEXT" value="at.centerx%" />
+            <parameter type="STATIC" value="," />
+            <parameter type="CONTEXT" value="y" />
+          </step>
+          <step name="Click Location" site="xTest" page="home" type="REPORT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+            <parameter type="CONTEXT" value="clickLocation" />
+          </step>
+          <step name="Loop Down" site="xF_Native" page="xF_Settings" type="LOOP">
+            <parameter type="CONTEXT" name="Iterator" value="clickCount" />
+            <parameter type="STATIC" name="Function Name" value="xF_tapAtPoint" />
+          </step>
         </step>
         <step name="xF-Date" site="xF_Native" page="xF_Date-Time" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="xF-Auto" os="ANDROID">
           <step name="DATE" site="xF_Native" page="xF_Date-Time" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="monthYear">
@@ -143,5 +170,10 @@
       <step name="CorrectDate" site="xF_Native" page="xF_Date-Time" type="BREAK" active="true" threshold="0" timed="false" inverse="false" wait="0" />
     </step>
     <step name="Next" site="xF_Native" page="xF_Date-Time" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" />
+  </function>
+  <function name="xF_tapAtPoint">
+    <step name="PRESS" site="xF_Native" page="xF_Date-Time" type="GESTURE" wait="500">
+      <parameter type="CONTEXT" value="clickLocation" />
+    </step>
   </function>
 </suite>

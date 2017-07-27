@@ -574,7 +574,6 @@ public class SeleniumElement extends AbstractElement
                         new Actions( getWebDriver() ).moveToElement( webElement, useX, useY ).click().build().perform();
                 }
 
-                new Actions( getWebDriver() ).moveToElement( webElement, useX, useY ).click().build().perform();
                 return true;
             }
 
