@@ -1323,6 +1323,19 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         }
         return null;
     }
+    
+    protected String getParameterAsString( String parameterName, Map<String, Object> contextMap, Map<String, PageData> dataMap, String xFID )
+    {
+        for ( KeyWordParameter p : parameterList )
+        {
+            if ( parameterName.equals( p.getName() ) )
+            {
+                return getParameterValue( p, contextMap, dataMap, xFID );
+            }
+        }
+        return null;
+    }
+    
 
     /**
      * Gets the token list.
