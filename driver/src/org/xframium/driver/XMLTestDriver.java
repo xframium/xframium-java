@@ -20,19 +20,18 @@
  *******************************************************************************/
 package org.xframium.driver;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 import org.testng.Assert;
-import org.testng.ITestContext;
 import org.testng.annotations.Test;
-import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
-import org.xframium.device.data.DataManager;
 import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.device.ng.TestContainer;
 import org.xframium.device.ng.TestName;
@@ -44,6 +43,7 @@ import org.xframium.integrations.sauceLabs.rest.SauceREST;
 import org.xframium.page.PageManager;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.reporting.ExecutionContextTest.TestStatus;
 import com.perfecto.reportium.client.ReportiumClientFactory;
@@ -199,13 +199,21 @@ public class XMLTestDriver extends AbstractSeleniumTest
                     //
                     // Reportium Integration
                     //
-                    String[] tags = new String[] { "xFramium", CloudRegistry.instance(executionContextTest.getxFID()).getCloud().getUserName(), testPackage.getConnectedDevice().getWebDriver().getAut().getName(), PageManager.instance(executionContextTest.getxFID()).getSiteName() };
+                    List<String> tagList = new ArrayList<String>( 5 );
+                    tagList.add( "xFramium" );
+                    if ( CloudRegistry.instance(executionContextTest.getxFID()).getCloud() != null && CloudRegistry.instance(executionContextTest.getxFID()).getCloud().getUserName() != null && !CloudRegistry.instance(executionContextTest.getxFID()).getCloud().getUserName().isEmpty() )
+                        tagList.add( CloudRegistry.instance(executionContextTest.getxFID()).getCloud().getUserName() );
+                    
+                    if ( testPackage.getConnectedDevice().getWebDriver().getAut() != null && testPackage.getConnectedDevice().getWebDriver().getAut().getName() != null && !testPackage.getConnectedDevice().getWebDriver().getAut().getName().isEmpty() && !testPackage.getConnectedDevice().getWebDriver().getAut().getName().equals( "NOOP" ) )
+                        tagList.add( testPackage.getConnectedDevice().getWebDriver().getAut().getName() );
+                    
                     if ( test.getTags() != null && test.getTags().length > 0 )
                     {
                         for ( String tag : test.getTags() )
-                            ArrayUtils.add( tags, tag );
+                            tagList.add( tag );
                     }
-                    PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder().withProject( new Project( testPackage.getConnectedDevice().getWebDriver().getAut().getName(), testPackage.getConnectedDevice().getWebDriver().getAut().getVersion() + "" ) ).withContextTags( tags )
+                    
+                    PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder().withProject( new Project( ExecutionContext.instance( executionContextTest.getxFID() ).getSuiteName(), "" ) ).withContextTags( tagList.toArray( new String[ 0 ] ) )
                             .withWebDriver( testPackage.getConnectedDevice().getWebDriver() ).build();
                     testPackage.getConnectedDevice().getWebDriver().setReportiumClient( new ReportiumClientFactory().createPerfectoReportiumClient( perfectoExecutionContext ) );
 
@@ -219,7 +227,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
 
             testFlow.info( Thread.currentThread().getName() + ": Executing " + testPackage.getRunKey() + " against " + testPackage.getConnectedDevice().getDevice().getKey() );
             executionContextTest = KeyWordDriver.instance( testPackage.getxFID() ).executeTest( testName, testPackage.getConnectedDevice().getWebDriver(), null );
-            testFlow.info( Thread.currentThread().getName() + ": Completed Executing " + testPackage.getRunKey() + " against " + executionContextTest.getDevice().getKey() );
+            testFlow.info( Thread.currentThread().getName() + ": Completed Executing " + testPackage.getRunKey() + " against " + testPackage.getConnectedDevice().getDevice().getKey() );
             returnValue = executionContextTest.getStatus();
             testName.setTest( executionContextTest );
 
@@ -278,11 +286,9 @@ public class XMLTestDriver extends AbstractSeleniumTest
 
             if ( currentException != null )
                 throw currentException;
-
-            
-            
-            Assert.assertTrue( returnValue );
         }
+        
+        Assert.assertTrue( returnValue );
     }
 
 }

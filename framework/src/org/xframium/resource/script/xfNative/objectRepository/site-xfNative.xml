@@ -9,4 +9,5 @@
   <import fileName="org/xframium/resource/script/xfNative/objectRepository/page-xF-General.xml" />
   <import fileName="org/xframium/resource/script/xfNative/objectRepository/page-xF-Device Management.xml" />
   <import fileName="org/xframium/resource/script/xfNative/objectRepository/page-xF-Cellular.xml" />
+  <import fileName="org/xframium/resource/script/xfNative/objectRepository/page-xF_Date-Time.xml" />
 </elementDefinition>

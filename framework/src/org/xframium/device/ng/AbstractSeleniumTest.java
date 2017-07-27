@@ -511,8 +511,7 @@ public abstract class AbstractSeleniumTest
         {
             
             
-            Map<String, ConnectedDevice> map = testPackage.getTestName().getTest().getDeviceMap();
-            Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null);
+            
 
             if ( testPackage.getConnectedDevice().getWebDriver() != null && testPackage.getConnectedDevice().getWebDriver().isConnected() )
             {
@@ -553,6 +552,9 @@ public abstract class AbstractSeleniumTest
             
             ExecutionContext.instance( testPackage.getxFID() ).addExecution( testPackage.getTestName().getTest() );
             
+            
+            Map<String, ConnectedDevice> map = testPackage.getTestName().getTest().getDeviceMap();
+            Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null);
             while ( (keys != null) && (keys.hasNext()) )
             {
                 String name = keys.next();

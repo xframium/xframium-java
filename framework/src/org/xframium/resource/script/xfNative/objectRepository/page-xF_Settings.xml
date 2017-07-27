@@ -11,6 +11,10 @@
         <element value="//UIAStaticText[@name='Wi-Fi']" descriptor="XPATH" os="IOS" />
         <element value="//android.widget.TextView[@text='Wi-Fi']" descriptor="XPATH" os="ANDROID" />
       </element>
+      <element name="xF_Wi-Fi" descriptor="COMPLEX">
+        <element value="//UIAStaticText[@name='Wi-Fi']" descriptor="XPATH" os="IOS" />
+        <element value="//android.widget.TextView[@text='Wi-Fi']" descriptor="XPATH" os="ANDROID" />
+      </element>
       <element name="xF-Search Button" descriptor="COMPLEX">
         <element value="//*[@resource-id='com.android.settings:id/search']" descriptor="XPATH" os="ANDROID" />
         <element value="//android.widget.Button[@content-desc='Search']" descriptor="XPATH" os="ANDROID" />
@@ -35,12 +39,17 @@
       <element name="xF-Privacy" descriptor="COMPLEX">
         <element value="//UIATableCell[@name='Privacy']/UIAStaticText[1]" descriptor="XPATH" os="IOS" />
       </element>
-      <element name="xF-General" value="//UIATableCell[@name='General']" descriptor="XPATH" />
+      <element name="xF-General" value="//UIATableCell[@name='General']|//XCUIElementTypeCell[@name='General']" descriptor="XPATH" />
       <element name="xF-Cellular" descriptor="COMPLEX">
         <element value="//UIATableCell[@name='Cellular']" descriptor="XPATH" os="IOS" />
         <element value="//UIATableCell[@name='Mobile Data']" descriptor="XPATH" os="IOS" />
         <element value="//android.widget.TextView[@text='Data usage']" descriptor="XPATH" os="ANDROID" />
          <element value="//android.widget.TextView[@text='Mobile data']" descriptor="XPATH" os="ANDROID" />
+      </element>
+      
+      <element name="xF-Date" descriptor="COMPLEX">
+        <element value="//UIAStaticText[contains( @name, 'Date' )]" descriptor="XPATH" os="IOS" />
+        <element value="//android.widget.TextView[ contains( @text, 'Date' )]" descriptor="XPATH" os="ANDROID" />
       </element>
     </page>
   </site>

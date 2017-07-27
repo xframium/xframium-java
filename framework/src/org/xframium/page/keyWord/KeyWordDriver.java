@@ -700,7 +700,7 @@ public class KeyWordDriver
         catch ( Throwable e )
         {
             contextMap.put( "XF_TEST_STATUS", TestStatus.FAILED.name() );
-            executionContext.startStep( new SyntheticStep( test.getName(), "TEST" ), contextMap, dataMap );
+            executionContext.startStep( new SyntheticStep( test == null ? testName.getTestName() : test.getName(), "TEST" ), contextMap, dataMap );
             executionContext.completeStep( StepStatus.FAILURE, e );
             executionContext.completeTest( TestStatus.FAILED, e );
 
@@ -709,19 +709,21 @@ public class KeyWordDriver
         }
         finally
         {
-            
-            //String testValue = "{test.testException.detailMessage}\r\n\r\nUser id: {data.authData.userName}\r\nPassword: {data.authData.password}\r\nDevice: {device.environment}\r\nOS: {device.os}\r\n";
-            
-            //System.out.println( ((DeviceWebDriver) webDriver ).toFormattedString( testValue ) );
-            
-            if ( !contextMap.containsKey( "XF_TEST_STATUS" ) )
-                contextMap.put( "XF_TEST_STATUS", "UNKNOWN" );
-            if ( testStarted )
-                KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).notifyAfterTest( webDriver, test, contextMap, dataMap, pageMap, returnValue, sC, executionContext );
-            
-            for ( String key : dataMap.keySet() )
+            try
             {
-                PageDataManager.instance(xFID).putPageData( dataMap.get( key ) );
+                if ( !contextMap.containsKey( "XF_TEST_STATUS" ) )
+                    contextMap.put( "XF_TEST_STATUS", "UNKNOWN" );
+                if ( testStarted )
+                    KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).notifyAfterTest( webDriver, test, contextMap, dataMap, pageMap, returnValue, sC, executionContext );
+                
+                for ( String key : dataMap.keySet() )
+                {
+                    PageDataManager.instance(xFID).putPageData( dataMap.get( key ) );
+                }
+            }
+            catch( Exception e )
+            {
+                e.printStackTrace();
             }
         }
     }

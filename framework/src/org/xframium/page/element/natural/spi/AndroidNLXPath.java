@@ -22,6 +22,10 @@ public class AndroidNLXPath extends AbstractNLXPath
                 break;
                 
             case CHECKBOX:
+                builderList.add( new StringBuilder( "//android.widget.CheckBox" ) );
+                break;
+                
+            case SWITCH:
                 builderList.add( new StringBuilder( "//android.widget.Switch" ) );
                 break;
                 
@@ -60,7 +64,7 @@ public class AndroidNLXPath extends AbstractNLXPath
                 case NAMED:
                     for ( StringBuilder s : builderList )
                     {
-                        s.append( "[@resource-id='" ).append( nL.getQueryData() ).append( "' or contains( text(), '" ).append( nL.getQueryData() ).append( "')]" );
+                        s.append( "[@resource-id='" ).append( nL.getQueryData() ).append( "' or @text='" ).append( nL.getQueryData() ).append( "' or contains( text(), '" ).append( nL.getQueryData() ).append( "')]" );
                     }
             }
         }

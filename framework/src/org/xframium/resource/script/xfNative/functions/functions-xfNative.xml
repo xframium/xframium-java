@@ -7,4 +7,5 @@
   <import fileName="org/xframium/resource/script/xfNative/functions/xF-Set Location Mode.xml" />
   <import fileName="org/xframium/resource/script/xfNative/functions/xF-Trust Developer.xml" />
   <import fileName="org/xframium/resource/script/xfNative/functions/xF-Set Data Mode.xml" />
+  <import fileName="org/xframium/resource/script/xfNative/functions/xF-Set Date-Time.xml" />
 </suite>

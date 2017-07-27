@@ -131,8 +131,8 @@ public class DeviceWebDriver
     private long pageLoadTimeout = 0;
     private DesiredCapabilities dC;
     
-    private double widthModifier;
-    private double heightModifier;
+    private double widthModifier = 1;
+    private double heightModifier = 1;
     
     private boolean reportingElement = false;
     

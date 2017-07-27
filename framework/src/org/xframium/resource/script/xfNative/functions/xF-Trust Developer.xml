@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-<function name="xF-Trust Developer" active="true">
-<description>This is a sample function</description>
-<step name="xF-Launch Settings" site="New Test" page="Search" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0"/>
-<step name="xF-General" site="xF_Native" page="xF_Settings" type="VISIBLE" active="true" threshold="0" timed="false" inverse="false" wait="0">
-<parameter type="STATIC" name="new parameter" value="10"/>
-<parameter type="STATIC" name="new parameter" value="UP"/>
-</step>
-<step name="xF-General" site="xF_Native" page="xF_Settings" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0"/>
-<step name="xF-Device Management" site="xF_Native" page="xF-General" type="VISIBLE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
-<parameter type="STATIC" name="new parameter" value="10"/>
-<parameter type="STATIC" name="new parameter" value="UP"/>
-<step name="xF-Device Management" site="xF_Native" page="xF-General" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0"/>
-<step name="xF-Developer.CLICKABLE" site="xF_Native" page="xF-Device Management" type="WAIT_FOR" active="true" threshold="0" timed="false" inverse="false" wait="0">
-<parameter type="STATIC" name="Wait Time" value="12"/>
-<token type="CONTEXT" name="developer" value="xF-Developer"/>
-</step>
-<step name="xF-Developer" site="xF_Native" page="xF-Device Management" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0">
-<token type="CONTEXT" name="developer" value="xF-Developer"/>
-</step>
-<step name="xF-Trust.CLICKABLE" site="xF_Native" page="xF-Device Management" type="WAIT_FOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
-<parameter type="STATIC" name="Wait Time" value="12"/>
-<step name="xF-Trust" site="xF_Native" page="xF-Device Management" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0"/>
-<step name="xF-Trust Button.CLICKABLE" site="xF_Native" page="xF-Device Management" type="WAIT_FOR" active="true" threshold="0" timed="false" inverse="false" wait="0">
-<parameter type="STATIC" name="Wait Time" value="12"/>
-</step>
-<step name="xF-Trust Button" site="xF_Native" page="xF-Device Management" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0"/>
-</step>
-</step>
-</function>
+  <function name="xF-Trust Developer" active="true">
+    <description>This is a sample function</description>
+    <step name="xF-Launch Settings" site="New Test" page="Search" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" />
+    <step name="xF-General" site="xF_Native" page="xF_Settings" type="VISIBLE" active="true" threshold="0" timed="false" inverse="false" wait="0">
+      <parameter type="STATIC" name="new parameter" value="10" />
+      <parameter type="STATIC" name="new parameter" value="UP" />
+    </step>
+    <step name="xF-General" site="xF_Native" page="xF_Settings" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" />
+    <step name="xF-Device Management" site="xF_Native" page="xF-General" type="VISIBLE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
+      <parameter type="STATIC" name="new parameter" value="10" />
+      <parameter type="STATIC" name="new parameter" value="UP" />
+      <step name="xF-Device Management" site="xF_Native" page="xF-General" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" />
+      <step name="xF-Developer.CLICKABLE" site="xF_Native" page="xF-Device Management" type="WAIT_FOR" active="true" threshold="0" timed="false" inverse="false" wait="0">
+        <parameter type="STATIC" name="Wait Time" value="12" />
+        <token type="CONTEXT" name="developer" value="xF-Developer" />
+      </step>
+      <step name="xF-Developer" site="xF_Native" page="xF-Device Management" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0">
+        <token type="CONTEXT" name="developer" value="xF-Developer" />
+      </step>
+      <step name="xF-Trust.CLICKABLE" site="xF_Native" page="xF-Device Management" type="WAIT_FOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
+        <parameter type="STATIC" name="Wait Time" value="12" />
+        <step name="xF-Trust" site="xF_Native" page="xF-Device Management" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" />
+        <step name="xF-Trust Button.CLICKABLE" site="xF_Native" page="xF-Device Management" type="WAIT_FOR" active="true" threshold="0" timed="false" inverse="false" wait="0">
+          <parameter type="STATIC" name="Wait Time" value="12" />
+        </step>
+        <step name="xF-Trust Button" site="xF_Native" page="xF-Device Management" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" />
+      </step>
+    </step>
+  </function>
 </suite>

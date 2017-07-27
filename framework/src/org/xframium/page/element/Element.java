@@ -60,7 +60,9 @@ public interface Element
     	BY_VALUE,
     	BY_VISIBLE_TEXT,
     	DELAYED,
-    	PERFECTO;
+    	PERFECTO,
+    	UP_FIRST,
+    	DOWN_FIRST;
     }
 	
 	/**

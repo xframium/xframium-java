@@ -14,7 +14,7 @@ public class NaturalLanguageDescriptor
     
     public enum NLType
     {
-        TEXTBOX,CHECKBOX,BUTTON,OPTION,DROPDOWN,LABEL,PASSWORD,ELEMENT
+        TEXTBOX,CHECKBOX,BUTTON,OPTION,DROPDOWN,LABEL,PASSWORD,ELEMENT,SWITCH
     }
     
     public enum NLQuery
