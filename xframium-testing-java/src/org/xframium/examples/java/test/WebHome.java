@@ -21,6 +21,9 @@
 package org.xframium.examples.java.test;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -31,6 +34,7 @@ import org.testng.ITestContext;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
+import org.xframium.Initializable;
 import org.xframium.artifact.AbstractArtifact;
 import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactTime;
@@ -79,7 +83,7 @@ public class WebHome extends AbstractJavaTest
         }
 
         @Override
-        protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver ) throws Exception
+        protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver, String xFID ) throws Exception
         {
             StringBuilder stepMap = new StringBuilder();
             
@@ -110,7 +114,12 @@ public class WebHome extends AbstractJavaTest
         // Register our Test Artifact
         //
         
-        ArtifactManager.instance().registerArtifact( ArtifactTime.AFTER_TEST, "TAB_WEBHOME", WebHomeArtifact.class );
+        String xFID = UUID.randomUUID().toString();
+        Initializable.xFID.set( xFID ); 
+        Map<String,String> customConfig = new HashMap<String,String>(5);
+        customConfig.put( "xF-ID", Initializable.xFID.get() );
+        
+        ArtifactManager.instance( xFID ).registerArtifact( ArtifactTime.AFTER_TEST, "TAB_WEBHOME", WebHomeArtifact.class );
 
         //
         // Specify your xFramium configuration file here as TXT or XML
@@ -123,7 +132,7 @@ public class WebHome extends AbstractJavaTest
             cR = new XMLConfigurationReader();
         else if ( configurationFile.getName().toLowerCase().endsWith( ".txt" ) )
             cR = new TXTConfigurationReader();
-        cR.readConfiguration( configurationFile, false );
+        cR.readConfiguration( configurationFile, false, customConfig );
         
     }
     

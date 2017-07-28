@@ -179,6 +179,42 @@ public abstract class AbstractPage implements Page
         return step;
         
     }
+    
+    /**
+     * Execute a keyword step
+     *
+     * @param step the step
+     * @param webDriver the web driver
+     * @return true, if successful
+     * @throws Exception the exception
+     */
+    protected Map<String,Object> executeStep( KeyWordStep step ) throws Exception
+    {
+        KeyWordPage p = new KeyWordPageImpl();
+        p.setPageName( step.getPageName() );
+        Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
+        contextMap.put( "RESULT", step.executeStep( p, ( (DeviceWebDriver) webDriver ), contextMap, null, null, null, ( (DeviceWebDriver) webDriver ).getExecutionContext() ) );
+        return contextMap;
+    }
+    
+    /**
+     * Creates and executes a KeyWord step
+     *
+     * @param keyword The name of the keyword
+     * @param pageName the page name
+     * @param elementName the element name
+     * @param parameterList A list of parameter to pass to the keyword.  User name==value for named parameters
+     * @param webDriver The webDriver for the active run
+     * @return The created step
+     */
+    protected Map<String,Object> executeStep( String keyword, String pageName, String elementName, String[] parameterList ) throws Exception
+    {
+        KeyWordPage p = new KeyWordPageImpl();
+        p.setPageName( pageName );
+        Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
+        contextMap.put( "RESULT", createStep( keyword, pageName, elementName, parameterList ).executeStep( p, ( (DeviceWebDriver) webDriver ), contextMap, null, null, null, ( (DeviceWebDriver) webDriver ).getExecutionContext() ) );
+        return contextMap;
+    }
 
     
     

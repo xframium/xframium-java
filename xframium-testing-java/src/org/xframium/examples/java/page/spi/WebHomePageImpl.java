@@ -36,7 +36,7 @@ public class WebHomePageImpl extends AbstractPage implements WebHomePage
     {
         try
         {
-            executeStep( "COMPARE2", "page", "element", new String[ 0 ] );
+            executeStep( "COMPARE2", "page", "element", new String[ 0 ]);
             
         }
         catch( Exception e )
