@@ -30,6 +30,7 @@ import org.xframium.debugger.DebugManager;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.cloud.CloudDescriptor.ProviderType;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.logging.ThreadedFileHandler;
@@ -437,6 +438,36 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
 
             log.info( "Artifact: Configuring Artifact Production" );
             if ( !configureArtifacts( driverC ) ) return null;
+            
+            if ( !ArtifactManager.instance( xFID ).isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
+            {
+                //
+                // If we have a PERFECTO cloud then automatically enable REPORTIUM
+                //
+                for ( CloudDescriptor cD : CloudRegistry.instance( xFID ).getCloudDescriptors() )
+                {
+                    if ( ProviderType.PERFECTO.name().equals( cD.getProvider() ) )
+                    {
+                        ArtifactManager.instance( xFID ).enableArtifact( ArtifactType.REPORTIUM.name() );
+                        break;
+                    }
+                }
+            }
+            
+            if ( !ArtifactManager.instance( xFID ).isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
+            {
+                //
+                // If we have a SAUCELABS cloud then automatically enable REPORTIUM
+                //
+                for ( CloudDescriptor cD : CloudRegistry.instance( xFID ).getCloudDescriptors() )
+                {
+                    if ( ProviderType.SAUCELABS.name().equals( cD.getProvider() ) )
+                    {
+                        ArtifactManager.instance( xFID ).enableArtifact( ArtifactType.SAUCE_LABS.name() );
+                        break;
+                    }
+                }
+            }
             
             DataManager.instance( xFID ).setReportFolder( new File( configFolder, driverC.getReportFolder() ) );
             PageManager.instance( xFID ).setStoreImages( true );

@@ -191,7 +191,6 @@ public abstract class AbstractSeleniumTest
                 if ( kT == null )
                 {
                     log.error( "Could not find test: " + tK.getKey() );
-                    continue;
                 }
                 
                 if ( kT.getContentKeys() != null && kT.getContentKeys().length > 0 )
