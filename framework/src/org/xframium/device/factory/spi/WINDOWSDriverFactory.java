@@ -56,11 +56,13 @@ public class WINDOWSDriverFactory extends AbstractDriverFactory
             
             DeviceManager.instance( xFID ).setCurrentCloud( useCloud );
 			
-			URL hubUrl = new URL( useCloud.getCloudUrl() );
+			
 	
 			
 			for ( String name : currentDevice.getCapabilities().keySet() )
 				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
+			
+			URL hubUrl = new URL( useCloud.getCloudUrl( dc ) );
 			
 			if ( log.isInfoEnabled() )
 			    log.info( "Acquiring Windows Application as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );

@@ -58,7 +58,7 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 			
             
             DeviceManager.instance( xFID ).setCurrentCloud( useCloud );
-            URL hubUrl = new URL( useCloud.getCloudUrl() );
+            
 
 			if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )
 			{
@@ -93,6 +93,8 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
                 dc.setCapability( Device.LOCALE, localeToConfigure );
             }		
 			
+            URL hubUrl = new URL( useCloud.getCloudUrl( dc ) );
+            
             if ( log.isDebugEnabled() )
                 log.debug( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 			

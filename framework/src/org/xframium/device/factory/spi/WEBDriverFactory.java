@@ -72,7 +72,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
             
             DeviceManager.instance( xFID ).setCurrentCloud( useCloud );
             
-            URL hubUrl = new URL( useCloud.getCloudUrl() );
+            
 
             if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )
             {
@@ -181,7 +181,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
 			    }
 			}
 			
-			
+			URL hubUrl = new URL( useCloud.getCloudUrl( dc ) );
             if ( log.isWarnEnabled() )
                 log.warn( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
             
