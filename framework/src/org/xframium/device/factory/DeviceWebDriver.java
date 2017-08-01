@@ -854,6 +854,23 @@ public class DeviceWebDriver
         webDriver.quit();
         if ( diThread != null )
             diThread.stop();
+        
+        try
+        {
+            String deviceQuietTime = DeviceManager.instance( getxFID() ).getConfigurationProperties().get( "xframium.deviceQuietTime" );
+            
+            if( deviceQuietTime != null )
+            {
+                if ( log.isInfoEnabled() )
+                    log.info( "Device Quiet Time: " + deviceQuietTime + " seconds" );
+                Thread.sleep( Integer.parseInt( deviceQuietTime ) * 1000 );
+            }
+        }
+        catch( Exception e )
+        {
+            
+        }
+        
     }
 
     /*

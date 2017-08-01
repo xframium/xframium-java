@@ -767,6 +767,7 @@ public abstract class AbstractSeleniumTest
                 if ( testFlow.isInfoEnabled() )
                     testFlow.info( Thread.currentThread().getName() + ": Quiting WebDriver " );
                 webDriver.quit();
+                
             }
             catch ( Exception e )
             {
