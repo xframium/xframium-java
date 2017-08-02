@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Stack;
 import java.util.TreeMap;
 import org.openqa.selenium.Capabilities;
 import org.xframium.application.ApplicationDescriptor;
@@ -61,6 +62,7 @@ public class ExecutionContextTest
     private Map<String,?> c = null;
     private Map<String,?> dC = null;
     private KeyWordStep failedStep = null;
+    private transient Stack<String> deviceStack = new Stack<String>();
     
     private Map<String,ConnectedDevice> deviceMap = new HashMap<String,ConnectedDevice>( 5 );
     
@@ -82,8 +84,34 @@ public class ExecutionContextTest
         }
     }
     
+    public String peekAtDevice()
+    {
+        try
+        {
+            return deviceStack.peek();
+        }
+        catch( Exception e )
+        {
+            return null;
+        }
+    }
     
+    public String popDevice()
+    {
+        try
+        {
+            return deviceStack.pop();
+        }
+        catch( Exception e )
+        {
+            return null;
+        }
+    }
     
+    public void pushDevice( String deviceName )
+    {
+        deviceStack.push( deviceName );
+    }
     
     public String getxFID()
     {

@@ -516,12 +516,34 @@ public class KeyWordDriver
                     if ( tagName.toLowerCase().equals( t.getName().toLowerCase() ) )
                         testMap.put( t.getName(), t );
                 }
+            }
+            
+            for ( KeyWordTest t : this.inactiveTestMap.values() )
+            {
+                if ( tagName.contains( "*" ) )
+                {
+                    if ( tagName.startsWith( "*" ) )
+                    {
+                        if ( t.getName().toLowerCase().endsWith( tagName.replace( "*", "" ).trim() ) )
+                            testMap.put( t.getName(), t );
+                    }
+                    else if ( tagName.endsWith( "*" ) )
+                    {
+                        if ( t.getName().toLowerCase().startsWith( tagName.replace( "*", "" ).trim() ) )
+                            testMap.put( t.getName(), t );
+                    }
+                }
+                else
+                {
+                    if ( tagName.toLowerCase().equals( t.getName().toLowerCase() ) )
+                        testMap.put( t.getName(), t );
+                }
 
-                if ( log.isDebugEnabled() )
-                    log.debug( "Adding Test [" + t.getName() + "]" );
-                testMap.put( t.getName(), t );
             }
         }
+        
+        
+        
 
         return testMap.values();
     }
@@ -548,6 +570,9 @@ public class KeyWordDriver
         Map<String, Page> pageMap = new HashMap<String, Page>( 10 );
         Map<String, Object> contextMap = new HashMap<String, Object>( 10 );
         KeyWordTest test = testMap.get( testName.getRawName() );
+        
+        if ( test == null )
+            test = inactiveTestMap.get( testName.getRawName() );
         
         logConsole( "Executing [" + testName + "]" );
         

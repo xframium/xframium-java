@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.ConnectedDevice;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
@@ -79,6 +80,7 @@ public class KWSCall2 extends AbstractKeyWordStep
 	{
 		Map<String,String> localContextMap = new HashMap<String,String>( 20 );
 		boolean returnValue = false;
+		boolean devicePushed = false;
 		
 		String functionName = getName();
 		
@@ -87,7 +89,6 @@ public class KWSCall2 extends AbstractKeyWordStep
 		
 		try
 		{
-			
 			if ( getParameterList() != null && !getParameterList().isEmpty() )
 			{
 				for ( KeyWordParameter param : getParameterList() )
@@ -127,10 +128,25 @@ public class KWSCall2 extends AbstractKeyWordStep
 			if ( sC != null )
 				returnValue = sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext);
 			else
+			{
+			    
+			    if ( getDevice() != null && !getDevice().trim().isEmpty() )
+                {
+			        
+                    //
+			        // A device was specified at the function level so p[ush it onto the device stack
+			        //
+			        executionContext.pushDevice( getDevice() );
+			        devicePushed = true;
+                }
+			    
 				returnValue = KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext );
+			}
 		}
 		finally
 		{
+		    if ( devicePushed )
+		        executionContext.popDevice();
 			for ( String name : localContextMap.keySet() )
 				contextMap.remove( name );
 		}

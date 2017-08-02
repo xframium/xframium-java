@@ -921,6 +921,22 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     else
                         throw new ScriptConfigurationException( "The device [" + getDevice()  + "] was referenced but does not exist or has not been added using an ADD_DEVICE command" );
                 }
+                else
+                {
+                    //
+                    // A device is not specified, se if one exists in the stack from a CALL
+                    //
+                    if ( executionContext.peekAtDevice() != null )
+                    {
+                        ConnectedDevice alternateDevice = executionContext.getDeviceMap().get( executionContext.peekAtDevice() );
+                        if ( alternateDevice != null )
+                            alternateWebDriver = alternateDevice.getWebDriver();
+                        else
+                            throw new ScriptConfigurationException( "The device [" + executionContext.peekAtDevice() + "] was referenced but does not exist or has not been added using an ADD_DEVICE command" );
+                    }
+                }
+                
+                
                  
                 //WebDriver altWebDriver = getAltWebDriver();
                 //

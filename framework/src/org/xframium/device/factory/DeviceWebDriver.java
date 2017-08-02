@@ -143,6 +143,7 @@ public class DeviceWebDriver
     
     private ExecutionContextTest executionContext;
     
+    
     private File artifactFolder = null;
     
     public String getxFID()
