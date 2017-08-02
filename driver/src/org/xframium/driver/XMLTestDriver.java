@@ -175,7 +175,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
 
             if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
             {
-                if ( cD.getProvider().equals( "SAUCELABS" ) )
+                if ( cD != null && cD.getProvider() != null && cD.getProvider().equals( "SAUCELABS" ) )
                 {
                     SauceREST sR = new SauceREST( cD.getUserName(), cD.getPassword() );
                     Map<String, Object> jobInfo = new HashMap<String, Object>( 10 );
@@ -231,6 +231,11 @@ public class XMLTestDriver extends AbstractSeleniumTest
             returnValue = executionContextTest.getStatus();
             testName.setTest( executionContextTest );
 
+        }
+        catch( Throwable t )
+        {
+            t.printStackTrace();
+            throw t;
         }
         finally
         {
