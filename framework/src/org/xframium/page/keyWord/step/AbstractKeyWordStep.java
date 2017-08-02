@@ -243,19 +243,19 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         switch ( scrollDirection )
         {
             case DOWN:
-                currentGesture = GestureManager.instance().createSwipe( webDriver.getExecutionContext().getxFID(), new Point( 50, randomNumber ), new Point( 50, 45 + randomNumber ) );
+                currentGesture = GestureManager.instance( webDriver ).createSwipe( webDriver.getExecutionContext().getxFID(), new Point( 50, randomNumber ), new Point( 50, 45 + randomNumber ) );
                 break;
 
             case LEFT:
-                currentGesture = GestureManager.instance().createSwipe( webDriver.getExecutionContext().getxFID(), new Point( randomNumber, 50 ), new Point( 45 + randomNumber, 50 ) );
+                currentGesture = GestureManager.instance( webDriver ).createSwipe( webDriver.getExecutionContext().getxFID(), new Point( randomNumber, 50 ), new Point( 45 + randomNumber, 50 ) );
                 break;
 
             case RIGHT:
-                currentGesture = GestureManager.instance().createSwipe( webDriver.getExecutionContext().getxFID(), new Point( 45 + randomNumber, 50 ), new Point( randomNumber, 50 ) );
+                currentGesture = GestureManager.instance( webDriver ).createSwipe( webDriver.getExecutionContext().getxFID(), new Point( 45 + randomNumber, 50 ), new Point( randomNumber, 50 ) );
                 break;
 
             case UP:
-                currentGesture = GestureManager.instance().createSwipe( webDriver.getExecutionContext().getxFID(), new Point( 50, 45 + randomNumber ), new Point( 50, randomNumber ) );
+                currentGesture = GestureManager.instance( webDriver ).createSwipe( webDriver.getExecutionContext().getxFID(), new Point( 50, 45 + randomNumber ), new Point( 50, randomNumber ) );
                 break;
         }
 
@@ -986,6 +986,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             catch ( Exception e )
             {
                 stepException = e;
+                e.printStackTrace();
                 returnValue = false;
                 try
                 {

@@ -75,7 +75,7 @@ public class SAUCELABSCloudActionProvider extends AbstractCloudActionProvider
     }
     
     @Override
-    public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device )
+    public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device, String xFID )
     {
         String uAgent = (String) webDriver.executeScript("return navigator.userAgent;");
         UserAgent userAgent = new UserAgent( uAgent );

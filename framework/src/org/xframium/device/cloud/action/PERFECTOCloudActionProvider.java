@@ -234,11 +234,11 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
     }
 
     @Override
-    public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device )
+    public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device, String xFID )
     {
         try
         {
-            Handset handSet = PerfectoMobile.instance( webDriver.getxFID() ).devices().getDevice( deviceId );
+            Handset handSet = PerfectoMobile.instance( xFID ).devices().getDevice( deviceId );
 
             device.setOs( handSet.getOs() );
             if ( device.getOs().toLowerCase().equals( "android" ) || device.getOs().toLowerCase().equals( "ios" ) )

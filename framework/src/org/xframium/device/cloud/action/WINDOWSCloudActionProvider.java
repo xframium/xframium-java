@@ -48,7 +48,7 @@ public class WINDOWSCloudActionProvider extends AbstractCloudActionProvider
     }
     
     @Override
-    public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device )
+    public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device, String xFID )
     {
 
         

@@ -357,7 +357,6 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             
             DeviceActionManager.instance().setDeviceActionFactory( new PerfectoDeviceActionFactory() );
-            GestureManager.instance().setGestureFactory( new PerfectoGestureFactory() );
             
             log.info( "Application: Configuring Application Registry" );
             ApplicationContainer appContainer = configureApplication();

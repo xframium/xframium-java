@@ -3,6 +3,7 @@ package org.xframium.page.element.spi.set;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.factory.MorelandWebElement;
 import org.xframium.gesture.GestureManager;
 import io.appium.java_client.ios.IOSElement;
@@ -57,7 +58,7 @@ public class PickerSetMethod extends AbstractSetMethod
             boolean valueChanged = true;
             while( valueChanged )
             {
-                GestureManager.instance().createSwipe( xFID, new Point( 50, 55 ), new Point( 50, 45 ) ).executeGesture( webDriver, webElement );
+                GestureManager.instance( ( (DeviceWebDriver) webDriver ) ).createSwipe( xFID, new Point( 50, 55 ), new Point( 50, 45 ) ).executeGesture( webDriver, webElement );
                 try{ Thread.sleep( 500 ); } catch( Exception e ) {}
                 String currentSelection = webElement.getAttribute( "value" );
                 
@@ -73,7 +74,7 @@ public class PickerSetMethod extends AbstractSetMethod
             valueChanged = true;
             while( valueChanged )
             {
-                GestureManager.instance().createSwipe( xFID, new Point( 50, 45 ), new Point( 50, 55 ) ).executeGesture( webDriver, webElement );
+                GestureManager.instance( ( (DeviceWebDriver) webDriver ) ).createSwipe( xFID, new Point( 50, 45 ), new Point( 50, 55 ) ).executeGesture( webDriver, webElement );
                 try{ Thread.sleep( 500 ); } catch( Exception e ) {}
                 String currentSelection = webElement.getAttribute( "value" );
                 
@@ -91,7 +92,7 @@ public class PickerSetMethod extends AbstractSetMethod
             boolean valueChanged = true;
             while( valueChanged )
             {
-                GestureManager.instance().createSwipe( xFID, new Point( 50, 45 ), new Point( 50, 55 ) ).executeGesture( webDriver, webElement );
+                GestureManager.instance( ( (DeviceWebDriver) webDriver ) ).createSwipe( xFID, new Point( 50, 45 ), new Point( 50, 55 ) ).executeGesture( webDriver, webElement );
                 try{ Thread.sleep( 500 ); } catch( Exception e ) {}
                 String currentSelection = webElement.getAttribute( "value" );
                 
@@ -107,7 +108,7 @@ public class PickerSetMethod extends AbstractSetMethod
             valueChanged = true;
             while( valueChanged )
             {
-                GestureManager.instance().createSwipe( xFID, new Point( 50, 55 ), new Point( 50, 45 ) ).executeGesture( webDriver, webElement );
+                GestureManager.instance( ( (DeviceWebDriver) webDriver ) ).createSwipe( xFID, new Point( 50, 55 ), new Point( 50, 45 ) ).executeGesture( webDriver, webElement );
                 try{ Thread.sleep( 500 ); } catch( Exception e ) {}
                 String currentSelection = webElement.getAttribute( "value" );
                 

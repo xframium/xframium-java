@@ -47,7 +47,7 @@ public class VisualWebElement implements WebElement
     public void click()
     {
         if ( location != null && size != null )
-            GestureManager.instance().createPress( webDriver.getExecutionContext().getxFID(), new Point( location.getX() + ( size.getWidth() / 2 ), location.getY() + ( size.getHeight() / 2 ) ) ).executeGesture( webDriver );
+            GestureManager.instance( webDriver ).createPress( webDriver.getExecutionContext().getxFID(), new Point( location.getX() + ( size.getWidth() / 2 ), location.getY() + ( size.getHeight() / 2 ) ) ).executeGesture( webDriver );
         else
             throw new ScriptException( "There was no information to perform a click" );
     }

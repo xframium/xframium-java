@@ -26,6 +26,8 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.ScreenOrientation;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.cloud.CloudDescriptor.ProviderType;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.AbstractDragDropGesture.InitialDragDropAction;
 import org.xframium.gesture.Gesture.Direction;
 import org.xframium.gesture.Gesture.GestureType;
@@ -41,18 +43,38 @@ import org.xframium.page.element.Element;
  */
 public class GestureManager
 {
-
-    /** The singleton. */
-    private static GestureManager singleton = new GestureManager();
-
+    
+    private static GestureFactory SELENIUM = new SeleniumGestureFactory();
+    private static GestureFactory APPIUM = new AppiumGestureFactory();
+    private static GestureFactory PERFECTO = new PerfectoGestureFactory();
+    
     /**
      * Instance.
      *
      * @return the gesture manager
      */
-    public static GestureManager instance()
+    public static GestureManager instance( DeviceWebDriver webDriver )
     {
-        return singleton;
+        GestureManager gM = new GestureManager();
+        
+        
+        switch( ProviderType.valueOf( webDriver.getCloud().getProvider().toUpperCase() ) )
+        {
+            case PERFECTO:
+                gM.gestureFactory = PERFECTO;
+                break;
+            case SAUCELABS:
+                gM.gestureFactory = SELENIUM;
+                break;
+            case SELENIUM:
+                gM.gestureFactory = SELENIUM;
+                break;
+            case WINDOWS:
+                gM.gestureFactory = SELENIUM;
+                break;
+        }
+        
+        return gM;
     }
 
     /**
@@ -69,16 +91,6 @@ public class GestureManager
     /** The log. */
     private Log log = LogFactory.getLog( GestureManager.class );
 
-    /**
-     * Sets the gesture factory.
-     *
-     * @param gestureFactory
-     *            the new gesture factory
-     */
-    public void setGestureFactory( GestureFactory gestureFactory )
-    {
-        this.gestureFactory = gestureFactory;
-    }
 
     /**
      * Creates the Hide Keyboard Gesture.
@@ -87,35 +99,7 @@ public class GestureManager
      */
     public Gesture createHideKeyboard( String xFID )
     {
-        return modifyGestureFactory( xFID ).createGesture( GestureType.HIDE_KEYBOARD, new Object[] { false } );
-    }
-
-    private GestureFactory modifyGestureFactory( String xFID )
-    {
-        CloudDescriptor cloud = DeviceManager.instance( xFID ).getCurrentCloud();
-        String providerType = cloud.getProvider();
-        GestureFactory altGestureFactory = null;
-
-        if ( providerType.equalsIgnoreCase( "selenium" ) )
-        {
-            altGestureFactory = new SeleniumGestureFactory();
-
-        }
-        else if ( providerType.equalsIgnoreCase( "appium" ) )
-        {
-            altGestureFactory = new AppiumGestureFactory();
-
-        }
-        else if ( providerType.equalsIgnoreCase( "perfecto" ) )
-        {
-            altGestureFactory = new PerfectoGestureFactory();
-        }
-        else
-        {
-            altGestureFactory = gestureFactory;
-        }
-
-        return altGestureFactory;
+        return gestureFactory.createGesture( GestureType.HIDE_KEYBOARD, new Object[] { false } );
     }
 
     /**
@@ -148,12 +132,12 @@ public class GestureManager
     
     public Gesture createDragDrop( String xFID, InitialDragDropAction dropAction, Element fromElement, Element toElement )
     {
-        return modifyGestureFactory(xFID).createGesture( GestureType.DRAGDROP, new Object[] { fromElement, toElement, dropAction } );
+        return gestureFactory.createGesture( GestureType.DRAGDROP, new Object[] { fromElement, toElement, dropAction } );
     }
     
     public Gesture createDragDrop( String xFID, Element fromElement, Element toElement )
     {
-        return modifyGestureFactory( xFID ).createGesture( GestureType.DRAGDROP, new Object[] { fromElement, toElement, InitialDragDropAction.PRESS } );
+        return gestureFactory.createGesture( GestureType.DRAGDROP, new Object[] { fromElement, toElement, InitialDragDropAction.PRESS } );
     }
 
     /**
@@ -165,7 +149,7 @@ public class GestureManager
      */
     public Gesture createRotate( String xFID, ScreenOrientation sOrientation )
     {
-        return modifyGestureFactory( xFID ).createGesture( GestureType.ROTATE, new Object[] { sOrientation } );
+        return gestureFactory.createGesture( GestureType.ROTATE, new Object[] { sOrientation } );
     }
 
     /**
@@ -179,7 +163,7 @@ public class GestureManager
      */
     public Gesture createSwipe( String xFID, Point startPosition, Point endPosition )
     {
-        return modifyGestureFactory( xFID ).createGesture( GestureType.SWIPE, new Object[] { startPosition, endPosition } );
+        return gestureFactory.createGesture( GestureType.SWIPE, new Object[] { startPosition, endPosition } );
     }
 
     /**
@@ -210,7 +194,7 @@ public class GestureManager
 
     public Gesture createPress( String xFID, Point pressPosition, long pressLength, int pressCount )
     {
-        return modifyGestureFactory( xFID ).createGesture( GestureType.PRESS, new Object[] { pressPosition, pressLength, pressCount } );
+        return gestureFactory.createGesture( GestureType.PRESS, new Object[] { pressPosition, pressLength, pressCount } );
     }
 
     /**
@@ -224,7 +208,7 @@ public class GestureManager
      */
     public Gesture createKeyPress( String xFID, String keyCode, int metaState )
     {
-        return modifyGestureFactory( xFID ).createGesture( GestureType.KEYPRESS, new Object[] { keyCode, metaState } );
+        return gestureFactory.createGesture( GestureType.KEYPRESS, new Object[] { keyCode, metaState } );
     }
 
     /**
@@ -252,7 +236,7 @@ public class GestureManager
      */
     public Gesture createZoom( String xFID, Point startOne, Point startTwo, Point endOne, Point endTwo )
     {
-        return modifyGestureFactory( xFID ).createGesture( GestureType.ZOOM, new Object[] { startOne, startTwo, endOne, endTwo } );
+        return gestureFactory.createGesture( GestureType.ZOOM, new Object[] { startOne, startTwo, endOne, endTwo } );
     }
 
     /**
@@ -280,7 +264,7 @@ public class GestureManager
      */
     public Gesture createPinch( String xFID, Point startOne, Point startTwo, Point endOne, Point endTwo )
     {
-        return modifyGestureFactory( xFID ).createGesture( GestureType.PINCH, new Object[] { startOne, startTwo, endOne, endTwo } );
+        return gestureFactory.createGesture( GestureType.PINCH, new Object[] { startOne, startTwo, endOne, endTwo } );
     }
 
 }

@@ -13,7 +13,7 @@ import org.xframium.spi.Device;
 public interface CloudActionProvider
 {
     public boolean startApp( DeviceWebDriver webdriver, String executionId, String deviceId, String appName, String appIdentifier );
-    public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device );
+    public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device, String xFID );
     public void enabledLogging( DeviceWebDriver webDriver );
     public void disableLogging( DeviceWebDriver webDriver );
     public String getExecutionId( DeviceWebDriver webDriver );
