@@ -277,7 +277,6 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	        catch( Exception e )
 	        {
 	            log.fatal( "Could not read from " + imp.getFileName(), e );
-                throw new IllegalStateException( e );
 	        }
 	    }
 	}
