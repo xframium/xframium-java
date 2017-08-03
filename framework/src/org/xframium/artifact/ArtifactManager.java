@@ -36,6 +36,7 @@ import org.xframium.artifact.spi.DeviceLogArtifact;
 import org.xframium.artifact.spi.HTMLGridArtifact;
 import org.xframium.artifact.spi.HTMLSourceArtifact;
 import org.xframium.artifact.spi.ImagingArtifact;
+import org.xframium.artifact.spi.JIRAUpdateExecutionArtifact;
 import org.xframium.artifact.spi.JSONArtifact;
 import org.xframium.artifact.spi.JSONGridArtifact;
 import org.xframium.artifact.spi.JSONHistoryArtifact;
@@ -127,6 +128,7 @@ public class ArtifactManager
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.ALM_DEFECT.name(), ALMDefectArtifact.class );
         registerArtifact( ArtifactTime.AFTER_ARTIFACTS, ArtifactType.EXECUTION_TEST_JSON.name(), JSONArtifact.class );
         registerArtifact( ArtifactTime.AFTER_ARTIFACTS, ArtifactType.EXECUTION_TEST_HTML.name(), DefaultReportingArtifact.class );
+        registerArtifact( ArtifactTime.AFTER_ARTIFACTS, ArtifactType.JIRA_UPDATE_STATUS.name(), JIRAUpdateExecutionArtifact.class );
     }
     
     public void registerArtifact( ArtifactTime artifactTime, String aType, Class artifactImplementation )
