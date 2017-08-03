@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+  <import fileName="org/xframium/resource/script/xfNative/functions/xF-Set Airplane Mode.xml" />
+  <import fileName="org/xframium/resource/script/xfNative/functions/xF-Launch Settings.xml" />
+  <import fileName="org/xframium/resource/script/xfNative/functions/xF-Set WiFi Mode.xml" />
+  <import fileName="org/xframium/resource/script/xfNative/functions/xF-Set Notifications Mode.xml" />
+  <import fileName="org/xframium/resource/script/xfNative/functions/xF-Set Location Mode.xml" />
+  <import fileName="org/xframium/resource/script/xfNative/functions/xF-Trust Developer.xml" />
+  <import fileName="org/xframium/resource/script/xfNative/functions/xF-Set Data Mode.xml" />
+  <import fileName="org/xframium/resource/script/xfNative/functions/xF-Set Date-Time.xml" />
+</suite>

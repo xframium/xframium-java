@@ -17,6 +17,12 @@ import com.xframium.serialization.SerializationManager;
 @SuppressWarnings ( "restriction")
 public class TestHandler implements HttpHandler
 {
+    private String xFID;
+    public TestHandler( String xFID )
+    {
+        this.xFID = xFID;
+    }
+    
     @Override
     public void handle( HttpExchange t ) throws IOException
     {
@@ -24,11 +30,11 @@ public class TestHandler implements HttpHandler
         StringBuilder stringBuilder = new StringBuilder();
 
 
-        TestContainer tC = DebugManager.instance().getActiveTests().get( parameterMap.get( "executionId" ) );
+        TestContainer tC = DebugManager.instance(xFID).getActiveTests().get( parameterMap.get( "executionId" ) );
 
         if ( tC == null )
         {
-            tC = DebugManager.instance().getCompletedTests().get( parameterMap.get( "executionId" ) );
+            tC = DebugManager.instance(xFID).getCompletedTests().get( parameterMap.get( "executionId" ) );
         }
 
         if ( parameterMap.get( "ajax" ) != null )

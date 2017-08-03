@@ -39,92 +39,65 @@ import org.xframium.spi.Device;
  */
 public class NamedDataProvider implements DataProvider
 {
-	
-	/** The log. */
-	private Log log = LogFactory.getLog( NamedDataProvider.class );
-	
-	/** The named resources. */
-	private String[] namedResources = null; 
-	
-	/** The driver type. */
-	private DriverType driverType;
-	
-	/**
-	 * Instantiates a new named data provider.
-	 *
-	 * @param resourceName A comma separated list of resource names
-	 * @param driverType the driver type
-	 */
-	public NamedDataProvider( String resourceName, DriverType driverType )
-	{
-		namedResources = resourceName.split( "," );
-		this.driverType = driverType;
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.device.data.DataProvider#readData()
-	 */
-    public List<Device> readData()
+
+    /** The log. */
+    private Log log = LogFactory.getLog( NamedDataProvider.class );
+
+    /** The named resources. */
+    private String[] namedResources = null;
+
+    /** The driver type. */
+    private DriverType driverType;
+
+    /**
+     * Instantiates a new named data provider.
+     *
+     * @param resourceName
+     *            A comma separated list of resource names
+     * @param driverType
+     *            the driver type
+     */
+    public NamedDataProvider( String resourceName, DriverType driverType )
+    {
+        namedResources = resourceName.split( "," );
+        this.driverType = driverType;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.perfectoMobile.device.data.DataProvider#readData()
+     */
+    public List<Device> readData( String xFID )
     {
         List<Device> deviceList = new ArrayList<Device>( 10 );
         for ( String device : namedResources )
         {
-            deviceList.add( lookupDeviceById( device, driverType ));
+            deviceList.add( lookupDeviceById( device, driverType, xFID ) );
         }
-        
+
         return deviceList;
     }
 
-    public static Device lookupDeviceById( String device, DriverType driverType )
+    public static Device lookupDeviceById( String device, DriverType driverType, String xFID )
     {
         if ( device.equals( "FIREFOX" ) )
         {
-            return new SimpleDevice( device,
-                    "Mozilla",
-                    "Windows",
-                    "Windows",
-                    null,
-                    "firefox",
-                    null,
-                    1,
-                    "WEB",
-                    true,
-                    device );
+            return new SimpleDevice( device, "Mozilla", "Windows", "Windows", null, "firefox", null, 1, "WEB", true, device );
         }
         else if ( device.equals( "CHROME" ) )
         {
-            return new SimpleDevice( device,
-                    "Google",
-                    "Windows",
-                    "Windows",
-                    null,
-                    "Chrome",
-                    null,
-                    1,
-                    "WEB",
-                    true,
-                    device );
+            return new SimpleDevice( device, "Google", "Windows", "Windows", null, "Chrome", null, 1, "WEB", true, device );
         }
         else if ( device.equals( "INTERNET EXPLORER" ) )
         {
-            return new SimpleDevice( device,
-                    "Microsoft",
-                    "Windows",
-                    "Windows",
-                    null,
-                    "internet explorer",
-                    null,
-                    1,
-                    "WEB",
-                    true,
-                    device );
+            return new SimpleDevice( device, "Microsoft", "Windows", "Windows", null, "internet explorer", null, 1, "WEB", true, device );
         }
-        
-        
-        Handset handset = PerfectoMobile.instance().devices().getDevice( device );
-			
+
+        Handset handset = PerfectoMobile.instance(xFID).devices().getDevice( device );
+
         String driverName = "";
-        switch( driverType )
+        switch ( driverType )
         {
             case APPIUM:
                 if ( handset.getOs().equals( "iOS" ) )
@@ -134,27 +107,17 @@ public class NamedDataProvider implements DataProvider
                 else
                     throw new IllegalArgumentException( "Appium is not supported on the following OS " + handset.getOs() );
                 break;
-                    
+
             case PERFECTO:
                 driverName = "PERFECTO";
                 break;
-                    
+
             case WEB:
                 driverName = "WEB";
                 break;
         }
-			
-        return new SimpleDevice( device,
-                                 handset.getManufacturer(),
-                                 handset.getModel(),
-                                 handset.getOs(),
-                                 handset.getOsVersion(),
-                                 null,
-                                 null,
-                                 1,
-                                 driverName,
-                                 true,
-                                 device );
+
+        return new SimpleDevice( device, handset.getManufacturer(), handset.getModel(), handset.getOs(), handset.getOsVersion(), null, null, 1, driverName, true, device );
     }
-    
+
 }

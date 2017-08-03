@@ -23,10 +23,10 @@
 <step name="promptButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
 <step name="promptButton" site="xTest" page="home" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
 <step name="SEND_KEYS" site="xTest" page="home" type="ALERT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="CONTEXT" value="alertValue"/>
+<parameter type="STATIC" value="alertValue"/>
 </step>
 <step name="promptValue" site="xTest" page="home" type="GET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="CONTEXT" value="alertValue"/>
+<parameter type="STATIC" value="alertValue"/>
 </step>
 </function>
 </suite>

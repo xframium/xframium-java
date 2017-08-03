@@ -33,10 +33,10 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.xframium.Initializable;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
-import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.AbstractDriverFactory;
 import org.xframium.device.factory.DeviceWebDriver;
@@ -57,7 +57,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
      * .perfectoMobile.device.Device)
      */
     @Override
-    protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud )
+    protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID )
     {
         DeviceWebDriver webDriver = null;
         try
@@ -70,9 +70,9 @@ public class WEBDriverFactory extends AbstractDriverFactory
                 dc = new DesiredCapabilities( "", "", Platform.ANY );
             
             
-            DeviceManager.instance().setCurrentCloud( useCloud );
+            DeviceManager.instance( xFID ).setCurrentCloud( useCloud );
             
-            URL hubUrl = new URL( useCloud.getCloudUrl() );
+            
 
             if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )
             {
@@ -82,29 +82,36 @@ public class WEBDriverFactory extends AbstractDriverFactory
             }
             else
             {
-                dc.setCapability( useCloud.getCloudActionProvider().getCloudPlatformName(currentDevice), currentDevice.getOs() );
-            	dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
-                
-                dc.setCapability( MODEL, currentDevice.getModel() );
-                dc.setCapability( USER_NAME, useCloud.getUserName() );
-                dc.setCapability( PASSWORD, useCloud.getPassword() );
+                if (!useCloud.isEmbedded())
+                {
+                    dc.setCapability( useCloud.getCloudActionProvider().getCloudPlatformName(currentDevice), currentDevice.getOs() );
+                	dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
+                	dc.setCapability( MODEL, currentDevice.getModel() );
+                    dc.setCapability( USER_NAME, useCloud.getUserName() );
+                    dc.setCapability( PASSWORD, useCloud.getPassword() );
+                }
             }
 
             if ( currentDevice.getBrowserName() != null && !currentDevice.getBrowserName().isEmpty() )
                 dc.setCapability( BROWSER_NAME,  useCloud.getCloudActionProvider().getCloudBrowserName(currentDevice.getBrowserName()) );
-            if ( currentDevice.getBrowserVersion() != null && !currentDevice.getBrowserVersion().isEmpty() )
-                dc.setCapability( BROWSER_VERSION, currentDevice.getBrowserVersion() );
-            	
+            
+            if ( !useCloud.isEmbedded() )
+            {
+                if ( currentDevice.getBrowserVersion() != null && !currentDevice.getBrowserVersion().isEmpty() )
+                    dc.setCapability( BROWSER_VERSION, currentDevice.getBrowserVersion() );
+            }
+            
             for ( String name : currentDevice.getCapabilities().keySet() )
 				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
-			if ( ApplicationRegistry.instance().getAUT() != null )
+			if ( ApplicationRegistry.instance( xFID ).getAUT() != null )
 			{
-                for ( String name : ApplicationRegistry.instance().getAUT().getCapabilities().keySet() )
-                	dc = setCapabilities(ApplicationRegistry.instance().getAUT().getCapabilities().get( name ), dc, name);
+                for ( String name : ApplicationRegistry.instance( xFID ).getAUT().getCapabilities().keySet() )
+                	dc = setCapabilities(ApplicationRegistry.instance( xFID ).getAUT().getCapabilities().get( name ), dc, name);
 			}
 
 			if ( useCloud.isEmbedded() )
 			{
+			    
 			    if ( currentDevice.getBrowserName() != null )
 			    {
 			        if ( log.isInfoEnabled() )
@@ -122,12 +129,12 @@ public class WEBDriverFactory extends AbstractDriverFactory
 			                
 			                if ( System.getProperty( "webdriver.gecko.driver" ) == null )
 			                {
-			                    driverFile = new File( DataManager.instance().getReportFolder(), "geckodriver.exe" );
+			                    driverFile = new File( DataManager.instance( xFID ).getReportFolder(), "geckodriver-" + Initializable.VERSION + ".exe" );
 			                    
 			                    if ( !driverFile.exists() )
 			                    {
 			                        log.warn( "Downloading http://xframium.org/driver/geckodriver.exe to " + driverFile.getAbsolutePath() );
-			                        driverFile = downloadFile( new URL( "http://xframium.org/driver/geckodriver.exe" ), driverFile );
+			                        driverFile = downloadFile( new URL( "http://xframium.org/driver/geckodriver-" + Initializable.VERSION + ".exe" ), driverFile );
 			                    }
 			                    
 			                    if ( driverFile.exists() )
@@ -141,12 +148,12 @@ public class WEBDriverFactory extends AbstractDriverFactory
                                 log.info( "webdriver.chrome.driver=" +  System.getProperty( "webdriver.chrome.driver" ) );
 			                if ( System.getProperty( "webdriver.chrome.driver" ) == null )
                             {
-			                    driverFile = new File( DataManager.instance().getReportFolder(), "chromedriver.exe" );
+			                    driverFile = new File( DataManager.instance( xFID ).getReportFolder(), "chromedriver-" + Initializable.VERSION + ".exe" );
 			                    
                                 if ( !driverFile.exists() )
                                 {
                                     log.warn( "Downloading http://xframium.org/driver/chromedriver.exe to " + driverFile.getAbsolutePath() );
-                                    driverFile = downloadFile( new URL( "http://xframium.org/driver/chromedriver.exe" ), driverFile );
+                                    driverFile = downloadFile( new URL( "http://xframium.org/driver/chromedriver-" + Initializable.VERSION + ".exe" ), driverFile );
                                 }
                                 
                                 if ( driverFile.exists() )
@@ -158,12 +165,12 @@ public class WEBDriverFactory extends AbstractDriverFactory
                                 log.info( "webdriver.ie.driver=" +  System.getProperty( "webdriver.ie.driver" ) );
 			                if ( System.getProperty( "webdriver.ie.driver" ) == null )
                             {
-			                    driverFile = new File( DataManager.instance().getReportFolder(), "IEDriverServer.exe" );
+			                    driverFile = new File( DataManager.instance( xFID ).getReportFolder(), "IEDriverServer-" + Initializable.VERSION + ".exe" );
 			                    
                                 if ( !driverFile.exists() )
                                 {
                                     log.warn( "Downloading http://xframium.org/driver/IEDriverServer.exe to " + driverFile.getAbsolutePath() );
-                                    driverFile = downloadFile( new URL( "http://xframium.org/driver/IEDriverServer.exe" ), driverFile );
+                                    driverFile = downloadFile( new URL( "http://xframium.org/driver/IEDriverServer-" + Initializable.VERSION + ".exe" ), driverFile );
                                 }
                                 
                                 if ( driverFile.exists() )
@@ -174,11 +181,11 @@ public class WEBDriverFactory extends AbstractDriverFactory
 			    }
 			}
 			
-			
-            if ( log.isDebugEnabled() )
-                log.debug( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
+			URL hubUrl = new URL( useCloud.getCloudUrl( dc ) );
+            if ( log.isWarnEnabled() )
+                log.warn( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
             
-            webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
+            webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance( xFID ).isCachingEnabled(), currentDevice, dc );
             webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 
             Capabilities caps = ((RemoteWebDriver) webDriver.getWebDriver()).getCapabilities();
@@ -186,18 +193,18 @@ public class WEBDriverFactory extends AbstractDriverFactory
             webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
             webDriver.setReportKey( caps.getCapability( "reportKey" ) + "" );
             webDriver.setDeviceName( caps.getCapability( "deviceName" ) + "" );
-            if ( useCloud.getProvider().equals( "PERFECTO" ) )
+            if ( useCloud.getProvider().equals( "PERFECTO" ) && caps.getCapability( "windTunnelReportUrl" ) != null )
                 webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
             
             webDriver.setCloud( useCloud );
 
-            if ( ApplicationRegistry.instance().getAUT() != null && ApplicationRegistry.instance().getAUT().getUrl() != null && !ApplicationRegistry.instance().getAUT().getUrl().isEmpty() )
+            if ( ApplicationRegistry.instance( xFID ).getAUT() != null && ApplicationRegistry.instance( xFID ).getAUT().getUrl() != null && !ApplicationRegistry.instance( xFID ).getAUT().getUrl().isEmpty() )
             {
-                if ( ApplicationRegistry.instance().getAUT().isAutoStart() )
-                    useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance().getAUT().getName(), webDriver );
+                if ( ApplicationRegistry.instance( xFID ).getAUT().isAutoStart() )
+                    useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance( xFID ).getAUT().getName(), webDriver, xFID );
                 
-                webDriver.setAut( ApplicationRegistry.instance().getAUT() );
-                String interruptString = ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance().getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance().getDeviceInterrupts();
+                webDriver.setAut( ApplicationRegistry.instance( xFID ).getAUT(), xFID );
+                String interruptString = ApplicationRegistry.instance( xFID ).getAUT().getCapabilities().get( "deviceInterrupts" )  != null ? (String)ApplicationRegistry.instance( xFID ).getAUT().getCapabilities().get( "deviceInterrupts" ) : DeviceManager.instance( xFID ).getDeviceInterrupts();
                 webDriver.setDeviceInterrupts( getDeviceInterrupts( interruptString, webDriver.getExecutionId(), webDriver.getDeviceName() ) );
             }
 
@@ -205,7 +212,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
         }
         catch ( Exception e )
         {
-            log.fatal( "Could not connect to " + currentDevice + " (" + e.getMessage() + ")" );
+            log.fatal( "Could not connect to " + currentDevice + " (" + e.getMessage() + ")", e );
             log.debug( e );
             if ( webDriver != null )
             {

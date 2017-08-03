@@ -3,11 +3,13 @@ package org.xframium.device.cloud.action;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Map;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.Rectangle;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xframium.device.factory.DeviceWebDriver;
@@ -36,6 +38,24 @@ public abstract class AbstractCloudActionProvider implements CloudActionProvider
     }
     
     public InputStream getReport( DeviceWebDriver webDriver, String reportType )
+    {
+        return null;
+    }
+    
+    @Override
+    public String getVitals( DeviceWebDriver webDriver )
+    {
+        return null;
+    }
+    
+    @Override
+    public Rectangle findText( DeviceWebDriver webDriver, String text, Map<String, String> propertyMap )
+    {
+        return null;
+    }
+    
+    @Override
+    public Rectangle findImage( DeviceWebDriver webDriver, String imageName, Map<String, String> propertyMap )
     {
         return null;
     }

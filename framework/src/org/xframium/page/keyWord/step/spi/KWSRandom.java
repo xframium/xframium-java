@@ -102,15 +102,15 @@ public class KWSRandom extends AbstractKeyWordStep
         {
             case WORD:
                 if ( validateParameters( new String[] { "Word List" } ) )
-                    contextMap.put( getContext(), Randomizer.instance().randomWord( getParameterValue( getParameter( "Word List" ), contextMap, dataMap ) ) );
+                    contextMap.put( getContext(), Randomizer.instance().randomWord( getParameterValue( getParameter( "Word List" ), contextMap, dataMap, executionContext.getxFID() ) ) );
                 
                 break;
             
             case NUMBER:
                 if ( validateParameters( new String[] { "Minimum", "Maximum", "Format" } ) )
-                    contextMap.put( getContext(), Randomizer.instance().randomNumber( Double.parseDouble( getParameterValue( getParameter( "Minimum" ), contextMap, dataMap ) ),
-                                                                                      Double.parseDouble( getParameterValue( getParameter( "Maximum" ), contextMap, dataMap ) ),
-                                                                                      getParameterValue( getParameter( "Format" ), contextMap, dataMap ) ) );
+                    contextMap.put( getContext(), Randomizer.instance().randomNumber( Double.parseDouble( getParameterValue( getParameter( "Minimum" ), contextMap, dataMap, executionContext.getxFID() ) ),
+                                                                                      Double.parseDouble( getParameterValue( getParameter( "Maximum" ), contextMap, dataMap, executionContext.getxFID() ) ),
+                                                                                      getParameterValue( getParameter( "Format" ), contextMap, dataMap, executionContext.getxFID() ) ) );
                 
                 break;
                 
@@ -124,16 +124,16 @@ public class KWSRandom extends AbstractKeyWordStep
                 
             case EMAIL_ADDRESS:
                 if ( getParameter( "Domain" ) != null )
-                    contextMap.put( getContext(), Randomizer.instance().randomEmailAddress( getParameterValue( getParameter( "Domain" ), contextMap, dataMap ) ) );
+                    contextMap.put( getContext(), Randomizer.instance().randomEmailAddress( getParameterValue( getParameter( "Domain" ), contextMap, dataMap, executionContext.getxFID() ) ) );
                 else
                     contextMap.put( getContext(), Randomizer.instance().randomEmailAddress( null ) );
                 break;
                 
             case DATE:
                 if ( validateParameters( new String[] { "Minimum", "Maximum", "Format" } ) )
-                    contextMap.put( getContext(), Randomizer.instance().randomDate( DateUtility.instance().parseDate( getParameterValue( getParameter( "Minimum" ), contextMap, dataMap ) ),
-                                                                                    DateUtility.instance().parseDate( getParameterValue( getParameter( "Maximum" ), contextMap, dataMap ) ),
-                                                                                    getParameterValue( getParameter( "Format" ), contextMap, dataMap ) ) );
+                    contextMap.put( getContext(), Randomizer.instance().randomDate( DateUtility.instance().parseDate( getParameterValue( getParameter( "Minimum" ), contextMap, dataMap, executionContext.getxFID() ) ),
+                                                                                    DateUtility.instance().parseDate( getParameterValue( getParameter( "Maximum" ), contextMap, dataMap, executionContext.getxFID() ) ),
+                                                                                    getParameterValue( getParameter( "Format" ), contextMap, dataMap, executionContext.getxFID() ) ) );
                 break;
                 
             case ADDRESS:
@@ -148,7 +148,7 @@ public class KWSRandom extends AbstractKeyWordStep
 
             case TEXT:
                 if ( validateParameters( new String[] { "Format" } ) )
-                    contextMap.put( getContext(), Randomizer.instance().randomText( getParameterValue( getParameter( "Format" ), contextMap, dataMap ) ) );
+                    contextMap.put( getContext(), Randomizer.instance().randomText( getParameterValue( getParameter( "Format" ), contextMap, dataMap, executionContext.getxFID() ) ) );
                 break;
             
         }

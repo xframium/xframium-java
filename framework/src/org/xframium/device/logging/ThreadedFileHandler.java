@@ -32,31 +32,35 @@ public class ThreadedFileHandler extends Handler
 {
     
     private static final String X_NAMESPACE = "org.xframium";
-    
-    public ThreadedFileHandler()
+    private String xFID;
+    public ThreadedFileHandler( String xFID )
     {
         LogFactory.getLog( X_NAMESPACE );
+        this.xFID = xFID;
     }
     
     public void configureHandler( Level baseLevel )
     {
+        
+        
+        Handler[] hList = LogManager.getLogManager().getLogger( "" ).getHandlers();
+        for ( Handler h : hList )
+        {
+            if ( h instanceof ThreadedFileHandler )
+                return;
+        }
+        
         setLevel( baseLevel );
         setFormatter( new SimpleFormatter() );
         
         LogManager.getLogManager().getLogger( "" ).addHandler( this );
-        //LogManager.getLogManager().getLogger( "" ).setLevel( baseLevel );
-        //if ( LogManager.getLogManager().getLogger( X_NAMESPACE ) != null )
-        //{
-	    //    LogManager.getLogManager().getLogger( X_NAMESPACE ).setLevel( baseLevel );
-	    //    LogManager.getLogManager().getLogger( X_NAMESPACE ).addHandler( this );
-        //}
     }
     
     @Override
     public void publish( LogRecord record )
     {
         if ( isLoggable( record ) )
-            DeviceManager.instance().addLog( getFormatter().format( record ) );
+            DeviceManager.instance( xFID ).addLog( getFormatter().format( record ) );
         
     }
 

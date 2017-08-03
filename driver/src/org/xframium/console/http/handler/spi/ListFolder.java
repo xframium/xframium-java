@@ -1,6 +1,7 @@
 package org.xframium.console.http.handler.spi;
 
 import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import com.xframium.serialization.SerializationManager;
 public class ListFolder extends ECHandler {
 
     private Preferences configPreferences = Preferences.userNodeForPackage( ExecutionConsole.class );
+
     
 	@Override
 	protected byte[] _handle(HttpExchange httpExchange) 
@@ -48,7 +50,8 @@ public class ListFolder extends ECHandler {
     	        fileContainer.put( "fileName", currentFile.getAbsolutePath() );
     	    else
     	    {
-    	        File[] fileList = currentFile.getAbsoluteFile().listFiles();
+    	        
+    	        File[] fileList = new File( new URI( "file:/" + currentFile.getAbsolutePath().replaceAll( " ", "%20" ).replaceAll( "\\\\", "/" ) ) ).listFiles();
     	        List<FileContainer> fullList = new ArrayList<FileContainer>( 20 );
     	        if ( fullList != null )
     	        {

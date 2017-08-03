@@ -45,7 +45,7 @@ public class WINDOWSDriverFactory extends AbstractDriverFactory
 	 * @see com.perfectoMobile.device.factory.AbstractDriverFactory#_createDriver(com.perfectoMobile.device.Device)
 	 */
 	@Override
-	protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud )
+	protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID )
 	{
 		DeviceWebDriver webDriver = null;
 		try
@@ -54,24 +54,27 @@ public class WINDOWSDriverFactory extends AbstractDriverFactory
 			
 
             
-            DeviceManager.instance().setCurrentCloud( useCloud );
+            DeviceManager.instance( xFID ).setCurrentCloud( useCloud );
 			
-			URL hubUrl = new URL( useCloud.getCloudUrl() );
+			
 	
-			
-			//dc.setCapability( APPLICATION, ApplicationRegistry.instance().getAUT().getUrl() );
 			
 			for ( String name : currentDevice.getCapabilities().keySet() )
 				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
 			
+			URL hubUrl = new URL( useCloud.getCloudUrl( dc ) );
+			
 			if ( log.isInfoEnabled() )
 			    log.info( "Acquiring Windows Application as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
 			
-			webDriver = new DeviceWebDriver( new IOSDriver( hubUrl, dc ), DeviceManager.instance().isCachingEnabled(), currentDevice );
+			webDriver = new DeviceWebDriver( new IOSDriver( hubUrl, dc ), DeviceManager.instance(xFID).isCachingEnabled(), currentDevice, dc );
 			webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );
 			
 			
 			Capabilities caps = ( (IOSDriver) webDriver.getWebDriver() ).getCapabilities();
+			
+			if ( useCloud.getProvider().equals( "PERFECTO" ) && caps.getCapability( "windTunnelReportUrl" ) != null )
+                webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
 			
 			webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
 			webDriver.setDeviceName( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );

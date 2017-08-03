@@ -66,7 +66,7 @@ public class KWSConsole extends AbstractKeyWordStep
 		    reportData.append( "*  " ).append( getName() ).append( "\r\n" );
 		
 		for ( int i=0; i<getParameterList().size(); i++ )
-		    reportData.append( "*       " ).append( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) ).append( "\r\n" );
+		    reportData.append( "*       " ).append( getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) ).append( "\r\n" );
 		
 		reportData.append( "**********************************************************************************************************************\r\n" );
 		

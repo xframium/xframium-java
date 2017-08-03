@@ -32,7 +32,7 @@ public class CallDeviceInterrupt extends AbstractDeviceInterrupt
     @Override
     public void interruptDevice( DeviceWebDriver webDriver )
     {
-        PerfectoMobile.instance().device().call( executionId, deviceId );
+        PerfectoMobile.instance( webDriver.getxFID() ).device().call( executionId, deviceId );
         
         try
         {

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
+  <site name="xF_Native">
+    <page name="xF_Notifications" class="org.xframium.page.keyWord.KeyWordPage">
+      <element name="xF-Notification Link" descriptor="COMPLEX">
+        <element value="//UIATableCell[@name='{notification}']" descriptor="XPATH" os="IOS" />
+      </element>
+      <element name="xF-Notification Title" descriptor="COMPLEX">
+        <element value="//UIANavigationBar[@name='Notifications']" descriptor="XPATH" os="IOS" />
+        <element value="//android.widget.TextView[@resource-id='android:id/action_bar_title'][@text='Application notifications']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.TextView[@text='NOTIFICATIONS']" descriptor="XPATH" os="ANDROID" />
+      </element>
+      <element name="xF-Android Sounds" value="//android.widget.TextView[@resource-id='android:id/action_bar_title'][@text='Application notifications']|//android.widget.TextView[@resource-id='android:id/action_bar_title'][@text='Sound and notification']"
+        descriptor="XPATH" />
+      <element name="xF-Application notifications" value="//android.widget.TextView[@text='Application notifications']" descriptor="XPATH" />
+    </page>
+  </site>
+</elementDefinition>

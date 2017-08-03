@@ -26,6 +26,7 @@ import org.xframium.container.SuiteContainer;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
+import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.reporting.ExecutionContextTest;
 import java.util.HashMap;
@@ -58,10 +59,17 @@ public class KWSCommand extends AbstractKeyWordStep
 		
 		
 		Map<String, Object> params = new HashMap<>();
+		
+		KeyWordParameter useCommand = getParameter( "commandName" );
+		if ( useCommand != null )
+		    commandName = getParameterValue( useCommand, contextMap, dataMap, executionContext.getxFID() );
+		
 		for (int i = 0; i < getParameterList().size(); i++) 
 		{
 			String currentName = getParameterList().get( i ).getName();
-			String currentValue = getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "";
+			if ( currentName != null && currentName.equals( "commandName" ) )
+			    continue;
+			String currentValue = getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) + "";
 
 			params.put(currentName, currentValue);
 		}

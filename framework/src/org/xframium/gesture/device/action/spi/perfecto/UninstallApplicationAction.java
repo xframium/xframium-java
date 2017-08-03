@@ -24,6 +24,7 @@ import java.util.List;
 import org.openqa.selenium.WebDriver;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
@@ -47,14 +48,14 @@ public class UninstallApplicationAction extends AbstractDefaultAction implements
 		
 		String applicationName = (String) parameterList.get( 0 );
 
-		ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
+		ApplicationDescriptor appDesc = ApplicationRegistry.instance( ( (DeviceWebDriver) webDriver).getxFID() ).getApplication( applicationName );
 	
-		Handset localDevice = PerfectoMobile.instance().devices().getDevice( deviceName );
+		Handset localDevice = PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).devices().getDevice( deviceName );
 		
 		if ( localDevice.getOs().toLowerCase().equals( "ios" ) )				
-			PerfectoMobile.instance().application().uninstall( executionId, deviceName, appDesc.getName(), appDesc.getAppleIdentifier() );
+			PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).application().uninstall( executionId, deviceName, appDesc.getName(), appDesc.getAppleIdentifier() );
 		else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-			PerfectoMobile.instance().application().uninstall( executionId, deviceName, appDesc.getName(), appDesc.getAndroidIdentifier() );
+			PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).application().uninstall( executionId, deviceName, appDesc.getName(), appDesc.getAndroidIdentifier() );
 		else
 			throw new IllegalArgumentException( "Could not uninstall application from " + localDevice.getOs() );
 		return true;

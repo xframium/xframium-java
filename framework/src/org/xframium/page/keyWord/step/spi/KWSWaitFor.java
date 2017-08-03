@@ -58,7 +58,7 @@ public class KWSWaitFor extends AbstractKeyWordStep
 		{
 			try
 			{
-				waitFor = Integer.parseInt( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
+				waitFor = Integer.parseInt( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
 			}
 			catch( Exception e ) {}
 		}

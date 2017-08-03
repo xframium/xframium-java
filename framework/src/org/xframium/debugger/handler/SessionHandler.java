@@ -15,6 +15,12 @@ import com.xframium.serialization.SerializationManager;
 @SuppressWarnings ( "restriction")
 public class SessionHandler implements HttpHandler
 {
+    private String xFID;
+    public SessionHandler( String xFID )
+    {
+        this.xFID = xFID;
+    }
+    
     @Override
     public void handle( HttpExchange t ) throws IOException
     {
@@ -23,7 +29,7 @@ public class SessionHandler implements HttpHandler
         
         if ( parameterMap.get( "ajax" ) != null )
         {
-        	stringBuilder.append( new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ), DebugManager.instance().getTests(), 0 ) ) );
+        	stringBuilder.append( new String( SerializationManager.instance().toByteArray( SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ), DebugManager.instance(xFID).getTests(), 0 ) ) );
         }
         else
         {

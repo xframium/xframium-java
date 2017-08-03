@@ -25,6 +25,8 @@ import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.ConnectedDevice;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordDriver;
@@ -78,6 +80,7 @@ public class KWSCall2 extends AbstractKeyWordStep
 	{
 		Map<String,String> localContextMap = new HashMap<String,String>( 20 );
 		boolean returnValue = false;
+		boolean devicePushed = false;
 		
 		String functionName = getName();
 		
@@ -86,7 +89,6 @@ public class KWSCall2 extends AbstractKeyWordStep
 		
 		try
 		{
-			
 			if ( getParameterList() != null && !getParameterList().isEmpty() )
 			{
 				for ( KeyWordParameter param : getParameterList() )
@@ -98,7 +100,7 @@ public class KWSCall2 extends AbstractKeyWordStep
 							//
 							// Override is used for dataMap parameter mappings
 							//
-							String dataProvider = getParameterValue( param, contextMap, dataMap ) + "";
+							String dataProvider = getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) + "";
 							String[] dpArray = dataProvider.split( "=" );
 							if ( dpArray.length == 2 )
 							{
@@ -109,7 +111,7 @@ public class KWSCall2 extends AbstractKeyWordStep
 						}
 						else if ( param.getName().equals( "FUNCTION_NAME") )
 						{
-						    functionName = getParameterValue( param, contextMap, dataMap ) + "";
+						    functionName = getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) + "";
 						}
 						else
 						{
@@ -117,7 +119,7 @@ public class KWSCall2 extends AbstractKeyWordStep
 							// These are locally used context variables
 							//
 							localContextMap.put( param.getName(), param.getName() );
-							contextMap.put( param.getName(), getParameterValue( param, contextMap, dataMap ) + "" );
+							contextMap.put( param.getName(), getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) + "" );
 						}
 					}
 				}
@@ -126,10 +128,25 @@ public class KWSCall2 extends AbstractKeyWordStep
 			if ( sC != null )
 				returnValue = sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext);
 			else
-				returnValue = KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext );
+			{
+			    
+			    if ( getDevice() != null && !getDevice().trim().isEmpty() )
+                {
+			        
+                    //
+			        // A device was specified at the function level so p[ush it onto the device stack
+			        //
+			        executionContext.pushDevice( getDevice() );
+			        devicePushed = true;
+                }
+			    
+				returnValue = KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext );
+			}
 		}
 		finally
 		{
+		    if ( devicePushed )
+		        executionContext.popDevice();
 			for ( String name : localContextMap.keySet() )
 				contextMap.remove( name );
 		}

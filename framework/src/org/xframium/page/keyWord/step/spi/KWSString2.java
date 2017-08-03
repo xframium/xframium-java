@@ -122,7 +122,7 @@ public class KWSString2 extends AbstractKeyWordStep
         String operationName = getName();
         int paramCount = getParameterList().size();
 
-        originalValue = getParameterValue( getParameter( O_VALUE ), contextMap, dataMap );
+        originalValue = getParameterValue( getParameter( O_VALUE ), contextMap, dataMap, executionContext.getxFID() );
 
         String newValue = null;
 
@@ -138,7 +138,7 @@ public class KWSString2 extends AbstractKeyWordStep
 
             case DECIMAL:
                 
-                DecimalFormat decimalFormat = new DecimalFormat( getParameterValue( getParameter( FORMAT ), contextMap, dataMap ) );
+                DecimalFormat decimalFormat = new DecimalFormat( getParameterValue( getParameter( FORMAT ), contextMap, dataMap, executionContext.getxFID() ) );
                 decimalFormat.setRoundingMode( RoundingMode.DOWN );
                 newValue = decimalFormat.format( Double.parseDouble( originalValue ) );
                 break;
@@ -157,7 +157,7 @@ public class KWSString2 extends AbstractKeyWordStep
                 {
                     Calendar useCalendar = Calendar.getInstance();
                     useCalendar.setTime( useDate );
-                    useCalendar.add( Calendar.DATE, Integer.parseInt( getParameterValue( getParameter( ADD_DAYS ), contextMap, dataMap ) ) );
+                    useCalendar.add( Calendar.DATE, Integer.parseInt( getParameterValue( getParameter( ADD_DAYS ), contextMap, dataMap, executionContext.getxFID() ) ) );
                     useDate = useCalendar.getTime();
                 }
                 
@@ -165,11 +165,11 @@ public class KWSString2 extends AbstractKeyWordStep
                 {
                     Calendar useCalendar = Calendar.getInstance();
                     useCalendar.setTime( useDate );
-                    useCalendar.add( Calendar.DATE, 0 - Integer.parseInt( getParameterValue( getParameter( SUBTRACT_DAYS ), contextMap, dataMap ) ) );
+                    useCalendar.add( Calendar.DATE, 0 - Integer.parseInt( getParameterValue( getParameter( SUBTRACT_DAYS ), contextMap, dataMap, executionContext.getxFID() ) ) );
                     useDate = useCalendar.getTime();
                 }
                 
-                newValue = new SimpleDateFormat( getParameterValue( getParameter( _FORMAT ), contextMap, dataMap ) ).format( useDate );
+                newValue = new SimpleDateFormat( getParameterValue( getParameter( _FORMAT ), contextMap, dataMap, executionContext.getxFID() ) ).format( useDate );
                 
                 break;
                 
@@ -178,7 +178,7 @@ public class KWSString2 extends AbstractKeyWordStep
                 break;
 
             case REGEX:
-                String regex = getParameterValue( getParameter( REGEX ), contextMap, dataMap );
+                String regex = getParameterValue( getParameter( REGEX ), contextMap, dataMap, executionContext.getxFID() );
                 Pattern regexPattern = Pattern.compile( regex );
                
                 if ( log.isInfoEnabled() )
@@ -204,7 +204,7 @@ public class KWSString2 extends AbstractKeyWordStep
                 break;
                 
             case CONTAINS:
-                String expectedValue = getParameterValue( getParameter( VALUE ), contextMap, dataMap );
+                String expectedValue = getParameterValue( getParameter( VALUE ), contextMap, dataMap, executionContext.getxFID() );
 
                 if ( expectedValue.isEmpty() )
                 {
@@ -225,21 +225,21 @@ public class KWSString2 extends AbstractKeyWordStep
                 StringBuilder buff = new StringBuilder();
                 for( int i = 0; i < paramCount; ++i )
                 {
-                    buff.append( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) );
+                    buff.append( getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) );
                 }
                 newValue = buff.toString();
                 break;
 
             case SUBSTR:
 
-                int beginIndex = getInt( getParameterValue( getParameter( BEGIN ), contextMap, dataMap ) );
-                int endIndex = getInt( getParameterValue( getParameter( END ), contextMap, dataMap ) );
+                int beginIndex = getInt( getParameterValue( getParameter( BEGIN ), contextMap, dataMap, executionContext.getxFID() ) );
+                int endIndex = getInt( getParameterValue( getParameter( END ), contextMap, dataMap, executionContext.getxFID() ) );
 
                 newValue = originalValue.substring( beginIndex, endIndex );
 
                 if ( getParameter( VALUE ) != null )
                 {
-                    String compareTo = getParameterValue( getParameter( COMPARE ), contextMap, dataMap );
+                    String compareTo = getParameterValue( getParameter( COMPARE ), contextMap, dataMap, executionContext.getxFID() );
                     rtn = newValue.equals( compareTo );
                 }
                 

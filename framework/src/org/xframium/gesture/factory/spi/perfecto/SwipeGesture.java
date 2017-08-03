@@ -52,7 +52,7 @@ public class SwipeGesture extends AbstractSwipeGesture
 			
 			if ( webElement != null )
 			{
-				if ( webElement.getLocation() != null && webElement.getSize() != null && webElement.getSize().getWidth() > 0 && webElement.getSize().getHeight() > 0 )
+				if (  webElement.getLocation() != null && webElement.getSize() != null && webElement.getSize().getWidth() > 0 && webElement.getSize().getHeight() > 0 )
 				{
 					int x = (int)( ( getSwipeStart().getX() / 100.0 ) * (double) webElement.getSize().getWidth() + webElement.getLocation().getX() );
 					int y = (int) ( ( getSwipeStart().getY() / 100.0 ) * (double) webElement.getSize().getHeight() + webElement.getLocation().getY() );

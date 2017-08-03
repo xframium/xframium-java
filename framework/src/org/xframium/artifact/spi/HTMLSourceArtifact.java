@@ -14,7 +14,7 @@ public class HTMLSourceArtifact extends AbstractArtifact
     }
     
     @Override
-    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver )
+    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver, String xFID )
     {
         return writeToDisk( rootFolder, FILE_NAME, ("<html><head><link href=\"http://www.xframium.org/output/assets/css/prism.css\" rel=\"stylesheet\"><script src=\"http://www.xframium.org/output/assets/js/prism.js\"></script><body><pre class\"line-numbers\"><code class=\"language-markup\">" + webDriver.getPageSource().replace( "<", "&lt;" ).replace( ">", "&gt;" ).replace( "\t", "  " ) + "</code></pre></body></html>").getBytes() );
     }

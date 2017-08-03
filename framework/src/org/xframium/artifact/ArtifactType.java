@@ -55,7 +55,7 @@ public enum ArtifactType
     FAILURE_SOURCE_HTML( 8, "FAILURE_SOURCE_HTML", "Extract device state on failure and convert to HTML" ),
     
     /** The execution report. */
-    IMAGING_ANALYSIS ( 9, "Imaging Analysis", "DEtailed image analysis from imaging steps" ),
+    IMAGING_ANALYSIS ( 9, "IMAGING_ANALYSIS", "Detailed image analysis from imaging steps" ),
     
     /** The device log. */
     DEVICE_LOG( 10, "DEVICE_LOG", "Extract platform logs for debugging" ),
@@ -94,12 +94,14 @@ public enum ArtifactType
     EXECUTION_HISTORY_JSON( 27, "EXECUTION_HISTORY_JSON", "xFramium History JSON Report" ),
     
     EXECUTION_HISTORY_HTML( 28, "EXECUTION_HISTORY_HTML", "xFramium History HTML Report" ),
+
+    WIND_TUNNEL( 29, "WIND_TUNNEL", "Perfecto wind tunnel integrations" ),
     
     EXECUTION_TEST_JSON( 30, "EXECUTION_HISTORY_JSON", "xFramium Test JSON Report" ),
     
     EXECUTION_TEST_HTML( 31, "EXECUTION_HISTORY_HTML", "xFramium Test HTML Report" ),
-    
-    WIND_TUNNEL( 29, "WIND_TUNNEL", "Perfecto wind tunnel integrations" )
+    TIMING_HTML( 32, "TIMING_HTML", "xFramium Test Timing Report" ),
+    STATISTICS( 33, "STATISTICS", "Device Statistics" )
     ;
     
     /** The time. */
@@ -139,6 +141,8 @@ public enum ArtifactType
         supportedList.add( ArtifactType.EXECUTION_TEST_HTML );
         supportedList.add( ArtifactType.WIND_TUNNEL );
         supportedList.add( ArtifactType.ALM_DEFECT );
+        supportedList.add( ArtifactType.TIMING_HTML );
+        supportedList.add( ArtifactType.STATISTICS );
 
         return supportedList;
     }

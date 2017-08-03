@@ -116,7 +116,7 @@ public abstract class AbstractPage implements Page
      */
     public Element getElement( String pageName, String elementName )
     {
-    	return getElement( PageManager.instance().getSiteName(), pageName, elementName );
+    	return getElement( PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getSiteName(), pageName, elementName );
     }
     
     /* (non-Javadoc)
@@ -124,7 +124,7 @@ public abstract class AbstractPage implements Page
      */
     public Element getElement( String elementName )
     {
-    	return getElement( PageManager.instance().getSiteName(), this.getClass().getInterfaces()[ 0 ].getSimpleName(), elementName );
+    	return getElement( PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getSiteName(), this.getClass().getInterfaces()[ 0 ].getSimpleName(), elementName );
     }
     
     
@@ -141,9 +141,14 @@ public abstract class AbstractPage implements Page
     /* (non-Javadoc)
      * @see com.perfectoMobile.page.Page#setDriver(java.lang.Object)
      */
-    public final void setDriver( Object webDriver )
+    public void setDriver( Object webDriver )
     {
     	this.webDriver = webDriver;
+    }
+    
+    protected Object getDriver()
+    {
+        return this.webDriver;
     }
     
     /**
@@ -210,6 +215,7 @@ public abstract class AbstractPage implements Page
         contextMap.put( "RESULT", createStep( keyword, pageName, elementName, parameterList ).executeStep( p, ( (DeviceWebDriver) webDriver ), contextMap, null, null, null, ( (DeviceWebDriver) webDriver ).getExecutionContext() ) );
         return contextMap;
     }
+
     
     
 }

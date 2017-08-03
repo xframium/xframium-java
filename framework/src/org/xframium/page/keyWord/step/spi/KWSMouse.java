@@ -51,7 +51,7 @@ public class KWSMouse extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
-	    String mouseAction = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+	    String mouseAction = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "";
 	    
 	    switch( mouseAction.toUpperCase() )
 	    {
@@ -65,7 +65,7 @@ public class KWSMouse extends AbstractKeyWordStep
                 return getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).press();
                 
 	        case "CLICK_AT":
-	            return getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).clickAt( Integer.parseInt( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" ), Integer.parseInt( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" ) );
+	            return getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).clickAt( Integer.parseInt( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "" ), Integer.parseInt( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap, executionContext.getxFID() ) + "" ) );
 
 			case "CLICK_JS":
 				return clickWithJS(webDriver, getElement( pageObject, contextMap, webDriver, dataMap, executionContext ));

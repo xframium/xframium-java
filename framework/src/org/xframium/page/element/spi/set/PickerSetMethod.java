@@ -3,6 +3,7 @@ package org.xframium.page.element.spi.set;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.factory.MorelandWebElement;
 import org.xframium.gesture.GestureManager;
 import io.appium.java_client.ios.IOSElement;
@@ -11,7 +12,7 @@ public class PickerSetMethod extends AbstractSetMethod
 {
 
     @Override
-    public boolean _set( WebElement webElement, WebDriver webDriver, String value, String setType )
+    public boolean _set( WebElement webElement, WebDriver webDriver, String value, String setType, String xFID )
     {
         WebElement useElement = webElement;
         
@@ -25,7 +26,7 @@ public class PickerSetMethod extends AbstractSetMethod
             try
             {
                 log.info( "Attempting to select picker using sendKeys" );
-                ((IOSElement) useElement).sendKeys( value );
+                useElement.sendKeys( value );
                 return true;
             }
             catch( Exception e )
@@ -36,87 +37,88 @@ public class PickerSetMethod extends AbstractSetMethod
             try
             {
                 log.info( "Attempting to select picker using setValue" );
-                ((IOSElement) useElement).setValue( value );
+                if ( useElement instanceof IOSElement )
+                    ( (IOSElement) useElement ).setValue( value );
                 return true;
             }
             catch( Exception e2 )
             {
                 
             }
-            
-            
-            //
-            // If we are here then we need to manually swipe
-            //
-            log.info( "Attempting to select picker using scroll and search" );
-            String previousSelection = null;
-            if ( setType == null || setType.equals( "UP_FIRST" ) || setType.equals( "DEFAULT" ) )
+        }
+        
+        
+        //
+        // If we are here then we need to manually swipe
+        //
+        log.info( "Attempting to select picker using scroll and search" );
+        String previousSelection = null;
+        if ( setType == null || setType.equals( "UP_FIRST" ) || setType.equals( "DEFAULT" ) )
+        {
+            boolean valueChanged = true;
+            while( valueChanged )
             {
-                boolean valueChanged = true;
-                while( valueChanged )
-                {
-                    GestureManager.instance().createSwipe( new Point( 50, 55 ), new Point( 50, 45 ) ).executeGesture( webDriver, webElement );
-                    try{ Thread.sleep( 500 ); } catch( Exception e ) {}
-                    String currentSelection = webElement.getAttribute( "value" );
-                    
-                    if ( currentSelection.toLowerCase().equals( value.toLowerCase() ) )
-                        return true;
-                    
-                    if ( currentSelection == null || currentSelection.equals( previousSelection ) )
-                        valueChanged = false;
-                    
-                    previousSelection = currentSelection;
-                }
+                GestureManager.instance( ( (DeviceWebDriver) webDriver ) ).createSwipe( xFID, new Point( 50, 55 ), new Point( 50, 45 ) ).executeGesture( webDriver, webElement );
+                try{ Thread.sleep( 500 ); } catch( Exception e ) {}
+                String currentSelection = webElement.getAttribute( "value" );
                 
-                valueChanged = true;
-                while( valueChanged )
-                {
-                    GestureManager.instance().createSwipe( new Point( 50, 45 ), new Point( 50, 55 ) ).executeGesture( webDriver, webElement );
-                    try{ Thread.sleep( 500 ); } catch( Exception e ) {}
-                    String currentSelection = webElement.getAttribute( "value" );
-                    
-                    if ( currentSelection.toLowerCase().equals( value.toLowerCase() ) )
-                        return true;
-                    
-                    if ( currentSelection == null || currentSelection.equals( previousSelection ) )
-                        valueChanged = false;
-                    
-                    previousSelection = currentSelection;
-                }
+                if ( currentSelection.toLowerCase().equals( value.toLowerCase() ) )
+                    return true;
+                
+                if ( currentSelection == null || currentSelection.equals( previousSelection ) )
+                    valueChanged = false;
+                
+                previousSelection = currentSelection;
             }
-            else
+            
+            valueChanged = true;
+            while( valueChanged )
             {
-                boolean valueChanged = true;
-                while( valueChanged )
-                {
-                    GestureManager.instance().createSwipe( new Point( 50, 45 ), new Point( 50, 55 ) ).executeGesture( webDriver, webElement );
-                    try{ Thread.sleep( 500 ); } catch( Exception e ) {}
-                    String currentSelection = webElement.getAttribute( "value" );
-                    
-                    if ( currentSelection.toLowerCase().equals( value.toLowerCase() ) )
-                        return true;
-                    
-                    if ( currentSelection == null || currentSelection.equals( previousSelection ) )
-                        valueChanged = false;
-                    
-                    previousSelection = currentSelection;
-                }
+                GestureManager.instance( ( (DeviceWebDriver) webDriver ) ).createSwipe( xFID, new Point( 50, 45 ), new Point( 50, 55 ) ).executeGesture( webDriver, webElement );
+                try{ Thread.sleep( 500 ); } catch( Exception e ) {}
+                String currentSelection = webElement.getAttribute( "value" );
                 
-                valueChanged = true;
-                while( valueChanged )
-                {
-                    GestureManager.instance().createSwipe( new Point( 50, 55 ), new Point( 50, 45 ) ).executeGesture( webDriver, webElement );
-                    try{ Thread.sleep( 500 ); } catch( Exception e ) {}
-                    String currentSelection = webElement.getAttribute( "value" );
-                    
-                    if ( currentSelection.toLowerCase().equals( value.toLowerCase() ) )
-                        return true;
-                    
-                    if ( currentSelection == null || currentSelection.equals( previousSelection ) )
-                        valueChanged = false;
-                    
-                    previousSelection = currentSelection;
-                }
+                if ( currentSelection.toLowerCase().equals( value.toLowerCase() ) )
+                    return true;
+                
+                if ( currentSelection == null || currentSelection.equals( previousSelection ) )
+                    valueChanged = false;
+                
+                previousSelection = currentSelection;
+            }
+        }
+        else
+        {
+            boolean valueChanged = true;
+            while( valueChanged )
+            {
+                GestureManager.instance( ( (DeviceWebDriver) webDriver ) ).createSwipe( xFID, new Point( 50, 45 ), new Point( 50, 55 ) ).executeGesture( webDriver, webElement );
+                try{ Thread.sleep( 500 ); } catch( Exception e ) {}
+                String currentSelection = webElement.getAttribute( "value" );
+                
+                if ( currentSelection.toLowerCase().equals( value.toLowerCase() ) )
+                    return true;
+                
+                if ( currentSelection == null || currentSelection.equals( previousSelection ) )
+                    valueChanged = false;
+                
+                previousSelection = currentSelection;
+            }
+            
+            valueChanged = true;
+            while( valueChanged )
+            {
+                GestureManager.instance( ( (DeviceWebDriver) webDriver ) ).createSwipe( xFID, new Point( 50, 55 ), new Point( 50, 45 ) ).executeGesture( webDriver, webElement );
+                try{ Thread.sleep( 500 ); } catch( Exception e ) {}
+                String currentSelection = webElement.getAttribute( "value" );
+                
+                if ( currentSelection.toLowerCase().equals( value.toLowerCase() ) )
+                    return true;
+                
+                if ( currentSelection == null || currentSelection.equals( previousSelection ) )
+                    valueChanged = false;
+                
+                previousSelection = currentSelection;
             }
         }
         

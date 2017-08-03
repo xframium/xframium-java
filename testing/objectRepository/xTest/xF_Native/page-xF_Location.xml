@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
+<site name="xF_Native">
+  <page name="xF_Location" class="org.xframium.page.keyWord.KeyWordPage">
+    <element name="xF-Location Mode" descriptor="COMPLEX">
+<element value="//android.widget.Switch" descriptor="XPATH" os="ANDROID"/>
+<element value="//UIASwitch[@name='Location Services']" descriptor="XPATH" os="IOS"/>
+</element>
+    <element name="xF-Agree" descriptor="COMPLEX">
+<element value="//android.widget.Button[@text='Agree']" descriptor="XPATH" os="ANDROID"/>
+</element>
+    <element name="Location Services" value="//UIAStaticText[@name='Location Services']" descriptor="XPATH"/>
+    <element name="xF-Turn Off" value="//UIAButton[@name='Turn Off']" descriptor="XPATH"/>
+  </page>
+</site></elementDefinition>

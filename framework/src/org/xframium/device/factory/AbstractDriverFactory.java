@@ -58,7 +58,7 @@ public abstract class AbstractDriverFactory implements DriverFactory
      *            the current device
      * @return the device web driver
      */
-    protected abstract DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud );
+    protected abstract DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID );
 
     public CloudActionProvider getCloudActionProvider( CloudDescriptor currentCloud )
     {
@@ -80,12 +80,12 @@ public abstract class AbstractDriverFactory implements DriverFactory
      * @see com.perfectoMobile.device.factory.DriverFactory#createDriver(com.
      * perfectoMobile.device.Device)
      */
-    public DeviceWebDriver createDriver( Device currentDevice )
+    public DeviceWebDriver createDriver( Device currentDevice, String xFID )
     {
-        return createDriver( currentDevice, CloudRegistry.instance().getCloud() );
+        return createDriver( currentDevice, CloudRegistry.instance(xFID).getCloud(), xFID );
     }
     
-    public DeviceWebDriver createDriver( Device currentDevice, CloudDescriptor useCloud )
+    public DeviceWebDriver createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID )
     {
         if ( log.isDebugEnabled() )
             log.debug( "Creating Driver for " + getClass().getSimpleName() );
@@ -94,15 +94,16 @@ public abstract class AbstractDriverFactory implements DriverFactory
         
         if ( currentDevice.getCloud() != null )
         {
-            useCloud = CloudRegistry.instance().getCloud( currentDevice.getCloud() );
+            useCloud = CloudRegistry.instance(xFID).getCloud( currentDevice.getCloud() );
             if ( useCloud == null )
             {
-                useCloud = CloudRegistry.instance().getCloud();
+                useCloud = CloudRegistry.instance(xFID).getCloud();
                 log.warn( "A separate grid instance was specified but it does not exist in your cloud registry [" + currentDevice.getCloud() + "] - using the default Cloud instance" );
             }
         }
         
-        DeviceWebDriver webDriver = _createDriver( currentDevice, useCloud );
+        DeviceWebDriver webDriver = _createDriver( currentDevice, useCloud, xFID );
+
 
         if ( webDriver != null )
         {
@@ -113,7 +114,7 @@ public abstract class AbstractDriverFactory implements DriverFactory
                 newDevice.setBrowserName( currentDevice.getBrowserName() );
                 newDevice.setBrowserVersion( currentDevice.getBrowserVersion() );
                 CloudActionProvider actionProvider = (CloudActionProvider) Class.forName( CloudActionProvider.class.getPackage().getName() + "." + webDriver.getCloud().getProvider() + "CloudActionProvider" ).newInstance();
-                if ( actionProvider.popuplateDevice( webDriver, webDriver.getDeviceName(), newDevice ) )
+                if ( actionProvider.popuplateDevice( webDriver, webDriver.getDeviceName(), newDevice, xFID ) )
                     webDriver.setPopulatedDevice( newDevice );
                 
                 newDevice.setCloud( currentDevice.getCloud() );

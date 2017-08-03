@@ -55,7 +55,7 @@ public class PressGesture extends AbstractPressGesture
                 for ( int i=0; i<getPressCount(); i++ )
                 {
                 
-                    PerfectoMobile.instance().gestures().tapAt( executionId, deviceName, pressPosition );
+                    PerfectoMobile.instance(( (DeviceWebDriver) webDriver ).getxFID() ).gestures().tapAt( executionId, deviceName, pressPosition );
                     
                     try
                     {
@@ -79,7 +79,7 @@ public class PressGesture extends AbstractPressGesture
 		    for ( int i=0; i<getPressCount(); i++ )
             {
             
-                PerfectoMobile.instance().gestures().tapAt( executionId, deviceName, pressPosition );
+                PerfectoMobile.instance(( (DeviceWebDriver) webDriver ).getxFID() ).gestures().tapAt( executionId, deviceName, pressPosition );
                 try
                 {
                     Thread.sleep( 500 );

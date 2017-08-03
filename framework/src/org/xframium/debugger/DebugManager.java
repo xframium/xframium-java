@@ -25,6 +25,7 @@ import org.xframium.page.Page;
 import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.SeleniumElement;
+import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordTest;
@@ -47,7 +48,7 @@ public class DebugManager implements KeyWordListener
     private Map<String, TestContainer> activeTests = new HashMap<String, TestContainer>( 20 );
     private Map<String, TestContainer> completedTests = new HashMap<String, TestContainer>( 20 );
 
-    private static final DebugManager singleton = new DebugManager();
+    private static final Map<String,DebugManager> singleton = new HashMap<String,DebugManager>(5);
 
     private DebugManager()
     {
@@ -66,9 +67,15 @@ public class DebugManager implements KeyWordListener
         SerializationManager.instance().getDefaultAdapter().addCustomMapping( Capabilities.class, new MapSerializer() );
     }
 
-    public static DebugManager instance()
+    public static DebugManager instance( String xFID )
     {
-        return singleton;
+        if ( singleton.containsKey( xFID ) )
+            return singleton.get( xFID );
+        else
+        {
+            singleton.put( xFID, new DebugManager() );
+            return singleton.get( xFID );
+        }
     }
     
     public Map<String, TestContainer> getActiveTests()
@@ -100,12 +107,12 @@ public class DebugManager implements KeyWordListener
             
             List<String> parameterList = new ArrayList<String>( 10 );
             for ( KeyWordParameter p : currentStep.getParameterList() )
-                parameterList.add( currentStep.getParameterValue( p, contextMap, dataMap ) + "" );
+                parameterList.add( currentStep.getParameterValue( p, contextMap, dataMap, eC.getxFID() ) + "" );
             
             
             List<String[]> tokenList = new ArrayList<String[]>( 10 );
             for ( KeyWordToken t : currentStep.getTokenList() )
-                tokenList.add( new String[] { t.getName(), currentStep.getTokenValue( t, contextMap, dataMap ) + "" } );
+                tokenList.add( new String[] { t.getName(), currentStep.getTokenValue( t, contextMap, dataMap, eC.getxFID() ) + "" } );
             
             testContainer.addStep( new StepContainer( webDriver, currentStep, contextMap, pageObject, parameterList, tokenList ) );
             
@@ -149,6 +156,12 @@ public class DebugManager implements KeyWordListener
         String executionId = ((DeviceWebDriver) webDriver).getExecutionId();
         completedTests.put( executionId, activeTests.remove( executionId ) );
     }
+    
+    @Override
+    public void afterArtifacts( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC )
+    {
+       
+    }
 
     public void launchBrowser( String ipAddress, int portNumber )
     {
@@ -162,7 +175,7 @@ public class DebugManager implements KeyWordListener
         }
     }
     
-    public void startUp( String ipAddress, int portNumber )
+    public void startUp( String ipAddress, int portNumber, String xFID )
     {
         try
         {
@@ -172,15 +185,15 @@ public class DebugManager implements KeyWordListener
             log.warn( "Starting the DEBUGGER as " + ipAddress + ":" + portNumber );
             
             httpServer = HttpServer.create( new InetSocketAddress( ipAddress, portNumber ), 1000 );
-            httpServer.createContext( "/sessions", new SessionHandler() );
-            httpServer.createContext( "/testCase", new TestHandler() );
-            httpServer.createContext( "/pause", new PauseHandler() );
-            httpServer.createContext( "/resume", new ResumeHandler() );
-            httpServer.createContext( "/stepAhead", new AheadHandler() );
-            httpServer.createContext( "/extract", new ExtractHandler() );
-            httpServer.createContext( "/extractXml", new ExtractXMLHandler() );
-            httpServer.createContext( "/extractXml", new ExtractXMLHandler() );
-            httpServer.createContext( "/snapshot", new SnapshotHandler() );
+            httpServer.createContext( "/sessions", new SessionHandler( xFID ) );
+            httpServer.createContext( "/testCase", new TestHandler( xFID ) );
+            httpServer.createContext( "/pause", new PauseHandler( xFID ) );
+            httpServer.createContext( "/resume", new ResumeHandler( xFID ) );
+            httpServer.createContext( "/stepAhead", new AheadHandler( xFID ) );
+            httpServer.createContext( "/extract", new ExtractHandler( xFID ) );
+            httpServer.createContext( "/extractXml", new ExtractXMLHandler( xFID ) );
+            httpServer.createContext( "/extractXml", new ExtractXMLHandler( xFID ) );
+            httpServer.createContext( "/snapshot", new SnapshotHandler( xFID ) );
             httpServer.start();
             
         }

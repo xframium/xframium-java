@@ -73,7 +73,7 @@ public class KeyWordDriver
     private Map<String, List<KeyWordTest>> tagMap = new HashMap<String, List<KeyWordTest>>( 10 );
 
     /** The singleton. */
-    private static KeyWordDriver singleton = new KeyWordDriver();
+    private static Map<String,KeyWordDriver> singleton = new HashMap<String,KeyWordDriver>(5);
 
     /** The configuration properties **/
     private Properties configProperties = new Properties();
@@ -85,9 +85,21 @@ public class KeyWordDriver
      *
      * @return the key word driver
      */
-    public static KeyWordDriver instance()
+    public static KeyWordDriver instance( String xFID )
     {
-        return singleton;
+        if ( singleton.containsKey( xFID ) )
+            return singleton.get( xFID );
+        else
+        {
+            singleton.put( xFID, new KeyWordDriver( xFID ) );
+            return singleton.get( xFID );
+        }
+    }
+    
+    private String xFID;
+    public KeyWordDriver( String xFID )
+    {
+        this.xFID = xFID;
     }
 
     public void clear()
@@ -145,7 +157,7 @@ public class KeyWordDriver
         if ( siteName != null )
             useName = siteName + "." + pageName;
         else
-            useName = PageManager.instance().getSiteName() + "." + pageName;
+            useName = PageManager.instance(xFID).getSiteName() + "." + pageName;
         if ( log.isInfoEnabled() )
             log.info( "Mapping Page [" + useName + "] to [" + pageClass.getName() + "]" );
         pageMap.put( useName, pageClass );
@@ -236,6 +248,21 @@ public class KeyWordDriver
             log.warn( "After Test notifications failed", e );
         }
     }
+    
+    public void notifyAfterArtifacts( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC  )
+    {
+        try
+        {
+            for ( KeyWordListener k : stepListenerList )
+            {
+                k.afterArtifacts( webDriver, keyWordTest, contextMap, dataMap, pageMap, stepPass, sC, eC );
+            }
+        }
+        catch ( Exception e )
+        {
+            log.warn( "After artifact notifications failed", e );
+        }
+    }
 
     /**
      * Adds the test.
@@ -281,8 +308,8 @@ public class KeyWordDriver
     {
         if ( test.isActive() )
         {
-            if ( log.isDebugEnabled() )
-                log.debug( "Adding function [" + test.getName() + "]" );
+            if ( log.isInfoEnabled() )
+                log.info( "Adding function [" + test.getName() + "]" );
             functionMap.put( test.getName(), test );
         }
     }
@@ -373,7 +400,7 @@ public class KeyWordDriver
                     {
                         dpMe = dataProvider.substring( 0, dataProvider.indexOf( "." ) );
                         String recordName = dataProvider.substring( dataProvider.indexOf( "." ) + 1 );
-                        pageData = PageDataManager.instance().getPageData( dpMe, recordName );
+                        pageData = PageDataManager.instance( executionContext.getxFID() ).getPageData( dpMe, recordName );
                     }
                     else if ( dataProvider.contains( "=" ) )
                     {
@@ -382,7 +409,7 @@ public class KeyWordDriver
                         String realName = aliasMap[ 0 ];
                         String alias = aliasMap[ 1 ];
                         
-                        pageData = PageDataManager.instance().getPageData( realName );
+                        pageData = PageDataManager.instance( executionContext.getxFID() ).getPageData( realName );
                         
                         if ( log.isInfoEnabled() )
                             log.info( "Adding Alias " + alias + " for " + realName );
@@ -390,7 +417,7 @@ public class KeyWordDriver
                     }
                     else
                     {
-                        pageData = PageDataManager.instance().getPageData( dataProvider );
+                        pageData = PageDataManager.instance( executionContext.getxFID() ).getPageData( dataProvider );
                     }
 
                     if ( pageData == null )
@@ -489,12 +516,34 @@ public class KeyWordDriver
                     if ( tagName.toLowerCase().equals( t.getName().toLowerCase() ) )
                         testMap.put( t.getName(), t );
                 }
+            }
+            
+            for ( KeyWordTest t : this.inactiveTestMap.values() )
+            {
+                if ( tagName.contains( "*" ) )
+                {
+                    if ( tagName.startsWith( "*" ) )
+                    {
+                        if ( t.getName().toLowerCase().endsWith( tagName.replace( "*", "" ).trim() ) )
+                            testMap.put( t.getName(), t );
+                    }
+                    else if ( tagName.endsWith( "*" ) )
+                    {
+                        if ( t.getName().toLowerCase().startsWith( tagName.replace( "*", "" ).trim() ) )
+                            testMap.put( t.getName(), t );
+                    }
+                }
+                else
+                {
+                    if ( tagName.toLowerCase().equals( t.getName().toLowerCase() ) )
+                        testMap.put( t.getName(), t );
+                }
 
-                if ( log.isDebugEnabled() )
-                    log.debug( "Adding Test [" + t.getName() + "]" );
-                testMap.put( t.getName(), t );
             }
         }
+        
+        
+        
 
         return testMap.values();
     }
@@ -510,17 +559,20 @@ public class KeyWordDriver
      * @throws Exception
      *             the exception
      */
-    public ExecutionContextTest executeTest( TestName testName, WebDriver webDriver, SuiteContainer sC ) throws Exception
+    public ExecutionContextTest executeTest( TestName testName, DeviceWebDriver webDriver, SuiteContainer sC ) throws Exception
     {
         boolean testStarted = false;
         boolean returnValue = true;
-        PageManager.instance().getPageCache().clear();
+        PageManager.instance(xFID).getPageCache().clear();
 
-        ExecutionContextTest executionContext = ( (DeviceWebDriver) webDriver ).getExecutionContext();
+        ExecutionContextTest executionContext = webDriver.getExecutionContext();
         Map<String, PageData> dataMap = new HashMap<String, PageData>( 10 );
         Map<String, Page> pageMap = new HashMap<String, Page>( 10 );
         Map<String, Object> contextMap = new HashMap<String, Object>( 10 );
         KeyWordTest test = testMap.get( testName.getRawName() );
+        
+        if ( test == null )
+            test = inactiveTestMap.get( testName.getRawName() );
         
         logConsole( "Executing [" + testName + "]" );
         
@@ -532,13 +584,13 @@ public class KeyWordDriver
                 throw new TestConfigurationException( testName.getTestName() );
             
             executionContext.setTest( test );
-            executionContext.setDevice( ( (DeviceWebDriver) webDriver ).getPopulatedDevice() );
-            executionContext.setCloud( ( (DeviceWebDriver) webDriver ).getCloud() );
+            executionContext.setDevice( webDriver.getPopulatedDevice() );
+            executionContext.setCloud( webDriver.getCloud() );
             
             executionContext.setDataMap( dataMap );
             executionContext.setPageMap( pageMap );
             executionContext.setContextMap( contextMap );
-            executionContext.setSessionId( ( (DeviceWebDriver) webDriver ).getExecutionId() );
+            executionContext.setSessionId( webDriver.getExecutionId() );
             executionContext.setTestName( testName.getTestName() );
         
             if ( log.isInfoEnabled() )
@@ -559,10 +611,10 @@ public class KeyWordDriver
                         {
                             dpMe = typeId[0];
                             String recordName = dataProvider.substring( dataProvider.indexOf( "." ) + 1 );
-                            pageData = PageDataManager.instance().getPageData( typeId[0], recordName );
+                            pageData = PageDataManager.instance(xFID).getPageData( typeId[0], recordName );
                         }
                         else
-                            pageData = PageDataManager.instance().getPageData( dataProvider );
+                            pageData = PageDataManager.instance(xFID).getPageData( dataProvider );
                     }
                     else
                     {
@@ -573,14 +625,14 @@ public class KeyWordDriver
                             String realName = aliasMap[ 0 ];
                             String alias = aliasMap[ 1 ];
                             
-                            pageData = PageDataManager.instance().getPageData( realName );
+                            pageData = PageDataManager.instance(xFID).getPageData( realName );
                             
                             if ( log.isInfoEnabled() )
                                 log.info( "Adding Alias " + alias + " for " + realName );
                             dataMap.put( alias, pageData );
                         }
                         else
-                            pageData = PageDataManager.instance().getPageData( dataProvider );
+                            pageData = PageDataManager.instance(xFID).getPageData( dataProvider );
                     }
                     if ( pageData == null )
                     {
@@ -611,7 +663,7 @@ public class KeyWordDriver
             
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Alerting Listeners" );
-            if ( !KeyWordDriver.instance().notifyBeforeTest( webDriver, test, contextMap, dataMap, pageMap, sC, executionContext ) )
+            if ( !KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).notifyBeforeTest( webDriver, test, contextMap, dataMap, pageMap, sC, executionContext ) )
             {
                 log.warn( "Test was skipped due to a failed test notification listener" );
                 contextMap.put( "XF_TEST_STATUS", TestStatus.SKIPPED.name() );
@@ -619,19 +671,21 @@ public class KeyWordDriver
                 return executionContext;
             }
             
+            String xFID = webDriver.getExecutionContext().getxFID();
+            
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Processing Initialization" );
-            if ( DeviceManager.instance().getInitializationName() != null )
+            if ( DeviceManager.instance( xFID ).getInitializationName() != null )
             {
-                KeyWordTest initTest = KeyWordDriver.instance().getTest( DeviceManager.instance().getInitializationName() );
+                KeyWordTest initTest = KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).getTest( DeviceManager.instance( xFID ).getInitializationName() );
                 if ( initTest != null )
                 {
-                    if ( !DeviceManager.instance().isDeviceInitialized( ( (DeviceWebDriver) webDriver ).getPopulatedDevice() ) )
+                    if ( !DeviceManager.instance( xFID ).isDeviceInitialized( webDriver.getPopulatedDevice() ) )
                     {
-                        logConsole( "Execution Initialization Method " + DeviceManager.instance().getInitializationName() + " on " + ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getEnvironment() + "(" + ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getDeviceName() + ")" );
+                        logConsole( "Execution Initialization Method " + DeviceManager.instance( xFID ).getInitializationName() + " on " + webDriver.getPopulatedDevice().getEnvironment() + "(" + webDriver.getPopulatedDevice().getDeviceName() + ")" );
                         executionContext.startStep( new SyntheticStep( "Device Initialization", "CALL2" ), contextMap, dataMap );
                         returnValue = initTest.executeTest( webDriver, contextMap, dataMap, pageMap, sC, executionContext );
-                        DeviceManager.instance().setDeviceInitialized( ( (DeviceWebDriver) webDriver ).getPopulatedDevice() );
+                        DeviceManager.instance( xFID ).setDeviceInitialized( webDriver.getPopulatedDevice() );
                         executionContext.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
                     }  
                 }
@@ -671,7 +725,7 @@ public class KeyWordDriver
         catch ( Throwable e )
         {
             contextMap.put( "XF_TEST_STATUS", TestStatus.FAILED.name() );
-            executionContext.startStep( new SyntheticStep( test.getName(), "TEST" ), contextMap, dataMap );
+            executionContext.startStep( new SyntheticStep( test == null ? testName.getTestName() : test.getName(), "TEST" ), contextMap, dataMap );
             executionContext.completeStep( StepStatus.FAILURE, e );
             executionContext.completeTest( TestStatus.FAILED, e );
 
@@ -680,14 +734,21 @@ public class KeyWordDriver
         }
         finally
         {
-            if ( !contextMap.containsKey( "XF_TEST_STATUS" ) )
-                contextMap.put( "XF_TEST_STATUS", "UNKNOWN" );
-            if ( testStarted )
-                KeyWordDriver.instance().notifyAfterTest( webDriver, test, contextMap, dataMap, pageMap, returnValue, sC, executionContext );
-            
-            for ( String key : dataMap.keySet() )
+            try
             {
-                PageDataManager.instance().putPageData( dataMap.get( key ) );
+                if ( !contextMap.containsKey( "XF_TEST_STATUS" ) )
+                    contextMap.put( "XF_TEST_STATUS", "UNKNOWN" );
+                if ( testStarted )
+                    KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).notifyAfterTest( webDriver, test, contextMap, dataMap, pageMap, returnValue, sC, executionContext );
+                
+                for ( String key : dataMap.keySet() )
+                {
+                    PageDataManager.instance(xFID).putPageData( dataMap.get( key ) );
+                }
+            }
+            catch( Exception e )
+            {
+                e.printStackTrace();
             }
         }
     }

@@ -25,7 +25,6 @@ package org.xframium.device;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,6 +43,8 @@ import org.xframium.device.ng.RunContainer.RunStatus;
 import org.xframium.device.ng.TestContainer;
 import org.xframium.device.ng.TestPackage;
 import org.xframium.device.property.PropertyAdapter;
+import org.xframium.exception.DeviceException;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordParameter;
@@ -65,10 +66,7 @@ import com.xframium.serialization.json.ReflectionSerializer;
 public class DeviceManager
 {
     /** The singleton. */
-    private static DeviceManager singleton = new DeviceManager();
-
-    /** The execution id. */
-    private ThreadLocal<String> executionId = new ThreadLocal<String>();
+    private static Map<String,DeviceManager> singleton = new HashMap<String,DeviceManager>( 3 );
 
     private ThreadLocal<CloudDescriptor> currentCloud = new ThreadLocal<CloudDescriptor>();
 
@@ -194,6 +192,15 @@ public class DeviceManager
     {
         propertyAdapterList.add( propertyAdapter );
     }
+    
+    public Class[] getPropertyAdapters()
+    {
+        List<Class> pA = new ArrayList<Class>( 10 );
+        for ( PropertyAdapter a : propertyAdapterList )
+            pA.add( a.getClass() );
+        
+        return pA.toArray( new Class[ 0 ] );
+    }
 
     public void notifyPropertyAdapter( Map<String, String> configurationProperties )
     {
@@ -255,9 +262,15 @@ public class DeviceManager
      *
      * @return the device manager
      */
-    public static DeviceManager instance()
+    public static DeviceManager instance( String xFID )
     {
-        return singleton;
+        if ( singleton.containsKey( xFID ) )
+            return singleton.get( xFID );
+        else
+        {
+            singleton.put( xFID, new DeviceManager() );
+            return singleton.get( xFID );
+        }
     }
 
     /**
@@ -339,28 +352,6 @@ public class DeviceManager
     {
         this.dryRun = dryRun;
     }
-
-    /**
-     * Sets the execution id.
-     *
-     * @param executionId
-     *            the new execution id
-     */
-    public void setExecutionId( String executionId )
-    {
-        this.executionId.set( executionId );
-    }
-
-    /**
-     * Gets the execution id.
-     *
-     * @return the execution id
-     */
-    public String getExecutionId()
-    {
-        return executionId.get();
-    }
-
     
 
     /**
@@ -453,15 +444,15 @@ public class DeviceManager
                     
                     if ( testPackage.getTestName().getPersonaName() != null && !testPackage.getTestName().getPersonaName().isEmpty() )
                         currentDevice.addCapability( "windTunnelPersona", testPackage.getTestName().getPersonaName(), "STRING" );
-
-                    webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice );
+                    
+                    webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice, testPackage.getxFID() );
 
                     if ( webDriver != null )
                     {
                         if ( testFlow.isDebugEnabled() )
                             testFlow.debug( Thread.currentThread().getName() + ": WebDriver Created - Creating Connected Device for " + currentDevice );
 
-                        DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
+                        notifyPropertyAdapter( configurationProperties, webDriver );
 
                         return new ConnectedDevice( webDriver, currentDevice, testPackage.getTestName().getPersonaName() );
                     }
@@ -537,64 +528,56 @@ public class DeviceManager
      *            the persona name
      * @return The next available device or null if no device are available
      */
-    public ConnectedDevice getUnconfiguredDevice( Method currentMethod, String testContext, String personaName, String deviceId )
+    public ConnectedDevice getUnconfiguredDevice( String deviceId, String xFID )
     {
         ConnectedDevice rtn = null;
-        Device currentDevice = NamedDataProvider.lookupDeviceById( deviceId, driverType );
+        
+        
+        
+        Device currentDevice = NamedDataProvider.lookupDeviceById( deviceId, driverType, xFID );
+        
+        if ( log.isInfoEnabled() )
+            log.info( "Attempting to register an alternate device as " + deviceId + " using " + currentDevice );
 
-        String runKey = currentMethod.getDeclaringClass().getSimpleName() + "." + currentMethod.getName() + (testContext != null ? ("." + testContext) : "");
-        if ( personaName != null && !personaName.isEmpty() )
-            runKey = runKey + "." + personaName;
+        DeviceWebDriver webDriver = null;
+        try
+        {
+            if ( log.isDebugEnabled() )
+                log.debug( "Attempting to create WebDriver instance for " + currentDevice );
 
-        //if ( ((analyticsMap.get( currentDevice.getKey() ) == null) || (!analyticsMap.get( currentDevice.getKey() ).hasRun( runKey ))) && (!activeRuns.containsKey( currentDevice.getKey() + "." + runKey )) )
-        //{
-            DeviceWebDriver webDriver = null;
+
+            webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice, xFID );
+
+            if ( webDriver != null )
+            {
+                if ( log.isInfoEnabled() )
+                    log.info( "Registered alternate connected device as " + deviceId );
+
+                notifyPropertyAdapter( configurationProperties, webDriver );
+
+                rtn = new ConnectedDevice( webDriver, currentDevice, "" );
+            }
+            else
+                throw new IllegalStateException( "Coudl not connect" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error creating factory instance", e );
             try
             {
-                if ( log.isDebugEnabled() )
-                    log.debug( "Attempting to create WebDriver instance for " + currentDevice );
-
-                if ( personaName != null && !personaName.isEmpty() )
-                    currentDevice.addCapability( "windTunnelPersona", personaName, "STRING" );
-
-                webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice );
-
-                if ( webDriver != null )
-                {
-                    if ( log.isDebugEnabled() )
-                        log.debug( "WebDriver Created - Creating Connected Device for " + currentDevice );
-
-                    DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
-
-                    //activeRuns.put( currentDevice.getKey() + "." + runKey, true );
-
-                    rtn = new ConnectedDevice( webDriver, currentDevice, personaName );
-                }
+                webDriver.close();
             }
-            catch ( Exception e )
+            catch ( Exception e2 )
             {
-                log.error( "Error creating factory instance", e );
-                try
-                {
-                    webDriver.close();
-                }
-                catch ( Exception e2 )
-                {
-                }
-                try
-                {
-                    webDriver.quit();
-                }
-                catch ( Exception e2 )
-                {
-                }
             }
-        //}
-//        else
-//        {
-//            if ( log.isDebugEnabled() )
-//                log.debug( Thread.currentThread().getName() + ": Releasing unused Device Semaphore for " + currentDevice );
-//        }
+            try
+            {
+                webDriver.quit();
+            }
+            catch ( Exception e2 )
+            {
+            }
+        }
 
         return rtn;
     }
@@ -607,26 +590,31 @@ public class DeviceManager
      *            name of the device which has to be connected
      * @return The next available device or null if no device are available
      */
-    public ConnectedDevice getInactiveDevice( String deviceName )
+    public ConnectedDevice getInactiveDevice( String deviceName, String xFID )
     {
         ConnectedDevice rtn = null;
 
         Device currentDevice = deviceMap.get( deviceName );
         DeviceWebDriver webDriver = null;
 
+        if ( log.isInfoEnabled() )
+            log.info( "Attempting to register an alternate device as " + deviceName + " using " + currentDevice );
+        
         try
         {
-            webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice );
+            webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice, xFID );
 
             if ( webDriver != null )
             {
 
-                if ( log.isDebugEnabled() )
-                    log.debug( "WebDriver Created - Creating Connected Device for " + currentDevice );
+                if ( log.isInfoEnabled() )
+                    log.info( "Registered alternate connected device as " + deviceName );
 
-                DeviceManager.instance().notifyPropertyAdapter( configurationProperties, webDriver );
+                notifyPropertyAdapter( configurationProperties, webDriver );
                 rtn = new ConnectedDevice( webDriver, currentDevice, null );
             }
+            else
+                throw new IllegalStateException( "Coudl not connect" );
         }
         catch ( Exception e )
         {
@@ -646,14 +634,9 @@ public class DeviceManager
             {
             }
 
-            if ( log.isDebugEnabled() )
-                log.debug( Thread.currentThread().getName() + ": Releasing unused Device Semaphore for " + currentDevice );
+            throw new DeviceException( "Could not connect to alternate device defined as " + deviceName );
         }
-        finally
-        {
-            if ( log.isDebugEnabled() )
-                log.debug( Thread.currentThread().getName() + ": Releasing Device Manager Lock" );
-        }
+
         return rtn;
     }
 

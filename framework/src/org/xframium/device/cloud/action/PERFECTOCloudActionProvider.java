@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -15,6 +16,9 @@ import java.util.zip.ZipInputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.openqa.selenium.ContextAware;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.Rectangle;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xframium.application.ApplicationDescriptor;
@@ -30,6 +34,7 @@ import org.xframium.integrations.common.PercentagePoint;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.bean.Execution;
 import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
+import org.xframium.integrations.perfectoMobile.rest.bean.ImageExecution;
 import org.xframium.integrations.perfectoMobile.rest.bean.Item;
 import org.xframium.integrations.perfectoMobile.rest.bean.ItemCollection;
 import org.xframium.integrations.perfectoMobile.rest.services.Repositories.RepositoryType;
@@ -56,6 +61,30 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 	        stringBuilder.append( "Unknown Action" );
 	    
 	    return stringBuilder.toString();
+	}
+	
+	@Override
+	public Rectangle findImage( DeviceWebDriver webDriver, String imageName, Map<String, String> propertyMap )
+	{
+	    
+	    ImageExecution imageExec = PerfectoMobile.instance( webDriver.getxFID() ).imaging().imageExists( webDriver.getExecutionId(), webDriver.getDeviceName(), imageName, propertyMap );
+	    
+	    if ( imageExec != null && Boolean.parseBoolean( imageExec.getStatus() ) )
+	        return new Rectangle( new Point( Integer.parseInt( imageExec.getLeft() ), Integer.parseInt( imageExec.getTop() ) ), new Dimension( Integer.parseInt( imageExec.getWidth() ), Integer.parseInt( imageExec.getHeight() ) ) );
+	    
+	    return null;
+	}
+	
+	@Override
+	public Rectangle findText( DeviceWebDriver webDriver, String text, Map<String, String> propertyMap )
+	{
+	    ImageExecution imageExec = PerfectoMobile.instance( webDriver.getxFID() ).imaging().textExists( webDriver.getExecutionId(), webDriver.getDeviceName(), text, propertyMap );
+	    
+	    
+	    if ( imageExec != null && Boolean.parseBoolean( imageExec.getStatus() ) )
+            return new Rectangle( new Point( Integer.parseInt( imageExec.getLeft() ), Integer.parseInt( imageExec.getTop() ) ), new Dimension( Integer.parseInt( imageExec.getWidth() ), Integer.parseInt( imageExec.getHeight() ) ) );
+	    
+	    return null;
 	}
 	
 	private Document getExecutionReport( DeviceWebDriver webDriver )
@@ -89,7 +118,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         }
         catch (Exception e)
         {
-            log.error( "Error downloading PERFECT execution report", e);
+            log.error( "Error downloading PERFECT execution report " + e.getMessage());
             return null;
         }
 	}
@@ -104,7 +133,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
             NodeList nodeList = getNodes( xmlDocument, "//dataItem[@type='log']/attachment" );
             if ( nodeList != null && nodeList.getLength() > 0 )
             {
-                byte[] zipFile = PerfectoMobile.instance().reports().download( webDriver.getReportKey() , nodeList.item( 0 ).getTextContent(), false );
+                byte[] zipFile = PerfectoMobile.instance( webDriver.getxFID() ).reports().download( webDriver.getReportKey() , nodeList.item( 0 ).getTextContent(), false );
                 ZipInputStream zipStream = new ZipInputStream( new ByteArrayInputStream( zipFile ) );
                 ZipEntry entry = zipStream.getNextEntry();
                 
@@ -130,11 +159,37 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         }
         return null;
 	}
+	
+	@Override
+    public String getVitals( DeviceWebDriver webDriver )
+    {
+        try
+        {
+            Document xmlDocument = getExecutionReport( webDriver );
+            
+            NodeList nodeList = getNodes( xmlDocument, "//dataItem[@type='monitor']/attachment" );
+            if ( nodeList != null && nodeList.getLength() > 0 )
+            {
+                byte[] zipFile = PerfectoMobile.instance( webDriver.getxFID() ).reports().download( webDriver.getReportKey() , nodeList.item( 0 ).getTextContent(), false );
+                
+                
+                return new String( zipFile );
+            }
+            
+            return null;
+            
+        }
+        catch( Exception e )
+        {
+            log.error( "Error download device log data", e );
+        }
+        return null;
+    }
 
 	@Override
 	public void tap( DeviceWebDriver webDriver, PercentagePoint location, int lengthInMillis )
 	{
-	    PerfectoMobile.instance().gestures().tap( webDriver.getExecutionId(), webDriver.getDeviceName(), location, lengthInMillis / 1000 );
+	    PerfectoMobile.instance( webDriver.getxFID() ).gestures().tap( webDriver.getExecutionId(), webDriver.getDeviceName(), location, lengthInMillis / 1000 );
 	}
 	
 	@Override
@@ -142,12 +197,14 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 	{
 	    if( timerId == null )
 	        return false;
-	    
-	    executionContext.getStep().addTiming( (type != null && !type.isEmpty()) ? "ux." + type : "ux", PerfectoMobile.instance().windTunnel().getTimer( webDriver.getExecutionId(), timerId, "ux", "milliseconds" ).getReturnValue() );
-	    executionContext.getStep().addTiming( (type != null && !type.isEmpty()) ? "device." + type : "device", PerfectoMobile.instance().windTunnel().getTimer( webDriver.getExecutionId(), timerId, "device", "milliseconds" ).getReturnValue() );
-	    executionContext.getStep().addTiming( (type != null && !type.isEmpty()) ? "system." + type : "system", PerfectoMobile.instance().windTunnel().getTimer( webDriver.getExecutionId(), timerId, "system", "milliseconds" ).getReturnValue() );
-	    executionContext.getStep().addTiming( (type != null && !type.isEmpty()) ? "elapsed." + type : "elapsed", PerfectoMobile.instance().windTunnel().getTimer( webDriver.getExecutionId(), timerId, "elapsed", "milliseconds" ).getReturnValue() );
+
+	    executionContext.getStep().addTiming( "perfecto.timerStart", executionContext.getTimerStart() );
+	    executionContext.getStep().addTiming( (type != null && !type.isEmpty()) ? "ux." + type : "ux", PerfectoMobile.instance( webDriver.getxFID() ).windTunnel().getTimer( webDriver.getExecutionId(), timerId, "ux", "milliseconds" ).getReturnValue() );
+	    executionContext.getStep().addTiming( (type != null && !type.isEmpty()) ? "device." + type : "device", PerfectoMobile.instance( webDriver.getxFID() ).windTunnel().getTimer( webDriver.getExecutionId(), timerId, "device", "milliseconds" ).getReturnValue() );
+	    executionContext.getStep().addTiming( (type != null && !type.isEmpty()) ? "system." + type : "system", PerfectoMobile.instance( webDriver.getxFID() ).windTunnel().getTimer( webDriver.getExecutionId(), timerId, "system", "milliseconds" ).getReturnValue() );
+	    executionContext.getStep().addTiming( (type != null && !type.isEmpty()) ? "elapsed." + type : "elapsed", PerfectoMobile.instance( webDriver.getxFID() ).windTunnel().getTimer( webDriver.getExecutionId(), timerId, "elapsed", "milliseconds" ).getReturnValue() );
 	    stopTimer( webDriver, timerId, executionContext );
+	    executionContext.getStep().addTiming( "perfecto.timerStop", System.currentTimeMillis() );
 	    return true;
 	}
 	
@@ -155,7 +212,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 	public String startTimer( DeviceWebDriver webDriver, Element element, ExecutionContextTest executionContext )
 	{
 	    String timerId = createTimerId( element );
-	    PerfectoMobile.instance().windTunnel().startTimer( webDriver.getExecutionId(), timerId, TimerPolicy.reset ).getReturnValue();
+	    PerfectoMobile.instance( webDriver.getxFID() ).windTunnel().startTimer( webDriver.getExecutionId(), timerId, TimerPolicy.reset ).getReturnValue();
 	    executionContext.setTimerName( timerId );
 	    return timerId;
 	}
@@ -163,25 +220,25 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 	@Override
 	public void stopTimer( DeviceWebDriver webDriver, String timerId, ExecutionContextTest executionContext )
 	{
-	    PerfectoMobile.instance().windTunnel().stopTimer( webDriver.getExecutionId(), timerId );
+	    PerfectoMobile.instance( webDriver.getxFID() ).windTunnel().stopTimer( webDriver.getExecutionId(), timerId );
 	    executionContext.clearTimer();
 
 	}
 	
 	
 	@Override
-    public boolean startApp( String executionId, String deviceId, String appName, String appIdentifier )
+    public boolean startApp( DeviceWebDriver webDriver, String executionId, String deviceId, String appName, String appIdentifier )
     {
-        PerfectoMobile.instance().application().open( executionId, deviceId, appName, appIdentifier );
+        PerfectoMobile.instance( webDriver.getxFID() ).application().open( executionId, deviceId, appName, appIdentifier );
         return true;
     }
 
     @Override
-    public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device )
+    public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device, String xFID )
     {
         try
         {
-            Handset handSet = PerfectoMobile.instance().devices().getDevice( deviceId );
+            Handset handSet = PerfectoMobile.instance( xFID ).devices().getDevice( deviceId );
 
             device.setOs( handSet.getOs() );
             if ( device.getOs().toLowerCase().equals( "android" ) || device.getOs().toLowerCase().equals( "ios" ) )
@@ -216,14 +273,14 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
     @Override
     public void disableLogging( DeviceWebDriver webDriver )
     {
-        PerfectoMobile.instance().device().startDebug( webDriver.getExecutionId(), webDriver.getDeviceName() );
+        PerfectoMobile.instance( webDriver.getxFID() ).device().startDebug( webDriver.getExecutionId(), webDriver.getDeviceName() );
         
     }
     
     @Override
     public void enabledLogging( DeviceWebDriver webDriver )
     {
-        PerfectoMobile.instance().device().stopDebug( webDriver.getExecutionId(), webDriver.getDeviceName() );
+        PerfectoMobile.instance( webDriver.getxFID() ).device().stopDebug( webDriver.getExecutionId(), webDriver.getDeviceName() );
         
     }
 
@@ -249,16 +306,16 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
     @Override
     public boolean installApplication( String applicationName, DeviceWebDriver webDriver, boolean instrumentApp )
     {
-        ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
+        ApplicationDescriptor appDesc = ApplicationRegistry.instance(webDriver.getxFID()).getApplication( applicationName );
     
-        Handset localDevice = PerfectoMobile.instance().devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
+        Handset localDevice = PerfectoMobile.instance( webDriver.getxFID() ).devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
         
         Execution appExec = null;
         
         if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
-            appExec = PerfectoMobile.instance().application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), getInstallLocation( appDesc.getIosInstallation() ), instrumentApp ? "instrument" : "noinstrument" );
+            appExec = PerfectoMobile.instance( webDriver.getxFID() ).application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), getInstallLocation( appDesc.getIosInstallation(), webDriver.getxFID() ), instrumentApp ? "instrument" : "noinstrument" );
         else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-            appExec = PerfectoMobile.instance().application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), getInstallLocation( appDesc.getAndroidInstallation() ), instrumentApp ? "instrument" : "noinstrument" );
+            appExec = PerfectoMobile.instance( webDriver.getxFID() ).application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), getInstallLocation( appDesc.getAndroidInstallation(), webDriver.getxFID() ), instrumentApp ? "instrument" : "noinstrument" );
         else
             throw new DeviceConfigurationException( "Could not install application to " + webDriver.getPopulatedDevice().getEnvironment() + "(" + webDriver.getDevice().getDeviceName() + ")" );
         
@@ -314,7 +371,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         
     }
     
-    private String getInstallLocation( String installLocation )
+    private String getInstallLocation( String installLocation, String xFID )
     {
 
         if ( installLocation.startsWith( "?" ) )
@@ -337,7 +394,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
             if ( filterType.equals( "REGEX" ) )
                 filter = m.group( 4 ).substring( 0, m.group( 4 ).length() - 1 );
             
-            ItemCollection itemList = PerfectoMobile.instance().repositories().list( RepositoryType.MEDIA, location );
+            ItemCollection itemList = PerfectoMobile.instance( xFID ).repositories().list( RepositoryType.MEDIA, location );
             
             List<String> fileList = new ArrayList<String>( 10 );
             
@@ -392,24 +449,24 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
     @Override
     public boolean uninstallApplication( String applicationName, DeviceWebDriver webDriver )
     {
-        ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
+        ApplicationDescriptor appDesc = ApplicationRegistry.instance(webDriver.getxFID()).getApplication( applicationName );
     
-        Handset localDevice = PerfectoMobile.instance().devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
+        Handset localDevice = PerfectoMobile.instance( webDriver.getxFID() ).devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
         
         if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
-            PerfectoMobile.instance().application().uninstall( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
+            PerfectoMobile.instance( webDriver.getxFID() ).application().uninstall( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
         else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-            PerfectoMobile.instance().application().uninstall( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
+            PerfectoMobile.instance( webDriver.getxFID() ).application().uninstall( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
         else
             throw new DeviceException( "Could not uninstall application from " + localDevice.getOs() );
         return true;
     }
 
     @Override
-    public boolean openApplication( String applicationName, DeviceWebDriver webDriver )
+    public boolean openApplication( String applicationName, DeviceWebDriver webDriver, String xFID )
     {
 
-        ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
+        ApplicationDescriptor appDesc = ApplicationRegistry.instance(xFID).getApplication( applicationName );
         
         if ( appDesc == null )
             throw new ScriptConfigurationException( "The Application " + applicationName + " does not exist" );
@@ -425,12 +482,12 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         }
         else
         {
-            Handset localDevice = PerfectoMobile.instance().devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
+            Handset localDevice = PerfectoMobile.instance( xFID ).devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
             Execution appExec = null;
             if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
-                appExec = PerfectoMobile.instance().application().open( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
+                appExec = PerfectoMobile.instance( xFID).application().open( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
             else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-                appExec = PerfectoMobile.instance().application().open( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
+                appExec = PerfectoMobile.instance( xFID ).application().open( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
             else
                 throw new IllegalArgumentException( "Could not install application to " + localDevice.getOs() );
             
@@ -457,14 +514,14 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
     public boolean closeApplication( String applicationName, DeviceWebDriver webDriver )
     {
 
-        ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
+        ApplicationDescriptor appDesc = ApplicationRegistry.instance(webDriver.getxFID()).getApplication( applicationName );
     
-        Handset localDevice = PerfectoMobile.instance().devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
+        Handset localDevice = PerfectoMobile.instance( webDriver.getxFID() ).devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
         
         if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
-            PerfectoMobile.instance().application().close( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
+            PerfectoMobile.instance( webDriver.getxFID() ).application().close( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
         else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-            PerfectoMobile.instance().application().close( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
+            PerfectoMobile.instance( webDriver.getxFID() ).application().close( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
         else
             log.warn( "Could not close application on " + localDevice.getOs() );
         return true;

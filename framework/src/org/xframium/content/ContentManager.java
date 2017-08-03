@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.content.provider.ContentProvider;
+import org.xframium.page.keyWord.KeyWordDriver;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -50,7 +51,7 @@ public class ContentManager
     private static ThreadLocal<String> CONTENT_KEY_HOLDER = new ThreadLocal<String>();
 	
     /** The singleton. */
-    private static ContentManager singleton = new ContentManager();
+    private static Map<String,ContentManager> singleton = new HashMap<String,ContentManager>(5);
 	
     /** The content map. */
     private Map<String,ContentData> contentMap = new HashMap<String,ContentData>( 100 );
@@ -69,15 +70,26 @@ public class ContentManager
      *
      * @return the page data manager
      */
-    public static ContentManager instance()
+    public static ContentManager instance( String xFID )
     {
-        return singleton;
+        if ( singleton.containsKey( xFID ) )
+            return singleton.get( xFID );
+        else
+        {
+            singleton.put( xFID, new ContentManager( xFID ) );
+            return singleton.get( xFID );
+        }
     }
+    
+    private String xFID;
 
     /**
      * Instantiates a new content manager.
      */
-    private ContentManager() {}
+    private ContentManager( String xFID ) {
+        this.xFID = xFID;
+        
+    }
     
     /** The content provider. */
     private ContentProvider contentProvider;
@@ -90,6 +102,7 @@ public class ContentManager
     public void setContentProvider( ContentProvider contentProvider )
     {
     	this.contentProvider = contentProvider;
+    	contentProvider.setxFID( xFID );
     	contentProvider.readContent();
     }
     

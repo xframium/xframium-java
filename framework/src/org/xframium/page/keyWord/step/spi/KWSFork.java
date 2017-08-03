@@ -65,7 +65,7 @@ public class KWSFork extends AbstractKeyWordStep
 		
 		for ( int i=0; i<getParameterList().size(); i++ )
 		{
-			elementArray[ i ] = pageObject.getElement( getPageName(), getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "" );
+			elementArray[ i ] = pageObject.getElement( getPageName(), getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) + "" );
 		}
 		
 		ElementFork elementFork = new ElementFork( elementArray, 15 );

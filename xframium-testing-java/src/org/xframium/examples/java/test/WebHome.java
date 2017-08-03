@@ -1,6 +1,29 @@
+/*******************************************************************************
+ * xFramium
+ *
+ * Copyright 2017 by Moreland Labs LTD (http://www.morelandlabs.com)
+ *
+ * Some open source application is free software: you can redistribute 
+ * it and/or modify it under the terms of the GNU General Public 
+ * License as published by the Free Software Foundation, either 
+ * version 3 of the License, or (at your option) any later version.
+ *  
+ * Some open source application is distributed in the hope that it will 
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *  
+ * You should have received a copy of the GNU General Public License
+ * along with xFramium.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>
+ *******************************************************************************/
 package org.xframium.examples.java.test;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -11,6 +34,7 @@ import org.testng.ITestContext;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
+import org.xframium.Initializable;
 import org.xframium.artifact.AbstractArtifact;
 import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactTime;
@@ -59,7 +83,7 @@ public class WebHome extends AbstractJavaTest
         }
 
         @Override
-        protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver ) throws Exception
+        protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver, String xFID ) throws Exception
         {
             StringBuilder stepMap = new StringBuilder();
             
@@ -90,7 +114,12 @@ public class WebHome extends AbstractJavaTest
         // Register our Test Artifact
         //
         
-        ArtifactManager.instance().registerArtifact( ArtifactTime.AFTER_TEST, "TAB_WEBHOME", WebHomeArtifact.class );
+        String xFID = UUID.randomUUID().toString();
+        Initializable.xFID.set( xFID ); 
+        Map<String,String> customConfig = new HashMap<String,String>(5);
+        customConfig.put( "xF-ID", Initializable.xFID.get() );
+        
+        ArtifactManager.instance( xFID ).registerArtifact( ArtifactTime.AFTER_TEST, "TAB_WEBHOME", WebHomeArtifact.class );
 
         //
         // Specify your xFramium configuration file here as TXT or XML
@@ -103,7 +132,7 @@ public class WebHome extends AbstractJavaTest
             cR = new XMLConfigurationReader();
         else if ( configurationFile.getName().toLowerCase().endsWith( ".txt" ) )
             cR = new TXTConfigurationReader();
-        cR.readConfiguration( configurationFile, false );
+        cR.readConfiguration( configurationFile, false, customConfig );
         
     }
     

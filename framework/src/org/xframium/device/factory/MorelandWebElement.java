@@ -171,7 +171,11 @@ public class MorelandWebElement implements WebElement, Locatable, HasIdentity
 	public Point getLocation()
 	{
 	    if ( cachedLocation == null )
-	        cachedLocation = webElement.getLocation();
+	    {
+	        Point s = webElement.getLocation();
+	        cachedLocation = new Point( deviceDriver.getModifiedX( s.getX() ), deviceDriver.getModifiedY( s.getY() ) );
+	        
+	    }
 		return cachedLocation;
 	}
 
@@ -183,7 +187,10 @@ public class MorelandWebElement implements WebElement, Locatable, HasIdentity
 	public Dimension getSize()
 	{
 	    if ( cachedSize == null )
-	        cachedSize = webElement.getSize();
+	    {
+	        Dimension s = webElement.getSize();
+	        cachedSize = new Dimension( deviceDriver.getModifiedX( s.getWidth() ), deviceDriver.getModifiedY( s.getHeight() ) );
+	    }
 		return cachedSize;
 	}
 
@@ -216,9 +223,14 @@ public class MorelandWebElement implements WebElement, Locatable, HasIdentity
         return webElement.getScreenshotAs( arg0 );
     }
 
+    
+    private Rectangle cacheRect = null;
     public Rectangle getRect()
     {
-        return webElement.getRect();
+        if ( cacheRect == null )
+            cacheRect = new Rectangle( getLocation(), getSize() );
+
+        return cacheRect;
     }
 
     public WebElement getWebElement()

@@ -93,10 +93,10 @@ public class KWSCompare2 extends AbstractKeyWordStep
 
 	    OperatorType operatorType = OperatorType.EQUALS;
 	    if ( getParameter( "Operator" ) != null )
-	        operatorType = OperatorType.valueOf( getParameterValue( getParameter( "Operator" ), contextMap, dataMap ).toUpperCase() );
+	        operatorType = OperatorType.valueOf( getParameterValue( getParameter( "Operator" ), contextMap, dataMap, executionContext.getxFID() ).toUpperCase() );
 	    
-	    String valueOne = getParameterValue( getParameter( "Value One" ), contextMap, dataMap );
-	    String valueTwo = getParameterValue( getParameter( "Value Two" ), contextMap, dataMap );
+	    String valueOne = getParameterValue( getParameter( "Value One" ), contextMap, dataMap, executionContext.getxFID() );
+	    String valueTwo = getParameterValue( getParameter( "Value Two" ), contextMap, dataMap, executionContext.getxFID() );
 
 	    switch( CompareType.valueOf( getName().toUpperCase() ) )
 	    {

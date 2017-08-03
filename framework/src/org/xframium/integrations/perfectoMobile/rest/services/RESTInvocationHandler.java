@@ -68,14 +68,19 @@ public class RESTInvocationHandler implements InvocationHandler
 	/** The log. */
 	private Log log = LogFactory.getLog( RESTInvocationHandler.class );
 	
+	private String xFID;
 	
+	public RESTInvocationHandler( String xFID )
+    {
+	    this.xFID = xFID;
+    }
 	
 	/* (non-Javadoc)
 	 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])
 	 */
 	public Object invoke( Object proxy, Method method, Object[] args ) throws Throwable
 	{
-	    CloudDescriptor currentCloud = DeviceManager.instance().getCurrentCloud();
+	    CloudDescriptor currentCloud = DeviceManager.instance( xFID ).getCurrentCloud();
         if ( currentCloud != null && !currentCloud.getProvider().equals( "PERFECTO" ) )
             return null;
 	    
@@ -89,9 +94,9 @@ public class RESTInvocationHandler implements InvocationHandler
     		urlBuilder.append( "https://" + currentCloud.getHostName() ).append( SLASH );
 		else
 		{
-		    urlBuilder.append( PerfectoMobile.instance().getBaseUrl() );
+		    urlBuilder.append( PerfectoMobile.instance( xFID ).getBaseUrl() );
             
-            if ( !PerfectoMobile.instance().getBaseUrl().endsWith( SLASH ) )
+            if ( !PerfectoMobile.instance( xFID ).getBaseUrl().endsWith( SLASH ) )
                 urlBuilder.append( SLASH );
 		}
 		
@@ -114,7 +119,7 @@ public class RESTInvocationHandler implements InvocationHandler
 			if ( getAnnotation( parameterAnnotations[ i ], ResourceID.class ) != null )
 				parameterId = parameterId + SLASH + args[ i ] + "";
 			else if ( getAnnotation( parameterAnnotations[ i ], ParameterMap.class ) != null )
-				parameterMap = (Map) parameterMap;
+				parameterMap = (Map) args[i];
 			else if ( getAnnotation( parameterAnnotations[ i ], Parameter.class ) != null )
 			{
 				if ( args[ i ] != null )
@@ -161,8 +166,8 @@ public class RESTInvocationHandler implements InvocationHandler
 		}
 		else
 		{
-    		urlBuilder.append( "&user=" ).append( PerfectoMobile.instance().getUserName() );
-    		urlBuilder.append( "&password=" ).append( PerfectoMobile.instance().getPassword() );
+    		urlBuilder.append( "&user=" ).append( PerfectoMobile.instance( xFID ).getUserName() );
+    		urlBuilder.append( "&password=" ).append( PerfectoMobile.instance( xFID ).getPassword() );
 		}
 		
 		PerfectoCommand command = actualMethod.getAnnotation( PerfectoCommand.class );
@@ -173,7 +178,7 @@ public class RESTInvocationHandler implements InvocationHandler
 				urlBuilder.append( "&subcommand=" ).append( command.subCommandName() );
 		}
 		
-		urlBuilder.append( "&responseFormat=" ).append( PerfectoMobile.instance().getResponseMethod() );
+		urlBuilder.append( "&responseFormat=" ).append( PerfectoMobile.instance( xFID ).getResponseMethod() );
 		
 		for ( String name : derivedMap.keySet() )
 			urlBuilder.append( "&" ).append( name ).append( "=" ).append( URLEncoder.encode( derivedMap.get( name ), "UTF-8" ) );
@@ -181,7 +186,7 @@ public class RESTInvocationHandler implements InvocationHandler
 		if ( parameterMap != null )
 		{
 			for ( Object name : parameterMap.keySet() )
-				urlBuilder.append( "&" ).append( name ).append( "=" ).append( URLEncoder.encode( parameterMap.get( name ) + "", "UTF-8" ) );
+				urlBuilder.append( "&param." ).append( name ).append( "=" ).append( URLEncoder.encode( parameterMap.get( name ) + "", "UTF-8" ) );
 		}
 		
 		URL currentUrl = new URL( urlBuilder.toString() );

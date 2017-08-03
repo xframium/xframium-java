@@ -176,11 +176,7 @@ public class StepSync
 	            if ( step.getPageName() != null )
 	            {
 	                page = pageMap.get( step.getPageName() );
-	                if ( page == null )
-	                {
-	                    page = PageManager.instance().createPage( KeyWordDriver.instance().getPage( step.getSiteName() != null && step.getSiteName().trim().length() > 0 ? step.getSiteName() : PageManager.instance().getSiteName(), step.getPageName() ), webDriver );
-	                    pageMap.put( step.getPageName(), page );
-	                }
+	                
 	            }
 	            
 	            if ( !step.executeStep( page, webDriver, contextMap, dataMap, pageMap, null, executionContext ) )

@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
@@ -61,8 +62,8 @@ public class DumpStateAction extends AbstractDefaultAction implements DeviceActi
 		File DOMFile = new File( new File( rootFolder, executionId ), timeKey + ".xml" );
 		String fileKey = "PRIVATE:" + deviceName + ".png";
 		
-		PerfectoMobile.instance().imaging().screenShot( executionId, deviceName, fileKey, Screen.primary, ImageFormat.png, resolution );
-		byte[] imageData = PerfectoMobile.instance().repositories().download( RepositoryType.MEDIA, fileKey );
+		PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).imaging().screenShot( executionId, deviceName, fileKey, Screen.primary, ImageFormat.png, resolution );
+		byte[] imageData = PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).repositories().download( RepositoryType.MEDIA, fileKey );
 		
 		try
 		{

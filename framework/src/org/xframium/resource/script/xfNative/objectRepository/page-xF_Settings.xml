@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
+  <site name="xF_Native">
+    <page name="xF_Settings" class="org.xframium.page.keyWord.KeyWordPage">
+      <element name="xF_Airplane Mode" descriptor="COMPLEX">
+        <element value="//android.widget.TextView[contains( @text, 'plane')]" descriptor="XPATH" os="ANDROID" />
+        <element value="//UIASwitch[@name='Airplane Mode']" descriptor="XPATH" os="IOS" />
+        <element value="//*[@resource-id='android:id/list']/android.widget.LinearLayout[1]//android.widget.Switch" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.Switch" descriptor="XPATH" os="ANDROID" />
+      </element>
+      <element name="xF_Wi-Fi" descriptor="COMPLEX">
+        <element value="//UIAStaticText[@name='Wi-Fi']" descriptor="XPATH" os="IOS" />
+        <element value="//android.widget.TextView[@text='Wi-Fi']" descriptor="XPATH" os="ANDROID" />
+      </element>
+      <element name="xF-Search Button" descriptor="COMPLEX">
+        <element value="//*[@resource-id='com.android.settings:id/search']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.Button[@content-desc='Search']" descriptor="XPATH" os="ANDROID" />
+        <element value="//*[@resource-id='com.android.settings:id/imageButton']" descriptor="XPATH" os="ANDROID" />
+      </element>
+      <element name="xF-Search Text Box" descriptor="COMPLEX">
+        <element value="//*[@resource-id='android:id/search_src_text']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.EditText" descriptor="XPATH" os="ANDROID" />
+      </element>
+      <element name="xF-Airplane Mode OK" value="//UIAButton[@name='OK']" descriptor="XPATH" />
+      <element name="xF-Airplane Mode Menu" descriptor="COMPLEX">
+        <element value="//android.widget.TextView[contains( @text, 'plane')]" descriptor="XPATH" />
+        <element value="//android.widget.TextView[contains( @text, 'More')]" descriptor="XPATH" />
+        
+      </element>
+      <element name="xF-Notifications" descriptor="COMPLEX">
+        <element value="//UIAStaticText[@name='Notifications']" descriptor="XPATH" os="IOS" />
+        <element value="//android.widget.TextView[@text='Notifications']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.TextView[@text='Sounds and notifications']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.TextView[@text='Sound and notification']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.TextView[@text='App notifications']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.TextView[@text='App notifications']" descriptor="XPATH" os="ANDROID" />
+        
+        
+      </element>
+      <element name="xF-Location" descriptor="COMPLEX">
+        <element value="//android.widget.TextView[@text='Location']" descriptor="XPATH" os="ANDROID" />
+      </element>
+      <element name="xF-Privacy" descriptor="COMPLEX">
+        <element value="//UIATableCell[@name='Privacy']/UIAStaticText[1]" descriptor="XPATH" os="IOS" />
+      </element>
+      <element name="xF-General" value="//UIATableCell[@name='General']|//XCUIElementTypeCell[@name='General']" descriptor="XPATH" />
+      <element name="xF-Cellular" descriptor="COMPLEX">
+        <element value="//UIATableCell[@name='Cellular']" descriptor="XPATH" os="IOS" />
+        <element value="//UIATableCell[@name='Mobile Data']" descriptor="XPATH" os="IOS" />
+        <element value="//android.widget.TextView[@text='Data usage']" descriptor="XPATH" os="ANDROID" />
+         <element value="//android.widget.TextView[@text='Mobile data']" descriptor="XPATH" os="ANDROID" />
+      </element>
+      
+      <element name="xF-Date" descriptor="COMPLEX">
+        <element value="//UIAStaticText[contains( @name, 'Date' )]" descriptor="XPATH" os="IOS" />
+        <element value="//android.widget.TextView[ contains( @text, 'Date' )]" descriptor="XPATH" os="ANDROID" />
+      </element>
+    </page>
+  </site>
+</elementDefinition>

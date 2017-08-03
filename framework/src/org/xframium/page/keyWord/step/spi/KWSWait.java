@@ -54,7 +54,7 @@ public class KWSWait extends AbstractKeyWordStep
 		{
 			try
 			{
-				waitTime = Integer.parseInt( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
+				waitTime = Integer.parseInt( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
 			}
 			catch( Exception e ) {}
 		}

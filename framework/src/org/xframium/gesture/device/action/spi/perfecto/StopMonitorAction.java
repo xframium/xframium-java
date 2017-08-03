@@ -22,6 +22,7 @@ package org.xframium.gesture.device.action.spi.perfecto;
 
 import java.util.List;
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
@@ -32,17 +33,23 @@ import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
  */
 public class StopMonitorAction extends AbstractDefaultAction implements DeviceAction
 {
-	
-	/* (non-Javadoc)
-	 * @see com.perfectoMobile.gesture.device.action.AbstractDefaultAction#_executeAction(org.openqa.selenium.WebDriver, java.util.List)
-	 */
-	@Override
-	public boolean _executeAction( WebDriver webDriver, List<Object> parameterList )
-	{
-		String executionId = getExecutionId( webDriver );
-		String deviceName = getDeviceName( webDriver );
-		PerfectoMobile.instance().windTunnel().stopVitals( executionId, deviceName );
-		return true;
-	}
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.perfectoMobile.gesture.device.action.AbstractDefaultAction#
+     * _executeAction(org.openqa.selenium.WebDriver, java.util.List)
+     */
+    @Override
+    public boolean _executeAction( WebDriver webDriver, List<Object> parameterList )
+    {
+        if ( ((DeviceWebDriver) webDriver).getCloud().getProvider().equals( "PERFECTO" ) )
+        {
+            String executionId = getExecutionId( webDriver );
+            String deviceName = getDeviceName( webDriver );
+            PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).windTunnel().stopVitals( executionId, deviceName );
+        }
+        return true;
+    }
 
 }

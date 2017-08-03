@@ -2,9 +2,8 @@ package org.xframium.page.element;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
 import org.xframium.application.ApplicationVersion;
-import org.xframium.content.ContentManager;
+import org.xframium.device.cloud.CloudDescriptor.ProviderType;
 import org.xframium.page.BY;
 
 public class SubElement
@@ -14,14 +13,30 @@ public class SubElement
     private String key;
     private String os;
     private ApplicationVersion version;
+    private ProviderType cloudProvider;
+    private String deviceTag;
     
-    public SubElement( BY by, String key, String os, ApplicationVersion version )
+    public SubElement( BY by, String key, String os, ApplicationVersion version, ProviderType cloudProvider, String deviceTag )
     {
         this.by = by;
         this.key = key;
         if ( os != null )
             this.os = os.toUpperCase();
         this.version = version;
+        this.cloudProvider = cloudProvider;
+        this.deviceTag = deviceTag;
+    }
+    
+    public SubElement( BY by, String key, String os, ApplicationVersion version, String cloudProvider, String deviceTag )
+    {
+        this.by = by;
+        this.key = key;
+        if ( os != null )
+            this.os = os.toUpperCase();
+        this.version = version;
+        if ( cloudProvider != null )
+        this.cloudProvider = ProviderType.valueOf( cloudProvider.toUpperCase() );
+        this.deviceTag = deviceTag;
     }
     
     public void addProperty( String name, String value )
@@ -70,6 +85,24 @@ public class SubElement
     {
         this.version = version;
     }
-    
-    
+
+    public ProviderType getCloudProvider()
+    {
+        return cloudProvider;
+    }
+
+    public void setCloudProvider( ProviderType cloudProvider )
+    {
+        this.cloudProvider = cloudProvider;
+    }
+
+    public String getDeviceTag()
+    {
+        return deviceTag;
+    }
+
+    public void setDeviceTag( String deviceTag )
+    {
+        this.deviceTag = deviceTag;
+    }
 }

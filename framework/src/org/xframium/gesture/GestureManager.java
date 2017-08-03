@@ -26,12 +26,16 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.ScreenOrientation;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.cloud.CloudDescriptor.ProviderType;
+import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.gesture.AbstractDragDropGesture.InitialDragDropAction;
 import org.xframium.gesture.Gesture.Direction;
 import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.gesture.factory.GestureFactory;
 import org.xframium.gesture.factory.spi.AppiumGestureFactory;
 import org.xframium.gesture.factory.spi.PerfectoGestureFactory;
 import org.xframium.gesture.factory.spi.SeleniumGestureFactory;
+import org.xframium.page.element.Element;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -39,18 +43,38 @@ import org.xframium.gesture.factory.spi.SeleniumGestureFactory;
  */
 public class GestureManager
 {
-
-    /** The singleton. */
-    private static GestureManager singleton = new GestureManager();
-
+    
+    private static GestureFactory SELENIUM = new SeleniumGestureFactory();
+    private static GestureFactory APPIUM = new AppiumGestureFactory();
+    private static GestureFactory PERFECTO = new PerfectoGestureFactory();
+    
     /**
      * Instance.
      *
      * @return the gesture manager
      */
-    public static GestureManager instance()
+    public static GestureManager instance( DeviceWebDriver webDriver )
     {
-        return singleton;
+        GestureManager gM = new GestureManager();
+        
+        
+        switch( ProviderType.valueOf( webDriver.getCloud().getProvider().toUpperCase() ) )
+        {
+            case PERFECTO:
+                gM.gestureFactory = PERFECTO;
+                break;
+            case SAUCELABS:
+                gM.gestureFactory = SELENIUM;
+                break;
+            case SELENIUM:
+                gM.gestureFactory = SELENIUM;
+                break;
+            case WINDOWS:
+                gM.gestureFactory = SELENIUM;
+                break;
+        }
+        
+        return gM;
     }
 
     /**
@@ -67,53 +91,15 @@ public class GestureManager
     /** The log. */
     private Log log = LogFactory.getLog( GestureManager.class );
 
-    /**
-     * Sets the gesture factory.
-     *
-     * @param gestureFactory
-     *            the new gesture factory
-     */
-    public void setGestureFactory( GestureFactory gestureFactory )
-    {
-        this.gestureFactory = gestureFactory;
-    }
 
     /**
      * Creates the Hide Keyboard Gesture.
      *
      * @return the gesture
      */
-    public Gesture createHideKeyboard()
+    public Gesture createHideKeyboard( String xFID )
     {
-        return modifyGestureFactory().createGesture( GestureType.HIDE_KEYBOARD, new Object[] { false } );
-    }
-
-    private GestureFactory modifyGestureFactory()
-    {
-        CloudDescriptor cloud = DeviceManager.instance().getCurrentCloud();
-        String providerType = cloud.getProvider();
-        GestureFactory altGestureFactory = null;
-
-        if ( providerType.equalsIgnoreCase( "selenium" ) )
-        {
-            altGestureFactory = new SeleniumGestureFactory();
-
-        }
-        else if ( providerType.equalsIgnoreCase( "appium" ) )
-        {
-            altGestureFactory = new AppiumGestureFactory();
-
-        }
-        else if ( providerType.equalsIgnoreCase( "perfecto" ) )
-        {
-            altGestureFactory = new PerfectoGestureFactory();
-        }
-        else
-        {
-            altGestureFactory = gestureFactory;
-        }
-
-        return altGestureFactory;
+        return gestureFactory.createGesture( GestureType.HIDE_KEYBOARD, new Object[] { false } );
     }
 
     /**
@@ -123,25 +109,35 @@ public class GestureManager
      *            the swipe direction
      * @return the gesture
      */
-    public Gesture createSwipe( Direction swipeDirection )
+    public Gesture createSwipe( String xFID, Direction swipeDirection )
     {
         switch ( swipeDirection )
         {
             case DOWN:
-                return createSwipe( new Point( 50, 15 ), new Point( 50, 85 ) );
+                return createSwipe( xFID, new Point( 50, 15 ), new Point( 50, 85 ) );
 
             case LEFT:
-                return createSwipe( new Point( 55, 50 ), new Point( 85, 50 ) );
+                return createSwipe( xFID, new Point( 55, 50 ), new Point( 85, 50 ) );
 
             case RIGHT:
-                return createSwipe( new Point( 85, 50 ), new Point( 15, 50 ) );
+                return createSwipe( xFID, new Point( 85, 50 ), new Point( 15, 50 ) );
 
             case UP:
-                return createSwipe( new Point( 50, 85 ), new Point( 50, 15 ) );
+                return createSwipe( xFID, new Point( 50, 85 ), new Point( 50, 15 ) );
 
             default:
                 return null;
         }
+    }
+    
+    public Gesture createDragDrop( String xFID, InitialDragDropAction dropAction, Element fromElement, Element toElement )
+    {
+        return gestureFactory.createGesture( GestureType.DRAGDROP, new Object[] { fromElement, toElement, dropAction } );
+    }
+    
+    public Gesture createDragDrop( String xFID, Element fromElement, Element toElement )
+    {
+        return gestureFactory.createGesture( GestureType.DRAGDROP, new Object[] { fromElement, toElement, InitialDragDropAction.PRESS } );
     }
 
     /**
@@ -151,9 +147,9 @@ public class GestureManager
      *            the s orientation
      * @return the gesture
      */
-    public Gesture createRotate( ScreenOrientation sOrientation )
+    public Gesture createRotate( String xFID, ScreenOrientation sOrientation )
     {
-        return modifyGestureFactory().createGesture( GestureType.ROTATE, new Object[] { sOrientation } );
+        return gestureFactory.createGesture( GestureType.ROTATE, new Object[] { sOrientation } );
     }
 
     /**
@@ -165,9 +161,9 @@ public class GestureManager
      *            the end position
      * @return the gesture
      */
-    public Gesture createSwipe( Point startPosition, Point endPosition )
+    public Gesture createSwipe( String xFID, Point startPosition, Point endPosition )
     {
-        return modifyGestureFactory().createGesture( GestureType.SWIPE, new Object[] { startPosition, endPosition } );
+        return gestureFactory.createGesture( GestureType.SWIPE, new Object[] { startPosition, endPosition } );
     }
 
     /**
@@ -177,9 +173,9 @@ public class GestureManager
      *            the press position
      * @return the gesture
      */
-    public Gesture createPress( Point pressPosition )
+    public Gesture createPress( String xFID, Point pressPosition )
     {
-        return createPress( pressPosition, 100l, 1 );
+        return createPress(  xFID, pressPosition, 100l, 1 );
     }
 
     /**
@@ -191,14 +187,14 @@ public class GestureManager
      *            the press length
      * @return the gesture
      */
-    public Gesture createPress( Point pressPosition, long pressLength )
+    public Gesture createPress( String xFID, Point pressPosition, long pressLength )
     {
-        return createPress( pressPosition, pressLength, 1 );
+        return createPress( xFID, pressPosition, pressLength, 1 );
     }
 
-    public Gesture createPress( Point pressPosition, long pressLength, int pressCount )
+    public Gesture createPress( String xFID, Point pressPosition, long pressLength, int pressCount )
     {
-        return modifyGestureFactory().createGesture( GestureType.PRESS, new Object[] { pressPosition, pressLength, pressCount } );
+        return gestureFactory.createGesture( GestureType.PRESS, new Object[] { pressPosition, pressLength, pressCount } );
     }
 
     /**
@@ -210,9 +206,9 @@ public class GestureManager
      *            the meta state
      * @return the gesture
      */
-    public Gesture createKeyPress( String keyCode, int metaState )
+    public Gesture createKeyPress( String xFID, String keyCode, int metaState )
     {
-        return modifyGestureFactory().createGesture( GestureType.KEYPRESS, new Object[] { keyCode, metaState } );
+        return gestureFactory.createGesture( GestureType.KEYPRESS, new Object[] { keyCode, metaState } );
     }
 
     /**
@@ -220,9 +216,9 @@ public class GestureManager
      *
      * @return the gesture
      */
-    public Gesture createZoom()
+    public Gesture createZoom(String xFID)
     {
-        return createZoom( new Point( 45, 45 ), new Point( 55, 55 ), new Point( 15, 15 ), new Point( 85, 85 ) );
+        return createZoom( xFID, new Point( 45, 45 ), new Point( 55, 55 ), new Point( 15, 15 ), new Point( 85, 85 ) );
     }
 
     /**
@@ -238,9 +234,9 @@ public class GestureManager
      *            the end two
      * @return the gesture
      */
-    public Gesture createZoom( Point startOne, Point startTwo, Point endOne, Point endTwo )
+    public Gesture createZoom( String xFID, Point startOne, Point startTwo, Point endOne, Point endTwo )
     {
-        return modifyGestureFactory().createGesture( GestureType.ZOOM, new Object[] { startOne, startTwo, endOne, endTwo } );
+        return gestureFactory.createGesture( GestureType.ZOOM, new Object[] { startOne, startTwo, endOne, endTwo } );
     }
 
     /**
@@ -248,9 +244,9 @@ public class GestureManager
      *
      * @return the gesture
      */
-    public Gesture createPinch()
+    public Gesture createPinch(String xFID)
     {
-        return createPinch( new Point( 15, 15 ), new Point( 85, 85 ), new Point( 45, 45 ), new Point( 55, 55 ) );
+        return createPinch( xFID, new Point( 15, 15 ), new Point( 85, 85 ), new Point( 45, 45 ), new Point( 55, 55 ) );
     }
 
     /**
@@ -266,9 +262,9 @@ public class GestureManager
      *            the end two
      * @return the gesture
      */
-    public Gesture createPinch( Point startOne, Point startTwo, Point endOne, Point endTwo )
+    public Gesture createPinch( String xFID, Point startOne, Point startTwo, Point endOne, Point endTwo )
     {
-        return modifyGestureFactory().createGesture( GestureType.PINCH, new Object[] { startOne, startTwo, endOne, endTwo } );
+        return gestureFactory.createGesture( GestureType.PINCH, new Object[] { startOne, startTwo, endOne, endTwo } );
     }
 
 }

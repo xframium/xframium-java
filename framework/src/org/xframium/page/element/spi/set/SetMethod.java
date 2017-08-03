@@ -5,5 +5,5 @@ import org.openqa.selenium.WebElement;
 
 public interface SetMethod
 {
-    public boolean set( WebElement webElement, WebDriver webDriver, String value, String setType );
+    public boolean set( WebElement webElement, WebDriver webDriver, String value, String setType, String xFID );
 }

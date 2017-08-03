@@ -71,7 +71,7 @@ public class KWSDevice extends AbstractKeyWordStep
 		
 		for ( KeyWordParameter param : getParameterList() )
 		{
-			actionParameters.add( getParameterValue( param, contextMap, dataMap ) );
+			actionParameters.add( getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) );
 		}
 		
 		boolean returnValue = deviceAction.executeAction( webDriver, actionParameters );

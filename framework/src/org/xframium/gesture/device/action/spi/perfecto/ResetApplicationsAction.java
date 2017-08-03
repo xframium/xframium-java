@@ -22,6 +22,7 @@ package org.xframium.gesture.device.action.spi.perfecto;
 
 import java.util.List;
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
@@ -44,7 +45,7 @@ public class ResetApplicationsAction extends AbstractDefaultAction implements De
 		
 		String applicationName = (String) parameterList.get( 0 );
 
-		PerfectoMobile.instance().application().uninstallAll( executionId, deviceName );
+		PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).application().uninstallAll( executionId, deviceName );
 		
 		return true;
 	}

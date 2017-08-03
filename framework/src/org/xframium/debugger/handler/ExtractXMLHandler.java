@@ -13,11 +13,17 @@ import com.sun.net.httpserver.HttpHandler;
 @SuppressWarnings ( "restriction")
 public class ExtractXMLHandler implements HttpHandler
 {
+    private String xFID;
+    public ExtractXMLHandler( String xFID )
+    {
+        this.xFID = xFID;
+    }
+    
     @Override
     public void handle( HttpExchange t ) throws IOException
     {
         Map<String, String> parameterMap = queryToMap( t.getRequestURI().getQuery() );
-        TestContainer tC = DebugManager.instance().getActiveTests().get( parameterMap.get( "executionId" ) );
+        TestContainer tC = DebugManager.instance(xFID).getActiveTests().get( parameterMap.get( "executionId" ) );
         
         StringBuilder stringBuilder = new StringBuilder();
         if ( tC != null )

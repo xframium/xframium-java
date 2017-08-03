@@ -1,6 +1,8 @@
 package org.xframium.device.cloud.action;
 
 import java.io.InputStream;
+import java.util.Map;
+import org.openqa.selenium.Rectangle;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.integrations.common.PercentagePoint;
 import org.xframium.page.BY;
@@ -10,8 +12,8 @@ import org.xframium.spi.Device;
 
 public interface CloudActionProvider
 {
-    public boolean startApp( String executionId, String deviceId, String appName, String appIdentifier );
-    public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device );
+    public boolean startApp( DeviceWebDriver webdriver, String executionId, String deviceId, String appName, String appIdentifier );
+    public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device, String xFID );
     public void enabledLogging( DeviceWebDriver webDriver );
     public void disableLogging( DeviceWebDriver webDriver );
     public String getExecutionId( DeviceWebDriver webDriver );
@@ -20,7 +22,7 @@ public interface CloudActionProvider
     
     public boolean installApplication( String applicationName, DeviceWebDriver webDriver, boolean instrumentApp );
     public boolean uninstallApplication( String applicationName, DeviceWebDriver webDriver );
-    public boolean openApplication( String applicationName, DeviceWebDriver webDriver );
+    public boolean openApplication( String applicationName, DeviceWebDriver webDriver, String xFID );
     public boolean closeApplication( String applicationName, DeviceWebDriver webDriver );
     public boolean isDescriptorSupported( BY descriptorType );
     
@@ -30,7 +32,11 @@ public interface CloudActionProvider
 
     public void tap( DeviceWebDriver webDriver, PercentagePoint location, int lengthInMillis );
     public String getLog( DeviceWebDriver webDriver );
+    public String getVitals( DeviceWebDriver webDriver );
     
     public InputStream getReport( DeviceWebDriver webDriver, String reportType );
+    
+    public Rectangle findImage( DeviceWebDriver webDriver, String imageName, Map<String,String> propertyMap );
+    public Rectangle findText( DeviceWebDriver webDriver, String text, Map<String,String> propertyMap );
     
 }

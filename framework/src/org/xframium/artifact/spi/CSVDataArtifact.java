@@ -14,7 +14,7 @@ public class CSVDataArtifact extends AbstractArtifact
     }
     
     @Override
-    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver )
+    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver, String xFID )
     {
         
         if ( webDriver.getExecutionContext() == null )

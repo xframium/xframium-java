@@ -4,6 +4,5 @@
 <description>Tests that the specified step is ignored for a specific OS type</description>
 <step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
 <step name="toggleButtonWeb" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
-<step name="toggleButtonNative" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR"/>
 </test>
 </suite>

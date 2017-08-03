@@ -20,6 +20,9 @@
  *******************************************************************************/
 package org.xframium.gesture.device.action.spi.perfecto;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.device.factory.DeviceWebDriver;
@@ -27,10 +30,6 @@ import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -46,7 +45,7 @@ public class BackAction extends AbstractDefaultAction implements DeviceAction
 	public boolean _executeAction( WebDriver webDriver, List<Object> parameterList )
 	{
 		String deviceName = getDeviceName( webDriver );
-		Handset localDevice = PerfectoMobile.instance().devices().getDevice( deviceName );
+		Handset localDevice = PerfectoMobile.instance(( (DeviceWebDriver) webDriver ).getxFID() ).devices().getDevice( deviceName );
 
 		if ( (localDevice.getOs().toLowerCase().equals( "android" )) && (webDriver instanceof DeviceWebDriver) )
 		{

@@ -53,7 +53,7 @@ public class KWSValue extends AbstractKeyWordStep
 		
 		if ( getParameterList().size() == 1 )
 		{
-			Object compareTo = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
+			Object compareTo = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() );
 			if ( !elementValue.equals( compareTo ) )
 				throw new ScriptException( "GET Expected [" + compareTo + "] but found [" + elementValue + "]" );
 		}

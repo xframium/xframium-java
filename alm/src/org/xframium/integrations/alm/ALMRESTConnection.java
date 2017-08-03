@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.Base64;
 import java.util.HashMap;
@@ -229,6 +230,7 @@ public class ALMRESTConnection
 
     private ALMResponse doHttp( String type, String url, String queryString, byte[] data, Map<String, String> headers, Map<String, String> cookies ) throws Exception
     {
+        log.warn( "1.0.4" );
 
         if ( (queryString != null) && !queryString.isEmpty() )
             url += "?" + queryString;
@@ -236,12 +238,17 @@ public class ALMRESTConnection
         if ( log.isInfoEnabled() )
             log.info( "Executing " + type + ": to " + url );
 
-        HttpURLConnection con = (HttpURLConnection) new URL( url ).openConnection();
+        HttpURLConnection con = null;
+        
+        if ( Boolean.parseBoolean( System.getProperty( "alm.bypassProxy", "false" ) ) )
+            con = (HttpURLConnection) new URL( url ).openConnection( Proxy.NO_PROXY );
+        else
+            con = (HttpURLConnection) new URL( url ).openConnection();
 
         con.setRequestMethod( type );
         String cookieString = getCookieString();
 
-        if ( log.isDebugEnabled() )
+        if ( log.isInfoEnabled() )
             log.info( "Cookies: " + cookieString );
 
         prepareHttpRequest( con, headers, data, cookieString );
@@ -324,7 +331,6 @@ public class ALMRESTConnection
 
         catch ( Exception e )
         {
-
             inputStream = con.getErrorStream();
             ret.setFailure( e );
         }
@@ -357,9 +363,15 @@ public class ALMRESTConnection
 
             for ( String cookie : newCookies )
             {
+                if ( cookie == null || cookie.isEmpty() )
+                    continue;
+                
                 int equalIndex = cookie.indexOf( '=' );
                 int semicolonIndex = cookie.indexOf( ';' );
 
+                if ( equalIndex < 0 || semicolonIndex < 0 )
+                    continue;
+                
                 String cookieKey = cookie.substring( 0, equalIndex );
                 String cookieValue = cookie.substring( equalIndex + 1, semicolonIndex );
 
@@ -462,10 +474,9 @@ public class ALMRESTConnection
         {
             for ( ALMAttachment a : almDefect.getAttachments() )
             {
-                String attachmentUrl = attachWithOctetStream( defectUrl, a.getFileData() != null ? a.getFileData() : readFile( a.getFileName() ), a.getFileName().getName() );
-                
-                if ( log.isDebugEnabled() )
-                    log.debug( "Attachment Url: " + attachmentUrl );
+                byte[] attachmentData = a.getFileData() != null ? a.getFileData() : readFile( a.getFileName() );
+                if ( attachmentData != null )
+                    attachWithOctetStream( defectUrl, attachmentData, a.getFileName().getName() );
             }
         }
 
@@ -498,7 +509,7 @@ public class ALMRESTConnection
         }
         catch ( Exception e )
         {
-            e.printStackTrace();
+            log.warn( "Could not read " + currentFile.getAbsolutePath() + " - " + e.getMessage() );
             return null;
         }
         finally

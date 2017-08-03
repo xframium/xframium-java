@@ -32,6 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.grid.internal.utils.configuration.StandaloneConfiguration;
 import org.openqa.selenium.remote.server.SeleniumServer;
+import org.xframium.page.keyWord.KeyWordDriver;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -41,16 +42,22 @@ public class CloudRegistry
 {
 	
 	/** The singleton. */
-	private static CloudRegistry singleton = new CloudRegistry();
+	private static Map<String,CloudRegistry> singleton = new HashMap<String,CloudRegistry>(5);
 
 	/**
 	 * Instance.
 	 *
 	 * @return the cloud registry
 	 */
-	public static CloudRegistry instance()
+	public static CloudRegistry instance( String xFID )
 	{
-		return singleton;
+	    if ( singleton.containsKey( xFID ) )
+            return singleton.get( xFID );
+        else
+        {
+            singleton.put( xFID, new CloudRegistry() );
+            return singleton.get( xFID );
+        }
 	}
 
 	/**
@@ -119,7 +126,18 @@ public class CloudRegistry
 		cut = cloudMap.get( cloudName );
 		
 		if ( cut == null )
-			throw new IllegalArgumentException( "Unknown cloud Identifier " + cloudName );
+		{
+
+		    if ( cloudName.equals( "EMBEDDED" ) )
+		    {
+		        addCloudDescriptor( new CloudDescriptor( "EMBEDDED", "", "", "127.0.0.1:4444", "", "0", "", null, "SELENIUM", "SELENIUM", "SELENIUM" ) );
+		        cut = cloudMap.get( cloudName );
+		        if ( cut == null )
+		            throw new IllegalArgumentException( "Unknown cloud Identifier " + cloudName );
+		    }
+		    else
+		        throw new IllegalArgumentException( "Unknown cloud Identifier " + cloudName );
+		}
 		
 		if ( log.isInfoEnabled() )
 			log.info( "cloud Under Test set to " + cut );
@@ -173,13 +191,15 @@ public class CloudRegistry
 	        
 	        if ( !isListening( "127.0.0.1", 4444 ) )
 	        {
-                _server = new SeleniumServer( new StandaloneConfiguration( ) );
-                _server.boot();
+	            _server = new SeleniumServer( new StandaloneConfiguration() );
+	            _server.boot();
 	        }
 	        else
 	            log.warn( "There is already an EMBEDDED server listening - we will use that instance" );
 
-            CloudRegistry.instance().addCloudDescriptor( new CloudDescriptor( "EMBEDDED", "", "", "127.0.0.1:4444", "", "0", "", null, "SELENIUM", "SELENIUM", "SELENIUM" ) );
+	        if ( !cloudMap.containsKey( "EMBEDDED" ))
+	            addCloudDescriptor( new CloudDescriptor( "EMBEDDED", "", "", "127.0.0.1:4444", "", "0", "", null, "SELENIUM", "SELENIUM", "SELENIUM" ) );
+	        
             embeddedGrid=true;
         }
         catch( Exception e )

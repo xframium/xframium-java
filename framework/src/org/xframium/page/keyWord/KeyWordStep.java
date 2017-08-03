@@ -71,8 +71,8 @@ public interface KeyWordStep
 
 	public void setTagNames( String tagNames );
 	public void setDeviceTags( String tagNames );
-	public Object getParameterValue( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap );
-	public String getTokenValue( KeyWordToken token, Map<String, Object> contextMap, Map<String, PageData> dataMap );
+	public Object getParameterValue( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap, String xFID );
+	public String getTokenValue( KeyWordToken token, Map<String, Object> contextMap, Map<String, PageData> dataMap, String xFID );
 	
 	public ApplicationVersion getVersion();
 	public void setVersion( String appVersion );

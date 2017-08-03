@@ -9,7 +9,7 @@ public class DefaultSetMethod extends AbstractSetMethod
 {
 
     @Override
-    public boolean _set( WebElement webElement, WebDriver webDriver, String value, String setType )
+    public boolean _set( WebElement webElement, WebDriver webDriver, String value, String setType, String xFID )
     {
         WebElement useElement = webElement;
         

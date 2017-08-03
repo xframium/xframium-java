@@ -70,7 +70,7 @@ public class KWSFunction extends AbstractKeyWordStep
 	{
 		try
 		{
-			Object[] parameterArray = getParameters( contextMap, dataMap );
+			Object[] parameterArray = getParameters( contextMap, dataMap, executionContext.getxFID() );
 			Method method = findMethod( pageObject.getClass(), getName(), parameterArray );
 			method.invoke( pageObject, parameterArray );
 			return true;

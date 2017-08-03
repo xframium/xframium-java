@@ -10,8 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Stack;
 import java.util.TreeMap;
+import org.openqa.selenium.Capabilities;
 import org.xframium.application.ApplicationDescriptor;
+import org.xframium.device.ConnectedDevice;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.exception.XFramiumException;
 import org.xframium.exception.XFramiumException.ExceptionType;
@@ -33,6 +36,7 @@ public class ExecutionContextTest
         SKIPPED;
     }
 
+    private String xFID = null;
     private ExceptionType exceptionType;
     private KeyWordTest test;
     private String testName;
@@ -55,6 +59,12 @@ public class ExecutionContextTest
     private Map<String,String> sPMap = new HashMap<String,String>( 10 );
     private ApplicationDescriptor aut;
     private StringBuilder csvOutput = new StringBuilder();
+    private Map<String,?> c = null;
+    private Map<String,?> dC = null;
+    private KeyWordStep failedStep = null;
+    private transient Stack<String> deviceStack = new Stack<String>();
+    
+    private Map<String,ConnectedDevice> deviceMap = new HashMap<String,ConnectedDevice>( 5 );
     
     private String timerName;
     
@@ -74,6 +84,65 @@ public class ExecutionContextTest
         }
     }
     
+    public String peekAtDevice()
+    {
+        try
+        {
+            return deviceStack.peek();
+        }
+        catch( Exception e )
+        {
+            return null;
+        }
+    }
+    
+    public String popDevice()
+    {
+        try
+        {
+            return deviceStack.pop();
+        }
+        catch( Exception e )
+        {
+            return null;
+        }
+    }
+    
+    public void pushDevice( String deviceName )
+    {
+        deviceStack.push( deviceName );
+    }
+    
+    public String getxFID()
+    {
+        return xFID;
+    }
+
+    public void setxFID( String xFID )
+    {
+        this.xFID = xFID;
+    }
+
+    public Map<String, ConnectedDevice> getDeviceMap()
+    {
+        return deviceMap;
+    }
+
+    public void setDeviceMap( Map<String, ConnectedDevice> deviceMap )
+    {
+        this.deviceMap = deviceMap;
+    }
+
+    public KeyWordStep getFailedStep()
+    {
+        return failedStep;
+    }
+
+    public void setFailedStep( KeyWordStep failedStep )
+    {
+        this.failedStep = failedStep;
+    }
+
     public void addToCSV( String line )
     {
         csvOutput.append( line ).append( "\r\n" );
@@ -95,7 +164,21 @@ public class ExecutionContextTest
     {
         return csvOutput.toString();
     }
+
+
+    public void setDesiredCapabilities( Capabilities c )
+    {
+        if ( c != null )
+            this.c = c.asMap();
+    }
     
+
+    public void setDerivedCapabilities( Capabilities c )
+    {
+        if ( c != null )
+            this.dC = c.asMap();
+    }
+
     public Map<String,Object> toMap()
     {
         Map<String,Object> asMap = new HashMap<String,Object>( 20 );
@@ -113,7 +196,8 @@ public class ExecutionContextTest
         asMap.put( "device", device );
         asMap.put( "sessionId", sessionId );
         asMap.put( "folderName", folderName );
-        asMap.put( "tagNames", test.getTags() );
+        if ( test != null )
+            asMap.put( "tagNames", test.getTags() );
         callMap.clear();
         analyzeCalls( callMap );
         
@@ -129,6 +213,7 @@ public class ExecutionContextTest
         Collections.sort( elementUsage, new FailureComparator() );
         asMap.put( "elementUsage", elementUsage );
         asMap.put( "elementUsageMap", elementUsageMap );
+
         
         return asMap;
     }
@@ -156,6 +241,8 @@ public class ExecutionContextTest
         this.messageDetail = messageDetail;
     }
 
+    private long timerStart;
+    
     public String getTimerName()
     {
         return timerName;
@@ -164,6 +251,12 @@ public class ExecutionContextTest
     public void setTimerName( String timerName )
     {
         this.timerName = timerName;
+        timerStart = System.currentTimeMillis();
+    }
+    
+    public long getTimerStart()
+    {
+        return timerStart;
     }
     
     public void clearTimer()
@@ -380,7 +473,7 @@ public class ExecutionContextTest
         
         for ( KeyWordParameter p : step.getParameterList() )
         {
-            currentStep.addParameterValue( step.getParameterValue( p, contextMap, dataMap ) + "" );
+            currentStep.addParameterValue( step.getParameterValue( p, contextMap, dataMap, getxFID() ) + "" );
         }
     }
 

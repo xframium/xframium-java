@@ -141,7 +141,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
     
     private ExecutionConsole() 
     {
-        KeyWordDriver.instance().addStepListener( this );
+        //KeyWordDriver.instance().addStepListener( this );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( KeyWordStep.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( KWSClick.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( AbstractKeyWordStep.class, new ReflectionSerializer() );
@@ -279,10 +279,17 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
         eContain.setFullTestName( eC.getTestName() );
         eContain.setDevice( eC.getDevice() );
         eContain.setStartTime( System.currentTimeMillis() );
-        eContain.setRootFolder( ExecutionContext.instance().getReportFolder().getAbsolutePath() );
+        eContain.setRootFolder( ExecutionContext.instance(( (DeviceWebDriver) webDriver ).getxFID()).getReportFolder(( (DeviceWebDriver) webDriver ).getxFID()).getAbsolutePath() );
         executionMap.put( executionId, eContain );
         
         return true;
+    }
+    
+    @Override
+    public void afterArtifacts( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC )
+    {
+        // TODO Auto-generated method stub
+        
     }
 
     @Override
@@ -307,11 +314,9 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
     @Override
     public void beforeSuite( String suiteName, File fileName )
     {
-        DeviceManager.instance().clear();
         testExecuting = true;
         executionMap.clear();
         syncMap.clear();
-        ExecutionContext.instance().clear();
     }
 
     @Override

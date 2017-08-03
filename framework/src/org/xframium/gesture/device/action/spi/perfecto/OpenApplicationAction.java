@@ -35,7 +35,6 @@ import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.perfectoMobile.rest.bean.Execution;
 import org.xframium.integrations.perfectoMobile.rest.bean.Handset;
-import org.xframium.reporting.ExecutionContext;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -55,7 +54,7 @@ public class OpenApplicationAction extends AbstractDefaultAction implements Devi
 		
 		String applicationName = (String) parameterList.get( 0 );
 
-		ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
+		ApplicationDescriptor appDesc = ApplicationRegistry.instance( ( (DeviceWebDriver) webDriver).getxFID() ).getApplication( applicationName );
 		
 		if ( appDesc == null )
 		    throw new ScriptConfigurationException( "The Application " + applicationName + " does not exist" );
@@ -68,17 +67,17 @@ public class OpenApplicationAction extends AbstractDefaultAction implements Devi
     		    webDriver.findElement(By.tagName("body")).sendKeys(selectLinkOpeninNewTab);
     		
     		webDriver.get( appDesc.getUrl() );
-    		( (DeviceWebDriver) webDriver ).setAut( ApplicationRegistry.instance().getApplication( applicationName ) );
+    		( (DeviceWebDriver) webDriver ).setAut( appDesc,  ( (DeviceWebDriver) webDriver ).getxFID()  );
     		    
 		}
 		else
 		{
-    		Handset localDevice = PerfectoMobile.instance().devices().getDevice( deviceName );
+    		Handset localDevice = PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).devices().getDevice( deviceName );
     		Execution appExec = null;
     		if ( localDevice.getOs().toLowerCase().equals( "ios" ) )				
-    			appExec = PerfectoMobile.instance().application().open( executionId, deviceName, appDesc.getName(), appDesc.getAppleIdentifier() );
+    			appExec = PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).application().open( executionId, deviceName, appDesc.getName(), appDesc.getAppleIdentifier() );
     		else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-    			appExec = PerfectoMobile.instance().application().open( executionId, deviceName, appDesc.getName(), appDesc.getAndroidIdentifier() );
+    			appExec = PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).application().open( executionId, deviceName, appDesc.getName(), appDesc.getAndroidIdentifier() );
     		else
     			throw new IllegalArgumentException( "Could not install application to " + localDevice.getOs() );
     		
@@ -89,7 +88,7 @@ public class OpenApplicationAction extends AbstractDefaultAction implements Devi
     		        if ( webDriver instanceof ContextAware )
     	                ( ( ContextAware ) webDriver ).context( "NATIVE_APP" );
     		        
-    		        ( (DeviceWebDriver) webDriver ).setAut( ApplicationRegistry.instance().getApplication( applicationName ) );
+    		        ( (DeviceWebDriver) webDriver ).setAut( appDesc,  ( (DeviceWebDriver) webDriver ).getxFID()  );
     		        return true;
     		    }
     		    else

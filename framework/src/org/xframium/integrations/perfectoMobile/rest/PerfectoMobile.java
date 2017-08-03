@@ -22,6 +22,9 @@ package org.xframium.integrations.perfectoMobile.rest;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.Map;
+import org.xframium.device.DeviceManager;
 import org.xframium.integrations.perfectoMobile.rest.services.Application;
 import org.xframium.integrations.perfectoMobile.rest.services.Device;
 import org.xframium.integrations.perfectoMobile.rest.services.Devices;
@@ -41,7 +44,7 @@ public class PerfectoMobile
 {
 	
 	/** The invocation handler. */
-	private RESTInvocationHandler invocationHandler = new RESTInvocationHandler();
+	private RESTInvocationHandler invocationHandler;
 	
 	/** The base url. */
 	private String baseUrl;
@@ -56,14 +59,14 @@ public class PerfectoMobile
 	private String responseMethod = "xml";
 	
 	/** The singleton. */
-	private static PerfectoMobile singleton = new PerfectoMobile();
+	private static Map<String,PerfectoMobile> singleton = new HashMap<String,PerfectoMobile>( 10 );
 	
 	/**
 	 * Instantiates a new perfecto mobile.
 	 */
-	private PerfectoMobile()
+	private PerfectoMobile( String xFID )
 	{
-		
+	    invocationHandler = new RESTInvocationHandler( xFID );
 	}
 	
 	/**
@@ -71,9 +74,15 @@ public class PerfectoMobile
 	 *
 	 * @return the perfecto mobile
 	 */
-	public static PerfectoMobile instance()
+	public static PerfectoMobile instance( String xFID )
 	{
-		return singleton;
+	    if ( singleton.containsKey( xFID ) )
+            return singleton.get( xFID );
+        else
+        {
+            singleton.put( xFID, new PerfectoMobile( xFID ) );
+            return singleton.get( xFID );
+        }
 	}
 	
 	/**

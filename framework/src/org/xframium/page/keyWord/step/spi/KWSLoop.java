@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.StepStatus;
@@ -66,8 +67,8 @@ public class KWSLoop extends AbstractKeyWordStep
 		if ( getParameterList().size() < 2 )
 			throw new ScriptConfigurationException( "You must provide one parameter specifying either the loop count or the name of the element to execute on along with a function name to execution" );
 		
-		String useValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
-		String functionName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+		String useValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "";
+		String functionName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "";
 		
 		boolean numericalLoop = false;
 		int loopCount = -1;
@@ -106,7 +107,7 @@ public class KWSLoop extends AbstractKeyWordStep
 				    }
                     else
                     {
-                        if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext ) )
+                        if ( !KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext ) )
                         {
                             executionContext.completeStep( StepStatus.FAILURE, null );
                             return false;
@@ -171,7 +172,7 @@ public class KWSLoop extends AbstractKeyWordStep
 				}
 				else
 				{
-				    dataTable = PageDataManager.instance().getRecords( tableName );
+				    dataTable = PageDataManager.instance(executionContext.getxFID()).getRecords( tableName );
 				    String[] tableParts = tableName.split(  "\\." );
 				    tableName = tableParts[ tableParts.length - 1 ];
 				}
@@ -197,7 +198,7 @@ public class KWSLoop extends AbstractKeyWordStep
 	                    }
 	                    else
 	                    {
-	                        if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext ) )
+	                        if ( !KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext ) )
 	                        {
                                 executionContext.completeStep( StepStatus.FAILURE, null );
                                 return false;
@@ -257,7 +258,7 @@ public class KWSLoop extends AbstractKeyWordStep
 	                    }
 	                    else
 	                    {
-	                        if ( !KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext ) )
+	                        if ( !KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext ) )
 	                        {
 	                            executionContext.completeStep( StepStatus.FAILURE, null );
 	                            return false;

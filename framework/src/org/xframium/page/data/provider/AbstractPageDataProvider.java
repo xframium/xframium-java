@@ -127,6 +127,8 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 		{
 			Deque<PageData> dataList = recordMap.get( getRecordType( recordType ) ).getRecordList();
 			
+			Object x = recordMap.get( "SellFromTrunk-KitItems" );
+			
 			if ( dataList instanceof LinkedBlockingDeque )
 				return ( (LinkedBlockingDeque<PageData>) dataList ).pollFirst( waitTimeOut, TimeUnit.SECONDS );
 			else

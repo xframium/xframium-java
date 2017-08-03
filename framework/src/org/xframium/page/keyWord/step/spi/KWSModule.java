@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordDriver;
@@ -71,7 +72,7 @@ public class KWSModule extends KWSCall2
 							//
 							// Override is used for dataMap parameter mappings
 							//
-							String dataProvider = getParameterValue( param, contextMap, dataMap ) + "";
+							String dataProvider = getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) + "";
 							String[] dpArray = dataProvider.split( "=" );
 							if ( dpArray.length == 2 )
 							{
@@ -82,7 +83,7 @@ public class KWSModule extends KWSCall2
 						}
 						else if ( param.getName().equals( "FUNCTION_NAME") )
 						{
-						    functionName = getParameterValue( param, contextMap, dataMap ) + "";
+						    functionName = getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) + "";
 						}
 						else
 						{
@@ -90,7 +91,7 @@ public class KWSModule extends KWSCall2
 							// These are locally used context variables
 							//
 							localContextMap.put( param.getName(), param.getName() );
-							contextMap.put( param.getName(), getParameterValue( param, contextMap, dataMap ) + "" );
+							contextMap.put( param.getName(), getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) + "" );
 						}
 					}
 				}
@@ -99,7 +100,7 @@ public class KWSModule extends KWSCall2
 			if ( sC != null )
 				returnValue = sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext);
 			else
-				returnValue = KeyWordDriver.instance().executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext );
+				returnValue = KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext );
 		}
 		finally
 		{

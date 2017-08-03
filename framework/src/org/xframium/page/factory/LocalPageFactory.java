@@ -27,12 +27,12 @@ package org.xframium.page.factory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.AbstractPage;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 import org.xframium.page.element.Element;
-import org.xframium.reporting.ExecutionContextTest;
 
 
 
@@ -104,8 +104,8 @@ public class LocalPageFactory extends AbstractPageFactory
 
             		try
             		{
-            			ElementDescriptor elementDescriptor = new ElementDescriptor( PageManager.instance().getSiteName(), currentPage.getClass().getInterfaces()[0].getSimpleName(), elementName );
-                		Element currentElement = PageManager.instance().getElementProvider().getElement( elementDescriptor );
+            			ElementDescriptor elementDescriptor = new ElementDescriptor( PageManager.instance( ( (DeviceWebDriver) webDriver).getxFID() ).getSiteName(), currentPage.getClass().getInterfaces()[0].getSimpleName(), elementName );
+                		Element currentElement = PageManager.instance( ( (DeviceWebDriver) webDriver).getxFID() ).getElementProvider().getElement( elementDescriptor );
             			( (AbstractPage) currentPage ).registerElement( elementDescriptor, currentElement );
             		}
             		catch( Exception e )
@@ -127,8 +127,8 @@ public class LocalPageFactory extends AbstractPageFactory
             		
             		try
             		{
-            			ElementDescriptor elementDescriptor = new ElementDescriptor( PageManager.instance().getSiteName(), currentPage.getClass().getInterfaces()[0].getSimpleName(), fieldValue );
-                		Element currentElement = PageManager.instance().getElementProvider().getElement( elementDescriptor );
+            			ElementDescriptor elementDescriptor = new ElementDescriptor( PageManager.instance( ( (DeviceWebDriver) webDriver).getxFID() ).getSiteName(), currentPage.getClass().getInterfaces()[0].getSimpleName(), fieldValue );
+                		Element currentElement = PageManager.instance( ( (DeviceWebDriver) webDriver).getxFID() ).getElementProvider().getElement( elementDescriptor );
                 		
                 		currentElement.setTimed(  currentField.getAnnotation( Page.TimeMethod.class ) != null );
                 		

@@ -54,19 +54,20 @@ public class KWSSet extends AbstractKeyWordStep
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
 
-		String newValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+		String newValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "";
 		String option = null;
 		if (getParameterList().size() > 1 ){
-			option = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+			option = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "";
 		}		
 		if ( log.isInfoEnabled() )
 			log.info( "Attmepting to set " + getName() + " to [" + newValue + "]" );
 
+		String xFID = executionContext.getxFID();
 		
 		if(option == null)
 		{
 		    Element elt = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
-			elt.setValue( newValue);
+			elt.setValue( newValue, xFID);
 		}
 		else 
 		{
@@ -80,16 +81,16 @@ public class KWSSet extends AbstractKeyWordStep
 					int length = -1;
 					KeyWordParameter lengthParam = getParameter( "length" );
 					if ( lengthParam != null )
-						length = Integer.parseInt( getParameterValue( lengthParam, contextMap, dataMap ) + "" );
+						length = Integer.parseInt( getParameterValue( lengthParam, contextMap, dataMap, executionContext.getxFID() ) + "" );
 					
 					String useCharacters = "abcdef";
 					KeyWordParameter charParam = getParameter( "characters" );
 					if ( charParam != null )
-						useCharacters = getParameterValue( charParam, contextMap, dataMap ) + "";
+						useCharacters = getParameterValue( charParam, contextMap, dataMap, executionContext.getxFID() ) + "";
 					
 					String testString = createString( length, useCharacters.getBytes() );
 					
-					elt.setValue( testString + "xxx" );
+					elt.setValue( testString + "xxx", xFID );
 					
 					try { Thread.sleep( 1000 ); } catch( Exception e ) {}
 					
@@ -97,7 +98,7 @@ public class KWSSet extends AbstractKeyWordStep
 					if ( !setValue.equals( testString ) )
 						throw new ScriptException( "The length of was exceeded - expected " + length );
 					
-					elt.setValue( newValue );
+					elt.setValue( newValue, xFID );
 					break;
 					
 				case PERFECTO:
@@ -105,7 +106,7 @@ public class KWSSet extends AbstractKeyWordStep
 				    int delayLength = 0;
 				    
 				    if ( delayLengthParam != null )
-				        delayLength = Integer.parseInt( getParameterValue( delayLengthParam, contextMap, dataMap ) );
+				        delayLength = Integer.parseInt( getParameterValue( delayLengthParam, contextMap, dataMap, executionContext.getxFID() ) );
 				    
 				    if ( log.isInfoEnabled() )
 				        log.info( "PERFECTO Type (" + delayLength + " )" );
@@ -131,7 +132,7 @@ public class KWSSet extends AbstractKeyWordStep
 					
 				default:
 				    Element elt2 = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
-					elt2.setValue( newValue,setMethod );
+					elt2.setValue( newValue,setMethod, xFID );
 			}
 			
 			

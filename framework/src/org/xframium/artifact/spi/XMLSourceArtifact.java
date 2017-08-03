@@ -15,7 +15,7 @@ public class XMLSourceArtifact extends AbstractArtifact implements Artifact
     }
     
     @Override
-    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver )
+    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver, String xFID )
     {
         return writeToDisk( rootFolder, FILE_NAME, webDriver.getPageSource().getBytes() );
     }

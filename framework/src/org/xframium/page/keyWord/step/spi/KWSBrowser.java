@@ -32,6 +32,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.factory.MorelandWebElement;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
@@ -126,8 +127,6 @@ public class KWSBrowser extends AbstractKeyWordStep
     @Override
     public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception
     {
-        if ( log.isDebugEnabled() )
-            log.debug( "Execution Function " + getName() );
 
         if ( getName().toUpperCase().startsWith( SwitchType.SWITCH_TO_ELEMENT.name ) )
         {
@@ -148,15 +147,15 @@ public class KWSBrowser extends AbstractKeyWordStep
             switch ( SwitchType.valueOf( getName().toUpperCase() ) )
             {
                 case SWITCH_BY_TITLE:
-                    return verifySwitchWindow( webDriver, getName(), getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
+                    return verifySwitchWindow( webDriver, getName(), getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
                 case SWITCH_BY_URL:
-                    return verifySwitchWindow( webDriver, getName(), getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
+                    return verifySwitchWindow( webDriver, getName(), getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
 
                 case SWITCH_NAMED_FRAME:
-                    webDriver.switchTo().frame( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
+                    webDriver.switchTo().frame( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
                     break;
                 case SWITCH_INDEX:
-                    webDriver.switchTo().frame( Integer.parseInt( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" ) );
+                    webDriver.switchTo().frame( Integer.parseInt( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" ) );
                     break;
                 case PARENT_FRAME:
                     webDriver.switchTo().parentFrame();
@@ -168,7 +167,10 @@ public class KWSBrowser extends AbstractKeyWordStep
                     webDriver.close();
                     break;
                 case NAVIGATE:
-                    webDriver.navigate().to( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
+                    if ( isTimed() )   
+                        ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider().startTimer( (DeviceWebDriver) webDriver, null, executionContext);
+                    
+                    webDriver.get( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
                     break;
 
                 case MAXIMIZE:
@@ -178,7 +180,7 @@ public class KWSBrowser extends AbstractKeyWordStep
                     String pageTitle = webDriver.getTitle();
                     if ( getParameterList().size() > 1 )
                     {
-                        String compareTo = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+                        String compareTo = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "";
                         if ( !compareTo.equals( pageTitle ) )
                         {
                             throw new ScriptException( "Expected Title of [" + compareTo + "] but received [" + pageTitle + "]" );
@@ -197,7 +199,7 @@ public class KWSBrowser extends AbstractKeyWordStep
                     String currentUrl = webDriver.getCurrentUrl();
                     if ( getParameterList().size() > 1 )
                     {
-                        String compareTo = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+                        String compareTo = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "";
                         if ( !compareTo.equals( currentUrl ) )
                         {
                             throw new ScriptException( "Expected Title of [" + compareTo + "] but received [" + currentUrl + "]" );
@@ -213,9 +215,13 @@ public class KWSBrowser extends AbstractKeyWordStep
                     break;
 
                 case BACK:
+                    if ( isTimed() )   
+                        ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider().startTimer( (DeviceWebDriver) webDriver, null, executionContext);
                     webDriver.navigate().back();
                     break;
                 case FORWARD:
+                    if ( isTimed() )   
+                        ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider().startTimer( (DeviceWebDriver) webDriver, null, executionContext);
                     webDriver.navigate().forward();
                     break;
                 case REFRESH:
@@ -227,7 +233,7 @@ public class KWSBrowser extends AbstractKeyWordStep
                     if ( getParameterList().size() < 2 )
                         index = 0;
                     else
-                        index = Integer.valueOf( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" );
+                        index = Integer.valueOf( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
 
                     for ( String handle : webDriver.getWindowHandles() )
                     {
@@ -240,7 +246,7 @@ public class KWSBrowser extends AbstractKeyWordStep
                     }
                     break;
                 case ADD_COOKIE:
-                    Cookie addCookie = new Cookie( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "", getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "" );
+                    Cookie addCookie = new Cookie( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "", getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
                     if ( webDriver instanceof RemoteWebDriver )
                         ((RemoteWebDriver) webDriver).manage().addCookie( addCookie );
                     else if ( webDriver instanceof NativeDriverProvider && ((NativeDriverProvider) webDriver).getNativeDriver() instanceof RemoteWebDriver )
@@ -264,10 +270,10 @@ public class KWSBrowser extends AbstractKeyWordStep
                     else
                     {
                         if ( webDriver instanceof RemoteWebDriver )
-                            ((RemoteWebDriver) webDriver).manage().deleteCookieNamed( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
+                            ((RemoteWebDriver) webDriver).manage().deleteCookieNamed( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
                         else if ( webDriver instanceof NativeDriverProvider && ((NativeDriverProvider) webDriver).getNativeDriver() instanceof RemoteWebDriver )
                         {
-                            ((RemoteWebDriver) ((NativeDriverProvider) webDriver).getNativeDriver()).manage().deleteCookieNamed( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
+                            ((RemoteWebDriver) ((NativeDriverProvider) webDriver).getNativeDriver()).manage().deleteCookieNamed( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
                         }
                     }
                     break;
@@ -309,9 +315,9 @@ public class KWSBrowser extends AbstractKeyWordStep
                     {
                         Cookie getCookie = null;
                         if ( webDriver instanceof RemoteWebDriver )
-                            getCookie = ((RemoteWebDriver) webDriver).manage().getCookieNamed( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
+                            getCookie = ((RemoteWebDriver) webDriver).manage().getCookieNamed( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
                         else if ( webDriver instanceof NativeDriverProvider && ((NativeDriverProvider) webDriver).getNativeDriver() instanceof RemoteWebDriver )
-                            getCookie = ((RemoteWebDriver) ((NativeDriverProvider) webDriver).getNativeDriver()).manage().getCookieNamed( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "" );
+                            getCookie = ((RemoteWebDriver) ((NativeDriverProvider) webDriver).getNativeDriver()).manage().getCookieNamed( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
 
                         if ( !validateData( getCookie.getValue() ) )
                         {
@@ -329,7 +335,7 @@ public class KWSBrowser extends AbstractKeyWordStep
                 case PAGE_DOWN:
                     int pageDown = 1;
                     if ( getParameter( "Page Count" ) != null )
-                        pageDown = Integer.parseInt( getParameterValue( getParameter( "Page Count" ), contextMap, dataMap ) );
+                        pageDown = Integer.parseInt( getParameterValue( getParameter( "Page Count" ), contextMap, dataMap, executionContext.getxFID() ) );
                     
                     if ( webDriver instanceof JavascriptExecutor )
                         ( (JavascriptExecutor) webDriver ).executeScript( "window.scrollBy( 0, (window.innerHeight * " + pageDown + "));" );
@@ -338,7 +344,7 @@ public class KWSBrowser extends AbstractKeyWordStep
                 case PAGE_UP:
                     int pageUp = 1;
                     if ( getParameter( "Page Count" ) != null )
-                        pageUp = Integer.parseInt( getParameterValue( getParameter( "Page Count" ), contextMap, dataMap ) );
+                        pageUp = Integer.parseInt( getParameterValue( getParameter( "Page Count" ), contextMap, dataMap, executionContext.getxFID() ) );
                     
                     if ( webDriver instanceof JavascriptExecutor )
                         ( (JavascriptExecutor) webDriver ).executeScript( "window.scrollBy( 0, -(window.innerHeight * " + pageUp + "));" );
@@ -347,7 +353,7 @@ public class KWSBrowser extends AbstractKeyWordStep
                 case SCROLL_DOWN:
                     int scrollDown = 250;
                     if ( getParameter( "Scroll Size" ) != null )
-                        scrollDown = Integer.parseInt( getParameterValue( getParameter( "Scroll Size" ), contextMap, dataMap ) );
+                        scrollDown = Integer.parseInt( getParameterValue( getParameter( "Scroll Size" ), contextMap, dataMap, executionContext.getxFID() ) );
                     
                     if ( webDriver instanceof JavascriptExecutor )
                         ( (JavascriptExecutor) webDriver ).executeScript( "window.scrollBy( 0, " + scrollDown + ");" );
@@ -356,7 +362,7 @@ public class KWSBrowser extends AbstractKeyWordStep
                 case SCROLL_UP:
                     int scrollUp = 250;
                     if ( getParameter( "Scroll Size" ) != null )
-                        scrollUp = Integer.parseInt( getParameterValue( getParameter( "Scroll Size" ), contextMap, dataMap ) );
+                        scrollUp = Integer.parseInt( getParameterValue( getParameter( "Scroll Size" ), contextMap, dataMap, executionContext.getxFID() ) );
                     
                     if ( webDriver instanceof JavascriptExecutor )
                         ( (JavascriptExecutor) webDriver ).executeScript( "window.scrollBy( 0, -" + scrollUp + ");" );

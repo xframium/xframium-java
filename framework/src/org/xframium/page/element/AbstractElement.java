@@ -34,6 +34,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.content.ContentManager;
+import org.xframium.device.cloud.CloudDescriptor.ProviderType;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
@@ -80,6 +81,9 @@ public abstract class AbstractElement implements Element
 	{
 	    List<SubElement> appList = new ArrayList<SubElement>( 10 );
 	    
+	    //
+	    // Filter by application version if specified
+	    //
 	    for ( SubElement subElement : subElementList )
 	    {
 	        if ( subElement.getVersion() != null && subElement.getVersion().isVersion( appDesc ) )
@@ -88,18 +92,65 @@ public abstract class AbstractElement implements Element
 	            appList.add( subElement );
 	    }
 	    
+	    //
+        // Filter by operating system if specified
+        //
 	    List<SubElement> osList = new ArrayList<SubElement>( 10 );
 	    for ( SubElement subElement : appList )
         {        
-            if ( subElement.getOs() != null && subElement.getOs().contains( os ) )
-                osList.add( subElement );
-            else if ( subElement.getOs() != null && subElement.getOs().equalsIgnoreCase( os ))
+            if ( subElement.getOs() != null && subElement.getOs().toLowerCase().contains( os ) )
                 osList.add( subElement );
             else if ( subElement.getOs() == null )
                 osList.add( subElement );
         }
 	    
-	    return osList.toArray( new SubElement[ 0 ] );
+	    //
+        // Filter by device os version
+        //
+	    List<SubElement> osVersionList = new ArrayList<SubElement>( 10 );
+        for ( SubElement subElement : osList )
+        {        
+            if ( subElement.getOs() != null && subElement.getOs().toLowerCase().contains( os ) )
+                osVersionList.add( subElement );
+            else if ( subElement.getOs() == null )
+                osVersionList.add( subElement );
+        }
+        
+	    
+	    //
+        // Filter by cloud provider if specified
+        //
+	    List<SubElement> cloudList = new ArrayList<SubElement>( 10 );
+        for ( SubElement subElement : osVersionList )
+        {        
+            if ( subElement.getCloudProvider() != null && subElement.getCloudProvider().equals( ProviderType.valueOf( webDriver.getCloud().getProvider().toUpperCase() ) ) )
+                cloudList.add( subElement );
+            else if ( subElement.getCloudProvider() == null )
+                cloudList.add( subElement );
+        }
+        
+        //
+        // Filter by device tag is specified
+        //
+        List<SubElement> tagList = new ArrayList<SubElement>( 10 );
+        for ( SubElement subElement : cloudList )
+        {        
+            if ( subElement.getDeviceTag() != null )
+            {
+                if ( webDriver.getPopulatedDevice().getTagNames() != null )
+                for ( String tagName : webDriver.getPopulatedDevice().getTagNames() )
+                {
+                    if ( subElement.getDeviceTag().equalsIgnoreCase( tagName ) )
+                        tagList.add( subElement );
+                }
+            }
+            else if ( subElement.getDeviceTag() == null )
+                tagList.add( subElement );
+        }
+        
+        
+	    
+	    return tagList.toArray( new SubElement[ 0 ] );
 	}
 	
 	public void setExecutionContext( ExecutionContextTest executionContext )
@@ -165,7 +216,7 @@ public abstract class AbstractElement implements Element
 	 *
 	 * @param currentValue the current value
 	 */
-	protected abstract void _setValue( String currentValue, SetMethod setMethod );
+	protected abstract void _setValue( String currentValue, SetMethod setMethod, String xFID );
 
 	/**
 	 * _get value.
@@ -443,7 +494,7 @@ public abstract class AbstractElement implements Element
         while ( matcher.find() )
         {
             String contentKey = matcher.group( 1 );
-            String replacementValue = ContentManager.instance().getContentValue( contentKey );
+            String replacementValue = ContentManager.instance( webDriver.getxFID() ).getContentValue( contentKey );
             
             if ( replacementValue != null )
                 keyValue = keyValue.replace( "!{" + contentKey + "}", replacementValue );
@@ -534,7 +585,7 @@ public abstract class AbstractElement implements Element
 		finally
 		{
 			if ( timed )
-				PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".getValue()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+				PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".getValue()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
 		}
 		return returnValue;
 	}
@@ -563,7 +614,7 @@ public abstract class AbstractElement implements Element
         finally
         {
             if ( timed )
-                PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".getStyle()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+                PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".getStyle()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
         }
         return returnValue;
     }
@@ -592,7 +643,7 @@ public abstract class AbstractElement implements Element
 		finally
 		{
 			if ( timed )
-				PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".isVisible()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+				PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".isVisible()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
 		}
 		return returnValue;
 	}
@@ -622,7 +673,7 @@ public abstract class AbstractElement implements Element
 		finally
 		{
 			if ( timed )
-				PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".isPresent()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+				PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".isPresent()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
 		}
 		return returnValue;
 	}
@@ -646,7 +697,7 @@ public abstract class AbstractElement implements Element
         finally
         {
             if ( timed )
-                PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".waitForVisible()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+                PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".waitForVisible()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
         }
         return returnValue;
     }
@@ -702,7 +753,7 @@ public abstract class AbstractElement implements Element
 		finally
 		{
 			if ( timed )
-				PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".getAttribute()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+				PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".getAttribute()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
 		}
 		return returnValue;
 	}
@@ -731,7 +782,7 @@ public abstract class AbstractElement implements Element
 		finally
 		{
 			if ( timed )
-				PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".getImage()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+				PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".getImage()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
 		}
 		return returnValue;
 	}
@@ -740,14 +791,14 @@ public abstract class AbstractElement implements Element
 	 * @see com.perfectoMobile.page.element.Element#setValue(java.lang.String)
 	 */
 	@Override
-	public void setValue( String currentValue )
+	public void setValue( String currentValue, String xFID)
 	{
 	    
-		setValue( currentValue, SetMethod.DEFAULT );
+		setValue( currentValue, SetMethod.DEFAULT, xFID);
 	}
 	
 	@Override
-	public void setValue( String currentValue, SetMethod setMethod )
+	public void setValue( String currentValue, SetMethod setMethod, String xFID )
 	{
 	    
 	    
@@ -756,11 +807,12 @@ public abstract class AbstractElement implements Element
         boolean success = false;
         try
         {
-            _setValue( currentValue, setMethod );
+            _setValue( currentValue, setMethod, xFID );
             success = true;
         }
         catch( Exception e )
         {
+            e.printStackTrace();
             if ( e instanceof XFramiumException )
                 throw e;
             else
@@ -769,7 +821,7 @@ public abstract class AbstractElement implements Element
         finally
         {
             if ( timed )
-                PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".setValue(" + currentValue + ")", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+                PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".setValue(" + currentValue + ")", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
         }
 	    
 	}
@@ -825,7 +877,7 @@ public abstract class AbstractElement implements Element
 		finally
 		{			
 			if ( timed )
-				PageManager.instance().addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".click()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
+				PageManager.instance( getWebDriver().getxFID() ).addExecutionTiming( getExecutionId(), getDeviceName(), pageName + "." + elementName + ".click()", System.currentTimeMillis() - startTime, success ? StepStatus.SUCCESS : StepStatus.FAILURE, "", 0 );
 		}
 	}
 

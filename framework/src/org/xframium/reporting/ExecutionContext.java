@@ -12,10 +12,11 @@ import java.util.Map;
 import java.util.Properties;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.device.data.DataManager;
+import org.xframium.page.keyWord.KeyWordDriver;
 
 public class ExecutionContext
 {
-    private static transient ExecutionContext singleton = new ExecutionContext();
+    private static transient Map<String,ExecutionContext> singleton = new HashMap<String,ExecutionContext>(5);
     private static transient DateFormat timeFormat = new SimpleDateFormat( "MM-dd_HH-mm-ss-SSS" );
     private File reportFolder = null;
     private String suiteName;
@@ -59,9 +60,15 @@ public class ExecutionContext
 
     }
 
-    public static ExecutionContext instance()
+    public static ExecutionContext instance( String xFID )
     {
-        return singleton;
+        if ( singleton.containsKey( xFID ) )
+            return singleton.get( xFID );
+        else
+        {
+            singleton.put( xFID, new ExecutionContext() );
+            return singleton.get( xFID );
+        }
     }
     
     public void clear()
@@ -142,10 +149,15 @@ public class ExecutionContext
         return executionSummary;
     }
 
-    public File getReportFolder()
+    public void resetReportFolder()
+    {
+        reportFolder = null;
+    }
+    
+    public File getReportFolder( String xFID )
     {
         if ( reportFolder == null )
-            reportFolder = new File( DataManager.instance().getReportFolder(), timeFormat.format( new Date( System.currentTimeMillis() ) ) );
+            reportFolder = new File( DataManager.instance( xFID ).getReportFolder(), timeFormat.format( new Date( System.currentTimeMillis() ) ) );
         return reportFolder;
     }
 

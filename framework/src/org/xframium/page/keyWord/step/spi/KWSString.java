@@ -60,12 +60,12 @@ public class KWSString extends AbstractKeyWordStep
         if ( getParameterList().size() == 1 )
         {
             originalValue = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getValue();
-            operationName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+            operationName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "";
         }
         else if ( getParameterList().size() >= 2 )
         {
-            originalValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
-            operationName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+            originalValue = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "";
+            operationName = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "";
         }
 
         String newValue = null;
@@ -81,7 +81,7 @@ public class KWSString extends AbstractKeyWordStep
                 break;
 
             case "decimal":
-                DecimalFormat decimalFormat = new DecimalFormat( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" );
+                DecimalFormat decimalFormat = new DecimalFormat( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
                 decimalFormat.setRoundingMode( RoundingMode.DOWN );
                 newValue = decimalFormat.format( Double.parseDouble( originalValue ) );
                 break;
@@ -91,7 +91,7 @@ public class KWSString extends AbstractKeyWordStep
                 break;
 
             case "regex":
-                String regex = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "";
+                String regex = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap, executionContext.getxFID() ) + "";
                 Pattern regexPattern = Pattern.compile( regex );
                
                 Matcher regexMatcher = regexPattern.matcher( originalValue );
@@ -110,7 +110,7 @@ public class KWSString extends AbstractKeyWordStep
                 break;
                 
             case "contains":
-                String expectedValue = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "";
+                String expectedValue = getParameterValue( getParameterList().get( 2 ), contextMap, dataMap, executionContext.getxFID() ) + "";
 
                 if ( expectedValue.isEmpty() )
                 {
@@ -131,7 +131,7 @@ public class KWSString extends AbstractKeyWordStep
                 StringBuilder buff = new StringBuilder( originalValue );
                 for( int i = 2; i < paramCount; ++i )
                 {
-                    buff.append( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "" );
+                    buff.append( getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) + "" );
                 }
                 newValue = buff.toString();
                 break;
@@ -142,14 +142,14 @@ public class KWSString extends AbstractKeyWordStep
                     throw new ScriptConfigurationException( "STRING operation substr requires four parameters" );
                 }
 
-                int beginIndex = getInt( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap ) + "" );
-                int endIndex = getInt( getParameterValue( getParameterList().get( 3 ), contextMap, dataMap ) + "" );
+                int beginIndex = getInt( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
+                int endIndex = getInt( getParameterValue( getParameterList().get( 3 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
 
                 newValue = originalValue.substring( beginIndex, endIndex );
 
                 if ( paramCount > 4 )
                 {
-                    String compareTo = getParameterValue( getParameterList().get( 4 ), contextMap, dataMap ) + "";
+                    String compareTo = getParameterValue( getParameterList().get( 4 ), contextMap, dataMap, executionContext.getxFID() ) + "";
 
                     rtn = newValue.equals( compareTo );
                 }

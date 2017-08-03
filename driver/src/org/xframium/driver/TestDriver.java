@@ -22,15 +22,19 @@ package org.xframium.driver;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.xframium.device.DeviceManager;
+import java.util.UUID;
+import org.xframium.Initializable;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.reporting.ExecutionContext;
 public class TestDriver
 {
     private List<SuiteListener> listenerList = new ArrayList<SuiteListener>(3);
+    
+    
     
     public void addSuiteListener( SuiteListener suiteListener )
     {
@@ -39,12 +43,9 @@ public class TestDriver
     
     public void execute( File configFile, Map<String,String> customConfig )
     {
-        System.setProperty( "selenium.LOGGER.level", "WARNING" );
-        System.setProperty( "selenium.LOGGER", "c:\\projects\\selenium.log" );
+        String xFID = null;
         try
         {
-            DeviceManager.instance().clear();
-            KeyWordDriver.instance().clear();
             ConfigurationReader configReader = null;
             if ( configFile.getName().toLowerCase().endsWith( ".txt" ) )
             {
@@ -58,14 +59,32 @@ public class TestDriver
             for ( SuiteListener l : listenerList )
                 l.beforeSuite( null, configFile );
             
+            
+            
+            
+            if ( customConfig == null )
+                customConfig = new HashMap<String,String>(10);
+            
+            xFID = UUID.randomUUID().toString();
+            Initializable.xFID.set( xFID ); 
+            customConfig.put( "xF-ID", Initializable.xFID.get() );
+            
             configReader.readConfiguration( configFile, true, customConfig );
             
             for ( SuiteListener l : listenerList )
-                l.afterSuite( configReader.getSuiteName(), configFile, ExecutionContext.instance().getReportFolder() );
+                l.afterSuite( configReader.getSuiteName(), configFile, ExecutionContext.instance( xFID ).getReportFolder( xFID ) );
+            
+            
+            
         }
         catch( Exception e )
         {
             e.printStackTrace();
+        }
+        finally
+        {
+            if ( CloudRegistry.instance( xFID ).isEmbeddedGrid() )
+                CloudRegistry.instance( xFID ).shutdown();
         }
     }
     
@@ -84,9 +103,11 @@ public class TestDriver
             System.exit( -1 );
         }
         
+        
+        
         new TestDriver().execute( configFile, null );
         
-        CloudRegistry.instance().shutdown();
+        
     }
 
     

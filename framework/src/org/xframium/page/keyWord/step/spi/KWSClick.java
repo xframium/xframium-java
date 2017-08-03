@@ -61,18 +61,18 @@ public class KWSClick extends AbstractKeyWordStep
         } 
 		else if ( getParameter( "Count" ) != null )
 		{
-		    getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).click( Integer.parseInt( getParameterValue( getParameter( "Count" ), contextMap, dataMap ) ),250);
+		    getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).click( Integer.parseInt( getParameterValue( getParameter( "Count" ), contextMap, dataMap, executionContext.getxFID() ) ),250);
 		    return true;
 		}
 		else if ( getParameter( "Length" ) != null )
         {
-		    getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).clickFor( Integer.parseInt( getParameterValue( getParameter( "Length" ), contextMap, dataMap ) ) );
+		    getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).clickFor( Integer.parseInt( getParameterValue( getParameter( "Length" ), contextMap, dataMap, executionContext.getxFID() ) ) );
             return true;
         }
 		
 		else if ( getParameter( "Offset" ) != null )
         {
-		    String[] offSet = getParameterValue( getParameter( "Offset" ), contextMap, dataMap ).replace( "%", "").split( "," );
+		    String[] offSet = getParameterValue( getParameter( "Offset" ), contextMap, dataMap, executionContext.getxFID() ).replace( "%", "").split( "," );
 		    
             getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).clickAt( Integer.parseInt( offSet[ 0 ] ), Integer.parseInt( offSet[ 1 ] ) );
             return true;
@@ -85,13 +85,13 @@ public class KWSClick extends AbstractKeyWordStep
 		    //
 		    if(getParameterList().size() == 1)
     		{	
-    			String clicks = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
+    			String clicks = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "";
     			int intClicks = Integer.parseInt(clicks);
     			getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).click(intClicks,250);
     		}
     		else {	
-    			String clicks = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap ) + "";
-    			String waitTime = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap ) + "";
+    			String clicks = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "";
+    			String waitTime = getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "";
     			int intClicks = Integer.parseInt(clicks);
     			int intwaitTime =Integer.parseInt(waitTime);			
     			getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).click(intClicks,intwaitTime);

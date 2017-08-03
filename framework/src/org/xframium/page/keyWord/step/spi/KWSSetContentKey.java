@@ -54,7 +54,7 @@ public class KWSSetContentKey extends AbstractKeyWordStep
                 
         if ( getParameterList().size() == 1 )
         {
-            newKey = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap );
+            newKey = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() );
             if ( !( newKey instanceof String ) )
                 throw new ScriptConfigurationException( "Script value must be of type String" );
         }
@@ -62,7 +62,7 @@ public class KWSSetContentKey extends AbstractKeyWordStep
         if ( log.isDebugEnabled() )
             log.debug( "Setting Content key to: " + newKey );
 
-        ContentManager.instance().setCurrentContentKey( (String) newKey );
+        ContentManager.instance(executionContext.getxFID()).setCurrentContentKey( (String) newKey );
 		
         return true;
     }

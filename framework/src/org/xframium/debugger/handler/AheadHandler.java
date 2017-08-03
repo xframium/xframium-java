@@ -13,11 +13,17 @@ import com.sun.net.httpserver.HttpHandler;
 @SuppressWarnings ( "restriction")
 public class AheadHandler implements HttpHandler
 {
+    private String xFID;
+    public AheadHandler( String xFID )
+    {
+        this.xFID = xFID;
+    }
+    
     @Override
     public void handle( HttpExchange t ) throws IOException
     {
         Map<String, String> parameterMap = queryToMap( t.getRequestURI().getQuery() );
-        TestContainer tC = DebugManager.instance().getActiveTests().get( parameterMap.get( "executionId" ) );
+        TestContainer tC = DebugManager.instance(xFID).getActiveTests().get( parameterMap.get( "executionId" ) );
         
         if ( tC != null )
         {

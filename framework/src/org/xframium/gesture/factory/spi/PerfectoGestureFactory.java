@@ -24,6 +24,7 @@ import org.xframium.gesture.Gesture;
 import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.gesture.factory.AbstractGestureFactory;
 import org.xframium.gesture.factory.GestureFactory;
+import org.xframium.gesture.factory.spi.perfecto.DragDropGesture;
 import org.xframium.gesture.factory.spi.perfecto.KeyPressGesture;
 import org.xframium.gesture.factory.spi.perfecto.PressGesture;
 import org.xframium.gesture.factory.spi.perfecto.RotateGesture;
@@ -70,6 +71,10 @@ public class PerfectoGestureFactory extends AbstractGestureFactory implements Ge
 				returnGesture = new KeyPressGesture();
 				returnGesture.setParameters( parameterList );
 				break;
+				
+			case DRAGDROP:
+			    returnGesture = new DragDropGesture();
+			    returnGesture.setParameters( parameterList );
 		}
 		
 		return returnGesture;

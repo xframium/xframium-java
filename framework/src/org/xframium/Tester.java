@@ -31,35 +31,7 @@ public class Tester
 {
     public static void main( String[] args )
     {
-        SerializationManager.instance().setDefaultAdapter( SerializationManager.JSON_SERIALIZATION );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( TestContainer.class, new ReflectionSerializer() );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( StepContainer.class, new ReflectionSerializer() );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( KeyWordStep.class, new ReflectionSerializer() );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( KWSClick.class, new ReflectionSerializer() );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( AbstractKeyWordStep.class, new ReflectionSerializer() );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( KeyWordTest.class, new ReflectionSerializer() );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( KeyWordPageImpl.class, new ReflectionSerializer() );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( Page.class, new ReflectionSerializer() );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( PageData.class, new ReflectionSerializer() );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( KeyWordParameter.class, new ReflectionSerializer() );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( KeyWordToken.class, new ReflectionSerializer() );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( SeleniumElement.class, new ReflectionSerializer() );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( Capabilities.class, new MapSerializer() );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( XMLElementProvider.class, new ReflectionSerializer() );
-        SerializationManager.instance().getDefaultAdapter().addCustomMapping( XMLElementProvider.class, new ReflectionSerializer() );
         
-        List x = new ArrayList();
-        x.add( new KWSClick() );
-        x.add( new KWSAlign() );
-        x.add( new KWSExists() );
-        x.add( new KWSVisible() );
-        x.add( new KWSWaitFor() );
-        x.add( new KWSWait() );
-        //x.add( new KeyWordTest( "testOne", true, "dpOne, dpTwo", "dDriver", false, "linkId", "IOS", 0, "This is a sample test case", "tag one, tagTwo", "english, french" ) );
-        //x.add( new KeyWordTest( "testTwo", true, "dpOne", null, false, "linkId", "IOS", 0, "This is a sample test case with a much longer description to test how far this will stretch", "tag one, tagTwo", "english, french" ) );
-        
-        PageManager.instance().setSiteName( "VZW" );
-        PageManager.instance().setElementProvider( new XMLElementProvider( new File( "C:\\Projects\\Git\\morelandLabs\\customerProjects\\xmlDriven\\verizon\\pageElements.xml" ) ) );
         
 
     }

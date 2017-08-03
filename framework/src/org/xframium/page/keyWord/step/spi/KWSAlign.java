@@ -56,9 +56,9 @@ public class KWSAlign extends AbstractKeyWordStep
 	{
 		for ( int i=0; i<getParameterList().size(); i++ )
 		{
-		    String[] dataSet = ( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "" ).split( "=" );
+		    String[] dataSet = ( getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) + "" ).split( "=" );
 		    if ( dataSet.length != 2 )
-		        throw new ScriptConfigurationException( ( getParameterValue( getParameterList().get( i ), contextMap, dataMap ) + "" ) + " is not formatted correctly for an alignment check" );
+		        throw new ScriptConfigurationException( ( getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) + "" ) + " is not formatted correctly for an alignment check" );
 		 
 		    ALIGN align = ALIGN.valueOf( dataSet[ 0 ] );
 		    String elementName = dataSet[ 1 ];

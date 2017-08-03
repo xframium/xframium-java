@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
+  <site name="xF_Native">
+    <page name="xF_Date-Time" class="org.xframium.page.keyWord.KeyWordPage">
+      <element name="xF-Automatic Time" descriptor="COMPLEX">
+        <element descriptor="NATURAL" value="FIRST SWITCH" os="ANDROID" />
+        <element descriptor="NATURAL" value="FIRST CHECKBOX" os="ANDROID" />
+        <element descriptor="NATURAL" value="FIRST SWITCH NAMED 'Set Automatically'" os="IOS" />
+      </element>
+      <element name="xF-Date" descriptor="COMPLEX">
+        <element descriptor="XPATH" value="//UIATableCell[ @label='Time Zone' ]/following-sibling::UIATableCell/UIAStaticText[1]" os="IOS" />
+        <element descriptor="XPATH" value="//android.widget.TextView[ @text='Set date' ]/following-sibling::android.widget.TextView" os="ANDROID" />
+      </element>
+      <element name="xF-Time" descriptor="COMPLEX">
+        <element descriptor="XPATH" value="//UIATableCell[ @label='Time Zone' ]/following-sibling::UIATableCell/UIAStaticText[2]" os="IOS" />
+        <element descriptor="XPATH" value="//android.widget.TextView[ @text='Set time' ]/following-sibling::android.widget.TextView" os="ANDROID" />
+      </element>
+      <element descriptor="XPATH" value="//android.widget.ImageButton[contains( @resource-id, 'next' )]" name="Next" />
+      <element descriptor="XPATH" value="//android.widget.ImageButton[contains( @resource-id, 'prev' )]" name="Previous" />
+      <element descriptor="COMPLEX" name="CorrectDate">
+        <element descriptor="XPATH" value="//android.view.View[@content-desc='{correctDate}']|//android.view.View[@content-desc='{correctDate2}']" os="ANDROID" />
+        <element descriptor="XPATH" value="//UIATableCell[ @label='{correctDate}' ]" os="IOS" />
+      </element>
+      <element descriptor="XPATH" value="//UIAPickerWheel[1]" name="Day" />
+      <element descriptor="XPATH" value="//UIAPickerWheel[2]" name="Hour" />
+      <element descriptor="XPATH" value="//UIAPickerWheel[3]" name="Minute" />
+      <element descriptor="XPATH" value="//UIAPickerWheel[4]" name="AMPM" />
+      <element name="OK" descriptor="COMPLEX">
+        <element descriptor="NATURAL" value="FIRST BUTTON NAMED 'OK'" os="ANDROID" />
+        <element descriptor="NATURAL" value="FIRST BUTTON NAMED 'DONE'" os="ANDROID" />
+        <element descriptor="NATURAL" value="FIRST BUTTON NAMED 'Done'" os="ANDROID" />
+      </element>
+    </page>
+  </site>
+</elementDefinition>

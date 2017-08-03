@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -38,6 +40,7 @@ import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
+import org.xframium.Initializable;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactTime;
@@ -51,6 +54,7 @@ import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
+import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
@@ -74,15 +78,9 @@ import org.xframium.spi.Device;
  */
 public abstract class AbstractSeleniumTest
 {
-
     /** The log. */
     protected static Log log = LogFactory.getLog( AbstractSeleniumTest.class );
 
-    /** The set of devices in use on this thread. */
-    private static ThreadLocal<HashMap<String, ConnectedDevice>> threadDevices = new ThreadLocal<HashMap<String, ConnectedDevice>>();
-
-    /** The test context running on this thread. */
-    private static ThreadLocal<TestContext> threadContext = new ThreadLocal<TestContext>();
     
     protected ThreadLocal<TestPackage> testPackageContainer = new ThreadLocal<TestPackage>();
     
@@ -110,9 +108,10 @@ public abstract class AbstractSeleniumTest
     @DataProvider ( name = "deviceManager", parallel = true)
     public Object[][] getDeviceData( ITestContext testContext )
     {
-        List<Device> deviceList = DeviceManager.instance().getDevices();
+        String xFID = Initializable.xFID.get();
 
-        return getDeviceData( deviceList, testContext );
+        List<Device> deviceList = DeviceManager.instance( xFID ).getDevices();
+        return getDeviceData( deviceList, testContext, xFID );
     }
 
     private enum KeyType
@@ -154,31 +153,31 @@ public abstract class AbstractSeleniumTest
 
     }
 
-    protected Object[][] getDeviceData( List<Device> deviceList, ITestContext testContext )
+    protected Object[][] getDeviceData( List<Device> deviceList, ITestContext testContext, String xFID )
     {
         List<TestName> rawList = new ArrayList<TestName>( 10 );
         List<TestName> finalList = new ArrayList<TestName>( 10 );
         List<TestKey> personaList = new ArrayList<TestKey>( 10 );
         List<TestKey> testList = new ArrayList<TestKey>( 10 );
 
-        if ( DataManager.instance().getPersonas() != null && DataManager.instance().getPersonas().length > 0 )
+        if ( DataManager.instance( xFID ).getPersonas() != null && DataManager.instance( xFID ).getPersonas().length > 0 )
         {
-            for ( String pN : DataManager.instance().getPersonas() )
+            for ( String pN : DataManager.instance( xFID ).getPersonas() )
                 personaList.add( new TestKey( pN, KeyType.PERSONA ) );
         }
         
         if ( xmlMode )
         {
-            if ( DataManager.instance().getTests() != null && DataManager.instance().getTests().length > 0 )
+            if ( DataManager.instance( xFID ).getTests() != null && DataManager.instance( xFID ).getTests().length > 0 )
             {
-                for ( String pN : DataManager.instance().getTests() )
+                for ( String pN : DataManager.instance( xFID ).getTests() )
                 {
                     testList.add( new TestKey( pN, KeyType.TEST ) );
                 }
             }
             else
             {
-                for ( String pN : KeyWordDriver.instance().getTestNames() )
+                for ( String pN : KeyWordDriver.instance( xFID ).getTestNames() )
                 {
                     testList.add( new TestKey( pN, KeyType.TEST ) );
                 }
@@ -187,12 +186,11 @@ public abstract class AbstractSeleniumTest
 
             for ( TestKey tK : testList )
             {
-                KeyWordTest kT = KeyWordDriver.instance().getTest( tK.getKey() );
+                KeyWordTest kT = KeyWordDriver.instance( xFID ).getTest( tK.getKey() );
                 
                 if ( kT == null )
                 {
                     log.error( "Could not find test: " + tK.getKey() );
-                    continue;
                 }
                 
                 if ( kT.getContentKeys() != null && kT.getContentKeys().length > 0 )
@@ -205,7 +203,7 @@ public abstract class AbstractSeleniumTest
                             {
                                 if ( kT.getDataDriver() != null && kT.getDataDriver().trim().length() > 0 )
                                 {
-                                    PageData[] pageData = PageDataManager.instance().getRecords( kT.getDataDriver() );
+                                    PageData[] pageData = PageDataManager.instance( xFID ).getRecords( kT.getDataDriver() );
                                     for ( PageData pD : pageData )
                                     {
                                         TestName testName = new TestName( tK.getKey() );
@@ -228,7 +226,7 @@ public abstract class AbstractSeleniumTest
                         {
                             if ( kT.getDataDriver() != null && kT.getDataDriver().trim().length() > 0 )
                             {
-                                PageData[] pageData = PageDataManager.instance().getRecords( kT.getDataDriver() );
+                                PageData[] pageData = PageDataManager.instance( xFID ).getRecords( kT.getDataDriver() );
                                 for ( PageData pD : pageData )
                                 {
                                     TestName testName = new TestName( tK.getKey() );
@@ -254,7 +252,7 @@ public abstract class AbstractSeleniumTest
                         {
                             if ( kT.getDataDriver() != null && kT.getDataDriver().trim().length() > 0 )
                             {
-                                PageData[] pageData = PageDataManager.instance().getRecords( kT.getDataDriver() );
+                                PageData[] pageData = PageDataManager.instance( xFID ).getRecords( kT.getDataDriver() );
                                 for ( PageData pD : pageData )
                                 {
                                     TestName testName = new TestName( tK.getKey() );
@@ -275,7 +273,7 @@ public abstract class AbstractSeleniumTest
                     {
                         if ( kT.getDataDriver() != null && kT.getDataDriver().trim().length() > 0 )
                         {
-                            PageData[] pageData = PageDataManager.instance().getRecords( kT.getDataDriver() );
+                            PageData[] pageData = PageDataManager.instance( xFID ).getRecords( kT.getDataDriver() );
                             for ( PageData pD : pageData )
                             {
                                 TestName testName = new TestName( tK.getKey() );
@@ -373,7 +371,7 @@ public abstract class AbstractSeleniumTest
             log.warn( "Thread count configured as " + fullDeviceList.size() + " via system property" );
         }
 
-        TestContainer testContainer = new TestContainer( newArray, fullDeviceList.toArray( new Device[0] ) );
+        TestContainer testContainer = new TestContainer( newArray, fullDeviceList.toArray( new Device[0] ), xFID );
 
         
         Object[][] returnArray = new Object[newArray.length][1];
@@ -430,13 +428,13 @@ public abstract class AbstractSeleniumTest
                 ExecutionContextTest eC = new ExecutionContextTest();
                 eC.setTestName( currentMethod.getName() );
                 
-                CloudDescriptor cD = CloudRegistry.instance().getCloud();
+                CloudDescriptor cD = CloudRegistry.instance(tC.getxFID()).getCloud();
                 if ( testPackage.getDevice().getCloud() != null && !testPackage.getDevice().getCloud().trim().isEmpty() )
-                    cD = CloudRegistry.instance().getCloud( testPackage.getDevice().getCloud() );
+                    cD = CloudRegistry.instance(tC.getxFID()).getCloud( testPackage.getDevice().getCloud() );
                 
-                KeyWordTest kwt = new KeyWordTest( currentMethod.getName(), true, null, null, false, null, null, 0, currentMethod.getName() + " from " + currentMethod.getClass().getName(), null, null, null, ExecutionContext.instance().getConfigProperties(), 0, null, null, null, null, 0, 0 );
+                KeyWordTest kwt = new KeyWordTest( currentMethod.getName(), true, null, null, false, null, null, 0, currentMethod.getName() + " from " + currentMethod.getClass().getName(), null, null, null, ExecutionContext.instance(tC.getxFID()).getConfigProperties(), 0, null, null, null, null, 0, 0 );
                 eC.setTest( kwt );
-                eC.setAut( ApplicationRegistry.instance().getAUT() );
+                eC.setAut( ApplicationRegistry.instance(tC.getxFID()).getAUT() );
                 eC.setCloud( cD );
                 eC.setDevice( testPackage.getConnectedDevice().getPopulatedDevice() );
                 testPackage.getConnectedDevice().getWebDriver().setExecutionContext( eC );
@@ -456,11 +454,11 @@ public abstract class AbstractSeleniumTest
 
             if ( (contentKey != null) && (contentKey.length() > 0) )
             {
-                ContentManager.instance().setCurrentContentKey( contentKey );
+                ContentManager.instance(tC.getxFID()).setCurrentContentKey( contentKey );
             }
             else
             {
-                ContentManager.instance().setCurrentContentKey( null );
+                ContentManager.instance(tC.getxFID()).setCurrentContentKey( null );
             }
 
             if ( connectedDevice != null )
@@ -474,24 +472,7 @@ public abstract class AbstractSeleniumTest
                     testFlow.info( Thread.currentThread().getName() + ": acquired for " + currentMethod.getName() );
             }
 
-            if ( connectedDevice != null && connectedDevice.getWebDriver() != null && connectedDevice.getWebDriver().isConnected() )
-            {
-                try
-                {
-                    if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG.name() ) )
-                        connectedDevice.getWebDriver().getCloud().getCloudActionProvider().enabledLogging( connectedDevice.getWebDriver() );
-                }
-                catch ( Exception e )
-                {
-                    e.printStackTrace();
-                }
-            }
-
-            TestContext ctx = new TestContext();
-            ctx.currentMethod = currentMethod;
-            ctx.testArgs = testArgs;
-
-            threadContext.set( ctx );
+            
         }
         catch ( Exception e )
         {
@@ -499,48 +480,6 @@ public abstract class AbstractSeleniumTest
         }
     }
 
-    public static ConnectedDevice getConnectedDevice( String name )
-    {
-        HashMap<String, ConnectedDevice> map = getDeviceMap();
-
-        return map.get( name );
-    }
-
-    public static void registerSecondaryDeviceOnName( String name, String deviceId )
-    {
-        TestContext ctx = threadContext.get();
-
-        if ( ctx != null )
-        {
-            if ( log.isInfoEnabled() )
-                log.info( "Attempting to acquire device for " + ctx.currentMethod.getName() );
-
-            ConnectedDevice connectedDevice = DeviceManager.instance().getUnconfiguredDevice( ctx.currentMethod, ((TestName) ctx.testArgs[0]).getTestName(), ((TestName) ctx.testArgs[0]).getPersonaName(), deviceId );
-
-            if ( connectedDevice != null )
-            {
-                putConnectedDevice( name, connectedDevice );
-            }
-        }
-    }
-
-    public static void registerInactiveDeviceOnName( String name )
-    {
-        TestContext ctx = threadContext.get();
-
-        if ( ctx != null )
-        {
-            if ( log.isInfoEnabled() )
-                log.info( "Attempting to acquire Inactive device for " + ctx.currentMethod.getName() );
-
-            ConnectedDevice connectedDevice = DeviceManager.instance().getInactiveDevice( name );
-
-            if ( connectedDevice != null )
-            {
-                putConnectedDevice( name, connectedDevice );
-            }
-        }
-    }
 
     private String exceptionToString(Throwable t )
     {
@@ -571,9 +510,7 @@ public abstract class AbstractSeleniumTest
         {
             
             
-            HashMap<String, ConnectedDevice> map = getDevicesToCleanUp();
-            threadContext.set( null );
-            Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null);
+            
 
             if ( testPackage.getConnectedDevice().getWebDriver() != null && testPackage.getConnectedDevice().getWebDriver().isConnected() )
             {
@@ -593,7 +530,7 @@ public abstract class AbstractSeleniumTest
                 
                 try
                 {
-                    if ( ArtifactManager.instance().isArtifactEnabled( ArtifactType.DEVICE_LOG.name() ) )
+                    if ( ArtifactManager.instance( testPackage.getxFID() ).isArtifactEnabled( ArtifactType.DEVICE_LOG.name() ) )
                         testPackage.getConnectedDevice().getWebDriver().getCloud().getCloudActionProvider().disableLogging( testPackage.getConnectedDevice().getWebDriver() );
 
                 }
@@ -606,14 +543,17 @@ public abstract class AbstractSeleniumTest
             cleanUpConnectedDevice( "DEFAULT", testPackage.getTestName(), testPackage.getConnectedDevice(), testResult, true, testPackage );
             if ( testPackage.getConnectedDevice().getDevice() != null )
             {
-                DeviceManager.instance().addRun( testPackage.getConnectedDevice().getWebDriver().getPopulatedDevice(), testPackage, (TestContainer) testArgs[0], testResult.isSuccess() );
+                DeviceManager.instance( testPackage.getxFID() ).addRun( testPackage.getConnectedDevice().getWebDriver().getPopulatedDevice(), testPackage, (TestContainer) testArgs[0], testResult.isSuccess() );
             }
             
             if ( testFlow.isInfoEnabled() )
                 testFlow.info( Thread.currentThread().getName() + ": Adding Execution for " + testPackage.getRunKey() + " - " + testPackage.getTestName().getTest().getDevice().getKey() + " - " + testPackage.getDevice().getKey() + " - "+ testPackage + " - " + testPackage.getTestName() );
             
-            ExecutionContext.instance().addExecution( testPackage.getTestName().getTest() );
+            ExecutionContext.instance( testPackage.getxFID() ).addExecution( testPackage.getTestName().getTest() );
             
+            
+            Map<String, ConnectedDevice> map = testPackage.getTestName().getTest().getDeviceMap();
+            Iterator<String> keys = ((map != null) ? map.keySet().iterator() : null);
             while ( (keys != null) && (keys.hasNext()) )
             {
                 String name = keys.next();
@@ -622,9 +562,12 @@ public abstract class AbstractSeleniumTest
                 cleanUpConnectedDevice( name, testPackage.getTestName(), device, testResult, true, testPackage );
             }
 
+            
+
             try
             {
                 Thread.currentThread().setName( "xF-Idle Thread" );
+                KeyWordDriver.instance( testPackage.getxFID() ).notifyAfterArtifacts( testPackage.getConnectedDevice().getWebDriver(), testPackage.getConnectedDevice().getWebDriver().getExecutionContext().getTest(), null, null, null, testPackage.getConnectedDevice().getWebDriver().getExecutionContext().getStatus(), null, testPackage.getConnectedDevice().getWebDriver().getExecutionContext() );
             }
             catch ( Exception e )
             {
@@ -711,7 +654,7 @@ public abstract class AbstractSeleniumTest
      */
     public Map<String,Object> executeStep( KeyWordStep step, DeviceWebDriver webDriver ) throws Exception
     {
-        KeyWordPage p = new KeyWordPageImpl();
+        KeyWordPage p = new KeyWordPageImpl(PageManager.instance(webDriver.getxFID()).getElementProvider(), PageManager.instance(webDriver.getxFID()).getSiteName());
         p.setPageName( step.getPageName() );
         Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
         contextMap.put( "RESULT", step.executeStep( p, webDriver, contextMap, null, null, null, webDriver.getExecutionContext() ) );
@@ -730,7 +673,7 @@ public abstract class AbstractSeleniumTest
      */
     public Map<String,Object> executeStep( String keyword, String pageName, String elementName, String[] parameterList, DeviceWebDriver webDriver ) throws Exception
     {
-        KeyWordPage p = new KeyWordPageImpl();
+        KeyWordPage p = new KeyWordPageImpl(PageManager.instance(webDriver.getxFID()).getElementProvider(), PageManager.instance(webDriver.getxFID()).getSiteName());
         p.setPageName( pageName );
         Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
         contextMap.put( "RESULT", createStep( keyword, pageName, elementName, parameterList ).executeStep( p, webDriver, null, null, null, null, webDriver.getExecutionContext() ) );
@@ -761,22 +704,23 @@ public abstract class AbstractSeleniumTest
                     
                 }
 
-                if ( DataManager.instance().getReportFolder() == null )
-                    DataManager.instance().setReportFolder( new File( "." ) );
+                if ( DataManager.instance( testPackage.getxFID() ).getReportFolder() == null )
+                    DataManager.instance( testPackage.getxFID() ).setReportFolder( new File( "." ) );
                 
-                File rootFolder = new File( ExecutionContext.instance().getReportFolder(), webDriver.getArtifactFolder().getPath() );
-                //rootFolder = new File( rootFolder, primaryDevice ? testName.getTestName() : testName.getTestName() + "-" + name );
-                rootFolder.mkdirs();
+                File rootFolder = null;
                 try
                 {
+                    rootFolder = new File( ExecutionContext.instance( testPackage.getxFID() ).getReportFolder( testPackage.getxFID() ), webDriver.getArtifactFolder().getPath() );
+                    rootFolder.mkdirs();
+                    
                     if ( webDriver.isConnected() && !testResult.isSuccess() )
                     {
-                        List<String> aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.ON_FAILURE );
+                        List<String> aList = ArtifactManager.instance( testPackage.getxFID() ).getEnabledArtifacts( ArtifactTime.ON_FAILURE );
                         if ( aList != null )
                         {
                             for ( String artifactType : aList )
                             {
-                                ArtifactManager.instance().generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver );
+                                ArtifactManager.instance( testPackage.getxFID() ).generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver, webDriver.getxFID() );
                             }
                         }
                     }
@@ -791,31 +735,26 @@ public abstract class AbstractSeleniumTest
                     }
                     catch ( Exception e )
                     {
+                        
                     }
                 }
                 
-                if ( webDriver.isConnected() )
+                List<String> aList = ArtifactManager.instance( testPackage.getxFID() ).getEnabledArtifacts( ArtifactTime.AFTER_TEST );
+                
+                if ( aList != null )
                 {
-                    List<String> aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.AFTER_TEST );
-                    
-                    if ( aList != null )
+                    for ( String artifactType : aList )
                     {
-                        for ( String artifactType : aList )
-                        {
-                            ArtifactManager.instance().generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver );
-                        }
+                        ArtifactManager.instance( testPackage.getxFID() ).generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver, webDriver.getxFID() );
                     }
                 }
-                
-                if ( webDriver.isConnected() )
+            
+                aList = ArtifactManager.instance( testPackage.getxFID() ).getEnabledArtifacts( ArtifactTime.AFTER_ARTIFACTS );
+                if ( aList != null )
                 {
-                    List<String> aList = ArtifactManager.instance().getEnabledArtifacts( ArtifactTime.AFTER_ARTIFACTS );
-                    if ( aList != null )
+                    for ( String artifactType : aList )
                     {
-                        for ( String artifactType : aList )
-                        {
-                            ArtifactManager.instance().generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver );
-                        }
+                        ArtifactManager.instance( testPackage.getxFID() ).generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver, webDriver.getxFID() );
                     }
                 }
 
@@ -828,9 +767,11 @@ public abstract class AbstractSeleniumTest
                 if ( testFlow.isInfoEnabled() )
                     testFlow.info( Thread.currentThread().getName() + ": Quiting WebDriver " );
                 webDriver.quit();
+                
             }
             catch ( Exception e )
             {
+                
             }
 
         }
@@ -841,39 +782,39 @@ public abstract class AbstractSeleniumTest
     // Helpers
     //
 
-    private static class TestContext
-    {
-        public Method currentMethod = null;
-        public Object[] testArgs = null;
-    }
+//    private static class TestContext
+//    {
+//        public Method currentMethod = null;
+//        public Object[] testArgs = null;
+//    }
 
-    private static void putConnectedDevice( String name, ConnectedDevice device )
-    {
-        HashMap<String, ConnectedDevice> map = getDeviceMap();
-
-        map.put( name, device );
-    }
-
-    private static HashMap<String, ConnectedDevice> getDeviceMap()
-    {
-        HashMap<String, ConnectedDevice> map = threadDevices.get();
-
-        if ( map == null )
-        {
-            map = new HashMap<String, ConnectedDevice>();
-
-            threadDevices.set( map );
-        }
-
-        return map;
-    }
-
-    private HashMap<String, ConnectedDevice> getDevicesToCleanUp()
-    {
-        HashMap<String, ConnectedDevice> map = threadDevices.get();
-
-        threadDevices.set( null );
-
-        return map;
-    }
+//    private static void putConnectedDevice( String name, ConnectedDevice device )
+//    {
+//        HashMap<String, ConnectedDevice> map = getDeviceMap();
+//
+//        map.put( name, device );
+//    }
+//
+//    private static HashMap<String, ConnectedDevice> getDeviceMap()
+//    {
+//        HashMap<String, ConnectedDevice> map = threadDevices.get();
+//
+//        if ( map == null )
+//        {
+//            map = new HashMap<String, ConnectedDevice>();
+//
+//            threadDevices.set( map );
+//        }
+//
+//        return map;
+//    }
+//
+//    private HashMap<String, ConnectedDevice> getDevicesToCleanUp()
+//    {
+//        HashMap<String, ConnectedDevice> map = threadDevices.get();
+//
+//        threadDevices.set( null );
+//
+//        return map;
+//    }
 }

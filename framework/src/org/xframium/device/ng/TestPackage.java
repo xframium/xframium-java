@@ -9,6 +9,7 @@ public class TestPackage
     private Device device;
     private String runKey;
     private ConnectedDevice connectedDevice;
+    private String xFID;
     
     public ConnectedDevice getConnectedDevice()
     {
@@ -20,14 +21,22 @@ public class TestPackage
         this.connectedDevice = connectedDevice;
     }
 
-    public TestPackage( TestName testName, Device device, String runKey )
+    public TestPackage( TestName testName, Device device, String runKey, String xFID )
     {
         super();
         this.testName = testName;
         this.device = device;
         this.runKey = runKey;
+        this.xFID = xFID;
     }
     
+    
+    
+    public String getxFID()
+    {
+        return xFID;
+    }
+
     public String getRunKey()
     {
         return runKey;

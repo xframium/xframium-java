@@ -21,6 +21,7 @@
 package org.xframium.gesture.factory.spi.perfecto;
 
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.AbstractKeyPressGesture;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 
@@ -39,7 +40,7 @@ public class KeyPressGesture extends AbstractKeyPressGesture
 	{
 		String executionId = getExecutionId( webDriver );
 		String deviceName = getDeviceName( webDriver );
-		PerfectoMobile.instance().gestures().sendKey(executionId, deviceName, Integer.valueOf(getKeyCode()), getMetaState() );
+		PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).gestures().sendKey(executionId, deviceName, Integer.valueOf(getKeyCode()), getMetaState() );
 		return true;
 	}
 

@@ -32,7 +32,12 @@ import org.xframium.device.cloud.CloudRegistry;
  */
 public class ReservedHandsetValidator extends AbstractHandsetValidator implements PerfectoMobileHandsetValidator
 {
-	
+	private String userName;
+    public ReservedHandsetValidator( String userName )
+    {
+        this.userName = userName;
+    }
+    
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.device.data.perfectoMobile.PerfectoMobileHandsetValidator#validate(org.w3c.dom.Node)
 	 */
@@ -42,7 +47,7 @@ public class ReservedHandsetValidator extends AbstractHandsetValidator implement
 		{
 			if ( Boolean.parseBoolean( getValue( handSet, "reserved" ) + "" ) )
 			{
-				return CloudRegistry.instance().getCloud().getUserName().toLowerCase().equals (getValue( handSet, "reservedTo" ) );
+				return userName.toLowerCase().equals (getValue( handSet, "reservedTo" ) );
 			}
 		}
 		

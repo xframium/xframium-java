@@ -46,13 +46,58 @@ public abstract class AbstractElementProvider implements ElementProvider
 	/** The log. */
 	protected Log log = LogFactory.getLog(ElementProvider.class);
 	
+	private ElementProvider internalElementProvider = null;
+	
+	private ThreadLocal<Element> previousElement = new ThreadLocal<Element>();
+	private ThreadLocal<ElementDescriptor> previousElementDescriptor = new ThreadLocal<ElementDescriptor>();
+	
+	@Override
+	public void setCachedElement( Element cachedElement, ElementDescriptor elementDescriptor )
+	{
+	    this.previousElement.set( cachedElement );
+	    this.previousElementDescriptor.set( elementDescriptor );
+	    
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.element.provider.ElementProvider#getElement(com.perfectoMobile.page.ElementDescriptor)
 	 */
 	@Override
 	public Element getElement( ElementDescriptor elementDescriptor )
 	{
-		return _getElement( elementDescriptor );
+	    if ( previousElement.get() != null && previousElementDescriptor.get() != null && elementDescriptor.equals( previousElementDescriptor.get() ) )
+	    {
+	        log.warn( "CACHED VALUE " + elementDescriptor.toString() );
+	        return previousElement.get();
+	    }
+	    else
+	    {
+	        previousElement.set( null );
+	        previousElementDescriptor.set( null );
+	    }
+	    
+	    Element returnElement = null;
+	    if ( internalElementProvider != null )
+	        returnElement = internalElementProvider.getElement( elementDescriptor );
+	    
+	    if ( returnElement == null )
+	        returnElement = _getElement( elementDescriptor );
+	    
+	    if ( returnElement != null )
+	    {
+	       previousElement.set( returnElement );
+	       
+	       previousElementDescriptor.set( elementDescriptor );
+	    }
+	    
+	    return returnElement;
+	}
+	
+	@Override
+	public void addElementProvider( ElementProvider elementProvider )
+	{
+	    this.internalElementProvider = elementProvider;
+	    
 	}
 	
 	private boolean initialized = false;

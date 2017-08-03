@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
@@ -53,12 +54,26 @@ public class KWSSQL extends AbstractKeyWordStep
         orMapping = false;
         category = "Utility";
     }
-    
+
     private static final String[] JDBC = new String[] { "jdbc.username", "jdbc.password", "jdbc.url", "jdbc.driverClassName" };
     private static final String[] EMPTY = new String[0];
 
-    /* (non-Javadoc)
-     * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
+    private String getProperty( String connectionName, String propertyName, WebDriver webDriver )
+    {
+        String useName = propertyName;
+        if ( connectionName != null )
+            useName = connectionName + "." + propertyName;
+        
+        return KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).getConfigProperties().getProperty( useName );
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com
+     * .perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map,
+     * java.util.Map)
      */
     @Override
     public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
@@ -67,9 +82,11 @@ public class KWSSQL extends AbstractKeyWordStep
 
         String query = null;
         String[] query_params = null;
-        KeyWordParameter param1 = null;
         
         int paramCount = getParameterList().size();
+        
+        KeyWordParameter namedConnection = getParameter( "connectionName" );
+        String connectionName = namedConnection != null ? getParameterValue( namedConnection, contextMap, dataMap, executionContext.getxFID() ) : null;
         
         if ( paramCount < 1 )
         {
@@ -77,25 +94,36 @@ public class KWSSQL extends AbstractKeyWordStep
         }
         else
         {
-            param1 = (( getParameterList().size() == 0 ) ? null : getParameterList().get( 0 ) );
-            query = (( param1 != null ) ? param1.getValue() : null );
-            query_params = loadQueryParams( param1, contextMap, dataMap );
+
+            query = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() );
+            ArrayList<String> paramList = new ArrayList<String>();
+            if ( getParameterList().size() > 1 )
+            {
+                
+                for ( int i=1; i<getParameterList().size(); i++ )
+                {
+                    if ( !"connectionName".equals( getParameterList().get( i ).getName() ) )
+                        paramList.add( getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) );
+                }
+            }
+            
+            
+            query_params = paramList.toArray( new String[ 0 ] );
         }
 
         try
         {
+            log.info( "Executing [" + query + "] against [" + getProperty( connectionName, JDBC[2], webDriver ) + "] as [" + getProperty( connectionName, JDBC[3], webDriver ) + "]" );
+            
             //
             // OK, now we need to look at the statement to see if we're reading or writing
             //
             
             if ( query.trim().toUpperCase().startsWith( "SELECT" ))
             {
-                Map[] resultsArr = SQLUtil.getRow( KeyWordDriver.instance().getConfigProperties().getProperty( JDBC[0] ),
-                                                   KeyWordDriver.instance().getConfigProperties().getProperty( JDBC[1] ),
-                                                   KeyWordDriver.instance().getConfigProperties().getProperty( JDBC[2] ),
-                                                   KeyWordDriver.instance().getConfigProperties().getProperty( JDBC[3] ),
-                                                   query,
-                                                   query_params );
+                
+                Map[] resultsArr = SQLUtil.getRow( getProperty( connectionName, JDBC[0], webDriver ), getProperty( connectionName, JDBC[1], webDriver ) , getProperty( connectionName, JDBC[2], webDriver ) , getProperty( connectionName, JDBC[3], webDriver ), query, query_params );
+                        
                 Map<String,String> results = resultsArr[0];
                 
                 if (resultsArr.length > 1)
@@ -107,7 +135,7 @@ public class KWSSQL extends AbstractKeyWordStep
 	                Map resultMap = null;
 	                String mapKey = null;
 	                String mapValue = null;
-	                PageDataProvider dp = PageDataManager.instance().getDataProvider();
+	                PageDataProvider dp = PageDataManager.instance(executionContext.getxFID()).getDataProvider();
 	                dp.addRecordType(getContext(), false);
 	                
 	                for (int i=1; i<resultsArr.length; i++) {
@@ -140,15 +168,20 @@ public class KWSSQL extends AbstractKeyWordStep
                         Object key = keys.next();
                         Object value = results.get( key );
     
-                        if ( key instanceof Integer )
+                        try
                         {
+                            Integer.parseInt( key + "" );
                             continue;
+                        }
+                        catch( Exception e )
+                        {
+                            
                         }
 
                         String context_name = getContext() + "_" + key;
                     
-                        if ( log.isDebugEnabled() )
-                            log.debug( "Setting Context Data to [" + value + "] for [" + context_name + "]" );
+                        if ( log.isInfoEnabled() )
+                            log.info( "Setting Context Data to [" + value + "] for [" + context_name + "]" );
                     
                         contextMap.put( context_name, value );
                     }
@@ -159,12 +192,7 @@ public class KWSSQL extends AbstractKeyWordStep
                 //
                 // We only capture the update count here
                 //
-                int row_count = SQLUtil.execute( KeyWordDriver.instance().getConfigProperties().getProperty( JDBC[0] ),
-                                                 KeyWordDriver.instance().getConfigProperties().getProperty( JDBC[1] ),
-                                                 KeyWordDriver.instance().getConfigProperties().getProperty( JDBC[2] ),
-                                                 KeyWordDriver.instance().getConfigProperties().getProperty( JDBC[3] ),
-                                                 query,
-                                                 query_params );
+                int row_count = SQLUtil.execute( getProperty( connectionName, JDBC[0], webDriver ), getProperty( connectionName, JDBC[1], webDriver ) , getProperty( connectionName, JDBC[2], webDriver ) , getProperty( connectionName, JDBC[3], webDriver ), query, query_params );
 
                 if ( getContext() != null && !getContext().isEmpty() )
                 {
@@ -180,37 +208,22 @@ public class KWSSQL extends AbstractKeyWordStep
         }
         catch( Throwable e )
         {
+            e.printStackTrace();
             throw new ScriptException( "SQL execution failed with: " + e.getMessage() );
         }
 		
         return rtn;
     }
-	
-    /* (non-Javadoc)
-     * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#isRecordable()
      */
     public boolean isRecordable()
     {
         return false;
-    }
-
-    //
-    // Helpers
-    //
-
-    private String[] loadQueryParams( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap )
-    {
-        ArrayList<String> rtn = new ArrayList<String>();
-
-        Iterator<KeyWordToken> tokens = param.getTokenList().iterator();
-        while( tokens.hasNext() )
-        {
-            KeyWordToken token = tokens.next();
-
-            rtn.add( getTokenValue( token, contextMap, dataMap ));
-        }
-
-        return rtn.toArray( EMPTY );
     }
 
 }

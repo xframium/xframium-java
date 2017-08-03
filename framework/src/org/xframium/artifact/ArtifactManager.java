@@ -35,6 +35,7 @@ import org.xframium.artifact.spi.DefaultSuiteReportingArtifact;
 import org.xframium.artifact.spi.DeviceLogArtifact;
 import org.xframium.artifact.spi.HTMLGridArtifact;
 import org.xframium.artifact.spi.HTMLSourceArtifact;
+import org.xframium.artifact.spi.ImagingArtifact;
 import org.xframium.artifact.spi.JSONArtifact;
 import org.xframium.artifact.spi.JSONGridArtifact;
 import org.xframium.artifact.spi.JSONHistoryArtifact;
@@ -46,14 +47,16 @@ import org.xframium.artifact.spi.PerfectoReportingServices;
 import org.xframium.artifact.spi.PerfectoWindTunnel;
 import org.xframium.artifact.spi.PerfectoXMLReport;
 import org.xframium.artifact.spi.SauceLabsReportingServices;
-import org.xframium.artifact.spi.ImagingArtifact;
+import org.xframium.artifact.spi.TimingArtifact;
+import org.xframium.artifact.spi.VitalsArtifact;
 import org.xframium.artifact.spi.XMLSourceArtifact;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.page.keyWord.KeyWordDriver;
 
 public class ArtifactManager
 {
     /** The singleton. */
-    private static ArtifactManager singleton = new ArtifactManager();
+    private static Map<String,ArtifactManager> singleton = new HashMap<String,ArtifactManager>(5);
 
     private String displayArtifact = null; 
 
@@ -75,9 +78,15 @@ public class ArtifactManager
      *
      * @return the RunDetails
      */
-    public static ArtifactManager instance()
+    public static ArtifactManager instance( String xFID )
     {
-        return singleton;
+        if ( singleton.containsKey( xFID ) )
+            return singleton.get( xFID );
+        else
+        {
+            singleton.put( xFID, new ArtifactManager() );
+            return singleton.get( xFID );
+        }
     }
     
     private Log log = LogFactory.getLog( ArtifactManager.class );
@@ -93,6 +102,7 @@ public class ArtifactManager
         registerArtifact( ArtifactTime.ON_FAILURE, ArtifactType.FAILURE_SOURCE.name(), XMLSourceArtifact.class );
         registerArtifact( ArtifactTime.ON_FAILURE, ArtifactType.FAILURE_SOURCE_HTML.name(), HTMLSourceArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.CONSOLE_LOG.name(), ConsoleLogArtifact.class );
+        registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.STATISTICS.name(), VitalsArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.DEVICE_LOG.name(), DeviceLogArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.IMAGING_ANALYSIS.name(), ImagingArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.ADD_TO_CSV.name(), CSVDataArtifact.class );
@@ -103,6 +113,8 @@ public class ArtifactManager
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.EXECUTION_REPORT_PDF.name(), PerfectoPDFReport.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.EXECUTION_REPORT.name(), PerfectoPDFReport.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.EXECUTION_REPORT_CSV.name(), PerfectoCSVReport.class );
+        registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.TIMING_HTML.name(), TimingArtifact.class );
+        
         registerArtifact( ArtifactTime.BEFORE_SUITE_ARTIFACTS, ArtifactType.GRID_REPORT.name(), JSONGridArtifact.class );
         registerArtifact( ArtifactTime.BEFORE_SUITE_ARTIFACTS, ArtifactType.GRID_HTML.name(), HTMLGridArtifact.class );
         registerArtifact( ArtifactTime.AFTER_SUITE, ArtifactType.EXECUTION_SUITE_HTML.name(), DefaultSuiteReportingArtifact.class );
@@ -112,14 +124,16 @@ public class ArtifactManager
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.REPORTIUM.name(), PerfectoReportingServices.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.SAUCE_LABS.name(), SauceLabsReportingServices.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.WIND_TUNNEL.name(), PerfectoWindTunnel.class );
-        registerArtifact( ArtifactTime.ON_FAILURE, ArtifactType.ALM_DEFECT.name(), ALMDefectArtifact.class );
+        registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.ALM_DEFECT.name(), ALMDefectArtifact.class );
         registerArtifact( ArtifactTime.AFTER_ARTIFACTS, ArtifactType.EXECUTION_TEST_JSON.name(), JSONArtifact.class );
         registerArtifact( ArtifactTime.AFTER_ARTIFACTS, ArtifactType.EXECUTION_TEST_HTML.name(), DefaultReportingArtifact.class );
     }
     
     public void registerArtifact( ArtifactTime artifactTime, String aType, Class artifactImplementation )
     {
-        artifactMap.put( aType.toUpperCase(), artifactImplementation );
+        log.info( "Registering artifact " + aType );
+        
+        artifactMap.put( aType, artifactImplementation );
         classTimeMap.put( artifactImplementation, artifactTime );
         
         List<Class> timeList = timeMap.get( artifactTime );
@@ -160,6 +174,8 @@ public class ArtifactManager
     
     public void enableArtifact( String artifactName )
     {
+        log.info( "Enabling artifact " + artifactName );
+        
         if  (ArtifactType.EXECUTION_RECORD_HTML.name().equals( artifactName ) )
         {
             for ( String defaultArtifact : DEFAULT_ARTIFACTS )
@@ -198,7 +214,7 @@ public class ArtifactManager
         return enabledArtifactMap.get( aTime );
     }
     
-    public Artifact generateArtifact( String artifactType, String rootFolder, DeviceWebDriver webDriver )
+    public Artifact generateArtifact( String artifactType, String rootFolder, DeviceWebDriver webDriver, String xFID )
     {
         Class artifactImpl = artifactMap.get( artifactType );
         
@@ -211,7 +227,7 @@ public class ArtifactManager
         try
         {
             Artifact artifact = (Artifact)artifactImpl.newInstance();
-            if ( artifact.generateArtifact( rootFolder, webDriver ) != null )
+            if ( artifact.generateArtifact( rootFolder, webDriver, xFID ) != null )
                 return artifact;
             else
                 return null;
@@ -219,7 +235,7 @@ public class ArtifactManager
         }
         catch( Exception e )
         {
-            log.warn( "Error generating artifact for " + artifactType, e );
+            log.warn( "Error generating artifact for " + artifactType );
         }
         
         return null;

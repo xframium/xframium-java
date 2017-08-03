@@ -23,6 +23,7 @@ package org.xframium.page.keyWord.step.spi;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordDriver;
@@ -73,7 +74,7 @@ public class KWSCall extends AbstractKeyWordStep
 		{
 			for ( KeyWordParameter param : getParameterList() )
 			{
-				String dataProvider = getParameterValue( param, contextMap, dataMap ) + "";
+				String dataProvider = getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) + "";
 				String[] dpArray = dataProvider.split( "=" );
 				if ( dpArray.length == 2 )
 				{
@@ -87,7 +88,7 @@ public class KWSCall extends AbstractKeyWordStep
 		if ( sC != null )
 			return sC.getTest( getName() ).executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext );
 		else
-			return KeyWordDriver.instance().executionFunction( getName(), webDriver, dataMap, pageMap, contextMap, sC, executionContext );
+			return KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).executionFunction( getName(), webDriver, dataMap, pageMap, contextMap, sC, executionContext );
 	}
 	
 	public boolean isRecordable()

@@ -18,7 +18,7 @@ public abstract class AbstractArtifact implements Artifact
     protected Log log = LogFactory.getLog( Artifact.class );
     
     
-    protected abstract File _generateArtifact( File rootFolder, DeviceWebDriver webDriver ) throws Exception;
+    protected abstract File _generateArtifact( File rootFolder, DeviceWebDriver webDriver, String xFID ) throws Exception;
     
     private String artifactType;
     private File fileName;
@@ -46,7 +46,7 @@ public abstract class AbstractArtifact implements Artifact
             return new FileInputStream( new File(  System.getProperty( "reportTemplateFolder" ), templateName ) );
     }
     
-    public File generateArtifact( String rootFolder, DeviceWebDriver webDriver )
+    public File generateArtifact( String rootFolder, DeviceWebDriver webDriver, String xFID )
     {
         if ( log.isInfoEnabled() )
             log.info( Thread.currentThread().getName() + ": Generating artifact for " + getArtifactType() );
@@ -57,7 +57,7 @@ public abstract class AbstractArtifact implements Artifact
             if ( !rootFile.exists() )
                 rootFile.mkdirs();
             
-            File returnFile =  _generateArtifact( rootFile, webDriver );
+            File returnFile =  _generateArtifact( rootFile, webDriver, xFID );
             
             if ( returnFile == null && (webDriver == null || webDriver.getExecutionContext().getElementParameter( artifactType + "_" + URL ) == null ) )
                 return null;
@@ -67,13 +67,14 @@ public abstract class AbstractArtifact implements Artifact
                 if ( returnFile != null )
                 {
                     webDriver.getExecutionContext().addExecutionParameter( artifactType + "_FILE", returnFile.getName() );
+                    webDriver.getExecutionContext().addExecutionParameter( artifactType + "_ABS", returnFile.getAbsolutePath() );
                     webDriver.getExecutionContext().addExecutionParameter( artifactType + "_PATH", returnFile.getPath() );
                 }
                 
                 webDriver.getExecutionContext().addExecutionParameter( artifactType, "enabled" );
             }
             
-            if ( artifactType.equals( ArtifactManager.instance().getDisplayArtifact() ) )
+            if ( artifactType.equals( ArtifactManager.instance( xFID ).getDisplayArtifact() ) )
             {
                 try
                 {
@@ -93,7 +94,7 @@ public abstract class AbstractArtifact implements Artifact
         }
         catch( Exception e )
         {
-            log.warn( "Error generating artifact for " + artifactType, e );
+            log.warn( "Error generating artifact for " + artifactType + "(" + e.getMessage() + ")" );
         }
         
         return null;
@@ -106,6 +107,9 @@ public abstract class AbstractArtifact implements Artifact
     
     protected File writeToDisk( File rootFolder, String useName, InputStream inputStream )
     {
+        if ( inputStream == null )
+            return null;
+        
         this.fileName = new File( rootFolder, useName );
         
         if ( !this.fileName.getParentFile().exists() )

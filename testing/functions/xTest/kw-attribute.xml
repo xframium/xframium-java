@@ -1,39 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-  <function name="kw-attribute" inputPage="xTest.home" outputPage="xTest.home" active="true">
-    <description></description>
-    <step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" value="button" />
-      <parameter type="STATIC" value="type" />
-    </step>
-    
-    <step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="targetClass">
-      <parameter type="STATIC" value="class" />
-    </step>
-    
-    <step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="targetToggle">
-      <parameter type="STATIC" value="data-toggle" />
-    </step>
-    
-    <step name="toggleButton" site="xTest" page="home" type="REPORT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="CONTEXT" value="targetClass" />
-      <parameter type="CONTEXT" value="targetToggle" />
-    </step>
-    
-    <step name="attributeCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" value="button" />
-      <parameter type="CONTEXT" value="attributeValue" />
-    </step>
-    <step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" value="none" />
-      <parameter type="STATIC" value="STYLE.text-align" />
-    </step>
-    <step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="attributeStyleValue">
-      <parameter type="STATIC" value="STYLE.background-image" />
-    </step>
-    <step name="attributeCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" value="none" />
-      <parameter type="CONTEXT" value="attributeStyleValue" />
-    </step>
-  </function>
+<function name="kw-attribute" inputPage="xTest.home" outputPage="xTest.home" active="true">
+<description></description>
+<step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="button"/>
+<parameter type="STATIC" value="type"/>
+</step>
+<step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="targetClass">
+<parameter type="STATIC" value="class"/>
+</step>
+<step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="targetToggle">
+<parameter type="STATIC" value="data-toggle"/>
+</step>
+<step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="attributeValue">
+<parameter type="STATIC" value="type"/>
+</step>
+<step name="toggleButton" site="xTest" page="home" type="REPORT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="CONTEXT" value="targetClass"/>
+<parameter type="CONTEXT" value="targetToggle"/>
+</step>
+<step name="attributeCompare" site="xTest" page="home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="button"/>
+<parameter type="CONTEXT" value="attributeValue"/>
+</step>
+<step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="center"/>
+<parameter type="STATIC" value="STYLE.text-align"/>
+</step>
+<step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="attributeStyleValue">
+<parameter type="STATIC" value="STYLE.background-image"/>
+</step>
+</function>
 </suite>

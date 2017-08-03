@@ -60,7 +60,9 @@ public interface Element
     	BY_VALUE,
     	BY_VISIBLE_TEXT,
     	DELAYED,
-    	PERFECTO;
+    	PERFECTO,
+    	UP_FIRST,
+    	DOWN_FIRST;
     }
 	
 	/**
@@ -257,9 +259,9 @@ public interface Element
 	 *
 	 * @param currentValue the new value
 	 */
-	public void setValue( String currentValue );
+	public void setValue( String currentValue, String xFID );
 	
-	public void setValue( String currentValue, SetMethod setMethod );
+	public void setValue( String currentValue, SetMethod setMethod, String xFID );
 	
 	/**
 	 * Sets the driver.

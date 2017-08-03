@@ -26,6 +26,7 @@ package org.xframium.device.factory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
@@ -45,6 +48,7 @@ import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.ContextAware;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
@@ -58,6 +62,7 @@ import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.interactions.TouchScreen;
 import org.openqa.selenium.logging.Logs;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.ExecuteMethod;
 import org.openqa.selenium.remote.RemoteExecuteMethod;
@@ -95,7 +100,7 @@ public class DeviceWebDriver
         implements HasCapabilities, WebDriver, JavascriptExecutor, ContextAware, ExecuteMethod, NativeDriverProvider, PropertyProvider, TakesScreenshot, DeviceProvider, HasInputDevices, CachingDriver, ReportiumProvider, HasTouchScreen
 {
 
-    
+    private static Pattern FORMAT_PATTERN = Pattern.compile( "\\{([\\w\\.]*)\\}" );
     private List<DeviceInterrupt> interruptList;
 
     private DeviceInterruptThread diThread = null;
@@ -124,6 +129,10 @@ public class DeviceWebDriver
     private long implicitWait = 0;
     private long scriptTimeout = 0;
     private long pageLoadTimeout = 0;
+    private DesiredCapabilities dC;
+    
+    private double widthModifier = 1;
+    private double heightModifier = 1;
     
     private boolean reportingElement = false;
     
@@ -134,12 +143,134 @@ public class DeviceWebDriver
     
     private ExecutionContextTest executionContext;
     
+    
     private File artifactFolder = null;
+    
+    public String getxFID()
+    {
+        return executionContext.getxFID();
+    }
     
     public void setArtifactFolder( File artifactFolder )
     {
         this.artifactFolder = artifactFolder;
     }
+    
+    public double getWidthModifier()
+    {
+        return widthModifier;
+    }
+
+    public double getHeightModifier()
+    {
+        return heightModifier;
+    }
+
+    public String getValue( String valueDescriptor )
+    {
+        String[] valueMap = valueDescriptor.split( "\\." );
+        
+        switch( valueMap[ 0 ] )
+        {
+            case "device":
+                return _getValue( populatedDevice, valueMap, 1 );
+                
+            case "data":
+                try
+                {
+                    return executionContext.getDataMap().get( valueMap[ 0 ] ).get( valueMap[ 1 ] ).toString();
+                }
+                catch( Exception e )
+                {
+                    log.error( "Could not locate data object " + valueDescriptor, e );
+                }
+                break;
+                
+            case "test":
+                return _getValue( executionContext, valueMap, 1 );
+        }
+        
+        return null;
+    }
+
+    private Field getField( String fieldName, Class currentClass )
+    {
+        try
+        {
+            Field currentField = currentClass.getDeclaredField( fieldName );
+            if ( currentField != null )
+                return currentField;
+            else
+            {
+                if ( currentClass.getSuperclass() != null )
+                    return getField( fieldName, currentClass.getSuperclass() );
+            }
+        }
+        catch( Exception e )
+        {
+            if ( currentClass.getSuperclass() != null )
+                return getField( fieldName, currentClass.getSuperclass() );
+        }
+        
+        return null;
+    }
+    
+    private String _getValue( Object currentObject, String[] valueArray, int position )
+    {
+        try
+        {
+            Class currentClass = currentObject.getClass();
+            Field currentField = getField( valueArray[ position ], currentClass );
+            
+            boolean iA = currentField.isAccessible();
+            currentField.setAccessible( true );
+            
+            Object newObject = currentField.get( currentObject );
+            
+            if ( position == valueArray.length - 1 )
+            {
+                if ( newObject != null )
+                    return newObject.toString();
+                else
+                    return null;
+            }
+            
+            currentField.setAccessible( iA );
+            
+            return _getValue( newObject, valueArray, position+1 );
+            
+        }
+        catch( Exception e )
+        {
+            log.error( "Could not find field " + valueArray[ position ] + " on " + currentObject.getClass().getName() );
+            return null;
+        }
+    }
+    
+    public String toFormattedString( String template )
+    {
+        List<String> templateArray = new ArrayList<String>( 10 );
+        
+        
+        Matcher templateMatcher = FORMAT_PATTERN.matcher( template );
+        
+        while ( templateMatcher.find() )
+            templateArray.add( templateMatcher.group( 1 ) );
+        
+        
+        String newValue = template;
+        
+        for ( String fieldName : templateArray )
+        {
+            String replaceValue = getValue( fieldName );
+            
+            if ( replaceValue != null )
+                newValue = newValue.replaceAll( "\\{" + fieldName + "\\}", replaceValue );
+        }
+        
+        return newValue;
+    }
+    
     
     public File getArtifactFolder()
     {
@@ -164,6 +295,9 @@ public class DeviceWebDriver
     public void setExecutionContext( ExecutionContextTest executionContext )
     {
         this.executionContext = executionContext;
+        
+        this.executionContext.setDesiredCapabilities( dC );
+        this.executionContext.setDerivedCapabilities( getCapabilities() );
     }
 
     public long getImplicitWait()
@@ -183,7 +317,9 @@ public class DeviceWebDriver
     
     public String getLog()
     {
-        return DeviceManager.instance().getLog();
+        String log = DeviceManager.instance( executionContext.getxFID() ).getLog();
+        DeviceManager.instance( executionContext.getxFID() ).clearLog();
+        return log;
     }
 
     public ApplicationDescriptor getAut()
@@ -191,9 +327,9 @@ public class DeviceWebDriver
         return aut;
     }
 
-    public void setAut( ApplicationDescriptor aut )
+    public void setAut( ApplicationDescriptor aut, String xFID )
     {
-        ExecutionContext.instance().setAut( aut );
+        ExecutionContext.instance( xFID ).setAut( aut );
         this.aut = aut;
     }
 
@@ -342,20 +478,22 @@ public class DeviceWebDriver
      * @param currentDevice
      *            the current device
      */
-    public DeviceWebDriver( WebDriver webDriver, boolean cachingEnabled, Device currentDevice )
+    public DeviceWebDriver( WebDriver webDriver, boolean cachingEnabled, Device currentDevice, DesiredCapabilities dC )
     {
         this.webDriver = webDriver;
         this.cachingEnabled = cachingEnabled;
         this.currentDevice = currentDevice;
         this.syntheticConnection = false;
+        this.dC = dC;
     }
     
-    public DeviceWebDriver( String xmlData, Device currentDevice )
+    public DeviceWebDriver( String xmlData, Device currentDevice, DesiredCapabilities dC )
     {
         this.cachingEnabled = true;
         readXML( xmlData );
         this.currentDevice = currentDevice;
         this.syntheticConnection = true;
+        this.dC = dC;
     }
 
     public boolean isConnected()
@@ -393,7 +531,6 @@ public class DeviceWebDriver
     public void setExecutionId( String executionId )
     {
         this.executionId = executionId;
-        DeviceManager.instance().setExecutionId( executionId );
 
         if ( log.isInfoEnabled() )
             log.info( "Execution ID recorded as [" + executionId + "]" );
@@ -492,6 +629,34 @@ public class DeviceWebDriver
     public void get( String url )
     {
         webDriver.get( url );
+        
+        try
+        {
+            double outerHeight = Integer.parseInt( executeScript( "return window.outerHeight;" ) + "" );
+            double outerWidth = Integer.parseInt( executeScript( "return window.outerWidth;" ) + "" );
+            
+            Dimension windowSize = manage().window().getSize();
+            Object f = executeScript( "return window.outerHeight;" );
+            heightModifier = (double) windowSize.getHeight() / outerHeight;
+            widthModifier = (double) windowSize.getWidth() / outerWidth;
+            
+        }
+        catch( Exception e )
+        {
+            log.warn( "Could not extract height/width modifiers" );
+            heightModifier = 1;
+            widthModifier = 1;
+        }
+    }
+    
+    public int getModifiedX( int currentX )
+    {
+        return (int) (currentX * widthModifier);
+    }
+    
+    public int getModifiedY( int currentY )
+    {
+        return (int) (currentY * heightModifier);
     }
 
     /*
@@ -521,6 +686,9 @@ public class DeviceWebDriver
      */
     public List<WebElement> findElements( By by )
     {
+        if ( log.isInfoEnabled() )
+            log.info( Thread.currentThread().getName() + ": Locating element using [" + by + "]" );
+        
         if ( cachingEnabled && cachedDocument == null )
             cacheData();
 
@@ -588,6 +756,9 @@ public class DeviceWebDriver
      */
     public WebElement findElement( By by )
     {
+        if ( log.isInfoEnabled() )
+            log.info( Thread.currentThread().getName() + ": Locating element using [" + by + "]" );
+        
         if ( by instanceof ByXPath )
         {
             if ( cachingEnabled && cachedDocument == null )
@@ -684,6 +855,23 @@ public class DeviceWebDriver
         webDriver.quit();
         if ( diThread != null )
             diThread.stop();
+        
+        try
+        {
+            String deviceQuietTime = DeviceManager.instance( getxFID() ).getConfigurationProperties().get( "xframium.deviceQuietTime" );
+            
+            if( deviceQuietTime != null )
+            {
+                if ( log.isInfoEnabled() )
+                    log.info( "Device Quiet Time: " + deviceQuietTime + " seconds" );
+                Thread.sleep( Integer.parseInt( deviceQuietTime ) * 1000 );
+            }
+        }
+        catch( Exception e )
+        {
+            
+        }
+        
     }
 
     /*

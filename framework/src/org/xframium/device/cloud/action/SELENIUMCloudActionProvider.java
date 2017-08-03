@@ -25,7 +25,7 @@ public class SELENIUMCloudActionProvider extends AbstractCloudActionProvider
 	
 	
 	@Override
-    public boolean startApp( String executionId, String deviceId, String appName, String appIdentifier )
+    public boolean startApp( DeviceWebDriver webDriver, String executionId, String deviceId, String appName, String appIdentifier )
     {
         
         return true;
@@ -76,7 +76,7 @@ public class SELENIUMCloudActionProvider extends AbstractCloudActionProvider
     }
     
     @Override
-    public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device )
+    public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device, String xFID )
     {
         String uAgent = (String) webDriver.executeScript("return navigator.userAgent;");
         UserAgent userAgent = new UserAgent( uAgent );
@@ -152,9 +152,9 @@ public class SELENIUMCloudActionProvider extends AbstractCloudActionProvider
     }
 
     @Override
-    public boolean openApplication( String applicationName, DeviceWebDriver webDriver )
+    public boolean openApplication( String applicationName, DeviceWebDriver webDriver, String xFID )
     {
-        ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
+        ApplicationDescriptor appDesc = ApplicationRegistry.instance(xFID).getApplication( applicationName );
         
         if ( appDesc == null )
             throw new ScriptConfigurationException( "The Application " + applicationName + " does not exist" );

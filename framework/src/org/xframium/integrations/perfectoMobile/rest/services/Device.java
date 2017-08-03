@@ -137,6 +137,10 @@ public interface Device extends PerfectoService
     @PerfectoCommand( commandName="gateway", subCommandName = "sms" )
     public Execution sendText( @ResourceID String executionId, @NameOverride( name="body" )String body, @Parameter( name="to.handset" ) String handsetId );
     
+    @Operation( operationName="command" )
+    @PerfectoCommand( commandName="device", subCommandName = "ready" )
+    public Execution home( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId  );
+    
     
     @Operation( operationName="command" )
     @PerfectoCommand( commandName="browser", subCommandName = "execute" )

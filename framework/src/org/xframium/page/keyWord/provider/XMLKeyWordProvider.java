@@ -256,7 +256,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	            }
 	            else if ( imp.getFileName().toLowerCase().endsWith( ".bdd" ) )
 	            {
-	                Parser bddParser = new Parser( new XMLFormatter( PageDataManager.instance().getDataProvider(), configProperties ) );
+	                Parser bddParser = new Parser( new XMLFormatter( PageDataManager.instance(sC.getxFID()).getDataProvider(), configProperties, sC.getxFID() ) );
 	                
 	                byte[] buffer = new byte[512];
 	                int bytesRead = 0;
@@ -277,7 +277,6 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	        catch( Exception e )
 	        {
 	            log.fatal( "Could not read from " + imp.getFileName(), e );
-                throw new IllegalStateException( e );
 	        }
 	    }
 	}
@@ -404,7 +403,9 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	    
 	    for ( Parameter p : pList )
 	    {
-	        ParameterType ptype = ParameterType.valueOf( p.getType() );
+	        ParameterType ptype = ParameterType.STATIC;
+	        if ( p.getType() != null )
+	            ptype = ParameterType.valueOf( p.getType() );
 	        KeyWordParameter kp = new KeyWordParameter( ptype, p.getValue(), p.getName(), p.getUsage() );
 	        
 	        if ( p.getToken() != null && !p.getToken().isEmpty() )

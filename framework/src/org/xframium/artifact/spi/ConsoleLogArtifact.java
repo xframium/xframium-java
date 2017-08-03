@@ -14,7 +14,7 @@ public class ConsoleLogArtifact extends AbstractArtifact
     }
     
     @Override
-    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver )
+    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver, String xFID )
     {
         return writeToDisk( rootFolder, FILE_NAME, webDriver.getLog().getBytes() );
     }

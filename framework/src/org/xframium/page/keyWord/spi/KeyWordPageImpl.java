@@ -20,6 +20,7 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.spi;
 
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.AbstractPage;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.Page;
@@ -58,7 +59,14 @@ public class KeyWordPageImpl extends AbstractPage implements KeyWordPage, Page
 	
 	public KeyWordPageImpl()
     {
-        this( PageManager.instance().getElementProvider(), PageManager.instance().getSiteName() );
+        
+    }
+	
+	public void setDriver( Object webDriver )
+    {
+        this.webDriver = webDriver;
+        this.elementProvider = PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID() ).getElementProvider();
+        this.siteName = PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID() ).getSiteName();
     }
 	
 	@Override
@@ -77,6 +85,7 @@ public class KeyWordPageImpl extends AbstractPage implements KeyWordPage, Page
         {
             myElement = myElement.cloneElement();
             myElement.setDriver( webDriver );
+            elementProvider.setCachedElement( myElement, elementDescriptor );
             return myElement;
         }
 	}

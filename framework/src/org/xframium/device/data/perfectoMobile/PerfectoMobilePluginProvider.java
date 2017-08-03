@@ -75,12 +75,12 @@ public class PerfectoMobilePluginProvider implements DataProvider
      * 
      * @see com.perfectoMobile.device.data.DataProvider#readData()
      */
-    public List<Device> readData()
+    public List<Device> readData( String xFID )
     {
         List<Device> deviceList = new ArrayList<Device>( 10 );
         try
         {
-            SimpleDevice device = (SimpleDevice)lookupDeviceById( deviceId, driverType );
+            SimpleDevice device = (SimpleDevice)lookupDeviceById( deviceId, driverType, xFID );
             String executionId = null;
             if ( PluginType.INTELLIJ.toString().equals( pluginType ) )
             {
@@ -121,10 +121,10 @@ public class PerfectoMobilePluginProvider implements DataProvider
         }
     }
     
-    private Device lookupDeviceById( String device, DriverType driverType )
+    private Device lookupDeviceById( String device, DriverType driverType, String xFID )
     {
         
-        Handset handset = PerfectoMobile.instance().devices().getDevice( device );
+        Handset handset = PerfectoMobile.instance( xFID ).devices().getDevice( device );
             
         String driverName = "";
         switch( driverType )

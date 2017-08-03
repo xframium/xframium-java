@@ -34,7 +34,7 @@ public class WINDOWSCloudActionProvider extends AbstractCloudActionProvider
     }
 	
 	@Override
-    public boolean startApp( String executionId, String deviceId, String appName, String appIdentifier )
+    public boolean startApp( DeviceWebDriver webDriver, String executionId, String deviceId, String appName, String appIdentifier )
     {
         
         return true;
@@ -48,7 +48,7 @@ public class WINDOWSCloudActionProvider extends AbstractCloudActionProvider
     }
     
     @Override
-    public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device )
+    public boolean popuplateDevice( DeviceWebDriver webDriver, String deviceId, Device device, String xFID )
     {
 
         
@@ -111,7 +111,7 @@ public class WINDOWSCloudActionProvider extends AbstractCloudActionProvider
     }
 
     @Override
-    public boolean openApplication( String applicationName, DeviceWebDriver webDriver )
+    public boolean openApplication( String applicationName, DeviceWebDriver webDriver, String xFID )
     {
         // TODO Auto-generated method stub
         return false;

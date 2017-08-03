@@ -23,12 +23,12 @@ public class HTMLGridArtifact extends AbstractArtifact
     }
     
     @Override
-    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver )
+    protected File _generateArtifact( File rootFolder, DeviceWebDriver webDriver, String xFID )
     {
         InputStream inputStream = null;
         try
         {
-            ExecutionContext.instance().setGridUrl( "Grid.html" );
+            ExecutionContext.instance( xFID ).setGridUrl( "Grid.html" );
             inputStream = getTemplate( "Grid.html" );
             
             return writeToDisk( rootFolder, FILE_NAME, inputStream );

@@ -14,6 +14,7 @@
   <import fileName="../functions/xTest/kw-dumpstate.xml" />
   <import fileName="../functions/xTest/kw-else.xml" />
   <import fileName="../functions/xTest/kw-execjs.xml" />
+  <import fileName="../functions/xTest/kw-execws.xml" />
   <import fileName="../functions/xTest/kw-focus.xml" />
   <import fileName="../functions/xTest/kw-loop.xml" />
   <import fileName="../functions/xTest/setValueFromNumericIndex.xml" />
@@ -37,10 +38,11 @@
   <import fileName="../functions/xTest/kw-waitfor.xml" />
   <import fileName="../functions/xTest/kw-window.xml" />
   <import fileName="../functions/xTest/kw-browser.xml" />
-  <import fileName="../functions/xTest/kw-execws.xml" />
   <import fileName="../functions/xTest/kw-visual.xml" />
   <import fileName="../functions/xTest/kw-flow.xml" />
   <import fileName="../functions/xTest/kw-random.xml" />
   <import fileName="../functions/xTest/kw-compare2.xml" />
   <import fileName="../functions/xTest/checkData.xml" />
+  <import fileName="../functions/xTest/checkData2.xml" />
+  <import fileName="../functions/xTest/kw-sql.xml" />
 </suite>

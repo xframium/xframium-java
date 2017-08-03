@@ -24,6 +24,7 @@ import java.util.List;
 import org.openqa.selenium.WebDriver;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
@@ -48,14 +49,14 @@ public class InstallApplicationAction extends AbstractDefaultAction implements D
 		String applicationName = (String) parameterList.get( 0 );
 		Boolean instrument = Boolean.parseBoolean( (String) parameterList.get( 1 ) );
 		
-		ApplicationDescriptor appDesc = ApplicationRegistry.instance().getApplication( applicationName );
+		ApplicationDescriptor appDesc = ApplicationRegistry.instance( ( (DeviceWebDriver) webDriver).getxFID() ).getApplication( applicationName );
 	
-		Handset localDevice = PerfectoMobile.instance().devices().getDevice( deviceName );
+		Handset localDevice = PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).devices().getDevice( deviceName );
 		
 		if ( localDevice.getOs().toLowerCase().equals( "ios" ) )				
-			PerfectoMobile.instance().application().install( executionId, deviceName, appDesc.getIosInstallation(), instrument ? "instrument" : "noinstrument" );
+			PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).application().install( executionId, deviceName, appDesc.getIosInstallation(), instrument ? "instrument" : "noinstrument" );
 		else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-			PerfectoMobile.instance().application().install( executionId, deviceName, appDesc.getAndroidInstallation(), instrument ? "instrument" : "noinstrument" );
+			PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).application().install( executionId, deviceName, appDesc.getAndroidInstallation(), instrument ? "instrument" : "noinstrument" );
 		else
 			throw new IllegalArgumentException( "Could not install application to " + localDevice.getOs() );
 		return true;

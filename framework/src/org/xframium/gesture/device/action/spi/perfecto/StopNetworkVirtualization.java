@@ -22,6 +22,7 @@ package org.xframium.gesture.device.action.spi.perfecto;
 
 import java.util.List;
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
@@ -41,7 +42,7 @@ public class StopNetworkVirtualization extends AbstractDefaultAction implements 
 	{
 		String executionId = getExecutionId( webDriver );
 		String deviceName = getDeviceName( webDriver );
-		PerfectoMobile.instance().windTunnel().stopNetworkVirtualization( executionId, deviceName );
+		PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).windTunnel().stopNetworkVirtualization( executionId, deviceName );
 		return true;
 	}
 

@@ -42,6 +42,7 @@ public class KWSAt extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-at";
         category = "Verification";
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -69,10 +70,17 @@ public class KWSAt extends AbstractKeyWordStep
 
             contextMap.put( contextName + ".x", at.getX() + "" );
             contextMap.put( contextName + ".y", at.getY() + "" );
+
+            contextMap.put( contextName + ".x%", ((int) (((double) at.getX() / (double) webDriver.manage().window().getSize().getWidth()) * 100.0)) + "" );
+            contextMap.put( contextName + ".y%", ((int) (((double) at.getY() / (double) webDriver.manage().window().getSize().getHeight()) * 100.0)) + "" );
+
             contextMap.put( contextName + ".width", size.getWidth() + "" );
             contextMap.put( contextName + ".height", size.getHeight() + "" );
-            
-            
+            contextMap.put( contextName + ".centerx", at.getX() + (size.getWidth() / 2) + "" );
+            contextMap.put( contextName + ".centery", at.getY() + (size.getHeight() / 2) + "" );
+            contextMap.put( contextName + ".centerx%", ((int) ((((double) at.getX() + ((double) size.getWidth() / 2.0)) / (double) webDriver.manage().window().getSize().getWidth()) * 100.0)) + "" );
+            contextMap.put( contextName + ".centery%", ((int) ((((double) at.getY() + ((double) size.getHeight() / 2.0)) / (double) webDriver.manage().window().getSize().getHeight()) * 100.0)) + "" );
+
         }
 
         return currentElement.isPresent();

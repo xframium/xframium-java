@@ -24,7 +24,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -65,8 +70,27 @@ public abstract class ALMEntity
         String Label();
     }
     
+    private Map<String,ALMData> fieldMap = new HashMap<String,ALMData>( 10 );
+    
+    public void addCustomData( String fieldName, ALMData almData )
+    {
+        fieldMap.put( fieldName, almData );
+    }
+    
+    public ALMData getCustomData( String fieldName )
+    {
+        return fieldMap.get( fieldName );
+    }
+    
+    public Collection<ALMData> getCustomFields()
+    {
+        return fieldMap.values();
+    }
+    
     /** The entity type. */
     private String entityType;
+    
+    
     
     /**
      * Instantiates a new ALM entity.
@@ -104,6 +128,8 @@ public abstract class ALMEntity
         xml.append( "<Entity Type=\"" ).append( entityType ).append( "\">" );
         xml.append( "<Fields>" );
         
+        List<String> fieldOverride = new ArrayList<String>( 10 );
+        
         for ( Field f : fieldList )
         {
             boolean accessibleValue = f.isAccessible();
@@ -112,28 +138,94 @@ public abstract class ALMEntity
             if ( almField != null )
             {
                 Object currentValue = f.get( this );
-                if ( currentValue != null )
+                
+                if ( currentValue == null )
+                    continue;
+                
+                ALMData almData = getCustomData( almField.PhysicalName() );
+                
+                if ( almData != null )
                 {
+                    //
+                    // Override a field or data
+                    //
+                    xml.append( "<Field Name=\"" ).append( almData.getName() ).append( "\">" );
+                    fieldOverride.add( almField.PhysicalName() );
+                    
+                    if ( almData.getValue() != null )
+                        currentValue = almData.getValue();
+                    
+                }
+                else
                     xml.append( "<Field Name=\"" ).append( almField.Name() ).append( "\">" );
                     
-                    if ( currentValue instanceof String )
-                        xml.append( "<Value>" ).append(  currentValue ).append( "</Value>" );
-                    else if ( currentValue instanceof Date )
-                        xml.append( "<Value>" ).append( dateOnly.format( ( (Date) currentValue ) ) ).append( "</Value>" );
-                    
-                    xml.append( "</Field>" );
-                }
+                
+                if ( currentValue instanceof String )
+                    xml.append( "<Value>" ).append( escapeXML( (String) currentValue ) ).append( "</Value>" );
+                else if ( currentValue instanceof Date )
+                    xml.append( "<Value>" ).append( dateOnly.format( ( (Date) currentValue ) ) ).append( "</Value>" );
+                
+                xml.append( "</Field>" );
             }
             
             f.setAccessible( accessibleValue );
+        }
+        
+        //
+        // Now, add the custom fields
+        //
+        for( String key : fieldMap.keySet() )
+        {
+            if ( fieldOverride.contains( key ) )
+                continue;
+            
+            ALMData almData = fieldMap.get( key );
+            Object currentValue = almData.getValue();
+            if ( currentValue == null )
+                continue;
+            
+            
+            
+            xml.append( "<Field Name=\"" ).append( almData.getName() ).append( "\">" );
+            
+            if ( currentValue instanceof String )
+            {
+                
+                xml.append( "<Value>" ).append( escapeXML( (String) currentValue ) ).append( "</Value>" );
+            }
+            else if ( currentValue instanceof Date )
+                xml.append( "<Value>" ).append( dateOnly.format( ( (Date) currentValue ) ) ).append( "</Value>" );
+            xml.append( "</Field>" );
         }
         
         xml.append( "</Fields>" );
         xml.append( "</Entity>" );
         
         return xml.toString();
-        
     }
+    
+    private static int[][] CHAR_LIST = new int[][] { { 0, 9 }, { 11, 13 }, {128, 255 }, {38, 39 } };
+    
+    /**
+     * Replaces the XML escape characters to XML numeric replacement
+     * @param xmlIn - String
+     * @return String
+     */
+    private static String escapeXML( String xmlIn )
+    {
+        String xmlOut = xmlIn;
+        for ( int[] currentArray : CHAR_LIST )
+        {
+           
+            for ( int i=currentArray[ 0 ]; i<currentArray[ 1 ]; i++ )
+            {
+                xmlOut = xmlOut.replace( new String( new byte[] { (byte)i } ), "&#" + i + ";" );
+            }
+        }
+        
+        return xmlOut;
+    }
+    
     
     
 }

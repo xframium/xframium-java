@@ -21,7 +21,7 @@
         <div class="col-sm-12 content">
             <div class="dashhead">
                 <span class="pull-right text-muted">{{suiteData.startTime.dateOnly}} at {{suiteData.startTime.timeOnly}}</span>
-                <h6 class="dashhead-subtitle">xFramium 1.0.9a</h6>
+                <h6 class="dashhead-subtitle">xFramium 1.0.11 (Apollo</h6>
                 <h3 class="dashhead-title">{{suiteData.suiteName}}</h3>
                 <h6>Test Suite Execution Summary</h6>
             </div>
@@ -71,7 +71,7 @@
                                         </td>
                                         <td>
                                             <div class="row">
-                                                <div class="col-sm-1"><img src="http://xframium.org/images/{{exec.cloud.provider}}.png" width="16" alt="{{exec.cloud.provider}}" /> </div>
+                                                <div class="col-sm-1"><img ng-if="exec.cloud.provider.name != null" src="http://xframium.org/images/{{exec.cloud.provider.name}}.png" width="16" alt="{{exec.cloud.provider.name}}" /><img ng-if="exec.cloud.provider.name == null" src="http://xframium.org/images/{{exec.cloud.provider}}.png" width="16" alt="{{exec.cloud.provider}}" /> </div>
                                                 <div class="col-sm-11">{{exec.device.environment}}</div>
                                                 
                                             </div>
@@ -306,8 +306,6 @@
                     pD.failCount += parseInt( cE.elementUsageMap[ key ].failCount );
                     pD.passCount += parseInt( cE.elementUsageMap[ key ].passCount );
                 }
-                
-                console.log( $scope.elementUsageMap)
                 
                 if ( cE.testStatus == 'PASSED' )
                     $scope.passed++;
