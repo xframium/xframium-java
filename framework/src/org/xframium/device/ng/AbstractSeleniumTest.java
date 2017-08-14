@@ -426,6 +426,7 @@ public abstract class AbstractSeleniumTest
                 // Stub out the test and the execution context
                 //
                 ExecutionContextTest eC = new ExecutionContextTest();
+                eC.setxFID( tC.getxFID() );
                 eC.setTestName( currentMethod.getName() );
                 
                 CloudDescriptor cD = CloudRegistry.instance(tC.getxFID()).getCloud();
@@ -438,6 +439,7 @@ public abstract class AbstractSeleniumTest
                 eC.setCloud( cD );
                 eC.setDevice( testPackage.getConnectedDevice().getPopulatedDevice() );
                 testPackage.getConnectedDevice().getWebDriver().setExecutionContext( eC );
+                
                 testName.setTestName( currentMethod.getName() );
                 
                 testName.setTest( eC );

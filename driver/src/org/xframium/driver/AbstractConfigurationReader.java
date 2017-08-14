@@ -665,7 +665,6 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     {
         int threadCount = Integer.parseInt( System.getProperty( "xF-ThreadCount", "10" ) );
         int verboseLevel = Integer.parseInt( System.getProperty( "xF-VerboseLevel", "10" ) );
-
         
         TestNG testNg = new TestNG( true );
         testNg.setVerbose( verboseLevel );

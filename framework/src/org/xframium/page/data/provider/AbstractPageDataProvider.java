@@ -50,7 +50,7 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	public abstract void readPageData();
 	
 	/** The wait time out. */
-	private long waitTimeOut = 240;
+	private long waitTimeOut = 1200;
 	
 	/** The record map. */
 	private Map<String,PageDataContainer> recordMap = new HashMap<String,PageDataContainer>( 10 );
@@ -126,8 +126,6 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 		try
 		{
 			Deque<PageData> dataList = recordMap.get( getRecordType( recordType ) ).getRecordList();
-			
-			Object x = recordMap.get( "SellFromTrunk-KitItems" );
 			
 			if ( dataList instanceof LinkedBlockingDeque )
 				return ( (LinkedBlockingDeque<PageData>) dataList ).pollFirst( waitTimeOut, TimeUnit.SECONDS );
