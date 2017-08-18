@@ -53,7 +53,7 @@
       
       <element name="xF-Date" descriptor="COMPLEX">
         <element value="//UIAStaticText[contains( @name, 'Date' )]" descriptor="XPATH" os="IOS" />
-        <element value="//android.widget.TextView[ contains( @text, 'Date' )]" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.TextView[contains( @text, 'Date' )]" descriptor="XPATH" os="ANDROID" />
       </element>
     </page>
   </site>
