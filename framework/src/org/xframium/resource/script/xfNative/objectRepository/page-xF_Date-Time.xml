@@ -15,12 +15,53 @@
         <element descriptor="XPATH" value="//UIATableCell[ @label='Time Zone' ]/following-sibling::UIATableCell/UIAStaticText[2]" os="IOS" />
         <element descriptor="XPATH" value="//android.widget.TextView[ @text='Set time' ]/following-sibling::android.widget.TextView" os="ANDROID" />
       </element>
+      <element name="xF-TimeZone" descriptor="COMPLEX">
+        <element descriptor="XPATH" value="//UIATableCell[ @label='Time Zone' ]" os="IOS" />
+        <element descriptor="XPATH" value="//android.widget.TextView[ @text='Select time zone' ]/following-sibling::android.widget.TextView" os="ANDROID" />
+      </element>
+      <element name="xF-SelectedTimeZone" descriptor="COMPLEX">
+        <element descriptor="XPATH" value="//UIATableCell[ @label='Time Zone' ]" os="IOS" />
+        <element descriptor="XPATH" value="//android.widget.TextView[ @text='{timeZone}' ]" os="ANDROID" />
+      </element>
       <element descriptor="XPATH" value="//android.widget.ImageButton[contains( @resource-id, 'next' )]" name="Next" />
       <element descriptor="XPATH" value="//android.widget.ImageButton[contains( @resource-id, 'prev' )]" name="Previous" />
       <element descriptor="COMPLEX" name="CorrectDate">
         <element descriptor="XPATH" value="//android.view.View[@content-desc='{correctDate}']|//android.view.View[@content-desc='{correctDate2}']" os="ANDROID" />
         <element descriptor="XPATH" value="//UIATableCell[ @label='{correctDate}' ]" os="IOS" />
       </element>
+      
+      <element descriptor="COMPLEX" name="currentHour">
+        <element descriptor="XPATH" value="//android.widget.NumberPicker/android.widget.EditText[contains( @text, '{hour}, Hour')]" os="ANDROID" />
+        <element descriptor="XPATH" value="//UIATableCell[ @label='{correctDate}' ]" os="IOS" />
+      </element>
+      
+      <element descriptor="COMPLEX" name="changeHour">
+        <element descriptor="XPATH" value="//*[@resource-id='android:id/timePicker']/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.NumberPicker[1]/android.widget.EditText/following-sibling::android.widget.Button[1]" os="ANDROID" />
+        <element descriptor="XPATH" value="//UIATableCell[ @label='{correctDate}' ]" os="IOS" />
+      </element>
+      
+      <element descriptor="COMPLEX" name="currentMinute">
+        <element descriptor="XPATH" value="//android.widget.NumberPicker/android.widget.EditText[contains( @text, '{minute}, Minute')]" os="ANDROID" />
+        <element descriptor="XPATH" value="//UIATableCell[ @label='{correctDate}' ]" os="IOS" />
+      </element>
+      
+      <element descriptor="COMPLEX" name="changeMinute">
+        <element descriptor="XPATH" value="//*[@resource-id='android:id/timePicker']/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.NumberPicker[2]/android.widget.EditText/following-sibling::android.widget.Button[1]" os="ANDROID" />
+        <element descriptor="XPATH" value="//UIATableCell[ @label='{correctDate}' ]" os="IOS" />
+      </element>
+      
+      <element descriptor="COMPLEX" name="currentMarker">
+        <element descriptor="XPATH" value="//android.widget.TextView[contains( @text, '{marker},' )]" os="ANDROID" />
+        <element descriptor="XPATH" value="//UIATableCell[ @label='{correctDate}' ]" os="IOS" />
+      </element>
+      <element descriptor="COMPLEX" name="changeMarker">
+        <element descriptor="XPATH" value="//*[@resource-id='android:id/sem_timepicker_layout']/android.widget.NumberPicker[1]/android.widget.Button" os="ANDROID" />
+        <element descriptor="XPATH" value="//UIATableCell[ @label='{correctDate}' ]" os="IOS" />
+      </element>
+      
+      
+      
+      
       <element descriptor="XPATH" value="//UIAPickerWheel[1]" name="Day" />
       <element descriptor="XPATH" value="//UIAPickerWheel[2]" name="Hour" />
       <element descriptor="XPATH" value="//UIAPickerWheel[3]" name="Minute" />

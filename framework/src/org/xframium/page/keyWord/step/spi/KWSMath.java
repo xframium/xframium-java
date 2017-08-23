@@ -61,13 +61,16 @@ public class KWSMath extends AbstractKeyWordStep
     public enum MATH_TYPE
     {
         add(1, "add" , "Add numbers and compare the results "),
-        subtract(2, "subtract", "Subtract numbers and compare the results");
+        subtract(2, "subtract", "Subtract numbers and compare the results"),
+        multiply(3, "multiply", "multiply numbers and compare results");
+        
         
         public List<MATH_TYPE> getSupported()
         {
             List<MATH_TYPE> supportedList = new ArrayList<MATH_TYPE>( 10 );
             supportedList.add( MATH_TYPE.add );
             supportedList.add( MATH_TYPE.subtract );
+            supportedList.add( MATH_TYPE.multiply );
             return supportedList;
         }
         
@@ -119,6 +122,10 @@ public class KWSMath extends AbstractKeyWordStep
 	                        currentValue = Double.parseDouble( formatString( currentParameter ) );
 	                        valueAdded = true;
 	                    }
+	                    
+	                case multiply:
+                        currentValue *= Double.parseDouble( formatString( currentParameter ) );
+                        break;
 	            }
 	        }
 	    }

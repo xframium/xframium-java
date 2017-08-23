@@ -15,6 +15,9 @@ public class ULSetMethod extends AbstractSetMethod
         if ( dropdownToggle.isEmpty() )
             dropdownToggle = webElement.findElements( By.xpath( "./preceding-sibling::*[@data-toggle]" ) );
         
+        if ( dropdownToggle.isEmpty() )
+            dropdownToggle = webElement.findElements( By.xpath( "../preceding-sibling::*[@data-toggle]" ) );
+        
         if ( !dropdownToggle.isEmpty() )
             dropdownToggle.get( 0 ).click();
         
