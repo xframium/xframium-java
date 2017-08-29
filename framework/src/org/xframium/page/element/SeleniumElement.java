@@ -44,7 +44,6 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.HasTouchScreen;
 import org.openqa.selenium.interactions.touch.TouchActions;
-import org.openqa.selenium.remote.ProtocolHandshake;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -52,6 +51,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.device.factory.MorelandWebElement;
 import org.xframium.exception.ObjectIdentificationException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
@@ -100,7 +100,7 @@ public class SeleniumElement extends AbstractElement
 
     /** The use visual driver. */
     private boolean useVisualDriver = false;
-    
+
     private boolean clonedElement = false;
 
     /*
@@ -113,10 +113,10 @@ public class SeleniumElement extends AbstractElement
         //
         // If we already cloned this once then don't need to again
         //
-        //if ( clonedElement )
-        //{
-        //    return this;
-        //}
+        // if ( clonedElement )
+        // {
+        // return this;
+        // }
         SeleniumElement element = new SeleniumElement( getBy(), getRawKey(), getElementName(), getPageName(), getContextElement(), locatedElement, index );
         element.setDriver( getWebDriver() );
         element.setDeviceContext( getDeviceContext() );
@@ -136,7 +136,7 @@ public class SeleniumElement extends AbstractElement
      *
      * @param by
      *            the by
-     *            
+     * 
      * @param elementKey
      *            the element key
      * @param fieldName
@@ -198,9 +198,9 @@ public class SeleniumElement extends AbstractElement
 
                 String cloudName = ((DeviceWebDriver) getWebDriver()).getDevice().getCloud();
                 if ( cloudName == null || cloudName.trim().isEmpty() )
-                    cloudName = CloudRegistry.instance(((DeviceWebDriver) getWebDriver()).getxFID()).getCloud().getName();
+                    cloudName = CloudRegistry.instance( ((DeviceWebDriver) getWebDriver()).getxFID() ).getCloud().getName();
 
-                if ( CloudRegistry.instance(((DeviceWebDriver) getWebDriver()).getxFID()).getCloud( cloudName ).getProvider().equals( "PERFECTO" ) )
+                if ( CloudRegistry.instance( ((DeviceWebDriver) getWebDriver()).getxFID() ).getCloud( cloudName ).getProvider().equals( "PERFECTO" ) )
                 {
                     PerfectoMobile.instance( getWebDriver().getxFID() ).imaging().screenShot( getExecutionId(), getDeviceName(), fileKey, Screen.primary, ImageFormat.png, imageResolution );
                     imageData = PerfectoMobile.instance( getWebDriver().getxFID() ).repositories().download( RepositoryType.MEDIA, fileKey );
@@ -346,8 +346,7 @@ public class SeleniumElement extends AbstractElement
                         By foundBy = _useBy( subList[0].getBy(), applyToken( subList[0].getKey() ) );
 
                         if ( foundBy == null )
-                            throw new ScriptConfigurationException(
-                                    "Could not locate sub-element type for " + getName() );
+                            throw new ScriptConfigurationException( "Could not locate sub-element type for " + getName() );
 
                         return foundBy;
                     }
@@ -363,8 +362,7 @@ public class SeleniumElement extends AbstractElement
                             By foundBy = _useBy( s.getBy(), applyToken( s.getKey() ) );
 
                             if ( foundBy == null )
-                                throw new ScriptConfigurationException(
-                                        "Could not locate sub-element type for " + getName()  );
+                                throw new ScriptConfigurationException( "Could not locate sub-element type for " + getName() );
 
                             byList.add( foundBy );
                         }
@@ -373,7 +371,8 @@ public class SeleniumElement extends AbstractElement
                     }
                     else
                     {
-                        throw new ScriptConfigurationException( "Could not locate sub-element for " + getName() + "( " + ((DeviceWebDriver) getWebDriver()).getPopulatedDevice().getOs() + "," + ((DeviceWebDriver) getWebDriver()).getCloud().getProvider() + ", " + ((DeviceWebDriver) getWebDriver()).getAut().getName() + " (" + ((DeviceWebDriver) getWebDriver()).getAut().getVersion() + ") )" );
+                        throw new ScriptConfigurationException( "Could not locate sub-element for " + getName() + "( " + ((DeviceWebDriver) getWebDriver()).getPopulatedDevice().getOs() + "," + ((DeviceWebDriver) getWebDriver()).getCloud().getProvider()
+                                + ", " + ((DeviceWebDriver) getWebDriver()).getAut().getName() + " (" + ((DeviceWebDriver) getWebDriver()).getAut().getVersion() + ") )" );
                     }
                 }
                 else
@@ -410,7 +409,7 @@ public class SeleniumElement extends AbstractElement
 
             case XPATH:
                 return By.xpath( keyValue );
-                
+
             case NATURAL:
                 return new ByNaturalLanguage( keyValue, getWebDriver() );
 
@@ -703,12 +702,12 @@ public class SeleniumElement extends AbstractElement
     {
         return (int) (currentX * getWebDriver().getWidthModifier());
     }
-    
+
     public int getModifiedY( int currentY )
     {
         return (int) (currentY * getWebDriver().getHeightModifier());
     }
-    
+
     /**
      * Gets the element.
      *
@@ -806,7 +805,7 @@ public class SeleniumElement extends AbstractElement
     protected String _getValue()
     {
         WebElement currentElement = getElement();
-        
+
         if ( currentElement.getTagName() == null )
             return null;
 
@@ -1041,6 +1040,45 @@ public class SeleniumElement extends AbstractElement
                         } );
                         break;
 
+                    case FRAME:
+                        webElement = wait.until( new Function<WebDriver, WebElement>()
+                        {
+
+                            @Override
+                            public WebElement apply( WebDriver webDriver )
+                            {
+                                try
+                                {
+                                    WebElement webElement = webDriver.findElement( useBy() );
+                                    if ( webElement instanceof MorelandWebElement )
+                                        webDriver.switchTo().frame( ( (MorelandWebElement) webElement ).getWebElement() );
+                                    else
+                                        webDriver.switchTo().frame( webElement );
+                                    return webElement;
+                                }
+                                catch ( Exception e )
+                                {
+                                    e.printStackTrace();
+                                    return null;
+                                }
+                            }
+
+                        } );
+                        break;
+                        
+                    case CLICKABLE_THEN_CLICK:
+                        webElement = wait.until( new Function<WebDriver, WebElement>()
+                        {
+
+                            @Override
+                            public WebElement apply( WebDriver webDriver )
+                            {
+                                return ExpectedConditions.elementToBeClickable( useBy() ).apply( webDriver );
+                            }
+
+                        } );
+                        webElement.click();
+                        
 
                     default:
                         throw new IllegalArgumentException( "Unknown Wait Condition [" + waitType + "]" );
@@ -1075,7 +1113,7 @@ public class SeleniumElement extends AbstractElement
             }
         }
     }
-    
+
     /*
      * (non-Javadoc)
      * 

@@ -59,7 +59,7 @@
         <element descriptor="XPATH" value="//UIATableCell[ @label='{correctDate}' ]" os="IOS" />
       </element>
       
-      
+      <element name="24 Hour Switch" descriptor="NATURAL" value="SECOND SWITCH" />
       
       
       <element descriptor="XPATH" value="//UIAPickerWheel[1]" name="Day" />

@@ -105,6 +105,7 @@ public class KWSApplication extends AbstractKeyWordStep
 	        case OPEN:
 	            if ( isTimed() )
                     cP.startTimer( (DeviceWebDriver) webDriver, null, executionContext );
+	            
 	            if ( cP.openApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver, ((DeviceWebDriver)webDriver ).getxFID() ) )
 	            {
 	                ApplicationRegistry aR = ApplicationRegistry.instance( ( (DeviceWebDriver) webDriver ).getxFID() );

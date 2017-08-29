@@ -75,6 +75,7 @@ import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.interrupt.DeviceInterrupt;
 import org.xframium.device.interrupt.DeviceInterruptThread;
+import org.xframium.device.keepAlive.DeviceKeepAlive;
 import org.xframium.page.StepStatus;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
@@ -103,6 +104,8 @@ public class DeviceWebDriver
     private static Pattern FORMAT_PATTERN = Pattern.compile( "\\{([\\w\\.]*)\\}" );
     private List<DeviceInterrupt> interruptList;
 
+    private KeepAliveThread keepAliveThread = null;
+    
     private DeviceInterruptThread diThread = null;
 
     /** The web driver. */
@@ -134,6 +137,9 @@ public class DeviceWebDriver
     private double widthModifier = 1;
     private double heightModifier = 1;
     
+    private boolean keepAliveRunning = false;
+    private long lastAction = System.currentTimeMillis();
+    
     private boolean reportingElement = false;
     
     private DeviceOptions deviceOptions = null;
@@ -146,6 +152,35 @@ public class DeviceWebDriver
     
     private File artifactFolder = null;
     
+    
+    
+    public boolean isKeepAliveRunning()
+    {
+        return keepAliveRunning;
+    }
+
+    public void setKeepAliveRunning( boolean keepAliveRunning )
+    {
+        this.keepAliveRunning = keepAliveRunning;
+    }
+
+    
+    
+    public long getLastAction()
+    {
+        return lastAction;
+    }
+
+    public void setLastAction( long lastAction )
+    {
+        this.lastAction = lastAction;
+    }
+    
+    public void setLastAction( )
+    {
+        this.lastAction = System.currentTimeMillis();
+    }
+
     public String getxFID()
     {
         return executionContext.getxFID();
@@ -341,6 +376,66 @@ public class DeviceWebDriver
     public void setCloud( CloudDescriptor cloud )
     {
         this.cloud = cloud;
+        
+        if ( cloud.getKeepAlive() != null && isConnected() )
+        {
+            //
+            // Configure the keep live thread here
+            //
+            keepAliveThread = new KeepAliveThread( cloud.getKeepAlive(), this );
+            keepAliveThread.start();
+        }
+        
+    }
+    
+    private class KeepAliveThread extends Thread
+    {
+        private boolean keepAliveRunning = true;
+        private DeviceKeepAlive kA;
+        private DeviceWebDriver webDriver;
+        
+        public KeepAliveThread( DeviceKeepAlive kA, DeviceWebDriver webDriver )
+        {
+            this.kA = kA;
+            this.webDriver = webDriver;
+        }
+
+        public void run()
+        {
+            
+            while( keepAliveRunning )
+            {
+                long timeGap = System.currentTimeMillis() - webDriver.getLastAction();
+                if ( timeGap > ( kA.getQuietTime() * 1000 ) )
+                {
+                    kA.keepAlive( webDriver );
+                    webDriver.setLastAction();
+                }
+                
+                try
+                {
+                    Thread.sleep( kA.getPollTime() * 1000 );
+                }
+                catch( Exception e )
+                {
+                    
+                }
+            }
+        }
+        
+        
+        public boolean isKeepAliveRunning()
+        {
+            return keepAliveRunning;
+        }
+
+        public void setKeepAliveRunning( boolean keepAliveRunning )
+        {
+            this.keepAliveRunning = keepAliveRunning;
+        }
+        
+        
+        
     }
 
     private ReportiumClient reportiumClient;
@@ -418,7 +513,7 @@ public class DeviceWebDriver
     @Override
     public String getPageSource()
     {
-
+        setLastAction();
         String pageSource = webDriver.getPageSource();
 
         if ( pageSource != null )
@@ -628,6 +723,7 @@ public class DeviceWebDriver
      */
     public void get( String url )
     {
+        setLastAction();
         webDriver.get( url );
         
         try
@@ -666,6 +762,7 @@ public class DeviceWebDriver
      */
     public String getCurrentUrl()
     {
+        setLastAction();
         return webDriver.getCurrentUrl();
     }
 
@@ -676,6 +773,7 @@ public class DeviceWebDriver
      */
     public String getTitle()
     {
+        setLastAction();
         return webDriver.getTitle();
     }
 
@@ -686,6 +784,7 @@ public class DeviceWebDriver
      */
     public List<WebElement> findElements( By by )
     {
+        setLastAction();
         if ( log.isInfoEnabled() )
             log.info( Thread.currentThread().getName() + ": Locating element using [" + by + "]" );
         
@@ -756,6 +855,7 @@ public class DeviceWebDriver
      */
     public WebElement findElement( By by )
     {
+        setLastAction();
         if ( log.isInfoEnabled() )
             log.info( Thread.currentThread().getName() + ": Locating element using [" + by + "]" );
         
@@ -831,6 +931,7 @@ public class DeviceWebDriver
      */
     public void close()
     {
+        setLastAction();
         if ( webDriver != null && webDriver instanceof AppiumDriver )
             try
             {
@@ -840,6 +941,9 @@ public class DeviceWebDriver
             {
             }
         webDriver.close();
+        
+        if ( keepAliveThread != null )
+            keepAliveThread.setKeepAliveRunning( false );
 
         if ( diThread != null )
             diThread.stop();
@@ -852,7 +956,12 @@ public class DeviceWebDriver
      */
     public void quit()
     {
+        setLastAction();
         webDriver.quit();
+        
+        if ( keepAliveThread != null )
+            keepAliveThread.setKeepAliveRunning( false );
+        
         if ( diThread != null )
             diThread.stop();
         
@@ -881,6 +990,7 @@ public class DeviceWebDriver
      */
     public Set<String> getWindowHandles()
     {
+        setLastAction();
         return webDriver.getWindowHandles();
     }
 
@@ -891,6 +1001,7 @@ public class DeviceWebDriver
      */
     public String getWindowHandle()
     {
+        setLastAction();
         try
         {
             return webDriver.getWindowHandle();
@@ -908,6 +1019,7 @@ public class DeviceWebDriver
      */
     public TargetLocator switchTo()
     {
+        setLastAction();
         return webDriver.switchTo();
     }
 
@@ -918,6 +1030,7 @@ public class DeviceWebDriver
      */
     public Navigation navigate()
     {
+        setLastAction();
         return webDriver.navigate();
     }
 
@@ -940,6 +1053,7 @@ public class DeviceWebDriver
      */
     public WebDriver context( String newContext )
     {
+        setLastAction();
         if ( !contextSwitchSupported )
             return webDriver;
 
@@ -981,6 +1095,7 @@ public class DeviceWebDriver
      */
     public String getContext()
     {
+        setLastAction();
         if ( currentContext != null || !contextSwitchSupported )
             return currentContext;
 
@@ -1027,6 +1142,7 @@ public class DeviceWebDriver
      */
     public Set<String> getContextHandles()
     {
+        setLastAction();
         if ( contextHandles != null )
             return contextHandles;
 
@@ -1046,6 +1162,7 @@ public class DeviceWebDriver
      */
     public Object execute( String commandName, Map<String, ?> parameters )
     {
+        setLastAction();
         if ( webDriver instanceof RemoteWebDriver )
         {
             // RemoteExecuteMethod executeMethod = new RemoteExecuteMethod(
@@ -1103,6 +1220,7 @@ public class DeviceWebDriver
     @Override
     public <X> X getScreenshotAs( OutputType<X> target ) throws WebDriverException
     {
+        setLastAction();
         if ( webDriver instanceof TakesScreenshot )
             return ((TakesScreenshot) webDriver).getScreenshotAs( target );
         else
@@ -1115,17 +1233,20 @@ public class DeviceWebDriver
 
     public Object executeScript( String script, Object... args )
     {
+        setLastAction();
         return ((JavascriptExecutor) webDriver).executeScript( script, args );
     }
 
     public Object executeAsyncScript( String script, Object... args )
     {
+        setLastAction();
         return ((JavascriptExecutor) webDriver).executeAsyncScript( script, args );
     }
 
     @Override
     public Keyboard getKeyboard()
     {
+        setLastAction();
         if ( webDriver instanceof HasInputDevices )
             return ((HasInputDevices) webDriver).getKeyboard();
         else
@@ -1135,6 +1256,7 @@ public class DeviceWebDriver
     @Override
     public Mouse getMouse()
     {
+        setLastAction();
         if ( webDriver instanceof HasInputDevices )
             return ((HasInputDevices) webDriver).getMouse();
         else
@@ -1153,6 +1275,7 @@ public class DeviceWebDriver
     @Override
     public TouchScreen getTouch()
     {
+        setLastAction();
         if ( webDriver instanceof HasTouchScreen )
             return ((HasTouchScreen) webDriver).getTouch();
         else

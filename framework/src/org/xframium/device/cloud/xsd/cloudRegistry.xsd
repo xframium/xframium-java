@@ -16,6 +16,9 @@
     </complexType>
     
     <complexType name="Cloud">
+        <sequence>
+            <element name="keepAlive" type="tns:KeepAlive" minOccurs="0" maxOccurs="1" />
+        </sequence>
     	<attribute name="name" type="string" use="required" />    	
     	<attribute name="hostName" type="string" use="required" />
     	<attribute name="userName" type="string" use="optional" />
@@ -28,6 +31,12 @@
         <attribute name="providerType" type="string" use="optional" default="PERFECTO" />
         <attribute name="gesture" type="string" use="optional" />
         <attribute name="deviceAction" type="string" use="optional" />
+    </complexType>
+    
+    <complexType name="KeepAlive">
+        <attribute name="implementation" type="string" use="required" />
+        <attribute name="pollTime" type="int" use="optional" default="10" />
+        <attribute name="quietTime" type="int" use="optional" default="60" />
     </complexType>
     
 </schema>

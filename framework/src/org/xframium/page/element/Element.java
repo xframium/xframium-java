@@ -96,7 +96,11 @@ public interface Element
         TITLE_IS( 8, "TITLE_IS", "Title Equals"),
         
         /** The visible. */
-        VISIBLE( 9, "VISIBLE", "Visible");
+        VISIBLE( 9, "VISIBLE", "Visible"),
+        FRAME( 10, "FRAME", "Waits for a frame and switches to it"),
+        
+        CLICKABLE_THEN_CLICK( 11, "CLICKABLE_THEN_CLICK", "Waits for Clickable then clicks on the element"),
+        ;
 	    
 	    private WAIT_FOR( int id, String name, String description )
         {
@@ -121,6 +125,8 @@ public interface Element
             wList.add( WAIT_FOR.TITLE_CONTAINS );
             wList.add( WAIT_FOR.TITLE_IS );
             wList.add( WAIT_FOR.VISIBLE );
+            wList.add( WAIT_FOR.FRAME );
+            wList.add( WAIT_FOR.CLICKABLE_THEN_CLICK );
             return wList;
         }
     }

@@ -484,28 +484,33 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         {
             Handset localDevice = PerfectoMobile.instance( xFID ).devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
             Execution appExec = null;
-            if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
-                appExec = PerfectoMobile.instance( xFID).application().open( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
-            else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-                appExec = PerfectoMobile.instance( xFID ).application().open( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
+            
+            String[] applicationArray = null;
+            
+            if ( localDevice.getOs().toLowerCase().equals( "ios" ) )
+                applicationArray = appDesc.getAppleIdentifier().split( ";" );
+            else if ( localDevice.getOs().toLowerCase().equals( "android" ) )    
+                applicationArray = appDesc.getAndroidIdentifier().split( ";" );
             else
-                throw new IllegalArgumentException( "Could not install application to " + localDevice.getOs() );
+                throw new ScriptException( "Could not install application to " + localDevice.getOs() );
             
-            if ( appExec != null )
+            
+            for ( String appId : applicationArray )
             {
-                if ( appExec.getStatus().toLowerCase().equals( "success" ) )
+                log.info( "Attempting to launch [" + appId + "] on [" + localDevice.getOs() + "]" );
+                appExec = PerfectoMobile.instance( xFID).application().open( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appId );
+                if ( appExec != null )
                 {
-                    if ( webDriver instanceof ContextAware )
-                        ( ( ContextAware ) webDriver ).context( "NATIVE_APP" );
-                    return true;
+                    if ( appExec.getStatus().toLowerCase().equals( "success" ) )
+                    {
+                        if ( webDriver instanceof ContextAware )
+                            ( ( ContextAware ) webDriver ).context( "NATIVE_APP" );
+                        return true;
+                    }
                 }
-                else
-                    throw new ScriptException( "Failed to launch application " + appDesc.getName() );
             }
-            else 
-                throw new ScriptException( "Failed to launch application " + appDesc.getName() );
             
-            
+            throw new ScriptException( "Failed to launch application " + appDesc.getName() );
         }
         return true;
     }

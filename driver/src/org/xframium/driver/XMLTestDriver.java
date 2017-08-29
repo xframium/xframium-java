@@ -239,52 +239,59 @@ public class XMLTestDriver extends AbstractSeleniumTest
         }
         finally
         {
-            if ( testPackage.getConnectedDevice().getWebDriver() != null )
+            try
             {
-                if ( returnValue )
+                if ( testPackage.getConnectedDevice().getWebDriver() != null )
                 {
-                    if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
+                    if ( returnValue )
                     {
-                        if ( cD.getProvider().equals( "SAUCELABS" ) )
+                        if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
                         {
-                            SauceREST sR = new SauceREST( cD.getUserName(), cD.getPassword() );
-                            sR.jobPassed( testPackage.getConnectedDevice().getWebDriver().getExecutionId() );
+                            if ( cD.getProvider().equals( "SAUCELABS" ) )
+                            {
+                                SauceREST sR = new SauceREST( cD.getUserName(), cD.getPassword() );
+                                sR.jobPassed( testPackage.getConnectedDevice().getWebDriver().getExecutionId() );
+                            }
+                        }
+    
+                        if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
+                        {
+                            if ( testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
+                            {
+                                if ( returnValue )
+                                    testPackage.getConnectedDevice().getWebDriver().getReportiumClient().testStop( TestResultFactory.createSuccess() );
+                            }
+                        }
+    
+                        return;
+                    }
+                    else
+                    {
+                        if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
+                        {
+                            if ( cD.getProvider().equals( "SAUCELABS" ) )
+                            {
+                                SauceREST sR = new SauceREST( cD.getUserName(), cD.getPassword() );
+                                sR.jobFailed( testPackage.getConnectedDevice().getWebDriver().getExecutionId() );
+                            }
+                        }
+    
+                        if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
+                        {
+                            if ( testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
+                            {
+                                Throwable currentException = executionContextTest.getStepException();
+    
+                                testPackage.getConnectedDevice().getWebDriver().getReportiumClient().testStop( TestResultFactory.createFailure( currentException != null ? currentException.getMessage() : "Unknown Failure", currentException ) );
+    
+                            }
                         }
                     }
-
-                    if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
-                    {
-                        if ( testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
-                        {
-                            if ( returnValue )
-                                testPackage.getConnectedDevice().getWebDriver().getReportiumClient().testStop( TestResultFactory.createSuccess() );
-                        }
-                    }
-
-                    return;
                 }
-                else
-                {
-                    if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
-                    {
-                        if ( cD.getProvider().equals( "SAUCELABS" ) )
-                        {
-                            SauceREST sR = new SauceREST( cD.getUserName(), cD.getPassword() );
-                            sR.jobFailed( testPackage.getConnectedDevice().getWebDriver().getExecutionId() );
-                        }
-                    }
-
-                    if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
-                    {
-                        if ( testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
-                        {
-                            Throwable currentException = executionContextTest.getStepException();
-
-                            testPackage.getConnectedDevice().getWebDriver().getReportiumClient().testStop( TestResultFactory.createFailure( currentException != null ? currentException.getMessage() : "Unknown Failure", currentException ) );
-
-                        }
-                    }
-                }
+            }
+            catch( Exception e )
+            {
+                log.error( "Error ending test", e );
             }
 
             Throwable currentException = executionContextTest.getStepException();

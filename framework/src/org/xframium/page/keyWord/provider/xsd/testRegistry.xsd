@@ -137,6 +137,7 @@
           <enumeration value="RANDOM" />
           <enumeration value="FLOW" />
           <enumeration value="CONSOLE" />
+          <enumeration value="DATE" />
         </restriction>
       </simpleType>
     </attribute>
