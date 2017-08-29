@@ -12,8 +12,14 @@
         <parameter type="STATIC" name="new parameter" value="UP" />
       </step>
     </step>
-    <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="CLICK" os="ANDROID" failureMode="IGNORE">
-      <step name="xF-Search Text Box.VISIBLE" site="xF_Native" page="xF_Settings" type="WAIT_FOR" />
+    <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="EXISTS" os="ANDROID" failureMode="IGNORE">
+      <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="CLICK" os="ANDROID" failureMode="ERROR" />
+      <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="WAIT_FOR" os="ANDROID" >
+        <step name="Click Again..." site="New Test" page="Search" type="ELSE" active="true" threshold="0" timed="false" inverse="false" wait="0">
+            <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="CLICK" os="ANDROID" failureMode="ERROR" />
+            <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="WAIT_FOR" os="ANDROID" />      
+        </step>
+      </step>
       <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="SET">
         <parameter type="STATIC" name="Value" value="Date" />
       </step>

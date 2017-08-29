@@ -11,5 +11,6 @@
 <step name="OPEN" site="New Test" page="Search" type="APPLICATION" active="true" threshold="0" timed="false" inverse="false" wait="5000" failureMode="ERROR">
 <parameter type="STATIC" name="Application Name" value="xF-Settings"/>
 </step>
+<step name="Wait for App" site="New Test" page="Search" type="WAIT" active="true" threshold="0" timed="false" inverse="false"  failureMode="ERROR" />
 </function>
 </suite>

@@ -5,9 +5,14 @@
     <step name="xF-Launch Settings" site="New Test" page="Search" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" />
     
     
-    <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="CLICK" os="ANDROID" failureMode="IGNORE">
-      <step name="STATUS" site="New Test" page="Search" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" os="ANDROID" />
-      <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="WAIT_FOR" os="ANDROID" />
+    <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="EXISTS" os="ANDROID" failureMode="IGNORE">
+      <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="CLICK" os="ANDROID" failureMode="ERROR" />
+      <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="WAIT_FOR" os="ANDROID" >
+        <step name="Click Again..." site="New Test" page="Search" type="ELSE" active="true" threshold="0" timed="false" inverse="false" wait="0">
+            <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="CLICK" os="ANDROID" failureMode="ERROR" />
+            <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="WAIT_FOR" os="ANDROID" />      
+        </step>
+      </step>
       <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="SET" os="ANDROID">
         <parameter type="STATIC" name="Value" value="Data" />
       </step>
