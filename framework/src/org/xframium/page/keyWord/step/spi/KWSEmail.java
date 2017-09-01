@@ -134,11 +134,11 @@ public class KWSEmail extends AbstractKeyWordStep
             {
                 if ( getContext() != null )
                 {
-                    contextMap.put( getContext() + "_count", messageWrapper.getMessageCount() + "" );
-                    contextMap.put( getContext() + "_FROM", messageWrapper.getFrom() );
-                    contextMap.put( getContext() + "_SUBJECT", messageWrapper.getSubject() );
-                    contextMap.put( getContext() + "_BODY", messageWrapper.getBody() );
-                    contextMap.put( getContext() + "_MIMETYPE", messageWrapper.getMimeType() );
+                    addContext( getContext() + "_count", messageWrapper.getMessageCount() + "", contextMap, executionContext );
+                    addContext( getContext() + "_FROM", messageWrapper.getFrom(), contextMap, executionContext );
+                    addContext( getContext() + "_SUBJECT", messageWrapper.getSubject(), contextMap, executionContext );
+                    addContext( getContext() + "_BODY", messageWrapper.getBody(), contextMap, executionContext );
+                    addContext( getContext() + "_MIMETYPE", messageWrapper.getMimeType(), contextMap, executionContext );
                 }
                 
                 if ( !validateData( messageWrapper.getBody() + "" ) )

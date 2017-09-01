@@ -33,6 +33,7 @@ import org.xframium.artifact.spi.DefaultHistoryReportingArtifact;
 import org.xframium.artifact.spi.DefaultReportingArtifact;
 import org.xframium.artifact.spi.DefaultSuiteReportingArtifact;
 import org.xframium.artifact.spi.DeviceLogArtifact;
+import org.xframium.artifact.spi.HTMLAssetsArtifact;
 import org.xframium.artifact.spi.HTMLGridArtifact;
 import org.xframium.artifact.spi.HTMLSourceArtifact;
 import org.xframium.artifact.spi.ImagingArtifact;
@@ -52,6 +53,7 @@ import org.xframium.artifact.spi.TimingArtifact;
 import org.xframium.artifact.spi.VitalsArtifact;
 import org.xframium.artifact.spi.XMLSourceArtifact;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.page.keyWord.KeyWordDriver;
 
 public class ArtifactManager
@@ -122,6 +124,7 @@ public class ArtifactManager
         registerArtifact( ArtifactTime.AFTER_SUITE, ArtifactType.EXECUTION_SUITE_JSON.name(), JSONSuiteArtifact.class );
         registerArtifact( ArtifactTime.AFTER_SUITE_ARTIFACTS, ArtifactType.EXECUTION_HISTORY_HTML.name(), DefaultHistoryReportingArtifact.class );
         registerArtifact( ArtifactTime.AFTER_SUITE_ARTIFACTS, ArtifactType.EXECUTION_HISTORY_JSON.name(), JSONHistoryArtifact.class );
+        registerArtifact( ArtifactTime.AFTER_SUITE_ARTIFACTS, ArtifactType.ASSETS.name(), HTMLAssetsArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.REPORTIUM.name(), PerfectoReportingServices.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.SAUCE_LABS.name(), SauceLabsReportingServices.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.WIND_TUNNEL.name(), PerfectoWindTunnel.class );
@@ -172,7 +175,7 @@ public class ArtifactManager
         return enabledArtifacts.contains( artifactName );
     }
     
-    private static final String[] DEFAULT_ARTIFACTS = new String[] { "EXECUTION_SUITE_HTML", "EXECUTION_SUITE_JSON", "EXECUTION_HISTORY_JSON", "EXECUTION_HISTORY_HTML", "EXECUTION_TEST_JSON", "EXECUTION_TEST_HTML" };
+    private static final String[] DEFAULT_ARTIFACTS = new String[] { "EXECUTION_SUITE_HTML", "EXECUTION_SUITE_JSON", "EXECUTION_HISTORY_JSON", "EXECUTION_HISTORY_HTML", "EXECUTION_TEST_JSON", "EXECUTION_TEST_HTML", "GRID_HTML", "GRID_REPORT" };
     
     public void enableArtifact( String artifactName )
     {
@@ -189,6 +192,15 @@ public class ArtifactManager
         {
             try
             {
+                for ( String a : DEFAULT_ARTIFACTS )
+                {
+                    if ( a.equals( artifactName ) )
+                    {
+                        enableArtifact( ArtifactType.ASSETS.name() );
+                    }
+                }
+                
+                
                 Class artifactClass = artifactMap.get( artifactName ); 
                 ArtifactTime aTime = classTimeMap.get( artifactClass );
                 List<String> classList = enabledArtifactMap.get( aTime );

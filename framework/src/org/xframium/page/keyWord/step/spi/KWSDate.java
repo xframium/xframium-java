@@ -184,7 +184,7 @@ public class KWSDate extends AbstractKeyWordStep
         {
             if ( log.isDebugEnabled() )
                 log.debug( "Setting Context Data to [" + returnValue + "] for [" + getContext() + "]" );
-            contextMap.put( getContext(), returnValue );
+            addContext( getContext(), returnValue, contextMap, executionContext );
         }
 
         return true;

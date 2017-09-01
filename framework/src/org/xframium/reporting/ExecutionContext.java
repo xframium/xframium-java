@@ -25,6 +25,7 @@ public class ExecutionContext
     private String gridUrl;
     private String phase;
     private String domain;
+    private String folderName;
     private Map<String,String> configProperties;
     private ApplicationDescriptor aut = null;
     private String[] testTags = new String[ 0 ];
@@ -157,8 +158,16 @@ public class ExecutionContext
     public File getReportFolder( String xFID )
     {
         if ( reportFolder == null )
-            reportFolder = new File( DataManager.instance( xFID ).getReportFolder(), timeFormat.format( new Date( System.currentTimeMillis() ) ) );
+        {
+            folderName = timeFormat.format( new Date( System.currentTimeMillis() ) );
+            reportFolder = new File( DataManager.instance( xFID ).getReportFolder(), folderName );
+        }
         return reportFolder;
+    }
+
+    public String getFolderName()
+    {
+        return folderName;
     }
 
     public String getSuiteName()

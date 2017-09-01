@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.io.IOUtils;
 import org.xframium.artifact.AbstractArtifact;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.factory.DeviceWebDriver;
@@ -30,7 +31,6 @@ public class HTMLGridArtifact extends AbstractArtifact
         {
             ExecutionContext.instance( xFID ).setGridUrl( "Grid.html" );
             inputStream = getTemplate( "Grid.html" );
-            
             return writeToDisk( rootFolder, FILE_NAME, inputStream );
         }
         catch( Exception e )

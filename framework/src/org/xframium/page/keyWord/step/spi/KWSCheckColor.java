@@ -137,7 +137,7 @@ public class KWSCheckColor extends AbstractKeyWordStep
 		{
 			if ( log.isInfoEnabled() )
 				log.info( "Setting Context Data to [" + elementColor + "] for [" + getContext() + "]" );
-			contextMap.put( getContext(), elementColor + "" );
+			addContext( getContext(), elementColor + "", contextMap, executionContext );
 		}
 		
 		if ( colorCode != null )

@@ -98,6 +98,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         category = "Other";
     }
 
+
     /** The name. */
     private String name;
 
@@ -178,6 +179,20 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     protected String natualLanguage;
     protected ApplicationVersion version;
 
+    protected void addContext( String contextName, Object contextValue, Map<String,Object> contextMap, ExecutionContextTest eC )
+    {
+        
+        Map<String,Object> cP = (Map<String,Object>) eC.getStep().getExecutionParameter().get( "CONTEXT" );
+        if ( cP == null )
+        {
+            cP = new HashMap<String,Object>( 10 );
+            eC.getStep().getExecutionParameter().put( "CONTEXT", cP );
+        }
+        
+        cP.put( contextName, contextValue );
+        contextMap.put( contextName, contextValue );
+    }
+    
     protected boolean validateParameters( String[] parameterNames )
     {
         for ( String pName : parameterNames )

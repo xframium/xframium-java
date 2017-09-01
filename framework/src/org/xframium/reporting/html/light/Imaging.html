@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html ng-app="xImage">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
+<script src="http://xframium.org/output/assets/js/ui-bootstrap-tpls-2.1.4.js"></script>
+<script src="http://xframium.org/output/assets/js/angular-ui-tree.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+<script src="http://xframium.org/output/assets/js/angular-chart.js"></script>
+<script src="./Test.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link href="http://www.xframium.org/output/assets/css/toolkit-inverse.css" rel="stylesheet">
+<link href="http://www.xframium.org/output/assets/css/application.css" rel="stylesheet">
+<link href="http://www.xframium.org/output/assets/css/angular-ui-tree.css" rel="stylesheet">
+</head>
+<body ng-controller="xImageController" data-ng-init="initialize()">
+    <div class="container-fluid">
+        <div class="col-sm-12 content">
+            <div ng-if="s.executionParameter[ 'ImagingStatus'] == 'true'" class="bg-success row" style="border-radius: 5px; margin-top: 10px; margin-bottom: 25px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; cursor: default" ng-repeat="s in imageList">
+                <div class="col-sm-2">
+                    <span style="color: black">{{s.step.pageName}}</span>
+                </div>
+                <div class="col-sm-2">
+                    <span style="color: black">{{s.step.name}}</span>
+                </div>
+                <div class="col-sm-8">
+                    <img class="img-rounded" src="{{s.executionParameter[ 'ImagingImage']}}" height="32"/>
+                </div>
+                
+            </div>
+            <div ng-if="s.executionParameter[ 'ImagingStatus'] == 'false'" class="bg-danger row" style="border-radius: 5px; margin-top: 10px; margin-bottom: 25px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; cursor: default" ng-repeat="s in imageList">
+                <div class="col-sm-2">
+                    <span style="color: black">{{s.step.pageName}}</span>
+                </div>
+                <div class="col-sm-2">
+                    <span style="color: black">{{s.step.name}}</span>
+                </div>
+                <div class="col-sm-8">
+                    <img class="img-rounded" src="{{s.executionParameter[ 'ImagingImage']}}" height="32"/>
+                </div>
+                <div class="col-sm-12">
+                    <span style="color: black; font-weight: bold">{{s.executionParameter[ 'ImagingError']}}</span>
+                </div>
+                
+            </div>
+
+        </div>
+    </div>
+</body>
+<script>
+    var xGrid = angular.module('xImage', [ 'ngAnimate', 'ngSanitize', 'ui.bootstrap' ]);
+
+    xGrid.controller('xImageController', function XImageController( $scope, $uibModal )
+    {
+        $scope.testData = testData.pageData;
+        $scope.imageList = [];
+        
+        
+        
+        $scope.processStep = function( step )
+        {
+            console.log( step );
+            if ( step.executionParameter[ 'ImagingType'] != null )
+            {
+                $scope.imageList.push( step );
+            }    
+            
+            for ( var i=0; i<step.stepList.length; i++ )
+                $scope.processStep( step.stepList[ i ] );
+        }
+        
+        for ( var i=0; i<$scope.testData.stepList.length; i++  )
+        {
+            $scope.processStep( $scope.testData.stepList[ i ] );
+        }
+
+    });
+</script>
+</html>

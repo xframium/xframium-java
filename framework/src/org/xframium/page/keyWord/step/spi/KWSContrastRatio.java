@@ -157,7 +157,7 @@ public class KWSContrastRatio extends AbstractKeyWordStep
 		{
 			if ( log.isInfoEnabled() )
 				log.info( "Setting Context Data to [" + contrastRatio + "] for [" + getContext() + "]" );
-			contextMap.put( getContext(), contrastRatio + "" );
+			addContext( getContext(), contrastRatio + "", contextMap, executionContext );
 		}
 		
 		return true;

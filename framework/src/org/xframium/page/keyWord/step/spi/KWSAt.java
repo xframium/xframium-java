@@ -68,19 +68,21 @@ public class KWSAt extends AbstractKeyWordStep
             if ( log.isDebugEnabled() )
                 log.debug( "Setting Context Data to [" + currentElement.getValue() + "] for [" + getContext() + "]" );
 
-            contextMap.put( contextName + ".x", at.getX() + "" );
-            contextMap.put( contextName + ".y", at.getY() + "" );
+            addContext( contextName + ".x", at.getX() + "", contextMap, executionContext );
+            addContext( contextName + ".y", at.getY() + "", contextMap, executionContext );
 
-            contextMap.put( contextName + ".x%", ((int) (((double) at.getX() / (double) webDriver.manage().window().getSize().getWidth()) * 100.0)) + "" );
-            contextMap.put( contextName + ".y%", ((int) (((double) at.getY() / (double) webDriver.manage().window().getSize().getHeight()) * 100.0)) + "" );
+            addContext( contextName + ".x%", ((int) (((double) at.getX() / (double) webDriver.manage().window().getSize().getWidth()) * 100.0)) + "", contextMap, executionContext );
+            addContext( contextName + ".y%", ((int) (((double) at.getY() / (double) webDriver.manage().window().getSize().getHeight()) * 100.0)) + "", contextMap, executionContext );
 
-            contextMap.put( contextName + ".width", size.getWidth() + "" );
-            contextMap.put( contextName + ".height", size.getHeight() + "" );
-            contextMap.put( contextName + ".centerx", at.getX() + (size.getWidth() / 2) + "" );
-            contextMap.put( contextName + ".centery", at.getY() + (size.getHeight() / 2) + "" );
-            contextMap.put( contextName + ".centerx%", ((int) ((((double) at.getX() + ((double) size.getWidth() / 2.0)) / (double) webDriver.manage().window().getSize().getWidth()) * 100.0)) + "" );
-            contextMap.put( contextName + ".centery%", ((int) ((((double) at.getY() + ((double) size.getHeight() / 2.0)) / (double) webDriver.manage().window().getSize().getHeight()) * 100.0)) + "" );
+            addContext( contextName + ".width", size.getWidth() + "", contextMap, executionContext );
+            addContext( contextName + ".height", size.getHeight() + "", contextMap, executionContext );
+            addContext( contextName + ".centerx", at.getX() + (size.getWidth() / 2) + "", contextMap, executionContext );
+            addContext( contextName + ".centery", at.getY() + (size.getHeight() / 2) + "", contextMap, executionContext );
+            addContext( contextName + ".centerx%", ((int) ((((double) at.getX() + ((double) size.getWidth() / 2.0)) / (double) webDriver.manage().window().getSize().getWidth()) * 100.0)) + "", contextMap, executionContext );
+            addContext( contextName + ".centery%", ((int) ((((double) at.getY() + ((double) size.getHeight() / 2.0)) / (double) webDriver.manage().window().getSize().getHeight()) * 100.0)) + "", contextMap, executionContext );
 
+            
+            
         }
 
         return currentElement.isPresent();

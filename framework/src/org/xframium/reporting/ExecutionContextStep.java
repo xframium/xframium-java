@@ -21,7 +21,7 @@ public class ExecutionContextStep
     private StepStatus stepStatus;
     private Throwable throwable;
     private String message;
-    private Map<String,String> executionParameter = new HashMap<String,String>( 10 );
+    private Map<String,Object> executionParameter = new HashMap<String,Object>( 10 );
     private List<String> parameterList = new ArrayList<String>( 10 );
 
     public String toString()
@@ -122,12 +122,12 @@ public class ExecutionContextStep
         return stepCount;
     }
     
-    public void addExecutionParameter( String name, String value )
+    public void addExecutionParameter( String name, Object value )
     {
         executionParameter.put( name,  value );
     }
     
-    public Map<String, String> getExecutionParameter()
+    public Map<String, Object> getExecutionParameter()
     {
         return executionParameter;
     }
@@ -212,7 +212,7 @@ public class ExecutionContextStep
     {
         
         if ( !getStatus() && executionParameter.containsKey( "SCREENSHOT_ABS" ) )
-            return executionParameter.get( "SCREENSHOT_ABS" );
+            return executionParameter.get( "SCREENSHOT_ABS" ) + "";
         else
         {
             if ( stepList != null )

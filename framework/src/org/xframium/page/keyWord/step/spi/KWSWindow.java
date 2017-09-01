@@ -186,7 +186,7 @@ public class KWSWindow extends AbstractKeyWordStep
 	            throw new ScriptException( "GET_TITLE Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + pageTitle + "]" );
 		    
 		    if ( getContext() != null && !getContext().trim().isEmpty() ) 
-		        contextMap.put( getContext(), pageTitle );
+		        addContext( getContext(), pageTitle , contextMap, executionContext );
 
 		    break;
 		    
@@ -205,7 +205,7 @@ public class KWSWindow extends AbstractKeyWordStep
                 throw new ScriptException( "GET_URL Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + currentUrl + "]" );
             
             if ( getContext() != null && !getContext().trim().isEmpty() ) 
-                contextMap.put( getContext(), currentUrl );
+                addContext( getContext(), currentUrl , contextMap, executionContext );
 
 		    break;
 		    

@@ -124,7 +124,7 @@ public class KWSExecWS extends AbstractKeyWordStep
             
             if ( getContext() != null )
             {
-                contextMap.put( getContext(), data.get( "_PAYLOAD" ) );
+                addContext( getContext(), data.get( "_PAYLOAD" ), contextMap, executionContext );
             }
             
         }

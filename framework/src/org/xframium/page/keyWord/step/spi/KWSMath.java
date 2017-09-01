@@ -145,7 +145,7 @@ public class KWSMath extends AbstractKeyWordStep
         {
             if ( log.isDebugEnabled() )
                 log.debug( "Setting Context Data to [" + currentValue + "] for [" + getContext() + "]" );
-            contextMap.put( getContext(), currentValue + "" );
+            addContext( getContext(), currentValue + "", contextMap, executionContext );
         }
 		
 		return true;

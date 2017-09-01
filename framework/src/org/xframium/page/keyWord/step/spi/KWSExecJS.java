@@ -85,7 +85,7 @@ public class KWSExecJS extends AbstractKeyWordStep
         {
             if ( log.isDebugEnabled() )
                 log.debug( "Setting Context Data to [" + result + "] for [" + getContext() + "]" );
-            contextMap.put( getContext(), result );
+            addContext( getContext(), result, contextMap, executionContext );
         }
 		
         return true;

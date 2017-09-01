@@ -193,7 +193,7 @@ public class KWSString2 extends AbstractKeyWordStep
                     {
                         for ( int i=1; i<regexMatcher.groupCount() + 1; i++ )
                         {
-                            contextMap.put( getContext() + "_Group " + i, regexMatcher.group( i ) );
+                            addContext( getContext() + "_Group " + i, regexMatcher.group( i ), contextMap, executionContext );
                         }
                     }
                     newValue = regexMatcher.group( 0 );
@@ -253,7 +253,7 @@ public class KWSString2 extends AbstractKeyWordStep
         {
             if ( log.isDebugEnabled() )
                 log.debug( "Setting Context Data to [" + newValue + "] for [" + getContext() + "]" );
-            contextMap.put( getContext(), newValue );
+            addContext( getContext(), newValue , contextMap, executionContext );
         }
 
         return rtn;

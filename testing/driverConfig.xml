@@ -1,8 +1,8 @@
 <xFramium xmlns="http://www.xframium.org/xFramiumDriver" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/xFramiumDriver http://www.xframium.org/xsd/xFramiumDriver.xsd">
-  <cloud provider="XML" fileName="cloudRegistry.xml" name="saucelabs" />
+  <cloud provider="XML" fileName="cloudRegistry.xml" name="ford" />
   <application provider="XML" fileName="applicationRegistry.xml" name="xTest" />
-  <devices provider="XML" fileName="deviceRegistry.xml" />
-  <driver suiteName="xTest" type="WEB" outputFolder="test-output" displayResults="true" domain="PROFESSIONAL_SERVICES" dryRun="false" embeddedServer="true">
+  <devices provider="RESERVED" fileName="deviceRegistry.xml" />
+  <driver suiteName="xTest" type="WEB" outputFolder="test-output" displayResults="true" domain="PROFESSIONAL_SERVICES" dryRun="false" embeddedServer="true" tagNames="Native">
     <property name="jdbc.password"></property>
     <property name="xxx.jdbc.url">jdbc:derby:memory:mll;create=true</property>
     <property name="xxx.jdbc.username"></property>
@@ -20,12 +20,10 @@
     <artifact type="CONSOLE_LOG" />
     <artifact type="GRID_REPORT" />
     <artifact type="GRID_HTML" />
-    <artifact type="SAUCE_LABS" />
     <artifact type="EXECUTION_REPORT_CSV" />
     <artifact type="EXECUTION_REPORT_XML" />
     <artifact type="EXECUTION_REPORT_HTML" />
     <artifact type="EXECUTION_REPORT_PDF" />
-    <artifact type="REPORTIUM" />
     <artifact type="WIND_TUNNEL" />
     <artifact type="TIMING_HTML" />
     <artifact type="STATISTICS" />
