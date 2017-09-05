@@ -8,4 +8,4 @@ outputs:
 
 run:
   path: mvn
-  args: ["-f", "xframium-java/framework/pom.xml", "clean compile package"]
+  args: ["-f", "pom.xml", "clean compile package"]
