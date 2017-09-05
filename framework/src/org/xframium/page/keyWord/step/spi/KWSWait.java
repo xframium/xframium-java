@@ -50,7 +50,7 @@ public class KWSWait extends AbstractKeyWordStep
 	{
 		int waitTime = 5;
 		
-		if ( getParameterList().size() > 0 )
+		if ( getParameterList().size() == 1 )
 		{
 			try
 			{

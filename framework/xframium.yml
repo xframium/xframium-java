@@ -1,0 +1,11 @@
+platform: linux
+
+inputs:
+- name: xframium
+
+outputs:
+- name: built-project
+
+run:
+  path: mvn
+  args: ["-f", "xframium-java/framework/pom.xml", "clean compile package"]

@@ -11,6 +11,7 @@
       <element name="xF_Wi-Fi" descriptor="COMPLEX">
         <element value="//UIAStaticText[@name='Wi-Fi']" descriptor="XPATH" os="IOS" />
         <element value="//android.widget.TextView[@text='Wi-Fi']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.TextView[starts-with( @text, 'Wi' )][contains( @text, 'Fi' )]" descriptor="XPATH" os="ANDROID" />
       </element>
       <element name="xF-Search Button" descriptor="COMPLEX">
         <element value="//*[@resource-id='com.android.settings:id/search']" descriptor="XPATH" os="ANDROID" />
