@@ -1,7 +1,7 @@
 platform: linux
 
 inputs:
-- name: xframium
+- name: source-code
 
 outputs:
 - name: built-project
