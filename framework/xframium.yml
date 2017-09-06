@@ -1,7 +1,7 @@
 platform: linux
 
 image_resource:
-  type: docker_image
+  type: docker-image
 
 inputs:
 - name: source-code
