@@ -13,5 +13,5 @@ outputs:
 - name: built-project
 
 run:
-  path: mvn
+  path: /usr/bin/mvn
   args: ["-f", "pom.xml", "clean compile package"]
