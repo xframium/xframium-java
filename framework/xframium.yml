@@ -3,8 +3,8 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: ruby
-    tag: '2.1'
+    repository: maven
+    tag: 'latest'
 
 inputs:
 - name: source-code
@@ -13,5 +13,5 @@ outputs:
 - name: built-project
 
 run:
-  path: /usr/bin/mvn
+  path: mvn
   args: ["-f", "pom.xml", "clean compile package"]
