@@ -14,4 +14,4 @@ outputs:
 
 run:
   path: mvn
-  args: ["-f", "pom.xml", "clean compile package"]
+  args: ["-f", "source-code/framework/pom.xml", "clean compile package"]
