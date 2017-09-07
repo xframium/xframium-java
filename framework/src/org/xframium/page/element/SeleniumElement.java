@@ -961,6 +961,7 @@ public class SeleniumElement extends AbstractElement
 
         try
         {
+            ReportableBy useBy = useBy();
 
             try
             {
@@ -983,7 +984,7 @@ public class SeleniumElement extends AbstractElement
                             @Override
                             public WebElement apply( WebDriver webDriver )
                             {
-                                return ExpectedConditions.elementToBeClickable( (By) useBy() ).apply( webDriver );
+                                return ExpectedConditions.elementToBeClickable( (By) useBy ).apply( webDriver );
                             }
 
                         } );
@@ -997,7 +998,7 @@ public class SeleniumElement extends AbstractElement
                             @Override
                             public Boolean apply( WebDriver webDriver )
                             {
-                                return ExpectedConditions.invisibilityOfElementLocated( (By) useBy() ).apply( webDriver );
+                                return ExpectedConditions.invisibilityOfElementLocated( (By) useBy ).apply( webDriver );
                             }
 
                         } );
@@ -1010,7 +1011,7 @@ public class SeleniumElement extends AbstractElement
                             @Override
                             public WebElement apply( WebDriver webDriver )
                             {
-                                return ExpectedConditions.presenceOfElementLocated( (By) useBy() ).apply( webDriver );
+                                return ExpectedConditions.presenceOfElementLocated( (By) useBy ).apply( webDriver );
                             }
 
                         } );
@@ -1024,7 +1025,7 @@ public class SeleniumElement extends AbstractElement
                             @Override
                             public Boolean apply( WebDriver webDriver )
                             {
-                                return ExpectedConditions.elementToBeSelected( (By) useBy() ).apply( webDriver );
+                                return ExpectedConditions.elementToBeSelected( (By) useBy ).apply( webDriver );
                             }
 
                         } );
@@ -1037,7 +1038,7 @@ public class SeleniumElement extends AbstractElement
                             @Override
                             public Boolean apply( WebDriver webDriver )
                             {
-                                return ExpectedConditions.textToBePresentInElementValue( (By) useBy(), value ).apply( webDriver );
+                                return ExpectedConditions.textToBePresentInElementValue( (By) useBy, value ).apply( webDriver );
                             }
 
                         } );
@@ -1050,7 +1051,7 @@ public class SeleniumElement extends AbstractElement
                             @Override
                             public WebElement apply( WebDriver webDriver )
                             {
-                                return ExpectedConditions.visibilityOfElementLocated( (By) useBy() ).apply( webDriver );
+                                return ExpectedConditions.visibilityOfElementLocated( (By) useBy ).apply( webDriver );
                             }
 
                         } );
@@ -1065,7 +1066,7 @@ public class SeleniumElement extends AbstractElement
                             {
                                 try
                                 {
-                                    WebElement webElement = webDriver.findElement( (By) useBy() );
+                                    WebElement webElement = webDriver.findElement( (By) useBy );
                                     if ( webElement instanceof MorelandWebElement )
                                         webDriver.switchTo().frame( ((MorelandWebElement) webElement).getWebElement() );
                                     else
@@ -1089,7 +1090,7 @@ public class SeleniumElement extends AbstractElement
                             @Override
                             public WebElement apply( WebDriver webDriver )
                             {
-                                return ExpectedConditions.elementToBeClickable( (By) useBy() ).apply( webDriver );
+                                return ExpectedConditions.elementToBeClickable( (By) useBy ).apply( webDriver );
                             }
 
                         } );
@@ -1098,6 +1099,7 @@ public class SeleniumElement extends AbstractElement
                     default:
                         throw new IllegalArgumentException( "Unknown Wait Condition [" + waitType + "]" );
                 }
+                
 
                 if ( currentContext != null && getWebDriver() instanceof ContextAware )
                     ((ContextAware) getWebDriver()).context( currentContext );
@@ -1110,7 +1112,11 @@ public class SeleniumElement extends AbstractElement
             catch ( Exception e )
             {
                 log.error( Thread.currentThread().getName() + ": Could not locate " + useBy(), e );
-                throw new ObjectIdentificationException( getBy(), (By) useBy() );
+                throw new ObjectIdentificationException( getBy(), (By) useBy );
+            }
+            finally
+            {
+                getExecutionContext().getStep().setLocatorResult( useBy.getResults() );
             }
         }
         finally
