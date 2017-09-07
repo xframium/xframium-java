@@ -44,14 +44,17 @@ iframe {
 </head>
 <body ng-controller="xTestController" data-ng-init="initialize()" ng-cloak style="padding-top: 25px">
     <div class="container-fluid">
-        <div class="col-sm-12 content">
+        <div class="col-sm-3 content">
+            <span class="glyphicon glyphicon-ok"></span>ddd
+        </div>
+        <div class="col-sm-9 content">
             <div class="dashhead">
                 <span class="pull-right text-muted">
                     Started {{testData.startTime.dateOnly}} at {{testData.startTime.timeOnly}} and ran for
                     <b>{{formattedDuration}}</b>
                 </span>
                 <h6 class="dashhead-subtitle">xFramium 1.0.12 (Helios)</h6>
-                <h3 class="dashhead-title">{{testData.test.name}}</h3>
+                <h3 class="dashhead-title">{{testData.test.name}}<span class="glyphicon glyphicon-ok" ng-class="{'glyphicon-ok text-success': testData.testStatus=='PASSED', 'glyphicon-remove text-danger': testData.testStatus!='PASSED' }" style="margin-left: 15px"></span></h3>
                 <h6>
                     {{testData.device.environment}} on {{testData.cloudDescriptor.hostName}} ({{testData.cloudDescriptor.provider.name}})
                     <a hRef="../../index.html" class="pull-right" style="margin-right: 10px">
@@ -225,6 +228,14 @@ iframe {
                                             <li class="list-group-item">
                                                 Element Name:
                                                 <b>{{selectedElement.step.name}}</b>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="panel-body" ng-if="selectedElement.locatorResult != null && selectedElement.locatorResult != 'null' && selectedElement.locatorResult.length > 0">
+                                        <ul class="list-group">
+                                            <li class="list-group-item" ng-class="{'list-group-item-success' : locator.success == true, 'list-group-item-danger' : locator.success == false}" ng-repeat="locator in selectedElement.locatorResult">
+                                                {{locator.locator}}
+                                                <span class="badge">{{locator.time}} ms</span>
                                             </li>
                                         </ul>
                                     </div>

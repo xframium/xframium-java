@@ -8,6 +8,7 @@ import java.util.Map;
 import org.xframium.exception.XFramiumException;
 import org.xframium.exception.XFramiumException.ExceptionType;
 import org.xframium.page.StepStatus;
+import org.xframium.page.element.ByResult;
 import org.xframium.page.keyWord.KeyWordStep;
 
 public class ExecutionContextStep
@@ -23,6 +24,7 @@ public class ExecutionContextStep
     private String message;
     private Map<String,Object> executionParameter = new HashMap<String,Object>( 10 );
     private List<String> parameterList = new ArrayList<String>( 10 );
+    private List<ByResult> locatorResult = null;
 
     public String toString()
     {
@@ -44,6 +46,18 @@ public class ExecutionContextStep
         return timingMap.get( type );
     }
     
+    
+    
+    public List<ByResult> getLocatorResult()
+    {
+        return locatorResult;
+    }
+
+    public void setLocatorResult( List<ByResult> locatorResult )
+    {
+        this.locatorResult = locatorResult;
+    }
+
     public void analyzePageElements( Map<String,Integer[]> pageMap, Map<String,ElementUsage> elementMap )
     {
         for ( ExecutionContextStep s : stepList )

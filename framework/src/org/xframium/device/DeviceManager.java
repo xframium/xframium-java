@@ -44,9 +44,9 @@ import org.xframium.device.ng.TestContainer;
 import org.xframium.device.ng.TestPackage;
 import org.xframium.device.property.PropertyAdapter;
 import org.xframium.exception.DeviceException;
-import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
+import org.xframium.page.element.ByResult;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordTest;
@@ -290,6 +290,7 @@ public class DeviceManager
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( Page.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( PageData.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ElementUsage.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ByResult.class, new ReflectionSerializer() );
 
     }
 
