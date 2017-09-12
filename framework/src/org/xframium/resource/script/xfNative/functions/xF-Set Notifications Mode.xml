@@ -91,5 +91,6 @@
         </step>
       </step>
     </step>
+    <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="STATE" os="ANDROID" failureMode="ERROR" />
   </function>
 </suite>

@@ -17,24 +17,24 @@
 <link href="../../../assets/angular-ui-tree.css" rel="stylesheet">
 <style>
 iframe {
-	background-color: #eaeae1;
+    background-color: #eaeae1;
 }
 
 .scrollable {
-	overflow: auto;
+    overflow: auto;
 }
 
 .list-group-item {
-	padding-top: 5px;
-	padding-bottom: 5px
+    padding-top: 5px;
+    padding-bottom: 5px
 }
 
 .panel-heading {
-	padding: 8px
+    padding: 8px
 }
 
 .list-group {
-	margin-bottom: 0px
+    margin-bottom: 0px
 }
 
 .filteredStep {
@@ -64,7 +64,14 @@ iframe {
         <div class="col-sm-3">
             <div class="panel panel-primary" style="margin-bottom: 0px; margin-top: 5px">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Test Breakdown</h3>
+                    <div class="input-group" >
+                        <span class="input-group-addon" id="basic-addon2">Test Details</span>
+                        <input type="text" class="form-control" placeholder="Step Filter" aria-describedby="basic-addon2" ng-model="filterBy">
+                        <span class="input-group-addon" id="basic-addon2" style="padding-left: 3px; padding-right: 3px"><a hRef="#" class="glyphicon glyphicon-eye-close text-info" ng-click="filterBy=''" uib-tooltip="Clear Filter"></a></span>
+                        <span class="input-group-addon" id="basic-addon2" style="padding-left: 3px; padding-right: 3px"><a hRef="#" class="glyphicon glyphicon-ok text-success" ng-click="filterBy='SUCCESS'" uib-tooltip="Successful Steps"></a></span>
+                        <span class="input-group-addon" id="basic-addon2" style="padding-left: 3px; padding-right: 3px"><a hRef="#" class="glyphicon glyphicon-warning-sign text-warning" ng-click="filterBy='IGNORED'" uib-tooltip="Ignored Steps"></a></span>
+                        <span class="input-group-addon" id="basic-addon2" style="padding-left: 3px; padding-right: 3px"><a hRef="#" class="glyphicon glyphicon-remove text-danger" ng-click="filterBy='FAILURE'" uib-tooltip="Failed Steps"></a></span>
+                    </div>
                 </div>
                 <div data-drag-enabled="false" ui-tree id="tree-root" class="scrollable panel-body" style="padding-left: 5px; max-height: 700px">
                     <ol style="cursor: default" ui-tree-nodes ng-model="rootTree">
@@ -79,7 +86,7 @@ iframe {
                                 <a style="cursor: default; margin-left: 23px" ng-click="selectElement( 'Imaging Analysis', null )" ng-if="rootNode == 'Imaging Analysis'">{{rootNode}}</a>
                             </div>
                             <ol ui-tree-nodes ng-model="testData.stepList" ng-class="{hidden: collapsed}" ng-if="rootNode == 'Steps'">
-                                <li ui-tree-node ng-repeat="stepDef in testData.stepList" ng-include="'step.html'" collapsed="false"></li>
+                                <li ui-tree-node ng-repeat="stepDef in testData.stepList | filter:filterBy"  ng-include="'step.html'" collapsed="false"></li>
                             </ol>
                             <ol ui-tree-nodes ng-model="links" ng-if="rootNode == 'Logs'" ng-class="{hidden: collapsed}" style="cursor: default; font-size: 8pt">
                                 <li ui-tree-node collapsed="true" ng-repeat="log in logTypes">
@@ -322,7 +329,7 @@ iframe {
         <span ng-if="stepDef.stepStatus == 'FAILURE_IGNORED'" data-nodrag class="pull-right text-warning glyphicon glyphicon-warning-sign" style="cursor: default;"></span> 
     </div>
     <ol data-nodrag ui-tree-nodes="" ng-model="stepDef.stepList" ng-if="stepDef.stepList.length != 0" ng-class="{hidden: collapsed}" >
-        <li data-nodrag ui-tree-node ng-repeat="stepDef in stepDef.stepList" ng-include="'step.html'"  style="cursor: default"></li>
+        <li data-nodrag ui-tree-node ng-repeat="stepDef in stepDef.stepList | filter:filterBy" ng-include="'step.html'"  style="cursor: default"></li>
     </ol>
 </script>
 <script type="text/ng-template" id="errorDetail.html">
@@ -389,7 +396,7 @@ iframe {
         $scope.duration = 0;
         $scope.formattedDuration = 0;
         $scope.selectedStep;
-
+        $scope.filterBy = $scope.testData.testStatus == 'PASSED' ? '' : 'FAILURE';
         $scope.selectedContext = '';
         $scope.selectedElement = null;
         $scope.selectedState = 'PRIMARY';
