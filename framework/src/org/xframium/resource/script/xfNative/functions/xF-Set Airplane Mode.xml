@@ -57,5 +57,6 @@
         </step>
       </step>
     </step>
+    <step name="STATUS" site="New Test" page="Search" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" />
   </function>
 </suite>
