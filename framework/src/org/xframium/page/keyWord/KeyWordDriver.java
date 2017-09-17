@@ -591,7 +591,7 @@ public class KeyWordDriver
             executionContext.setPageMap( pageMap );
             executionContext.setContextMap( contextMap );
             executionContext.setSessionId( webDriver.getExecutionId() );
-            executionContext.setTestName( testName.getTestName() );
+            
         
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Configuring Data Providers" );

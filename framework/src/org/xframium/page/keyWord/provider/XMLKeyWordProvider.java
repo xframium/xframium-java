@@ -322,7 +322,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	private KeyWordTest parseTest( Test xTest )
 	{
         KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount(), null, null, null, null, xTest.getPriority(), xTest.getSeverity() );
-		
+		test.setReliesOn( xTest.getReliesOn() );
         
 		KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
 

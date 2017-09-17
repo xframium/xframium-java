@@ -89,6 +89,7 @@ public class DeviceManager
     private Map<Device, Integer> failureMap = new HashMap<Device, Integer>( 10 );
 
     private Map<String, Boolean> initializationMap = new HashMap<String, Boolean>( 10 );
+    private Map<String,Integer> retryMap = new HashMap<String,Integer>( 20 );
 
     private String initializationName;
     private Log testFlow = LogFactory.getLog( "testFlow" );
@@ -309,6 +310,8 @@ public class DeviceManager
 
     /** The retry count. */
     private int retryCount = 3;
+    
+    private int failedTestRetryCount = 0;
 
 
     /** The caching enabled. */
@@ -354,6 +357,18 @@ public class DeviceManager
         this.dryRun = dryRun;
     }
     
+
+    
+    
+    public int getFailedTestRetryCount()
+    {
+        return failedTestRetryCount;
+    }
+
+    public void setFailedTestRetryCount( int failedTestRetryCount )
+    {
+        this.failedTestRetryCount = failedTestRetryCount;
+    }
 
     /**
      * Sets the retry count.
@@ -658,13 +673,44 @@ public class DeviceManager
      * @param personaName
      *            the persona name
      */
-    public void addRun( Device currentDevice, TestPackage testPackage, TestContainer testContainer, boolean success )
+    public boolean addRun( Device currentDevice, TestPackage testPackage, TestContainer testContainer, boolean success )
     {
         if ( testFlow.isInfoEnabled() )
             testFlow.info( Thread.currentThread().getName() + ": Adding run " + testPackage.getRunKey() + " to " + currentDevice.getEnvironment() );
 
-        testContainer.completeTest( testPackage.getTestName(), testPackage.getRunKey(), success ? RunStatus.COMPLETED : RunStatus.FAILED );
-
+        if ( !success )
+        {
+            if ( failedTestRetryCount > 0 )
+            {
+                Integer testRetryCount = retryMap.get( testPackage.getRunKey() );
+                if ( testRetryCount == null )
+                    testRetryCount = 0;
+                
+                if ( ++testRetryCount <= failedTestRetryCount )
+                {
+                    retryMap.put( testPackage.getRunKey(), testRetryCount );
+                    return testContainer.completeTest( testPackage.getTestName(), testPackage.getRunKey(), RunStatus.RETRY, currentDevice );
+                }
+                else
+                    testContainer.completeTest( testPackage.getTestName(), testPackage.getRunKey(), RunStatus.FAILED, currentDevice );
+            }
+            else
+                testContainer.completeTest( testPackage.getTestName(), testPackage.getRunKey(), RunStatus.COMPLETED, currentDevice );
+        
+        }
+        else
+            testContainer.completeTest( testPackage.getTestName(), testPackage.getRunKey(), RunStatus.COMPLETED, currentDevice );
+        
+        return true;
+    }
+    
+    public int getIterationCount( String runKey )
+    {
+        Integer testRetryCount = retryMap.get( runKey );
+        if ( testRetryCount == null )
+            testRetryCount = 0;
+        
+        return testRetryCount;
     }
 
     /**

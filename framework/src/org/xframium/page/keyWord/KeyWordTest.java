@@ -89,6 +89,7 @@ public class KeyWordTest
     private String mode = "function";
     private int priority;
     private int severity;
+    private String reliesOn = null;
     
     private List<KeyWordParameter> expectedParameters = new ArrayList<KeyWordParameter>( 5 );
     
@@ -98,6 +99,18 @@ public class KeyWordTest
 
     /** The step list. */
     private List<KeyWordStep> stepList = new ArrayList<KeyWordStep>( 10 );
+
+    
+    
+    public String getReliesOn()
+    {
+        return reliesOn;
+    }
+
+    public void setReliesOn( String reliesOn )
+    {
+        this.reliesOn = reliesOn;
+    }
 
     public int getPriority()
     {

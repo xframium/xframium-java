@@ -12,10 +12,5 @@
     <step name="NAVIGATE" site="New Test" page="Search" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" device="Chrome Local">
       <parameter type="STATIC" name="The URL to navigate to" value="http://www.google.com" />
     </step>
-    <step type="GESTURE" name="SWIPE" page="SHOW" wait="250">
-      <parameter type="STATIC" value="UP" />
-    </step>
-    <step type="STATE" name="SWIPE" page="SHOW" />
-    
   </test>
 </suite>

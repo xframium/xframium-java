@@ -52,7 +52,7 @@ iframe {
                     <b>{{formattedDuration}}</b>
                 </span>
                 <h6 class="dashhead-subtitle">xFramium 1.0.12 (Helios)</h6>
-                <h3 class="dashhead-title">{{testData.test.name}}<span class="glyphicon glyphicon-ok" ng-class="{'glyphicon-ok text-success': testData.testStatus=='PASSED', 'glyphicon-remove text-danger': testData.testStatus!='PASSED' }" style="margin-left: 15px"></span></h3>
+                <h3 class="dashhead-title">{{testData.test.name}}<span class="glyphicon glyphicon-ok" ng-class="{'glyphicon-ok text-success': testData.testStatus=='PASSED', 'glyphicon-remove text-danger': testData.testStatus!='PASSED' }" style="margin-left: 15px"></span><sup style="margin-left: 5px" ng-if="testData.iterationCount > 0">x {{(+testData.iterationCount+1)}}</sup></h3>
                 <h6>
                     {{testData.device.environment}} on {{testData.cloudDescriptor.hostName}} ({{testData.cloudDescriptor.provider.name}})
                     <a hRef="../../index.html" class="pull-right" style="margin-right: 10px">

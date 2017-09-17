@@ -121,7 +121,7 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
                 {
                     if ( ApplicationRegistry.instance(xFID).getAUT().isAutoStart() )
                     {
-                        useCloud.getCloudActionProvider().installApplication( ApplicationRegistry.instance(xFID).getAUT().getName(), webDriver, false );
+                        useCloud.getCloudActionProvider().installApplication( ApplicationRegistry.instance(xFID).getAUT().getName(), webDriver, false, false );
                         if ( !useCloud.getCloudActionProvider().openApplication( ApplicationRegistry.instance(xFID).getAUT().getName(), webDriver, xFID ) )
                             throw new DeviceConfigurationException( ApplicationRegistry.instance(xFID).getAUT().getAndroidIdentifier() );
                     }

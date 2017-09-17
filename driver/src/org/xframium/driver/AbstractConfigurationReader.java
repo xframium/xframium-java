@@ -177,6 +177,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             suiteName = driverC.getSuiteName();
             
             DeviceManager.instance( xFID ).setInitializationName( driverC.getBeforeDevice() );
+            DeviceManager.instance( xFID ).setFailedTestRetryCount( driverC.getRetryCount() );
             
             if ( driverC.getBeforeTest() != null  )
             {
