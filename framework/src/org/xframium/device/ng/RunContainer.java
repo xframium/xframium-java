@@ -61,7 +61,7 @@ public class RunContainer
                     }
                     else
                     {
-                        testFlow.warn( Thread.currentThread().getName() + ":Issued RELYING RESET on " + runKey );
+                        testFlow.debug( Thread.currentThread().getName() + ":Issued RELYING RESET on " + runKey );
                         runMap.remove( runKey );
                         return false;
                     }
@@ -69,7 +69,7 @@ public class RunContainer
                 }
                 else
                 {
-                    testFlow.warn( Thread.currentThread().getName() + ":Issued RELYING RESET on " + runKey );
+                    testFlow.debug( Thread.currentThread().getName() + ":Issued RELYING RESET on " + runKey );
                     runMap.remove( runKey );
                     return false;
                 }

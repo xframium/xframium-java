@@ -102,11 +102,9 @@ public class TestContainer
                 
                 String reliesOn = null;
                 KeyWordTest kT = KeyWordDriver.instance( xFID ).getTest( testName.getRawName() );
-                System.out.println( runKey );
                 if ( kT != null && kT.getReliesOn() != null )
                 {
                     reliesOn = getRunKey( useDevice, currentMethod, kT.getReliesOn(), testName.getPersonaName() );
-                    System.out.println( "RELIES ON: " + reliesOn );
                 }
                 
                 if ( runContainer.addRun( runKey, RunStatus.RUNNING, reliesOn ) )

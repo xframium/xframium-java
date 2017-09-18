@@ -30,7 +30,7 @@ li.selected {
 </style>
 </head>
 <body ng-controller="xFramiumDebugger" data-ng-init="takeSnapshot()">
-	<div class="container fill">
+	<div class="container-fluid fill">
 		<nav class="navbar navbar-default navbar-fixed-top">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -49,145 +49,177 @@ li.selected {
 		            <li><a target="_blank" href="#" style="margin-right: 20px">Connect to Device&nbsp;<span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span></a></li>
 				</ul>
 			</div>
-
 		</nav>
-		<table class="table" style="width: 100%; height: 100%">
-			<tr>
-				<td width="30%" height="50%">
-					<div class="panel panel-default scrollable" id="stepList">
-						<div class="panel-heading">
-							<div class="panel-title">Screenshot</div>
-						</div>
-						<div class="panel-body">
-							<img src="{{snapshot}}" width="100%" />
-						</div>
-					</div>
-					<div class="panel panel-default scrollable" id="stepList">
-						<div class="panel-heading">
-							<div class="panel-title">Steps</div>
-						</div>
-						<div class="panel-body">
-							<ol class="list-group">
-								<li selection-model ng-click="selectStep($index)" style="display: list-item; list-style: decimal inside; padding-top: 2px; padding-bottom: 2px" ng-repeat="step in stepList"
-									ng-attr-class="list-group-item list-group-item-{{step.status == 'SUCCESS' || step.status == 'null' ? 'success' : step.step.sFailure == 'ERROR' ? 'danger' : 'warning'}}">{{step.stepType}}</li>
-							</ol>
-						</div>
-					</div>
-				</td>
-				<td width="70%" height="100%">
-					<div class="panel panel-default scrollable" id="stepList">
-						<div class="panel-heading">
-							<div class="panel-title">Step Detail</div>
-						</div>
-						<div class="panel-body">
-							<table class="table table-striped table-condensed">
-								<caption>{{selectedStep.step.pageName}}.{{selectedStep.step.name}}</caption>
-								<tr>
-									<th width="25%">Property</th>
-									<th width="75%">Value</th>
-								</tr>
-								<tr ng-repeat="(key, value) in selectedStep.step" ng-if="key != 'tokenList' && key != 'description' && key != 'log' && key != 'stepList' && key != 'parameterList' && value != 'null'">
-									<td>{{key}}</td>
-									<td>{{value}}</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-					<div ng-if="selectedStep.pageElement != null && selectedStep.pageElement != 'null'" class="panel panel-default scrollable">
-						<div class="panel-heading">
-							<div class="panel-title">Page Element Detail</div>
-						</div>
-						<div class="panel-body">
-							<table class="table table-striped table-condensed">
-								<tr>
-									<th width="25%">Property</th>
-									<th width="75%">Value</th>
-								</tr>
-								<tr ng-repeat="(key, value) in selectedStep.pageElement track by $index" ng-if="key != 'log' && key != 'webDriver' && key != 'parameterList' && value != 'null'">
-									<td>{{key}}</td>
-									<td>{{value}}</td>
-								</tr>
-								<tr ng-if="selectedStep.fullElement != null && selectedStep.fullElement != 'null'">
-									<td>Tokenized Element</td>
-									<td class="success">{{selectedStep.fullElement}}</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-					<div ng-if="selectedStep.parameterList.length > 0" class="panel panel-default scrollable">
-						<div class="panel-heading">
-							<div class="panel-title">Step Parameters</div>
-						</div>
-						<div class="panel-body">
-							<ol class="list-group">
-								<li selection-model style="display: list-item; list-style: decimal inside; padding-top: 2px; padding-bottom: 2px" ng-repeat="p in selectedStep.parameterList" ng-attr-class="list-group-item list-group-item-info">{{p}}</li>
-							</ol>
-						</div>
-					</div>
-					<div ng-if="selectedStep.tokenList.length > 0" class="panel panel-default scrollable">
-						<div class="panel-heading">
-							<div class="panel-title">Step Tokens</div>
-						</div>
-						<div class="panel-body">
-							<table class="table table-striped table-condensed">
-								<tr>
-									<th width="25%">Token Name</th>
-									<th width="75%">Value</th>
-								</tr>
-								<tr ng-repeat="p in selectedStep.tokenList">
-									<td>{{p[0]}}</td>
-									<td>{{p[1]}}</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-					<div class="panel panel-default scrollable">
-						<div class="panel-heading">
-							<div class="panel-title">Context Variables</div>
-						</div>
-						<div class="panel-body">
-							<table class="table table-striped table-condensed">
-								<tr>
-									<th width="25%">Name</th>
-									<th width="75%">Value</th>
-								</tr>
-								<tr ng-repeat="(key, value) in selectedStep.contextMap">
-									<td>{{key}}</td>
-									<td>{{value}}</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-					<div class="panel panel-default scrollable">
-						<div class="panel-heading">
-							<div class="panel-title">Page Data</div>
-						</div>
-						<div class="panel-body">
-
-							<table class="table table-striped table-condensed" ng-repeat="(key, value) in pageData">
-								<caption>Record Type: {{key}}</caption>
-								<tr>
-									<th width="25%">Name</th>
-									<th width="75%">Value</th>
-								</tr>
-								<tr>
-									<td>recordName</td>
-									<td>{{value.recordName}}</td>
-								</tr>
-								<tr>
-									<td>active</td>
-									<td>{{value.active}}</td>
-								</tr>
-								<tr ng-repeat="(key2, value2) in value.recordMap track by $index">
-									<td>{{key2}}</td>
-									<td>{{value2}}</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-				</td>
-			</tr>
-		</table>
+        
+        <div class="row" style="margin-top: 60px">
+            <div class="col-sm-4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-default scrollable" id="stepList">
+                            <div class="panel-heading">
+                                <div class="panel-title">Screenshot</div>
+                            </div>
+                            <div class="panel-body">
+                                <img src="{{snapshot}}" width="100%" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-default scrollable" id="stepList">
+                            <div class="panel-heading">
+                                <div class="panel-title">Steps</div>
+                            </div>
+                            <div class="panel-body">
+                                <ol class="list-group">
+                                    <li selection-model ng-click="selectStep($index)" style="display: list-item; list-style: decimal inside; padding-top: 2px; padding-bottom: 2px" ng-repeat="step in stepList"
+                                        ng-attr-class="list-group-item list-group-item-{{step.status == 'SUCCESS' || step.status == 'null' ? 'success' : step.step.sFailure == 'ERROR' ? 'danger' : 'warning'}}">{{step.stepType}}</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-default scrollable" id="stepList">
+                            <div class="panel-heading">
+                                <div class="panel-title">Step Detail</div>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-striped table-condensed">
+                                    <caption>{{selectedStep.step.pageName}}.{{selectedStep.step.name}}</caption>
+                                    <tr>
+                                        <th width="25%">Property</th>
+                                        <th width="75%">Value</th>
+                                    </tr>
+                                    <tr ng-repeat="(key, value) in selectedStep.step" ng-if="key != 'tokenList' && key != 'description' && key != 'log' && key != 'stepList' && key != 'parameterList' && value != 'null'">
+                                        <td>{{key}}</td>
+                                        <td>{{value}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div ng-if="selectedStep.pageElement != null && selectedStep.pageElement != 'null'" class="panel panel-default scrollable">
+                            <div class="panel-heading">
+                                <div class="panel-title">Page Element Detail</div>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-striped table-condensed">
+                                    <tr>
+                                        <th width="25%">Property</th>
+                                        <th width="75%">Value</th>
+                                    </tr>
+                                    <tr ng-repeat="(key, value) in selectedStep.pageElement track by $index" ng-if="key != 'log' && key != 'webDriver' && key != 'parameterList' && value != 'null'">
+                                        <td>{{key}}</td>
+                                        <td>{{value}}</td>
+                                    </tr>
+                                    <tr ng-if="selectedStep.fullElement != null && selectedStep.fullElement != 'null'">
+                                        <td>Tokenized Element</td>
+                                        <td class="success">{{selectedStep.fullElement}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div ng-if="selectedStep.parameterList.length > 0" class="panel panel-default scrollable">
+                            <div class="panel-heading">
+                                <div class="panel-title">Step Parameters</div>
+                            </div>
+                            <div class="panel-body">
+                                <ol class="list-group">
+                                    <li selection-model style="display: list-item; list-style: decimal inside; padding-top: 2px; padding-bottom: 2px" ng-repeat="p in selectedStep.parameterList" ng-attr-class="list-group-item list-group-item-info">{{p}}</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div ng-if="selectedStep.tokenList.length > 0" class="panel panel-default scrollable">
+                            <div class="panel-heading">
+                                <div class="panel-title">Step Tokens</div>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-striped table-condensed">
+                                    <tr>
+                                        <th width="25%">Token Name</th>
+                                        <th width="75%">Value</th>
+                                    </tr>
+                                    <tr ng-repeat="p in selectedStep.tokenList">
+                                        <td>{{p[0]}}</td>
+                                        <td>{{p[1]}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-default scrollable">
+                            <div class="panel-heading">
+                                <div class="panel-title">Context Variables</div>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-striped table-condensed">
+                                    <tr>
+                                        <th width="25%">Name</th>
+                                        <th width="75%">Value</th>
+                                    </tr>
+                                    <tr ng-repeat="(key, value) in selectedStep.contextMap">
+                                        <td>{{key}}</td>
+                                        <td>{{value}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-default scrollable">
+                            <div class="panel-heading">
+                                <div class="panel-title">Page Data</div>
+                            </div>
+                            <div class="panel-body">
+    
+                                <table class="table table-striped table-condensed" ng-repeat="(key, value) in pageData">
+                                    <caption>Record Type: {{key}}</caption>
+                                    <tr>
+                                        <th width="25%">Name</th>
+                                        <th width="75%">Value</th>
+                                    </tr>
+                                    <tr>
+                                        <td>recordName</td>
+                                        <td>{{value.recordName}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>active</td>
+                                        <td>{{value.active}}</td>
+                                    </tr>
+                                    <tr ng-repeat="(key2, value2) in value.recordMap track by $index">
+                                        <td>{{key2}}</td>
+                                        <td>{{value2}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+		
 	</div>
 </body>
 <script>
