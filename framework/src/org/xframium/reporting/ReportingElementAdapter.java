@@ -544,13 +544,15 @@ public class ReportingElementAdapter implements Element
     @Override
     public Element addToken( String tokenName, String tokenValue )
     {
-        return baseElement.addToken( tokenName, tokenValue );
+        baseElement.addToken( tokenName, tokenValue );
+        return this;
     }
 
     @Override
     public Element addToken( String tokenPairValue )
     {
-        return baseElement.addToken( tokenPairValue );
+        baseElement.addToken( tokenPairValue );
+        return this;
     }
 
     @Override

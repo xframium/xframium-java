@@ -8,6 +8,7 @@ import org.xframium.console.http.ExecutionConsole;
 import org.xframium.console.http.handler.ECHandler;
 import org.xframium.container.DriverContainer;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.DeviceManager;
 import org.xframium.driver.ConfigurationReader;
 import org.xframium.driver.TXTConfigurationReader;
 import org.xframium.driver.TestDriver;
@@ -33,6 +34,7 @@ public class ExecuteTest extends ECHandler
             final Map<String, String> queryMap = queryToMap( httpExchange.getRequestURI().getQuery() );
 
             final File configFile = new File( queryMap.get( "fileName" ) );
+            DeviceManager.instance( TestDriver.xFID ).clear();
             
             new Thread( new Runnable()
             {

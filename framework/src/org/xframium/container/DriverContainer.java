@@ -22,6 +22,7 @@ public class DriverContainer
     private String suiteName = "";
     private String phase = "";
     private String domain = "";
+    private int retryCount = 0;
     
     private String beforeTest;
     private String afterTest;
@@ -38,6 +39,17 @@ public class DriverContainer
     private boolean secureCloud = false;
     
     
+
+    public int getRetryCount()
+    {
+        return retryCount;
+    }
+
+    public void setRetryCount( int retryCount )
+    {
+        this.retryCount = retryCount;
+        System.setProperty( "driver.retryCount", retryCount + "" );
+    }
 
     public Class[] getPropertyAdapters()
     {

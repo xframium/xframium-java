@@ -122,6 +122,7 @@ public class KWSMath extends AbstractKeyWordStep
 	                        currentValue = Double.parseDouble( formatString( currentParameter ) );
 	                        valueAdded = true;
 	                    }
+	                    break;
 	                    
 	                case multiply:
                         currentValue *= Double.parseDouble( formatString( currentParameter ) );

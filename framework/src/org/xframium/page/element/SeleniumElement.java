@@ -1095,6 +1095,7 @@ public class SeleniumElement extends AbstractElement
 
                         } );
                         webElement.click();
+                        break;
 
                     default:
                         throw new IllegalArgumentException( "Unknown Wait Condition [" + waitType + "]" );

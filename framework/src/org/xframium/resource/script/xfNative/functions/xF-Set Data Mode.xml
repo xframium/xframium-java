@@ -16,7 +16,7 @@
         <parameter type="STATIC" name="Value" value="Data" />
       </step>
       <step name="STATUS" site="New Test" page="Search" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" os="ANDROID" />
-      <step name="xF_Wi-Fi.CLICKABLE" site="xF_Native" page="xF_Settings" type="WAIT_FOR" os="ANDROID" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
+      <step name="xF-Cellular.CLICKABLE" site="xF_Native" page="xF_Settings" type="WAIT_FOR" os="ANDROID" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
         <step name="Undefined" site="New Test" page="Search" type="ELSE" active="true" threshold="0" timed="false" inverse="false" wait="0" os="ANDROID">
           <step name="STATUS" site="New Test" page="Search" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" os="ANDROID" />
           <step name="xF_Wi-Fi Back" site="xF_Native" page="xF_Wi-Fi" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" os="ANDROID" />
@@ -25,7 +25,7 @@
     </step>
     <step name="STATUS" site="New Test" page="Search" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" />
     <step name="xF-Cellular" site="xF_Native" page="xF_Settings" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0">
-      <parameter type="STATIC" name="new parameter" value="1" />
+      <parameter type="STATIC" name="new parameter" value="3" />
       <parameter type="STATIC" name="new parameter" value="UP" />
     </step>
     <step name="STATUS" site="New Test" page="Search" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" />

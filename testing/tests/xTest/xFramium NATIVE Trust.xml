@@ -3,7 +3,7 @@
 <test name="xFramium NATIVE Trust" tagNames="Native" timed="false" threshold="0" active="true" priority="1" severity="1" os="IOS">
 <description>Test trusting of an application developer</description>
 <step name="xF-Trust Developer" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" name="xF-Developer" value="Allstate Insurance Company"/>
+<parameter type="STATIC" name="xF-Developer" value="Ford Motor Company"/>
 </step>
 
 </test>

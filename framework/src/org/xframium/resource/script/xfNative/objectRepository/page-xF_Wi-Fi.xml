@@ -6,7 +6,7 @@
         <element value="//*[@resource-id='com.android.settings:id/imageButton']" descriptor="XPATH" os="ANDROID" />
         <element value="//*[@content-desc='Navigate up']" descriptor="XPATH" os="ANDROID" />
         <element value="//*[contains( @resource-id, ':id/action_bar' )]/android.widget.ImageButton" descriptor="XPATH" os="ANDROID" />
-        
+        <element value="//*[@resource-id='android:id/up']" descriptor="XPATH" os="ANDROID" />
      </element>
       <element name="xF_Wi-Fi Title" descriptor="COMPLEX">
         <element value="//UIANavigationBar[@name='Wi-Fi']" descriptor="XPATH" os="IOS" />

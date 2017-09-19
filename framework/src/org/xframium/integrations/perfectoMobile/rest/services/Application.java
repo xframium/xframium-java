@@ -47,6 +47,19 @@ public interface Application extends PerfectoService
 	public Execution install( @ResourceID String executionId, @Parameter( name="deviceId" ) String handsetId, @Parameter( name="file" ) String file, @Parameter( name="instrument" ) String instrument  );
 	
 	/**
+     * Install.
+     *
+     * @param executionId the execution id
+     * @param handsetId the handset id
+     * @param file the file
+     * @param instrument the instrument
+     * @return the execution
+     */
+    @Operation( operationName="command" )
+    @PerfectoCommand( commandName="application", subCommandName = "install" )
+    public Execution install( @ResourceID String executionId, @Parameter( name="deviceId" ) String handsetId, @Parameter( name="file" ) String file, @Parameter( name="instrument" ) String instrument, @Parameter( name="sensorInstrument" ) String sensorInstrument   );
+	
+	/**
 	 * Uninstall.
 	 *
 	 * @param executionId the execution id

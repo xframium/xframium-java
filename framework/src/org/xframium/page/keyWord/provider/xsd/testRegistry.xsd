@@ -48,6 +48,7 @@
     <attribute name="count" type="int" use="optional" default="0" />
     <attribute name="priority" type="int" use="optional" default="0" />
     <attribute name="severity" type="int" use="optional" default="0" />
+    <attribute name="reliesOn" type="string" use="optional" />
   </complexType>
   <complexType name="xFunction">
     <sequence>

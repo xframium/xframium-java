@@ -30,12 +30,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.IRetryAnalyzer;
 import org.testng.ITestContext;
+import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -52,6 +52,7 @@ import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.device.factory.DriverManager;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
 import org.xframium.page.PageManager;
@@ -109,6 +110,7 @@ public abstract class AbstractSeleniumTest
     public Object[][] getDeviceData( ITestContext testContext )
     {
         String xFID = Initializable.xFID.get();
+        
 
         List<Device> deviceList = DeviceManager.instance( xFID ).getDevices();
         return getDeviceData( deviceList, testContext, xFID );
@@ -411,8 +413,10 @@ public abstract class AbstractSeleniumTest
         try
         {
             TestContainer tC = ((TestContainer) testArgs[0]);
+            if ( testContext.getAttribute( "testContainer" ) == null )
+                testContext.setAttribute( "testContainer", tC );
 
-            TestPackage testPackage = tC.getTestPackage( currentMethod, true );
+            TestPackage testPackage = tC.getTestPackage( currentMethod, true, xmlMode );
 
             testPackageContainer.set( testPackage );
 
@@ -443,12 +447,12 @@ public abstract class AbstractSeleniumTest
                 testName.setTestName( currentMethod.getName() );
                 
                 testName.setTest( eC );
-            }
-            
-            File artifactFolder = new File( testPackage.getConnectedDevice().getDevice().getEnvironment(), testName.getTestName() );
-            testPackage.getConnectedDevice().getWebDriver().setArtifactFolder( artifactFolder );
                 
-            
+                File artifactFolder = new File( testPackage.getConnectedDevice().getDevice().getEnvironment(), testName.getTestName() );
+                testPackage.getConnectedDevice().getWebDriver().setArtifactFolder( artifactFolder );
+                
+            }
+
             
             ConnectedDevice connectedDevice = testPackage.getConnectedDevice();
 
@@ -510,9 +514,6 @@ public abstract class AbstractSeleniumTest
         testPackageContainer.remove();
         try
         {
-            
-            
-            
 
             if ( testPackage.getConnectedDevice().getWebDriver() != null && testPackage.getConnectedDevice().getWebDriver().isConnected() )
             {
@@ -545,13 +546,22 @@ public abstract class AbstractSeleniumTest
             cleanUpConnectedDevice( "DEFAULT", testPackage.getTestName(), testPackage.getConnectedDevice(), testResult, true, testPackage );
             if ( testPackage.getConnectedDevice().getDevice() != null )
             {
-                DeviceManager.instance( testPackage.getxFID() ).addRun( testPackage.getConnectedDevice().getWebDriver().getPopulatedDevice(), testPackage, (TestContainer) testArgs[0], testResult.isSuccess() );
+                if ( DeviceManager.instance( testPackage.getxFID() ).addRun( testPackage.getConnectedDevice().getWebDriver().getPopulatedDevice(), testPackage, (TestContainer) testArgs[0], testResult.isSuccess() ) )
+                {
+                    if ( testFlow.isInfoEnabled() )
+                        testFlow.info( Thread.currentThread().getName() + ": Adding Execution for " + testPackage.getRunKey() + " - " + testPackage.getTestName().getTest().getDevice().getKey() + " - " + testPackage.getDevice().getKey() + " - "+ testPackage + " - " + testPackage.getTestName() );
+                    
+                    ExecutionContext.instance( testPackage.getxFID() ).addExecution( testPackage.getTestName().getTest() );
+                }
             }
+            else
+            {
             
-            if ( testFlow.isInfoEnabled() )
-                testFlow.info( Thread.currentThread().getName() + ": Adding Execution for " + testPackage.getRunKey() + " - " + testPackage.getTestName().getTest().getDevice().getKey() + " - " + testPackage.getDevice().getKey() + " - "+ testPackage + " - " + testPackage.getTestName() );
-            
-            ExecutionContext.instance( testPackage.getxFID() ).addExecution( testPackage.getTestName().getTest() );
+                if ( testFlow.isInfoEnabled() )
+                    testFlow.info( Thread.currentThread().getName() + ": Adding Execution for " + testPackage.getRunKey() + " - " + testPackage.getTestName().getTest().getDevice().getKey() + " - " + testPackage.getDevice().getKey() + " - "+ testPackage + " - " + testPackage.getTestName() );
+                
+                ExecutionContext.instance( testPackage.getxFID() ).addExecution( testPackage.getTestName().getTest() );
+            }
             
             
             Map<String, ConnectedDevice> map = testPackage.getTestName().getTest().getDeviceMap();

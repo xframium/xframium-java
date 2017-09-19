@@ -101,7 +101,9 @@ public interface DeviceAction
 		
 		COPY_FILE(24, "COPY_FILE", "Copies file from Perfecto repository to Device"),
 		
-		HOME(25, "HOME", "Returns to the home screen");
+		HOME(25, "HOME", "Returns to the home screen"),
+		
+		FINGERPRINT( 26, "FINGERPRINT", "Simulates a fingerprint action");
 	    
 	    public List<ActionType> getSupportedActions()
 	    {
@@ -129,6 +131,7 @@ public interface DeviceAction
 	        supportedList.add( ActionType.STOP_VITALS );
 	        supportedList.add( ActionType.COPY_FILE );
 	        supportedList.add( ActionType.HOME );
+	        supportedList.add( ActionType.FINGERPRINT );
 	        return supportedList;
 	    }
 	    
