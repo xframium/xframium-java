@@ -9,6 +9,7 @@ public class SetMethodFactory
     
     private SetMethodFactory()
     {
+        registerSetMethod( new NumberPickerSetMethod(), "android.widget.numberpicker" );
         registerSetMethod( new PickerSetMethod(), "uiapickerwheel" );
         registerSetMethod( new SelectSetMethod(), "select" );
         registerSetMethod( new ULSetMethod(), "ul" );

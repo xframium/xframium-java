@@ -10,6 +10,7 @@ public class TestPackage
     private String runKey;
     private ConnectedDevice connectedDevice;
     private String xFID;
+    private Device populatedDevice;
     
     public ConnectedDevice getConnectedDevice()
     {
@@ -32,6 +33,19 @@ public class TestPackage
     
     
     
+    public Device getPopulatedDevice()
+    {
+        if ( populatedDevice != null )
+            return populatedDevice;
+        else
+            return device;
+    }
+
+    public void setPopulatedDevice( Device populatedDevice )
+    {
+        this.populatedDevice = populatedDevice;
+    }
+
     public String getxFID()
     {
         return xFID;
