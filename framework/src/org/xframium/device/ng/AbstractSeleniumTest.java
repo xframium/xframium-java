@@ -109,8 +109,11 @@ public abstract class AbstractSeleniumTest
     @DataProvider ( name = "deviceManager", parallel = true)
     public Object[][] getDeviceData( ITestContext testContext )
     {
-        String xFID = Initializable.xFID.get();
-        
+        String xFID = null;
+        if ( Initializable.xFID == null || Initializable.xFID.get() == null )
+            xFID = (String) testContext.getAttribute( "xFID" );
+        else
+            xFID = Initializable.xFID.get();
 
         List<Device> deviceList = DeviceManager.instance( xFID ).getDevices();
         return getDeviceData( deviceList, testContext, xFID );
