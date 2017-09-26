@@ -8,7 +8,9 @@
       <element name="xF-Notification Title" descriptor="COMPLEX">
         <element value="//UIANavigationBar[@name='Notifications']" descriptor="XPATH" os="IOS" />
         <element value="//android.widget.TextView[@resource-id='android:id/action_bar_title'][@text='Application notifications']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.TextView[@resource-id='com.android.settings:id/primary'][@text='App notifications']" descriptor="XPATH" os="ANDROID" />
         <element value="//android.widget.TextView[@text='NOTIFICATIONS']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.TextView[@text='Manage app notifications']" descriptor="XPATH" os="ANDROID" />
       </element>
       <element name="xF-Android Sounds" value="//android.widget.TextView[@resource-id='android:id/action_bar_title'][@text='Application notifications']|//android.widget.TextView[@resource-id='android:id/action_bar_title'][@text='Sound and notification']"
         descriptor="XPATH" />

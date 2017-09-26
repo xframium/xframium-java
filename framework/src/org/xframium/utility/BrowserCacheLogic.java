@@ -251,16 +251,10 @@ public class BrowserCacheLogic
                 // id: clear-browsing-data
                 // cssSelector: #clear-browsing-data
                 //
-                params.clear();
-                params.put("label", "CLEAR BROWSING");
-                params.put("timeout", "10");
-                params.put("threshold", "100");
-                params.put("ignorecase", "case");
-                params.put("screen.top", "80%");
-                params.put("screen.height", "20%");
-                params.put("screen.left", "0%");
-                params.put("screen.width", "100%");
-                driver.executeScript("mobile:button-text:click", params);
+                
+                switchToContext(driver, "WEBVIEW");
+                driver.findElementByXPath("//*[@id=\"clear-browsing-data\"]").click();
+                switchToContext(driver, "NATIVE_APP");
                 //driver.findElementById("clear-browsing-data");//params.put("value", "//*[@id=\"clear-browsing-data\"]");
                 //params.put("framework", "appium-1.3.4");
                 //driver.executeScript("mobile:application.element:click", params);*/

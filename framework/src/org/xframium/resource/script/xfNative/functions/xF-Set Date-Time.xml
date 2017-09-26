@@ -450,7 +450,7 @@
     <step name="Next" site="xF_Native" page="xF_Date-Time" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" />
   </function>
   <function name="xF_tapAtPoint">
-    <step name="PRESS" site="xF_Native" page="xF_Date-Time" type="GESTURE" wait="500">
+    <step name="PRESS" site="xF_Native" page="xF_Date-Time" type="GESTURE" wait="1500">
       <parameter type="CONTEXT" value="clickLocation" />
     </step>
   </function>

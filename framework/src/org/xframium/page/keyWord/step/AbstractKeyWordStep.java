@@ -1017,7 +1017,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             catch ( Exception e )
             {
                 stepException = e;
-                e.printStackTrace();
                 returnValue = false;
                 try
                 {
