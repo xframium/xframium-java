@@ -56,12 +56,12 @@ public class Field implements Iterable<ScreenPosition>
     this.next = field;
   }
 
-  Field getNextUnprotectedField ()
+  public Field getNextUnprotectedField ()
   {
     return next;
   }
 
-  Field getPreviousUnprotectedField ()
+  public Field getPreviousUnprotectedField ()
   {
     return previous;
   }
