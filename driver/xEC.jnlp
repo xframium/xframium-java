@@ -4,7 +4,7 @@
         <title>xFramium Execution Console</title>
         <vendor>Moreland Labs LLC</vendor>
         <homepage href="http://xframium.org" />
-        <description>xFramium Execution Console 1.0.10</description>
+        <description>xFramium Execution Console 1.0.13</description>
         <description kind="short">xFramium Execution Console</description>
         <icon kind="splash" href="lib//images/xframium.png"/>
         <icon kind="shortcut" href="lib//images/xframium.png"/>
@@ -139,11 +139,11 @@
         <jar href="lib/websocket-common-9.4.3.v20170317.jar" />
         <jar href="lib/xalan-2.7.2.jar" />
         <jar href="lib/xercesImpl-2.11.0.jar" />
-        <jar href="lib/xframium-java-1.0.12.jar" />
+        <jar href="lib/xframium-java-1.0.13.jar" />
         <jar href="lib/xframium-serialization-2.0.6.jar" />
         <jar href="lib/xml-apis-1.4.01.jar" />
         <jar href="lib/xmlbeans-2.6.0.jar" />
-        <jar href="xframium-driver-1.0.12.jar"/>
+        <jar href="xframium-driver-1.0.13.jar"/>
     </resources>
     <java version="1.6+" max-heap-size="1G"/>
     <application-desc main-class="org.xframium.console.http.ExecutionConsole"/>

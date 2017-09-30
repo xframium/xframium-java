@@ -14,4 +14,4 @@ outputs:
 
 run:
   path: mvn
-  args: ["-f", "source-code/framework/pom.xml", "package"]
+  args: ["-f", "source-code/driver/pom.xml", "clean", "compile", "exec:exec" , "-DdriverConfig=../testing/driverConfig.xml"]

@@ -462,12 +462,14 @@ public class DeviceManager
                         currentDevice.addCapability( "windTunnelPersona", testPackage.getTestName().getPersonaName(), "STRING" );
                     
                     webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice, testPackage.getxFID() );
-
+                    
                     if ( webDriver != null )
                     {
                         if ( testFlow.isDebugEnabled() )
                             testFlow.debug( Thread.currentThread().getName() + ": WebDriver Created - Creating Connected Device for " + currentDevice );
 
+                        testPackage.setPopulatedDevice( webDriver.getPopulatedDevice() );
+                        
                         notifyPropertyAdapter( configurationProperties, webDriver );
 
                         return new ConnectedDevice( webDriver, currentDevice, testPackage.getTestName().getPersonaName() );

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
-<site name="xF_Native">
-  <page name="xF_Notification" class="org.xframium.page.keyWord.KeyWordPage">
-    <element name="xF-Allow Notification" descriptor="COMPLEX">
-<element value="//UIASwitch[@name='Allow Notifications']" descriptor="XPATH" os="IOS"/>
-<element value="//android.widget.ListView[@resource-id='android:id/list']/android.widget.LinearLayout[1]//android.widget.Switch" descriptor="XPATH" os="ANDROID"/>
-</element>
-    <element name="Application Notifications" value="//android.widget.TextView[@text='Application notifications']" descriptor="XPATH"/>
-  </page>
-</site></elementDefinition>
+  <site name="xF_Native">
+    <page name="xF_Notification" class="org.xframium.page.keyWord.KeyWordPage">
+      <element name="xF-Allow Notification" descriptor="COMPLEX">
+        <element value="//UIASwitch[@name='Allow Notifications']" descriptor="XPATH" os="IOS" />
+        <element value="//android.widget.ListView[@resource-id='android:id/list']/android.widget.LinearLayout[1]//android.widget.Switch" descriptor="XPATH" os="ANDROID" />
+      </element>
+      <element name="Application Notifications" value="//android.widget.TextView[@text='Application notifications']" descriptor="XPATH" />
+    </page>
+  </site>
+</elementDefinition>

@@ -144,7 +144,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
             throw new DeviceException( "Could not connect to " + testPackage.getDevice() );
         }
         
-        String deviceOs = testPackage.getDevice().getOs();
+        String deviceOs = testPackage.getPopulatedDevice().getOs();
         String[] deviceTags = testPackage.getDevice().getTagNames();
         
         boolean returnValue = false;

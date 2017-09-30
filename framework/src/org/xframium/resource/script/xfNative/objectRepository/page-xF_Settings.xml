@@ -26,15 +26,16 @@
       <element name="xF-Airplane Mode Menu" descriptor="COMPLEX">
         <element value="//android.widget.TextView[contains( @text, 'plane')]" descriptor="XPATH" />
         <element value="//android.widget.TextView[contains( @text, 'More')]" descriptor="XPATH" />
-        
       </element>
       <element name="xF-Notifications" descriptor="COMPLEX">
+      <element value="//android.widget.TextView[@text='Manage app notifications']" descriptor="XPATH" os="ANDROID" />
         <element value="//UIAStaticText[@name='Notifications']" descriptor="XPATH" os="IOS" />
         <element value="//android.widget.TextView[@text='Notifications']" descriptor="XPATH" os="ANDROID" />
         <element value="//android.widget.TextView[@text='Sounds and notifications']" descriptor="XPATH" os="ANDROID" />
         <element value="//android.widget.TextView[@text='Sound and notification']" descriptor="XPATH" os="ANDROID" />
         <element value="//android.widget.TextView[@text='App notifications']" descriptor="XPATH" os="ANDROID" />
-        <element value="//android.widget.TextView[@text='App notifications']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.TextView[@text='Notification access']" descriptor="XPATH" os="ANDROID" />
+        
         
         
       </element>
