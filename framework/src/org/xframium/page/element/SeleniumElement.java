@@ -51,6 +51,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.device.factory.DriverFactory;
 import org.xframium.device.factory.MorelandWebElement;
 import org.xframium.exception.ObjectIdentificationException;
 import org.xframium.exception.ScriptConfigurationException;
@@ -385,6 +386,8 @@ public class SeleniumElement extends AbstractElement
         }
     }
 
+    
+    
     private ByWrapper _useBy( BY byType, String keyValue )
     {
         switch ( byType )
@@ -408,6 +411,19 @@ public class SeleniumElement extends AbstractElement
                 return new ByWrapper( By.tagName( keyValue ) );
 
             case XPATH:
+                
+                if ( getWebDriver().getPopulatedDevice().getOs() != null && getWebDriver().getPopulatedDevice().getOs().toUpperCase().equals( "IOS" ) )
+                {
+                    if ( (getWebDriver().getPopulatedDevice().getOsVersion() != null && getWebDriver().getPopulatedDevice().getOsVersion().startsWith( "11" )) || (getWebDriver().getCapabilities().getCapability( DriverFactory.AUTOMATION_NAME ) != null && getWebDriver().getCapabilities().getCapability( DriverFactory.AUTOMATION_NAME ).equals( "XCUITest" ) ) )
+                    {
+                        if ( keyValue.contains( "UIA" ) )
+                        {
+                            log.warn( "UI Autopmation XPATH detected - replacing UIA Code in " + keyValue );
+                            keyValue = XPathGenerator.XCUIConvert( keyValue );
+                        }
+                    }
+                }
+                
                 return new ByWrapper( By.xpath( keyValue ) );
 
             case NATURAL:
@@ -1112,7 +1128,6 @@ public class SeleniumElement extends AbstractElement
             }
             catch ( Exception e )
             {
-                log.error( Thread.currentThread().getName() + ": Could not locate " + useBy(), e );
                 throw new ObjectIdentificationException( getBy(), (By) useBy );
             }
             finally

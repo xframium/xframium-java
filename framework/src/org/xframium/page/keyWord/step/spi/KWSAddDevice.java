@@ -52,6 +52,7 @@ public class KWSAddDevice extends AbstractKeyWordStep
         Object name = null;
         Object deviceId = null;
         Object deviceName = null;
+                
         
         if ( getParameterList().size() == 1 ) {
         	deviceName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() );
@@ -65,6 +66,12 @@ public class KWSAddDevice extends AbstractKeyWordStep
         	ConnectedDevice wD = DeviceManager.instance( executionContext.getxFID() ).getInactiveDevice( deviceName + "", executionContext.getxFID()  );
         	wD.getWebDriver().setExecutionContext( executionContext );
         	executionContext.getDeviceMap().put( deviceName + "", wD );
+        	if ( getContext() != null )
+        	{
+        	    addContext( getContext(), wD.getPopulatedDevice().getDeviceName(), contextMap, executionContext );
+        	    addContext( getContext() + ".id", wD.getWebDriver().getExecutionId(), contextMap, executionContext );
+        	}
+        	
         }
         else if ( getParameterList().size() == 2 )
         {
@@ -81,6 +88,11 @@ public class KWSAddDevice extends AbstractKeyWordStep
         	ConnectedDevice wD = DeviceManager.instance( executionContext.getxFID() ).getUnconfiguredDevice( deviceName + "",  executionContext.getxFID()  );
             wD.getWebDriver().setExecutionContext( executionContext );
             executionContext.getDeviceMap().put( deviceName + "", wD );
+            if ( getContext() != null )
+            {
+                addContext( getContext(), wD.getPopulatedDevice().getDeviceName(), contextMap, executionContext );
+                addContext( getContext() + ".id", wD.getWebDriver().getExecutionId(), contextMap, executionContext );
+            }
         }
 	    else
 	    {
