@@ -2083,7 +2083,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             }
             catch ( Exception e )
             {
-                log.warn( "Error taking screenshot", e );
+                log.debug( "Error taking screenshot", e );
                 throw new ScriptException( e.getMessage() );
             }
             finally
