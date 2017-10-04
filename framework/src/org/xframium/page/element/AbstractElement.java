@@ -148,9 +148,22 @@ public abstract class AbstractElement implements Element
                 tagList.add( subElement );
         }
         
-        
+        //
+        // Filter by context if specified
+        //
+        List<SubElement> contextList = new ArrayList<SubElement>( 10 );
+        for ( SubElement subElement : tagList )
+        {        
+            if ( subElement.getContext() != null && !subElement.getContext().isEmpty() )
+            {
+                if ( webDriver.getContext().contains( subElement.getContext() ) )
+                    contextList.add( subElement );
+            }
+            else if ( subElement.getDeviceTag() == null )
+                contextList.add( subElement );
+        }
 	    
-	    return tagList.toArray( new SubElement[ 0 ] );
+	    return contextList.toArray( new SubElement[ 0 ] );
 	}
 	
 	public void setExecutionContext( ExecutionContextTest executionContext )

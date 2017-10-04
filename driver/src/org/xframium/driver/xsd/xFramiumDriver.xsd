@@ -420,6 +420,7 @@
     <attribute name="version" type="string" use="optional" />
     <attribute name="cloud" type="string" use="optional" />
     <attribute name="deviceTag" type="string" use="optional" />
+    <attribute name="context" type="string" use="optional" />
   </complexType>
   <complexType name="xElementParameter">
     <annotation>
