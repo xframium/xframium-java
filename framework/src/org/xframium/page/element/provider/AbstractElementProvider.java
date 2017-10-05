@@ -65,30 +65,13 @@ public abstract class AbstractElementProvider implements ElementProvider
 	@Override
 	public Element getElement( ElementDescriptor elementDescriptor )
 	{
-//	    if ( previousElement.get() != null && previousElementDescriptor.get() != null && elementDescriptor.equals( previousElementDescriptor.get() ) )
-//	    {
-//	        log.warn( "CACHED VALUE " + elementDescriptor.toString() );
-//	        return previousElement.get();
-//	    }
-//	    else
-//	    {
-//	        previousElement.set( null );
-//	        previousElementDescriptor.set( null );
-//	    }
-	    
 	    Element returnElement = null;
 	    if ( internalElementProvider != null )
 	        returnElement = internalElementProvider.getElement( elementDescriptor );
 	    
 	    if ( returnElement == null )
 	        returnElement = _getElement( elementDescriptor );
-	    
-	    if ( returnElement != null )
-	    {
-	       //previousElement.set( returnElement );
-	       
-	       //previousElementDescriptor.set( elementDescriptor );
-	    }
+
 	    
 	    return returnElement;
 	}

@@ -1213,11 +1213,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                             if ( PageManager.instance( executionContext.getxFID() ).isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
                                 PerfectoMobile.instance(((DeviceWebDriver)webDriver).getxFID()).windTunnel().addPointOfInterest( getExecutionId( webDriver ), getPoi() + "(" + getPageName() + "." + getName() + ")", Status.failure );
                         }
-                        log.error( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed", currentError );
+                        log.info( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed", currentError );
                         return false;
 
                     case LOG_IGNORE:
-                        log.warn( Thread.currentThread().getName() + ": Step " + name + " failed but was marked to log and ignore" );
+                        log.warn( Thread.currentThread().getName() + ": Step " + name + " failed but was marked to log and ignore", currentError );
 
                     case IGNORE:
                         if ( currentError == null )
@@ -2083,7 +2083,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             }
             catch ( Exception e )
             {
-                log.warn( "Error taking screenshot", e );
+                log.debug( "Error taking screenshot", e );
                 throw new ScriptException( e.getMessage() );
             }
             finally

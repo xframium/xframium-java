@@ -216,23 +216,40 @@ iframe {
                         </div>
                         <div class="row">
                             <div class="col-sm-{{selectedElement.executionParameter.SCREENSHOT == null ? 12 : 6}}">
+                                <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px" ng-if="selectedElement.step.kw=='REPORT'">
+                                    <div class="panel-body">
+                                        <ul class="list-group">
+                                            <li class="list-group-item" ng-repeat="p in selectedElement.parameterList">
+                                                {{p}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                                 <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px">
                                     <div class="panel-heading">
-                                        <h3 class="panel-title" style="color: black">Object Identification</h3>
+                                        <h3 class="panel-title" style="color: black">Step Information</h3>
                                     </div>
                                     <div class="panel-body">
                                         <ul class="list-group">
-                                            <li class="list-group-item">
+                                            <li class="list-group-item" ng-if="selectedElement.step.orMapping==true">
                                                 Site Name:
                                                 <b>{{selectedElement.step.siteName}}</b>
                                             </li>
-                                            <li class="list-group-item">
+                                            <li class="list-group-item" ng-if="selectedElement.step.orMapping==true">
                                                 Page Name:
                                                 <b>{{selectedElement.step.pageName}}</b>
                                             </li>
-                                            <li class="list-group-item">
+                                            <li class="list-group-item" ng-if="selectedElement.step.orMapping==true">
                                                 Element Name:
                                                 <b>{{selectedElement.step.name}}</b>
+                                            </li>
+                                            <li class="list-group-item">
+                                                Inverted:
+                                                <b>{{selectedElement.step.inverted}}</b>
+                                            </li>
+                                            <li class="list-group-item" ng-if="selectedElement.step.validation != 'null'">
+                                                Validation:
+                                                <b>{{selectedElement.step.validation}} ({{selectedElement.step.validationType}})</b>
                                             </li>
                                         </ul>
                                     </div>
@@ -245,7 +262,7 @@ iframe {
                                         </ul>
                                     </div>
                                 </div>
-                                <span ng-if="selectedElement.parameterList.length > 0">
+                                <span ng-if="selectedElement.parameterList.length > 0 && selectedElement.step.kw!='REPORT'">
                                     <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px">
                                         <div class="panel-heading">
                                             <h3 class="panel-title" style="color: black">Parameters</h3>
@@ -315,7 +332,7 @@ iframe {
     </div>
 </body>
 <script type="text/ng-template" id="step.html">
-    <div data-nodrag ui-tree-handle  class="tree-node tree-node-content" style="font-size: 8pt; padding-left: 5px; padding-right: 5px;cursor: default" ng-class="{'filteredStep text-muted' : stepDef.stepStatus == 'FILTERED'}">
+    <div data-nodrag ui-tree-handle  class="tree-node tree-node-content" style="font-size: 8pt; padding-left: 5px; padding-right: 5px;cursor: default" ng-class="{'filteredStep text-muted' : stepDef.stepStatus == 'FILTERED'}" style="text-overflow: ellipsis">
         
         <img src="../../../assets/{{stepDef.step.kw}}.png" width="16" style="margin-right: 2px"/>
         <a ng-if="stepDef.stepList.length != 0" data-nodrag ng-click="toggle(this)" style="cursor: default" >
@@ -384,6 +401,8 @@ iframe {
             });
         };
     } ]);
+    
+
 
     xTest.controller('xTestController', function XTestController( $scope, $uibModal )
     {
@@ -416,6 +435,11 @@ iframe {
         {
             $scope.elementModalInstance.close();
         };
+        
+        $scope.filterElement = function( step )
+        {
+            return ( step.stepStatus == $scope.filterBy || $scope.filterBy.includes( step.name ) || $scope.filterBy.includes( step.kw ) )
+        }
 
         $scope.showError = function( step )
         {
@@ -506,22 +530,13 @@ iframe {
             if ( messageText == null )
                 messageText = $scope.stepMessages['DEFAULT'];
 
-            if ( step.step.kw == 'REPORT' ) {
-                messageText = '<span class="text-info"><i>' + step.step.name + "</i></span><br/>";
-                for ( var i = 0; i < step.parameterList.length; i++ ) {
-
-                    messageText += '<span class="text-info">' + step.parameterList[i] + "</span> ";
-                }
-            }
-            else {
-                messageText = messageText.replace("{kw}", step.step.kw);
-                messageText = messageText.replace("{name}", '<i>' + step.step.name + "</i>");
-                messageText = messageText.replace("{subName}", step.step.subName);
-                messageText = messageText.replace("{pageName}", step.step.pageName);
-                messageText = messageText.replace("{errorMessage}", step.throwable);
-                for ( var i = 0; i < step.parameterList.length; i++ ) {
-                    messageText = messageText.replace("{$p" + (i + 1) + "}", '<span class="text-info">' + step.parameterList[i] + "</span>");
-                }
+            messageText = messageText.replace("{kw}", step.step.kw);
+            messageText = messageText.replace("{name}", '<i>' + step.step.name + "</i>");
+            messageText = messageText.replace("{subName}", step.step.subName);
+            messageText = messageText.replace("{pageName}", step.step.pageName);
+            messageText = messageText.replace("{errorMessage}", step.throwable);
+            for ( var i = 0; i < step.parameterList.length; i++ ) {
+                messageText = messageText.replace("{$p" + (i + 1) + "}", '<span class="text-info">' + step.parameterList[i] + "</span>");
             }
 
             if ( step.step.device != 'null' && step.step.device != '' && step.step.device != null ) {
@@ -609,17 +624,18 @@ iframe {
         }
 
         $scope.stepMessages = {
-            "CALL" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use CALL2)",
-            "CALL2" : "CALL {name}",
+            "CALL" : "{name}",
+            "CALL2" : "{name}",
             "MODULE" : "Execute the {kw} named {name}",
             "SET" : "{kw} the value to {$p1}",
             "ADD_DEVICE" : "Add {$p1}",
             "WAIT_FOR" : "{kw} for {name}",
+            "REPORT" : "Add to Report",
             "NAVIGATE" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use BROWSER)",
             "LOOP" : "Execute {$p2} in a {kw}",
             "STATE" : "Extract State",
             "ALERT" : "{name} to a web-based {kw} ",
-            "VISIBLE" : "Is {name} {kw}}",
+            "VISIBLE" : "Is {name} {kw}",
             "ALIGN" : "{kw} with {name}",
             "SET_CONTENT_KEY" : "{kw} to a {$p1}",
             "BREAK" : "{kw}",
@@ -628,6 +644,7 @@ iframe {
             "EXECWS" : "Execute WebSerivce",
             "WAIT" : "{kw}",
             "HAS_FOCUS" : "Does {name} have focus",
+            "OPERATOR" : "Operator Comparison",
             "ATTRIBUTE" : "Get the attribute {$p1}",
             "EXISTS" : "Does {name} exist",
             "ENABLED" : "Is {name} enabled",
@@ -643,7 +660,7 @@ iframe {
             "WINDOW" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use BROWSER)",
             "GET" : "Get the value for {name}",
             "COMPARE" : "Compare Values",
-            "COMPARE2" : "Comnpare Values",
+            "COMPARE2" : "Compare Values",
             "GESTURE" : "Perform a {name}",
             "STRING2" : "String Operation",
             "STRING" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use STRING2)",

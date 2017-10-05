@@ -259,6 +259,10 @@ public class BrowserCacheLogic
                 //params.put("framework", "appium-1.3.4");
                 //driver.executeScript("mobile:application.element:click", params);*/
 
+                driver.findElementByXPath("//*[@resource-id=\"com.android.chrome:id/spinner\"]").click();
+                driver.findElementByXPath("//*[@text=\"beginning of time\"]").click();
+                
+                
                 //
                 // do it!
                 //

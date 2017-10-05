@@ -276,11 +276,6 @@ public class XMLTestDriver extends AbstractSeleniumTest
             testName.setTest( executionContextTest );
 
         }
-        catch( Throwable t )
-        {
-            t.printStackTrace();
-            throw t;
-        }
         finally
         {
             try

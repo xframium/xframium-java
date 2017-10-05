@@ -80,7 +80,7 @@ public class CleanApplicationAction extends AbstractDefaultAction implements Dev
                 }
                 catch ( Throwable e )
                 {
-                    e.printStackTrace();
+                    log.debug( "Error clearing cache", e );
                 }
             }
             else if ( (localDevice != null && localDevice.getOs().toLowerCase().equals( "android" )) && (webDriver instanceof DeviceWebDriver) )
@@ -91,7 +91,7 @@ public class CleanApplicationAction extends AbstractDefaultAction implements Dev
                 }
                 catch ( Throwable e )
                 {
-                    e.printStackTrace();
+                    log.debug( "Error clearing cache", e );
                 }
             }
             
@@ -100,7 +100,7 @@ public class CleanApplicationAction extends AbstractDefaultAction implements Dev
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                   
                 }
                 webDriver.get(appDesc.getUrl());
             }

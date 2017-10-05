@@ -53,6 +53,58 @@ public class XPathGenerator
     private static final String INTERNAL_SUBSTITUTIONS_PARAM = "xpath.substitution.properties";
     private static Properties substitutions = null;
 
+    private static String[][] XCUI_SUBSTITUTION = new String[][] { 
+        {"UIApplication", "XCUIElementTypeApplication"},
+        {"UIAActionSheet ", "XCUIElementTypeSheet"},
+        {"UIAActivityIndicator ", "XCUIElementTypeActivityIndicator"},
+        {"UIAAlert ", "XCUIElementTypeAlert"},
+        {"UIAButton ", "XCUIElementTypeButton"},
+        {"UIACollectionCell", "XCUIElementTypeCell"},
+        {"UIACollectionView", "XCUIElementTypeCollectionView"},
+        {"UIAEditingMenu", "XCUIElementTypeMenu"},
+        {"UIAElement ", "XCUIElementTypeAny"},
+        {"UIAImage ", "XCUIElementTypeImage"},
+        {"UIAKey ", "XCUIElementTypeKey"},
+        {"UIAKeyboard ", "XCUIElementTypeKeyboard"},
+        {"UIALink ", "XCUIElementTypeLink"},
+        {"UIAMapView", "XCUIElementTypeMap"},
+        {"UIANavigationBar", "XCUIElementTypeNavigationBar"},
+        {"UIAPageIndicator ", "XCUIElementTypePageIndicator"},
+        {"UIAPicker ", "XCUIElementTypePicker"},
+        {"UIAPickerWheel ", "XCUIElementTypePickerWheel"},
+        {"UIAPopover ", "XCUIElementTypePopover"},
+        {"UIAProgressIndicator ", "XCUIElementTypeProgressIndicator"},
+        {"UIAScrollView ", "XCUIElementTypeScrollView"},
+        {"UIASearchBar ", "XCUIElementTypeSearchField"},
+        {"UIASecureTextField ", "XCUIElementTypeSecureTextField"},
+        {"UIASegmentedControl ", "XCUIElementTypeSegmentedControl"},
+        {"UIASlider ", "XCUIElementTypeSlider"},
+        {"UIAStaticText ", "XCUIElementTypeStaticText"},
+        {"UIAStatusBar ", "XCUIElementTypeStatusBar"},
+        {"UIASwitch ", "XCUIElementTypeSwitch"},
+        {"UIATabBar ", "XCUIElementTypeTabBar"},
+        {"UIATableCell", "XCUIElementTypeTableColumn"},
+        {"UIATableGroup ", "XCUIElementTypeOther"},
+        {"UIATableView ", "XCUIElementTypeTable"},
+        {"UIATextField ", "XCUIElementTypeTextField"},
+        {"UIATextView ", "XCUIElementTypeTextView"},
+        {"UIAToolbar ", "XCUIElementTypeToolbar"},
+        {"UIAWebView ", "XCUIElementTypeWebView"},
+        {"UIAWindow ", "XCUIElementTypeWindow"} 
+    };
+    
+    
+    public static String XCUIConvert( String xpath )
+    {
+        String returnValue = xpath;
+        for ( String[] conversion : XCUI_SUBSTITUTION )
+        {
+            returnValue = returnValue.replace( conversion[ 0 ],  conversion[ 1 ] );
+        }
+        
+        return returnValue;
+    }
+    
     /**
      * Generate an XPath expression from properties.
      *

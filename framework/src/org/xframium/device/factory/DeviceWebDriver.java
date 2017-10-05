@@ -788,6 +788,7 @@ public class DeviceWebDriver
         if ( log.isInfoEnabled() )
             log.info( Thread.currentThread().getName() + ": Locating element using [" + by + "]" );
         
+        
         if ( cachingEnabled && cachedDocument == null )
             cacheData();
 

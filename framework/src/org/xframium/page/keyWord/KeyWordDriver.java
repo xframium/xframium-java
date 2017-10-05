@@ -37,7 +37,9 @@ import org.xframium.exception.DataConfigurationException;
 import org.xframium.exception.FilteredException;
 import org.xframium.exception.FlowException;
 import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.exception.ScriptException;
 import org.xframium.exception.TestConfigurationException;
+import org.xframium.exception.XFramiumException;
 import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
@@ -711,7 +713,7 @@ public class KeyWordDriver
                 executionContext.completeStep( StepStatus.FAILURE, e );
                 executionContext.completeTest( TestStatus.FAILED, e );
                 contextMap.put( "XF_TEST_STATUS", TestStatus.FAILED.name() );
-                log.error( "Error executing Test " + testName, e );
+                log.info( "Error executing Test " + testName, e );
                 
             }
             else
@@ -722,16 +724,26 @@ public class KeyWordDriver
             }
             return executionContext;
         }
-        catch ( Throwable e )
+        catch ( XFramiumException e )
         {
             contextMap.put( "XF_TEST_STATUS", TestStatus.FAILED.name() );
             executionContext.startStep( new SyntheticStep( test == null ? testName.getTestName() : test.getName(), "TEST" ), contextMap, dataMap );
             executionContext.completeStep( StepStatus.FAILURE, e );
             executionContext.completeTest( TestStatus.FAILED, e );
 
-            log.error( "Error executing Test " + testName, e );
+            log.info( "Error executing Test " + testName, e );
             return executionContext;
         }
+        catch ( Throwable e )
+        {
+            contextMap.put( "XF_TEST_STATUS", TestStatus.FAILED.name() );
+            executionContext.startStep( new SyntheticStep( test == null ? testName.getTestName() : test.getName(), "TEST" ), contextMap, dataMap );
+            executionContext.completeStep( StepStatus.FAILURE, new ScriptException( e.getMessage() ) );
+            executionContext.completeTest( TestStatus.FAILED, new ScriptException( e.getMessage() ) );
+            log.info( "Error executing Test " + testName, e );
+            return executionContext;
+        }
+        
         finally
         {
             try

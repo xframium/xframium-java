@@ -216,6 +216,7 @@ public class XMLElementProvider extends AbstractElementProvider
 	        for ( org.xframium.page.element.provider.xsd.Element ele : page.getElement() )
 	        {
 	            ElementDescriptor elementDescriptor = new ElementDescriptor( site.getName(), page.getName(), ele.getName() );
+	            
 	            Element currentElement = ElementFactory.instance().createElement( BY.valueOf( ele.getDescriptor() ), ele.getValue(), ele.getName(), page.getName(), ele.getContextName() );
 	            
 	            if ( ele.getElement() != null )
@@ -225,7 +226,7 @@ public class XMLElementProvider extends AbstractElementProvider
                     //
                     for ( SimpleElement sE : ele.getElement() )
                     {
-                        SubElement subElement = new SubElement( BY.valueOf( sE.getDescriptor() ), sE.getValue(), sE.getOs(), sE.getVersion( ) == null ? null : new ApplicationVersion( sE.getVersion() ), sE.getCloud(), sE.getDeviceTag() );
+                        SubElement subElement = new SubElement( BY.valueOf( sE.getDescriptor() ), sE.getValue(), sE.getOs(), sE.getVersion( ) == null ? null : new ApplicationVersion( sE.getVersion() ), sE.getCloud(), sE.getDeviceTag(), sE.getContext() );
                         currentElement.addSubElement( subElement );
                         if ( sE.getParameter() != null )
                         {
@@ -252,6 +253,10 @@ public class XMLElementProvider extends AbstractElementProvider
 	            elementsRead = elementsRead & validateElement( elementDescriptor, currentElement );
 	            
 	            elementMap.put(elementDescriptor.toString(), currentElement );
+	            
+	            if ( log.isDebugEnabled() )
+	                log.debug( "Extracted Element [" + elementDescriptor.toString() + "]" );
+	            
 	        }
 	        
 	        for( Activity activity : page.getActivity() )
@@ -286,5 +291,11 @@ public class XMLElementProvider extends AbstractElementProvider
 	{
 		return elementMap.get(  elementDescriptor.toString() );
 	}
+	
+	public static void main( String[] args )
+    {
+	    XMLElementProvider x = new XMLElementProvider( new File( "C:\\Users\\Allen\\git\\allState-ETRM\\AllState-ETRM\\objectRepository\\All State Good Hands and RoadSmart\\objectRepository.xml" ) );
+	    x.readElements();
+    }
 	
 }
