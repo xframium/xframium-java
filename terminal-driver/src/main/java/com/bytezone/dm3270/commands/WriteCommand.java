@@ -136,7 +136,7 @@ public class WriteCommand extends Command
 
     if (screen.isKeyboardLocked())
     {
-        
+        screen.restoreKeyboard();
     }
   }
 
