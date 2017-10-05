@@ -32,13 +32,17 @@ public class EraseUnprotectedToAddressOrder extends Order
             Cursor cursor = screen.getScreenCursor ();
             int cursorPostion = cursor.getLocation ();
             Field resetField = null;
+            Field firstField = null;
       
             for (Field field : screen.getFieldManager ().getUnprotectedFields ())
+            {
                 if (field.contains (cursorPostion))
                 {
                     resetField = field;
+                    firstField = field;
                     break;
                 }
+            }
       
             HashSet haveSeen = new HashSet();
             
@@ -48,15 +52,15 @@ public class EraseUnprotectedToAddressOrder extends Order
                 resetField.clearData(false);       // don't set modified (is this correct?)
                 haveSeen.add(resetField);
                 
-                if (resetField.contains (stopAddress.getLocation ()))
-                {
-                    cursor.moveTo (resetField.getFirstLocation ());
-                    break;
-                }
-                resetField = resetField.getNextUnprotectedField ();
+                resetField = resetField.getNextUnprotectedField();
             }
-            
-            int x = 1;
+
+            if (firstField != null)
+            {
+                cursor.moveTo (firstField.getFirstLocation());
+            }
+
+            screen.restoreKeyboard();
         }
         else
         {
