@@ -133,6 +133,11 @@ public class WriteCommand extends Command
     // check screen for jobs submitted or finished
     systemMessage = screen.getSystemMessage ();
     systemMessage.checkSystemMessage (eraseWrite, orders, data.length);
+
+    if (screen.isKeyboardLocked())
+    {
+        
+    }
   }
 
   // Used by Session.checkServerName() when searching for the server's name
