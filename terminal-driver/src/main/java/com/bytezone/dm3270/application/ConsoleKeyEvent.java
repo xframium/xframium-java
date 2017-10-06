@@ -28,6 +28,8 @@ public class ConsoleKeyEvent implements EventHandler<KeyEvent>
       return;
     char ch = c.charAt (0);
 
+    System.out.println( "Key Event: " + ch );
+
     if (screen.isKeyboardLocked () || e.isMetaDown () || e.isControlDown ()
         || e.isAltDown ())
     {
