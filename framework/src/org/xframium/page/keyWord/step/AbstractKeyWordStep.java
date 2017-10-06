@@ -119,6 +119,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     private boolean startAt;
 
     private boolean breakpoint;
+    
+    private String appContext;
 
     protected String category;
 
@@ -209,6 +211,18 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         return true;
     }
     
+    
+    
+    public String getAppContext()
+    {
+        return appContext;
+    }
+
+    public void setAppContext( String appContext )
+    {
+        this.appContext = appContext;
+    }
+
     public boolean isOrMapping()
     {
         return orMapping;
@@ -919,6 +933,16 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     {
                         throw new FilteredException( "This required an application version of " + version.toString() );
                     }
+                }
+                
+                
+                //
+                // Validate the applicationcontext
+                //
+                if ( appContext != null && !appContext.isEmpty() )
+                {
+                    if ( !( (DeviceWebDriver) webDriver ).getContext().contains( appContext ) )
+                        throw new FilteredException( "This required an application context containing " + appContext.toString() );
                 }
     
                 if ( log.isInfoEnabled() )

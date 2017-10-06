@@ -40,7 +40,7 @@ public class MatrixStep
     private String deviceTags;
     private String siteName;
     private String version;
-    
+    private String appContext;
 
     public MatrixStep( String stepDefinition )
     {
@@ -57,7 +57,7 @@ public class MatrixStep
     
     public KeyWordStep createStep( Map<String,String> configProperties )
     {
-        KeyWordStep kStep = KeyWordStepFactory.instance().createStep( name, pageName, active, type, linkId, timed, failureMode, inverse, os, browser, poi, threshold, "", wait, context, validationDetail, device, vType, tagNames, startAt, false, deviceTags, siteName, configProperties, version );
+        KeyWordStep kStep = KeyWordStepFactory.instance().createStep( name, pageName, active, type, linkId, timed, failureMode, inverse, os, browser, poi, threshold, "", wait, context, validationDetail, device, vType, tagNames, startAt, false, deviceTags, siteName, configProperties, version, appContext );
         if ( parameterArray != null )
         {
             List<KeyWordParameter> parameterList = parameterArray.getParameters();
@@ -232,6 +232,10 @@ public class MatrixStep
                     break;
                 case 24:
                     version = parseString( stepArray[ i ], null, false );
+                    break;
+                    
+                case 25:
+                    appContext = parseString( stepArray[ i ], null, false );
                     break;
             }
         }
