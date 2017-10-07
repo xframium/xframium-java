@@ -206,6 +206,10 @@ public interface KeyWordStep
 	public boolean isBreakpoint();
     
     public void setBreakpoint( boolean breakpoint );
+    
+    public void setAppContext( String appContext );
+    
+    public String getAppContext();
 
 	/**
 	 * Gets the page name.
