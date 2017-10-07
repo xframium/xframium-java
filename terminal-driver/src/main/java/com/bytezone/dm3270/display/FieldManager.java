@@ -67,11 +67,13 @@ public class FieldManager
     hiddenProtectedFields = 0;
     hiddenUnprotectedFields = 0;
 
+    System.out.println( "\n\n" );
     for (List<ScreenPosition> protoField : divide (screenPositions))
     {
       addField (new Field (screen, protoField));
       setContexts (protoField);
     }
+    System.out.println( "\n\n" );
 
     //    assert dataPositions + fields.size () == 1920 || fields.size () == 0;
 
