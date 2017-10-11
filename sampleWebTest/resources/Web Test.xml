@@ -1,0 +1,16 @@
+<xFramium xmlns="http://www.xframium.org/xFramiumDriver" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/xFramiumDriver http://www.xframium.org/xsd/xFramiumDriver.xsd">
+  <cloud provider="XML" fileName="cloudRegistry.xml" name="EMBEDDED" />
+  <application provider="XML" fileName="applicationRegistry.xml" name="NOOP" />
+  <devices provider="XML" fileName="deviceRegistry.xml" />
+  <driver suiteName="Web Test" type="WEB" outputFolder="test-output" displayResults="EXECUTION_SUITE_HTML" dryRun="false" embeddedServer="false">
+    <artifact type="EXECUTION_RECORD_HTML" />
+    <artifact type="FAILURE_SOURCE" />
+    <artifact type="DEVICE_LOG" />
+    <artifact type="SAUCE_LABS" />
+    <artifact type="CONSOLE_LOG" />
+  </driver>
+  <model provider="XML" fileName="./objectRepository/Web Test/objectRepository.xml" siteName="New Test" />
+  <suite provider="XML" fileName="./tests/tests-Web Test.xml" />
+  <dependencies afterTest="Reporting" />
+  <data provider="XML" fileName="./data/testData.xml" />
+</xFramium>

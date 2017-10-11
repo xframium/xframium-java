@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+<test name="Google Search" dataDriver="Search Data" tagNames="demo" timed="false" threshold="0" active="true" priority="0" severity="0">
+<description>A sample google search test clicking on the first link</description>
+<step name="OPEN" site="Google" page="Search" type="APPLICATION" active="true" threshold="0" timed="false" inverse="false" wait="0">
+<parameter type="STATIC" name="Application Name" value="Google"/>
+</step>
+<step name="NAVIGATE" site="New Test" page="Search" type="BROWSER" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+<parameter type="STATIC" value="http://www.google.com"/>
+</step>
+<step name="CRITERIA" site="Google" page="Search" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="CRITERIA" site="Google" page="Search" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0">
+<parameter type="DATA" name="Value to Set" value="Search Data.Criteria"/>
+<parameter type="STATIC" name="Set Method" value="DEFAULT"/>
+</step>
+<step name="Search Button" site="Google" page="Search" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0"/>
+<step name="First Result.CLICKABLE_THEN_CLICK" site="Google" page="Search" type="WAIT_FOR" active="true" threshold="0" timed="false" inverse="false" wait="0">
+<parameter type="STATIC" name="Wait Time" value="12"/>
+</step>
+</test>
+</suite>
