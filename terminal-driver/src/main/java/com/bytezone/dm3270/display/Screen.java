@@ -658,6 +658,8 @@ public class Screen extends Canvas
     cursor.setVisible (true);
     keyboardLocked = false;
     fireKeyboardStatusChange ("");
+
+    //(new Exception( "Unlock Keyboard" )).printStackTrace();
   }
 
   public void lockKeyboard (String keyName)
@@ -666,7 +668,11 @@ public class Screen extends Canvas
     fireKeyboardStatusChange (keyName);
 
     if (function == TERMINAL)
+    {
       cursor.setVisible (false);
+    }
+
+    //(new Exception( "Lock Keyboard" )).printStackTrace();
   }
 
   public void resetModified ()
