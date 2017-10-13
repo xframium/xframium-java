@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cloudRegistry xmlns="http://www.xframium.org/cloudRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/cloudRegistry http://www.xframium.org/xsd/deviceManagement/cloudRegistry.xsd">
+<cloud name="Perfecto" hostName="partners.perfectomobile.com" userName="" password="" providerType="PERFECTO"/>
+</cloudRegistry>

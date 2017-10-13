@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deviceRegistry xsi:schemaLocation="http://www.xframium.org/deviceRegistry http://www.xframium.org/xsd/deviceManagement/deviceRegistry.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.xframium.org/deviceRegistry">
+<device browserVersion="46" browserName="firefox" os="Windows" osVersion="8.1" model="Firefox" manufacturer="Mozilla" availableDevices="1" driverType="WEB" name="Windows 8.1 firefox 46" cloud="EMBEDDED" active="true"/>
+<device os="ANDROID" model="Galaxy S.*" manufacturer="Samsung" driverType="WEB" name="Galaxy S ANDROID" cloud="Perfecto" active="false"/>
+</deviceRegistry>

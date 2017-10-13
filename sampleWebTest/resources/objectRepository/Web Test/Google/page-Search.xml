@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
+<site name="Google">
+  <page name="Search" class="org.xframium.page.keyWord.KeyWordPage">
+    <element name="CRITERIA" value="//input[@id='lst-ib']" descriptor="XPATH"/>
+    <element name="Search Button" value="//input[@value='Google Search'][@type='submit']" descriptor="XPATH"/>
+    <element name="First Result" value="//div[@class='_NId'][1]//div[@class='g'][1]//a" descriptor="XPATH"/>
+  </page>
+</site></elementDefinition>

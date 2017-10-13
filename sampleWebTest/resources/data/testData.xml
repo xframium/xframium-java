@@ -1,0 +1,11 @@
+<data>
+  <recordType name="Search Data" lockRecords="false">
+    <record name="One" active="true" Criteria="xFramium" />
+    <record name="Two" active="true" Criteria="GMC" />
+    <record name="Three" active="true" Criteria="Java" />
+  </recordType>
+  <recordType name="Facebook Credentials" lockRecords="false">
+    <record name="One" active="true" UserName="user@facebook.com" Password="P@Ssw0rd" />
+    <record name="Two" active="true" UserName="userTwo@facebook.com" Password="P@ssw0rd" />
+  </recordType>
+</data>
