@@ -89,13 +89,15 @@ public class Tn3270TerminalDriver
     {
         private String host;
         private int port;
+        private int terminalType;
         private String startScreen;
         private String pathToAppFile;
 
-        public StartupDetails( String host, int port, String startScreen, String pathToAppFile )
+        public StartupDetails( String host, int port, int terminalType, String startScreen, String pathToAppFile )
         {
             this.host = host;
             this.port = port;
+            this.terminalType = terminalType;
             this.startScreen = startScreen;
             this.pathToAppFile = pathToAppFile;
         }
@@ -198,11 +200,70 @@ public class Tn3270TerminalDriver
             return null;
         }
 
-		@Override
-		public <X> X getScreenshotAs(OutputType<X> arg0) throws WebDriverException {
-			// TODO Auto-generated method stub
-			return null;
-		}
+        @Override
+        public <X> X getScreenshotAs(OutputType<X> arg0) throws WebDriverException {
+            // TODO Auto-generated method stub
+            return null;
+        }
+    }
+
+    private class MySite
+        extends com.bytezone.dm3270.utilities.Site
+    {
+        private String name;
+        private String url;
+        private int port;
+        private boolean extended;
+        private int model;
+        private boolean plugins;
+        private String folder;
+
+        public MySite( String name, String url, int port, boolean extended,
+                       int model, boolean plugins, String folder )
+        {
+            this.name = name;
+            this.url = url;
+            this.port = port;
+            this.extended = extended;
+            this.model = model;
+            this.plugins = plugins;
+            this.folder = folder;
+        }
+
+        public String getName()
+        {
+            return  this.name;
+        }
+
+        public String getURL()
+        {
+            return this.url;
+        }
+
+        public int getPort()
+        {
+            return this.port;
+        }
+
+        public boolean getExtended()
+        {
+            return this.extended;
+        }
+
+        public int getModel()
+        {
+            return this.model;
+        }
+
+        public boolean getPlugins()
+        {
+            return this.plugins;
+        }
+
+        public String getFolder()
+        {
+            return this.folder;
+        }
     }
 }
 
