@@ -1060,6 +1060,7 @@ public class SeleniumElement extends AbstractElement
                         } );
                         break;
 
+                        
                     case VISIBLE:
                         webElement = wait.until( new Function<WebDriver, WebElement>()
                         {
@@ -1092,6 +1093,8 @@ public class SeleniumElement extends AbstractElement
                                 catch ( Exception e )
                                 {
                                     e.printStackTrace();
+                                    e.getCause().printStackTrace();
+                                    
                                     return null;
                                 }
                             }

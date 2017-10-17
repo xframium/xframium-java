@@ -139,6 +139,7 @@
           <enumeration value="FLOW" />
           <enumeration value="CONSOLE" />
           <enumeration value="DATE" />
+          <enumeration value="DEBUG" />
         </restriction>
       </simpleType>
     </attribute>

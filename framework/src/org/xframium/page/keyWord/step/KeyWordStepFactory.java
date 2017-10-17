@@ -48,6 +48,7 @@ import org.xframium.page.keyWord.step.spi.KWSCompare2;
 import org.xframium.page.keyWord.step.spi.KWSConsole;
 import org.xframium.page.keyWord.step.spi.KWSContrastRatio;
 import org.xframium.page.keyWord.step.spi.KWSDate;
+import org.xframium.page.keyWord.step.spi.KWSDebug;
 import org.xframium.page.keyWord.step.spi.KWSDevice;
 import org.xframium.page.keyWord.step.spi.KWSDumpState;
 import org.xframium.page.keyWord.step.spi.KWSElse;
@@ -203,6 +204,7 @@ public class KeyWordStepFactory
         addKeyWord( "RANDOM", KWSRandom.class );
         addKeyWord( "SELECTED", KWSSelected.class );
         addKeyWord( "DATE", KWSDate.class );
+        addKeyWord( "DEBUG", KWSDebug.class );
     }
 
     /**

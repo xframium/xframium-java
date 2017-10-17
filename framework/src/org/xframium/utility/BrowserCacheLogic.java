@@ -284,6 +284,7 @@ public class BrowserCacheLogic
                         driver.findElementByXPath("//*[@resource-id=\"com.android.chrome:id/button_preference\"]").click();
                     } catch (Exception e2) {
                         //do nothing
+                        e2.printStackTrace();
                     }
                 }
 
@@ -296,7 +297,7 @@ public class BrowserCacheLogic
 
                 try {
                     driver.executeScript("mobile:application:close", params);
-                } catch (Exception e) {}
+                } catch (Exception e) {e.printStackTrace();}
                 driver.executeScript("mobile:application:open", params);
             }
             else

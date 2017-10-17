@@ -21,6 +21,7 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
+import org.apache.derby.impl.sql.compile.GetCurrentConnectionNode;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.ConnectedDevice;
@@ -70,6 +71,7 @@ public class KWSAddDevice extends AbstractKeyWordStep
         	{
         	    addContext( getContext(), wD.getPopulatedDevice().getDeviceName(), contextMap, executionContext );
         	    addContext( getContext() + ".id", wD.getWebDriver().getExecutionId(), contextMap, executionContext );
+        	    addContext( getContext() + ".addedTo", ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getDeviceName(), contextMap, executionContext );
         	}
         	
         }
@@ -92,6 +94,7 @@ public class KWSAddDevice extends AbstractKeyWordStep
             {
                 addContext( getContext(), wD.getPopulatedDevice().getDeviceName(), contextMap, executionContext );
                 addContext( getContext() + ".id", wD.getWebDriver().getExecutionId(), contextMap, executionContext );
+                addContext( getContext() + ".addedTo", ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getDeviceName(), contextMap, executionContext );
             }
         }
 	    else

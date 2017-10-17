@@ -415,7 +415,7 @@ iframe {
         $scope.duration = 0;
         $scope.formattedDuration = 0;
         $scope.selectedStep;
-        $scope.filterBy = $scope.testData.testStatus == 'PASSED' ? '' : 'FAILURE';
+        $scope.filterBy = '';
         $scope.selectedContext = '';
         $scope.selectedElement = null;
         $scope.selectedState = 'PRIMARY';
@@ -630,7 +630,6 @@ iframe {
             "SET" : "{kw} the value to {$p1}",
             "ADD_DEVICE" : "Add {$p1}",
             "WAIT_FOR" : "{kw} for {name}",
-            "REPORT" : "Add to Report",
             "NAVIGATE" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use BROWSER)",
             "LOOP" : "Execute {$p2} in a {kw}",
             "STATE" : "Extract State",
@@ -677,6 +676,7 @@ iframe {
             "RANDOM" : "Generate a random {name}",
             "SQL" : "Executing SQL",
             "DATE" : "Date Operation",
+            "DEBUG" : "***** DEBUG *****",
             "FUNCTION" : "Call native function {name}"
         };
 
