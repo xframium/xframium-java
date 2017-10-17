@@ -18,17 +18,19 @@ public class Site
   
   private final CheckBox[] checkBoxFieldList = { null, null, null, this.extended, null, this.plugins, null };
   
+    public Site(String name, String url, int port, boolean extended, int model, boolean plugins, String folder)
+    {
+        this.name.setText(name);
+        this.url.setText(url);
+        this.port.setText("" + port);
+        this.extended.setSelected(extended);
+        this.model.setText("" + model);
+        this.plugins.setSelected(plugins);
+        this.folder.setText(folder);
+    }
 
-  public Site(String name, String url, int port, boolean extended, int model, boolean plugins, String folder)
-  {
-    this.name.setText(name);
-    this.url.setText(url);
-    this.port.setText("" + port);
-    this.extended.setSelected(extended);
-    this.model.setText("" + model);
-    this.plugins.setSelected(plugins);
-    this.folder.setText(folder);
-  }
+    public Site()
+    {}
   
   public String getName()
   {

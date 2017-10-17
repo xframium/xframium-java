@@ -34,14 +34,14 @@ public class Console extends Application
   private WindowSaver spyWindowSaver;
 
   private Preferences prefs;
-  private Screen screen;
+  protected Screen screen;
   private final ScreenDimensions screenDimensions = new ScreenDimensions (24, 80);
   private ScreenDimensions alternateScreenDimensions;
   private final TelnetState telnetState = new TelnetState ();
 
   private OptionStage optionStage;
   private SpyPane spyPane;
-  private ConsolePane consolePane;
+  protected ConsolePane consolePane;
   private ReplayStage replayStage;
   private MainframeStage mainframeStage;
   private PluginsStage pluginsStage;
@@ -89,7 +89,7 @@ public class Console extends Application
     optionStage.show ();
   }
 
-  private void startSelectedFunction ()
+  protected void startSelectedFunction ()
   {
     optionStage.hide ();
     String errorMessage = "";
@@ -185,7 +185,7 @@ public class Console extends Application
       optionStage.show ();
   }
 
-  private void setModel (Site serverSite)
+  protected void setModel (Site serverSite)
   {
     int model = serverSite.getModel ();
     System.out.println ("model: " + model);
@@ -218,7 +218,7 @@ public class Console extends Application
   //    return optionalServerSite;
   //  }
 
-  private void setConsolePane (Screen screen, Site serverSite)
+  protected void setConsolePane (Screen screen, Site serverSite)
   {
     consolePane = new ConsolePane (screen, serverSite, pluginsStage);
     Scene scene = new Scene (consolePane);
@@ -322,7 +322,7 @@ public class Console extends Application
                optionStage.clientComboBox.getSelectionModel ().getSelectedItem ());
   }
 
-  private Screen createScreen (Function function, Site site)
+  protected Screen createScreen (Function function, Site site)
   {
     screen = new Screen (screenDimensions, alternateScreenDimensions, prefs, function,
         pluginsStage, site, telnetState);
