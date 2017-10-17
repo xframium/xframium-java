@@ -7,9 +7,21 @@ import org.openqa.selenium.*;
 public class Tn3270TerminalDriver
     implements WebDriver
 {
+    private Dm3270Context context;
+    private StartupDetails details;
+    
     public Tn3270TerminalDriver( StartupDetails startup )
     {
+        Dm3270Context.Dm3270Site site = new Dm3270Context.Dm3270Site( "Tn3270TerminalDriver",
+                                                                      startup.getHost(),
+                                                                      startup.getPort(),
+                                                                      true,
+                                                                      startup.getTerminalType(),
+                                                                      false,
+                                                                      "." );
+        details = startup;
 
+        context = new Dm3270Context( site );
     }
     
     //
@@ -104,6 +116,7 @@ public class Tn3270TerminalDriver
 
         public String getHost() { return host; }
         public int getPort() { return port; }
+        public int getTerminalType() { return terminalType; }
         public String getStartScreen() { return startScreen; }
         public String getPathToAppFile() { return pathToAppFile; }
     }
@@ -204,65 +217,6 @@ public class Tn3270TerminalDriver
         public <X> X getScreenshotAs(OutputType<X> arg0) throws WebDriverException {
             // TODO Auto-generated method stub
             return null;
-        }
-    }
-
-    private class MySite
-        extends com.bytezone.dm3270.utilities.Site
-    {
-        private String name;
-        private String url;
-        private int port;
-        private boolean extended;
-        private int model;
-        private boolean plugins;
-        private String folder;
-
-        public MySite( String name, String url, int port, boolean extended,
-                       int model, boolean plugins, String folder )
-        {
-            this.name = name;
-            this.url = url;
-            this.port = port;
-            this.extended = extended;
-            this.model = model;
-            this.plugins = plugins;
-            this.folder = folder;
-        }
-
-        public String getName()
-        {
-            return  this.name;
-        }
-
-        public String getURL()
-        {
-            return this.url;
-        }
-
-        public int getPort()
-        {
-            return this.port;
-        }
-
-        public boolean getExtended()
-        {
-            return this.extended;
-        }
-
-        public int getModel()
-        {
-            return this.model;
-        }
-
-        public boolean getPlugins()
-        {
-            return this.plugins;
-        }
-
-        public String getFolder()
-        {
-            return this.folder;
         }
     }
 }

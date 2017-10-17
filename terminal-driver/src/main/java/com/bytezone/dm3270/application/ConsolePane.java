@@ -320,7 +320,7 @@ public class ConsolePane extends BorderPane
 
   // called from Console.startSelectedFunction()
   // called from Terminal.start()
-  void connect ()
+  public void connect ()
   {
     if (server == null)
       throw new IllegalArgumentException ("Server must not be null");
