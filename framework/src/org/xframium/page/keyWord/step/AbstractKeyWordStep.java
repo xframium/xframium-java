@@ -272,11 +272,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         switch ( scrollDirection )
         {
             case DOWN:
-                currentGesture = GestureManager.instance( webDriver ).createSwipe( webDriver.getExecutionContext().getxFID(), new Point( 50, randomNumber ), new Point( 50, 45 + randomNumber ) );
+                currentGesture = GestureManager.instance( webDriver ).createSwipe( webDriver.getExecutionContext().getxFID(), new Point( 50, randomNumber + 10 ), new Point( 50, 45 + randomNumber ) );
                 break;
 
             case LEFT:
-                currentGesture = GestureManager.instance( webDriver ).createSwipe( webDriver.getExecutionContext().getxFID(), new Point( randomNumber, 50 ), new Point( 45 + randomNumber, 50 ) );
+                currentGesture = GestureManager.instance( webDriver ).createSwipe( webDriver.getExecutionContext().getxFID(), new Point( randomNumber + 5, 50 ), new Point( 45 + randomNumber, 50 ) );
                 break;
 
             case RIGHT:

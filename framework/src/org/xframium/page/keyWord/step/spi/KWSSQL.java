@@ -151,6 +151,8 @@ public class KWSSQL extends AbstractKeyWordStep
 		                	pageData.addValue( mapKey, mapValue );
 		                }
 	                }
+	                
+    	            addContext( getContext() + "_row_count", resultsArr.length + "", contextMap, executionContext );    
                 }
 
                 //

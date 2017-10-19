@@ -108,9 +108,20 @@ public class KWSVisual extends AbstractKeyWordStep
 		{
 			String currentParamStr = getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) + "";
 			int splitIndex = currentParamStr.indexOf("=");
-			if (currentParamStr.length() < 3 || splitIndex < 1) continue;
-			String key = currentParamStr.substring(0, splitIndex);
-			String value = currentParamStr.substring(splitIndex + 1);
+			String key = null;
+			String value = null;
+			if ( splitIndex == -1 )
+			{
+				key = getParameterList().get( i ).getName();
+				value = currentParamStr;
+			}
+			else
+			{
+			    key = currentParamStr.substring(0, splitIndex);
+				value = currentParamStr.substring(splitIndex + 1);
+			}
+			
+
 			params.put(key, value);
 		}
 

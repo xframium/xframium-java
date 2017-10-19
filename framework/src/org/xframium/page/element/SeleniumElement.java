@@ -896,6 +896,10 @@ public class SeleniumElement extends AbstractElement
     protected boolean _isVisible()
     {
         WebElement webElement = (WebElement) getElement();
+        
+        if ( webElement == null )
+            throw new ScriptException( "Element was found but not visible" );
+            
         boolean returnValue = webElement.isDisplayed();
         if ( returnValue )
             getActionProvider().getSupportedTimers( (DeviceWebDriver) getWebDriver(), getExecutionContext().getTimerName(), getExecutionContext(), null );
@@ -929,6 +933,9 @@ public class SeleniumElement extends AbstractElement
     {
         WebElement webElement = (WebElement) getElement();
 
+        if ( webElement == null )
+            throw new ScriptException( "Element was found but not enabled" );
+        
         boolean returnValue = webElement.isEnabled();
         if ( returnValue )
             getActionProvider().getSupportedTimers( (DeviceWebDriver) getWebDriver(), getExecutionContext().getTimerName(), getExecutionContext(), null );
@@ -1060,6 +1067,7 @@ public class SeleniumElement extends AbstractElement
                         } );
                         break;
 
+                        
                     case VISIBLE:
                         webElement = wait.until( new Function<WebDriver, WebElement>()
                         {
@@ -1092,6 +1100,8 @@ public class SeleniumElement extends AbstractElement
                                 catch ( Exception e )
                                 {
                                     e.printStackTrace();
+                                    e.getCause().printStackTrace();
+                                    
                                     return null;
                                 }
                             }
