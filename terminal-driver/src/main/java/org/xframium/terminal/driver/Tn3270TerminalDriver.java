@@ -1,14 +1,20 @@
 package org.xframium.terminal.driver;
 
+import java.io.*;
 import java.util.*;
+import javax.xml.bind.*;
 
 import org.openqa.selenium.*;
+import org.xframium.terminal.driver.screen.model.*;
 
 public class Tn3270TerminalDriver
     implements WebDriver
 {
     private Dm3270Context context;
     private StartupDetails details;
+    private Application application;
+    private ConsumedApplication workingApp;
+    private ConsumedScreen currentScreen;
     
     public Tn3270TerminalDriver( StartupDetails startup )
     {
@@ -22,6 +28,9 @@ public class Tn3270TerminalDriver
         details = startup;
 
         context = new Dm3270Context( site );
+        application = loadApplication( startup.getPathToAppFile() );
+        workingApp = new ConsumedApplication( application );
+        currentScreen = workingApp.getScreenByName( startup.getStartScreen() );
     }
     
     //
@@ -45,11 +54,18 @@ public class Tn3270TerminalDriver
   
     public List<WebElement> findElements(By paramBy)
     {
+        reportUnsupportedUsage( "Only single element selection is available" );
+        
         return null;
     }
   
     public WebElement findElement(By paramBy)
     {
+        if ( !( paramBy instanceof By.ByName ))
+        {
+            reportUnsupportedUsage( "Only element selection by name is available" );
+        }
+        
         return null;
     }
   
@@ -218,6 +234,122 @@ public class Tn3270TerminalDriver
             // TODO Auto-generated method stub
             return null;
         }
+    }
+
+    private class ConsumedScreen
+    {
+        private Screen screen;
+        private HashMap<String,Action> actionsByName = new HashMap<String,Action>();
+        private HashMap<String,Field> fieldsByName = new HashMap<String,Field>();
+        private HashMap<String,Link> linksByName = new HashMap<String,Link>();
+
+        public ConsumedScreen( Screen screen )
+        {
+            this.screen = screen;
+
+            Iterator<Action> actions = screen.getActions().iterator();
+            while( actions.hasNext() )
+            {
+                Action action = actions.next();
+                actionsByName.put( action.getName(), action );
+            }
+
+            Iterator<Field> fields = screen.getFields().iterator();
+            while( fields.hasNext() )
+            {
+                Field field = fields.next();
+                fieldsByName.put( field.getName(), field );
+            }
+
+            Iterator<Link> links = screen.getLinks().iterator();
+            while( links.hasNext() )
+            {
+                Link link = links.next();
+                linksByName.put( link.getName(), link );
+            }
+        }
+
+        public Screen getScreen()
+        {
+            return screen;
+        }
+
+        public Action getActionByName( String name )
+        {
+            return actionsByName.get( name );
+        }
+
+        public Field getFieldByName( String name )
+        {
+            return fieldsByName.get( name );
+        }
+
+        public Link getLinkByName( String name )
+        {
+            return linksByName.get( name );
+        }
+    }
+
+    private class ConsumedApplication
+    {
+        private Application application;
+        private HashMap<String,ConsumedScreen> screensByName = new HashMap<String,ConsumedScreen>();
+        
+        public ConsumedApplication( Application application )
+        {
+            this.application = application;
+            
+            Iterator<Screen> screens = application.getScreens().iterator();
+            while( screens.hasNext() )
+            {
+                ConsumedScreen cScreen = new ConsumedScreen( screens.next() );
+                screensByName.put( cScreen.getScreen().getName(), cScreen );
+            }
+        }
+
+        public Application getApplication()
+        {
+            return application;
+        }
+
+        public ConsumedScreen getScreenByName( String name )
+        {
+            return screensByName.get( name );
+        }
+    }
+
+    //
+    // Helpers
+    //
+
+    private Application loadApplication( String pathToFile )
+    {
+        Application rtn = null;
+        FileReader reader = null;
+
+        try
+        {
+            reader = new FileReader( pathToFile );
+            
+            JAXBContext context = JAXBContext.newInstance( ObjectFactory.class );
+            Unmarshaller un = context.createUnmarshaller();
+
+            JAXBElement<?> rootElement = (JAXBElement<?>)un.unmarshal( reader );
+            RegistryRoot rRoot = (RegistryRoot)rootElement.getValue();
+
+            rtn = rRoot.getApplication().get(0);
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
+
+        return rtn;
+    }
+
+    private void reportUnsupportedUsage( String msg )
+    {
+        throw new UnsupportedOperationException( msg );
     }
 }
 
