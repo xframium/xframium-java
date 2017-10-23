@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.data.DataProvider.DriverType;
@@ -617,6 +618,59 @@ public class DeviceManager
 
         if ( log.isInfoEnabled() )
             log.info( "Attempting to register an alternate device as " + deviceName + " using " + currentDevice );
+        
+        try
+        {
+            webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice, xFID );
+
+            if ( webDriver != null )
+            {
+
+                if ( log.isInfoEnabled() )
+                    log.info( "Registered alternate connected device as " + deviceName );
+
+                notifyPropertyAdapter( configurationProperties, webDriver );
+                rtn = new ConnectedDevice( webDriver, currentDevice, null );
+            }
+            else
+                throw new IllegalStateException( "Coudl not connect" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error creating factory instance", e );
+            try
+            {
+                webDriver.close();
+            }
+            catch ( Exception e2 )
+            {
+            }
+            try
+            {
+                webDriver.quit();
+            }
+            catch ( Exception e2 )
+            {
+            }
+
+            throw new DeviceException( "Could not connect to alternate device defined as " + deviceName );
+        }
+
+        return rtn;
+    }
+    
+    public ConnectedDevice getConnectedDevice( String deviceName, Capabilities dC, String driverType, String xFID )
+    {
+        ConnectedDevice rtn = null;
+
+        SimpleDevice currentDevice = new SimpleDevice( null, null, null, null, null, null, null, 1, driverType, true, null );
+        
+        currentDevice.addCapabilities( dC );
+        
+        DeviceWebDriver webDriver = null;
+
+        if ( log.isInfoEnabled() )
+            log.info( "Attempting to create a device instance as " + deviceName + " using " + currentDevice );
         
         try
         {

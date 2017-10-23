@@ -107,6 +107,9 @@ public interface Device
 	String[] getTagNames();
     public void setTagNames( String[] tagNames );
     public void addTag( String tagName );
+    
+    public void setPhoneNumber( String phoneNumber );
+    public String getPhoneNumber();
 	
 	/**
 	 * Gets the available devices.

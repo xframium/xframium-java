@@ -30,6 +30,7 @@ import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
 import org.xframium.page.keyWord.step.spi.KWSAddDevice;
+import org.xframium.page.keyWord.step.spi.KWSAddDevice2;
 import org.xframium.page.keyWord.step.spi.KWSAlert;
 import org.xframium.page.keyWord.step.spi.KWSAlign;
 import org.xframium.page.keyWord.step.spi.KWSApplication;
@@ -46,6 +47,7 @@ import org.xframium.page.keyWord.step.spi.KWSCommand;
 import org.xframium.page.keyWord.step.spi.KWSCompare;
 import org.xframium.page.keyWord.step.spi.KWSCompare2;
 import org.xframium.page.keyWord.step.spi.KWSConsole;
+import org.xframium.page.keyWord.step.spi.KWSContext;
 import org.xframium.page.keyWord.step.spi.KWSContrastRatio;
 import org.xframium.page.keyWord.step.spi.KWSDate;
 import org.xframium.page.keyWord.step.spi.KWSDebug;
@@ -182,6 +184,7 @@ public class KeyWordStepFactory
         addKeyWord( "CACHE", KWSCache.class );
         addKeyWord( "REPORT", KWSReport.class );
         addKeyWord( "ADD_DEVICE", KWSAddDevice.class );
+        addKeyWord( "ADD_DEVICE2", KWSAddDevice2.class );
         addKeyWord( "HAS_FOCUS", KWSFocus.class );
         addKeyWord( "ALIGN", KWSAlign.class );
         addKeyWord( "SYNC", KWSSync.class );
@@ -205,6 +208,7 @@ public class KeyWordStepFactory
         addKeyWord( "SELECTED", KWSSelected.class );
         addKeyWord( "DATE", KWSDate.class );
         addKeyWord( "DEBUG", KWSDebug.class );
+        addKeyWord( "CONTEXT", KWSContext.class );
     }
 
     /**

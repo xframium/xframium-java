@@ -233,5 +233,10 @@
       <artifactId>jira</artifactId>
       <version>1.0.0</version>
     </dependency>
+    <dependency>
+      <groupId>com.googlecode.libphonenumber</groupId>
+      <artifactId>libphonenumber</artifactId>
+      <version>8.8.4</version>
+    </dependency>
   </dependencies>
 </project>

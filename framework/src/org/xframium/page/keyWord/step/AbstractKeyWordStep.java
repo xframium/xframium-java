@@ -51,6 +51,7 @@ import org.xframium.content.ContentManager;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.device.factory.DriverManager;
 import org.xframium.exception.FilteredException;
 import org.xframium.exception.FlowException;
 import org.xframium.exception.ObjectConfigurationException;
@@ -1590,6 +1591,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
             case PROPERTY:
                 returnValue = System.getProperty( param.getValue(), "" );
+                if ( "".equals(returnValue) )
+                    returnValue = KeyWordDriver.instance( xFID ).getConfigProperties().getProperty( param.getValue() );
+                
+                if ( returnValue == null )
+                    returnValue = "";
                 break;
 
             case CONTENT:
@@ -1597,6 +1603,17 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 break;
 
             case DATA:
+
+                //
+                // We allow data to be overriden by context
+                //
+                if ( contextMap.get( param.getValue() ) != null )
+                {
+                    returnValue = contextMap.get( param.getValue() ) + "";
+                    break;
+                }
+
+                
                 int dotPosition = param.getValue().lastIndexOf( "." );
                 String tableName = param.getValue().substring( 0, dotPosition );
                 String recordName = param.getValue().substring( param.getValue().lastIndexOf( "." ) + 1 );
@@ -1657,12 +1674,28 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 return token.getValue();
 
             case PROPERTY:
-                return System.getProperty( token.getValue(), "" );
+                String returnValue2 = null;
+                returnValue2 = System.getProperty( token.getValue(), "" );
+                if ( "".equals(returnValue2) )
+                    returnValue2 = KeyWordDriver.instance( xFID ).getConfigProperties().getProperty( token.getValue() );
+                
+                if ( returnValue2 == null )
+                    returnValue2 = "";
+                
+                return returnValue2;
+                
+                
 
             case CONTENT:
                 return ContentManager.instance(xFID).getContentValue( token.getValue() + "" );
 
             case DATA:
+                //
+                // We allow data to be overriden by context
+                //
+                if ( contextMap.get( token.getValue() ) != null )
+                    return contextMap.get( token.getValue() ) + "";
+                
                 int dotPosition = token.getValue().lastIndexOf( "." );
                 String tableName = token.getValue().substring( 0, dotPosition );
                 String recordName = token.getValue().substring( token.getValue().lastIndexOf( "." ) + 1 );

@@ -1,3 +1,4 @@
+
 package org.xframium.device.cloud.action;
 
 import java.io.ByteArrayInputStream;
@@ -248,6 +249,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
             device.setResolution( handSet.getResolution() );
             device.setManufacturer( handSet.getManufacturer() );
             device.setDeviceName( handSet.getDeviceId() );
+            device.setPhoneNumber( handSet.getPhoneNumber() );
             
             ((SimpleDevice) device).setDeviceName( deviceId );
             return true;
