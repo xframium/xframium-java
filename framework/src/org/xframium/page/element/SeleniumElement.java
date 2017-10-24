@@ -1099,8 +1099,6 @@ public class SeleniumElement extends AbstractElement
                                 }
                                 catch ( Exception e )
                                 {
-                                    e.printStackTrace();
-                                    e.getCause().printStackTrace();
                                     
                                     return null;
                                 }

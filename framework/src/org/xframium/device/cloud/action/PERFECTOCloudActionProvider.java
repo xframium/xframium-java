@@ -525,6 +525,9 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
     
         Handset localDevice = PerfectoMobile.instance( webDriver.getxFID() ).devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
         
+        System.out.println(  localDevice  );
+        System.out.println(  appDesc  );
+        
         if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
             PerfectoMobile.instance( webDriver.getxFID() ).application().close( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
         else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
