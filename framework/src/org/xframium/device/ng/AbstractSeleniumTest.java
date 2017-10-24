@@ -173,19 +173,9 @@ public abstract class AbstractSeleniumTest
         
         if ( xmlMode )
         {
-            if ( DataManager.instance( xFID ).getTests() != null && DataManager.instance( xFID ).getTests().length > 0 )
+            for ( String pN : DataManager.instance( xFID ).getTests() )
             {
-                for ( String pN : DataManager.instance( xFID ).getTests() )
-                {
-                    testList.add( new TestKey( pN, KeyType.TEST ) );
-                }
-            }
-            else
-            {
-                for ( String pN : KeyWordDriver.instance( xFID ).getTestNames() )
-                {
-                    testList.add( new TestKey( pN, KeyType.TEST ) );
-                }
+                testList.add( new TestKey( pN, KeyType.TEST ) );
             }
         
 

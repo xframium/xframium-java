@@ -62,6 +62,7 @@ import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
 import org.xframium.utility.SeleniumSessionManager;
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 public abstract class AbstractConfigurationReader implements ConfigurationReader
 {
@@ -530,7 +531,11 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                     System.err.println( "No tests contained the names(s) [" + driverC.getTestNames() + "]" );
                 }
                 
-                testArray.addAll( driverC.getTestNames() );
+                for ( KeyWordTest t : testList )
+                    testArray.add( t.getName() );
+                
+                
+                //testArray.addAll( Arrays.asList( testArray.toArray( new String[ 0 ] ) ) );
             }
             
             //
@@ -552,7 +557,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                     testArray.add( t.getName() );
             }
             
-            if ( testArray.size() == 0 )
+            if ( !driverC.isNamesConfigured() )
                 DataManager.instance( xFID ).setTests( KeyWordDriver.instance( xFID ).getTestNames() );
             else
                 DataManager.instance( xFID ).setTests( testArray.toArray( new String[0] ) );

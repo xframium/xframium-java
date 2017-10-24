@@ -1051,7 +1051,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 {
 
                 }
-                log.error( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed " );
                 log.debug( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed ", e );
 
             }
@@ -1238,11 +1237,13 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                             if ( PageManager.instance( executionContext.getxFID() ).isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
                                 PerfectoMobile.instance(((DeviceWebDriver)webDriver).getxFID()).windTunnel().addPointOfInterest( getExecutionId( webDriver ), getPoi() + "(" + getPageName() + "." + getName() + ")", Status.failure );
                         }
+                        log.warn( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed");
                         log.info( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed", currentError );
                         return false;
 
                     case LOG_IGNORE:
-                        log.warn( Thread.currentThread().getName() + ": Step " + name + " failed but was marked to log and ignore", currentError );
+                        log.warn( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed");
+                        log.info( Thread.currentThread().getName() + ": Step " + name + " failed but was marked to log and ignore", currentError );
 
                     case IGNORE:
                         if ( currentError == null )

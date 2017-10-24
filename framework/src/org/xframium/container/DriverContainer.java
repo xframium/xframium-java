@@ -37,7 +37,7 @@ public class DriverContainer
     private String reportFolder;
     private List<String> artifactList = new ArrayList<String>( 20 );
     private boolean secureCloud = false;
-    
+    private boolean namesConfigured = false;
     
 
     public int getRetryCount()
@@ -326,6 +326,8 @@ public class DriverContainer
 
     public void setTestTags( String testTags )
     {
+        if ( testTags != null )
+            namesConfigured = true;
         this.testTags = testTags;
     }
 
@@ -346,10 +348,26 @@ public class DriverContainer
 
     public void setTestNames( String testNames )
     {
+        
         if ( testNames != null )
+        {
+            namesConfigured = true;
             this.testNames.addAll( Arrays.asList( testNames.split( "," ) ) );
+        }
     }
     
+    
+    
+    public boolean isNamesConfigured()
+    {
+        return namesConfigured;
+    }
+
+    public void setNamesConfigured( boolean namesConfigured )
+    {
+        this.namesConfigured = namesConfigured;
+    }
+
     public void setTestNames( List<String> testNames )
     {
         this.testNames = testNames;
