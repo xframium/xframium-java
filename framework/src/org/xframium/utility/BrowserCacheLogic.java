@@ -260,7 +260,7 @@ public class BrowserCacheLogic
                 //driver.executeScript("mobile:application.element:click", params);*/
 
                 driver.findElementByXPath("//*[@resource-id=\"com.android.chrome:id/spinner\"]").click();
-                driver.findElementByXPath("//*[@text=\"beginning of time\"]").click();
+                driver.findElementByXPath("//*[@text=\"beginning of time\"]|//*[@text=\\\"All time\\\"]").click();
                 
                 
                 //
@@ -268,6 +268,16 @@ public class BrowserCacheLogic
                 //
                 // text: Clear
                 //
+                
+                try
+                {
+                    driver.findElementByXPath("//*[@resource-id=\"com.android.chrome:id/clear_button\"]|//*[@resource-id=\"com.android.chrome:id/button_preference\"]").click();
+                }
+                catch( Exception e )
+                {
+                    e.printStackTrace();
+                }
+                
                 try {
                     //params.clear();
                     //params.put("value", "//*[@resource-id=\"android:id/button1\"]");
