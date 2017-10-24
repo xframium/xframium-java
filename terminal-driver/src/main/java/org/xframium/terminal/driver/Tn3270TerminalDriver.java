@@ -46,6 +46,7 @@ public class Tn3270TerminalDriver
         details = startup;
 
         context = new Dm3270Context( site );
+        Utilities.setscreenDimensions( context.getScreenDimensions() );
         application = loadApplication( startup.getPathToAppFile() );
         applicationRdeader = JXPathContext.newContext( application );
         workingApp = new ConsumedApplication( application );
@@ -259,7 +260,7 @@ public class Tn3270TerminalDriver
   
         public void clear()
         {
-
+            
         }
   
         public String getTagName()
@@ -289,12 +290,12 @@ public class Tn3270TerminalDriver
   
         public List<WebElement> findElements(By paramBy)
         {
-            return null;
+            return Tn3270TerminalDriver.this.findElements( paramBy );
         }
   
         public WebElement findElement(By paramBy)
         {
-            return null;
+            return Tn3270TerminalDriver.this.findElement( paramBy );
         }
   
         public boolean isDisplayed()
@@ -304,7 +305,7 @@ public class Tn3270TerminalDriver
   
         public Point getLocation()
         {
-            return null;
+            return Utilities.asApplicationLocation( context.getCurrentLocation() );
         }
   
         public Dimension getSize()

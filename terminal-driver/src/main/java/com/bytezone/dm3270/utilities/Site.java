@@ -44,22 +44,26 @@ public class Site
   
   public int getPort()
   {
-    try
-    {
-      int portValue = Integer.parseInt(this.port.getText());
-      if (portValue <= 0)
+      int portValue = 23;
+      
+      try
       {
-        System.out.println("Invalid port value: " + this.port.getText());
-        this.port.setText("23"); }
-      return 23;
-
-    }
-    catch (NumberFormatException e)
-    {
-
-      System.out.println("Invalid port value: " + this.port.getText());
-      this.port.setText("23"); }
-    return 23;
+          portValue = Integer.parseInt(this.port.getText());
+          if (portValue <= 0)
+          {
+              System.out.println("Invalid port value: " + this.port.getText());
+              this.port.setText("23");
+              portValue = 23;
+          }
+      }
+      catch (NumberFormatException e)
+      {
+          System.out.println("Invalid port value: " + this.port.getText());
+          this.port.setText("23");
+          portValue = 23;
+      }
+      
+    return portValue;
   }
   
 
@@ -70,22 +74,26 @@ public class Site
   
   public int getModel()
   {
-    try
-    {
-      int modelValue = Integer.parseInt(this.model.getText());
-      if ((modelValue < 2) || (modelValue > 5))
+      int modelValue = 2;
+          
+      try
       {
-        System.out.println("Invalid model value: " + this.model.getText());
-        this.model.setText("2"); }
-      return 2;
-
-    }
-    catch (NumberFormatException e)
-    {
-
-      System.out.println("Invalid model value: " + this.model.getText());
-      this.model.setText("2"); }
-    return 2;
+          modelValue = Integer.parseInt(this.model.getText());
+          if ((modelValue < 2) || (modelValue > 5))
+          {
+              System.out.println("Invalid model value: " + this.model.getText());
+              this.model.setText("2");
+              modelValue = 2;
+          }
+      }
+      catch (NumberFormatException e)
+      {
+          System.out.println("Invalid model value: " + this.model.getText());
+          this.model.setText("2");
+          modelValue = 2;
+      }
+      
+      return modelValue;
   }
   
 

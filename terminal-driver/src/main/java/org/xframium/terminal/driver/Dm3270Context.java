@@ -64,6 +64,11 @@ public class Dm3270Context
         return rtn;
     }
 
+    public ScreenDimensions getScreenDimensions()
+    {
+        return console.getScreen().getScreenDimensions();
+    }
+
     //
     // Data Types
     //
