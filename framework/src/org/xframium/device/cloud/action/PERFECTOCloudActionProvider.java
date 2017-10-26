@@ -241,8 +241,6 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         {
             Handset handSet = PerfectoMobile.instance( xFID ).devices().getDevice( deviceId );
 
-            System.out.println( handSet );
-            
             device.setPhoneNumber( handSet.getPhoneNumber() );
             
             device.setOs( handSet.getOs() );
@@ -253,15 +251,12 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
             device.setResolution( handSet.getResolution() );
             device.setManufacturer( handSet.getManufacturer() );
             device.setDeviceName( handSet.getDeviceId() );
-            
-            System.out.println( device.getPhoneNumber() );
-            
+
             ((SimpleDevice) device).setDeviceName( deviceId );
             return true;
         }
         catch ( Exception e )
         {
-            e.printStackTrace();
             return false;
         }
     }

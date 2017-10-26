@@ -981,8 +981,8 @@ public class SeleniumElement extends AbstractElement
     {
         long implicitWait = getWebDriver().getImplicitWait();
         
-        if ( implicitWait > timeOut )
-             getWebDriver().manage().timeouts().implicitlyWait( timeOut, TimeUnit.MILLISECONDS );
+        if ( implicitWait > (timeOut * 1000) )
+             getWebDriver().manage().timeouts().implicitlyWait( timeOut, TimeUnit.SECONDS );
 
         try
         {
