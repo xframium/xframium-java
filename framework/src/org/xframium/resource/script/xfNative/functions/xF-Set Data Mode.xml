@@ -71,10 +71,10 @@
       <step name="Exit Loop" site="xF_Native" page="xF_Settings" type="BREAK" />
     </step>
     <step name="CLOSE" site="New Test" page="Search" type="APPLICATION" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Application Name" value="xF-Settings" />
+      <parameter type="STATIC" name="Application Name" value="Settings" />
     </step>
     <step name="OPEN" site="New Test" page="Search" type="APPLICATION" active="true" threshold="0" timed="false" inverse="false" wait="2000" failureMode="ERROR">
-      <parameter type="STATIC" name="Application Name" value="xF-Settings" />
+      <parameter type="STATIC" name="Application Name" value="Settings" />
     </step>
     <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="CLICK" os="ANDROID" failureMode="ERROR" />
   </function>
