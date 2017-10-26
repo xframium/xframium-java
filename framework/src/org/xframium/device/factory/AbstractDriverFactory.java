@@ -116,7 +116,6 @@ public abstract class AbstractDriverFactory implements DriverFactory
                 CloudActionProvider actionProvider = (CloudActionProvider) Class.forName( CloudActionProvider.class.getPackage().getName() + "." + webDriver.getCloud().getProvider() + "CloudActionProvider" ).newInstance();
                 if ( actionProvider.popuplateDevice( webDriver, webDriver.getDeviceName(), newDevice, xFID ) )
                 {
-                    System.out.println( "SETTING " + newDevice.getPhoneNumber() );
                     webDriver.setPopulatedDevice( newDevice );
                 }
                 
