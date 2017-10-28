@@ -84,7 +84,8 @@ public class DataManager
 	 */
 	public void setTests( String[] testNames )
 	{
-		this.testNames = testNames;
+     this.testNames = testNames;
+	    
 	}
 	
 	/**

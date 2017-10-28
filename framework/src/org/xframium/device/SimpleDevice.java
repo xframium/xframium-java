@@ -92,6 +92,7 @@ public class SimpleDevice implements Device
 	    simpleDevice.tagNames.addAll( this.tagNames );
 	    simpleDevice.capabilities.putAll( this.capabilities );
 	    simpleDevice.capList.addAll( this.capList );
+	    simpleDevice.setPhoneNumber( phoneNumber );
 	    simpleDevice.generateEnv();
 	    return simpleDevice;
 	}

@@ -89,7 +89,7 @@ public class KWSAddDevice2 extends AbstractKeyWordStep
                 addContext( getContext() + ".addedTo", ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getDeviceName(), contextMap, executionContext );
                 if ( ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getPhoneNumber() != null  )
                 {
-                    addContext( getContext() + ".phoneNumber", ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getPhoneNumber(), contextMap, executionContext );
+                    addContext( getContext() + ".phoneNumber", wD.getWebDriver().getPopulatedDevice().getPhoneNumber(), contextMap, executionContext );
                 }
             }
         }
@@ -105,7 +105,7 @@ public class KWSAddDevice2 extends AbstractKeyWordStep
                 addContext( getContext() + ".addedTo", ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getDeviceName(), contextMap, executionContext );
                 if ( ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getPhoneNumber() != null  )
                 {
-                    addContext( getContext() + ".phoneNumber", ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getPhoneNumber(), contextMap, executionContext );
+                    addContext( getContext() + ".phoneNumber", wD.getWebDriver().getPopulatedDevice().getPhoneNumber(), contextMap, executionContext );
                 }
             }
         }

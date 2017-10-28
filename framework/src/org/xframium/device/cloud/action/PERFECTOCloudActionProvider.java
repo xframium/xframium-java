@@ -241,6 +241,8 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         {
             Handset handSet = PerfectoMobile.instance( xFID ).devices().getDevice( deviceId );
 
+            device.setPhoneNumber( handSet.getPhoneNumber() );
+            
             device.setOs( handSet.getOs() );
             if ( device.getOs().toLowerCase().equals( "android" ) || device.getOs().toLowerCase().equals( "ios" ) )
                 device.setModel( handSet.getModel() );
@@ -249,8 +251,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
             device.setResolution( handSet.getResolution() );
             device.setManufacturer( handSet.getManufacturer() );
             device.setDeviceName( handSet.getDeviceId() );
-            device.setPhoneNumber( handSet.getPhoneNumber() );
-            
+
             ((SimpleDevice) device).setDeviceName( deviceId );
             return true;
         }
@@ -524,6 +525,9 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         ApplicationDescriptor appDesc = ApplicationRegistry.instance(webDriver.getxFID()).getApplication( applicationName );
     
         Handset localDevice = PerfectoMobile.instance( webDriver.getxFID() ).devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
+        
+        System.out.println(  localDevice  );
+        System.out.println(  appDesc  );
         
         if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
             PerfectoMobile.instance( webDriver.getxFID() ).application().close( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );

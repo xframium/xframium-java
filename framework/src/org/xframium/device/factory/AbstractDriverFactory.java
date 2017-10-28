@@ -115,7 +115,10 @@ public abstract class AbstractDriverFactory implements DriverFactory
                 newDevice.setBrowserVersion( currentDevice.getBrowserVersion() );
                 CloudActionProvider actionProvider = (CloudActionProvider) Class.forName( CloudActionProvider.class.getPackage().getName() + "." + webDriver.getCloud().getProvider() + "CloudActionProvider" ).newInstance();
                 if ( actionProvider.popuplateDevice( webDriver, webDriver.getDeviceName(), newDevice, xFID ) )
+                {
                     webDriver.setPopulatedDevice( newDevice );
+                }
+                
                 
                 newDevice.setCloud( currentDevice.getCloud() );
             }

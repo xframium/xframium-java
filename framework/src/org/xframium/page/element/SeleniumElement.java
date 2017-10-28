@@ -980,7 +980,9 @@ public class SeleniumElement extends AbstractElement
     protected boolean _waitFor( long timeOut, TimeUnit timeUnit, WAIT_FOR waitType, String value )
     {
         long implicitWait = getWebDriver().getImplicitWait();
-        getWebDriver().manage().timeouts().implicitlyWait( 1, TimeUnit.SECONDS );
+        
+        if ( implicitWait > (timeOut * 1000) )
+             getWebDriver().manage().timeouts().implicitlyWait( timeOut, TimeUnit.SECONDS );
 
         try
         {
@@ -1099,8 +1101,6 @@ public class SeleniumElement extends AbstractElement
                                 }
                                 catch ( Exception e )
                                 {
-                                    e.printStackTrace();
-                                    e.getCause().printStackTrace();
                                     
                                     return null;
                                 }
