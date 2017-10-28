@@ -9,7 +9,7 @@ import com.bytezone.dm3270.utilities.Dm3270Utility;
 public class Dm3270Context
 {
     private Dm3270Site theSite;
-    private MyDm3270Console console;
+    private Dm3270Console console;
 
     //
     // CTOR
@@ -25,6 +25,11 @@ public class Dm3270Context
     //
     // WebDriver Support Methods
     //
+
+    public void setConsole( Dm3270Console console )
+    {
+        this.console = console;
+    }
 
     public int getCurrentLocation()
     {
@@ -74,7 +79,7 @@ public class Dm3270Context
     //
 
     public static class Dm3270Site
-        extends com.bytezone.dm3270.utilities.Site
+        implements com.bytezone.dm3270.utilities.ISite
     {
         private String name;
         private String url;
@@ -132,39 +137,12 @@ public class Dm3270Context
         }
     }
 
-    private class MyDm3270Console
-        extends Console
-    {
-        protected void startSelectedFunction ()
-        {
-            //
-            // JavaFX doesn't have an easy way to get access to the add once launched, so we'll grab
-            // a referecne as we pass through our code
-            //
-
-            console = this;
-
-            //
-            // OK, initialize the UI
-            //
-            
-            setModel (theSite);
-            setConsolePane (createScreen (Console.Function.TERMINAL, theSite), theSite);
-            consolePane.connect ();
-        }
-
-        public Screen getScreen()
-        {
-            return screen;
-        }
-    }
-
     //
     // Helpers
     //
 
     private void init()
     {
-        MyDm3270Console.launch( new String[0] );
+        Dm3270Console.doIt( this, theSite );
     }
 }

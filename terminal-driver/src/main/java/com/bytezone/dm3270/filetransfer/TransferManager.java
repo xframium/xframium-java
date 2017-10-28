@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 import com.bytezone.dm3270.display.Screen;
 import com.bytezone.dm3270.display.TSOCommandListener;
-import com.bytezone.dm3270.utilities.Site;
+import com.bytezone.dm3270.utilities.ISite;
 
 public class TransferManager implements TSOCommandListener
 {
@@ -19,7 +19,7 @@ public class TransferManager implements TSOCommandListener
   private Transfer currentTransfer;
 
   private final Screen screen;
-  private Site site;
+  private ISite site;
 
   public enum TransferStatus
   {
@@ -31,7 +31,7 @@ public class TransferManager implements TSOCommandListener
     return INDFILE_PATTERN.matcher (command).matches ();
   }
 
-  public TransferManager (Screen screen, Site site)
+  public TransferManager (Screen screen, ISite site)
   {
     this.screen = screen;
     this.site = site;
@@ -59,7 +59,7 @@ public class TransferManager implements TSOCommandListener
       }
   }
 
-  public void setReplayServer (Site serverSite)
+  public void setReplayServer (ISite serverSite)
   {
     site = serverSite;
   }

@@ -13,6 +13,7 @@ import com.bytezone.dm3270.plugins.PluginsStage;
 import com.bytezone.dm3270.session.Session;
 import com.bytezone.dm3270.streams.TelnetState;
 import com.bytezone.dm3270.utilities.Dm3270Utility;
+import com.bytezone.dm3270.utilities.ISite;
 import com.bytezone.dm3270.utilities.Site;
 import com.bytezone.dm3270.utilities.WindowSaver;
 
@@ -25,8 +26,8 @@ import javafx.stage.Stage;
 public class Console extends Application
 {
   private static final int MAINFRAME_EMULATOR_PORT = 5555;
-  private static final Site DEFAULT_MAINFRAME =
-      new Site ("mainframe", "localhost", MAINFRAME_EMULATOR_PORT, true, 2, false, "");
+    //  private static final Site DEFAULT_MAINFRAME =
+    //      new Site ("mainframe", "localhost", MAINFRAME_EMULATOR_PORT, true, 2, false, "");
 
   private Stage primaryStage;
   private Rectangle2D primaryScreenBounds;
@@ -166,26 +167,26 @@ public class Console extends Application
 
         break;
 
-      case "Test":
-        if (!optionalClientSite.isPresent ())
-          errorMessage = "No client selected";
-        else
-        {
-          Site clientSite = optionalClientSite.get ();
-          setSpyPane (createScreen (Function.TEST, null), DEFAULT_MAINFRAME, clientSite);
-          mainframeStage = new MainframeStage (telnetState, MAINFRAME_EMULATOR_PORT);
-          mainframeStage.show ();
-          mainframeStage.startServer ();
-        }
+      // case "Test":
+      //   if (!optionalClientSite.isPresent ())
+      //     errorMessage = "No client selected";
+      //   else
+      //   {
+      //     Site clientSite = optionalClientSite.get ();
+      //     setSpyPane (createScreen (Function.TEST, null), DEFAULT_MAINFRAME, clientSite);
+      //     mainframeStage = new MainframeStage (telnetState, MAINFRAME_EMULATOR_PORT);
+      //     mainframeStage.show ();
+      //     mainframeStage.startServer ();
+      //   }
 
-        break;
+      //   break;
     }
 
     if (!errorMessage.isEmpty () && Dm3270Utility.showAlert (errorMessage))
       optionStage.show ();
   }
 
-  protected void setModel (Site serverSite)
+  protected void setModel (ISite serverSite)
   {
     int model = serverSite.getModel ();
     System.out.println ("model: " + model);
@@ -218,7 +219,7 @@ public class Console extends Application
   //    return optionalServerSite;
   //  }
 
-  protected void setConsolePane (Screen screen, Site serverSite)
+  protected void setConsolePane (Screen screen, ISite serverSite)
   {
     consolePane = new ConsolePane (screen, serverSite, pluginsStage);
     Scene scene = new Scene (consolePane);
@@ -322,7 +323,7 @@ public class Console extends Application
                optionStage.clientComboBox.getSelectionModel ().getSelectedItem ());
   }
 
-  protected Screen createScreen (Function function, Site site)
+  protected Screen createScreen (Function function, ISite site)
   {
     screen = new Screen (screenDimensions, alternateScreenDimensions, prefs, function,
         pluginsStage, site, telnetState);

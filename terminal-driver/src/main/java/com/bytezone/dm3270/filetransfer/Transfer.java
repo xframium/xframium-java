@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bytezone.dm3270.utilities.FileSaver;
-import com.bytezone.dm3270.utilities.Site;
+import com.bytezone.dm3270.utilities.ISite;
 
 // CUT - Control Unit Terminal --------- Buffered
 // DFT - Distributed Function Terminal - WSF
@@ -49,7 +49,7 @@ public class Transfer
 
   // called from TransferManager.tsoCommand()
   // called from TransferManager.prepareTransfer()
-  Transfer (IndFileCommand indFileCommand, Site site, String tlq)
+  Transfer (IndFileCommand indFileCommand, ISite site, String tlq)
   {
     this.indFileCommand = indFileCommand;
     inboundBuffer = indFileCommand.getBuffer ();
