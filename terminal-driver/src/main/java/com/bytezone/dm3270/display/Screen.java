@@ -34,7 +34,7 @@ import com.bytezone.dm3270.plugins.PluginsStage;
 import com.bytezone.dm3270.streams.TelnetState;
 import com.bytezone.dm3270.streams.TelnetStateListener;
 import com.bytezone.dm3270.structuredfields.SetReplyModeSF;
-import com.bytezone.dm3270.utilities.Site;
+import com.bytezone.dm3270.utilities.ISite;
 
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
@@ -99,7 +99,7 @@ public class Screen extends Canvas
 
   public Screen (ScreenDimensions defaultScreenDimensions,
       ScreenDimensions alternateScreenDimensions, Preferences prefs, Function function,
-      PluginsStage pluginsStage, Site serverSite, TelnetState telnetState)
+      PluginsStage pluginsStage, ISite serverSite, TelnetState telnetState)
   {
     this.defaultScreenDimensions = defaultScreenDimensions;
     this.alternateScreenDimensions = alternateScreenDimensions;

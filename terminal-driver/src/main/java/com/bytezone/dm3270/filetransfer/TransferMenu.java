@@ -13,7 +13,7 @@ import com.bytezone.dm3270.display.ScreenWatcher;
 import com.bytezone.dm3270.filetransfer.Transfer.TransferType;
 import com.bytezone.dm3270.utilities.Dm3270Utility;
 import com.bytezone.dm3270.utilities.FileSaver;
-import com.bytezone.dm3270.utilities.Site;
+import com.bytezone.dm3270.utilities.ISite;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -24,7 +24,7 @@ import javafx.scene.input.KeyCombination;
 
 public class TransferMenu implements ScreenChangeListener
 {
-  private Site server;
+  private ISite server;
 
   private ScreenWatcher screenWatcher;
   private final TransferManager transferManager;
@@ -36,7 +36,7 @@ public class TransferMenu implements ScreenChangeListener
   private UploadDialog uploadDialog;
   private DownloadDialog downloadDialog;
 
-  public TransferMenu (Site server, TransferManager transferManager)
+  public TransferMenu (ISite server, TransferManager transferManager)
   {
     this.server = server;
     this.transferManager = transferManager;
@@ -47,7 +47,7 @@ public class TransferMenu implements ScreenChangeListener
   }
 
   // called from Screen.setReplayServer()
-  public void setReplayServer (Site server)
+  public void setReplayServer (ISite server)
   {
     this.server = server;
   }

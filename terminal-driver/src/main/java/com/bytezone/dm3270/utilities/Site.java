@@ -5,6 +5,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
 public class Site
+    implements ISite
 {
   public final TextField name = new TextField();
   public final TextField url = new TextField();

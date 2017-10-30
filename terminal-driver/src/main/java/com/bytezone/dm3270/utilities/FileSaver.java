@@ -12,7 +12,7 @@ public class FileSaver
     return Paths.get(userHome, new String[] { "dm3270", "files", siteFolderName });
   }
   
-  public static Path getHomePath(Site site)
+  public static Path getHomePath(ISite site)
   {
     if (site == null)
     {

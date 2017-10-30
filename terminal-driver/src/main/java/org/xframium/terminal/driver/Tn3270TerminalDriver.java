@@ -182,7 +182,7 @@ public class Tn3270TerminalDriver
     // Data Types
     //
 
-    public class StartupDetails
+    public static class StartupDetails
     {
         private String host;
         private int port;
