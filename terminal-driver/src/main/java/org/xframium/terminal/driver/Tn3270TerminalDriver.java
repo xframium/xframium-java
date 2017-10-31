@@ -47,6 +47,7 @@ public class Tn3270TerminalDriver
 
         context = new Dm3270Context( site );
         Utilities.setscreenDimensions( context.getScreenDimensions() );
+        
         application = loadApplication( startup.getPathToAppFile() );
         applicationRdeader = JXPathContext.newContext( application );
         workingApp = new ConsumedApplication( application );

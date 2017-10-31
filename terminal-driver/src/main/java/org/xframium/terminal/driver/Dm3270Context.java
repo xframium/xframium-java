@@ -143,6 +143,16 @@ public class Dm3270Context
 
     private void init()
     {
-        Dm3270Console.doIt( this, theSite );
+        final Dm3270Context _this = this;
+        
+        Runnable launcher = new Runnable()
+            {
+                public void run()
+                {
+                    Dm3270Console.doIt( _this, theSite );
+                }
+            };
+        
+        new Thread( launcher ).run();
     }
 }

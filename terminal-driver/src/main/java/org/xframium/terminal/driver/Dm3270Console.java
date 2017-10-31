@@ -1,5 +1,7 @@
 package org.xframium.terminal.driver;
 
+import javafx.scene.Scene;
+
 import com.bytezone.dm3270.application.*;
 import com.bytezone.dm3270.display.*;
 
@@ -9,7 +11,8 @@ public class Dm3270Console
     private static Dm3270Context.Dm3270Site theSite = null;
     private static Dm3270Context theContext = null;
     
-    protected void startSelectedFunction ()
+    @Override
+    public void startPartTwo() throws Exception
     {
         //
         // JavaFX doesn't have an easy way to get access to the add once launched, so we'll grab
@@ -36,7 +39,7 @@ public class Dm3270Console
     {
         theSite = site;
         theContext = context;
-        
+
         launch( new String[0] );
     }
 }
