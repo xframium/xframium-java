@@ -93,7 +93,8 @@ public class KWSString2 extends AbstractKeyWordStep
         CONCAT( 7, "CONCAT", "Add all strings together" ), 
         SUBSTR( 8, "SUBSTR","Extract a portion of the string" ),
         DATE( 9, "DATE","Convert a date" ),
-        PHONE( 10, "PHONE","Parses a phone number" )
+        PHONE( 10, "PHONE","Parses a phone number" ),
+        EMPTY( 11, "EMPTY","Checks if a string is empty" )
         ;
 
         public List<OperationType> getSupported()
@@ -109,6 +110,7 @@ public class KWSString2 extends AbstractKeyWordStep
             supportedList.add( OperationType.SUBSTR );
             supportedList.add( OperationType.DATE );
             supportedList.add( OperationType.PHONE );
+            supportedList.add( OperationType.EMPTY );
             return supportedList;
         }
 
@@ -146,6 +148,28 @@ public class KWSString2 extends AbstractKeyWordStep
 
         switch ( OperationType.valueOf( getName().toUpperCase() ) )
         {
+            case EMPTY:
+                if ( originalValue == null || originalValue.isEmpty() )
+                {
+                    if ( getContext() != null )
+                    {
+                        if ( log.isDebugEnabled() )
+                            log.debug( "Setting Context Data to [" + newValue + "] for [" + getContext() + "]" );
+                        addContext( getContext(), "true" , contextMap, executionContext );
+                    }
+                    return true;
+                }
+                else
+                {
+                    if ( getContext() != null )
+                    {
+                        if ( log.isDebugEnabled() )
+                            log.debug( "Setting Context Data to [" + newValue + "] for [" + getContext() + "]" );
+                        addContext( getContext(), "false" , contextMap, executionContext );
+                    }
+                    return false;
+                }
+            
             case PHONE:
                 String countryCode = "US";
                 if ( getParameter( COUNTRY_CODE ) != null )
