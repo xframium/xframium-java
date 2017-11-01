@@ -79,16 +79,23 @@ public class Console extends Application
     primaryStage.setResizable (false);
 
     pluginsStage = new PluginsStage (prefs);
-    optionStage = new OptionStage (prefs, pluginsStage);
+    
 
     primaryScreenBounds = javafx.stage.Screen.getPrimary ().getVisualBounds ();
     if (false)
       System.out.println (javafx.stage.Screen.getPrimary ().getDpi ());
 
-    optionStage.okButton.setOnAction (e -> startSelectedFunction ());
-    optionStage.cancelButton.setOnAction (e -> optionStage.hide ());
-    optionStage.show ();
+    startPartTwo();
   }
+
+    public void startPartTwo() throws Exception
+    {
+        optionStage = new OptionStage (prefs, pluginsStage);
+        
+        optionStage.okButton.setOnAction (e -> startSelectedFunction ());
+        optionStage.cancelButton.setOnAction (e -> optionStage.hide ());
+        optionStage.show ();
+    }
 
   protected void startSelectedFunction ()
   {
