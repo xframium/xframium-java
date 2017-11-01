@@ -97,8 +97,6 @@ public class KWSMath extends AbstractKeyWordStep
 	    boolean valueAdded = false;
 	    for ( int i=0; i<getParameterList().size(); i++ )
 	    {
-	        
-
 	        String currentParameter = getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) + "";
 	        
 	        if ( getParameterList().get( i ).getValue().startsWith( "=" ) )
@@ -125,7 +123,13 @@ public class KWSMath extends AbstractKeyWordStep
 	                    break;
 	                    
 	                case multiply:
-                        currentValue *= Double.parseDouble( formatString( currentParameter ) );
+	                    if ( valueAdded )
+	                        currentValue *= Double.parseDouble( formatString( currentParameter ) );
+	                    else
+	                    {
+	                        currentValue = Double.parseDouble( formatString( currentParameter ) );
+	                        valueAdded = true;
+	                    }
                         break;
 	            }
 	        }

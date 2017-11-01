@@ -21,6 +21,7 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.factory.DeviceWebDriver;
@@ -54,7 +55,7 @@ public class KWSVisible extends AbstractKeyWordStep
 		if ( pageObject == null )
 			throw new IllegalStateException( "There was not page object defined" );
 		
-		if ( getParameterList().size() == 2 )
+		if ( getParameterList().size() >= 2 )
 		{
 			int searchCount = Integer.parseInt( getParameterValue(getParameterList().get(0), contextMap, dataMap, executionContext.getxFID()) + "" );
 			for ( int i=0; i<searchCount; i++)
@@ -70,7 +71,16 @@ public class KWSVisible extends AbstractKeyWordStep
 					
 				}
 				
-				scroll( Direction.valueOf( getParameterValue(getParameterList().get(1), contextMap, dataMap, executionContext.getxFID()) + "" ), ( (DeviceWebDriver) webDriver ));
+				if ( getParameter( "fromPoint" ) != null && getParameter( "toPoint" ) != null )
+				{
+				    String[] fromPoint = getParameterAsString( "fromPoint", contextMap, dataMap, executionContext.getxFID() ).split( "," );
+				    String[] toPoint = getParameterAsString( "toPoint", contextMap, dataMap, executionContext.getxFID() ).split( "," );
+				    
+				    scroll( new Point( Integer.parseInt( fromPoint[0] ), Integer.parseInt( fromPoint[1] ) ), new Point( Integer.parseInt( toPoint[0] ), Integer.parseInt( toPoint[1] ) ), ( (DeviceWebDriver) webDriver ));
+				    
+				}
+				else
+				    scroll( Direction.valueOf( getParameterValue(getParameterList().get(1), contextMap, dataMap, executionContext.getxFID()) + "" ), ( (DeviceWebDriver) webDriver ));
 
 			}
 			
