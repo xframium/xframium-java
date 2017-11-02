@@ -20,6 +20,7 @@
  *******************************************************************************/
 package org.xframium.gesture.factory.spi.appium;
 
+import java.time.Duration;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
@@ -58,7 +59,7 @@ public class PressGesture extends AbstractPressGesture
 		Point pressPosition = getActualPoint( getPressPosition(), screenDimension );
 		
 		TouchAction swipeAction = new TouchAction( appiumDriver );
-		swipeAction.press(  pressPosition.getX(), pressPosition.getY() ).waitAction( getPressLength() ).release().perform();
+		swipeAction.press(  pressPosition.getX(), pressPosition.getY() ).waitAction( Duration.ofMillis( getPressLength() ) ).release().perform();
 		
 		return true;
 	}

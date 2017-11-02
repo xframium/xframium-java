@@ -875,11 +875,12 @@ public abstract class AbstractElement implements Element
 		        catch( Exception e ) {}
 		    }
 
-								
+						if ( success==true)		
 			success = true;
 		}	
 		catch( Exception e )
 		{
+		    e.printStackTrace();
 			if(e instanceof XFramiumException)
 			    throw e;
 			else

@@ -149,7 +149,7 @@ public class KWSString2 extends AbstractKeyWordStep
         switch ( OperationType.valueOf( getName().toUpperCase() ) )
         {
             case EMPTY:
-                if ( originalValue == null || originalValue.isEmpty() )
+                if ( originalValue == null || originalValue.trim().isEmpty() )
                 {
                     if ( getContext() != null )
                     {

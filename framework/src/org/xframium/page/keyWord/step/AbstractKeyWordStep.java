@@ -269,27 +269,29 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         //
         int randomNumber = numberGenerator.nextInt( 45 );
 
-        Gesture currentGesture = null;
         switch ( scrollDirection )
         {
             case DOWN:
-                currentGesture = GestureManager.instance( webDriver ).createSwipe( webDriver.getExecutionContext().getxFID(), new Point( 50, randomNumber + 10 ), new Point( 50, 45 + randomNumber ) );
+                scroll( new Point( 50, randomNumber + 10 ), new Point( 50, 45 + randomNumber ), webDriver );
                 break;
 
             case LEFT:
-                currentGesture = GestureManager.instance( webDriver ).createSwipe( webDriver.getExecutionContext().getxFID(), new Point( randomNumber + 5, 50 ), new Point( 45 + randomNumber, 50 ) );
+                scroll( new Point( randomNumber + 5, 50 ), new Point( 45 + randomNumber, 50 ), webDriver );
                 break;
 
             case RIGHT:
-                currentGesture = GestureManager.instance( webDriver ).createSwipe( webDriver.getExecutionContext().getxFID(), new Point( 45 + randomNumber, 50 ), new Point( randomNumber, 50 ) );
+                scroll( new Point( 45 + randomNumber, 50 ), new Point( randomNumber, 50 ), webDriver );
                 break;
 
             case UP:
-                currentGesture = GestureManager.instance( webDriver ).createSwipe( webDriver.getExecutionContext().getxFID(), new Point( 50, 45 + randomNumber ), new Point( 50, randomNumber ) );
+                scroll( new Point( 50, 45 + randomNumber ), new Point( 50, randomNumber ), webDriver );
                 break;
         }
-
-        currentGesture.executeGesture( webDriver );
+    }
+    
+    protected void scroll( Point fromPoint, Point toPoint, DeviceWebDriver webDriver )
+    {
+        GestureManager.instance( webDriver ).createSwipe( webDriver.getExecutionContext().getxFID(), fromPoint, toPoint ).executeGesture( webDriver );
     }
 
     @Override
@@ -1579,11 +1581,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     {
         if ( param == null )
             return null;
-        String returnValue;
+        Object returnValue;
         switch ( param.getType() )
         {
             case CONTEXT:
-                returnValue = contextMap.get( param.getValue() ) + "";
+                returnValue = contextMap.get( param.getValue() );
                 break;
 
             case STATIC:
@@ -1610,7 +1612,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 //
                 if ( contextMap.get( param.getValue() ) != null )
                 {
-                    returnValue = contextMap.get( param.getValue() ) + "";
+                    returnValue = contextMap.get( param.getValue() );
                     break;
                 }
 
@@ -1646,11 +1648,14 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 if ( log.isDebugEnabled() )
                     log.debug( "Applying token " + token.getName() );
 
-                returnValue = returnValue.replace( "{" + token.getName() + "}", getTokenValue( token, contextMap, dataMap, xFID ) );
+                returnValue = ( returnValue + "").replace( "{" + token.getName() + "}", getTokenValue( token, contextMap, dataMap, xFID ) );
             }
         }
 
-        return returnValue;
+        if ( returnValue == null )
+            return "";
+        else
+            return returnValue + "";
     }
 
     /**
@@ -2026,7 +2031,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     }
 
 
-    public void dumpState(WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, ExecutionContextTest executionContext )
+    public String dumpState(WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, ExecutionContextTest executionContext )
     {
         String checkPointName = null;
         int historicalCount = -1;
@@ -2157,6 +2162,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             }
         }
 
+        String pageSource = null;
+        
         FileOutputStream outputStream = null;
         try
         {
@@ -2176,8 +2183,9 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             executionContext.getStep().addExecutionParameter( "XML", "../../artifacts/" + xmlFile.getName() );
             executionContext.getStep().addExecutionParameter( "HTML", "../../artifacts/" + domFile.getName() );
 
-            String pageSource = webDriver.getPageSource();
+            pageSource = webDriver.getPageSource();
             outputStream = new FileOutputStream( xmlFile );
+            
             outputStream.write( XMLEscape.toXML( pageSource ).getBytes() );
 
             outputStream.flush();
@@ -2208,6 +2216,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 {
                 }
         }
+        
+        return pageSource;
     }
 
     private class CheckPointFiles implements FilenameFilter

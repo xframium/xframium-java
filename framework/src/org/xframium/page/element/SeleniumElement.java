@@ -23,6 +23,7 @@ package org.xframium.page.element;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -499,7 +500,7 @@ public class SeleniumElement extends AbstractElement
 
                 if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver )
                 {
-                    new TouchAction( (AppiumDriver<?>) ((DeviceWebDriver) getWebDriver()).getNativeDriver() ).press( webElement ).waitAction( length ).release().perform();
+                    new TouchAction( (AppiumDriver<?>) ((DeviceWebDriver) getWebDriver()).getNativeDriver() ).press( webElement ).waitAction( Duration.ofMillis( length ) ).release().perform();
                 }
                 else if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver )
                 {
