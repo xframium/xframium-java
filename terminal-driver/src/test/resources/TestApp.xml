@@ -1,4 +1,4 @@
-xs<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <elementDefinition xmlns="http://www.xframium.org/terminal-screen-model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/terminal-screen-model http://www.xframium.org/xsd/pageManagement/terminal-screen-model.xsd">
   
   <Application name="sim390" >

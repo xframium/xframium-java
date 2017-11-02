@@ -10,6 +10,7 @@ public class Dm3270Context
 {
     private Dm3270Site theSite;
     private Dm3270Console console;
+    private boolean running = true;
 
     //
     // CTOR
@@ -153,6 +154,8 @@ public class Dm3270Context
                 }
             };
         
-        new Thread( launcher ).run();
+        new Thread( launcher, "Launch Emulator" ).start();
+
+        Dm3270Console.waitForStartup();
     }
 }

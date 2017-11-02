@@ -10,6 +10,7 @@ public class Dm3270Console
 {
     private static Dm3270Context.Dm3270Site theSite = null;
     private static Dm3270Context theContext = null;
+    private static Object monitor = new Object();
     
     @Override
     public void startPartTwo() throws Exception
@@ -28,6 +29,12 @@ public class Dm3270Console
         setModel (theSite);
         setConsolePane (createScreen (Console.Function.TERMINAL, theSite), theSite);
         consolePane.connect ();
+
+        //
+        // OK, we're started now
+        //
+
+        notifyOfStartup();
     }
 
     public Screen getScreen()
@@ -41,5 +48,28 @@ public class Dm3270Console
         theContext = context;
 
         launch( new String[0] );
+    }
+
+    public static void waitForStartup()
+    {
+    	try
+    	{
+    		synchronized( monitor )
+    		{
+    			monitor.wait();
+    		}
+    	}
+    	catch( Exception e )
+    	{
+    		e.printStackTrace();
+    	}
+    }
+
+	public static void notifyOfStartup()
+    {
+        synchronized( monitor )
+        {
+            monitor.notify();
+        }
     }
 }
