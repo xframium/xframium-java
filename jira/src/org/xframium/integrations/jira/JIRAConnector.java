@@ -7,6 +7,7 @@ import java.util.List;
  * Connector interface used for ZAPI(JIRA) connection
  * 
  *
+ *
  */
 public interface JIRAConnector {
 	
