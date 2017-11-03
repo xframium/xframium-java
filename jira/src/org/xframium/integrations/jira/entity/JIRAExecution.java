@@ -5,7 +5,6 @@ import org.xframium.integrations.jira.ExecutionStatus;
 /**
  * Represents an Execution inside a test Cycle
  * Test Cycle > TestCase/Issue[Execution]
- * @author rravs
  *
  */
 public class JIRAExecution extends JIRAEntity {

@@ -18,7 +18,6 @@ import org.json.JSONObject;
 import org.xframium.integrations.jira.HTTPMethod;
 /**
  * Util class.
- * @author rravs
  *
  */
 public class JIRAConnectorUtil {

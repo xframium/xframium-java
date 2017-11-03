@@ -2,7 +2,6 @@ package org.xframium.integrations.jira.entity;
 
 /**
  * Common entity class extended by other entity classes.
- * @author rravs
  *
  */
 public abstract class JIRAEntity {

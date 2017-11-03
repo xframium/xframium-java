@@ -2,7 +2,6 @@ package org.xframium.integrations.jira.entity;
 
 /**
  * Represents a Project in JIRA
- * @author rravs
  *
  */
 public class JIRAProject extends JIRAEntity {
