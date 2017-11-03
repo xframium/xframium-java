@@ -11,6 +11,7 @@
       <element name="xF_Wi-Fi" descriptor="COMPLEX">
         <element value="//UIAStaticText[@name='Wi-Fi']" descriptor="XPATH" os="IOS" />
         <element value="//android.widget.TextView[@text='Wi-Fi']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.TextView[starts-with( @text, 'Wi' )][contains( @text, 'Fi' )]" descriptor="XPATH" os="ANDROID" />
       </element>
       <element name="xF-Search Button" descriptor="COMPLEX">
         <element value="//*[@resource-id='com.android.settings:id/search']" descriptor="XPATH" os="ANDROID" />
@@ -25,15 +26,16 @@
       <element name="xF-Airplane Mode Menu" descriptor="COMPLEX">
         <element value="//android.widget.TextView[contains( @text, 'plane')]" descriptor="XPATH" />
         <element value="//android.widget.TextView[contains( @text, 'More')]" descriptor="XPATH" />
-        
       </element>
       <element name="xF-Notifications" descriptor="COMPLEX">
+      <element value="//android.widget.TextView[@text='Manage app notifications']" descriptor="XPATH" os="ANDROID" />
         <element value="//UIAStaticText[@name='Notifications']" descriptor="XPATH" os="IOS" />
         <element value="//android.widget.TextView[@text='Notifications']" descriptor="XPATH" os="ANDROID" />
         <element value="//android.widget.TextView[@text='Sounds and notifications']" descriptor="XPATH" os="ANDROID" />
         <element value="//android.widget.TextView[@text='Sound and notification']" descriptor="XPATH" os="ANDROID" />
         <element value="//android.widget.TextView[@text='App notifications']" descriptor="XPATH" os="ANDROID" />
-        <element value="//android.widget.TextView[@text='App notifications']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.TextView[@text='Notification access']" descriptor="XPATH" os="ANDROID" />
+        
         
         
       </element>
@@ -53,7 +55,7 @@
       
       <element name="xF-Date" descriptor="COMPLEX">
         <element value="//UIAStaticText[contains( @name, 'Date' )]" descriptor="XPATH" os="IOS" />
-        <element value="//android.widget.TextView[ contains( @text, 'Date' )]" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.TextView[contains( @text, 'Date' )]" descriptor="XPATH" os="ANDROID" />
       </element>
     </page>
   </site>

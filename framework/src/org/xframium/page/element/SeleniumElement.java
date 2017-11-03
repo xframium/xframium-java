@@ -23,6 +23,7 @@ package org.xframium.page.element;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +45,6 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.HasTouchScreen;
 import org.openqa.selenium.interactions.touch.TouchActions;
-import org.openqa.selenium.remote.ProtocolHandshake;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -52,6 +52,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.device.factory.DriverFactory;
+import org.xframium.device.factory.MorelandWebElement;
 import org.xframium.exception.ObjectIdentificationException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
@@ -100,7 +102,7 @@ public class SeleniumElement extends AbstractElement
 
     /** The use visual driver. */
     private boolean useVisualDriver = false;
-    
+
     private boolean clonedElement = false;
 
     /*
@@ -113,10 +115,10 @@ public class SeleniumElement extends AbstractElement
         //
         // If we already cloned this once then don't need to again
         //
-        //if ( clonedElement )
-        //{
-        //    return this;
-        //}
+        // if ( clonedElement )
+        // {
+        // return this;
+        // }
         SeleniumElement element = new SeleniumElement( getBy(), getRawKey(), getElementName(), getPageName(), getContextElement(), locatedElement, index );
         element.setDriver( getWebDriver() );
         element.setDeviceContext( getDeviceContext() );
@@ -136,7 +138,7 @@ public class SeleniumElement extends AbstractElement
      *
      * @param by
      *            the by
-     *            
+     * 
      * @param elementKey
      *            the element key
      * @param fieldName
@@ -198,9 +200,9 @@ public class SeleniumElement extends AbstractElement
 
                 String cloudName = ((DeviceWebDriver) getWebDriver()).getDevice().getCloud();
                 if ( cloudName == null || cloudName.trim().isEmpty() )
-                    cloudName = CloudRegistry.instance(((DeviceWebDriver) getWebDriver()).getxFID()).getCloud().getName();
+                    cloudName = CloudRegistry.instance( ((DeviceWebDriver) getWebDriver()).getxFID() ).getCloud().getName();
 
-                if ( CloudRegistry.instance(((DeviceWebDriver) getWebDriver()).getxFID()).getCloud( cloudName ).getProvider().equals( "PERFECTO" ) )
+                if ( CloudRegistry.instance( ((DeviceWebDriver) getWebDriver()).getxFID() ).getCloud( cloudName ).getProvider().equals( "PERFECTO" ) )
                 {
                     PerfectoMobile.instance( getWebDriver().getxFID() ).imaging().screenShot( getExecutionId(), getDeviceName(), fileKey, Screen.primary, ImageFormat.png, imageResolution );
                     imageData = PerfectoMobile.instance( getWebDriver().getxFID() ).repositories().download( RepositoryType.MEDIA, fileKey );
@@ -315,7 +317,7 @@ public class SeleniumElement extends AbstractElement
      *
      * @return the by
      */
-    private By useBy()
+    private ReportableBy useBy()
     {
         if ( getDeviceContext() != null && !getDeviceContext().trim().isEmpty() )
         {
@@ -343,11 +345,10 @@ public class SeleniumElement extends AbstractElement
                         //
                         // Single element found
                         //
-                        By foundBy = _useBy( subList[0].getBy(), applyToken( subList[0].getKey() ) );
+                        ReportableBy foundBy = _useBy( subList[0].getBy(), applyToken( subList[0].getKey() ) );
 
                         if ( foundBy == null )
-                            throw new ScriptConfigurationException(
-                                    "Could not locate sub-element type for " + getName() );
+                            throw new ScriptConfigurationException( "Could not locate sub-element type for " + getName() );
 
                         return foundBy;
                     }
@@ -363,8 +364,7 @@ public class SeleniumElement extends AbstractElement
                             By foundBy = _useBy( s.getBy(), applyToken( s.getKey() ) );
 
                             if ( foundBy == null )
-                                throw new ScriptConfigurationException(
-                                        "Could not locate sub-element type for " + getName()  );
+                                throw new ScriptConfigurationException( "Could not locate sub-element type for " + getName() );
 
                             byList.add( foundBy );
                         }
@@ -373,7 +373,8 @@ public class SeleniumElement extends AbstractElement
                     }
                     else
                     {
-                        throw new ScriptConfigurationException( "Could not locate sub-element for " + getName() + "( " + ((DeviceWebDriver) getWebDriver()).getPopulatedDevice().getOs() + "," + ((DeviceWebDriver) getWebDriver()).getCloud().getProvider() + ", " + ((DeviceWebDriver) getWebDriver()).getAut().getName() + " (" + ((DeviceWebDriver) getWebDriver()).getAut().getVersion() + ") )" );
+                        throw new ScriptConfigurationException( "Could not locate sub-element for " + getName() + "( " + ((DeviceWebDriver) getWebDriver()).getPopulatedDevice().getOs() + "," + ((DeviceWebDriver) getWebDriver()).getCloud().getProvider()
+                                + ", " + ((DeviceWebDriver) getWebDriver()).getAut().getName() + " (" + ((DeviceWebDriver) getWebDriver()).getAut().getVersion() + ") )" );
                     }
                 }
                 else
@@ -386,48 +387,63 @@ public class SeleniumElement extends AbstractElement
         }
     }
 
-    private By _useBy( BY byType, String keyValue )
+    
+    
+    private ByWrapper _useBy( BY byType, String keyValue )
     {
         switch ( byType )
         {
             case CLASS:
-                return By.className( keyValue );
+                return new ByWrapper( By.className( keyValue ) );
 
             case CSS:
-                return By.cssSelector( keyValue );
+                return new ByWrapper( By.cssSelector( keyValue ) );
 
             case ID:
-                return By.id( keyValue );
+                return new ByWrapper( By.id( keyValue ) );
 
             case LINK_TEXT:
-                return By.linkText( keyValue );
+                return new ByWrapper( By.linkText( keyValue ) );
 
             case NAME:
-                return By.name( keyValue );
+                return new ByWrapper( By.name( keyValue ) );
 
             case TAG_NAME:
-                return By.tagName( keyValue );
+                return new ByWrapper( By.tagName( keyValue ) );
 
             case XPATH:
-                return By.xpath( keyValue );
                 
+                if ( getWebDriver().getPopulatedDevice().getOs() != null && getWebDriver().getPopulatedDevice().getOs().toUpperCase().equals( "IOS" ) )
+                {
+                    if ( (getWebDriver().getPopulatedDevice().getOsVersion() != null && getWebDriver().getPopulatedDevice().getOsVersion().startsWith( "11" )) || (getWebDriver().getCapabilities().getCapability( DriverFactory.AUTOMATION_NAME ) != null && getWebDriver().getCapabilities().getCapability( DriverFactory.AUTOMATION_NAME ).equals( "XCUITest" ) ) )
+                    {
+                        if ( keyValue.contains( "UIA" ) )
+                        {
+                            log.warn( "UI Autopmation XPATH detected - replacing UIA Code in " + keyValue );
+                            keyValue = XPathGenerator.XCUIConvert( keyValue );
+                        }
+                    }
+                }
+                
+                return new ByWrapper( By.xpath( keyValue ) );
+
             case NATURAL:
-                return new ByNaturalLanguage( keyValue, getWebDriver() );
+                return new ByWrapper( new ByNaturalLanguage( keyValue, getWebDriver() ) );
 
             case V_TEXT:
-                return new ByOCR( keyValue, getElementProperties(), getWebDriver() );
+                return new ByWrapper( new ByOCR( keyValue, getElementProperties(), getWebDriver() ) );
 
             case V_IMAGE:
-                return new ByImage( keyValue, getElementProperties(), getWebDriver() );
+                return new ByWrapper( new ByImage( keyValue, getElementProperties(), getWebDriver() ) );
 
             case HTML:
                 HTMLElementLookup elementLookup = new HTMLElementLookup( keyValue );
-                return By.xpath( elementLookup.toXPath() );
+                return new ByWrapper( By.xpath( elementLookup.toXPath() ) );
 
             case PROP:
                 Map<String, String> propertyMap = new HashMap<String, String>( 10 );
                 propertyMap.put( "resource-id", ((DeviceWebDriver) getWebDriver()).getAut().getAndroidIdentifier() );
-                return By.xpath( XPathGenerator.generateXPathFromProperty( propertyMap, keyValue ) );
+                return new ByWrapper( By.xpath( XPathGenerator.generateXPathFromProperty( propertyMap, keyValue ) ) );
             default:
                 return null;
         }
@@ -484,7 +500,7 @@ public class SeleniumElement extends AbstractElement
 
                 if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver )
                 {
-                    new TouchAction( (AppiumDriver<?>) ((DeviceWebDriver) getWebDriver()).getNativeDriver() ).press( webElement ).waitAction( length ).release().perform();
+                    new TouchAction( (AppiumDriver<?>) ((DeviceWebDriver) getWebDriver()).getNativeDriver() ).press( webElement ).waitAction( Duration.ofMillis( length ) ).release().perform();
                 }
                 else if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver )
                 {
@@ -660,7 +676,7 @@ public class SeleniumElement extends AbstractElement
     @Override
     protected Element[] _getAll()
     {
-        By useBy = useBy();
+        ReportableBy useBy = useBy();
         if ( useBy != null )
         {
             Element fromContext = getContext();
@@ -673,9 +689,11 @@ public class SeleniumElement extends AbstractElement
             List<WebElement> webElements = null;
 
             if ( fromContext != null )
-                webElements = ((WebElement) fromContext.getNative()).findElements( useBy() );
+                webElements = ((WebElement) fromContext.getNative()).findElements( (By) useBy() );
             else
-                webElements = ((WebDriver) getWebDriver()).findElements( useBy() );
+                webElements = ((WebDriver) getWebDriver()).findElements( (By) useBy() );
+
+            getExecutionContext().getStep().setLocatorResult( useBy.getResults() );
 
             if ( log.isInfoEnabled() )
             {
@@ -703,12 +721,12 @@ public class SeleniumElement extends AbstractElement
     {
         return (int) (currentX * getWebDriver().getWidthModifier());
     }
-    
+
     public int getModifiedY( int currentY )
     {
         return (int) (currentY * getWebDriver().getHeightModifier());
     }
-    
+
     /**
      * Gets the element.
      *
@@ -732,9 +750,11 @@ public class SeleniumElement extends AbstractElement
         if ( fromContext == null && getContextElement() != null && !getContextElement().isEmpty() )
             fromContext = getElement( getContextElement() );
 
+        ReportableBy useBy = null;
+        
         try
         {
-            By useBy = useBy();
+            useBy = useBy();
             if ( useBy != null )
             {
 
@@ -742,15 +762,17 @@ public class SeleniumElement extends AbstractElement
 
                 if ( useVisualDriver && "VISUAL".equals( getBy().getContext() ) )
                 {
-                    webElement = ((VisualDriverProvider) getWebDriver()).getVisualDriver().findElement( useBy );
+                    webElement = ((VisualDriverProvider) getWebDriver()).getVisualDriver().findElement( (By) useBy );
                 }
                 else
                 {
                     if ( fromContext != null )
-                        webElement = ((WebElement) fromContext.getNative()).findElement( useBy() );
+                        webElement = ((WebElement) fromContext.getNative()).findElement( (By) useBy );
                     else
-                        webElement = ((WebDriver) getWebDriver()).findElement( useBy() );
+                        webElement = ((WebDriver) getWebDriver()).findElement( (By) useBy );
                 }
+
+                
 
                 if ( log.isDebugEnabled() )
                 {
@@ -769,6 +791,16 @@ public class SeleniumElement extends AbstractElement
         }
         finally
         {
+            try
+            {
+                if ( useBy != null )
+                    getExecutionContext().getStep().setLocatorResult( useBy.getResults() );
+            }
+            catch( Exception e )
+            {
+                
+            }
+        
             if ( currentContext != null && getWebDriver() instanceof ContextAware )
                 ((ContextAware) getWebDriver()).context( currentContext );
         }
@@ -806,7 +838,7 @@ public class SeleniumElement extends AbstractElement
     protected String _getValue()
     {
         WebElement currentElement = getElement();
-        
+
         if ( currentElement.getTagName() == null )
             return null;
 
@@ -865,6 +897,10 @@ public class SeleniumElement extends AbstractElement
     protected boolean _isVisible()
     {
         WebElement webElement = (WebElement) getElement();
+        
+        if ( webElement == null )
+            throw new ScriptException( "Element was found but not visible" );
+            
         boolean returnValue = webElement.isDisplayed();
         if ( returnValue )
             getActionProvider().getSupportedTimers( (DeviceWebDriver) getWebDriver(), getExecutionContext().getTimerName(), getExecutionContext(), null );
@@ -898,6 +934,9 @@ public class SeleniumElement extends AbstractElement
     {
         WebElement webElement = (WebElement) getElement();
 
+        if ( webElement == null )
+            throw new ScriptException( "Element was found but not enabled" );
+        
         boolean returnValue = webElement.isEnabled();
         if ( returnValue )
             getActionProvider().getSupportedTimers( (DeviceWebDriver) getWebDriver(), getExecutionContext().getTimerName(), getExecutionContext(), null );
@@ -942,10 +981,13 @@ public class SeleniumElement extends AbstractElement
     protected boolean _waitFor( long timeOut, TimeUnit timeUnit, WAIT_FOR waitType, String value )
     {
         long implicitWait = getWebDriver().getImplicitWait();
-        getWebDriver().manage().timeouts().implicitlyWait( 1, TimeUnit.SECONDS );
+        
+        if ( implicitWait > (timeOut * 1000) )
+             getWebDriver().manage().timeouts().implicitlyWait( timeOut, TimeUnit.SECONDS );
 
         try
         {
+            ReportableBy useBy = useBy();
 
             try
             {
@@ -968,7 +1010,7 @@ public class SeleniumElement extends AbstractElement
                             @Override
                             public WebElement apply( WebDriver webDriver )
                             {
-                                return ExpectedConditions.elementToBeClickable( useBy() ).apply( webDriver );
+                                return ExpectedConditions.elementToBeClickable( (By) useBy ).apply( webDriver );
                             }
 
                         } );
@@ -982,7 +1024,7 @@ public class SeleniumElement extends AbstractElement
                             @Override
                             public Boolean apply( WebDriver webDriver )
                             {
-                                return ExpectedConditions.invisibilityOfElementLocated( useBy() ).apply( webDriver );
+                                return ExpectedConditions.invisibilityOfElementLocated( (By) useBy ).apply( webDriver );
                             }
 
                         } );
@@ -995,7 +1037,7 @@ public class SeleniumElement extends AbstractElement
                             @Override
                             public WebElement apply( WebDriver webDriver )
                             {
-                                return ExpectedConditions.presenceOfElementLocated( useBy() ).apply( webDriver );
+                                return ExpectedConditions.presenceOfElementLocated( (By) useBy ).apply( webDriver );
                             }
 
                         } );
@@ -1009,7 +1051,7 @@ public class SeleniumElement extends AbstractElement
                             @Override
                             public Boolean apply( WebDriver webDriver )
                             {
-                                return ExpectedConditions.elementToBeSelected( useBy() ).apply( webDriver );
+                                return ExpectedConditions.elementToBeSelected( (By) useBy ).apply( webDriver );
                             }
 
                         } );
@@ -1022,12 +1064,13 @@ public class SeleniumElement extends AbstractElement
                             @Override
                             public Boolean apply( WebDriver webDriver )
                             {
-                                return ExpectedConditions.textToBePresentInElementValue( useBy(), value ).apply( webDriver );
+                                return ExpectedConditions.textToBePresentInElementValue( (By) useBy, value ).apply( webDriver );
                             }
 
                         } );
                         break;
 
+                        
                     case VISIBLE:
                         webElement = wait.until( new Function<WebDriver, WebElement>()
                         {
@@ -1035,16 +1078,56 @@ public class SeleniumElement extends AbstractElement
                             @Override
                             public WebElement apply( WebDriver webDriver )
                             {
-                                return ExpectedConditions.visibilityOfElementLocated( useBy() ).apply( webDriver );
+                                return ExpectedConditions.visibilityOfElementLocated( (By) useBy ).apply( webDriver );
                             }
 
                         } );
                         break;
 
+                    case FRAME:
+                        webElement = wait.until( new Function<WebDriver, WebElement>()
+                        {
+
+                            @Override
+                            public WebElement apply( WebDriver webDriver )
+                            {
+                                try
+                                {
+                                    WebElement webElement = webDriver.findElement( (By) useBy );
+                                    if ( webElement instanceof MorelandWebElement )
+                                        webDriver.switchTo().frame( ((MorelandWebElement) webElement).getWebElement() );
+                                    else
+                                        webDriver.switchTo().frame( webElement );
+                                    return webElement;
+                                }
+                                catch ( Exception e )
+                                {
+                                    
+                                    return null;
+                                }
+                            }
+
+                        } );
+                        break;
+
+                    case CLICKABLE_THEN_CLICK:
+                        webElement = wait.until( new Function<WebDriver, WebElement>()
+                        {
+
+                            @Override
+                            public WebElement apply( WebDriver webDriver )
+                            {
+                                return ExpectedConditions.elementToBeClickable( (By) useBy ).apply( webDriver );
+                            }
+
+                        } );
+                        webElement.click();
+                        break;
 
                     default:
                         throw new IllegalArgumentException( "Unknown Wait Condition [" + waitType + "]" );
                 }
+                
 
                 if ( currentContext != null && getWebDriver() instanceof ContextAware )
                     ((ContextAware) getWebDriver()).context( currentContext );
@@ -1056,8 +1139,11 @@ public class SeleniumElement extends AbstractElement
             }
             catch ( Exception e )
             {
-                log.error( Thread.currentThread().getName() + ": Could not locate " + useBy(), e );
-                throw new ObjectIdentificationException( getBy(), useBy() );
+                throw new ObjectIdentificationException( getBy(), (By) useBy );
+            }
+            finally
+            {
+                getExecutionContext().getStep().setLocatorResult( useBy.getResults() );
             }
         }
         finally
@@ -1075,7 +1161,7 @@ public class SeleniumElement extends AbstractElement
             }
         }
     }
-    
+
     /*
      * (non-Javadoc)
      * 

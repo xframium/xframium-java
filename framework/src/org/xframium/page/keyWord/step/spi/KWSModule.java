@@ -91,7 +91,7 @@ public class KWSModule extends KWSCall2
 							// These are locally used context variables
 							//
 							localContextMap.put( param.getName(), param.getName() );
-							contextMap.put( param.getName(), getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) + "" );
+							addContext( param.getName(), getParameterValue( param, contextMap, dataMap, executionContext.getxFID() ) + "", contextMap, executionContext );
 						}
 					}
 				}

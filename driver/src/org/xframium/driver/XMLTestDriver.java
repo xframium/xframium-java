@@ -20,13 +20,17 @@
  *******************************************************************************/
 package org.xframium.driver;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.lang3.ArrayUtils;
 import org.testng.Assert;
+import org.testng.ITestContext;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.Test;
+import org.testng.internal.TestResult;
 import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactType;
 import org.xframium.device.DeviceManager;
@@ -40,7 +44,6 @@ import org.xframium.exception.DeviceException;
 import org.xframium.exception.FilteredException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.integrations.sauceLabs.rest.SauceREST;
-import org.xframium.page.PageManager;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.reporting.ExecutionContext;
@@ -53,8 +56,45 @@ import com.perfecto.reportium.test.result.TestResultFactory;
 
 public class XMLTestDriver extends AbstractSeleniumTest
 {
-
-    @Test ( dataProvider = "deviceManager")
+ 
+    @AfterSuite
+    public void afterSuite( ITestContext testContext )
+    {
+        
+        TestContainer testContainer = (TestContainer) testContext.getAttribute( "testContainer" );
+        
+        if ( DeviceManager.instance( testContainer.getxFID() ).getFailedTestRetryCount() > 0 )
+        {
+            
+            
+            while ( testContainer.testsRemain() )
+            {
+                try
+                {
+                    TestResult tR = new TestResult();
+                    beforeMethod( XMLTestDriver.class.getMethods()[ 0 ], new Object[] { testContainer }, testContext );
+                    try
+                    {
+                        testDriver( testContainer );
+                        tR.setStatus( ITestResult.SUCCESS );
+                        afterMethod( XMLTestDriver.class.getMethods()[ 0 ], new Object[] { testContainer }, tR ,testContext );
+                    }
+                    catch( Exception e )
+                    {
+                        tR.setStatus( ITestResult.FAILURE );
+                        afterMethod( XMLTestDriver.class.getMethods()[ 0 ], new Object[] { testContainer }, tR ,testContext ); 
+                    }
+                    
+                }
+                catch( Throwable e )
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    @Test ( dataProvider = "deviceManager" )
     public void testDriver( TestContainer testContainer ) throws Throwable
     {
         TestPackage testPackage = testPackageContainer.get();
@@ -68,7 +108,11 @@ public class XMLTestDriver extends AbstractSeleniumTest
         
         ExecutionContextTest executionContextTest = new ExecutionContextTest();
         executionContextTest.setxFID( testContainer.getxFID() );
+        executionContextTest.setIterationCount( DeviceManager.instance( testContainer.getxFID() ).getIterationCount( testPackage.getRunKey() ) );
+        executionContextTest.setTestName( testName.getTestName() );
         
+        File artifactFolder = new File( testPackage.getConnectedDevice().getDevice().getEnvironment(), testName.getTestName() );
+        testPackage.getConnectedDevice().getWebDriver().setArtifactFolder( artifactFolder );
    
         testPackage.getConnectedDevice().getWebDriver().setExecutionContext( executionContextTest );
         
@@ -100,7 +144,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
             throw new DeviceException( "Could not connect to " + testPackage.getDevice() );
         }
         
-        String deviceOs = testPackage.getDevice().getOs();
+        String deviceOs = testPackage.getPopulatedDevice().getOs();
         String[] deviceTags = testPackage.getDevice().getTagNames();
         
         boolean returnValue = false;
@@ -232,59 +276,61 @@ public class XMLTestDriver extends AbstractSeleniumTest
             testName.setTest( executionContextTest );
 
         }
-        catch( Throwable t )
-        {
-            t.printStackTrace();
-            throw t;
-        }
         finally
         {
-            if ( testPackage.getConnectedDevice().getWebDriver() != null )
+            try
             {
-                if ( returnValue )
+                if ( testPackage.getConnectedDevice().getWebDriver() != null )
                 {
-                    if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
+                    if ( returnValue )
                     {
-                        if ( cD.getProvider().equals( "SAUCELABS" ) )
+                        if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
                         {
-                            SauceREST sR = new SauceREST( cD.getUserName(), cD.getPassword() );
-                            sR.jobPassed( testPackage.getConnectedDevice().getWebDriver().getExecutionId() );
+                            if ( cD.getProvider().equals( "SAUCELABS" ) )
+                            {
+                                SauceREST sR = new SauceREST( cD.getUserName(), cD.getPassword() );
+                                sR.jobPassed( testPackage.getConnectedDevice().getWebDriver().getExecutionId() );
+                            }
+                        }
+    
+                        if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
+                        {
+                            if ( testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
+                            {
+                                if ( returnValue )
+                                    testPackage.getConnectedDevice().getWebDriver().getReportiumClient().testStop( TestResultFactory.createSuccess() );
+                            }
+                        }
+    
+                        return;
+                    }
+                    else
+                    {
+                        if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
+                        {
+                            if ( cD.getProvider().equals( "SAUCELABS" ) )
+                            {
+                                SauceREST sR = new SauceREST( cD.getUserName(), cD.getPassword() );
+                                sR.jobFailed( testPackage.getConnectedDevice().getWebDriver().getExecutionId() );
+                            }
+                        }
+    
+                        if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
+                        {
+                            if ( testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
+                            {
+                                Throwable currentException = executionContextTest.getStepException();
+    
+                                testPackage.getConnectedDevice().getWebDriver().getReportiumClient().testStop( TestResultFactory.createFailure( currentException != null ? currentException.getMessage() : "Unknown Failure", currentException ) );
+    
+                            }
                         }
                     }
-
-                    if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
-                    {
-                        if ( testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
-                        {
-                            if ( returnValue )
-                                testPackage.getConnectedDevice().getWebDriver().getReportiumClient().testStop( TestResultFactory.createSuccess() );
-                        }
-                    }
-
-                    return;
                 }
-                else
-                {
-                    if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.SAUCE_LABS.name() ) )
-                    {
-                        if ( cD.getProvider().equals( "SAUCELABS" ) )
-                        {
-                            SauceREST sR = new SauceREST( cD.getUserName(), cD.getPassword() );
-                            sR.jobFailed( testPackage.getConnectedDevice().getWebDriver().getExecutionId() );
-                        }
-                    }
-
-                    if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
-                    {
-                        if ( testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
-                        {
-                            Throwable currentException = executionContextTest.getStepException();
-
-                            testPackage.getConnectedDevice().getWebDriver().getReportiumClient().testStop( TestResultFactory.createFailure( currentException != null ? currentException.getMessage() : "Unknown Failure", currentException ) );
-
-                        }
-                    }
-                }
+            }
+            catch( Exception e )
+            {
+                log.error( "Error ending test", e );
             }
 
             Throwable currentException = executionContextTest.getStepException();

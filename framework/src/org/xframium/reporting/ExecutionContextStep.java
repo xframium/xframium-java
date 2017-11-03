@@ -8,6 +8,7 @@ import java.util.Map;
 import org.xframium.exception.XFramiumException;
 import org.xframium.exception.XFramiumException.ExceptionType;
 import org.xframium.page.StepStatus;
+import org.xframium.page.element.ByResult;
 import org.xframium.page.keyWord.KeyWordStep;
 
 public class ExecutionContextStep
@@ -21,8 +22,9 @@ public class ExecutionContextStep
     private StepStatus stepStatus;
     private Throwable throwable;
     private String message;
-    private Map<String,String> executionParameter = new HashMap<String,String>( 10 );
+    private Map<String,Object> executionParameter = new HashMap<String,Object>( 10 );
     private List<String> parameterList = new ArrayList<String>( 10 );
+    private List<ByResult> locatorResult = null;
 
     public String toString()
     {
@@ -44,6 +46,18 @@ public class ExecutionContextStep
         return timingMap.get( type );
     }
     
+    
+    
+    public List<ByResult> getLocatorResult()
+    {
+        return locatorResult;
+    }
+
+    public void setLocatorResult( List<ByResult> locatorResult )
+    {
+        this.locatorResult = locatorResult;
+    }
+
     public void analyzePageElements( Map<String,Integer[]> pageMap, Map<String,ElementUsage> elementMap )
     {
         for ( ExecutionContextStep s : stepList )
@@ -122,12 +136,12 @@ public class ExecutionContextStep
         return stepCount;
     }
     
-    public void addExecutionParameter( String name, String value )
+    public void addExecutionParameter( String name, Object value )
     {
         executionParameter.put( name,  value );
     }
     
-    public Map<String, String> getExecutionParameter()
+    public Map<String, Object> getExecutionParameter()
     {
         return executionParameter;
     }
@@ -212,7 +226,7 @@ public class ExecutionContextStep
     {
         
         if ( !getStatus() && executionParameter.containsKey( "SCREENSHOT_ABS" ) )
-            return executionParameter.get( "SCREENSHOT_ABS" );
+            return executionParameter.get( "SCREENSHOT_ABS" ) + "";
         else
         {
             if ( stepList != null )

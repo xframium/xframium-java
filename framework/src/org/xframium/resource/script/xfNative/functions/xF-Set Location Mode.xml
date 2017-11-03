@@ -3,13 +3,22 @@
   <function name="xF-Set Location Mode" active="true">
     <description>This function turns off and on location services</description>
     <step name="xF-Launch Settings" site="New Test" page="Search" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" />
-    
-    <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="CLICK" os="ANDROID" failureMode="LOG_IGNORE"/>
-    <step name="xF-Search Text Box.VISIBLE" site="xF_Native" page="xF_Settings" type="WAIT_FOR" os="ANDROID" failureMode="LOG_IGNORE"/>
-    <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="SET" os="ANDROID" failureMode="LOG_IGNORE">
+    <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="EXISTS" os="ANDROID" failureMode="IGNORE">
+      <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="CLICK" os="ANDROID" failureMode="ERROR" />
+      <step name="LOOP" site="New Test" page="Search" type="LOOP" active="true" threshold="0" timed="false" inverse="false" wait="2000" failureMode="ERROR">
+        <parameter type="STATIC"  value="10" />
+        <parameter type="STATIC"  value="xF-Click Search Android" />
+      </step>
+      <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="SET">
         <parameter type="STATIC" name="Value" value="Location" />
+      </step>
+      <step name="Undefined" site="New Test" page="Search" type="ELSE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+        <step name="xF-Location" site="xF_Native" page="xF_Settings" type="VISIBLE" active="true" threshold="0" timed="true" inverse="false" wait="0" failureMode="IGNORE">
+          <parameter type="STATIC" name="Value" value="10" />
+          <parameter type="STATIC" name="Value" value="UP" />
+        </step>
+      </step>
     </step>
-  
     <step name="xF-Location" site="xF_Native" page="xF_Settings" type="VISIBLE" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0">
       <parameter type="STATIC" name="new parameter" value="10" />
       <parameter type="STATIC" name="new parameter" value="UP" />

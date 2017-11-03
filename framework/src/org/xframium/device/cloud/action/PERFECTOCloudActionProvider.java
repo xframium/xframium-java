@@ -1,3 +1,4 @@
+
 package org.xframium.device.cloud.action;
 
 import java.io.ByteArrayInputStream;
@@ -240,6 +241,8 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         {
             Handset handSet = PerfectoMobile.instance( xFID ).devices().getDevice( deviceId );
 
+            device.setPhoneNumber( handSet.getPhoneNumber() );
+            
             device.setOs( handSet.getOs() );
             if ( device.getOs().toLowerCase().equals( "android" ) || device.getOs().toLowerCase().equals( "ios" ) )
                 device.setModel( handSet.getModel() );
@@ -248,7 +251,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
             device.setResolution( handSet.getResolution() );
             device.setManufacturer( handSet.getManufacturer() );
             device.setDeviceName( handSet.getDeviceId() );
-            
+
             ((SimpleDevice) device).setDeviceName( deviceId );
             return true;
         }
@@ -304,7 +307,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 	}
 
     @Override
-    public boolean installApplication( String applicationName, DeviceWebDriver webDriver, boolean instrumentApp )
+    public boolean installApplication( String applicationName, DeviceWebDriver webDriver, boolean instrumentApp, boolean instrumentSensor )
     {
         ApplicationDescriptor appDesc = ApplicationRegistry.instance(webDriver.getxFID()).getApplication( applicationName );
     
@@ -313,9 +316,9 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         Execution appExec = null;
         
         if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
-            appExec = PerfectoMobile.instance( webDriver.getxFID() ).application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), getInstallLocation( appDesc.getIosInstallation(), webDriver.getxFID() ), instrumentApp ? "instrument" : "noinstrument" );
+            appExec = PerfectoMobile.instance( webDriver.getxFID() ).application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), getInstallLocation( appDesc.getIosInstallation(), webDriver.getxFID() ), instrumentApp ? "instrument" : "noinstrument", instrumentSensor ? "sensor" : "nosensor" );
         else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-            appExec = PerfectoMobile.instance( webDriver.getxFID() ).application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), getInstallLocation( appDesc.getAndroidInstallation(), webDriver.getxFID() ), instrumentApp ? "instrument" : "noinstrument" );
+            appExec = PerfectoMobile.instance( webDriver.getxFID() ).application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), getInstallLocation( appDesc.getAndroidInstallation(), webDriver.getxFID() ), instrumentApp ? "instrument" : "noinstrument", instrumentSensor ? "sensor" : "nosensor" );
         else
             throw new DeviceConfigurationException( "Could not install application to " + webDriver.getPopulatedDevice().getEnvironment() + "(" + webDriver.getDevice().getDeviceName() + ")" );
         
@@ -484,28 +487,33 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         {
             Handset localDevice = PerfectoMobile.instance( xFID ).devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
             Execution appExec = null;
-            if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
-                appExec = PerfectoMobile.instance( xFID).application().open( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
-            else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-                appExec = PerfectoMobile.instance( xFID ).application().open( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
+            
+            String[] applicationArray = null;
+            
+            if ( localDevice.getOs().toLowerCase().equals( "ios" ) )
+                applicationArray = appDesc.getAppleIdentifier().split( ";" );
+            else if ( localDevice.getOs().toLowerCase().equals( "android" ) )    
+                applicationArray = appDesc.getAndroidIdentifier().split( ";" );
             else
-                throw new IllegalArgumentException( "Could not install application to " + localDevice.getOs() );
+                throw new ScriptException( "Could not install application to " + localDevice.getOs() );
             
-            if ( appExec != null )
+            
+            for ( String appId : applicationArray )
             {
-                if ( appExec.getStatus().toLowerCase().equals( "success" ) )
+                log.info( "Attempting to launch [" + appId + "] on [" + localDevice.getOs() + "]" );
+                appExec = PerfectoMobile.instance( xFID).application().open( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appId );
+                if ( appExec != null )
                 {
-                    if ( webDriver instanceof ContextAware )
-                        ( ( ContextAware ) webDriver ).context( "NATIVE_APP" );
-                    return true;
+                    if ( appExec.getStatus().toLowerCase().equals( "success" ) )
+                    {
+                        if ( webDriver instanceof ContextAware )
+                            ( ( ContextAware ) webDriver ).context( "NATIVE_APP" );
+                        return true;
+                    }
                 }
-                else
-                    throw new ScriptException( "Failed to launch application " + appDesc.getName() );
             }
-            else 
-                throw new ScriptException( "Failed to launch application " + appDesc.getName() );
             
-            
+            throw new ScriptException( "Failed to launch application " + appDesc.getName() );
         }
         return true;
     }
@@ -517,6 +525,9 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         ApplicationDescriptor appDesc = ApplicationRegistry.instance(webDriver.getxFID()).getApplication( applicationName );
     
         Handset localDevice = PerfectoMobile.instance( webDriver.getxFID() ).devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
+        
+        System.out.println(  localDevice  );
+        System.out.println(  appDesc  );
         
         if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
             PerfectoMobile.instance( webDriver.getxFID() ).application().close( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );

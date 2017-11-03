@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elementDefinition xmlns="http://www.xframium.org/terminal-screen-model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/terminal-screen-model http://www.xframium.org/xsd/pageManagement/terminal-screen-model.xsd">
+  
+  <Application name="sim390" >
+
+    <Screen name="SystemBanner">
+      <Link name="ack" screen="Login" > <Location line="1" column="1"/> </Link>
+    </Screen>
+    
+    <Screen name="Login">
+      <Field name="username"> <Location line="2" column="17"/> </Field>
+      <Field name="password"> <Location line="3" column="17"/> </Field>
+      <Link name="login" screen="ABlankScreen" > <Location line="3" column="17"/> </Link>
+    </Screen>
+
+    <Screen name="ABlankScreen">
+      <Link name="ack" screen="MainMenu" > <Location line="1" column="1"/> </Link>
+    </Screen>
+
+    <Screen name="MainMenu">
+      <Field name="option"> <Location line="3" column="21"/> </Field>
+      <Link name="work-with-file-system" screen="FileSystemMenu" > <Location line="3" column="21"/> </Link>
+    </Screen>
+
+    <Screen name="FileSystemMenu">
+      <Field name="option"> <Location line="3" column="21"/> </Field>
+      <Link name="file-system-help" screen="FileSystemHelp" > <Location line="3" column="21"/> </Link>
+    </Screen>
+
+     <Screen name="FileSystemHelp">
+       <Field name="help-text"> <Location line="5" column="1"/> </Field>
+     </Screen>
+    
+  </Application>
+  
+</elementDefinition>

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Capabilities;
@@ -46,6 +47,7 @@ import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudDescriptor.ProviderType;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.driver.SuiteListener;
+import org.xframium.driver.TestDriver;
 import org.xframium.driver.XMLConfigurationReader;
 import org.xframium.gesture.Gesture.GestureType;
 import org.xframium.gesture.device.action.DeviceAction.ActionType;
@@ -94,6 +96,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
     
     private Map<String,ExecutionContainer> syncMap = new HashMap<String,ExecutionContainer>( 25 );
     private Map<String,ExecutionContainer> executionMap = new HashMap<String,ExecutionContainer>( 25 );
+    public static final String xFID = UUID.randomUUID().toString();
     
     public static ExecutionConsole instance()
     {
@@ -109,6 +112,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
             System.out.println( "***************************************************************************************" );
             
             ExecutionConsole.instance().startUp( "0.0.0.0", 8145 );
+            TestDriver.xFID = xFID;
         }
         catch( Exception e )
         {
@@ -141,7 +145,6 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
     
     private ExecutionConsole() 
     {
-        //KeyWordDriver.instance().addStepListener( this );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( KeyWordStep.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( KWSClick.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( AbstractKeyWordStep.class, new ReflectionSerializer() );
@@ -298,7 +301,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
         String executionId = ( (DeviceWebDriver) webDriver ).getExecutionId();
         executionMap.get( executionId ).setTestStatus( eC.getTestStatus() );
         executionMap.get( executionId ).setStopTime( System.currentTimeMillis() );
-        executionMap.get( executionId ).setFolderName( eC.getTestName() + System.getProperty( "file.separator" ) + eC.getDevice().getKey() );
+        executionMap.get( executionId ).setFolderName( eC.getDevice().getDeviceName() + System.getProperty( "file.separator" ) +  eC.getTestName() );
         addSync( executionMap.get( executionId ) );
     }
 
@@ -314,6 +317,7 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
     @Override
     public void beforeSuite( String suiteName, File fileName )
     {
+        KeyWordDriver.instance( xFID ).addStepListener( this );
         testExecuting = true;
         executionMap.clear();
         syncMap.clear();
@@ -323,5 +327,6 @@ public class ExecutionConsole implements KeyWordListener, SuiteListener
     public void afterSuite( String suiteName, File fileName, File outputFolder )
     {
         testExecuting = false;
+        KeyWordDriver.instance( xFID ).removeStepListener( this );
     }
 }

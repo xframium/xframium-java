@@ -3,26 +3,22 @@
   <function name="xF-Set Notifications Mode" active="true">
     <description>This function enables and disables notifications for an installed application</description>
     <step name="xF-Launch Settings" site="New Test" page="Search" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="2500" failureMode="ERROR" />
-    
-    
-    <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="CLICK" os="ANDROID" />
-    <step name="xF-Search Text Box.VISIBLE" site="xF_Native" page="xF_Settings" type="WAIT_FOR" os="ANDROID" />
-    <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="SET" os="ANDROID" >
-        <parameter type="STATIC" name="Value" value="Notifications" />
-    </step>
-    
-    
-    
-    <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="CLICK" os="ANDROID" failureMode="IGNORE">
-      <step name="STATUS" site="New Test" page="Search" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" os="ANDROID" />
-      <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="WAIT_FOR" os="ANDROID" />
-      <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="SET" os="ANDROID">
-        <parameter type="STATIC" name="Value" value="Notification" />
+    <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="EXISTS" os="ANDROID" failureMode="IGNORE">
+      <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="CLICK" os="ANDROID" failureMode="ERROR" />
+      <step name="LOOP" site="New Test" page="Search" type="LOOP" active="true" threshold="0" timed="false" inverse="false" wait="2000" failureMode="ERROR">
+        <parameter type="STATIC" value="10" />
+        <parameter type="STATIC" value="xF-Click Search Android" />
       </step>
-      <step name="STATUS" site="New Test" page="Search" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" os="ANDROID" />
-      <step name="xF-Notifications.CLICKABLE" site="xF_Native" page="xF_Settings" type="WAIT_FOR" os="ANDROID" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
-        <step name="Undefined" site="New Test" page="Search" type="ELSE" active="true" threshold="0" timed="false" inverse="false" wait="0" os="ANDROID">
-          <step name="xF_Wi-Fi Back" site="xF_Native" page="xF_Wi-Fi" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" os="ANDROID" />
+      <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="SET">
+        <parameter type="STATIC" name="Value" value="Notifications" />
+      </step>
+      <step type="GESTURE" name="PRESS" site="xF_Native" page="xF_Settings">
+        <parameter type="STATIC" value="1,99" />
+      </step>
+      <step name="Undefined" site="New Test" page="Search" type="ELSE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+        <step name="xF-Notifications" site="xF_Native" page="xF_Settings" type="VISIBLE" active="true" threshold="0" timed="true" inverse="false" wait="0" failureMode="IGNORE">
+          <parameter type="STATIC" name="Value" value="10" />
+          <parameter type="STATIC" name="Value" value="UP" />
         </step>
       </step>
     </step>
@@ -30,18 +26,18 @@
       <parameter type="STATIC" name="new parameter" value="5" />
       <parameter type="STATIC" name="new parameter" value="UP" />
     </step>
-    <step name="xF-Notifications" site="xF_Native" page="xF_Settings" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" />
-    
-    
-    
-    <step name="xF-Notifications.CLICKABLE" site="xF_Native" page="xF_Settings" type="WAIT_FOR" active="true" threshold="0" timed="true" inverse="false" wait="0" failureMode="IGNORE" os="ANDROID"  >
-        <parameter type="STATIC" name="Wait Time" value="5" />    
-        <step name="xF-Notifications" site="xF_Native" page="xF_Settings" type="CLICK" active="true" threshold="0" timed="true" inverse="false" wait="0" failureMode="ERROR" />
-        <step name="xF_Wi-Fi" site="xF_Native" page="xF_Settings" type="ELSE" active="true" threshold="0" timed="true" inverse="false" wait="0">
-            <step name="xF_Wi-Fi Back" site="xF_Native" page="xF_Wi-Fi" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" />
-        </step>
+    <step name="xF-Notifications.CLICKABLE" site="xF_Native" page="xF_Settings" type="WAIT_FOR" active="true" threshold="0" timed="true" inverse="false" wait="0" failureMode="IGNORE">
+      <parameter type="STATIC" name="Wait Time" value="5" />
+      <step name="xF-Notifications" site="xF_Native" page="xF_Settings" type="CLICK" active="true" threshold="0" timed="true" inverse="false" wait="1000" failureMode="ERROR" />
+      <step name="xF_Wi-Fi" site="xF_Native" page="xF_Settings" type="ELSE" active="true" threshold="0" timed="true" inverse="false" wait="0">
+        <step name="xF_Wi-Fi Back" site="xF_Native" page="xF_Wi-Fi" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" os="ANDROID" />
+      </step>
     </step>
-
+    <step name="xF-Launch Settings" site="New Test" page="Search" type="STATE" active="true" threshold="0" timed="false" inverse="false" failureMode="ERROR" />
+    <step name="xF-Notifications.CLICKABLE" site="xF_Native" page="xF_Settings" type="WAIT_FOR" active="true" threshold="0" timed="true" inverse="false" wait="0" failureMode="IGNORE">
+      <parameter type="STATIC" name="Wait Time" value="5" />
+      <step name="xF-Notifications" site="xF_Native" page="xF_Settings" type="CLICK" active="true" threshold="0" timed="true" inverse="false" wait="0" failureMode="ERROR" />
+    </step>
     <step name="xF-Android Sounds" site="xF_Native" page="xF_Notifications" type="VISIBLE" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
       <step name="xF-Application notifications" site="xF_Native" page="xF_Notifications" type="VISIBLE" active="true" threshold="0" timed="false" inverse="false" wait="0">
         <parameter type="STATIC" name="Scroll Count" value="5" />
@@ -52,15 +48,13 @@
     <step name="xF-Notification Title.PRESENT" site="xF_Native" page="xF_Notifications" type="WAIT_FOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
       <parameter type="STATIC" name="Wait Time" value="12" />
     </step>
-    <step name="Title" site="xF_Native" page="xF-Application Notifications" type="EXISTS" active="true" os="ANDROID" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
-      <step name="xF-Notification Link" site="xF_Native" page="xF-Application Notifications" type="VISIBLE" active="true" threshold="0" timed="false" inverse="false" wait="0">
-        <parameter type="STATIC" name="new parameter" value="25" />
-        <parameter type="STATIC" name="new parameter" value="UP" />
-        <token type="CONTEXT" name="notification" value="xF-Notification Name" />
-      </step>
-      <step name="xF-Notification Link" site="xF_Native" page="xF-Application Notifications" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0">
-        <token type="CONTEXT" name="notification" value="xF-Notification Name" />
-      </step>
+    <step name="xF-Notification Link" site="xF_Native" page="xF-Application Notifications" type="VISIBLE" active="true" threshold="0" timed="false" inverse="false" wait="0" os="ANDROID">
+      <parameter type="STATIC" name="new parameter" value="25" />
+      <parameter type="STATIC" name="new parameter" value="UP" />
+      <token type="CONTEXT" name="notification" value="xF-Notification Name" />
+    </step>
+    <step name="xF-Notification Link" site="xF_Native" page="xF-Application Notifications" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" os="ANDROID">
+      <token type="CONTEXT" name="notification" value="xF-Notification Name" />
     </step>
     <step name="xF-Notification Link" site="xF_Native" page="xF_Notifications" type="VISIBLE" active="true" os="IOS" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
       <parameter type="STATIC" name="Scroll Count" value="5" />
@@ -71,7 +65,7 @@
       <token type="CONTEXT" name="notification" value="xF-Notification Name" />
     </step>
     <step name="xF-Allow Notification.VISIBLE" site="xF_Native" page="xF_Notification" type="WAIT_FOR" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-      <parameter type="STATIC" name="Wait Time" value="12" />
+      <parameter type="STATIC" name="Wait Time" value="5" />
     </step>
     <step name="xF-Allow Notification" site="xF_Native" page="xF_Notification" type="ATTRIBUTE" active="true" os="IOS" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="xF-Notification State">
       <parameter type="STATIC" name="Attribute Name" value="value" />
@@ -102,5 +96,6 @@
         </step>
       </step>
     </step>
+    <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="STATE" os="ANDROID" failureMode="ERROR" />
   </function>
 </suite>

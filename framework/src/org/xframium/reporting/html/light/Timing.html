@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html ng-app="xImage">
+<head>
+<script src="../../../assets/angular.js"></script>
+<script src="../../../assets/angular-animate.js"></script>
+<script src="../../../assets/angular-sanitize.js"></script>
+<script src="../../../assets/ui-bootstrap-tpls-2.js"></script>
+<script src="../../../assets/angular-ui-tree.js"></script>
+<script src="../../../assets/Chart.js"></script>
+<script src="../../../assets/angular-chart.js"></script>
+<script src="./Test.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link href="../../../assets/toolkit-inverse.css" rel="stylesheet">
+<link href="../../../assets/application.css" rel="stylesheet">
+<link href="../../../assets/angular-ui-tree.css" rel="stylesheet">
+</head>
+<body ng-controller="xTimingController" data-ng-init="initialize()">
+    <div class="container-fluid">
+        <div class="col-sm-12 content">
+            <canvas class="chart chart-bar" chart-data="timingData" chart-labels="timingLabels" chart-options="chartOptions" chart-colors="chartColors"></canvas>
+        </div>
+    </div>
+</body>
+<script>
+    var xGrid = angular.module('xImage', [ 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'chart.js' ]);
+
+    xGrid
+            .controller(
+                    'xTimingController',
+                    function XImageController( $scope, $uibModal )
+                    {
+                        $scope.testData = testData.pageData;
+
+                        $scope.timingLabels = [];
+                        $scope.timingData = [];
+
+                        $scope.initialize = function()
+                        {
+                            $scope.getTimings();
+
+                        }
+
+
+                        $scope.getTimings = function()
+                        {
+                            $scope.testData.stepList.forEach(function( step )
+                            {
+                                $scope.walkStepToGetTimeings(step, testLevelData);
+                            });
+                        }
+
+                        $scope.walkStepToGetTimings = function( step, testLevelData )
+                        {
+
+
+                            if ( step.step.timed ) {
+                                $scope.timingLabels.push(txName);
+                                $scope.timingData.push(duration);
+                            }
+
+                            if ( step.stepList ) {
+                                step.stepList.forEach(function( subStep )
+                                {
+                                    $scope.walkStepToGetTimings(subStep, testLevelData);
+                                });
+                            }
+                        }
+
+
+                    });
+</script>
+</html>

@@ -51,7 +51,7 @@ public class KWSEnabled extends AbstractKeyWordStep
         {
             if ( log.isDebugEnabled() )
                 log.debug( "Setting Context Data to [" + currentElement.getValue() + "] for [" + getContext() + "]" );
-            contextMap.put( getContext(), currentElement.getValue() );
+            addContext( getContext(), currentElement.getValue(), contextMap, executionContext );
         }
         return currentElement.isEnabled();
 	}

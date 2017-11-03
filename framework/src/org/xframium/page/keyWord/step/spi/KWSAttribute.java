@@ -111,7 +111,7 @@ public class KWSAttribute extends AbstractKeyWordStep
 		{
 			if ( log.isDebugEnabled() )
 				log.debug( "Setting Context Data to [" + attributeValue + "] for [" + getContext() + "]" );
-			contextMap.put( getContext(), attributeValue );
+			addContext( getContext(), attributeValue, contextMap, executionContext );
 		}
 		
 		

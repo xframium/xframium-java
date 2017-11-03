@@ -34,7 +34,7 @@ public class TestDriver
 {
     private List<SuiteListener> listenerList = new ArrayList<SuiteListener>(3);
     
-    
+    public static String xFID = null;
     
     public void addSuiteListener( SuiteListener suiteListener )
     {
@@ -43,7 +43,7 @@ public class TestDriver
     
     public void execute( File configFile, Map<String,String> customConfig )
     {
-        String xFID = null;
+        
         try
         {
             ConfigurationReader configReader = null;
@@ -65,7 +65,8 @@ public class TestDriver
             if ( customConfig == null )
                 customConfig = new HashMap<String,String>(10);
             
-            xFID = UUID.randomUUID().toString();
+            if ( xFID == null )
+                xFID = UUID.randomUUID().toString();
             Initializable.xFID.set( xFID ); 
             customConfig.put( "xF-ID", Initializable.xFID.get() );
             

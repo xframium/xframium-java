@@ -151,6 +151,8 @@ public class KWSSQL extends AbstractKeyWordStep
 		                	pageData.addValue( mapKey, mapValue );
 		                }
 	                }
+	                
+    	            addContext( getContext() + "_row_count", resultsArr.length + "", contextMap, executionContext );    
                 }
 
                 //
@@ -183,7 +185,7 @@ public class KWSSQL extends AbstractKeyWordStep
                         if ( log.isInfoEnabled() )
                             log.info( "Setting Context Data to [" + value + "] for [" + context_name + "]" );
                     
-                        contextMap.put( context_name, value );
+                        addContext( context_name, value, contextMap, executionContext );
                     }
                 }
             }
@@ -202,7 +204,7 @@ public class KWSSQL extends AbstractKeyWordStep
                     if ( log.isDebugEnabled() )
                         log.debug( "Setting Context Data to [" + value + "] for [" + context_name + "]" );
                     
-                    contextMap.put( context_name, value );
+                    addContext( context_name, value, contextMap, executionContext );
                 }
             }
         }

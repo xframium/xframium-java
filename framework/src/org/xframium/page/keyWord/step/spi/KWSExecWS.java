@@ -66,7 +66,8 @@ public class KWSExecWS extends AbstractKeyWordStep
     private static final String TOKEN_UNAME = "username";
     private static final String TOKEN_PWD = "password";
     private static final String TOKEN_HEADERS = "headers";
-    
+
+    private static final String CONTENT_HTML = "html";
     private static final String CONTENT_XML = "xml";
     private static final String CONTENT_JSON = "json";
 
@@ -77,7 +78,7 @@ public class KWSExecWS extends AbstractKeyWordStep
     
     //
     // Implementation
-    //
+    //R
 
     /* (non-Javadoc)
      * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
@@ -124,7 +125,7 @@ public class KWSExecWS extends AbstractKeyWordStep
             
             if ( getContext() != null )
             {
-                contextMap.put( getContext(), data.get( "_PAYLOAD" ) );
+                addContext( getContext(), data.get( "_PAYLOAD" ), contextMap, executionContext );
             }
             
         }

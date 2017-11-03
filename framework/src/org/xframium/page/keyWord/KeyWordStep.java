@@ -79,7 +79,7 @@ public interface KeyWordStep
 	public boolean isOrMapping();
 	
 	
-	public void dumpState(WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, ExecutionContextTest executionContext );
+	public String dumpState(WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, ExecutionContextTest executionContext );
 	
 	/**
 	 * Gets the link id.
@@ -206,6 +206,10 @@ public interface KeyWordStep
 	public boolean isBreakpoint();
     
     public void setBreakpoint( boolean breakpoint );
+    
+    public void setAppContext( String appContext );
+    
+    public String getAppContext();
 
 	/**
 	 * Gets the page name.

@@ -72,8 +72,21 @@ public class ExecutionContextTest
     private Map<String,Integer[]> pageUsageMap = new HashMap<String,Integer[]>( 10 );
     private Map<String,ElementUsage> elementUsageMap = new TreeMap<String,ElementUsage>( );
     private List<ElementUsage> elementUsage = new ArrayList<ElementUsage>( 10 );
+    
+    private int iterationCount = 0;
 
     
+    
+    public int getIterationCount()
+    {
+        return iterationCount;
+    }
+
+    public void setIterationCount( int iterationCount )
+    {
+        this.iterationCount = iterationCount;
+    }
+
     private class FailureComparator implements Comparator<ElementUsage>
     {
 

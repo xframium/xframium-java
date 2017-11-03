@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
+import org.openqa.selenium.Capabilities;
 import org.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc
@@ -71,6 +72,9 @@ public class SimpleDevice implements Device
 	/** The device name. */
 	private String deviceName;
 	
+	private String phoneNumber;
+	
+	
 	/** The active. */
 	private boolean active;
 	
@@ -88,6 +92,7 @@ public class SimpleDevice implements Device
 	    simpleDevice.tagNames.addAll( this.tagNames );
 	    simpleDevice.capabilities.putAll( this.capabilities );
 	    simpleDevice.capList.addAll( this.capList );
+	    simpleDevice.setPhoneNumber( phoneNumber );
 	    simpleDevice.generateEnv();
 	    return simpleDevice;
 	}
@@ -102,6 +107,19 @@ public class SimpleDevice implements Device
         this.cloud = cloud;
     }
 
+    @Override
+    public String getPhoneNumber()
+    {
+        return phoneNumber;
+    }
+    
+    @Override
+    public void setPhoneNumber( String phoneNumber )
+    {
+        this.phoneNumber = phoneNumber;
+        
+    }
+    
     public String getResolution()
     {
         return resolution;
@@ -307,6 +325,11 @@ public class SimpleDevice implements Device
 	{
 		capabilities.put( capabilityName,capabilityValue);
 		capList.add(  new DeviceCap( capabilityName, capabilityValue, classType ) );
+	}
+	
+	public void addCapabilities( Capabilities dC )
+	{
+	    capabilities.putAll( dC.asMap() );
 	}
 	
 	

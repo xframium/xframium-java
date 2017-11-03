@@ -85,7 +85,14 @@ public class IOSDriverFactory extends AbstractDriverFactory
     				dc = setCapabilities(ApplicationRegistry.instance(xFID).getAUT().getCapabilities().get( name ), dc, name);
 			}
 			
-			dc.setCapability( AUTOMATION_NAME, "Appium" );
+			if ( dc.getCapability( AUTOMATION_NAME ) == null )
+			{
+			    if ( currentDevice.getOsVersion() != null && currentDevice.getOsVersion().startsWith( "11" ) )
+			        dc.setCapability( AUTOMATION_NAME, "XCUITest" );    
+			    else
+			        dc.setCapability( AUTOMATION_NAME, "Appium" );
+			}
+			
 
             if (( ContentManager.instance(xFID).getCurrentContentKey() != null ) &&
                 ( ContentManager.instance(xFID).getContentValue( Device.LOCALE ) != null ))
@@ -120,7 +127,7 @@ public class IOSDriverFactory extends AbstractDriverFactory
 			    }
 			    else
 			    {
-			        useCloud.getCloudActionProvider().installApplication( ApplicationRegistry.instance( xFID ).getAUT().getName(), webDriver, false );
+			        useCloud.getCloudActionProvider().installApplication( ApplicationRegistry.instance( xFID ).getAUT().getName(), webDriver, false, false );
 			        
 			        if ( ApplicationRegistry.instance( xFID ).getAUT().isAutoStart() )
 			        {

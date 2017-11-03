@@ -138,7 +138,7 @@ public class SELENIUMCloudActionProvider extends AbstractCloudActionProvider
 	}
 
     @Override
-    public boolean installApplication( String applicationName, DeviceWebDriver webDriver, boolean instrumentApp )
+    public boolean installApplication( String applicationName, DeviceWebDriver webDriver, boolean instrumentApp, boolean instrumentSensor )
     {
         // TODO Auto-generated method stub
         return false;

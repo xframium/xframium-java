@@ -11,10 +11,12 @@ import org.apache.commons.logging.LogFactory;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
-import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.device.ng.RunContainer.RunStatus;
+import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.reporting.ExecutionContextTest.TestStatus;
 import org.xframium.spi.Device;
 
 
@@ -73,6 +75,10 @@ public class TestContainer
         }
     }
     
+    public synchronized boolean testsRemain()
+    {
+        return !testList.isEmpty();
+    }
     
     
     public String getxFID()
@@ -80,7 +86,7 @@ public class TestContainer
         return xFID;
     }
 
-    public TestPackage getTestPackage( Method currentMethod, boolean attachDevice )
+    public TestPackage getTestPackage( Method currentMethod, boolean attachDevice, boolean xmlTest )
     {
         Thread.currentThread().setName( "xF-Acquiring Test Package..." );
         TestName testName = null;
@@ -94,7 +100,14 @@ public class TestContainer
                 testName = getTest( currentMethod );
                 String runKey = getRunKey( useDevice, currentMethod, testName.getTestName(), testName.getPersonaName() );
                 
-                if ( runContainer.addRun( runKey, RunStatus.RUNNING ) )
+                String reliesOn = null;
+                KeyWordTest kT = KeyWordDriver.instance( xFID ).getTest( testName.getRawName() );
+                if ( kT != null && kT.getReliesOn() != null )
+                {
+                    reliesOn = getRunKey( useDevice, currentMethod, kT.getReliesOn(), testName.getPersonaName() );
+                }
+                
+                if ( runContainer.addRun( runKey, RunStatus.RUNNING, reliesOn ) )
                 {
                     Thread.currentThread().setName( "xF-" + testName.getRawName() + "-->" + useDevice.getEnvironment() );
                     TestPackage testPackage = new TestPackage( testName, useDevice, runKey, xFID );
@@ -107,7 +120,7 @@ public class TestContainer
                     }
                     else
                     {
-                        runContainer.addRun( runKey, RunStatus.RESET );
+                        runContainer.addRun( runKey, RunStatus.RESET, reliesOn );
                         if ( DeviceManager.instance( xFID ).isDeviceInvalid( useDevice ) )
                         {
                             testFlow.warn(  "Device Invalidated: " + useDevice.getEnvironment() );
@@ -238,13 +251,26 @@ public class TestContainer
         testFlow.error( Thread.currentThread().getName() + ": ************** DESTROYING DEVICE due to errors :" + currentDevice );
     }
     
-    public void completeTest( TestName testName, String runKey, RunStatus runStatus )
+    public boolean completeTest( TestName testName, String runKey, RunStatus runStatus, Device currentDevice )
     {
-        testFlow.warn( Thread.currentThread().getName() + ": Test Completed: " + runKey + " - " + runStatus );
-        runContainer.addRun( runKey, runStatus );
-        if ( emptyTests )
-            return;
-        checkedOut.remove( testName );
-        completedList.add( testName );
+        if ( runStatus == RunStatus.RETRY && testName.getTest().getTestStatus() != TestStatus.SKIPPED )
+        {
+            testFlow.warn( Thread.currentThread().getName() + ": RETRY FAILED TEST: " + runKey + " - " + runStatus );
+            returnTest( testName );
+            runContainer.addRun( runKey, RunStatus.RESET, null );
+            return false;
+        }
+        else
+        {
+            
+            testFlow.warn( Thread.currentThread().getName() + ": Test Completed: " + runKey + " - " + runStatus );
+            runContainer.addRun( runKey, runStatus, null );
+            if ( emptyTests )
+                return true;
+            checkedOut.remove( testName );
+            completedList.add( testName );
+        }
+        
+        return true;
     }
 }

@@ -105,7 +105,7 @@ public class ReportingElementAdapter implements Element
 
     private KeyWordStep createStep( String type )
     {
-        return KeyWordStepFactory.instance().createStep( getElementName(), getPageName(), true, type, "", false, StepFailure.IGNORE, false, "", "", "", 0, "", 0, "", "", "", null, "", false, false, "", "", null, "" );
+        return KeyWordStepFactory.instance().createStep( getElementName(), getPageName(), true, type, "", false, StepFailure.IGNORE, false, "", "", "", 0, "", 0, "", "", "", null, "", false, false, "", "", null, "", "" );
     }
     
     @Override
@@ -544,13 +544,15 @@ public class ReportingElementAdapter implements Element
     @Override
     public Element addToken( String tokenName, String tokenValue )
     {
-        return baseElement.addToken( tokenName, tokenValue );
+        baseElement.addToken( tokenName, tokenValue );
+        return this;
     }
 
     @Override
     public Element addToken( String tokenPairValue )
     {
-        return baseElement.addToken( tokenPairValue );
+        baseElement.addToken( tokenPairValue );
+        return this;
     }
 
     @Override

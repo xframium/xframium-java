@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="http://xframium.org/xsl/xs3p.xsl"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.xframium.org/terminal-screen-model" xmlns:tns="http://www.xframium.org/terminal-screen-model" elementFormDefault="qualified">
+  <annotation>
+    <documentation xml:lang="en"> xFramium Page Element Registry Definition
+    </documentation>
+  </annotation>
+  <element name="elementDefinition" type="tns:RegistryRoot" />
+  
+  <complexType name="RegistryRoot">
+    <sequence>
+      <element name="application" type="tns:Application" minOccurs="1" maxOccurs="unbounded" />
+    </sequence>
+  </complexType>
+  
+  <complexType name="Application">
+    <sequence>
+      <element name="screens" type="tns:Screen" minOccurs="1" maxOccurs="unbounded" />
+    </sequence>
+    <attribute name="name" type="string" use="required" />
+  </complexType>
+  
+  <complexType name="Screen">
+    <sequence>
+      <element name="links" type="tns:Link" minOccurs="0" maxOccurs="unbounded" />
+      <element name="fields" type="tns:Field" minOccurs="0" maxOccurs="unbounded" />
+      <element name="actions" type="tns:Action" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+    <attribute name="name" type="string" use="required" />
+  </complexType>
+
+  <complexType name="Field">
+    <sequence>
+      <element name="location" type="tns:Location" minOccurs="1" maxOccurs="1" />
+    </sequence>
+    <attribute name="name" type="string" use="required" />
+  </complexType>
+  
+  <complexType name="Link">
+    <sequence>
+      <element name="location" type="tns:Location" minOccurs="1" maxOccurs="1" />
+    </sequence>
+    <attribute name="name" type="string" use="required" />
+    <attribute name="screen" type="string" use="required" />
+    <attribute name="keys" type="string" use="required" />
+  </complexType>
+
+  <complexType name="Action">
+    <sequence>
+      <element name="location" type="tns:Location" minOccurs="1" maxOccurs="1" />
+    </sequence>
+    <attribute name="name" type="string" use="required" />
+    <attribute name="keys" type="string" use="required" />
+  </complexType>
+  
+  <complexType name="Location">
+    <attribute name="line" type="integer" use="required" />
+    <attribute name="column" type="integer" use="required" />
+  </complexType>
+  
+</schema>

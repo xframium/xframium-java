@@ -61,13 +61,16 @@ public class KWSMath extends AbstractKeyWordStep
     public enum MATH_TYPE
     {
         add(1, "add" , "Add numbers and compare the results "),
-        subtract(2, "subtract", "Subtract numbers and compare the results");
+        subtract(2, "subtract", "Subtract numbers and compare the results"),
+        multiply(3, "multiply", "multiply numbers and compare results");
+        
         
         public List<MATH_TYPE> getSupported()
         {
             List<MATH_TYPE> supportedList = new ArrayList<MATH_TYPE>( 10 );
             supportedList.add( MATH_TYPE.add );
             supportedList.add( MATH_TYPE.subtract );
+            supportedList.add( MATH_TYPE.multiply );
             return supportedList;
         }
         
@@ -94,8 +97,6 @@ public class KWSMath extends AbstractKeyWordStep
 	    boolean valueAdded = false;
 	    for ( int i=0; i<getParameterList().size(); i++ )
 	    {
-	        
-
 	        String currentParameter = getParameterValue( getParameterList().get( i ), contextMap, dataMap, executionContext.getxFID() ) + "";
 	        
 	        if ( getParameterList().get( i ).getValue().startsWith( "=" ) )
@@ -119,6 +120,17 @@ public class KWSMath extends AbstractKeyWordStep
 	                        currentValue = Double.parseDouble( formatString( currentParameter ) );
 	                        valueAdded = true;
 	                    }
+	                    break;
+	                    
+	                case multiply:
+	                    if ( valueAdded )
+	                        currentValue *= Double.parseDouble( formatString( currentParameter ) );
+	                    else
+	                    {
+	                        currentValue = Double.parseDouble( formatString( currentParameter ) );
+	                        valueAdded = true;
+	                    }
+                        break;
 	            }
 	        }
 	    }
@@ -138,7 +150,7 @@ public class KWSMath extends AbstractKeyWordStep
         {
             if ( log.isDebugEnabled() )
                 log.debug( "Setting Context Data to [" + currentValue + "] for [" + getContext() + "]" );
-            contextMap.put( getContext(), currentValue + "" );
+            addContext( getContext(), currentValue + "", contextMap, executionContext );
         }
 		
 		return true;

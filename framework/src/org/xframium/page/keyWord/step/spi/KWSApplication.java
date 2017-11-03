@@ -100,11 +100,12 @@ public class KWSApplication extends AbstractKeyWordStep
 	            return cP.closeApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver );
 	            
 	        case INSTALL:
-	            return cP.installApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver, Boolean.parseBoolean( getParameterValue( getParameter( "Instrument" ), contextMap, dataMap, executionContext.getxFID() ) + "" ) );
+	            return cP.installApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver, getParameter( "Instrument" ) == null ? false : Boolean.parseBoolean( getParameterValue( getParameter( "Instrument" ), contextMap, dataMap, executionContext.getxFID() ) + "" ), getParameter( "Sensor Instrument" ) == null ? false : Boolean.parseBoolean( getParameterValue( getParameter( "Sensor Instrument" ), contextMap, dataMap, executionContext.getxFID() ) + "" ) );
 	            
 	        case OPEN:
 	            if ( isTimed() )
                     cP.startTimer( (DeviceWebDriver) webDriver, null, executionContext );
+	            
 	            if ( cP.openApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver, ((DeviceWebDriver)webDriver ).getxFID() ) )
 	            {
 	                ApplicationRegistry aR = ApplicationRegistry.instance( ( (DeviceWebDriver) webDriver ).getxFID() );

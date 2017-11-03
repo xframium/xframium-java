@@ -3,6 +3,7 @@ package org.xframium.page.keyWord.step.spi;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
@@ -66,6 +67,7 @@ public class KWSDate extends AbstractKeyWordStep
         category = "Utility";
     }
 
+    
     /*
      * (non-Javadoc)
      * 
@@ -137,21 +139,21 @@ public class KWSDate extends AbstractKeyWordStep
                 if ( valueOne == null || valueTwo == null )
                     throw new ScriptConfigurationException( "DAYS_BETWEEN must contain Value One and Value Two parameters" );
 
-                returnValue = (Math.abs( dateOne.getTimeInMillis() - dateTwo.getTimeInMillis() ) / (24 * 60 * 60 * 1000)) + "";
+                returnValue = ((int)(Math.ceil(Math.abs( dateOne.getTimeInMillis() - dateTwo.getTimeInMillis() ) / (24.0 * 60.0 * 60.0 * 1000.0)))) + "";
                 break;
 
             case HOURS_BETWEEN:
                 if ( valueOne == null || valueTwo == null )
                     throw new ScriptConfigurationException( "HOURS_BETWEEN must contain Value One and Value Two parameters" );
 
-                returnValue = (Math.abs( dateOne.getTimeInMillis() - dateTwo.getTimeInMillis() ) / (60 * 60 * 1000)) + "";
+                returnValue = ((int)(Math.ceil(Math.abs( dateOne.getTimeInMillis() - dateTwo.getTimeInMillis() ) / (60 * 60 * 1000)))) + "";
                 break;
 
             case MINUTES_BETWEEN:
                 if ( valueOne == null || valueTwo == null )
                     throw new ScriptConfigurationException( "MINUTES_BETWEEN must contain Value One and Value Two parameters" );
 
-                returnValue = (Math.abs( dateOne.getTimeInMillis() - dateTwo.getTimeInMillis() ) / (60 * 1000)) + "";
+                returnValue = ((int)(Math.ceil(Math.abs( dateOne.getTimeInMillis() - dateTwo.getTimeInMillis() ) / (60 * 1000)))) + "";
                 break;
 
             case PARSE:
@@ -184,7 +186,7 @@ public class KWSDate extends AbstractKeyWordStep
         {
             if ( log.isDebugEnabled() )
                 log.debug( "Setting Context Data to [" + returnValue + "] for [" + getContext() + "]" );
-            contextMap.put( getContext(), returnValue );
+            addContext( getContext(), returnValue, contextMap, executionContext );
         }
 
         return true;

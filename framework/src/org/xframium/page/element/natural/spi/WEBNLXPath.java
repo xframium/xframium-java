@@ -36,9 +36,10 @@ public class WEBNLXPath extends AbstractNLXPath
                 builderList.add( new StringBuilder( "//label" ) );
                 builderList.add( new StringBuilder( "//span" ) );
                 break;
-                
+            
+            case SWITCH:
             case OPTION:
-                builderList.add( new StringBuilder( "//input[@type='radiobutton']" ) );
+                builderList.add( new StringBuilder( "//input[@type='radio']" ) );
                 break;
                 
             case TEXTBOX:
@@ -52,6 +53,8 @@ public class WEBNLXPath extends AbstractNLXPath
             case ELEMENT:
                 builderList.add( new StringBuilder( "//*" ) );
                 break;
+                
+            
                 
         }
         

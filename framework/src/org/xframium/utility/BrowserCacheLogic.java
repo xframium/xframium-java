@@ -251,25 +251,33 @@ public class BrowserCacheLogic
                 // id: clear-browsing-data
                 // cssSelector: #clear-browsing-data
                 //
-                params.clear();
-                params.put("label", "CLEAR BROWSING");
-                params.put("timeout", "10");
-                params.put("threshold", "100");
-                params.put("ignorecase", "case");
-                params.put("screen.top", "80%");
-                params.put("screen.height", "20%");
-                params.put("screen.left", "0%");
-                params.put("screen.width", "100%");
-                driver.executeScript("mobile:button-text:click", params);
+                
+                switchToContext(driver, "WEBVIEW");
+                driver.findElementByXPath("//*[@id=\"clear-browsing-data\"]").click();
+                switchToContext(driver, "NATIVE_APP");
                 //driver.findElementById("clear-browsing-data");//params.put("value", "//*[@id=\"clear-browsing-data\"]");
                 //params.put("framework", "appium-1.3.4");
                 //driver.executeScript("mobile:application.element:click", params);*/
 
+                driver.findElementByXPath("//*[@resource-id=\"com.android.chrome:id/spinner\"]").click();
+                driver.findElementByXPath("//*[@text=\"beginning of time\"]|//*[@text=\"All time\"]").click();
+                
+                
                 //
                 // do it!
                 //
                 // text: Clear
                 //
+                
+                try
+                {
+                    driver.findElementByXPath("//*[@resource-id=\"com.android.chrome:id/clear_button\"]|//*[@resource-id=\"com.android.chrome:id/button_preference\"]").click();
+                }
+                catch( Exception e )
+                {
+                    e.printStackTrace();
+                }
+                
                 try {
                     //params.clear();
                     //params.put("value", "//*[@resource-id=\"android:id/button1\"]");
@@ -286,6 +294,7 @@ public class BrowserCacheLogic
                         driver.findElementByXPath("//*[@resource-id=\"com.android.chrome:id/button_preference\"]").click();
                     } catch (Exception e2) {
                         //do nothing
+                        e2.printStackTrace();
                     }
                 }
 
@@ -298,7 +307,7 @@ public class BrowserCacheLogic
 
                 try {
                     driver.executeScript("mobile:application:close", params);
-                } catch (Exception e) {}
+                } catch (Exception e) {e.printStackTrace();}
                 driver.executeScript("mobile:application:open", params);
             }
             else

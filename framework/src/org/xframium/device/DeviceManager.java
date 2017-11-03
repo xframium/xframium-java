@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.data.DataProvider.DriverType;
@@ -44,9 +45,9 @@ import org.xframium.device.ng.TestContainer;
 import org.xframium.device.ng.TestPackage;
 import org.xframium.device.property.PropertyAdapter;
 import org.xframium.exception.DeviceException;
-import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
+import org.xframium.page.element.ByResult;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordTest;
@@ -89,6 +90,7 @@ public class DeviceManager
     private Map<Device, Integer> failureMap = new HashMap<Device, Integer>( 10 );
 
     private Map<String, Boolean> initializationMap = new HashMap<String, Boolean>( 10 );
+    private Map<String,Integer> retryMap = new HashMap<String,Integer>( 20 );
 
     private String initializationName;
     private Log testFlow = LogFactory.getLog( "testFlow" );
@@ -290,6 +292,7 @@ public class DeviceManager
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( Page.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( PageData.class, new ReflectionSerializer() );
         SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ElementUsage.class, new ReflectionSerializer() );
+        SerializationManager.instance().getAdapter( SerializationManager.JSON_SERIALIZATION ).addCustomMapping( ByResult.class, new ReflectionSerializer() );
 
     }
 
@@ -308,6 +311,8 @@ public class DeviceManager
 
     /** The retry count. */
     private int retryCount = 3;
+    
+    private int failedTestRetryCount = 0;
 
 
     /** The caching enabled. */
@@ -353,6 +358,18 @@ public class DeviceManager
         this.dryRun = dryRun;
     }
     
+
+    
+    
+    public int getFailedTestRetryCount()
+    {
+        return failedTestRetryCount;
+    }
+
+    public void setFailedTestRetryCount( int failedTestRetryCount )
+    {
+        this.failedTestRetryCount = failedTestRetryCount;
+    }
 
     /**
      * Sets the retry count.
@@ -446,12 +463,14 @@ public class DeviceManager
                         currentDevice.addCapability( "windTunnelPersona", testPackage.getTestName().getPersonaName(), "STRING" );
                     
                     webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice, testPackage.getxFID() );
-
+                    
                     if ( webDriver != null )
                     {
                         if ( testFlow.isDebugEnabled() )
                             testFlow.debug( Thread.currentThread().getName() + ": WebDriver Created - Creating Connected Device for " + currentDevice );
 
+                        testPackage.setPopulatedDevice( webDriver.getPopulatedDevice() );
+                        
                         notifyPropertyAdapter( configurationProperties, webDriver );
 
                         return new ConnectedDevice( webDriver, currentDevice, testPackage.getTestName().getPersonaName() );
@@ -639,6 +658,59 @@ public class DeviceManager
 
         return rtn;
     }
+    
+    public ConnectedDevice getConnectedDevice( String deviceName, Capabilities dC, String driverType, String xFID )
+    {
+        ConnectedDevice rtn = null;
+
+        SimpleDevice currentDevice = new SimpleDevice( null, null, null, null, null, null, null, 1, driverType, true, null );
+        
+        currentDevice.addCapabilities( dC );
+        
+        DeviceWebDriver webDriver = null;
+
+        if ( log.isInfoEnabled() )
+            log.info( "Attempting to create a device instance as " + deviceName + " using " + currentDevice );
+        
+        try
+        {
+            webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice, xFID );
+
+            if ( webDriver != null )
+            {
+
+                if ( log.isInfoEnabled() )
+                    log.info( "Registered alternate connected device as " + deviceName );
+
+                notifyPropertyAdapter( configurationProperties, webDriver );
+                rtn = new ConnectedDevice( webDriver, currentDevice, null );
+            }
+            else
+                throw new IllegalStateException( "Coudl not connect" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error creating factory instance", e );
+            try
+            {
+                webDriver.close();
+            }
+            catch ( Exception e2 )
+            {
+            }
+            try
+            {
+                webDriver.quit();
+            }
+            catch ( Exception e2 )
+            {
+            }
+
+            throw new DeviceException( "Could not connect to alternate device defined as " + deviceName );
+        }
+
+        return rtn;
+    }
 
 
     
@@ -657,13 +729,44 @@ public class DeviceManager
      * @param personaName
      *            the persona name
      */
-    public void addRun( Device currentDevice, TestPackage testPackage, TestContainer testContainer, boolean success )
+    public boolean addRun( Device currentDevice, TestPackage testPackage, TestContainer testContainer, boolean success )
     {
         if ( testFlow.isInfoEnabled() )
             testFlow.info( Thread.currentThread().getName() + ": Adding run " + testPackage.getRunKey() + " to " + currentDevice.getEnvironment() );
 
-        testContainer.completeTest( testPackage.getTestName(), testPackage.getRunKey(), success ? RunStatus.COMPLETED : RunStatus.FAILED );
-
+        if ( !success )
+        {
+            if ( failedTestRetryCount > 0 )
+            {
+                Integer testRetryCount = retryMap.get( testPackage.getRunKey() );
+                if ( testRetryCount == null )
+                    testRetryCount = 0;
+                
+                if ( ++testRetryCount <= failedTestRetryCount )
+                {
+                    retryMap.put( testPackage.getRunKey(), testRetryCount );
+                    return testContainer.completeTest( testPackage.getTestName(), testPackage.getRunKey(), RunStatus.RETRY, currentDevice );
+                }
+                else
+                    testContainer.completeTest( testPackage.getTestName(), testPackage.getRunKey(), RunStatus.FAILED, currentDevice );
+            }
+            else
+                testContainer.completeTest( testPackage.getTestName(), testPackage.getRunKey(), RunStatus.COMPLETED, currentDevice );
+        
+        }
+        else
+            testContainer.completeTest( testPackage.getTestName(), testPackage.getRunKey(), RunStatus.COMPLETED, currentDevice );
+        
+        return true;
+    }
+    
+    public int getIterationCount( String runKey )
+    {
+        Integer testRetryCount = retryMap.get( runKey );
+        if ( testRetryCount == null )
+            testRetryCount = 0;
+        
+        return testRetryCount;
     }
 
     /**

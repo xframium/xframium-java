@@ -15,8 +15,9 @@ public class SubElement
     private ApplicationVersion version;
     private ProviderType cloudProvider;
     private String deviceTag;
+    private String context;
     
-    public SubElement( BY by, String key, String os, ApplicationVersion version, ProviderType cloudProvider, String deviceTag )
+    public SubElement( BY by, String key, String os, ApplicationVersion version, ProviderType cloudProvider, String deviceTag, String context )
     {
         this.by = by;
         this.key = key;
@@ -25,9 +26,10 @@ public class SubElement
         this.version = version;
         this.cloudProvider = cloudProvider;
         this.deviceTag = deviceTag;
+        this.context = context;
     }
     
-    public SubElement( BY by, String key, String os, ApplicationVersion version, String cloudProvider, String deviceTag )
+    public SubElement( BY by, String key, String os, ApplicationVersion version, String cloudProvider, String deviceTag, String context )
     {
         this.by = by;
         this.key = key;
@@ -37,8 +39,19 @@ public class SubElement
         if ( cloudProvider != null )
         this.cloudProvider = ProviderType.valueOf( cloudProvider.toUpperCase() );
         this.deviceTag = deviceTag;
+        this.context = context;
     }
     
+    public String getContext()
+    {
+        return context;
+    }
+
+    public void setContext( String context )
+    {
+        this.context = context;
+    }
+
     public void addProperty( String name, String value )
     {
         elementProperties.put( name, value );

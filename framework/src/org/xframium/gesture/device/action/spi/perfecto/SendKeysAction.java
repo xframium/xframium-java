@@ -22,6 +22,7 @@ package org.xframium.gesture.device.action.spi.perfecto;
 
 import java.util.List;
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.device.action.AbstractDefaultAction;
 import org.xframium.gesture.device.action.DeviceAction;
 import org.xframium.spi.driver.NativeDriverProvider;
@@ -41,20 +42,13 @@ public class SendKeysAction extends AbstractDefaultAction implements DeviceActio
 	@Override
 	public boolean _executeAction( WebDriver webDriver, List<Object> parameterList )
 	{
-		AppiumDriver appiumDriver = null;
-		
-		if ( webDriver instanceof AppiumDriver )
-			appiumDriver = (AppiumDriver) webDriver;
-		else if ( webDriver instanceof NativeDriverProvider )
-		{
-			NativeDriverProvider nativeProvider = (NativeDriverProvider) webDriver;
-			if ( nativeProvider.getNativeDriver() instanceof AppiumDriver )
-				appiumDriver = (AppiumDriver) nativeProvider.getNativeDriver();
-			else
-				throw new IllegalArgumentException( "Unsupported Driver Type " + webDriver );
-		}
-		
-		appiumDriver.getKeyboard().sendKeys( (String) parameterList.get( 0 ) ); 
+	    if ( ( (DeviceWebDriver) webDriver ).getKeyboard() == null )
+	    {
+	        throw new IllegalArgumentException( "Unsupported Driver Type " + webDriver );
+	    }
+	    else
+	        ( (DeviceWebDriver) webDriver ).getKeyboard().sendKeys( (String) parameterList.get( 0 ) );
+	    
 
 		
 		return true;

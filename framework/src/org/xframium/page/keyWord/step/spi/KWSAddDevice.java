@@ -21,6 +21,7 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
+import org.apache.derby.impl.sql.compile.GetCurrentConnectionNode;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.ConnectedDevice;
@@ -52,6 +53,7 @@ public class KWSAddDevice extends AbstractKeyWordStep
         Object name = null;
         Object deviceId = null;
         Object deviceName = null;
+                
         
         if ( getParameterList().size() == 1 ) {
         	deviceName = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() );
@@ -65,6 +67,13 @@ public class KWSAddDevice extends AbstractKeyWordStep
         	ConnectedDevice wD = DeviceManager.instance( executionContext.getxFID() ).getInactiveDevice( deviceName + "", executionContext.getxFID()  );
         	wD.getWebDriver().setExecutionContext( executionContext );
         	executionContext.getDeviceMap().put( deviceName + "", wD );
+        	if ( getContext() != null )
+        	{
+        	    addContext( getContext(), wD.getPopulatedDevice().getDeviceName(), contextMap, executionContext );
+        	    addContext( getContext() + ".id", wD.getWebDriver().getExecutionId(), contextMap, executionContext );
+        	    addContext( getContext() + ".addedTo", ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getDeviceName(), contextMap, executionContext );
+        	}
+        	
         }
         else if ( getParameterList().size() == 2 )
         {
@@ -81,6 +90,12 @@ public class KWSAddDevice extends AbstractKeyWordStep
         	ConnectedDevice wD = DeviceManager.instance( executionContext.getxFID() ).getUnconfiguredDevice( deviceName + "",  executionContext.getxFID()  );
             wD.getWebDriver().setExecutionContext( executionContext );
             executionContext.getDeviceMap().put( deviceName + "", wD );
+            if ( getContext() != null )
+            {
+                addContext( getContext(), wD.getPopulatedDevice().getDeviceName(), contextMap, executionContext );
+                addContext( getContext() + ".id", wD.getWebDriver().getExecutionId(), contextMap, executionContext );
+                addContext( getContext() + ".addedTo", ( (DeviceWebDriver) webDriver ).getPopulatedDevice().getDeviceName(), contextMap, executionContext );
+            }
         }
 	    else
 	    {
@@ -95,15 +110,6 @@ public class KWSAddDevice extends AbstractKeyWordStep
     public boolean isRecordable()
     {
         return false;
-    }
-    
-    public KWSAddDevice()
-    {
-        kwName = "Add device";
-        kwDescription = "Allows thte script to add a additional device to the same script to validate device/device actions";
-        kwHelp = "https://www.xframium.org/keyword.html#kw-adddevice";
-        orMapping = false;
-        category="Utility";
     }
 
 }

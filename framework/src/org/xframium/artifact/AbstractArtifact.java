@@ -38,7 +38,7 @@ public abstract class AbstractArtifact implements Artifact
         if ( System.getProperty( "reportTemplateFolder" ) == null )
         {
             if ( System.getProperty( "reportTemplate" ) == null )
-                return getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/dark/" + templateName );
+                return getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/light/" + templateName );
             else
                 return getClass().getClassLoader().getResourceAsStream( "org/xframium/reporting/html/" + System.getProperty( "reportTemplate" ) + "/" + templateName );
         }

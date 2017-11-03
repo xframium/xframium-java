@@ -413,7 +413,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                             //
                             for ( XSimpleElement sE : ele.getElement() )
                             {
-                                SubElement subElement = new SubElement( BY.valueOf( sE.getDescriptor() ), sE.getValue(), sE.getOs(), sE.getVersion( ) == null ? null : new ApplicationVersion( sE.getVersion() ), sE.getCloud(), sE.getDeviceTag() );
+                                SubElement subElement = new SubElement( BY.valueOf( sE.getDescriptor() ), sE.getValue(), sE.getOs(), sE.getVersion( ) == null ? null : new ApplicationVersion( sE.getVersion() ), sE.getCloud(), sE.getDeviceTag(), sE.getContext() );
                                 currentElement.addSubElement( subElement );
                                 if ( sE.getParameter() != null )
                                 {
@@ -986,6 +986,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         dC.setSuiteName( getValue( "driver.suiteName", xRoot.getDriver().getSuiteName(), configProperties ) );
         dC.setDomain( getValue( "driver.domain", xRoot.getDriver().getDomain(), configProperties ) );
         dC.setPhase( getValue( "driver.phase", xRoot.getDriver().getPhase(), configProperties ) );
+        dC.setRetryCount( Integer.parseInt( getValue( "driver.retryCount", xRoot.getDriver().getRetryCount() + "", configProperties ) ) );
 
         return dC;
     }
@@ -1022,7 +1023,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     private KeyWordTest parseTest( XTest xTest )
     { 
         KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount(), null, null, null, null, xTest.getPriority(), xTest.getSeverity() );
-        
+        test.setReliesOn( xTest.getReliesOn() );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
 
@@ -1067,7 +1068,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                                                                                  xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
                                                                                  xStep.getOs(), xStep.getBrowser(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
-                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties, xStep.getVersion() );
+                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties, xStep.getVersion(), xStep.getAppContext() );
             
             step.getParameterList().addAll( parseParameters( xStep.getParameter() ) );
             parseTokens( xStep.getToken(), testName, xStep.getName(), step );

@@ -62,6 +62,7 @@ public class PerfectoDeviceActionFactory implements DeviceActionFactory
 		DeviceActionManager.instance().registerAction( ActionType.STOP_VITALS, StopMonitorAction.class );
 		DeviceActionManager.instance().registerAction( ActionType.COPY_FILE, CopyFileAction.class );
 		DeviceActionManager.instance().registerAction( ActionType.HOME, HomeAction.class );
+		DeviceActionManager.instance().registerAction( ActionType.FINGERPRINT, FingerPrintAction.class );
 	}
 
 }

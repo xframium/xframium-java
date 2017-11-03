@@ -102,7 +102,8 @@ public enum ArtifactType
     EXECUTION_TEST_HTML( 31, "EXECUTION_HISTORY_HTML", "xFramium Test HTML Report" ),
     TIMING_HTML( 32, "TIMING_HTML", "xFramium Test Timing Report" ),
     STATISTICS( 33, "STATISTICS", "Device Statistics" ),
-    JIRA_UPDATE_STATUS( 34, "JIRA_UPDATE_STATUS", "Update Execution Staus To JIRA" )
+    JIRA_UPDATE_STATUS( 34, "JIRA_UPDATE_STATUS", "Update Execution Staus To JIRA" ),
+    ASSETS( 35, "ASSETS", "Cache the xFramium HTML Report assets" )
     ;
     
     /** The time. */
@@ -145,6 +146,7 @@ public enum ArtifactType
         supportedList.add( ArtifactType.TIMING_HTML );
         supportedList.add( ArtifactType.STATISTICS );
         supportedList.add( ArtifactType.JIRA_UPDATE_STATUS);
+        supportedList.add( ArtifactType.ASSETS);
 
         return supportedList;
     }

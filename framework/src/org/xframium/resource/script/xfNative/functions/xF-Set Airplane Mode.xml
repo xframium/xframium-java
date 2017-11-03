@@ -3,9 +3,12 @@
   <function name="xF-Set Airplane Mode" active="true">
     <description>Enables or disables Air Plane mode.  Pass one single parameter named xF-state as true or false to enable or disable Air Plane mode</description>
     <step name="xF-Launch Settings" site="New Test" page="Search" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" />
-    <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="CLICK" os="ANDROID" failureMode="IGNORE">
-      <step name="STATUS" site="New Test" page="Search" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" os="ANDROID" />
-      <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="WAIT_FOR" os="ANDROID" />
+    <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="EXISTS" os="ANDROID" failureMode="IGNORE">
+      <step name="xF-Search Button" site="xF_Native" page="xF_Settings" type="CLICK" os="ANDROID" failureMode="ERROR" />
+      <step name="LOOP" site="New Test" page="Search" type="LOOP" active="true" threshold="0" timed="false" inverse="false" wait="2000" failureMode="ERROR">
+        <parameter type="STATIC"  value="10" />
+        <parameter type="STATIC"  value="xF-Click Search Android" />
+      </step>
       <step name="xF-Search Text Box" site="xF_Native" page="xF_Settings" type="SET" os="ANDROID">
         <parameter type="STATIC" name="Value" value="a" />
       </step>
@@ -16,12 +19,12 @@
         </step>
       </step>
     </step>
-    <step name="xF-Airplane Mode Menu" site="xF_Native" page="xF_Settings" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0">
+    <step name="xF-Airplane Mode Menu" site="xF_Native" page="xF_Settings" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0"  os="ANDROID">
       <parameter type="STATIC" name="new parameter" value="1" />
       <parameter type="STATIC" name="new parameter" value="UP" />
     </step>
     <step name="STATUS" site="New Test" page="Search" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" />
-    <step name="xF-Airplane Mode Menu" site="xF_Native" page="xF_Settings" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" />
+    <step name="xF-Airplane Mode Menu" site="xF_Native" page="xF_Settings" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0"  os="ANDROID"/>
     <step name="xF-Airplane Mode OK" site="xF_Native" page="xF_Settings" type="VISIBLE" active="true" os="IOS" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
       <step name="xF-Airplane Mode OK" site="xF_Native" page="xF_Settings" type="CLICK" active="true" threshold="0" timed="true" inverse="false" wait="0" failureMode="ERROR" />
     </step>
@@ -54,5 +57,6 @@
         </step>
       </step>
     </step>
+    <step name="STATUS" site="New Test" page="Search" type="STATE" active="true" threshold="0" timed="false" inverse="false" wait="0" />
   </function>
 </suite>

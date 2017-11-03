@@ -40,6 +40,7 @@ public class AndroidNLXPath extends AbstractNLXPath
                 
             case OPTION:
                 builderList.add( new StringBuilder( "//android.widget.CheckedTextView" ) );
+                builderList.add( new StringBuilder( "//android.widget.RadioButton" ) );
                 break;
                 
             case TEXTBOX:

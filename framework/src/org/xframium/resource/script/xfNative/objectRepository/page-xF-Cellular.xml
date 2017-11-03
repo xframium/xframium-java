@@ -14,11 +14,11 @@
       <element name="xF-Cellular Mode" descriptor="COMPLEX">
         <element value="//UIASwitch[@name='Cellular Data']" descriptor="XPATH" os="IOS" />
         <element value="//android.widget.LinearLayout[@resource-id='com.android.settings:id/network_switches']/android.widget.LinearLayout[1]//android.widget.Switch" descriptor="XPATH" os="ANDROID" />
-        <element value="//UIASwitch[@name='Mobile Data']" descriptor="XPATH" version="ios4" os="IOS" />
-        <element value="//android.widget.Switch[@resource-id='android:id/switch_widget']" descriptor="XPATH" version="android1" os="ANDROID" />
-        <element value="//android.widget.ListView[@resource-id='android:id/list']/android.widget.TextView[1]/following::android.widget.Switch[1]" descriptor="XPATH" version="android2" os="ANDROID" />
-        <element value="//android.widget.TextView[@text='Limit mobile data usage']/preceding::android.widget.CheckBox" descriptor="XPATH" version="" os="ANDROID" />
-        <element value="FIRST CHECKBOX" descriptor="NATURAL" version="" os="ANDROID" />
+        <element value="//UIASwitch[@name='Mobile Data']" descriptor="XPATH" os="IOS" />
+        <element value="//android.widget.Switch[@resource-id='android:id/switch_widget']" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.ListView[@resource-id='android:id/list']/android.widget.TextView[1]/following::android.widget.Switch[1]" descriptor="XPATH" os="ANDROID" />
+        <element value="//android.widget.TextView[@text='Limit mobile data usage']/preceding::android.widget.CheckBox" descriptor="XPATH" os="ANDROID" />
+        <element value="FIRST CHECKBOX" descriptor="NATURAL" os="ANDROID" />
       </element>
       <element name="xF-OK Button" value="" descriptor="COMPLEX" >
       <element value="//android.widget.Button[@text='OK']" descriptor="XPATH" os="ANDROID" />

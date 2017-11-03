@@ -65,7 +65,7 @@ public class KWSValue extends AbstractKeyWordStep
 		{
 			if ( log.isDebugEnabled() )
 				log.debug( "Setting Context Data to [" + elementValue + "] for [" + getContext() + "]" );
-			contextMap.put( getContext(), elementValue );
+			addContext( getContext(), elementValue, contextMap, executionContext );
 		}
 		
 		return true;

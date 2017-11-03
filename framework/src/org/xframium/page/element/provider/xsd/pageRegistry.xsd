@@ -72,6 +72,7 @@
           <enumeration value="HTML" />
           <enumeration value="PROP" />
           <enumeration value="COMPLEX" />
+          <enumeration value="NATURAL" />
         </restriction>
       </simpleType>
     </attribute>
@@ -105,6 +106,7 @@
     <attribute name="version" type="string" use="optional" />
     <attribute name="cloud" type="string" use="optional" />
     <attribute name="deviceTag" type="string" use="optional" />
+    <attribute name="context" type="string" use="optional" />
   </complexType>
   <complexType name="ElementParameter">
     <attribute name="name" type="string" use="required" />

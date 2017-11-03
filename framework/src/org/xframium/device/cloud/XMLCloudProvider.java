@@ -35,6 +35,7 @@ import javax.xml.bind.Unmarshaller;
 import org.xframium.device.cloud.xsd.Cloud;
 import org.xframium.device.cloud.xsd.ObjectFactory;
 import org.xframium.device.cloud.xsd.RegistryRoot;
+import org.xframium.device.keepAlive.DeviceKeepAlive;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -115,7 +116,7 @@ public class XMLCloudProvider extends AbstractCloudProvider
             RegistryRoot rRoot = (RegistryRoot)rootElement.getValue();
 		    
 			for ( Cloud cloud : rRoot.getCloud() )
-			    cList.add( parseApplication( cloud ) );
+			    cList.add( parseCloud( cloud ) );
 			return cList;
 		}
 		catch( Exception e )
@@ -130,9 +131,27 @@ public class XMLCloudProvider extends AbstractCloudProvider
 	 *
 	 * @param appNode the app node
 	 */
-	private CloudDescriptor parseApplication( Cloud cloud )
+	private CloudDescriptor parseCloud( Cloud cloud )
 	{
-	    return new CloudDescriptor( cloud.getName(), cloud.getUserName(), cloud.getPassword(), cloud.getHostName(), cloud.getProxyHost(), cloud.getProxyPort() + "", "", cloud.getGrid(), cloud.getProviderType(), cloud.getGesture(), cloud.getDeviceAction() );
+	    CloudDescriptor cD = new CloudDescriptor( cloud.getName(), cloud.getUserName(), cloud.getPassword(), cloud.getHostName(), cloud.getProxyHost(), cloud.getProxyPort() + "", "", cloud.getGrid(), cloud.getProviderType(), cloud.getGesture(), cloud.getDeviceAction() );
+	    
+	    if ( cloud.getKeepAlive() != null && cloud.getKeepAlive().getImplementation() != null && !cloud.getKeepAlive().getImplementation().isEmpty() )
+	    {
+	        try
+	        {
+	           DeviceKeepAlive kA =  (DeviceKeepAlive) Class.forName( cloud.getKeepAlive().getImplementation() ).newInstance();
+	           kA.setPollTime( cloud.getKeepAlive().getPollTime() );
+	           kA.setQuietTime( cloud.getKeepAlive().getQuietTime() );
+	           cD.setKeepAlive( kA );
+	        }
+	        catch( Exception e )
+	        {
+	            log.error( "Could not configure device keep alive for the [" + cloud.getName() + "] cloud", e );
+	        }
+	    }
+	    
+	    return cD;
+	    
 	}
 
 	

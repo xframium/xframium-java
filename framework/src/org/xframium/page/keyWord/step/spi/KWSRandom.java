@@ -102,53 +102,53 @@ public class KWSRandom extends AbstractKeyWordStep
         {
             case WORD:
                 if ( validateParameters( new String[] { "Word List" } ) )
-                    contextMap.put( getContext(), Randomizer.instance().randomWord( getParameterValue( getParameter( "Word List" ), contextMap, dataMap, executionContext.getxFID() ) ) );
+                    addContext( getContext(), Randomizer.instance().randomWord( getParameterValue( getParameter( "Word List" ), contextMap, dataMap, executionContext.getxFID() ) ), contextMap, executionContext );
                 
                 break;
             
             case NUMBER:
                 if ( validateParameters( new String[] { "Minimum", "Maximum", "Format" } ) )
-                    contextMap.put( getContext(), Randomizer.instance().randomNumber( Double.parseDouble( getParameterValue( getParameter( "Minimum" ), contextMap, dataMap, executionContext.getxFID() ) ),
+                    addContext( getContext(), Randomizer.instance().randomNumber( Double.parseDouble( getParameterValue( getParameter( "Minimum" ), contextMap, dataMap, executionContext.getxFID() ) ),
                                                                                       Double.parseDouble( getParameterValue( getParameter( "Maximum" ), contextMap, dataMap, executionContext.getxFID() ) ),
-                                                                                      getParameterValue( getParameter( "Format" ), contextMap, dataMap, executionContext.getxFID() ) ) );
+                                                                                      getParameterValue( getParameter( "Format" ), contextMap, dataMap, executionContext.getxFID() ) ), contextMap, executionContext );
                 
                 break;
                 
             case FIRST_NAME:
-                contextMap.put( getContext(), Randomizer.instance().randomFirstName() );
+                addContext( getContext(), Randomizer.instance().randomFirstName(), contextMap, executionContext );
                 break;
                 
             case LAST_NAME:
-                contextMap.put( getContext(), Randomizer.instance().randomLastName() );
+                addContext( getContext(), Randomizer.instance().randomLastName(), contextMap, executionContext );
                 break;
                 
             case EMAIL_ADDRESS:
                 if ( getParameter( "Domain" ) != null )
-                    contextMap.put( getContext(), Randomizer.instance().randomEmailAddress( getParameterValue( getParameter( "Domain" ), contextMap, dataMap, executionContext.getxFID() ) ) );
+                    addContext( getContext(), Randomizer.instance().randomEmailAddress( getParameterValue( getParameter( "Domain" ), contextMap, dataMap, executionContext.getxFID() ) ) , contextMap, executionContext );
                 else
-                    contextMap.put( getContext(), Randomizer.instance().randomEmailAddress( null ) );
+                    addContext( getContext(), Randomizer.instance().randomEmailAddress( null ) , contextMap, executionContext );
                 break;
                 
             case DATE:
                 if ( validateParameters( new String[] { "Minimum", "Maximum", "Format" } ) )
-                    contextMap.put( getContext(), Randomizer.instance().randomDate( DateUtility.instance().parseDate( getParameterValue( getParameter( "Minimum" ), contextMap, dataMap, executionContext.getxFID() ) ),
+                    addContext( getContext(), Randomizer.instance().randomDate( DateUtility.instance().parseDate( getParameterValue( getParameter( "Minimum" ), contextMap, dataMap, executionContext.getxFID() ) ),
                                                                                     DateUtility.instance().parseDate( getParameterValue( getParameter( "Maximum" ), contextMap, dataMap, executionContext.getxFID() ) ),
-                                                                                    getParameterValue( getParameter( "Format" ), contextMap, dataMap, executionContext.getxFID() ) ) );
+                                                                                    getParameterValue( getParameter( "Format" ), contextMap, dataMap, executionContext.getxFID() ) ), contextMap, executionContext );
                 break;
                 
             case ADDRESS:
-                contextMap.put( getContext() + "_ADDRESS_ONE", Randomizer.instance().randomInt( 100, 900 ) + " " + Randomizer.instance().randomStreetName() );
-                contextMap.put( getContext() + "_STREET", Randomizer.instance().randomStreetName() );
-                contextMap.put( getContext() + "_HOUSE_NUMBER", Randomizer.instance().randomInt( 100, 900 ) );
-                contextMap.put( getContext() + "_CITY", Randomizer.instance().randomCityName() );
-                contextMap.put( getContext() + "_STATE", Randomizer.instance().randomState() );
-                contextMap.put( getContext() + "_ZIP", Randomizer.instance().randomInt( 10000, 65000 ) );
+                addContext( getContext() + "_ADDRESS_ONE", Randomizer.instance().randomInt( 100, 900 ) + " " + Randomizer.instance().randomStreetName(), contextMap, executionContext );
+                addContext( getContext() + "_STREET", Randomizer.instance().randomStreetName(), contextMap, executionContext );
+                addContext( getContext() + "_HOUSE_NUMBER", Randomizer.instance().randomInt( 100, 900 ), contextMap, executionContext );
+                addContext( getContext() + "_CITY", Randomizer.instance().randomCityName(), contextMap, executionContext );;
+                addContext( getContext() + "_STATE", Randomizer.instance().randomState(), contextMap, executionContext );
+                addContext( getContext() + "_ZIP", Randomizer.instance().randomInt( 10000, 65000 ), contextMap, executionContext );
                 break;
                 
 
             case TEXT:
                 if ( validateParameters( new String[] { "Format" } ) )
-                    contextMap.put( getContext(), Randomizer.instance().randomText( getParameterValue( getParameter( "Format" ), contextMap, dataMap, executionContext.getxFID() ) ) );
+                    addContext( getContext(), Randomizer.instance().randomText( getParameterValue( getParameter( "Format" ), contextMap, dataMap, executionContext.getxFID() ) ), contextMap, executionContext );
                 break;
             
         }

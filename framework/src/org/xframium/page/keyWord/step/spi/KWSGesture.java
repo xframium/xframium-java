@@ -62,6 +62,16 @@ public class KWSGesture extends AbstractKeyWordStep
 		boolean success = false;
 		Element gestureElement = null;
 			
+		DeviceWebDriver wD = (DeviceWebDriver) webDriver;
+		
+		boolean enableCache = false;
+		
+		if ( wD.isCachingEnabled() )
+		{
+		    wD.setCachingEnabled( false );
+		    enableCache = true;
+		}
+		
 		String xFID = executionContext.getxFID();
 		
 		WebElement webElement = null;
@@ -74,7 +84,7 @@ public class KWSGesture extends AbstractKeyWordStep
 		}
 		
 		if ( isTimed() )
-            ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider().startTimer( (DeviceWebDriver) webDriver, gestureElement, executionContext );
+            wD.getCloud().getCloudActionProvider().startTimer( (DeviceWebDriver) webDriver, gestureElement, executionContext );
 		
 		switch( GestureType.valueOf( gestureName[0] ) )
 		{
@@ -86,7 +96,7 @@ public class KWSGesture extends AbstractKeyWordStep
 		        if ( getParameter( "Initial Action" ) != null )
 		            initialAction = InitialDragDropAction.valueOf( (String) getParameterValue( getParameter( "Initial Action" ), contextMap, dataMap, executionContext.getxFID() ) );
 		        
-		        GestureManager.instance(( (DeviceWebDriver) webDriver )).createDragDrop( xFID, initialAction, fromElement, toElement ).executeGesture( webDriver, webElement );
+		        GestureManager.instance(wD).createDragDrop( xFID, initialAction, fromElement, toElement ).executeGesture( webDriver, webElement );
 		            
 		        
 			case PINCH:
@@ -97,10 +107,10 @@ public class KWSGesture extends AbstractKeyWordStep
 					pPoint[ 1 ] = createPoint( (String) getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) );
 					pPoint[ 2 ] = createPoint( (String) getParameterValue( getParameterList().get( 2 ), contextMap, dataMap, executionContext.getxFID() ) );
 					pPoint[ 3 ] = createPoint( (String) getParameterValue( getParameterList().get( 3 ), contextMap, dataMap, executionContext.getxFID() ) );
-					GestureManager.instance(( (DeviceWebDriver) webDriver )).createPinch( xFID, pPoint[ 0 ], pPoint[ 1 ], pPoint[ 2 ], pPoint[ 3 ] ).executeGesture( webDriver, webElement );
+					GestureManager.instance(wD).createPinch( xFID, pPoint[ 0 ], pPoint[ 1 ], pPoint[ 2 ], pPoint[ 3 ] ).executeGesture( webDriver, webElement );
 				}
 				else
-					GestureManager.instance(( (DeviceWebDriver) webDriver )).createPinch(xFID).executeGesture( webDriver, webElement );
+					GestureManager.instance(wD).createPinch(xFID).executeGesture( webDriver, webElement );
 								
 				break;
 				
@@ -112,10 +122,10 @@ public class KWSGesture extends AbstractKeyWordStep
 					pPoint[ 1 ] = createPoint( (String) getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) );
 					pPoint[ 2 ] = createPoint( (String) getParameterValue( getParameterList().get( 2 ), contextMap, dataMap, executionContext.getxFID() ) );
 					pPoint[ 3 ] = createPoint( (String) getParameterValue( getParameterList().get( 3 ), contextMap, dataMap, executionContext.getxFID() ) );
-					GestureManager.instance(( (DeviceWebDriver) webDriver )).createPinch( xFID, pPoint[ 0 ], pPoint[ 1 ], pPoint[ 2 ], pPoint[ 3 ] ).executeGesture( webDriver, webElement );
+					GestureManager.instance(wD).createPinch( xFID, pPoint[ 0 ], pPoint[ 1 ], pPoint[ 2 ], pPoint[ 3 ] ).executeGesture( webDriver, webElement );
 				}
 				else
-					GestureManager.instance(( (DeviceWebDriver) webDriver )).createZoom(xFID).executeGesture( webDriver, webElement );
+					GestureManager.instance(wD).createZoom(xFID).executeGesture( webDriver, webElement );
 				break;
 				
 			case SWIPE:
@@ -133,11 +143,11 @@ public class KWSGesture extends AbstractKeyWordStep
 						pPoint[ 1 ] = createPoint( (String) getParameterValue( getParameterList().get( 2 ), contextMap, dataMap, executionContext.getxFID() ) );
 					}
 					
-					GestureManager.instance(( (DeviceWebDriver) webDriver )).createSwipe( xFID, pPoint[ 0 ], pPoint[ 1 ] ).executeGesture( webDriver, webElement );
+					GestureManager.instance(wD).createSwipe( xFID, pPoint[ 0 ], pPoint[ 1 ] ).executeGesture( webDriver, webElement );
 					
 				}
 				else
-					GestureManager.instance(( (DeviceWebDriver) webDriver )).createSwipe( xFID, Direction.valueOf( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) ) ).executeGesture( webDriver, webElement );
+					GestureManager.instance(wD).createSwipe( xFID, Direction.valueOf( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) ) ).executeGesture( webDriver, webElement );
 				
 				break;
 				
@@ -145,30 +155,33 @@ public class KWSGesture extends AbstractKeyWordStep
 			    if ( getParameterList().size() > 1 )
 			    {
     			    Point pressPoint = createPoint( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) );
-    				GestureManager.instance(( (DeviceWebDriver) webDriver )).createPress( xFID, pressPoint, 250, Integer.parseInt( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "") ).executeGesture( webDriver, webElement );
+    				GestureManager.instance(wD).createPress( xFID, pressPoint, 250, Integer.parseInt( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "") ).executeGesture( webDriver, webElement );
 			    }
 			    else
 			    {
 			        Point pressPoint = createPoint( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) );
-                    GestureManager.instance(( (DeviceWebDriver) webDriver )).createPress( xFID, pressPoint ).executeGesture( webDriver, webElement );
+                    GestureManager.instance(wD).createPress( xFID, pressPoint ).executeGesture( webDriver, webElement );
 			    }
 				break;
 				
 			case ROTATE:
-				GestureManager.instance(( (DeviceWebDriver) webDriver )).createRotate( xFID, ScreenOrientation.valueOf( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) ) ).executeGesture( webDriver, webElement );
+				GestureManager.instance(wD).createRotate( xFID, ScreenOrientation.valueOf( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) ) ).executeGesture( webDriver, webElement );
 				break;
 				
 			case KEYPRESS:
-				GestureManager.instance(( (DeviceWebDriver) webDriver )).createKeyPress( xFID, ( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) ), Integer.parseInt( ( (String) getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) ) ) ).executeGesture( webDriver, webElement );
+				GestureManager.instance(wD).createKeyPress( xFID, ( (String) getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) ), Integer.parseInt( ( (String) getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) ) ) ).executeGesture( webDriver, webElement );
 				break;
 				
 			case HIDE_KEYBOARD:
-				GestureManager.instance(( (DeviceWebDriver) webDriver )).createHideKeyboard(xFID).executeGesture( webDriver, webElement );
+				GestureManager.instance(wD).createHideKeyboard(xFID).executeGesture( webDriver, webElement );
 				break;
 		}
 		
 		success = true;
 
+		
+		if ( enableCache )
+		    wD.setCachingEnabled( true );
 		
 		return success;
 	}

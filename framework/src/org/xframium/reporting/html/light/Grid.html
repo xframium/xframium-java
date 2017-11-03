@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html ng-app="xGrid">
+<head>
+<script src="../assets/angular.js"></script>
+<script src="../assets/angular-animate.js"></script>
+<script src="../assets/angular-sanitize.js"></script>
+<script src="../assets/ui-bootstrap-tpls-2.js"></script>
+<script src="../assets/angular-ui-tree.js"></script>
+<script src="../assets/Chart.js"></script>
+<script src="../assets/angular-chart.js"></script>
+<script src="./Grid.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link href="../assets/toolkit-inverse.css" rel="stylesheet">
+<link href="../assets/application.css" rel="stylesheet">
+<link href="../assets/angular-ui-tree.css" rel="stylesheet">
+</head>
+<body ng-controller="xGridController" data-ng-init="initialize()">
+    <div class="container-fluid">
+        <div class="col-sm-12 content">
+            <div class="dashhead">
+                <h6 class="dashhead-subtitle">xFramium 1.0.11 (Apollo)</h6>
+                <h3>xFramium GRID Report</h3>
+            </div>
+            <div class="row" style="background-color: rgba(28, 168, 221, 0.2); border-radius: 5px; margin-top: 10px; margin-bottom: 25px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; cursor: default" ng-repeat="(key, value) in suiteData">
+                <h6 style="margin-left: 25px; margin-top: 5px">{{key}}</h6>
+                <span ng-repeat="imageName in value">
+                    
+                    <img src="./artifacts/{{imageName}}" class="img-rounded" width="256" uib-tooltip="{{getDevice( imageName )}}"/>
+                </span>
+            </div>
+
+        </div>
+    </div>
+</body>
+<script>
+    var xGrid = angular.module('xGrid', [ 'ngAnimate', 'ngSanitize', 'ui.bootstrap' ]);
+
+
+    xGrid.controller('xGridController', function XGridController( $scope, $uibModal )
+    {
+        $scope.suiteData = testData.pageData;
+        
+        $scope.getDevice = function( imageName )
+        {
+            var index = imageName.indexOf( "-" );
+            index = imageName.indexOf( "-", index + 1 );
+            
+            var deviceName = imageName.substr( index + 1 ).replace( ".png", '');
+            return deviceName;
+        }
+
+    });
+</script>
+</html>

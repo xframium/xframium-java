@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.openqa.selenium.Capabilities;
 import org.xframium.device.cloud.action.CloudActionProvider;
+import org.xframium.device.keepAlive.DeviceKeepAlive;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -76,6 +77,8 @@ public class CloudDescriptor
 	private String gesture;
 	
 	private String deviceAction;
+	
+	private DeviceKeepAlive keepAlive;
 	
 	public enum ProviderType
 	{
@@ -136,7 +139,19 @@ public class CloudDescriptor
 		this.deviceAction = deviceAction;		
 	}
 	
-	public boolean isEmbedded()
+	
+	
+	public DeviceKeepAlive getKeepAlive()
+    {
+        return keepAlive;
+    }
+
+    public void setKeepAlive( DeviceKeepAlive keepAlive )
+    {
+        this.keepAlive = keepAlive;
+    }
+
+    public boolean isEmbedded()
 	{
 	    return name != null && ( name.equals( "EMBEDDED" ) || name.equals( "xOL" ) );
 	}

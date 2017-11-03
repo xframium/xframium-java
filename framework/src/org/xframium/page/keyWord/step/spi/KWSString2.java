@@ -39,23 +39,39 @@ import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.utility.DateUtility;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class KWSValue.
  */
+
 public class KWSString2 extends AbstractKeyWordStep
 {
     private static final String FORMAT = "Decimal Format";
     private static final String _FORMAT = "Format";
     private static final String O_VALUE = "Original Value";
     private static final String REGEX = "Regex";
+    private static final String COUNTRY_CODE = "Country Code";
     private static final String VALUE = "Value";
     private static final String BEGIN = "Begin";
     private static final String END = "End";
     private static final String COMPARE = "Compare To";
     private static final String ADD_DAYS = "Add Days";
     private static final String SUBTRACT_DAYS = "Subtract Days";
+    private static PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+
+    public static void main( String[] args )
+    {
+        String x = "+14123024043";
+        
+        
+        DecimalFormat decimalFormat = new DecimalFormat( "# (###) ###-####" );
+        
+        System.out.println( decimalFormat.format( Double.parseDouble( x ) ) );
+    }
     
     public KWSString2()
     {
@@ -76,7 +92,9 @@ public class KWSString2 extends AbstractKeyWordStep
         CONTAINS( 6, "CONTAINS", "Find a string in a string" ), 
         CONCAT( 7, "CONCAT", "Add all strings together" ), 
         SUBSTR( 8, "SUBSTR","Extract a portion of the string" ),
-        DATE( 9, "DATE","Convert a date" )
+        DATE( 9, "DATE","Convert a date" ),
+        PHONE( 10, "PHONE","Parses a phone number" ),
+        EMPTY( 11, "EMPTY","Checks if a string is empty" )
         ;
 
         public List<OperationType> getSupported()
@@ -91,6 +109,8 @@ public class KWSString2 extends AbstractKeyWordStep
             supportedList.add( OperationType.CONCAT );
             supportedList.add( OperationType.SUBSTR );
             supportedList.add( OperationType.DATE );
+            supportedList.add( OperationType.PHONE );
+            supportedList.add( OperationType.EMPTY );
             return supportedList;
         }
 
@@ -128,6 +148,56 @@ public class KWSString2 extends AbstractKeyWordStep
 
         switch ( OperationType.valueOf( getName().toUpperCase() ) )
         {
+            case EMPTY:
+                if ( originalValue == null || originalValue.trim().isEmpty() )
+                {
+                    if ( getContext() != null )
+                    {
+                        if ( log.isDebugEnabled() )
+                            log.debug( "Setting Context Data to [" + newValue + "] for [" + getContext() + "]" );
+                        addContext( getContext(), "true" , contextMap, executionContext );
+                    }
+                    return true;
+                }
+                else
+                {
+                    if ( getContext() != null )
+                    {
+                        if ( log.isDebugEnabled() )
+                            log.debug( "Setting Context Data to [" + newValue + "] for [" + getContext() + "]" );
+                        addContext( getContext(), "false" , contextMap, executionContext );
+                    }
+                    return false;
+                }
+            
+            case PHONE:
+                String countryCode = "US";
+                if ( getParameter( COUNTRY_CODE ) != null )
+                    countryCode = getParameterValue( getParameter( COUNTRY_CODE ), contextMap, dataMap, executionContext.getxFID() );
+                
+                try
+                {
+                    PhoneNumber pN = phoneUtil.parse( originalValue, countryCode );
+                    
+                    
+                    if ( getContext() != null )
+                    {
+                        addContext( getContext() + ".E164", phoneUtil.format( pN, PhoneNumberFormat.E164 ), contextMap, executionContext );
+                        addContext( getContext() + ".INTERNATIONAL", phoneUtil.format( pN, PhoneNumberFormat.INTERNATIONAL ), contextMap, executionContext );
+                        addContext( getContext() + ".RFC3966", phoneUtil.format( pN, PhoneNumberFormat.RFC3966 ), contextMap, executionContext );
+                        newValue = phoneUtil.format( pN, PhoneNumberFormat.NATIONAL );
+                    }
+                    
+                    
+                }
+                catch( Exception e )
+                {
+                    throw new ScriptException( "Could not parse phone number " + originalValue );
+                }
+                break;
+            
+                
+            
             case TRIM:
                 newValue = originalValue.trim();
                 break;
@@ -193,7 +263,7 @@ public class KWSString2 extends AbstractKeyWordStep
                     {
                         for ( int i=1; i<regexMatcher.groupCount() + 1; i++ )
                         {
-                            contextMap.put( getContext() + "_Group " + i, regexMatcher.group( i ) );
+                            addContext( getContext() + "_Group " + i, regexMatcher.group( i ), contextMap, executionContext );
                         }
                     }
                     newValue = regexMatcher.group( 0 );
@@ -253,7 +323,7 @@ public class KWSString2 extends AbstractKeyWordStep
         {
             if ( log.isDebugEnabled() )
                 log.debug( "Setting Context Data to [" + newValue + "] for [" + getContext() + "]" );
-            contextMap.put( getContext(), newValue );
+            addContext( getContext(), newValue , contextMap, executionContext );
         }
 
         return rtn;

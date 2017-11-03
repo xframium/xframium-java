@@ -48,5 +48,7 @@ public class ByNaturalLanguage extends By
     {
         return "By.naturalLanguage: " + queryString;
     }
+    
+    
 
 }
