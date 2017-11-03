@@ -2,7 +2,6 @@ package org.xframium.integrations.jira;
 
 /**
  * 
- * @author rravs
  *
  */
 public enum HTTPMethod {

@@ -1,7 +1,6 @@
 package org.xframium.integrations.jira;
 /**
  * Enum that stored the execution status values
- * @author rravs
  *
  */
 public enum ExecutionStatus {

@@ -5,7 +5,6 @@ import java.util.List;
 /**
  * Represents a TestCycle
  * Project > Version > Test Cycle
- * @author rravs
  *
  */
 

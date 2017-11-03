@@ -13,7 +13,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 /**
  * Util class used to create zip file
- * @author rravs
  *
  */
 public class ZIPFileUtil {

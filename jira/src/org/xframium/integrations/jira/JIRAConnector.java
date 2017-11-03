@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * Connector interface used for ZAPI(JIRA) connection
- * @author rravs
+ * 
  *
  */
 public interface JIRAConnector {
@@ -19,7 +19,7 @@ public interface JIRAConnector {
 	public static final String UPD_EXECUTION_URL = "rest/zapi/latest/execution/{executionId}/execute";
 	public static final String ADD_ATTACHMENT_URL = "/rest/zapi/latest/attachment?entityId={executionId}&entityType=EXECUTION";
 	
-	public static final String EXECUTION_PAYLOAD_JSON = "{ \"status\": \"{status}\"}";
+	public static final String EXECUTION_PAYLOAD_JSON = "{ \"status\": \"{status}\", \"comment\":\"{comment}\"}"; 
 	
 	
 	public static final String VERSION_TAG = "versions";
@@ -27,6 +27,7 @@ public interface JIRAConnector {
 	public static final String EXECUTIONS_TAG = "executions";
 	public static final String ISSUE_KEY_TAG = "issueKey";
 	public static final String PROJECT_ID_EQUALS = "projectId=";
+	public static final String VERSION_ID_EQUALS="versionId=";
 	
 	public static final String JSON_CONTENT_TYPE = "application/json";
 	public static final int STATUS_OK = 200;
@@ -87,10 +88,11 @@ public interface JIRAConnector {
 	 * @param testCycleIDd
 	 * @param executionId
 	 * @param status
+	 * @param comment 
 	 * @return
 	 * @throws Exception
 	 */
-	boolean changeExecutionStatus(String testCycleID, String issueKey, ExecutionStatus status) throws Exception;
+	boolean changeExecutionStatus(String testCycleID, String issueKey, ExecutionStatus status, String comment) throws Exception;
 	
 	
 	/**

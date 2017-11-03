@@ -5,7 +5,6 @@ import java.io.File;
 /**
  * Represents an attachment inside execution
  * Test Cycle > Execution > Attachment
- * @author rravs
  *
  */
 
