@@ -5,7 +5,6 @@ import org.xframium.integrations.jira.ExecutionStatus;
 /**
  * Represents an Execution inside a test Cycle
  * Test Cycle > TestCase/Issue[Execution]
- * @author rravs
  *
  */
 public class JIRAExecution extends JIRAEntity {
@@ -14,6 +13,7 @@ public class JIRAExecution extends JIRAEntity {
 	private String cycleId;
 	private ExecutionStatus status;
 	private JIRAAttachment  attachment;
+	private String comment;
 	
 	
 	public String getIssueKey() {
@@ -40,6 +40,15 @@ public class JIRAExecution extends JIRAEntity {
 	public void setStatus(ExecutionStatus status) {
 		this.status = status;
 	}
+    public String getComment()
+    {
+        return comment;
+    }
+    public void setComment( String comment )
+    {
+        this.comment = comment;
+    }
+	
 	
 	
 	

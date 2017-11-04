@@ -3,7 +3,6 @@ package org.xframium.integrations.jira.entity;
 /**
  * Represents a version in JIRA
  * Project > Version
- * @author rravs
  *
  */
 public class JIRAVersion extends JIRAEntity {
