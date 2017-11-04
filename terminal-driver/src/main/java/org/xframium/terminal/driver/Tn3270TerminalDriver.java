@@ -342,21 +342,21 @@ public class Tn3270TerminalDriver
         {
             this.screen = screen;
 
-            Iterator<Action> actions = screen.getActions().iterator();
+            Iterator<Action> actions = screen.getAction().iterator();
             while( actions.hasNext() )
             {
                 Action action = actions.next();
                 actionsByName.put( action.getName(), action );
             }
 
-            Iterator<Field> fields = screen.getFields().iterator();
+            Iterator<Field> fields = screen.getField().iterator();
             while( fields.hasNext() )
             {
                 Field field = fields.next();
                 fieldsByName.put( field.getName(), field );
             }
 
-            Iterator<Link> links = screen.getLinks().iterator();
+            Iterator<Link> links = screen.getLink().iterator();
             while( links.hasNext() )
             {
                 Link link = links.next();
@@ -394,7 +394,7 @@ public class Tn3270TerminalDriver
         {
             this.application = application;
             
-            Iterator<Screen> screens = application.getScreens().iterator();
+            Iterator<Screen> screens = application.getScreen().iterator();
             while( screens.hasNext() )
             {
                 ConsumedScreen cScreen = new ConsumedScreen( screens.next() );
