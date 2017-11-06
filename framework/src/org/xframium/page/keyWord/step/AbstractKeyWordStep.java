@@ -668,6 +668,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         return getElement( pageObject, contextMap, webDriver, dataMap, null, executionContext );
     }
 
+    
     /**
      * Gets the element.
      *
@@ -689,7 +690,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         if ( overrideName != null && !overrideName.isEmpty() )
             useName = overrideName;
 
-        
+        //
+        // We need to remove the preceding page and site from CONTEXT_ELEMENT 
+        //
+        if ( useName.contains( Element.CONTEXT_ELEMENT ) )
+            useName = useName.substring( useName.indexOf( Element.CONTEXT_ELEMENT ) );
         
         if ( useName.startsWith( Element.CONTEXT_ELEMENT ) )
         {
