@@ -245,7 +245,7 @@ public class Tn3270TerminalDriver
         public void click()
         {
             context.setLocation( Utilities.asTerminalLocation( location ));
-            context.sendChars( RETURN );
+            context.sendKey( javafx.scene.input.KeyCode.ENTER );
         }
   
         public void submit()
@@ -433,6 +433,8 @@ public class Tn3270TerminalDriver
             RegistryRoot rRoot = (RegistryRoot)rootElement.getValue();
 
             rtn = rRoot.getApplication().get(0);
+
+            reader.close();
         }
         catch ( Exception e )
         {
