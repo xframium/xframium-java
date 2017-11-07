@@ -304,11 +304,8 @@ public class XMLTestDriver extends AbstractSeleniumTest
                             for ( ConnectedDevice subDevice : executionContextTest.getDeviceMap().values() )
                             {                                
                                 if ( subDevice.getWebDriver() != null && subDevice.getWebDriver().getReportiumClient() != null )
-                                    testPackage.getConnectedDevice().getWebDriver().getReportiumClient().testStop( TestResultFactory.createSuccess() );
+                                    subDevice.getWebDriver().getReportiumClient().testStop( TestResultFactory.createSuccess() );
                             }
-                            
-                            
-                            
                             
                         }
     
@@ -331,8 +328,17 @@ public class XMLTestDriver extends AbstractSeleniumTest
                             {
                                 Throwable currentException = executionContextTest.getStepException();
     
-                                testPackage.getConnectedDevice().getWebDriver().getReportiumClient().testStop( TestResultFactory.createFailure( currentException != null ? currentException.getMessage() : "Unknown Failure", currentException ) );
+                                if ( testPackage.getConnectedDevice().getWebDriver() != null && testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
+                                    testPackage.getConnectedDevice().getWebDriver().getReportiumClient().testStop( TestResultFactory.createFailure( currentException != null ? currentException.getMessage() : "Unknown Failure", currentException ) );
     
+                                
+                                for ( ConnectedDevice subDevice : executionContextTest.getDeviceMap().values() )
+                                {                                
+                                    if ( subDevice.getWebDriver() != null && subDevice.getWebDriver().getReportiumClient() != null )
+                                        subDevice.getWebDriver().getReportiumClient().testStop( TestResultFactory.createFailure( currentException != null ? currentException.getMessage() : "Unknown Failure", currentException ) );
+                                }
+                                
+                                
                             }
                         }
                     }
