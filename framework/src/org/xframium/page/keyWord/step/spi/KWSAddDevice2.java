@@ -20,20 +20,28 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.xframium.artifact.ArtifactManager;
+import org.xframium.artifact.ArtifactType;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
+import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
+import com.perfecto.reportium.client.ReportiumClientFactory;
+import com.perfecto.reportium.model.PerfectoExecutionContext;
+import com.perfecto.reportium.model.Project;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -70,6 +78,7 @@ public class KWSAddDevice2 extends AbstractKeyWordStep
         if ( driverType == null )
             throw new ScriptConfigurationException( "You must provide a 'Device Type' specifying the type of web driver (WEB,APPIUM,etc)" );
         
+        ConnectedDevice wD = null;
         
         if( registryName != null )
         {
@@ -79,7 +88,7 @@ public class KWSAddDevice2 extends AbstractKeyWordStep
             if ( DeviceManager.instance( executionContext.getxFID() ).getDevice(registryName.toString()) == null )
                 throw new ScriptConfigurationException( "Device Name should be configured in DeviceRegistry with inactive status" );
             
-            ConnectedDevice wD = DeviceManager.instance( executionContext.getxFID() ).getInactiveDevice( registryName + "", executionContext.getxFID()  );
+            wD = DeviceManager.instance( executionContext.getxFID() ).getInactiveDevice( registryName + "", executionContext.getxFID()  );
             wD.getWebDriver().setExecutionContext( executionContext );
             executionContext.getDeviceMap().put( getName() + "", wD );
             if ( getContext() != null )
@@ -95,7 +104,7 @@ public class KWSAddDevice2 extends AbstractKeyWordStep
         }
         else
         {
-            ConnectedDevice wD = DeviceManager.instance( executionContext.getxFID() ).getConnectedDevice( getName(), dC, driverType, executionContext.getxFID() );
+            wD = DeviceManager.instance( executionContext.getxFID() ).getConnectedDevice( getName(), dC, driverType, executionContext.getxFID() );
             wD.getWebDriver().setExecutionContext( executionContext );
             executionContext.getDeviceMap().put( getName() + "", wD );
             if ( getContext() != null )
@@ -107,6 +116,38 @@ public class KWSAddDevice2 extends AbstractKeyWordStep
                 {
                     addContext( getContext() + ".phoneNumber", wD.getWebDriver().getPopulatedDevice().getPhoneNumber(), contextMap, executionContext );
                 }
+            }
+        }
+        
+        if ( wD.getWebDriver().getCloud().getProvider().equals( "PERFECTO" ) )
+        {
+            if ( ArtifactManager.instance( executionContext.getxFID() ).isArtifactEnabled( ArtifactType.REPORTIUM.name() )  )
+            {
+                //
+                // Reportium Integration
+                //
+                List<String> tagList = new ArrayList<String>( 5 );
+                tagList.add( "xFramium" );
+                if ( CloudRegistry.instance(executionContext.getxFID()).getCloud() != null && CloudRegistry.instance(executionContext.getxFID()).getCloud().getUserName() != null && !CloudRegistry.instance(executionContext.getxFID()).getCloud().getUserName().isEmpty() )
+                    tagList.add( CloudRegistry.instance(executionContext.getxFID()).getCloud().getUserName() );
+                
+                if ( wD.getWebDriver().getAut() != null && wD.getWebDriver().getAut().getName() != null && !wD.getWebDriver().getAut().getName().isEmpty() && !wD.getWebDriver().getAut().getName().equals( "NOOP" ) )
+                    tagList.add( wD.getWebDriver().getAut().getName() );
+                
+                if ( executionContext.getTest().getTags() != null && executionContext.getTest().getTags().length > 0 )
+                {
+                    for ( String tag : executionContext.getTest().getTags() )
+                        tagList.add( tag );
+                }
+                
+                tagList.add( "Additional Device" );
+                
+                PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder().withProject( new Project( ExecutionContext.instance( executionContext.getxFID() ).getSuiteName(), "" ) ).withContextTags( tagList.toArray( new String[ 0 ] ) )
+                        .withWebDriver( wD.getWebDriver() ).build();
+                wD.getWebDriver().setReportiumClient( new ReportiumClientFactory().createPerfectoReportiumClient( perfectoExecutionContext ) );
+
+                if ( wD.getWebDriver().getReportiumClient() != null )
+                    wD.getWebDriver().getReportiumClient().testStart( executionContext.getTestName() + "-->" + getName(), new com.perfecto.reportium.test.TestContext() );
             }
         }
         

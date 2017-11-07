@@ -20,12 +20,12 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
-import java.util.List;
 import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.page.ElementDescriptor;
 import org.xframium.page.Page;
 import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
@@ -228,7 +228,9 @@ public class KWSLoop extends AbstractKeyWordStep
 			if ( Element.CONTEXT_ELEMENT.equals( useValue ) )
 				elementList = (Element) contextMap.get( Element.CONTEXT_ELEMENT );
 			else
-				elementList = pageObject.getElement( getPageName(), useValue );
+				elementList = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
+			
+			
 			
 			if ( elementList != null )
 			{

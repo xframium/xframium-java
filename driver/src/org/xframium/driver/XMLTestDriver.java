@@ -23,6 +23,7 @@ package org.xframium.driver;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.testng.Assert;
@@ -33,6 +34,7 @@ import org.testng.annotations.Test;
 import org.testng.internal.TestResult;
 import org.xframium.artifact.ArtifactManager;
 import org.xframium.artifact.ArtifactType;
+import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
@@ -295,11 +297,19 @@ public class XMLTestDriver extends AbstractSeleniumTest
     
                         if ( ArtifactManager.instance( executionContextTest.getxFID() ).isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
                         {
-                            if ( testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
-                            {
-                                if ( returnValue )
+                            if ( testPackage.getConnectedDevice().getWebDriver() != null && testPackage.getConnectedDevice().getWebDriver().getReportiumClient() != null )
+                                testPackage.getConnectedDevice().getWebDriver().getReportiumClient().testStop( TestResultFactory.createSuccess() );
+                            
+
+                            for ( ConnectedDevice subDevice : executionContextTest.getDeviceMap().values() )
+                            {                                
+                                if ( subDevice.getWebDriver() != null && subDevice.getWebDriver().getReportiumClient() != null )
                                     testPackage.getConnectedDevice().getWebDriver().getReportiumClient().testStop( TestResultFactory.createSuccess() );
                             }
+                            
+                            
+                            
+                            
                         }
     
                         return;
