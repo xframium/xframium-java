@@ -17,57 +17,124 @@
 </head>
 <body ng-controller="xTimingController" data-ng-init="initialize()">
     <div class="container-fluid">
-        <div class="col-sm-12 content">
-            <canvas class="chart chart-bar" chart-data="timingData" chart-labels="timingLabels" chart-options="chartOptions" chart-colors="chartColors"></canvas>
+        <div class="row">
+            <div class="col-sm-6 content" style="text-align: center">
+                <a ng-click="resetData()">{{title}}</a><span ng-if="stack.length > 0" ng-repeat="s in stack" > --> {{s.step.name}} ({{(s.endTime.raw - s.startTime.raw)}})</span><a ng-if="stack.length > 0" ng-click="up()"> - Up</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 content">
+                <canvas class="chart chart-pie ng-isolate-scope" chart-data="timingData" chart-labels="timingLabels" chart-options="chartOptions" chart-click="chartClick"></canvas>
+                
+                <button id="doIt" value="allen" ng-click="initialize()" style="visibility: hidden;" />
+            </div>
         </div>
     </div>
 </body>
 <script>
+
     var xGrid = angular.module('xImage', [ 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'chart.js' ]);
 
     xGrid
             .controller(
                     'xTimingController',
-                    function XImageController( $scope, $uibModal )
+                    function XImageController( $scope )
                     {
                         $scope.testData = testData.pageData;
+                        $scope.title = $scope.testData.testName;
 
+                        $scope.stepScope = $scope.testData.stepList;
+                        $scope.currentStep;
+                        
                         $scope.timingLabels = [];
                         $scope.timingData = [];
+                        
+                        $scope.stack = [];
+       
+                        $scope.chartOptions = {
+                            responsive: true,
+                            legend: {
+                                position: 'right',
+                            },
+                            scale: {
+                              ticks: {
+                                beginAtZero: true
+                              },
+                              reverse: false
+                            },
+                            animation: {
+                                animateRotate: true,
+                                animateScale: true
+                            }
+                        }
+                        
+                        $scope.resetData = function()
+                        {
+                            $scope.stepScope = $scope.testData.stepList;
+                            $scope.stack = [];
+                            $scope.currentStep = null;
+                            $scope.initialize();
+                        }
+                        
+                        $scope.up = function()
+                        {
+                            $scope.stack.pop();
+                            if ( $scope.stack.length == 0 )
+                                $scope.resetData();
+                            else
+                            {
+                                $scope.currentStep = $scope.stack[ $scope.stack.length - 1];
+                                $scope.stepScope = $scope.currentStep.stepList;
+                                $scope.initialize();
+                            }
+                        }
+                        
+                        
+                        $scope.chartClick = function( points, evt )
+                        {
+                            if ( $scope.stepScope[ points[ 0 ]._index ].stepList != null && $scope.stepScope[ points[ 0 ]._index ].stepList.length > 0 )
+                            {
+
+                                console.log(  points[ 0 ]);
+                                $scope.currentStep = $scope.stepScope[ points[ 0 ]._index ]; 
+                                $scope.stepScope = $scope.stepScope[ points[ 0 ]._index ].stepList;
+                                
+                                $scope.stack.push( $scope.currentStep );
+                                
+                                //$scope.stepScope.forEach(function( step )
+                                //{
+                                //    $scope.timingLabels.push(step.step.name);
+                                //    $scope.timingData.push( (step.endTime.raw - step.startTime.raw) );
+                                //});
+                                
+                                document.getElementById( "doIt" ).click();
+                                
+                            }
+                        }
+                        
 
                         $scope.initialize = function()
                         {
                             $scope.getTimings();
-
                         }
-
 
                         $scope.getTimings = function()
                         {
-                            $scope.testData.stepList.forEach(function( step )
+                            $scope.timingLabels = [];
+                            $scope.timingData = [];
+                            $scope.stepScope.forEach(function( step )
                             {
-                                $scope.walkStepToGetTimeings(step, testLevelData);
+                                $scope.timingLabels.push(step.step.name);
+                                $scope.timingData.push( (step.endTime.raw - step.startTime.raw) );
+                                //$scope.chartColors.push( $scope.getRandomColor() );
                             });
+                            
+                                
+                                
+                                console.log( $scope.title );
                         }
-
-                        $scope.walkStepToGetTimings = function( step, testLevelData )
-                        {
-
-
-                            if ( step.step.timed ) {
-                                $scope.timingLabels.push(txName);
-                                $scope.timingData.push(duration);
-                            }
-
-                            if ( step.stepList ) {
-                                step.stepList.forEach(function( subStep )
-                                {
-                                    $scope.walkStepToGetTimings(subStep, testLevelData);
-                                });
-                            }
-                        }
-
-
+                        
+                        
                     });
 </script>
 </html>
