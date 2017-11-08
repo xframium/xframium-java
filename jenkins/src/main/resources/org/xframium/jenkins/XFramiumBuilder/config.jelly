@@ -1,0 +1,41 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <!--
+    This jelly script is used for per-project configuration.
+
+    See global.jelly for a general discussion about jelly script.
+  -->
+
+  <!--
+    Creates a text field that shows the value of the "name" property.
+    When submitted, it will be passed to the corresponding constructor parameter.
+  -->
+  <f:entry title="Driver Configuration File" field="configFile">
+    <f:textbox />
+  </f:entry>
+  
+  <f:validateButton title="${%Validate Configuration File}" progress="${%Validating...}" method="validateConfigurationFile" with="configFile" />
+  
+  <f:optionalBlock name="overrideDefaults" title="Optional Values" inline="true" value="${instance.overrideDefaults}">
+      <f:entry title="Suite Name" field="suiteName">
+        <f:textbox />
+      </f:entry>
+      <f:entry title="Named Test Cases" field="testNames">
+        <f:textbox />
+      </f:entry>
+      <f:entry title="Test Case Tags" field="tagNames">
+        <f:textbox />
+      </f:entry>
+      <f:entry title="Test Case Step Tags" field="stepTags">
+        <f:textbox />
+      </f:entry>
+      <f:entry title="Device Tags" field="deviceTags">
+        <f:textbox />
+      </f:entry>
+      <f:entry title="Default Cloud" field="defaultCloud">
+        <f:textbox />
+      </f:entry>
+  
+    <f:validateButton title="${%Validate Configuration}" progress="${%Validating...}" method="validateConfiguration" with="configFile,suiteName,testNames,tagNames,stepTags,deviceTags,defaultCloud" />
+  </f:optionalBlock>
+</j:jelly>
