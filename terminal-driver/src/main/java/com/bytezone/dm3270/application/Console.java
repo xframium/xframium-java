@@ -46,6 +46,7 @@ public class Console extends Application
   private ReplayStage replayStage;
   private MainframeStage mainframeStage;
   private PluginsStage pluginsStage;
+  private ConsoleKeyPress keyPressHandler;
 
   public enum Function
   {
@@ -250,7 +251,8 @@ public class Console extends Application
       }
     }
 
-    scene.setOnKeyPressed (new ConsoleKeyPress (consolePane, screen));
+    keyPressHandler = new ConsoleKeyPress (consolePane, screen);
+    scene.setOnKeyPressed (keyPressHandler);
     scene.setOnKeyTyped (new ConsoleKeyEvent (screen));
 
     primaryStage.sizeToScene ();
@@ -304,6 +306,11 @@ public class Console extends Application
     if (screen != null)
       screen.close ();
   }
+
+    public ConsoleKeyPress getKeyPresHandler()
+    {
+        return keyPressHandler;
+    }
 
   private void savePreferences ()
   {

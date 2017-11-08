@@ -54,18 +54,18 @@ public class Dm3270Console
     {
     	try
     	{
-    		synchronized( monitor )
-    		{
-    			monitor.wait();
-    		}
+            synchronized( monitor )
+            {
+                monitor.wait();
+            }
     	}
     	catch( Exception e )
     	{
-    		e.printStackTrace();
+            e.printStackTrace();
     	}
     }
 
-	public static void notifyOfStartup()
+    public static void notifyOfStartup()
     {
         synchronized( monitor )
         {

@@ -2,6 +2,10 @@ package org.xframium.terminal.driver;
 
 import java.util.*;
 
+import javafx.application.Platform;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
+
 import com.bytezone.dm3270.application.*;
 import com.bytezone.dm3270.display.*;
 import com.bytezone.dm3270.utilities.Dm3270Utility;
@@ -34,20 +38,74 @@ public class Dm3270Context
 
     public int getCurrentLocation()
     {
-        return console.getScreen().getScreenCursor().getLocation();
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void run()
+                {
+                    setValue( new Integer(console.getScreen().getScreenCursor().getLocation()) );
+                    doNotify();
+                }
+            };
+
+        Platform.runLater( worker );
+        worker.doWait();
+
+        return ((Integer) worker.getValue()).intValue();
     }
 
     public void setLocation( int location )
     {
-        console.getScreen().getScreenCursor().moveTo( location );
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void run()
+                {
+                    console.getScreen().getScreenCursor().moveTo( location );
+                    doNotify();
+                }
+            };
+
+        Platform.runLater( worker );
+        worker.doWait();
     }
 
     public void sendChars( String charSequence )
     {
-        for( char ch : charSequence.toCharArray() )
-        {
-            console.getScreen().getScreenCursor().typeChar ((byte) Dm3270Utility.asc2ebc[ch]);
-        }
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void run()
+                {
+                    for( char ch : charSequence.toCharArray() )
+                    {
+                        console.getScreen().getScreenCursor().typeChar ((byte) Dm3270Utility.asc2ebc[ch]);
+                    }
+                    doNotify();
+                }
+            };
+
+        Platform.runLater( worker );
+        worker.doWait();
+    }
+
+    public void sendKey( KeyCode keyCodePressed )
+    {
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void run()
+                {
+                    console.getKeyPresHandler().handle( new KeyEvent( KeyEvent.KEY_PRESSED,
+                                                                      "",
+                                                                      "",
+                                                                      keyCodePressed,
+                                                                      false,
+                                                                      false,
+                                                                      false,
+                                                                      false ));
+                    doNotify();
+                }
+            };
+
+        Platform.runLater( worker );
+        worker.doWait();
     }
 
     public String getText()
@@ -59,20 +117,41 @@ public class Dm3270Context
 
     public String getTextFromField( int location )
     {
-        String rtn = null;
-        Optional<Field> possibleField = console.getScreen().getFieldManager().getFieldAt( location );
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void run()
+                {
+                    Optional<Field> possibleField = console.getScreen().getFieldManager().getFieldAt( location );
+                    
+                    if ( possibleField.isPresent() )
+                    {
+                        setValue( possibleField.get().getText() );
+                    }
+                    doNotify();
+                }
+            };
 
-        if ( possibleField.isPresent() )
-        {
-            rtn = possibleField.get().getText();
-        }
+        Platform.runLater( worker );
+        worker.doWait();
         
-        return rtn;
+        return (String) worker.getValue();
     }
 
     public ScreenDimensions getScreenDimensions()
     {
-        return console.getScreen().getScreenDimensions();
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void run()
+                {
+                    setValue( console.getScreen().getScreenDimensions() );
+                    doNotify();
+                }
+            };
+
+        Platform.runLater( worker );
+        worker.doWait();
+        
+        return (ScreenDimensions) worker.getValue();
     }
 
     //
@@ -157,5 +236,40 @@ public class Dm3270Context
         new Thread( launcher, "Launch Emulator" ).start();
 
         Dm3270Console.waitForStartup();
+    }
+
+    private class JavaFxRunnable
+        implements Runnable
+    {
+        private Object monitor = new Object();
+        private boolean notified = false;
+        private Object value = null;
+
+        public void doWait()
+        {
+            synchronized( monitor )
+            {
+                if ( !notified )
+                {
+                    try { monitor.wait(); }
+                    catch( Exception e) {}
+                }
+            }
+        }
+
+        public void doNotify()
+        {
+            synchronized( monitor )
+            {
+                monitor.notify();
+                notified = true;
+            }
+        }
+
+        public void run()
+        {}
+
+        public Object getValue() { return value; }
+        public void setValue( Object v ) { value = v; }
     }
 }
