@@ -26,7 +26,13 @@ public class Utilities
     
     public static int asTerminalLocation( Location location )
     {
-        return (( location.getLine().intValue() * screenDimensions.rows ) + location.getColumn().intValue() );
+        int lineNum = location.getLine().intValue();
+        int colNum = location.getColumn().intValue();
+        int termLoc = (( lineNum * screenDimensions.columns ) + colNum );
+
+        System.out.println( "Term Loc: " + (lineNum - 1) + " * " + screenDimensions.columns + " + " + colNum + " = " + termLoc );
+        
+        return termLoc;
     }
 
     public static Point asApplicationLocation( int terminalLocation )

@@ -256,7 +256,11 @@ public class Tn3270TerminalDriver
         public void sendKeys(CharSequence... paramVarArgs)
         {
             context.setLocation( Utilities.asTerminalLocation( location ));
-            context.sendChars( paramVarArgs.toString() );
+
+            for( CharSequence seq : paramVarArgs )
+            {
+                context.sendChars( seq );
+            }
         }
   
         public void clear()

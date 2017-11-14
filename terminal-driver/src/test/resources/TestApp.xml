@@ -9,7 +9,7 @@
     
     <Screen name="Login">
       <Field name="username"> <Location line="2" column="17"/> </Field>
-      <Field name="password"> <Location line="3" column="17"/> </Field>
+      <Field name="password"> <Location line="4" column="17"/> </Field>
       <Link name="login" screen="ABlankScreen" > <Location line="3" column="17"/> </Link>
     </Screen>
 
