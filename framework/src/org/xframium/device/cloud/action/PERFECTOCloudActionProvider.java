@@ -407,8 +407,6 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
                     fileList.add( item.getTextContext() );
             }
             
-            System.out.println( fileList );
-            
             Iterator<String> fI = fileList.iterator();
             switch( filterType )
             {
@@ -526,8 +524,6 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
     
         Handset localDevice = PerfectoMobile.instance( webDriver.getxFID() ).devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
         
-        System.out.println(  localDevice  );
-        System.out.println(  appDesc  );
         
         if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
             PerfectoMobile.instance( webDriver.getxFID() ).application().close( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );

@@ -1,0 +1,1 @@
+The xFramium/Jenkins plugin allows for xFramium scripts to be executed directly in Jenkins.  You can specify tags, test, clouds, etc and view reports linked to each run.

@@ -228,7 +228,7 @@ public class KWSLoop extends AbstractKeyWordStep
 			if ( Element.CONTEXT_ELEMENT.equals( useValue ) )
 				elementList = (Element) contextMap.get( Element.CONTEXT_ELEMENT );
 			else
-				elementList = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
+				elementList = getElement( pageObject, contextMap, webDriver, dataMap, useValue, executionContext );
 			
 			
 			
