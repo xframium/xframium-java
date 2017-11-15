@@ -245,7 +245,7 @@ public class Tn3270TerminalDriver
         public void click()
         {
             context.setLocation( Utilities.asTerminalLocation( location ));
-            context.sendChars( RETURN );
+            context.sendKey( javafx.scene.input.KeyCode.ENTER );
         }
   
         public void submit()
@@ -256,7 +256,11 @@ public class Tn3270TerminalDriver
         public void sendKeys(CharSequence... paramVarArgs)
         {
             context.setLocation( Utilities.asTerminalLocation( location ));
-            context.sendChars( paramVarArgs.toString() );
+
+            for( CharSequence seq : paramVarArgs )
+            {
+                context.sendChars( seq );
+            }
         }
   
         public void clear()
@@ -342,21 +346,21 @@ public class Tn3270TerminalDriver
         {
             this.screen = screen;
 
-            Iterator<Action> actions = screen.getActions().iterator();
+            Iterator<Action> actions = screen.getAction().iterator();
             while( actions.hasNext() )
             {
                 Action action = actions.next();
                 actionsByName.put( action.getName(), action );
             }
 
-            Iterator<Field> fields = screen.getFields().iterator();
+            Iterator<Field> fields = screen.getField().iterator();
             while( fields.hasNext() )
             {
                 Field field = fields.next();
                 fieldsByName.put( field.getName(), field );
             }
 
-            Iterator<Link> links = screen.getLinks().iterator();
+            Iterator<Link> links = screen.getLink().iterator();
             while( links.hasNext() )
             {
                 Link link = links.next();
@@ -394,7 +398,7 @@ public class Tn3270TerminalDriver
         {
             this.application = application;
             
-            Iterator<Screen> screens = application.getScreens().iterator();
+            Iterator<Screen> screens = application.getScreen().iterator();
             while( screens.hasNext() )
             {
                 ConsumedScreen cScreen = new ConsumedScreen( screens.next() );
@@ -433,6 +437,8 @@ public class Tn3270TerminalDriver
             RegistryRoot rRoot = (RegistryRoot)rootElement.getValue();
 
             rtn = rRoot.getApplication().get(0);
+
+            reader.close();
         }
         catch ( Exception e )
         {

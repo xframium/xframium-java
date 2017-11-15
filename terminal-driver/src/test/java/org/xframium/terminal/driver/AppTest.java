@@ -57,36 +57,36 @@ public class AppTest
 
             sleep(3000);
 
-            WebElement element = driver.findElement( new By.ByXPath( "//Screen[@name='SystemBanner']/Link[@name='ack']" ));
+            WebElement element = driver.findElement( new By.ByXPath( "//screen[name='SystemBanner']/link[name='ack']" ));
             element.click();
 
             sleep(3000);
 
-            element = driver.findElement( new By.ByXPath( "//Screen[@name='Login']/Field[@name='username']" ));
+            element = driver.findElement( new By.ByXPath( "//screen[name='Login']/field[name='username']" ));
             element.sendKeys("$000");
-            element = driver.findElement( new By.ByXPath( "//Screen[@name='Login']/Field[@name='password']" ));
+            element = driver.findElement( new By.ByXPath( "//screen[name='Login']/field[name='password']" ));
             element.sendKeys("music");
-            element = driver.findElement( new By.ByXPath( "//Screen[@name='SystemBanner']/Link[@name='ack']" ));
+            element = driver.findElement( new By.ByXPath( "//screen[name='SystemBanner']/link[name='ack']" ));
             element.click();
 
             sleep(3000);
 
-            element = driver.findElement( new By.ByXPath( "//Screen[@name='ABlankScreen']/Link[@name='ack']" ));
+            element = driver.findElement( new By.ByXPath( "//screen[name='ABlankScreen']/link[name='ack']" ));
             element.click();
 
             sleep(3000);
 
-            element = driver.findElement( new By.ByXPath( "//Screen[@name='MainMenu']/Link[@name='work-with-file-system']" ));
+            element = driver.findElement( new By.ByXPath( "//screen[name='MainMenu']/link[name='work-with-file-system']" ));
             element.click();
 
             sleep(3000);
 
-            element = driver.findElement( new By.ByXPath( "//Screen[@name='FileSystemMenu']/Link[@name='file-system-help']" ));
+            element = driver.findElement( new By.ByXPath( "//screen[name='FileSystemMenu']/link[name='file-system-help']" ));
             element.click();
 
             sleep(3000);
 
-            element = driver.findElement( new By.ByXPath( "//Screen[@name='FileSystemHelp']/Link[@name='help-text']" ));
+            element = driver.findElement( new By.ByXPath( "//screen[name='FileSystemHelp']/link[name='help-text']" ));
 
             System.out.println( "Got text: " + element.getText() );
         }

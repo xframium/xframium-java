@@ -65,7 +65,9 @@ public class KWSString2 extends AbstractKeyWordStep
 
     public static void main( String[] args )
     {
-        String x = "+14123024043";
+        String x = "1122334455 ";
+        
+        System.out.println(x.substring( 0, 10 ) );
         
         
         DecimalFormat decimalFormat = new DecimalFormat( "# (###) ###-####" );

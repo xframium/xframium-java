@@ -9,7 +9,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-class ConsoleKeyPress implements EventHandler<KeyEvent>
+public class ConsoleKeyPress implements EventHandler<KeyEvent>
 {
   private static final KeyCode[] PFKeyCodes =
       { KeyCode.F1, KeyCode.F2, KeyCode.F3, KeyCode.F4, KeyCode.F5, KeyCode.F6,
