@@ -12,7 +12,7 @@ public class WEBNLXPath extends AbstractNLXPath
     
     
     @Override
-    protected String generateXPath( NaturalLanguageDescriptor nL )
+    public String generateXPath( NaturalLanguageDescriptor nL )
     {
         List<StringBuilder> builderList = new ArrayList<StringBuilder>();
         switch( nL.getType() )

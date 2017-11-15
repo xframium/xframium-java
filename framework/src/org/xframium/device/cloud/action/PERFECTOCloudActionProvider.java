@@ -493,7 +493,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
             else if ( localDevice.getOs().toLowerCase().equals( "android" ) )    
                 applicationArray = appDesc.getAndroidIdentifier().split( ";" );
             else
-                throw new ScriptException( "Could not install application to " + localDevice.getOs() );
+                throw new ScriptException( "Could not OPEN application to " + localDevice.getOs() );
             
             
             for ( String appId : applicationArray )
@@ -523,14 +523,28 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         ApplicationDescriptor appDesc = ApplicationRegistry.instance(webDriver.getxFID()).getApplication( applicationName );
     
         Handset localDevice = PerfectoMobile.instance( webDriver.getxFID() ).devices().getDevice( webDriver.getPopulatedDevice().getDeviceName() );
+        Execution appExec = null;
+        String[] applicationArray = null;
         
-        
-        if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
-            PerfectoMobile.instance( webDriver.getxFID() ).application().close( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAppleIdentifier() );
-        else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-            PerfectoMobile.instance( webDriver.getxFID() ).application().close( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appDesc.getAndroidIdentifier() );
+        if ( localDevice.getOs().toLowerCase().equals( "ios" ) )
+            applicationArray = appDesc.getAppleIdentifier().split( ";" );
+        else if ( localDevice.getOs().toLowerCase().equals( "android" ) )    
+            applicationArray = appDesc.getAndroidIdentifier().split( ";" );
         else
-            log.warn( "Could not close application on " + localDevice.getOs() );
+            throw new ScriptException( "Could not CLOSE application to " + localDevice.getOs() );
+        
+        
+        for ( String appId : applicationArray )
+        {
+            log.info( "Attempting to launch [" + appId + "] on [" + localDevice.getOs() + "]" );
+            appExec = PerfectoMobile.instance( webDriver.getxFID() ).application().close( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), appDesc.getName(), appId );
+            if ( appExec != null )
+            {
+                if ( appExec.getStatus().toLowerCase().equals( "success" ) )
+                    return true;
+            }
+        }
+        
         return true;
     }
     

@@ -61,13 +61,6 @@ public class XMLEscape
      */
     public static String toXML( String xmlIn )
     {
-        
-        //
-        // Check if the document is already well formed
-        //
-        if ( validateDocument( xmlIn ) )
-            return xmlIn;
-        
         //
         // Try to simply escape some characters
         //
@@ -91,7 +84,6 @@ public class XMLEscape
      */
     public static String toHTML( String htmlIn )
     {
-        //System.setProperty( "XML_Tags", "true" );
     	try
         {
             HtmlCleaner cleaner = new HtmlCleaner();
@@ -112,7 +104,22 @@ public class XMLEscape
             return null;
         }
     }
-
+    
+    
+    public static void main( String[] args ) throws Exception
+    {
+        StringBuilder x = new StringBuilder();
+        FileInputStream y = new FileInputStream( "C:/Users/Allen/git/allState-ETRM/AllState-ETRM/test-output/11-13_10-00-26-234/artifacts/dom-5702371624216011516.xml");
+        byte[] buffer = new byte[ 512 ];
+        int bytesRead = 0;
+        while ( (bytesRead = y.read( buffer ) ) != -1 )
+        {
+            x.append( new String( buffer, 0, bytesRead) );
+        }
+        
+        System.out.println(  toXML( x.toString()) );
+    }
+ 
     
     /**
      * Checks if a given xml is a valid format
