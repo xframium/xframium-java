@@ -1,20 +1,26 @@
 package org.xframium.terminal.driver;
 
+import java.awt.Robot;
+import javax.swing.KeyStroke;
 import java.util.*;
 
 import javafx.application.Platform;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
+import com.sun.javafx.scene.input.KeyCodeMap;
 
 import com.bytezone.dm3270.application.*;
 import com.bytezone.dm3270.display.*;
 import com.bytezone.dm3270.utilities.Dm3270Utility;
+import org.xframium.terminal.driver.util.SceneRobot;
 
 public class Dm3270Context
 {
     private Dm3270Site theSite;
     private Dm3270Console console;
     private boolean running = true;
+    private SceneRobot robot = null;
+    private static Hashtable KEY_CODES = new Hashtable();
 
     //
     // CTOR
@@ -25,6 +31,15 @@ public class Dm3270Context
         theSite = site;
 
         init();
+        
+        try
+        {
+            robot = console.getRobot();
+        }
+        catch( Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     //
@@ -68,16 +83,31 @@ public class Dm3270Context
         worker.doWait();
     }
 
-    public void sendChars( String charSequence )
+    public void sendChars( CharSequence charSequence )
     {
         JavaFxRunnable worker = new JavaFxRunnable()
             {
                 public void run()
                 {
-                    for( char ch : charSequence.toCharArray() )
+                    for( int i = 0; i < charSequence.length(); ++i  )
                     {
-                        console.getScreen().getScreenCursor().typeChar ((byte) Dm3270Utility.asc2ebc[ch]);
+                        char ch = charSequence.charAt(i);
+                        
+                        if (Character.isUpperCase(ch)) {
+                            robot.keyPress(KeyCode.SHIFT);
+                        }
+
+                        KeyCode code = KeyCodeMap.valueOf((int) ch);
+
+                        robot.delay(40);
+                        robot.keyPress(code);
+                        robot.keyRelease(code);
+                        
+                        if (Character.isUpperCase(ch)) {
+                            robot.keyRelease(KeyCode.SHIFT);
+                        }
                     }
+                    
                     doNotify();
                 }
             };
@@ -92,14 +122,10 @@ public class Dm3270Context
             {
                 public void run()
                 {
-                    console.getKeyPresHandler().handle( new KeyEvent( KeyEvent.KEY_PRESSED,
-                                                                      "",
-                                                                      "",
-                                                                      keyCodePressed,
-                                                                      false,
-                                                                      false,
-                                                                      false,
-                                                                      false ));
+                    robot.delay(40);
+                    robot.keyPress(keyCodePressed);
+                    robot.keyRelease(keyCodePressed);
+                        
                     doNotify();
                 }
             };
@@ -271,5 +297,31 @@ public class Dm3270Context
 
         public Object getValue() { return value; }
         public void setValue( Object v ) { value = v; }
+    }
+
+    
+    private static KeyCode findKeyCode(char character)
+    {
+        if (KEY_CODES.containsKey(character))
+        {
+            return (KeyCode) KEY_CODES.get(character);
+        }
+        
+        KeyCode keyCode = KeyCode.getKeyCode(String.valueOf(Character
+                                                            .toUpperCase(character)));
+        if (keyCode != null)
+        {
+            return keyCode;
+        }
+        
+        for (KeyCode code : KeyCode.values())
+        {
+            if ((char) code.impl_getCode() == character)
+            {
+                return code;
+            }
+        }
+        
+        throw new IllegalArgumentException("No KeyCode found for character: " + character);
     }
 }

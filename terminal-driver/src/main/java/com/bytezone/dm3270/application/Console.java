@@ -43,6 +43,7 @@ public class Console extends Application
   private OptionStage optionStage;
   private SpyPane spyPane;
   protected ConsolePane consolePane;
+    protected Scene consoleScene;
   private ReplayStage replayStage;
   private MainframeStage mainframeStage;
   private PluginsStage pluginsStage;
@@ -230,9 +231,9 @@ public class Console extends Application
   protected void setConsolePane (Screen screen, ISite serverSite)
   {
     consolePane = new ConsolePane (screen, serverSite, pluginsStage);
-    Scene scene = new Scene (consolePane);
+    consoleScene = new Scene (consolePane);
 
-    primaryStage.setScene (scene);
+    primaryStage.setScene (consoleScene);
     primaryStage.setTitle ("dm3270");
 
     if (screen.getFunction () == Function.TERMINAL)
@@ -252,12 +253,17 @@ public class Console extends Application
     }
 
     keyPressHandler = new ConsoleKeyPress (consolePane, screen);
-    scene.setOnKeyPressed (keyPressHandler);
-    scene.setOnKeyTyped (new ConsoleKeyEvent (screen));
+    consoleScene.setOnKeyPressed (keyPressHandler);
+    consoleScene.setOnKeyTyped (new ConsoleKeyEvent (screen));
 
     primaryStage.sizeToScene ();
     primaryStage.show ();
   }
+
+    protected Scene getConsoleScene()
+    {
+        return consoleScene;
+    }
 
   private void setSpyPane (Screen screen, Site server, Site client)
   {
