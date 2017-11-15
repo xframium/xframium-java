@@ -8,8 +8,10 @@ public abstract class AbstractDeviceKeepAlive implements DeviceKeepAlive
 {
     protected Log log = LogFactory.getLog( DeviceKeepAlive.class );
     protected abstract boolean _keepAlive( DeviceWebDriver webDriver );
+    private String implementationName = this.getClass().getName();
     private int pollTime;
     private int quietTime;
+    private boolean active = true;
     
     @Override
     public boolean keepAlive( DeviceWebDriver webDriver )
@@ -48,6 +50,8 @@ public abstract class AbstractDeviceKeepAlive implements DeviceKeepAlive
     {
         this.quietTime = quietTime;
     }
+    
+    
     
     
 }

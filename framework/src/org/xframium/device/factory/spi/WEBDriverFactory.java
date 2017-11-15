@@ -182,8 +182,8 @@ public class WEBDriverFactory extends AbstractDriverFactory
 			}
 			
 			URL hubUrl = new URL( useCloud.getCloudUrl( dc ) );
-            if ( log.isWarnEnabled() )
-                log.warn( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
+            if ( log.isDebugEnabled() )
+                log.debug( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
             
             webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance( xFID ).isCachingEnabled(), currentDevice, dc );
             webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );

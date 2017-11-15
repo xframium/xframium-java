@@ -691,7 +691,9 @@ public abstract class AbstractSeleniumTest
         ExecutionContextTest test = null;
 
         if ( testFlow.isInfoEnabled() )
+        {
             testFlow.info( Thread.currentThread().getName() + ": Attempting to clean up " + testName.getTestName() + " on " + device.getPopulatedDevice().getEnvironment() );
+        }
         
         try
         {
@@ -715,8 +717,19 @@ public abstract class AbstractSeleniumTest
                 File rootFolder = null;
                 try
                 {
-                    rootFolder = new File( ExecutionContext.instance( testPackage.getxFID() ).getReportFolder( testPackage.getxFID() ), webDriver.getArtifactFolder().getPath() );
-                    rootFolder.mkdirs();
+                    try
+                    {
+                        rootFolder = new File( ExecutionContext.instance( testPackage.getxFID() ).getReportFolder( testPackage.getxFID() ), webDriver.getArtifactFolder().getPath() );
+                        rootFolder.mkdirs();
+                    }
+                    catch( Exception e )
+                    {
+                        log.warn( "Not generating artifacts for " + device );
+                        rootFolder = null;
+                    }
+                    
+                    
+                    
                     
                     if ( webDriver.isConnected() && !testResult.isSuccess() )
                     {
@@ -725,7 +738,8 @@ public abstract class AbstractSeleniumTest
                         {
                             for ( String artifactType : aList )
                             {
-                                ArtifactManager.instance( testPackage.getxFID() ).generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver, webDriver.getxFID() );
+                                if ( rootFolder != null )
+                                    ArtifactManager.instance( testPackage.getxFID() ).generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver, webDriver.getxFID() );
                             }
                         }
                     }
@@ -750,7 +764,8 @@ public abstract class AbstractSeleniumTest
                 {
                     for ( String artifactType : aList )
                     {
-                        ArtifactManager.instance( testPackage.getxFID() ).generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver, webDriver.getxFID() );
+                        if ( rootFolder != null )
+                            ArtifactManager.instance( testPackage.getxFID() ).generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver, webDriver.getxFID() );
                     }
                 }
             
@@ -759,7 +774,8 @@ public abstract class AbstractSeleniumTest
                 {
                     for ( String artifactType : aList )
                     {
-                        ArtifactManager.instance( testPackage.getxFID() ).generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver, webDriver.getxFID() );
+                        if ( rootFolder != null )
+                            ArtifactManager.instance( testPackage.getxFID() ).generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver, webDriver.getxFID() );
                     }
                 }
 

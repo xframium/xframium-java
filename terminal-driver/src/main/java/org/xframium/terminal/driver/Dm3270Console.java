@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 
 import com.bytezone.dm3270.application.*;
 import com.bytezone.dm3270.display.*;
+import org.xframium.terminal.driver.util.SceneRobot;
 
 public class Dm3270Console
     extends Console
@@ -42,6 +43,11 @@ public class Dm3270Console
         return screen;
     }
 
+    public SceneRobot getRobot()
+    {
+        return new SceneRobot( getConsoleScene() );
+    }
+
     public static void doIt( Dm3270Context context, Dm3270Context.Dm3270Site site )
     {
         theSite = site;
@@ -54,18 +60,18 @@ public class Dm3270Console
     {
     	try
     	{
-    		synchronized( monitor )
-    		{
-    			monitor.wait();
-    		}
+            synchronized( monitor )
+            {
+                monitor.wait();
+            }
     	}
     	catch( Exception e )
     	{
-    		e.printStackTrace();
+            e.printStackTrace();
     	}
     }
 
-	public static void notifyOfStartup()
+    public static void notifyOfStartup()
     {
         synchronized( monitor )
         {

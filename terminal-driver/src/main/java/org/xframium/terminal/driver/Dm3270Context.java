@@ -1,16 +1,26 @@
 package org.xframium.terminal.driver;
 
+import java.awt.Robot;
+import javax.swing.KeyStroke;
 import java.util.*;
+
+import javafx.application.Platform;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
+import com.sun.javafx.scene.input.KeyCodeMap;
 
 import com.bytezone.dm3270.application.*;
 import com.bytezone.dm3270.display.*;
 import com.bytezone.dm3270.utilities.Dm3270Utility;
+import org.xframium.terminal.driver.util.SceneRobot;
 
 public class Dm3270Context
 {
     private Dm3270Site theSite;
     private Dm3270Console console;
     private boolean running = true;
+    private SceneRobot robot = null;
+    private static Hashtable KEY_CODES = new Hashtable();
 
     //
     // CTOR
@@ -21,6 +31,15 @@ public class Dm3270Context
         theSite = site;
 
         init();
+        
+        try
+        {
+            robot = console.getRobot();
+        }
+        catch( Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     //
@@ -34,20 +53,85 @@ public class Dm3270Context
 
     public int getCurrentLocation()
     {
-        return console.getScreen().getScreenCursor().getLocation();
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void run()
+                {
+                    setValue( new Integer(console.getScreen().getScreenCursor().getLocation()) );
+                    doNotify();
+                }
+            };
+
+        Platform.runLater( worker );
+        worker.doWait();
+
+        return ((Integer) worker.getValue()).intValue();
     }
 
     public void setLocation( int location )
     {
-        console.getScreen().getScreenCursor().moveTo( location );
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void run()
+                {
+                    console.getScreen().getScreenCursor().moveTo( location );
+                    doNotify();
+                }
+            };
+
+        Platform.runLater( worker );
+        worker.doWait();
     }
 
-    public void sendChars( String charSequence )
+    public void sendChars( CharSequence charSequence )
     {
-        for( char ch : charSequence.toCharArray() )
-        {
-            console.getScreen().getScreenCursor().typeChar ((byte) Dm3270Utility.asc2ebc[ch]);
-        }
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void run()
+                {
+                    for( int i = 0; i < charSequence.length(); ++i  )
+                    {
+                        char ch = charSequence.charAt(i);
+                        
+                        if (Character.isUpperCase(ch)) {
+                            robot.keyPress(KeyCode.SHIFT);
+                        }
+
+                        KeyCode code = KeyCodeMap.valueOf((int) ch);
+
+                        robot.delay(40);
+                        robot.keyPress(code);
+                        robot.keyRelease(code);
+                        
+                        if (Character.isUpperCase(ch)) {
+                            robot.keyRelease(KeyCode.SHIFT);
+                        }
+                    }
+                    
+                    doNotify();
+                }
+            };
+
+        Platform.runLater( worker );
+        worker.doWait();
+    }
+
+    public void sendKey( KeyCode keyCodePressed )
+    {
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void run()
+                {
+                    robot.delay(40);
+                    robot.keyPress(keyCodePressed);
+                    robot.keyRelease(keyCodePressed);
+                        
+                    doNotify();
+                }
+            };
+
+        Platform.runLater( worker );
+        worker.doWait();
     }
 
     public String getText()
@@ -59,20 +143,41 @@ public class Dm3270Context
 
     public String getTextFromField( int location )
     {
-        String rtn = null;
-        Optional<Field> possibleField = console.getScreen().getFieldManager().getFieldAt( location );
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void run()
+                {
+                    Optional<Field> possibleField = console.getScreen().getFieldManager().getFieldAt( location );
+                    
+                    if ( possibleField.isPresent() )
+                    {
+                        setValue( possibleField.get().getText() );
+                    }
+                    doNotify();
+                }
+            };
 
-        if ( possibleField.isPresent() )
-        {
-            rtn = possibleField.get().getText();
-        }
+        Platform.runLater( worker );
+        worker.doWait();
         
-        return rtn;
+        return (String) worker.getValue();
     }
 
     public ScreenDimensions getScreenDimensions()
     {
-        return console.getScreen().getScreenDimensions();
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void run()
+                {
+                    setValue( console.getScreen().getScreenDimensions() );
+                    doNotify();
+                }
+            };
+
+        Platform.runLater( worker );
+        worker.doWait();
+        
+        return (ScreenDimensions) worker.getValue();
     }
 
     //
@@ -157,5 +262,66 @@ public class Dm3270Context
         new Thread( launcher, "Launch Emulator" ).start();
 
         Dm3270Console.waitForStartup();
+    }
+
+    private class JavaFxRunnable
+        implements Runnable
+    {
+        private Object monitor = new Object();
+        private boolean notified = false;
+        private Object value = null;
+
+        public void doWait()
+        {
+            synchronized( monitor )
+            {
+                if ( !notified )
+                {
+                    try { monitor.wait(); }
+                    catch( Exception e) {}
+                }
+            }
+        }
+
+        public void doNotify()
+        {
+            synchronized( monitor )
+            {
+                monitor.notify();
+                notified = true;
+            }
+        }
+
+        public void run()
+        {}
+
+        public Object getValue() { return value; }
+        public void setValue( Object v ) { value = v; }
+    }
+
+    
+    private static KeyCode findKeyCode(char character)
+    {
+        if (KEY_CODES.containsKey(character))
+        {
+            return (KeyCode) KEY_CODES.get(character);
+        }
+        
+        KeyCode keyCode = KeyCode.getKeyCode(String.valueOf(Character
+                                                            .toUpperCase(character)));
+        if (keyCode != null)
+        {
+            return keyCode;
+        }
+        
+        for (KeyCode code : KeyCode.values())
+        {
+            if ((char) code.impl_getCode() == character)
+            {
+                return code;
+            }
+        }
+        
+        throw new IllegalArgumentException("No KeyCode found for character: " + character);
     }
 }
