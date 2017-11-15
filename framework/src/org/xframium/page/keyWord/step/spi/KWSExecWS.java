@@ -216,7 +216,7 @@ public class KWSExecWS extends AbstractKeyWordStep
                     while( tokens.hasNext() )
                     {
                         KeyWordToken token = tokens.next();
-                        rtn.getHeaders().put( token.getName(), token.getValue() );
+                        rtn.getHeaders().put( token.getName(), getTokenValue(token, contextMap, dataMap, executionContext.getxFID()));
                     }
                     break;
                 }
