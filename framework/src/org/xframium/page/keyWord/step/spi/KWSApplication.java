@@ -57,7 +57,8 @@ public class KWSApplication extends AbstractKeyWordStep
         INSTALL( 1, "INSTALL", "Install an application" ),
         UNINSTALL( 2, "UNINSTALL", "Uninstall an application" ),
         OPEN( 3, "OPEN", "Launch an application" ),
-        CLOSE( 4, "CLOSE", "Close an application" );
+        CLOSE( 4, "CLOSE", "Close an application" ),
+        UPGRADE( 5, "UPGRADE", "Upgrade an application without removing data" );
 
         public List<ApplicationAction> getSupported()
         {
@@ -66,6 +67,7 @@ public class KWSApplication extends AbstractKeyWordStep
             supportedList.add( ApplicationAction.UNINSTALL );
             supportedList.add( ApplicationAction.OPEN );
             supportedList.add( ApplicationAction.CLOSE );
+            supportedList.add( ApplicationAction.UPGRADE );
             return supportedList;
         }
 
@@ -100,7 +102,10 @@ public class KWSApplication extends AbstractKeyWordStep
 	            return cP.closeApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver );
 	            
 	        case INSTALL:
-	            return cP.installApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver, getParameter( "Instrument" ) == null ? false : Boolean.parseBoolean( getParameterValue( getParameter( "Instrument" ), contextMap, dataMap, executionContext.getxFID() ) + "" ), getParameter( "Sensor Instrument" ) == null ? false : Boolean.parseBoolean( getParameterValue( getParameter( "Sensor Instrument" ), contextMap, dataMap, executionContext.getxFID() ) + "" ) );
+	            return cP.installApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver, getParameter( "Instrument" ) == null ? false : Boolean.parseBoolean( getParameterValue( getParameter( "Instrument" ), contextMap, dataMap, executionContext.getxFID() ) + "" ), getParameter( "Sensor Instrument" ) == null ? false : Boolean.parseBoolean( getParameterValue( getParameter( "Sensor Instrument" ), contextMap, dataMap, executionContext.getxFID() ) + "" ), true );
+	        
+	        case UPGRADE:
+                return cP.installApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver, getParameter( "Instrument" ) == null ? false : Boolean.parseBoolean( getParameterValue( getParameter( "Instrument" ), contextMap, dataMap, executionContext.getxFID() ) + "" ), getParameter( "Sensor Instrument" ) == null ? false : Boolean.parseBoolean( getParameterValue( getParameter( "Sensor Instrument" ), contextMap, dataMap, executionContext.getxFID() ) + "" ), false );
 	            
 	        case OPEN:
 	            if ( isTimed() )
