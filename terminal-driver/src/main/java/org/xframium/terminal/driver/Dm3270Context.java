@@ -2,10 +2,10 @@ package org.xframium.terminal.driver;
 
 import java.awt.Robot;
 import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
 import java.util.*;
 
 import javafx.application.Platform;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
 import com.sun.javafx.scene.input.KeyCodeMap;
 
@@ -74,7 +74,9 @@ public class Dm3270Context
             {
                 public void run()
                 {
+                    System.out.println( "\n Before Location: " + console.getScreen().getScreenCursor().getLocation());
                     console.getScreen().getScreenCursor().moveTo( location );
+                    System.out.println( "\n After Location: " + console.getScreen().getScreenCursor().getLocation());
                     doNotify();
                 }
             };
@@ -97,11 +99,13 @@ public class Dm3270Context
                             robot.keyPress(KeyCode.SHIFT);
                         }
 
-                        KeyCode code = KeyCodeMap.valueOf((int) ch);
+                        KeyCode code = KeyCodeMap.valueOf(KeyEvent.getExtendedKeyCodeForChar( (int) ch ));
 
                         robot.delay(40);
-                        robot.keyPress(code);
-                        robot.keyRelease(code);
+                        //robot.keyPress(code);
+                        //robot.keyRelease(code);
+
+                        console.getScreen().getScreenCursor().typeChar( (byte) Dm3270Utility.asc2ebc[ch] );
                         
                         if (Character.isUpperCase(ch)) {
                             robot.keyRelease(KeyCode.SHIFT);

@@ -30,7 +30,7 @@ public class Utilities
         int colNum = location.getColumn().intValue();
         int termLoc = (( lineNum * screenDimensions.columns ) + colNum );
 
-        System.out.println( "Term Loc: " + (lineNum - 1) + " * " + screenDimensions.columns + " + " + colNum + " = " + termLoc );
+        System.out.println( "Term Loc: " + lineNum + " * " + screenDimensions.columns + " + " + colNum + " = " + termLoc );
         
         return termLoc;
     }
