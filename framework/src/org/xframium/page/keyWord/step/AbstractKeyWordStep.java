@@ -22,8 +22,10 @@ package org.xframium.page.keyWord.step;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -51,13 +53,11 @@ import org.xframium.content.ContentManager;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
-import org.xframium.device.factory.DriverManager;
 import org.xframium.exception.FilteredException;
 import org.xframium.exception.FlowException;
 import org.xframium.exception.ObjectConfigurationException;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
-import org.xframium.gesture.Gesture;
 import org.xframium.gesture.Gesture.Direction;
 import org.xframium.gesture.GestureManager;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
@@ -2067,6 +2067,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
         File screenFile = null;
         File domFile = null;
+        File xpathFile = null;
         ;
 
         if ( webDriver instanceof TakesScreenshot )
@@ -2174,6 +2175,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         {
             File xmlFile = File.createTempFile( "dom-", ".xml", useFolder );
             domFile = new File( xmlFile.getParentFile(), xmlFile.getName().replace( ".xml", ".html" ) );
+            xpathFile = new File( domFile.getParentFile(), domFile.getName().replace( ".html", "-xpath.html" ) );
 
             if ( contextMap != null )
             {
@@ -2185,8 +2187,10 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
             executionContext.getStep().addExecutionParameter( "XML_ABS", xmlFile.getPath() );
             executionContext.getStep().addExecutionParameter( "HTML_ABS", domFile.getPath() );
+            executionContext.getStep().addExecutionParameter( "XPATH_ABS", xpathFile.getPath() );
             executionContext.getStep().addExecutionParameter( "XML", "../../artifacts/" + xmlFile.getName() );
             executionContext.getStep().addExecutionParameter( "HTML", "../../artifacts/" + domFile.getName() );
+            executionContext.getStep().addExecutionParameter( "XPATH", "../../artifacts/" + xpathFile.getName() );
 
             pageSource = webDriver.getPageSource();
             outputStream = new FileOutputStream( xmlFile );
@@ -2202,6 +2206,23 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
             outputStream = new FileOutputStream( domFile );
             outputStream.write( stringBuilder.toString().getBytes() );
+            outputStream.flush();
+            outputStream.close();
+            
+            InputStream xStream = getClass().getResourceAsStream( "/org/xframium/resource/xpath.html" );
+            StringBuilder xBuilder = new StringBuilder();
+            byte[] buffer = new byte[ 512 ];
+            int bytesRead = 0;
+            while ( (bytesRead = xStream.read( buffer ) ) != -1 )
+            {
+                xBuilder.append( new String( buffer, 0, bytesRead) );
+            }
+            
+            String xPathData = xBuilder.toString();
+            String xmlData = removeScript( XMLEscape.toXML( pageSource ).replace( "\r", " " ).replace( "\n", " " ).replace( "'", "\\'" ) );
+            
+            outputStream = new FileOutputStream( xpathFile );
+            outputStream.write( xPathData.replace( "{xmlData}", xmlData ).replace( "{sourceFile}", domFile.getName() ).getBytes() );
             outputStream.flush();
             outputStream.close();
         }
@@ -2225,6 +2246,30 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         return pageSource;
     }
 
+    
+    private static String removeScript( String o )
+    {
+        String newString = o;
+        
+        int scriptLocation = 0;
+        
+        while ( ( scriptLocation = newString.indexOf( "<script" ) ) != -1 )
+        {
+            int endLocation = newString.indexOf( "/script>", scriptLocation );
+            if ( endLocation != -1 )
+            {
+                String begin = newString.substring( 0, scriptLocation );
+                String end = newString.substring( endLocation + 8 );
+                newString = begin + end;
+            }
+            else
+                break;
+                
+        }
+        
+        return newString;
+    }
+    
     private class CheckPointFiles implements FilenameFilter
     {
         private String checkPointName;

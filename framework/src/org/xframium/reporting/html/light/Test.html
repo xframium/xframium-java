@@ -301,12 +301,17 @@ iframe {
                                         <ul class="nav nav-pills nav-justified">
                                             <li ng-if="hasExecutionParameter( selectedElement, 'XML' )" role="presentation">
                                                 <div class="col-md-2" stype="text-align: center">
-                                                    <a hRef="{{selectedElement.executionParameter.XML}}" class="btn btn-primary" type="button" target="_blank">Raw Source</a>
+                                                    <a hRef="{{selectedElement.executionParameter.XML}}" class="btn btn-info" type="button" target="_blank">Raw Source</a>
                                                 </div>
                                             </li>
                                             <li ng-if="hasExecutionParameter( selectedElement, 'HTML' )" role="presentation">
                                                 <div class="col-md-2" stype="text-align: center">
                                                     <a hRef="{{selectedElement.executionParameter.HTML}}" class="btn btn-primary" type="button" target="_blank">Formatted Source</a>
+                                                </div>
+                                            </li>
+                                            <li ng-if="hasExecutionParameter( selectedElement, 'XPATH' )" role="presentation">
+                                                <div class="col-md-2" stype="text-align: center">
+                                                    <a hRef="{{selectedElement.executionParameter.XPATH}}" class="btn btn-warning" type="button" target="_blank">Analyze</a>
                                                 </div>
                                             </li>
                                         </ul>

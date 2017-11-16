@@ -14,6 +14,7 @@ public class ByNaturalLanguage extends By
 {
 
     private final String queryString;
+    private String evaluatedXPath;
     private final NaturalLanguageDescriptor nL;
     private final DeviceWebDriver webDriver;
 
@@ -27,7 +28,11 @@ public class ByNaturalLanguage extends By
     @Override
     public List<WebElement> findElements( SearchContext context )
     {
+    
         NLXpath xPath = NLXpathFactory.instance().getGenerator( webDriver );
+        
+        evaluatedXPath = xPath.generateXPath( nL );
+        
         List<WebElement> eList = new ArrayList<WebElement>( 10 );
         WebElement wE = xPath.getElement( webDriver, nL ); 
         if ( wE != null )
@@ -40,15 +45,13 @@ public class ByNaturalLanguage extends By
     public WebElement findElement( SearchContext context )
     {
         NLXpath xPath = NLXpathFactory.instance().getGenerator( webDriver );
+        evaluatedXPath = xPath.generateXPath( nL );
         return xPath.getElement( webDriver, nL );
     }
 
     @Override
     public String toString()
     {
-        return "By.naturalLanguage: " + queryString;
+        return "By.naturalLanguage: " + ( evaluatedXPath != null ? evaluatedXPath : queryString );
     }
-    
-    
-
 }

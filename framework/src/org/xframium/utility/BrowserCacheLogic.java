@@ -252,9 +252,9 @@ public class BrowserCacheLogic
                 // cssSelector: #clear-browsing-data
                 //
                 
-                switchToContext(driver, "WEBVIEW");
-                driver.findElementByXPath("//*[@id=\"clear-browsing-data\"]").click();
-                switchToContext(driver, "NATIVE_APP");
+                //switchToContext(driver, "WEBVIEW");
+                driver.findElementByXPath("//*[@resource-id=\"com.android.chrome:id/clear_browsing_data_button\"]").click();
+                //switchToContext(driver, "NATIVE_APP");
                 //driver.findElementById("clear-browsing-data");//params.put("value", "//*[@id=\"clear-browsing-data\"]");
                 //params.put("framework", "appium-1.3.4");
                 //driver.executeScript("mobile:application.element:click", params);*/

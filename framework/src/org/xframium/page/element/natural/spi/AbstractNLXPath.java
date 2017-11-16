@@ -9,7 +9,7 @@ import org.xframium.page.element.natural.NaturalLanguageDescriptor;
 
 public abstract class AbstractNLXPath implements NLXpath
 {
-    protected abstract String generateXPath( NaturalLanguageDescriptor nL );
+    public abstract String generateXPath( NaturalLanguageDescriptor nL );
     
     @Override
     public WebElement getElement( DeviceWebDriver webDriver, NaturalLanguageDescriptor nL )

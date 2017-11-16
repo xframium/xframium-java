@@ -766,13 +766,19 @@ public class SeleniumElement extends AbstractElement
                 }
                 else
                 {
+                    List<WebElement> elementList = null;
+                    
                     if ( fromContext != null )
-                        webElement = ((WebElement) fromContext.getNative()).findElement( (By) useBy );
+                        elementList = ((WebElement) fromContext.getNative()).findElements( (By) useBy );
                     else
-                        webElement = ((WebDriver) getWebDriver()).findElement( (By) useBy );
-                }
+                        elementList = ((WebDriver) getWebDriver()).findElements( (By) useBy );
+                    
+                    if ( elementList.size() == 1 )
+                        webElement =  elementList.get( 0 );
+                    else if ( elementList.size() > 1 )
+                        throw new ScriptConfigurationException( getKey() + " returned multiple values while 1 was expected" );
 
-                
+                }                
 
                 if ( log.isDebugEnabled() )
                 {

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html ng-app="xImage">
+<head>
+<script src="../../assets/angular.js"></script>
+<script src="../../assets/angular-animate.js"></script>
+<script src="../../assets/angular-sanitize.js"></script>
+<script src="../../assets/ui-bootstrap-tpls-2.js"></script>
+<script src="../../assets/angular-ui-tree.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link href="../../assets/toolkit-inverse.css" rel="stylesheet">
+<link href="../../assets/application.css" rel="stylesheet">
+<link href="../../assets/angular-ui-tree.css" rel="stylesheet">
+</head>
+<body ng-controller="xTimingController" data-ng-init="initialize()">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <form ng-submit="xQuery()">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon2" ng-if="elementList.length == 1">
+                            <span class="text-success glyphicon glyphicon-ok"></span>
+                        </span>
+                        <span class="input-group-addon" id="basic-addon2" ng-if="elementList.length == 0">
+                            <span class="text-danger glyphicon glyphicon-remove"></span>
+                        </span>
+                        <span class="input-group-addon" id="basic-addon2" ng-if="elementList.length > 1">
+                            <span class="text-warning glyphicon glyphicon-warning-sign"></span>
+                        </span>
+                        <input type="text" class="form-control" placefolder="xPath Query" ng-model="xpath" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="xQuery()">Search</button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div data-drag-enabled="false" ui-tree id="tree-root" class="scrollable panel-body">
+                    <ol style="cursor: default" ui-tree-nodes ng-model="elementList">
+                        <li ui-tree-node style="cursor: default" ng-repeat="rootNode in elementList" collapsed="true">
+                            <div style="cursor: default" ui-tree-handle class="tree-node tree-node-content">
+                                <a style="cursor: default" ng-click="toggle(this)" ng-if="rootNode.childNodes.length != 0">
+                                    <span class="glyphicon text-default" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }" style="margin-right: 3px; font-size: x-small;"></span>
+                                </a>
+                                <a ng-click="selectElement( rootNode )">
+                                    <span>{{rootNode.name}}</span>
+                                </a>
+                            </div>
+                            <ol ui-tree-nodes ng-model="elementList" ng-class="{hidden: collapsed}">
+                                <li ui-tree-node ng-repeat="n in rootNode.childNodes" ng-include="'node.html'" collapsed="false"></li>
+                            </ol>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="a in selectedElement.attributes">
+                        <b>{{a.name}}</b>
+                        : {{a.value}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <iframe src="{sourceFile}" frameborder="0" height="480" width="100%"></iframe>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/ng-template" id="node.html">
+    <div data-nodrag ui-tree-handle  class="tree-node tree-node-content" style=cursor: default" style="text-overflow: ellipsis">
+        <a ng-if="n.childNodes.length != 0" data-nodrag ng-click="toggle(this)" style="cursor: default" >
+            <span ng-if="n.childNodes.length != 0" class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }" style="cursor: default"></span>
+        </a>
+        <span data-nodrag ng-if="n.childNodes.length == 0" style="margin-left: 15px" style="cursor: default"></span>
+        <a ng-click="selectElement( n )" style="cursor: default"><span>{{n.name}}</span></a>
+ 
+    </div>
+    <ol data-nodrag ui-tree-nodes="" ng-model="n.childNodes" ng-if="n.childNodes.length != 0" ng-class="{hidden: collapsed}"  style="cursor: default">
+        <li data-nodrag ui-tree-node ng-repeat="n in n.childNodes" ng-include="'node.html'"  style="cursor: default"></li>
+    </ol>
+</script>
+<script>
+    var xGrid = angular.module('xImage', [ 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.tree' ]);
+
+    xGrid.controller('xTimingController', function XImageController( $scope )
+    {
+        $scope.testData = '{xmlData}';
+        $scope.xmlDoc = new DOMParser().parseFromString($scope.testData, "text/xml");
+        $scope.xpath = '';
+        $scope.elementList = null;
+        $scope.selectedElement = [];
+
+        $scope.selectElement = function( e )
+        {
+            $scope.selectedElement = e;
+        }
+
+        $scope.xQuery = function()
+        {
+            var queryResult = $scope.xmlDoc.evaluate($scope.xpath, $scope.xmlDoc, null, XPathResult.ANY_TYPE, null);
+            var currentResult = queryResult.iterateNext();
+            var counter = 0;
+            $scope.elementList = [];
+            while ( currentResult ) {
+                console.log($scope.addTo(currentResult));
+                $scope.elementList.push($scope.addTo(currentResult));
+
+                currentResult = queryResult.iterateNext();
+            }
+        }
+
+        $scope.addTo = function( currentNode )
+        {
+            var currentElement = {};
+            currentElement.name = currentNode.nodeName;
+            currentElement.attributes = [];
+            currentElement.childNodes = [];
+            if ( currentNode.attributes != null ) {
+                for ( var i = 0; i < currentNode.attributes.length; i++ ) {
+                    currentElement.attributes.push({
+                        "name" : currentNode.attributes[i].nodeName,
+                        "value" : currentNode.attributes[i].nodeValue
+                    });
+                }
+            }
+
+            if ( currentNode.childNodes != null ) {
+                for ( var i = 0; i < currentNode.childNodes.length; i++ ) {
+                    if ( currentNode.childNodes[i].nodeType == 1 ) {
+                        currentElement.childNodes.push($scope.addTo(currentNode.childNodes[i]));
+                    }
+                }
+            }
+
+            return currentElement;
+
+        }
+    });
+</script>
+</html>
