@@ -4,7 +4,7 @@
   <Application name="sim390" >
 
     <Screen name="SystemBanner">
-      <Link name="ack" screen="Login" > <Location line="1" column="1"/> </Link>
+      <Link name="ack" screen="Login" > <Location line="0" column="0"/> </Link>
     </Screen>
     
     <Screen name="Login">
