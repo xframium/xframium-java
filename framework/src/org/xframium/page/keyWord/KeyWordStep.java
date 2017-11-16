@@ -113,6 +113,14 @@ public interface KeyWordStep
 	
 	public List<KeyWordToken> getTokenList();
 
+	public String[] getTagNames();
+
+    public String[] getDeviceTags();
+    
+    public void setTagNames( String[] tagNames );
+    
+    public void setDeviceTags( String[] deviceTags );
+	
 	public String getKw();
 	
 	/**

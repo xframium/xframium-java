@@ -294,6 +294,21 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         GestureManager.instance( webDriver ).createSwipe( webDriver.getExecutionContext().getxFID(), fromPoint, toPoint ).executeGesture( webDriver );
     }
 
+    public String[] getTagNames()
+    {
+        return this.tagNames;
+    }
+    
+    public void setTagNames( String[] tagNames )
+    {
+        this.tagNames = tagNames;
+    }
+    
+    public void setDeviceTags( String[] deviceTags )
+    {
+        this.deviceTags = deviceTags;
+    }
+    
     @Override
     public void setTagNames( String tagNames )
     {
@@ -303,6 +318,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         }
     }
 
+    public String[] getDeviceTags()
+    {
+        return this.deviceTags;
+    }
+    
     public void setDeviceTags( String deviceTags )
     {
         if ( deviceTags != null && !deviceTags.isEmpty() )
@@ -1213,7 +1233,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             }
             catch ( Exception e )
             {
-                e.printStackTrace();
+                
             }
             
             executionContext.completeStep( stepStatus, stepException );
