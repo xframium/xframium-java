@@ -307,7 +307,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 	}
 
     @Override
-    public boolean installApplication( String applicationName, DeviceWebDriver webDriver, boolean instrumentApp, boolean instrumentSensor )
+    public boolean installApplication( String applicationName, DeviceWebDriver webDriver, boolean instrumentApp, boolean instrumentSensor, boolean dataReset )
     {
         ApplicationDescriptor appDesc = ApplicationRegistry.instance(webDriver.getxFID()).getApplication( applicationName );
     
@@ -316,9 +316,9 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         Execution appExec = null;
         
         if ( localDevice.getOs().toLowerCase().equals( "ios" ) )                
-            appExec = PerfectoMobile.instance( webDriver.getxFID() ).application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), getInstallLocation( appDesc.getIosInstallation(), webDriver.getxFID() ), instrumentApp ? "instrument" : "noinstrument", instrumentSensor ? "sensor" : "nosensor" );
+            appExec = PerfectoMobile.instance( webDriver.getxFID() ).application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), getInstallLocation( appDesc.getIosInstallation(), webDriver.getxFID() ), instrumentApp ? "instrument" : "noinstrument", instrumentSensor ? "sensor" : "nosensor", dataReset ? "reset" : "noreset" );
         else if ( localDevice.getOs().toLowerCase().equals( "android" ) )
-            appExec = PerfectoMobile.instance( webDriver.getxFID() ).application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), getInstallLocation( appDesc.getAndroidInstallation(), webDriver.getxFID() ), instrumentApp ? "instrument" : "noinstrument", instrumentSensor ? "sensor" : "nosensor" );
+            appExec = PerfectoMobile.instance( webDriver.getxFID() ).application().install( webDriver.getExecutionId(), webDriver.getPopulatedDevice().getDeviceName(), getInstallLocation( appDesc.getAndroidInstallation(), webDriver.getxFID() ), instrumentApp ? "instrument" : "noinstrument", instrumentSensor ? "sensor" : "nosensor", dataReset ? "reset" : "noreset" );
         else
             throw new DeviceConfigurationException( "Could not install application to " + webDriver.getPopulatedDevice().getEnvironment() + "(" + webDriver.getDevice().getDeviceName() + ")" );
         

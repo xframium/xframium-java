@@ -1,10 +1,13 @@
-package org.xframium.utility.http;
+package org.xframium.utility.html;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,18 +27,16 @@ public class HTTPLinkCheck
     private XPathFactory xPathFactory = XPathFactory.newInstance();
     private static int[][] CHAR_LIST = new int[][] { { 0, 9 }, { 11, 13 }, {128, 255 }, {38, 39 } };
     private Map<String, Integer> linkMap = new HashMap<String,Integer>( 10 );
+    private Map<String, List<String>> pageMap = new HashMap<String,List<String>>( 10 );
+    private List<String> brokenLinks = new ArrayList<String>(20);
     private URL baseUrl;
     
-    
-    public static void main( String[] args ) throws Exception
+    public List<String> getBrokenLinks()
     {
-        HTTPLinkCheck h = new HTTPLinkCheck();
-        h.process( new URL( "https://www.betaseron.com/"), new URL( "https://www.betaseron.com/") );
-        System.out.println( h.linkMap.size() + " unique pages" );
-        for ( String key : h.linkMap.keySet() )
-            System.out.println( key + ": " + h.linkMap.get( key ) + " refereces" );
-
+        return brokenLinks;
     }
+
+
 
     public Map<String,Integer> getLinkMap()
     {
@@ -47,14 +48,24 @@ public class HTTPLinkCheck
         
         if ( baseUrl == null )
             baseUrl = currentUrl;
-        Integer linkCount = linkMap.get( currentUrl.toString() );
+        Integer linkCount = linkMap.get( referencingUrl.toString() );
+        
+        List<String> linkList = pageMap.get( referencingUrl.toString() );
+        
+        if ( linkList == null )
+        {
+            linkList = new ArrayList<String>( 20 );
+            pageMap.put( referencingUrl.toString(), linkList );
+        }
+        
+        if ( !linkList.contains( currentUrl.toString() ) )
+            linkList.add( currentUrl.toString() );
         
         if ( linkCount == null )
             linkCount = linkMap.get( currentUrl.toString() + "/" );
         
         if ( linkCount == null )
         {
-            //System.out.println( "Processing: " + currentUrl.toString() );
             linkMap.put( currentUrl.toString(), 1 );
             
             Document cD = getDocument( currentUrl, referencingUrl );
@@ -77,7 +88,7 @@ public class HTTPLinkCheck
                 {
                     try
                     {
-                        URL useUrl = new URL( hRef );
+                        URL useUrl = new URL( hRef.replace( " ", "%20" ) );
                         if ( useUrl.getHost().equals( baseUrl.getHost() ) )
                             process( useUrl, currentUrl );
                         else
@@ -92,7 +103,7 @@ public class HTTPLinkCheck
                 {
                     try
                     {
-                        URL useUrl = new URL( baseUrl, hRef );
+                        URL useUrl = new URL( baseUrl, hRef.replace( " ", "%20" ) );
                         
                         process( useUrl, currentUrl );
                     }
@@ -215,9 +226,14 @@ public class HTTPLinkCheck
             else
                 return null;
         }
-        catch( Throwable t)
+        catch( FileNotFoundException t)
         {
+            brokenLinks.add( inputUrl.toString() + " <-- " + referencingUrl.toString() );
             System.err.println( "Broken Link: " + inputUrl.toString() + " referenced from " + referencingUrl.toString() );
+            return null;
+        }
+        catch( Exception e )
+        {
             return null;
         }
     }

@@ -210,9 +210,26 @@ iframe {
                                 <i>{{selectedElement.step.kwDescription}}</i>
                             </div>
                         </div>
+                        
                         <div class="row" ng-if="selectedElement.message != null && selectedElement.message != '' && selectedElement.message != 'null'">
                             <div class="col-sm-12">
-                                <div class="alert alert-{{selectedState}}" style="color: black">{{selectedElement.message}}</div>
+                                <div class="alert alert-{{selectedState}}" style="color: black">
+                                    <span ng-if="selectedElement.step.kw=='ACCESSIBILITY'">
+                                        <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px" ng-repeat="a in selectedElement.accessibility">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title" style="color: black"><a hRef="{{a.helpUrl}}" target="_blank">{{a.description}}</a> ({{a.nodes.length}})</h3>
+                                            </div>
+                                            <div class="panel-body">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item" ng-repeat="n in a.nodes">
+                                                      <code>{{n.html}}</code>
+                                                    </li>
+                                                </ul> 
+                                            </div>
+                                        </div>
+                                    </span>
+                                    <span ng-if="selectedElement.step.kw!='ACCESSIBILITY'">{{selectedElement.message}}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -240,13 +257,13 @@ iframe {
                                                 Page Name:
                                                 <b>{{selectedElement.step.pageName}}</b>
                                             </li>
-                                            <li class="list-group-item" ng-if="selectedElement.step.orMapping==true">
+                                            <li class="list-group-item">
                                                 Element Name:
                                                 <b>{{selectedElement.step.name}}</b>
                                             </li>
                                             <li class="list-group-item">
                                                 Inverted:
-                                                <b>{{selectedElement.step.inverted}}</b>
+                                                <b>{{selectedElement.step.inverse}}</b>
                                             </li>
                                             <li class="list-group-item" ng-if="selectedElement.step.validation != 'null'">
                                                 Validation:
@@ -515,6 +532,11 @@ iframe {
             }
             else
                 $scope.selectedState = 'primary';
+            console.log( "here" );
+            if ( $scope.selectedElement.step.kw == 'ACCESSIBILITY' && $scope.selectedElement.accessibility == null )
+                $scope.selectedElement.accessibility = JSON.parse( $scope.selectedElement.message );
+            
+            console.log( $scope.selectedElement.accessibility );
         }
 
         $scope.formatStep = function( step )
@@ -683,7 +705,8 @@ iframe {
             "DATE" : "Date Operation",
             "DEBUG" : "***** DEBUG *****",
             "CONTEXT" : "{name} Context Operation",
-            "FUNCTION" : "Call native function {name}"
+            "FUNCTION" : "Call native function {name}",
+            "ACCESSIBILITY" : "Verify Accessibility",
         };
 
     });

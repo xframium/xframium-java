@@ -127,7 +127,7 @@ public class IOSDriverFactory extends AbstractDriverFactory
 			    }
 			    else
 			    {
-			        useCloud.getCloudActionProvider().installApplication( ApplicationRegistry.instance( xFID ).getAUT().getName(), webDriver, false, false );
+			        useCloud.getCloudActionProvider().installApplication( ApplicationRegistry.instance( xFID ).getAUT().getName(), webDriver, false, false, true );
 			        
 			        if ( ApplicationRegistry.instance( xFID ).getAUT().isAutoStart() )
 			        {

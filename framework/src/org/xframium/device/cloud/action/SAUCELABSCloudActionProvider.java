@@ -140,7 +140,7 @@ public class SAUCELABSCloudActionProvider extends AbstractCloudActionProvider
 	}
 
     @Override
-    public boolean installApplication( String applicationName, DeviceWebDriver webDriver, boolean instrumentApp, boolean instrumentSensor )
+    public boolean installApplication( String applicationName, DeviceWebDriver webDriver, boolean instrumentApp, boolean instrumentSensor, boolean dataReset )
     {
         // TODO Auto-generated method stub
         return true;
