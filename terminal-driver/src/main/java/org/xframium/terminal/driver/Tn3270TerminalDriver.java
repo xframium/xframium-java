@@ -13,6 +13,7 @@ import org.xframium.terminal.driver.util.*;
 public class Tn3270TerminalDriver
     implements WebDriver,
                SearchContext,
+               TakesScreenshot,
                org.openqa.selenium.internal.FindsByXPath
 {
     //
@@ -55,7 +56,7 @@ public class Tn3270TerminalDriver
     }
     
     //
-    // Implementation
+    // WebDriver Implementation
     //
     
     public void get(String paramString)
@@ -74,6 +75,10 @@ public class Tn3270TerminalDriver
     {
         return null;
     }
+
+    //
+    // SearchContext Implementation
+    //
   
     public List<WebElement> findElements(By paramBy)
     {
@@ -84,6 +89,32 @@ public class Tn3270TerminalDriver
         
         return ((By.ByXPath) paramBy).findElements( this );
     }
+
+    public WebElement findElement(By paramBy)
+    {
+        if ( !( paramBy instanceof By.ByXPath ))
+        {
+            reportUnsupportedUsage( "Only element selection by XPath is available" );
+        }
+
+        return ((By.ByXPath) paramBy).findElement( this );
+    }
+
+    //
+    // TakesScreenshot Implementation
+    //
+
+    <X> X getScreenshotAs(OutputType<X> target)
+        throws WebDriverException
+    {
+        reportUnsupportedUsage( "Coming soon" );
+
+        return null;
+    }
+
+    //
+    // FindsByXPath Implementation
+    //
 
     public List<WebElement> findElementsByXPath(String paramString)
     {
@@ -103,16 +134,6 @@ public class Tn3270TerminalDriver
         }
 
         return rtn;
-    }
-  
-    public WebElement findElement(By paramBy)
-    {
-        if ( !( paramBy instanceof By.ByXPath ))
-        {
-            reportUnsupportedUsage( "Only element selection by XPath is available" );
-        }
-
-        return ((By.ByXPath) paramBy).findElement( this );
     }
 
     public WebElement findElementByXPath(String paramString)
@@ -250,7 +271,7 @@ public class Tn3270TerminalDriver
   
         public void submit()
         {
-            click();
+            context.sendKey( javafx.scene.input.KeyCode.ENTER );
         }
   
         public void sendKeys(CharSequence... paramVarArgs)
