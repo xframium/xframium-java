@@ -66,8 +66,12 @@ public class AppTest
             element.sendKeys("$000");
             element = driver.findElement( new By.ByXPath( "//screen[name='Login']/field[name='password']" ));
             element.sendKeys("music");
+            element.submit();
+
+            sleep(3000);
+            
             element = driver.findElement( new By.ByXPath( "//screen[name='SystemBanner']/link[name='ack']" ));
-            element.click();
+            element.submit();
 
             sleep(3000);
 
@@ -77,6 +81,7 @@ public class AppTest
             sleep(3000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='MainMenu']/link[name='work-with-file-system']" ));
+            element.sendKeys("3");
             element.click();
 
             sleep(3000);
@@ -86,7 +91,7 @@ public class AppTest
 
             sleep(3000);
 
-            element = driver.findElement( new By.ByXPath( "//screen[name='FileSystemHelp']/link[name='help-text']" ));
+            element = driver.findElement( new By.ByXPath( "//screen[name='FileSystemHelp']/field[name='help-text']" ));
 
             System.out.println( "Got text: " + element.getText() );
         }

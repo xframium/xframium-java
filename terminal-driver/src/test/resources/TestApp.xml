@@ -24,7 +24,7 @@
 
     <Screen name="FileSystemMenu">
       <Field name="option"> <Location line="3" column="21"/> </Field>
-      <Link name="file-system-help" screen="FileSystemHelp" > <Location line="3" column="21"/> </Link>
+      <Link name="file-system-help" screen="FileSystemHelp" > <Location line="13" column="21"/> </Link>
     </Screen>
 
      <Screen name="FileSystemHelp">

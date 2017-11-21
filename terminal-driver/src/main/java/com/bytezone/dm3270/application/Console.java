@@ -260,7 +260,7 @@ public class Console extends Application
     primaryStage.show ();
   }
 
-    protected Scene getConsoleScene()
+    public Scene getConsoleScene()
     {
         return consoleScene;
     }
