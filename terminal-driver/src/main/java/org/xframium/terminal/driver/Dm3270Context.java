@@ -4,10 +4,15 @@ import java.awt.Robot;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.util.*;
+import java.io.*;
 
 import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
+import javafx.scene.Scene;
 import com.sun.javafx.scene.input.KeyCodeMap;
+import javafx.scene.image.WritableImage;
+import javax.imageio.ImageIO;
+import javafx.embed.swing.SwingFXUtils;
 
 import com.bytezone.dm3270.application.*;
 import com.bytezone.dm3270.display.*;
@@ -182,6 +187,35 @@ public class Dm3270Context
         worker.doWait();
         
         return (ScreenDimensions) worker.getValue();
+    }
+
+    public void takeSnapShot(String fileName)
+    {
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void run()
+                {
+                    Scene scene = console.getConsoleScene();
+                    
+                    WritableImage writableImage = 
+                        new WritableImage((int)scene.getWidth(), (int)scene.getHeight());
+                    scene.snapshot(writableImage);
+         
+                    File file = new File(fileName);
+                    try
+                    {
+                        ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null), "png", file);
+                        System.out.println("snapshot saved: " + file.getAbsolutePath());
+                    }
+                    catch (IOException ex)
+                    {
+                        ex.printStackTrace();
+                    }
+                }
+            };
+
+        Platform.runLater( worker );
+        worker.doWait();
     }
 
     //

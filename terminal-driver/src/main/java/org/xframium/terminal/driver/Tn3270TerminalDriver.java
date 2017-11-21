@@ -104,7 +104,7 @@ public class Tn3270TerminalDriver
     // TakesScreenshot Implementation
     //
 
-    <X> X getScreenshotAs(OutputType<X> target)
+    public <X> X getScreenshotAs(OutputType<X> target)
         throws WebDriverException
     {
         reportUnsupportedUsage( "Coming soon" );
