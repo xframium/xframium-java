@@ -189,7 +189,7 @@ public class Dm3270Context
         return (ScreenDimensions) worker.getValue();
     }
 
-    public void takeSnapShot(String fileName)
+    public void takeSnapShot(OutputStream output)
     {
         JavaFxRunnable worker = new JavaFxRunnable()
             {
@@ -201,15 +201,18 @@ public class Dm3270Context
                         new WritableImage((int)scene.getWidth(), (int)scene.getHeight());
                     scene.snapshot(writableImage);
          
-                    File file = new File(fileName);
                     try
                     {
-                        ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null), "png", file);
-                        System.out.println("snapshot saved: " + file.getAbsolutePath());
+                        ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null), "png", output);
+                        System.out.println("snapshot saved");
                     }
                     catch (IOException ex)
                     {
                         ex.printStackTrace();
+                    }
+                    finally
+                    {
+                        doNotify();
                     }
                 }
             };

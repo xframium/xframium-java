@@ -107,9 +107,55 @@ public class Tn3270TerminalDriver
     public <X> X getScreenshotAs(OutputType<X> target)
         throws WebDriverException
     {
-        reportUnsupportedUsage( "Coming soon" );
+        X rtn = null;
+        OutputStream ostream = null;
+        File theFile = null;
+        ByteArrayOutputStream baos = null;
+        
+        try
+        {
+            if ( OutputType.FILE == target )
+            {
+                theFile = File.createTempFile(application.getName() + "-",
+                                              ".png",
+                                              new File( startup.getPathToImageFolder()));
+                ostream = new FileOutputStream( theFile );
+            }
+            else if ( OutputType.BYTES == target )
+            {
+                baos = new ByteArrayOutputStream();
+                ostream = baos;
+            }
+            else if ( OutputType.BASE64 == target )
+            {
+                baos = new ByteArrayOutputStream();
+                ostream = Base64.getEncoder().wrap( baos );
+            }
 
-        return null;
+            context.takeSnapShot( ostream );
+
+            ostream.flush();
+            ostream.close();
+
+            if ( OutputType.FILE == target )
+            {
+                rtn = (X) theFile;
+            }
+            else if ( OutputType.BYTES == target )
+            {
+                rtn = (X) baos.toByteArray();
+            }
+            else if ( OutputType.BASE64 == target )
+            {
+                rtn = (X) new String( baos.toByteArray() );
+            }
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace();
+        }
+            
+        return rtn;
     }
 
     //
@@ -211,14 +257,16 @@ public class Tn3270TerminalDriver
         private int terminalType;
         private String startScreen;
         private String pathToAppFile;
+        private String pathToImageFolder;
 
-        public StartupDetails( String host, int port, int terminalType, String startScreen, String pathToAppFile )
+        public StartupDetails( String host, int port, int terminalType, String startScreen, String pathToAppFile, String pathToImageFolder )
         {
             this.host = host;
             this.port = port;
             this.terminalType = terminalType;
             this.startScreen = startScreen;
             this.pathToAppFile = pathToAppFile;
+            this.pathToImageFolder = pathToImageFolder;
         }
 
         public String getHost() { return host; }
@@ -226,6 +274,7 @@ public class Tn3270TerminalDriver
         public int getTerminalType() { return terminalType; }
         public String getStartScreen() { return startScreen; }
         public String getPathToAppFile() { return pathToAppFile; }
+        public String getPathToImageFolder() { return pathToImageFolder; }
     }
 
     private class MyWebElement
