@@ -204,7 +204,6 @@ public class Dm3270Context
                     try
                     {
                         ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null), "png", output);
-                        System.out.println("snapshot saved");
                     }
                     catch (IOException ex)
                     {
@@ -214,6 +213,25 @@ public class Dm3270Context
                     {
                         doNotify();
                     }
+                }
+            };
+
+        Platform.runLater( worker );
+        worker.doWait();
+    }
+
+    public void setTerminalVisibility( boolean value )
+    {
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void run()
+                {
+                    if ( !value )
+                    {
+                        console.getPrimaryStage().hide();
+                    }
+                    
+                    doNotify();
                 }
             };
 

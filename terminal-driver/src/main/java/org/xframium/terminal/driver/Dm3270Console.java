@@ -43,6 +43,11 @@ public class Dm3270Console
         return screen;
     }
 
+    public ConsolePane getConsolePane()
+    {
+        return consolePane;
+    }
+
     public SceneRobot getRobot()
     {
         return new SceneRobot( getConsoleScene() );

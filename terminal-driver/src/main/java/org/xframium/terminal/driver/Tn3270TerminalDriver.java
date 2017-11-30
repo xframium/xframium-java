@@ -53,6 +53,7 @@ public class Tn3270TerminalDriver
         applicationRdeader = JXPathContext.newContext( application );
         workingApp = new ConsumedApplication( application );
         currentScreen = workingApp.getScreenByName( startup.getStartScreen() );
+        //context.setTerminalVisibility( startup.getDisplayEmulator() );
     }
     
     //
@@ -258,8 +259,15 @@ public class Tn3270TerminalDriver
         private String startScreen;
         private String pathToAppFile;
         private String pathToImageFolder;
+        private boolean displayEmulator;
 
-        public StartupDetails( String host, int port, int terminalType, String startScreen, String pathToAppFile, String pathToImageFolder )
+        public StartupDetails( String host,
+                               int port,
+                               int terminalType,
+                               String startScreen,
+                               String pathToAppFile,
+                               String pathToImageFolder,
+                               boolean displayEmulator )
         {
             this.host = host;
             this.port = port;
@@ -267,6 +275,7 @@ public class Tn3270TerminalDriver
             this.startScreen = startScreen;
             this.pathToAppFile = pathToAppFile;
             this.pathToImageFolder = pathToImageFolder;
+            this.displayEmulator = displayEmulator;
         }
 
         public String getHost() { return host; }
@@ -275,6 +284,7 @@ public class Tn3270TerminalDriver
         public String getStartScreen() { return startScreen; }
         public String getPathToAppFile() { return pathToAppFile; }
         public String getPathToImageFolder() { return pathToImageFolder; }
+        public boolean getDisplayEmulator() { return displayEmulator; }
     }
 
     private class MyWebElement

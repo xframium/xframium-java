@@ -52,7 +52,8 @@ public class AppTest
                                                           Integer.parseInt(props.getProperty("test.terminal.type")),
                                                           props.getProperty("test.app.start"),
                                                           props.getProperty("test.app.file"),
-                                                          props.getProperty("test.app.images"));
+                                                          props.getProperty("test.app.images"),
+                                                          Boolean.parseBoolean("test.terminal.visible"));
 
             Tn3270TerminalDriver driver = new Tn3270TerminalDriver( details );
 
@@ -96,7 +97,9 @@ public class AppTest
 
             System.out.println( "Got text: " + element.getText() );
 
-            ((TakesScreenshot) driver).getScreenshotAs( OutputType.FILE );
+            java.io.File theFile = ((TakesScreenshot) driver).getScreenshotAs( OutputType.FILE );
+
+            System.out.println("snapshot saved to: " + theFile.getAbsolutePath() );
         }
         catch( Throwable e )
         {
