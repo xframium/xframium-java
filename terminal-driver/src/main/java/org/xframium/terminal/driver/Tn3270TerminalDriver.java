@@ -45,6 +45,7 @@ public class Tn3270TerminalDriver
                                                                       false,
                                                                       "." );
         details = startup;
+        Utilities.setTerminalVisibility( startup.getDisplayEmulator() );
 
         context = new Dm3270Context( site );
         Utilities.setscreenDimensions( context.getScreenDimensions() );
@@ -53,7 +54,6 @@ public class Tn3270TerminalDriver
         applicationRdeader = JXPathContext.newContext( application );
         workingApp = new ConsumedApplication( application );
         currentScreen = workingApp.getScreenByName( startup.getStartScreen() );
-        //context.setTerminalVisibility( startup.getDisplayEmulator() );
     }
     
     //

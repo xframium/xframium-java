@@ -220,25 +220,6 @@ public class Dm3270Context
         worker.doWait();
     }
 
-    public void setTerminalVisibility( boolean value )
-    {
-        JavaFxRunnable worker = new JavaFxRunnable()
-            {
-                public void run()
-                {
-                    if ( !value )
-                    {
-                        console.getPrimaryStage().hide();
-                    }
-                    
-                    doNotify();
-                }
-            };
-
-        Platform.runLater( worker );
-        worker.doWait();
-    }
-
     //
     // Data Types
     //

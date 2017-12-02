@@ -41,6 +41,18 @@ public class Utilities
                           terminalLocation % screenDimensions.rows );
     }
 
+    public static void setTerminalVisibility( boolean value )
+    {
+        if ( !value )
+        {
+            System.setProperty("testfx.robot", "glass");
+            System.setProperty("testfx.headless", "true");
+            System.setProperty("prism.order", "sw");
+            System.setProperty("prism.text", "t2k");
+            System.setProperty("java.awt.headless", "true");
+        }
+    }
+
     //
     // Helpers
     //
