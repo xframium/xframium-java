@@ -504,16 +504,19 @@ public class SeleniumElement extends AbstractElement
                 }
                 else if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver )
                 {
-                    int x = webElement.getLocation().getX() + (webElement.getSize().getWidth() / 2);
-                    int y = webElement.getLocation().getY() + (webElement.getSize().getHeight() / 2);
+                    double x = webElement.getLocation().getX() + (webElement.getSize().getWidth() / 2);
+                    double y = webElement.getLocation().getY() + (webElement.getSize().getHeight() / 2);
 
+                    int percentX = (int) ( x / getWebDriver().manage().window().getSize().getWidth() * 100.0 );
+                    int percentY = (int) ( y / getWebDriver().manage().window().getSize().getHeight() * 100.0 );
+                    
                     try
                     {
                         new TouchActions( getWebDriver() ).longPress( webElement ).build().perform();
                     }
                     catch ( Exception e )
                     {
-                        ((DeviceWebDriver) getWebDriver()).getCloud().getCloudActionProvider().tap( (DeviceWebDriver) getWebDriver(), new PercentagePoint( x, y, false ), length );
+                        ((DeviceWebDriver) getWebDriver()).getCloud().getCloudActionProvider().tap( (DeviceWebDriver) getWebDriver(), new PercentagePoint( percentX, percentY, true  ), length );
                     }
 
                 }
