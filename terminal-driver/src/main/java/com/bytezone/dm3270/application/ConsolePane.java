@@ -393,4 +393,12 @@ public class ConsolePane extends BorderPane
     setStatusText (evt.keyboardLocked ? evt.keyName : "       ");
     insertMode.setText (evt.insertMode ? "Insert" : "      ");
   }
+
+    public void setHidden( boolean val )
+    {
+        setVisible( val );
+        menuBar.setVisible( val );
+        screen.setVisible( val );
+        statusPane.setVisible( val );
+    }
 }

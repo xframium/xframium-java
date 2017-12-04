@@ -318,6 +318,11 @@ public class Console extends Application
         return keyPressHandler;
     }
 
+    public Stage getPrimaryStage()
+    {
+        return primaryStage;
+    }
+
   private void savePreferences ()
   {
     prefs.put ("Function",

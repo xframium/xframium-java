@@ -51,16 +51,18 @@ public class AppTest
                                                           Integer.parseInt(props.getProperty("test.terminal.port")),
                                                           Integer.parseInt(props.getProperty("test.terminal.type")),
                                                           props.getProperty("test.app.start"),
-                                                          props.getProperty("test.app.file") );
+                                                          props.getProperty("test.app.file"),
+                                                          props.getProperty("test.app.images"),
+                                                          Boolean.parseBoolean("test.terminal.visible"));
 
             Tn3270TerminalDriver driver = new Tn3270TerminalDriver( details );
 
-            sleep(3000);
+            sleep(1000);
 
             WebElement element = driver.findElement( new By.ByXPath( "//screen[name='SystemBanner']/link[name='ack']" ));
             element.click();
 
-            sleep(3000);
+            sleep(1000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='Login']/field[name='username']" ));
             element.sendKeys("$000");
@@ -68,32 +70,36 @@ public class AppTest
             element.sendKeys("music");
             element.submit();
 
-            sleep(3000);
+            sleep(1000);
             
             element = driver.findElement( new By.ByXPath( "//screen[name='SystemBanner']/link[name='ack']" ));
             element.submit();
 
-            sleep(3000);
+            sleep(1000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='ABlankScreen']/link[name='ack']" ));
             element.click();
 
-            sleep(3000);
+            sleep(1000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='MainMenu']/link[name='work-with-file-system']" ));
             element.sendKeys("3");
             element.click();
 
-            sleep(3000);
+            sleep(1000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='FileSystemMenu']/link[name='file-system-help']" ));
             element.click();
 
-            sleep(3000);
+            sleep(1000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='FileSystemHelp']/field[name='help-text']" ));
 
             System.out.println( "Got text: " + element.getText() );
+
+            java.io.File theFile = ((TakesScreenshot) driver).getScreenshotAs( OutputType.FILE );
+
+            System.out.println("snapshot saved to: " + theFile.getAbsolutePath() );
         }
         catch( Throwable e )
         {
