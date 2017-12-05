@@ -16,26 +16,31 @@ public class Dm3270Console
     @Override
     public void startPartTwo() throws Exception
     {
-        //
-        // JavaFX doesn't have an easy way to get access to the add once launched, so we'll grab
-        // a referecne as we pass through our code
-        //
-
-    	theContext.setConsole( this );
-
-        //
-        // OK, initialize the UI
-        //
+        try
+        {
+            //
+            // JavaFX doesn't have an easy way to get access to the add once launched, so we'll grab
+            // a referecne as we pass through our code
+            //
             
-        setModel (theSite);
-        setConsolePane (createScreen (Console.Function.TERMINAL, theSite), theSite);
-        consolePane.connect ();
-
-        //
-        // OK, we're started now
-        //
-
-        notifyOfStartup();
+            theContext.setConsole( this );
+            
+            //
+            // OK, initialize the UI
+            //
+            
+            setModel (theSite);
+            setConsolePane (createScreen (Console.Function.TERMINAL, theSite), theSite);
+            consolePane.connect ();
+        }
+        finally
+        {   
+            //
+            // OK, we're started now
+            //
+               
+            notifyOfStartup();
+        }
     }
 
     public Screen getScreen()

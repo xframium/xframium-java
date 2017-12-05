@@ -53,7 +53,7 @@ public class AppTest
                                                           props.getProperty("test.app.start"),
                                                           props.getProperty("test.app.file"),
                                                           props.getProperty("test.app.images"),
-                                                          Boolean.parseBoolean("test.terminal.visible"));
+                                                          Boolean.parseBoolean(props.getProperty("test.terminal.visible")));
 
             Tn3270TerminalDriver driver = new Tn3270TerminalDriver( details );
 
