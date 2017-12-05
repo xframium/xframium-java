@@ -232,7 +232,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 break;
                 
             case "LOCAL":
-                CloudDescriptor cloud = new CloudDescriptor( xRoot.getCloud().getName(), secured ? EncryptedCloudProvider.decryptValue( xRoot.getCloud().getUserName() ) : xRoot.getCloud().getUserName(), secured ? EncryptedCloudProvider.decryptValue( xRoot.getCloud().getPassword() ) : xRoot.getCloud().getPassword(), xRoot.getCloud().getHostName(), xRoot.getCloud().getProxyHost(), xRoot.getCloud().getProxyPort().intValue() + "", "", xRoot.getCloud().getGrid(), xRoot.getCloud().getProviderType(), xRoot.getCloud().getGesture(), xRoot.getCloud().getDeviceAction() );
+                CloudDescriptor cloud = new CloudDescriptor( xRoot.getCloud().getName(), EncryptedCloudProvider.decryptValue( xRoot.getCloud().getUserName() ), EncryptedCloudProvider.decryptValue( xRoot.getCloud().getPassword() ), xRoot.getCloud().getHostName(), xRoot.getCloud().getProxyHost(), xRoot.getCloud().getProxyPort().intValue() + "", "", xRoot.getCloud().getGrid(), xRoot.getCloud().getProviderType(), xRoot.getCloud().getGesture(), xRoot.getCloud().getDeviceAction() );
                 cC.setCloudList( new ArrayList<CloudDescriptor>( 10 ) );
                 cC.getCloudList().add( cloud );
                 break;
