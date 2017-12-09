@@ -22,7 +22,7 @@
     </device>
     <device browserVersion="53" browserName="Chrome" os="Windows" osVersion="10" model="chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Windows 10 Chrome 53" cloud="perfecto" active="false" />
   </devices>
-  <driver type="WEB" outputFolder="test-output" displayResults="true">
+  <driver type="WEB" outputFolder="test-output" displayResults="true" testNames="Exists Test,Alert Text">
     <artifact type="FAILURE_SOURCE" />
     <artifact type="DEVICE_LOG" />
     <artifact type="IMAGING_ANALYSIS" />
