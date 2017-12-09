@@ -83,7 +83,6 @@ public class SpyServer implements Runnable
       serverTelnetSocket.link (clientTelnetSocket);
 
       // stop the session from using tn3270E mode?
-      System.out.printf ("Prevent 3270E: %s%n", prevent3270E);
       serverTelnetSocket.prevent3270E (prevent3270E);
 
       // start up the two listeners, each in its own thread 
@@ -100,7 +99,7 @@ public class SpyServer implements Runnable
     }
     catch (SocketException e)     // caused by closing the clientServerSocket
     {
-      System.out.println ("tata");
+      e.printStackTrace ();
       close ();
     }
     catch (IOException e)

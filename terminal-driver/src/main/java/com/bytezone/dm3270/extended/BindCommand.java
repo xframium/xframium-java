@@ -117,26 +117,19 @@ public class BindCommand extends AbstractExtendedCommand
       userDataLength = data[userDataOffset] & 0xFF;
       extraBytes = data.length - userDataOffset - userDataLength - 1;
 
-      System.out.printf ("Data:%d, ns:%d, pLU:%d, user:%d, extra:%d%n", data.length,
-                         nsOffset, primaryLuNameLength, userDataLength, extraBytes);
-
       if (extraBytes > 0)
       {
-        System.out.println ();
         int ptr = userDataOffset + userDataLength + 1;
         while (ptr < data.length)
         {
           int len = data[ptr] & 0xFF;
           String userData = Dm3270Utility.getSanitisedString (data, ptr + 1, len);
-          System.out.printf ("ptr:%d, len:%d, [%s]%n", ptr, len, userData);
           ptr += len + 1;
         }
       }
-      System.out.println ();
     }
     else
     {
-      System.out.println ("profile: " + psProfile);
       privateOptions = 0;
       sessionOptions = 0;
       sessionOptionsLength = 0;

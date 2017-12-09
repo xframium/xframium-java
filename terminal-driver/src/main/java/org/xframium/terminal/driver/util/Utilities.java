@@ -29,8 +29,6 @@ public class Utilities
         int lineNum = location.getLine().intValue();
         int colNum = location.getColumn().intValue();
         int termLoc = (( lineNum * screenDimensions.columns ) + colNum );
-
-        System.out.println( "Term Loc: " + lineNum + " * " + screenDimensions.columns + " + " + colNum + " = " + termLoc );
         
         return termLoc;
     }

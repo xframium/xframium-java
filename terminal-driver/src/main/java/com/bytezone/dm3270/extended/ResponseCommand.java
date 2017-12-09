@@ -8,9 +8,6 @@ public class ResponseCommand extends AbstractExtendedCommand
       int length)
   {
     super (commandHeader, buffer, offset, length);
-
-    if (length != 1)
-      System.out.println (Dm3270Utility.toHex (buffer, offset, length));
   }
 
   @Override

@@ -96,7 +96,6 @@ public class TelnetSocket implements Runnable
         bytesRead = inputStream.read (buffer);      // blocks
         if (bytesRead == -1)
         {
-          System.out.println (name + " has no data on input stream");
           close ();
           return;
         }
@@ -130,7 +129,6 @@ public class TelnetSocket implements Runnable
       }
     }
 
-    System.out.println (name + " closing - bye everyone");
     close ();
   }
 

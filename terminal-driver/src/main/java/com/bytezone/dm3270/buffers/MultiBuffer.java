@@ -32,11 +32,10 @@ public class MultiBuffer implements Buffer
     int ptr = 0;
     for (Buffer buffer : buffers)
     {
-      System.out.println (Dm3270Utility.toHex (buffer.getData ()));
       System.arraycopy (buffer.getData (), 0, data, ptr, buffer.size ());
       ptr += buffer.size ();
     }
-    System.out.println (Dm3270Utility.toHex (data));
+    
     return data;
   }
 

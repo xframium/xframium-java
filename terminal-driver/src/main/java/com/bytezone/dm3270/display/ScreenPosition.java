@@ -239,8 +239,6 @@ public final class ScreenPosition
       for (Attribute attribute : attributes)
         ptr = attribute.pack (buffer, ptr);
     }
-    else
-      System.out.println ("I should throw an exception here");
 
     return ptr;
   }

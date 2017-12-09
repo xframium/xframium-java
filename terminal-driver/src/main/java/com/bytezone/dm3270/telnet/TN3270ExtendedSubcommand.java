@@ -195,7 +195,7 @@ public class TN3270ExtendedSubcommand extends TelnetSubcommand
         break;
 
       default:
-        System.out.println ("Unknown subtype: " + subType);
+          //System.out.println ("Unknown subtype: " + subType);
         break;
     }
   }

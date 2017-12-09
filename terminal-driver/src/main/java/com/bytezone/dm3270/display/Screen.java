@@ -503,7 +503,6 @@ public class Screen extends Canvas
     if (alternate.size > 0 && alternateScreenDimensions == null)
     {
       alternateScreenDimensions = alternate;
-      System.out.println ("setting alternate dimensions: " + alternate);
     }
   }
 

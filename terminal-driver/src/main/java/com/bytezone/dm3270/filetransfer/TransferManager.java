@@ -77,8 +77,7 @@ public class TransferManager implements TSOCommandListener
       {
         if (localFile == null || !localFile.exists () || !localFile.isFile ())
         {
-          System.out.println ("******** No file to read ********");
-          return;
+            return;
         }
         try
         {

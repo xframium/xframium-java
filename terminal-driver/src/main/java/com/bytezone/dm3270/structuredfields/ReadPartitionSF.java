@@ -39,7 +39,6 @@ public class ReadPartitionSF extends StructuredField
 
       // can only be RB/RM/RMA (i.e. one of the read commands)
       command = Command.getCommand (buffer, offset + 2, length - 2);
-      System.out.println ("RB/RM/RMA: " + command);
     }
   }
 
@@ -66,7 +65,6 @@ public class ReadPartitionSF extends StructuredField
         setReply (opt.get ());
       else
         setReply (null);
-      System.out.println ("testing read command reply");
     }
   }
 

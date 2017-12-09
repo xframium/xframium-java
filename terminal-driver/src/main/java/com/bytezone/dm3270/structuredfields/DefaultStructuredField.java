@@ -8,13 +8,12 @@ public class DefaultStructuredField extends StructuredField
   public DefaultStructuredField (byte[] buffer, int offset, int length)
   {
     super (buffer, offset, length);
-    System.out.println ("Default Structured Field !!");
   }
 
   @Override
   public void process (Screen screen)
   {
-    System.out.printf ("Processing a DefaultStructuredField: %02X%n", type);
+
   }
 
   @Override

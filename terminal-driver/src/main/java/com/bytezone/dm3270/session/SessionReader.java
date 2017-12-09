@@ -200,7 +200,6 @@ public class SessionReader
       {
         if (client.nextLineNo () < server.nextLineNo ())
         {
-          System.out.println ("-----------------< Client >--------------------");
           while (client.nextLineNo () < server.nextLineNo ())
             if (mode == 1)
               print (client.getBufferLines ());
@@ -209,7 +208,6 @@ public class SessionReader
         }
         else
         {
-          System.out.println ("-----------------< Server >--------------------");
           while (server.nextLineNo () < client.nextLineNo ())
             if (mode == 1)
               print (server.getBufferLines ());
@@ -220,7 +218,7 @@ public class SessionReader
     }
     catch (Exception e)
     {
-      System.out.println ("Exception reading file");
+        System.out.println(e);
     }
   }
 

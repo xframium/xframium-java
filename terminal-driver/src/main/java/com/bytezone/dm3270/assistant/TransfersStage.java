@@ -182,9 +182,6 @@ public class TransfersStage extends Stage implements ScreenChangeListener,
   @Override
   public void transferStatusChanged (TransferStatus status, Transfer transfer)
   {
-    System.out.printf ("Status ......... %s%n", status);
-    System.out.println (transfer);
-    System.out.println ();
     if (status == TransferStatus.FINISHED && transfer.isDownloadAndIsData ())
       Platform.runLater ( () -> update (status, transfer));
   }

@@ -198,7 +198,7 @@ public class Console extends Application
   protected void setModel (ISite serverSite)
   {
     int model = serverSite.getModel ();
-    System.out.println ("model: " + model);
+    
     switch (model)
     {
       case 2:

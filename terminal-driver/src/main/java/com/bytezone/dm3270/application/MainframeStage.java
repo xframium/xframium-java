@@ -192,8 +192,7 @@ public class MainframeStage extends Stage implements Mainframe
         .getResourceAsStream ("com/bytezone/dm3270/application/mf.txt");
     if (in == null)
     {
-      System.out.println ("mf.txt not found");
-      return;
+        return;
     }
 
     BufferedReader reader = new BufferedReader (new InputStreamReader (in));

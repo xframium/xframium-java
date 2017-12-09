@@ -79,9 +79,8 @@ public class Dm3270Context
             {
                 public void run()
                 {
-                    System.out.println( "\n Before Location: " + console.getScreen().getScreenCursor().getLocation());
                     console.getScreen().getScreenCursor().moveTo( location );
-                    System.out.println( "\n After Location: " + console.getScreen().getScreenCursor().getLocation());
+                 
                     doNotify();
                 }
             };
