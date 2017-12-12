@@ -2,6 +2,8 @@ package org.xframium.terminal.driver;
 
 import javafx.scene.Scene;
 
+import org.apache.commons.logging.*;
+
 import com.bytezone.dm3270.application.*;
 import com.bytezone.dm3270.display.*;
 import org.xframium.terminal.driver.util.SceneRobot;
@@ -9,6 +11,16 @@ import org.xframium.terminal.driver.util.SceneRobot;
 public class Dm3270Console
     extends Console
 {
+    //
+    // Class Data
+    //
+
+    private static Log log = LogFactory.getLog( Dm3270Console.class );
+
+    //
+    // Instance Data
+    //
+    
     private static Dm3270Context.Dm3270Site theSite = null;
     private static Dm3270Context theContext = null;
     private static Object monitor = new Object();
@@ -77,7 +89,7 @@ public class Dm3270Console
     	}
     	catch( Exception e )
     	{
-            e.printStackTrace();
+            log.error( "Start notification failed with: ", e );
     	}
     }
 

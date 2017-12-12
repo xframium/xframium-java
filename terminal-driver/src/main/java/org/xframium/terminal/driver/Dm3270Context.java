@@ -14,6 +14,8 @@ import javafx.scene.image.WritableImage;
 import javax.imageio.ImageIO;
 import javafx.embed.swing.SwingFXUtils;
 
+import org.apache.commons.logging.*;
+
 import com.bytezone.dm3270.application.*;
 import com.bytezone.dm3270.display.*;
 import com.bytezone.dm3270.utilities.Dm3270Utility;
@@ -21,6 +23,16 @@ import org.xframium.terminal.driver.util.SceneRobot;
 
 public class Dm3270Context
 {
+    //
+    // Class Data
+    //
+
+    private static Log log = LogFactory.getLog( Tn3270TerminalDriver.class );
+
+    //
+    // Instance Data
+    //
+    
     private Dm3270Site theSite;
     private Dm3270Console console;
     private boolean running = true;
@@ -43,7 +55,7 @@ public class Dm3270Context
         }
         catch( Exception e)
         {
-            e.printStackTrace();
+            log.error( "Robot init failed with: ", e );
         }
     }
 
@@ -206,7 +218,7 @@ public class Dm3270Context
                     }
                     catch (IOException ex)
                     {
-                        ex.printStackTrace();
+                        log.error( "Snapshot failed with: ", ex );
                     }
                     finally
                     {

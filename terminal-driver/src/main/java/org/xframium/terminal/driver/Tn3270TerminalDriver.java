@@ -6,6 +6,7 @@ import javax.xml.bind.*;
 
 import org.openqa.selenium.*;
 import org.apache.commons.jxpath.*;
+import org.apache.commons.logging.*;
 
 import org.xframium.terminal.driver.screen.model.*;
 import org.xframium.terminal.driver.util.*;
@@ -21,6 +22,7 @@ public class Tn3270TerminalDriver
     //
 
     private static final String RETURN = "\n";
+    private static Log log = LogFactory.getLog( Tn3270TerminalDriver.class );
     
     //
     // Instance Data
@@ -111,6 +113,7 @@ public class Tn3270TerminalDriver
         X rtn = null;
         OutputStream ostream = null;
         File theFile = null;
+        String theFileName = null;
         ByteArrayOutputStream baos = null;
         
         try
@@ -120,6 +123,7 @@ public class Tn3270TerminalDriver
                 theFile = File.createTempFile(application.getName() + "-",
                                               ".png",
                                               new File( startup.getPathToImageFolder()));
+                theFileName = theFile.getCanonicalPath();
                 ostream = new FileOutputStream( theFile );
             }
             else if ( OutputType.BYTES == target )
@@ -153,8 +157,11 @@ public class Tn3270TerminalDriver
         }
         catch( Exception e )
         {
-            e.printStackTrace();
+            log.error( "Screenshot failed with: ", e );
         }
+
+        if ( log.isDebugEnabled() )
+            log.debug( "Screenshot saved to: " + (( theFile != null ) ? theFileName : "output buffer" ));
             
         return rtn;
     }
@@ -326,11 +333,17 @@ public class Tn3270TerminalDriver
         {
             context.setLocation( Utilities.asTerminalLocation( location ));
             context.sendKey( javafx.scene.input.KeyCode.ENTER );
+
+            if ( log.isDebugEnabled() )
+                log.debug( "Click on: " + dumpContext() );
         }
   
         public void submit()
         {
             context.sendKey( javafx.scene.input.KeyCode.ENTER );
+
+            if ( log.isDebugEnabled() )
+                log.debug( "Submit on: " + dumpContext() );
         }
   
         public void sendKeys(CharSequence... paramVarArgs)
@@ -341,6 +354,9 @@ public class Tn3270TerminalDriver
             {
                 context.sendChars( seq );
             }
+
+            if ( log.isDebugEnabled() )
+                log.debug( "Typed in: " + dumpContext() );
         }
   
         public void clear()
@@ -410,8 +426,23 @@ public class Tn3270TerminalDriver
 
         @Override
         public <X> X getScreenshotAs(OutputType<X> arg0) throws WebDriverException {
-            // TODO Auto-generated method stub
-            return null;
+            return Tn3270TerminalDriver.this.getScreenshotAs( arg0 );
+        }
+
+        //
+        // Helpers
+        //
+
+        private String dumpContext()
+        {
+            StringBuilder buffer = new StringBuilder();
+
+            buffer.append( (( field != null ) ? "Field: " + field.getName() :
+                            (( link != null ) ? "Link: " + link.getName() :
+                             (( action != null ) ? "Action: " + action.getName() : "??? " ))));
+            buffer.append( "[ " ).append( location.getLine() ).append("/").append( location.getColumn() ).append( " ]" );
+
+            return buffer.toString();
         }
     }
 
