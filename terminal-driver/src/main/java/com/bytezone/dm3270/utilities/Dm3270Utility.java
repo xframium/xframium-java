@@ -192,12 +192,12 @@ public class Dm3270Utility
   
   public static void hexDump(byte[] b, int offset, int length)
   {
-    System.out.println(toHex(b, offset, length));
+      System.out.println(toHex(b, offset, length));
   }
   
   public static void hexDump(byte[] b, int offset, int length, boolean ebcdic)
   {
-    System.out.println(toHex(b, offset, length, ebcdic));
+      System.out.println(toHex(b, offset, length, ebcdic));
   }
   
   public static String toHexString(byte[] buffer)

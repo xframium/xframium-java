@@ -118,8 +118,6 @@ public class Dm3270Context
                         KeyCode code = KeyCodeMap.valueOf(KeyEvent.getExtendedKeyCodeForChar( (int) ch ));
 
                         robot.delay(40);
-                        //robot.keyPress(code);
-                        //robot.keyRelease(code);
 
                         console.getScreen().getScreenCursor().typeChar( (byte) Dm3270Utility.asc2ebc[ch] );
                         

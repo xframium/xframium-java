@@ -31,7 +31,7 @@ public class Dm3270Console
         try
         {
             //
-            // JavaFX doesn't have an easy way to get access to the add once launched, so we'll grab
+            // JavaFX doesn't have an easy way to get access to the app once launched, so we'll grab
             // a referecne as we pass through our code
             //
             

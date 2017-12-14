@@ -52,7 +52,7 @@ public class Tn3270TerminalDriver
         context = new Dm3270Context( site );
         Utilities.setscreenDimensions( context.getScreenDimensions() );
         
-        application = loadApplication( startup.getPathToAppFile() );
+        application = loadApplication( startup.getPathToAppFile(), startup.getAppName() );
         applicationRdeader = JXPathContext.newContext( application );
         workingApp = new ConsumedApplication( application );
         currentScreen = workingApp.getScreenByName( startup.getStartScreen() );
@@ -265,6 +265,7 @@ public class Tn3270TerminalDriver
         private int terminalType;
         private String startScreen;
         private String pathToAppFile;
+        private String appName;
         private String pathToImageFolder;
         private boolean displayEmulator;
 
@@ -273,6 +274,7 @@ public class Tn3270TerminalDriver
                                int terminalType,
                                String startScreen,
                                String pathToAppFile,
+                               String appName,
                                String pathToImageFolder,
                                boolean displayEmulator )
         {
@@ -281,6 +283,7 @@ public class Tn3270TerminalDriver
             this.terminalType = terminalType;
             this.startScreen = startScreen;
             this.pathToAppFile = pathToAppFile;
+            this.appName = appName;
             this.pathToImageFolder = pathToImageFolder;
             this.displayEmulator = displayEmulator;
         }
@@ -291,6 +294,7 @@ public class Tn3270TerminalDriver
         public String getStartScreen() { return startScreen; }
         public String getPathToAppFile() { return pathToAppFile; }
         public String getPathToImageFolder() { return pathToImageFolder; }
+        public String getAppName() { return appName; }
         public boolean getDisplayEmulator() { return displayEmulator; }
     }
 
@@ -532,7 +536,7 @@ public class Tn3270TerminalDriver
     // Helpers
     //
 
-    private Application loadApplication( String pathToFile )
+    private Application loadApplication( String pathToFile, String name )
     {
         Application rtn = null;
         FileReader reader = null;
@@ -547,13 +551,27 @@ public class Tn3270TerminalDriver
             JAXBElement<?> rootElement = (JAXBElement<?>)un.unmarshal( reader );
             RegistryRoot rRoot = (RegistryRoot)rootElement.getValue();
 
-            rtn = rRoot.getApplication().get(0);
+            Iterator<Application> apps = rRoot.getApplication().iterator();
+            while(( rtn == null ) && ( apps.hasNext() ))
+            {
+                Application app = apps.next();
+
+                if ( app.getName().equals( name ))
+                {
+                    rtn = app;
+                }
+            }
 
             reader.close();
         }
         catch ( Exception e )
         {
             e.printStackTrace();
+        }
+
+        if ( rtn == null )
+        {
+            throw new IllegalStateException( "Application: " + name + " is not found" );
         }
 
         return rtn;

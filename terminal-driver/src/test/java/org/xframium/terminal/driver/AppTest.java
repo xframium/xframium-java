@@ -52,6 +52,7 @@ public class AppTest
                                                           Integer.parseInt(props.getProperty("test.terminal.type")),
                                                           props.getProperty("test.app.start"),
                                                           props.getProperty("test.app.file"),
+                                                          props.getProperty("test.app.name"),
                                                           props.getProperty("test.app.images"),
                                                           Boolean.parseBoolean(props.getProperty("test.terminal.visible")));
 
