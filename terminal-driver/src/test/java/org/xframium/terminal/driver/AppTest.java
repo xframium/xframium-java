@@ -58,12 +58,12 @@ public class AppTest
 
             Tn3270TerminalDriver driver = new Tn3270TerminalDriver( details );
 
-            sleep(1000);
+            sleep(3000);
 
             WebElement element = driver.findElement( new By.ByXPath( "//screen[name='SystemBanner']/link[name='ack']" ));
             element.click();
 
-            sleep(1000);
+            sleep(3000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='Login']/field[name='username']" ));
             element.sendKeys("$000");
@@ -71,28 +71,24 @@ public class AppTest
             element.sendKeys("music");
             element.submit();
 
-            sleep(1000);
+            sleep(3000);
             
-            element = driver.findElement( new By.ByXPath( "//screen[name='SystemBanner']/link[name='ack']" ));
+            element = driver.findElement( new By.ByXPath( "//screen[name='ABlankScreen']/field[name='menu-entry']" ));
+            element.sendKeys("admin");
             element.submit();
 
-            sleep(1000);
+            sleep(3000);
 
-            element = driver.findElement( new By.ByXPath( "//screen[name='ABlankScreen']/link[name='ack']" ));
-            element.click();
-
-            sleep(1000);
-
-            element = driver.findElement( new By.ByXPath( "//screen[name='MainMenu']/link[name='work-with-file-system']" ));
+            element = driver.findElement( new By.ByXPath( "//screen[name='AdminMenu']/link[name='work-with-file-system']" ));
             element.sendKeys("3");
             element.click();
 
-            sleep(1000);
+            sleep(3000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='FileSystemMenu']/link[name='file-system-help']" ));
             element.click();
 
-            sleep(1000);
+            sleep(3000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='FileSystemHelp']/field[name='help-text']" ));
 

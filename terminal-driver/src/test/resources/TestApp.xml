@@ -15,9 +15,10 @@
 
     <Screen name="ABlankScreen">
       <Link name="ack" screen="MainMenu" > <Location line="1" column="1"/> </Link>
+      <Field name="menu-entry"> <Location line="22" column="0"/> </Field>
     </Screen>
 
-    <Screen name="MainMenu">
+    <Screen name="AdminMenu">
       <Field name="option"> <Location line="3" column="21"/> </Field>
       <Link name="work-with-file-system" screen="FileSystemMenu" > <Location line="3" column="21"/> </Link>
     </Screen>
