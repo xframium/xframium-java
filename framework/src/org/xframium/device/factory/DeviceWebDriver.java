@@ -71,6 +71,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xframium.application.ApplicationDescriptor;
+import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.interrupt.DeviceInterrupt;
@@ -1102,6 +1103,9 @@ public class DeviceWebDriver
 
         currentContext = _getContext();
 
+        if ( currentContext == null )
+            currentContext = getPopulatedDevice().getDriverType();
+        
         return currentContext;
     }
 

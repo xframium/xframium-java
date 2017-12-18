@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applicationRegistry xmlns="http://www.xframium.org/applicationRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/applicationRegistry http://www.xframium.org/xsd/deviceManagement/applicationRegistry.xsd">
+
+	<application name="DeVry_app" appPackage="com.devry.mobileapps.devry" bundleId="edu.devry.mobile" iosInstall="GROUP:iOS\DeVry 5.4.0_20170208.ipa" androidInstall="GROUP:APK\app-devry-debug-test.apk" />
+	<application name="Keller_app" appPackage="com.devry.mobileapps.keller" bundleId="edu.keller.mobile" iosInstall="GROUP:iOS\Keller 5.4.0_20170208.ipa" androidInstall="GROUP:APK\app-keller-debug-test.apk"/>
+ 	<application name="Chamberlain_app" appPackage="com.devry.mobileapps.chamberlain" bundleId="edu.chamberlain.mobile" iosInstall="GROUP:iOS\Chamberlain 5.4.0_20170211.ipa" androidInstall="GROUP:APK\app-chamberlain-debug-test.apk"/>
+	<application name="RossMed_app" appPackage="com.devry.mobileapps.rossmed" bundleId="edu.rossmed.mobile" iosInstall="GROUP:iOS\RossMed 5.4.0_20170211.ipa" androidInstall="GROUP:APK\app-rossmed-debug-test.apk"/>
+	<application name="Safari_app" appPackage="com.devry.mobileapps.keller" bundleId="com.apple.mobilesafari" iosInstall="GROUP:iOS\Keller 5.4.0_20170208.ipa" androidInstall="GROUP:APK\app-keller-debug-test.apk"/>
+	<application name="RossVet_app" appPackage="com.devry.mobileapps.rossvet" bundleId="edu.rossvet.mobile" iosInstall="GROUP:iOS\RossVet 5.4.0_20170211.ipa" androidInstall="GROUP:APK\app-rossvet-debug-test.apk"/>
+ 	<application name="Carrington_app" appPackage="com.devry.mobileapps.carrington" bundleId="edu.carrington.mobile" iosInstall="GROUP:iOS\Carrington 5.4.0_20170211.ipa" androidInstall="GROUP:APK\app-carrington-debug-test.apk"/>
+	<application name="AUC_app" appPackage="com.devry.mobileapps.aucmed" bundleId="edu.aucmed.mobile" iosInstall="GROUP:iOS\AUC 5.4.0_20170211.ipa" androidInstall="GROUP:APK\app-aucmed-debug-test.apk"/>  
+
+	<application name="DVU_Web_Portal" url="https://my.tst2.devry.edu" />
+	<application name="KEL_Web_Portal" url="https://my.tst2.keller.edu" />      
+	<application name="AUC_Web_Portal" url="https://my.tst2.aucmed.edu" />      
+	<application name="CCN_Web_Portal" url="https://my.tst2.chamberlain.edu" />      	
+	<application name="RossMed_Web_Portal" url="https://my.tst2.rossmed.edu" /> 
+    <application name="RossVet_Web_Portal" url="https://my.tst2.rossu.edu" />  
+	<application name="CAR_Web_Portal" url="http://my.tst2.carrington.edu" />
+	<application name="DeVry_Canvas_Web_Portal" url="https://my.dev2.devry.edu/home" /> 	
+</applicationRegistry>
+
+
+ <!--  	<capability name="windTunnelPersonaKey">PUBLIC:Personas\AUC.json</capability> 
+   </application>
+   <application name="AUCwebPersona" url="http://www.aucmed.edu">
+ 		<capability name="windTunnelPersonaKey">PUBLIC:Personas\AUC.json</capability>
+   </application>
+   <application name="DeVryPersona" appPackage="edu.devry.mobile" bundleId="edu.devry.mobile" iosInstall="" androidInstall="" >
+  		<capability name="windTunnelPersonaKey">PUBLIC:Personas\AUC.json</capability>
+   </application> -->
+

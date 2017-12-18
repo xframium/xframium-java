@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cloudRegistry xmlns="http://www.xframium.org/cloudRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/cloudRegistry http://www.xframium.org/xsd/deviceManagement/cloudRegistry.xsd">
+<!-- Per Allen Geary, the grid=embedded attribute will cause an embedded Selenium server to be launched at build time.  This does
+not work.  That attribute and been deprecated in xFramium.-->   
+<!--<cloud name="DeVryPerfecto" userName="devrytester@gmail.com" password="Automation" hostName="devry.perfectomobile.com" proxyHost="" grid="EMBEDDED" />  -->
+   <cloud name="DeVryPerfecto" userName="devrytester@gmail.com" password="Automation" hostName="devry.perfectomobile.com" proxyHost="" />   
+</cloudRegistry>
+

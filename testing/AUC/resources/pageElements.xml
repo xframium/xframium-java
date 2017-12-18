@@ -1,0 +1,1785 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
+
+	<site name="DeVry">
+	
+		<page name="Home">
+			<element name="MENU_LINK" descriptor="XPATH" value="//*[@class='left menu-button']//*[@class='menu-icon']|//UIAWebView/UIALink[1]" />
+			<element name="SIGN_IN" descriptor="XPATH" value="//UIAStaticText[@name='Sign In']|//*[contains(@content-desc='Sign In Sign in with your Student UserID (D#) and password ')]"/>
+			<element name="HOME" descriptor="XPATH" value="//UIAWebView//*[@name='HOME']|//*[@content-desc='HOME']" />
+			<element name="LOGO" descriptor="XPATH" value="//UIAWebView//UIAImage|//*[@class='android.widget.Image']" />
+			<element name="MESSAGES" descriptor="XPATH" value="//UIAStaticText[@label='Messages']" />
+			<element name="HOME_TEXT" descriptor="V_TEXT" value="University" />									
+			<element name="ALERT_OK" descriptor="XPATH" value="//UIAButton[@name='OK']|//*[contains(@resource-id,'com.devry.mobileapps') and contains(@resource-id,'id/positive')]|//*[@text='OK']" />
+			<element name="GO2CLASS" descriptor="XPATH" value="//UIAStaticText[@name='Go To Class']|//*[@content-desc='Go To Class']|//*[@text='GO TO CLASS']" />
+			<element name="SCHEDULE" descriptor="XPATH" value="//UIATableCell[@name='SCHEDULE']|//*[@content-desc='Schedule']" />			
+			<element name="GRADES" descriptor="XPATH" value="//UIAStaticText[@name='Grades']|//*[@content-desc='Grades']" />
+			<element name="FINANCE" descriptor="XPATH" value="//UIAStaticText[@name='Student Finance']|//*[@content-desc='Student Finance']" />			
+			<element name="SIGN_IN_TEXT" descriptor="V_TEXT" value="Sign in with your Student Portal UserID (D#) and password" />
+			<element name="ALERT" descriptor="XPATH" value="//UIAStaticText[@value='Alert']|//*[@resource-id='com.devry.mobileapps.devry:id/title']" />
+			<element name="APP_UPDATED" descriptor="XPATH" value="//UIAStaticText[@label='Application Updated.  Press OK to reload.']|//*[@resource-id='com.devry.mobileapps.devry:id/message']|//*[@resource-id='com.devry.mobileapps.devry.debug:id/positive']|//*[@resource-id='com.devry.mobileapps.devry:id/positive']" />
+			<element name="SEND_NOTIFICATIONS" descriptor="XPATH" value="//*[@label='Allow']"  />
+			<element name="Menu_Link" descriptor="XPATH" value="//*[@class='left menu-button']|//*[@class='left menu-button']//*[@class='menu-icon']" />
+		</page>
+
+		<page name="Menu_Home">
+			<element name="HOME" descriptor="XPATH" value="//UIAWebView//*[@name='HOME']|//XCUIElementTypeTable/XCUIElementTypeCell/XCUIElementTypeStaticText[@name='HOME']|//*[@text='HOME']|//*[text()='HOME']" />
+			<element name="MESSAGES" descriptor="XPATH" value="//UIATableCell[@name='MESSAGES']|//*[@text='MESSAGES']|//XCUIElementTypeTable/XCUIElementTypeCell/XCUIElementTypeStaticText[@name='MESSAGES']" />											
+			<element name="MENU_LINK" descriptor="XPATH" value="//UIAWebView/UIALink[1]|//*[@content-desc='mobile.devry']|//*[@content-desc='Link']" />
+			<element name="GO2CLASS" descriptor="XPATH" value="//UIAStaticText[@name='GO TO CLASS']|//*[@text='GO TO CLASS']" />
+			<element name="SCHEDULE" descriptor="XPATH" value="//XCUIElementTypeCell/XCUIElementTypeStaticText[@name='SCHEDULE']|//UIAStaticText[@name='SCHEDULE']|//*[@text='SCHEDULE']" />			
+			<element name="GRADES" descriptor="XPATH" value="//XCUIElementTypeCell/XCUIElementTypeStaticText[@name='GRADES']|//UIATableCell[@name='GRADES']|//*[@text='GRADES']	" />
+			<element name="FINANCE" descriptor="XPATH" value="//UIAStaticText[@name='STUDENT FINANCE']|//*[@text='STUDENT FINANCE']" />
+			<element name="CALENDAR" descriptor="XPATH" value="//UIAStaticText[@name='ACADEMIC CALENDAR']" />
+			<element name="CONTACT" descriptor="XPATH" value="//UIAStaticText[@name='CONTACT US']" />
+			<element name="SURVEY" descriptor="XPATH" value="//UIAStaticText[@name='SURVEY']|//*[@text='FEEDBACK']|//*[@label='FEEDBACK']" />
+			<element name="NEWS" descriptor="XPATH" value="//UIAStaticText[@name='NEWS']" />
+			<element name="REFER" descriptor="XPATH" value="//XCUIElementTypeCell/XCUIElementTypeStaticText[@name='REFER A FRIEND']|//UIATableCell[@name='REFER A FRIEND']|//*[@text='REFER A FRIEND']" />
+			<element name="WEB_SITE" descriptor="XPATH" value="//UIAStaticText[@name='DEVRY.EDU']" />
+			<element name="LIBRARY" descriptor="XPATH" value="//UIAStaticText[@name='LIBRARY']|//*[@text='LIBRARY']" />
+			<element name="SOCIAL" descriptor="XPATH" value="//UIAStaticText[@name='SOCIAL']" />
+			<element name="ABOUT" descriptor="XPATH" value="//*[@label='ABOUT']|//*[@text='ABOUT']" />												
+			<element name="SIGN_IN" descriptor="XPATH" value="//UIATableCell[@name='SIGN IN']|//XCUIElementTypeCell/XCUIElementTypeStaticText[@name='SIGN IN']|//*[@text='SIGN IN']" />
+			<element name="SIGN_OUT" descriptor="XPATH" value="//UIATableCell[@name='SIGN OUT']|//XCUIElementTypeCell/XCUIElementTypeStaticText[@name='SIGN OUT']|//*[@text='SIGN OUT']" />
+			<element name="SIGN_OUT_TEXT" descriptor="V_TEXT" value="SIGN OUT" />		
+			<element name="ATTENTION" descriptor="XPATH" value="//UIAStaticText[@name='Attention']|//*[@resource-id='com.devry.mobileapps.devry:id/title']||//*[@resource-id='com.devry.mobileapps.devry.debug:id/title']" />
+			<element name="CONFIRM" descriptor="XPATH" value="//UIAButton[@name='CONFIRM']|//*[contains(@resource-id,'com.devry.mobileapps') and contains(@resource-id,'id/positive')]" />		
+			<element name="CANCEL" descriptor="XPATH" value="//UIAButton[@name='CANCEL']|//*[@resource-id='com.devry.mobileapps.devry:id/negative']|//*[@resource-id='com.devry.mobileapps.devry.debug:id/negative']" />
+			<element name="EBOOKS" descriptor="XPATH" value="//UIAStaticText[@name='EBOOKS']|//*[@text='EBOOKS']" />
+			<element name="CONTACT" descriptor="XPATH" value="//UIAStaticText[@name='CONTACT US']|//*[@text='CONTACT US']" />		
+			<element name="RESOURCES" descriptor="XPATH" value="//UIAStaticText[@name='RESOURCES']|//*[@text='RESOURCES']" />		
+			<element name="PREFERENCES" descriptor="XPATH" value="//UIAStaticText[@name='PREFERENCES']|//*[@text='PREFERENCES']" />		
+			<element name="ACADMIC_CALENDAR" descriptor="XPATH" value="//*[@label='ACADEMIC CALENDAR']|//*[@text='ACADEMIC CALENDAR']" />		
+			<element name="DOCUMENT_CENTER" descriptor="XPATH" value="//*[@label='DOCUMENT CENTER']|//*[@text='DOCUMENT CENTER']" />		
+			
+		</page>
+		
+		<page name="About">
+			<element name="Left_Menu" descriptor="XPATH" value="//*[@id='back-button']" /> 
+			<element name="About_Header" descriptor="XPATH" value="//span[contains(text(),'ABOUT')]" />
+			<element name="Privacy_Button" descriptor="XPATH" value="//a[@id='privacyButton']" /> 
+			<element name="License_Button" descriptor="XPATH" value="//*[@id='licenseButton']" /> 
+			<element name="Stu_Consumer_Info_Button" descriptor="XPATH" value="//*[text()='Student Consumer Information']" />
+			<element name="Terms_of_Service_Button" descriptor="XPATH" value="//*[text()='Terms of Service']" /> 
+			<element name="Open_Source_Licence_OK" descriptor="XPATH" value="//*[@label='OK']|//*[contains(@resource-id,'com.devry.mobileapps') and contains(@resource-id,'id/positive')]" /> 
+			<!--<element name="Open_Source_Licence_Header" descriptor="XPATH" value="//UIAStaticText[@label='OPEN SOURCE LICENSES'][1]|//*[contains(@resource-id,'com.devry.mobileapps') and contains(@resource-id,'id/title')]|//*[@value='Open Source Licenses']" />  --> 	
+			<element name="Open_Source_Licence_Header" descriptor="XPATH" value="//UIAAlert[@label='Open Source Licenses']|//*[contains(@resource-id,'com.devry.mobileapps') and contains(@resource-id,'id/title')]" /> 			
+		</page>
+	
+		<page name="Login">
+			<element name="Left_Menu" descriptor="XPATH" value="//UIAImage|//*[@id='back-button']" />
+			<element name="LOGO" descriptor="XPATH" value="//UIAWebView//UIAImage[1]" />
+			<element name="BACK" descriptor="XPATH" value="//UIAWebView/UIALink[1]|//*[@content-desc='back_button']|//*[@content-desc='Link']" />			
+			<element name="DETAILS" descriptor="XPATH" value="//UIAStaticText[@name='ENTER DETAILS']|//*[@content-desc='ENTER DETAILS']" />
+			<element name="USER_ID" descriptor="XPATH" value="//UIATextField[@name='Username']|//*[@resource-id='username']|//*[@id='username']" />
+			<element name="PASSWORD" descriptor="XPATH" value="//UIASecureTextField[@name='Password']|//*[@resource-id='password']|//*[@id='password']" />
+			<element name="SIGN_IN" descriptor="XPATH" value="//UIAButton[@name='Sign In']|//*[@resource-id='loginButton']|//*[@id='loginButton']" />
+			<element name="FORGOT_PASSWORD" descriptor="XPATH" value="//UIAButton[@name='Forgot Password?']|//*[@content-desc='Need Help?']" />
+			<element name="GO" descriptor="XPATH" value="//UIAButton[@name='Go']" />			
+			<element name="HIDE" descriptor="XPATH" value="//UIAButton[@name='Hide keyboard']" />
+			<element name="ALERT" descriptor="XPATH" value="//UIAStaticText[@name='Alert']|//*[@resource-id='com.devry.mobileapps.devry:id/title']" />
+			<element name="ALERT_OK" descriptor="XPATH" value="//UIAButton[@name='OK']|//*[@resource-id='com.devry.mobileapps.devry:id/positive']" />
+			<element name="INVALID_PASSWORD_OK" descriptor="XPATH" value="//*[@label='OK']|//*[@resource-id='com.devry.mobileapps.devry:id/positive']|//*[@resource-id='com.devry.mobileapps.devry.debug:id/positive']" />
+
+		</page>
+			
+		<!-- #### This is the Schedule Page Objects -->
+		<page name="Schedule">
+			<element name="Left_Menu" descriptor="XPATH" value="//UIAImage|//*[@id='back-button']" />				
+			<element name="Right_Hamburger_Menu" descriptor="XPATH" value="//UIAWebView/UIALink[2]|//*[contains(@content-desc,'mobile.tst2.')]|//*[contains(@content-desc,'mobile.dev2.')]|//*[@class='right menu-button']//*[@class='menu-icon']" />
+			<element name="Schedule_Label" descriptor="XPATH" value="//*[@label='SCHEDULE']|//*[@content-desc='SCHEDULE']|//*[contains(text(),'SCHEDULE')]" />
+			<element name="Degree_Works_Button" descriptor="XPATH" value="//*[@label='DegreeWorks']|//*[@content-desc='DegreeWorks']|//*[contains(text(),'DegreeWorks')]" />
+			<element name="Add_Drop_Classes_Button" descriptor="XPATH" value="//*[@label='Add/Drop Classes']|//*[@content-desc='Add/Drop Classes']|//*[contains(text(),'Add/Drop Classes')]" />
+			<element name="Click_to_Accept_Button" descriptor="XPATH" value="//*[@label='Click to Accept']|//*[@content-desc='Click to Accept']|//*[contains(text(),'Click to Accept')]" />
+			<element name="Schedule_Menu" descriptor="XPATH" value="//XCUIElementTypeCell/XCUIElementTypeStaticText[@name='SCHEDULE']|//UIATableCell[@name='SCHEDULE']|//*[@text='SCHEDULE']" />
+			<element name="Registration_Status_Button" descriptor="XPATH" value="//*[contains(text(),'Registration Status')]" />			
+			<element name="Event_Calendar" descriptor="XPATH" value="//*[contains(text(),'Event Calendar')]" />
+			<element name="RightMenu_Schedule" descriptor="XPATH" value="//*[@text='Schedule']|//*[@label='Schedule']|(//*[@class='UITableViewLabel' and contains(text(),'SCHEDULE')])[2]" />
+			<element name="RightMenu_Schedule_Overview" descriptor="XPATH" value="//*[@text='Schedule Overview']|//*[@label='Schedule Overview']" />
+			<element name="RightMenu_Event_Calendar" descriptor="XPATH" value="//*[@text='Event Calendar']|//*[@label='Event Calendar']" />
+		</page>		
+		
+				<!-- #### This is the Grades Page Objects -->
+		<page name="Grades">
+			<element name="Left_Menu" descriptor="XPATH" value="//UIAImage|//*[@id='back-button']" />				
+			<element name="Right_Hamburger_Menu" descriptor="XPATH" value="//UIAWebView/UIALink[2]|//*[contains(@content-desc,'mobile.tst2.')]|//*[contains(@content-desc,'mobile.dev2.')]|//*[@class='right menu-button']//*[@class='menu-icon']" />
+			<element name="Grades_Label" descriptor="XPATH" value="//*[@label='GRADES']|//*[@content-desc='GRADES']|//*[contains(text(),'GRADES')]" />
+			<element name="Official_Transcripts_Button" descriptor="XPATH" value="//*[@label='Official Transcripts']|//*[@content-desc='Official Transcripts']|//*[contains(text(),'Official Transcripts')]" />
+			<element name="Print_Grades_Button" descriptor="XPATH" value="//*[@label='Print Grades']|//*[@content-desc='Print Grades']|//*[contains(text(),'Print Grades')]" />
+			<element name="Unfficial_Transcripts_Button" descriptor="XPATH" value="//*[@label='Unofficial Transcripts']|//*[@content-desc='Unofficial Transcripts']|//*[contains(text(),'Unofficial Transcripts')]" />
+			<element name="Grades_Menu" descriptor="XPATH" value="//UIATableCell[@name='GRADES']|//*[@text='GRADES']|//*[@label='Grades']|//*[@text='Grades']|//*[@label='GRADES']" />
+			<element name="Grades_Right_Menu" descriptor="XPATH" value="//*[@label='Grades']|//*[@text='Grades']" />
+			<element name="Grades_Overview" descriptor="XPATH" value="//*[@label='Grades Overview']|//*[@text='Grades Overview']" />
+			<element name="Unofficial_Transcripts" descriptor="XPATH" value="//*[@label='Unofficial Transcripts']|//*[@text='Unofficial Transcripts']" />
+		</page>	
+       
+		<page name="REFER_A_FRIEND">
+			<element name="Back" descriptor="XPATH" value="//UIAImage|//*[@id='back-button']" /> 
+			<element name="FIRST_NAME" descriptor="XPATH" value="//*[@id='referralFirstName']"/>
+			<element name="LAST_NAME" descriptor="XPATH" value="//*[@id='referralLastName']"/>
+			<element name="EMAIL" descriptor="XPATH" value="//*[@id='referralEmail']"/>
+			<element name="PHONE" descriptor="XPATH" value="//*[@id='referralPhone']"/>
+			<element name="SUBMIT" descriptor="XPATH" value="//*[@id='submitButton']" />
+			<element name="ALERT_OK" descriptor="XPATH" value="//*[contains(@resource-id,'com.devry.mobileapps') and contains(@resource-id,'id/positive')]" />			
+		</page>      
+		
+		<!-- ########################################## -->
+		<!-- #### This is the Student Finance Page Objects -->
+		<page name="Student Finance">
+			<element name="Left_Menu" descriptor="XPATH" value="//UIAImage|//*[@resource-id='main']/android.view.View[1]/android.view.View[1]/android.widget.ListView[1]/android.view.View[1]" />            
+			<element name="Right_Hamburger_Menu" descriptor="XPATH" value="//UIAWebView/UIALink[2]|//*[contains(@content-desc,'mobile.tst2.')]|//*[contains(@content-desc,'mobile.dev2.')]|//*[@class='right menu-button']//*[@class='menu-icon']" />
+			<element name="Student_Finance_Label" descriptor="XPATH" value="//*[@label='STUDENT FINANCE']|//*[@content-desc='STUDENT FINANCE']" />
+			<element name="MML_Button" descriptor="XPATH" value="//UIAWebView/UIAStaticText[2]|//*[@resource-id='main']/android.view.View[1]/android.view.View[1]/android.widget.ListView[1]/android.view.View[1]" />
+			<element name="Account_Authorization_Button" descriptor="XPATH" value="//*[@label='Account Authorizations']|//*[@content-desc='Account Authorizations']" />
+			<element name="Financial_Consultant_Heading" descriptor="XPATH" value="//*[@label='Financial Consultant']|//*[@content-desc='Financial Consultant']" />
+			<element name="Student_Account_Summary_Header" descriptor="XPATH" value="//*[@label='Student Account Summary']|//*[@content-desc='Student Account Summary']" />
+			<element name="Account_Details_Header" descriptor="XPATH" value="//*[@label='Account Details']|//*[@resource-id='account-details-title']" />
+			<element name="Request_Itemized_Statement_Button" descriptor="XPATH" value="//UIAStaticText[@label='Request Itemized Statement']|//*[@resource-id='itemizedStatementButton']" />
+			<element name="Financial_Aid_Awards_Header" descriptor="XPATH" value="//*[@label='Financial Aid Awards (2016-2017 Year)']|//*[@content-desc='Financial Aid Awards (2016-2017 Year)']" />
+			<element name="Manage_My_Loans_Header" descriptor="XPATH" value="//UIAWebView/UIAStaticText[62]|//*[@resource-id='main']/android.view.View[32]" />         
+			<element name="Back_Button" descriptor="XPATH" value="//UIAImage|//*[@class='DOMUIAImage']|//*[@id='back-button']" />
+			<element name="Advisor_Phone_Number" descriptor="XPATH" value="//a[@class='contactButton']/i[@class='fi-telephone ng-binding']" />      
+			<element name="PayMyBill_label" descriptor="XPATH" value="//*[@label='Pay My Bill']|//*[contains(text(),'Pay My Bill')]" />
+			<element name="ManageMyLoans_label" descriptor="XPATH" value="//*[@label='Manage My Loans']|//*[contains(text(),'Manage My Loans')]" />
+			<element name="AccountAuthorizations_label" descriptor="XPATH" value="//*[@label='Account Authorizations']|//*[contains(text(),'Account Authorizations')]" />		
+		</page>  
+         
+		<!-- ########################################## -->
+		<!-- #### This is the Student Finance Right Menu Objects -->
+		<page name="Student_Finance_Right_Menu"> 
+			<element name="MenuHeader" descriptor="XPATH" value="//*[@label='Manage My Account']|//*[@text='Manage My Account']|//*[@label='MANAGE MY ACCOUNT']|//*[@text='MANAGE MY ACCOUNT']" />
+			<element name="LoanOverview" descriptor="XPATH" value="//*[@label='Loan Overview']|//*[@text='Loan Overview']" />
+			<element name="AccountOverview" descriptor="XPATH" value="//*[@label='Account Overview']|//*[@text='Account Overview']" />			
+		</page>   
+		<!-- #### This is the Student Finance Right Menu Objects -->
+		<page name="Manage_My_Loans">
+			<element name="PageHeader" descriptor="XPATH" value="//*[@label='MANAGE MY LOANS']|//*[@content-desc='MANAGE MY LOANS']" />
+			<element name="MMLParagraph" descriptor="XPATH" value="//*[@label='Take control and ensure your borrowing aligns with your progress towards completing your program. By starting to manage your borrowing now you will be better able to manage your future. Over-borrowing could impede your ability to graduate on time. See your student finance professional so that you can determine if you are nearing your aggregate loan limit.']|//*[@content-desc='Take control and ensure your borrowing aligns with your progress towards completing your program. By starting to manage your borrowing now you will be better able to manage your future. Over-borrowing could impede your ability to graduate on time. See your student finance professional so that you can determine if you are nearing your aggregate loan limit.']" />
+			<element name="Back_Button" descriptor="XPATH" value="//UIAImage|//*[@class='DOMUIAImage']|//*[@id='back-button']" />
+
+
+
+             <!-- ################ Ross Med MML Page elements##################### -->
+
+		<element name="MenuHeader" descriptor="XPATH" value="//*[contains(text(),'MANAGE MY ACCOUNT')]|//*[contains(text(),'Manage My Account')]|//div[contains(text(),'MANAGE MY ACCOUNT')]" />
+			<element name="ManageMyLoansHeader" descriptor="XPATH" value="//div[contains(text(),'MANAGE MY LOANS')]" />
+			<element name="Account_Overview" descriptor="XPATH" value="//span[contains(text(),'Account Overview')]" />
+			<element name="Payment_Options" descriptor="XPATH" value="//span[contains(text(),'Payment Options')]" />
+			<element name="Shopping_Sheet" descriptor="XPATH" value="//span[contains(text(),'Shopping Sheet')]" />
+			<element name="Tax_Notifications" descriptor="XPATH" value="//span[contains(text(),'Tax Notifications')]" />
+			<element name="Manage_Account_Authorizations" descriptor="XPATH" value="//span[contains(text(),'Manage Account Authorizations')]" />
+			<element name="Direct_Deposit" descriptor="XPATH" value="//span[contains(text(),'Direct Deposit')]" />
+			<element name="Itemized_Statements" descriptor="XPATH" value="//span[contains(text(),'Itemized Statements')]" />
+			<element name="Financial_Awareness" descriptor="XPATH" value="//span[contains(text(),'Financial Awareness')]" />
+			<element name="Financial_Awards" descriptor="XPATH" value="//span[contains(text(),'Financial Awards')]" />
+			<element name="Understanding_Financial" descriptor="XPATH" value="//span[contains(text(),'Understanding Financial Aid')]" />
+			
+			<!-- MML Page elements -->
+			
+			<!--  <element name="LoanOverview" descriptor="XPATH" value="//*[contains(text(),'Loan Overview')]" />Failed-->
+			
+			  <!--  Stud_Fin_MML_Page_Elements-->
+			   <element name="LoanOverview" descriptor="XPATH" value="//span[contains(text(),'Loan Overview')]" />  
+			 <element name="LoanDetail" descriptor="XPATH" value="//span[contains(text(),'Loan Detail')]" /> 
+			 <element name="Repayment_Modeling" descriptor="XPATH" value="//span[contains(text(),'Repayment Modeling')]" />  
+			 <element name="Budget_Modeling" descriptor="XPATH" value="//span[contains(text(),'Budget Modeling')]" /> 
+			 <element name="Budget_Summary" descriptor="XPATH" value="//span[contains(text(),'Budget Summary')]" />    
+			 <element name="Resources" descriptor="XPATH" value="//*[text()='Resources' ]" />   
+			 <element name="Feedback_Survey" descriptor="XPATH" value="//span[contains(text(),'Feedback Survey')]" />   
+					 
+		 					  
+			<!-- DOM objects below this line -->
+			<element name="ProgressTowardsText" descriptor="XPATH" value="//*[text()='Progress Towards Completing My Program']|//*[text()='Progress Towards Completing My Program']" />
+			<element name="PrimaryProgramText" descriptor="XPATH" value="//*[text()='Primary Program:']|//*[text()='Primary Program:']" />
+			<element name="ConcentrationText" descriptor="XPATH" value="//*[text()='Concentration:']|//*[text()='Concentration:']" />
+			<element name="HoursRequiredText" descriptor="XPATH" value="//*[text()='Hours Required:']|//*[text()='Hours Required:']" />
+			<element name="HoursToCompleteText" descriptor="XPATH" value="//*[text()='Hours to Complete:']|//*[text()='Hours to Complete:']" />
+			<element name="TotalStudentLoansText" descriptor="XPATH" value="//*[text()='Total Student Loans']|//*[text()='Total Student Loans']" />
+			<element name="FederalHeadingText" descriptor="XPATH" value="//*[text()='Federal: ']|//*[text()='Federal: ']" />
+			<element name="PrivateHeadingText" descriptor="XPATH" value="//*[text()='Private: ']|//*[text()='Private: ']" />
+			<element name="InstitutionalHeadingText" descriptor="XPATH" value="//*[text()='Institutional: ']|//*[text()='Institutional: ']" />
+			<element name="BorrowingHistoryHeadingText" descriptor="XPATH" value="//*[text()='Borrowing History']|//*[text()='Borrowing History']" />      
+			<element name="MyEstimatedLoanRepaymentObligationsHeaderText" descriptor="XPATH" value="//*[text()='My Estimated Loan Repayment Obligations']|//*[text()='My Estimated Loan Repayment Obligations']" />    
+			<element name="MyCreditBalancesPaidtoMeHeaderText" descriptor="XPATH" value="//*[text()='My Credit Balances Paid to Me']|//*[text()='My Credit Balances Paid to Me']" />    
+		</page>     
+		
+		
+		<page name="Manage_My_Loans">
+			<element name="PageHeader" descriptor="XPATH" value="//*[@class='header-font fontSize4 ng-binding' and contains(text(),'MANAGE MY LOANS')]|//section/span[contains(text(),'MANAGE MY LOANS')]" />
+			<element name="MMLParagraph" descriptor="XPATH" value="//div[contains(text(),'Take control and ensure your borrowing aligns with your progress towards completing your program.')]"/>
+			<element name="Back_Button" descriptor="XPATH" value="//UIAImage|//*[@class='DOMUIAImage']|//*[@id='back-button']" />
+
+
+             <!--  Stud_Fin_MML_Loan Overview Page_Elements-->
+			 <element name="Unable_to_retrieve_the_page" descriptor="XPATH" value="//div[contains(text(),'Unable to retrieve manage my loans overview at this time')]" />						
+			   <!--  <element name="MMLParagraph" descriptor="XPATH" value="//div[contains(text(),'Take control and ensure your borrowing aligns with your progress towards completing your program. By starting to manage your borrowing now you will be better able to manage your future. Over-borrowing could impede your ability to graduate on time. See your student finance professional so that you can determine if you are nearing your aggregate loan limit')]" />--> 
+			 <element name="EST_Federal_loan_Usage" descriptor="XPATH" value="//a[contains(text(),'Estimated Federal Direct Loan Usage:')]" />  
+			 <element name="Total_Student_Loans" descriptor="XPATH" value="//span[contains(text(),'Total Student Loans')]" />
+			 <element name="My_Estimated_Loan_Repayment_Obligations" descriptor="XPATH" value= "//span[contains(text(),'My Estimated Loan Repayment Obligations')]" />
+			 
+			 <element name="Manage_MY_Loans_Header" descriptor="XPATH" value="//span[contains(text(),'MANAGE MY LOANS')]" />
+			 
+			 <element name="ProgressTowardsText" descriptor="XPATH" value="//*[text()='Progress Towards Completing My Program']|//*[text()='Progress Towards Completing My Program']" />
+			 <element name="PrimaryProgramText" descriptor="XPATH" value="//*[text()='Primary Program:']|//*[text()='Primary Program:']" />
+			 <element name="ConcentrationText" descriptor="XPATH" value="//*[text()='Concentration:']|//*[text()='Concentration:']" />
+			 <element name="HoursRequiredText" descriptor="XPATH" value="//*[text()='Hours Required:']|//*[text()='Hours Required:']" />
+			 <element name="HoursToCompleteText" descriptor="XPATH" value="//*[text()='Hours to Complete:']|//*[text()='Hours to Complete:']" />
+			 <element name="TotalStudentLoansText" descriptor="XPATH" value="//*[text()='Total Student Loans']|//*[text()='Total Student Loans']" />
+			 <element name="FederalHeadingText" descriptor="XPATH" value="//*[text()='Federal: ']|//*[text()='Federal: ']" />
+			 <element name="PrivateHeadingText" descriptor="XPATH" value="//*[text()='Private: ']|//*[text()='Private: ']" />
+			 <element name="InstitutionalHeadingText" descriptor="XPATH" value="//*[text()='Institutional: ']|//*[text()='Institutional: ']" />
+			 <element name="BorrowingHistoryHeadingText" descriptor="XPATH" value="//*[text()='Borrowing History']|//*[text()='Borrowing History']" />      
+			 <element name="MyEstimatedLoanRepaymentObligationsHeaderText" descriptor="XPATH" value="//*[text()='My Estimated Loan Repayment Obligations']|//*[text()='My Estimated Loan Repayment Obligations']" />    
+				 
+            <!--  Stud_Fin_MML_Loan Detail Page_Elements-->
+
+			<element name="FederalLoanText" descriptor="XPATH" value="//*[text()='FEDERAL LOANS']|//*[text()='FEDERAL LOANS']" />
+			<element name="LoanDetailParagraph" descriptor="XPATH" value="//span[contains(text(),'Stay on top of your student loan borrowing as you progress through your program. Remember, in addition to the loans you see here you could have private or institutional loans borrowed at previous schools. Keep track of your loans so you know how much you owe before you enter repayment. Repayment on federal loans begins when you drop below half-time enrollment, withdraw or graduate. Knowing who you owe to and how much will help you create a financial plan to prepare for your future repayment and financial well-being')]" />
+			<element name="PrivateLoansText" descriptor="XPATH" value="//*[text()='PRIVATE LOANS']|//*[text()='PRIVATE LOANS']" />
+			<element name="InstitutionalLoansText" descriptor="XPATH" value="//*[text()='INSTITUTIONAL LOANS']|//*[text()='INSTITUTIONAL LOANS']" />
+			<element name="AddNewLoanText" descriptor="XPATH" value="//*[text()='ADD NEW LOAN']|//*[text()='ADD NEW LOAN']"/>
+			<element name="RepaymentAffordabilityText" descriptor="XPATH" value=" //*[text()='Repayment Affordability']|//*[text()='Repayment Affordability']" />
+            <element name="RightHamburgerMenuLoanDetailPage" descriptor="XPATH" value="//*[@id='rightMenuWeb']"/>
+
+
+
+            <!--  Stud_Fin_MML_Repayment Modeling Page_Elements-->
+			<element name="RepaymentDetailsText" descriptor="XPATH" value=" //*[text()='REPAYMENT DETAILS']|//*[text()='REPAYMENT DETAILS']" />
+			<element name="RepaymentModelingParagraph" descriptor="XPATH" value="//span[contains(text(),'Take control and understand the options available to pay off your student loans when you get ready to leave school. You have a choice. You can choose a repayment plan that works best with your financial situation. Remember, you can change repayment plans, without any cost, if your financial situation changes.')]" />
+			<element name="FederalDirectAndGradPlusText" descriptor="XPATH" value="//*[text()='FEDERAL DIRECT AND GRAD PLUS LOAN AMOUNT' ]|//*[text()='FEDERAL DIRECT AND GRAD PLUS LOAN AMOUNT']" />
+			<element name="AdditionalLoanPaymentsText" descriptor="XPATH" value="//*[text()='ADDITIONAL LOAN PAYMENTS']|//*[text()='ADDITIONAL LOAN PAYMENTS']" />
+			<element name="TotalEstimatedMonthlyPaymentsText" descriptor="XPATH" value="//*[text()='TOTAL ESTIMATED MONTHLY PAYMENTS']|//*[text()='TOTAL ESTIMATED MONTHLY PAYMENTS']"/>
+			<element name="DisclaimerText" descriptor="XPATH" value=" //*[text()='Disclaimer :']|//*[text()='Disclaimer:']" />
+			<element name="LoanForgivenesstext" descriptor="XPATH" value=" //*[text()='Loan Forgiveness']|//*[text()='Loan Forgiveness']" />
+
+
+			
+					
+			<!--  Stud_Fin_MML_Budget Modeling Page_Elements-->
+			<element name="SelectBudgetTypeToViewText" descriptor="XPATH" value=" //*[text()='Select budget type to view: ']|//*[text()='Select budget type to view: ']" />
+			<element name="DuplicateBudgetText" descriptor="XPATH" value=" //span[contains(text(),'Duplicate budget:')]" />
+			<element name="PastAsCurrentButton" descriptor="XPATH" value=" //*[@id='duplicateBudget']" />
+			<element name="MonthlyIncomeText" descriptor="XPATH" value=" //*[text()='MONTHLY INCOME']|//*[text()='MONTHLY INCOME']" />
+			<element name="EducationExpensesText" descriptor="XPATH" value=" //*[text()='EDUCATION EXPENSES']|//*[text()='EDUCATION EXPENSES']" />
+			<element name="LoanRepaymentText" descriptor="XPATH" value="//*[text()='LOAN REPAYMENT']|//*[text()='LOAN REPAYMENT']" />
+			<element name="LivingExpensesText" descriptor="XPATH" value="//*[text()='LIVING EXPENSES']|//*[text()='LIVING EXPENSES']" />
+			
+			<!--  Stud_Fin_MML_Budget Summary Page_Elements-->
+			<element name="SelectBudgetToViewText" descriptor="XPATH" value=" //*[text()='Select Budget to View:' ]" />
+			<element name="BudgetSummaryText" descriptor="XPATH" value=" //*[text()='Budget Summary' ]|//*[text()='Budget Summary']" />
+			<element name="MonthlyIncomesText" descriptor="XPATH" value="//*[text()='Monthly Income:' ]" />
+			<element name="MonthlyExpensesText" descriptor="XPATH" value=" //*[text()='Monthly Expenses:' ]|//*[text()='Monthly Expenses:']" />
+			<element name="MonthlyExpensesBreakdownText" descriptor="XPATH" value=" //*[text()='Monthly Expenses Breakdown' ]|//*[text()='Monthly Expenses Breakdown']" />
+			<element name="ExpenseText" descriptor="XPATH" value="//*[text()='Expenses' ]|//*[text()='Expenses']" />
+			<element name="EditThisBudgetButton" descriptor="XPATH" value="//*[@id='editButton']" />
+			<element name="ExportToPDFButton" descriptor="XPATH" value="//*[text()='Export to PDF' ]|//*[text()='Export to PDF']" />
+			<element name="%OfTotalExpenses" descriptor="XPATH" value="//*[text()='% of Total Expenses' ]|//*[text()='% of Total Expenses']" />
+			<element name="Alert_Leave_Button" descriptor="XPATH" value="//button[contains(text(),'LEAVE')]" />
+			
+			<!--  Stud_Fin_MML_Resources Page_Elements -->
+			<element name="OverviewText" descriptor="XPATH" value=" //*[text()='Overview']|//*[text()='Overview']" />
+			<element name="ManageMyLoansText" descriptor="XPATH" value="//*[text()='Manage My Loans']|//*[text()='Manage My Loans']" />
+			<element name="BorrowingStatusText" descriptor="XPATH" value=" //*[text()='Borrowing Status']|//*[text()='Borrowing Status']" />
+			<element name="LoanLimitsText" descriptor="XPATH" value=" //*[text()='Loan Limits']|//*[text()='Loan Limits']" />
+			<element name="EstimatedFederalDirectLoanUsageText" descriptor="XPATH" value=" //*[text()='Estimated Federal Direct Loan Usage']|//*[text()='Estimated Federal Direct Loan Usage']" />
+			<element name="FederalDirectLoanStatusText" descriptor="XPATH" value="//*[text()='Federal Direct Loan Status']|//*[text()='Federal Direct Loan Status']" />
+			<element name="ProgramCompletionStatusText" descriptor="XPATH" value="//*[text()='Program Completion Status']|//*[text()='Program Completion Status']" />
+			<element name="ProgressTowardsCompletingMyProgramText" descriptor="XPATH" value="//*[text()='Progress Towards Completing My Program']|//*[text()='Progress Towards Completing My Program']" />
+			<element name="MyEstimatedLoanRepaymentObligationText" descriptor="XPATH" value="//*[text()='My Estimated Loan Repayment Obligation']|//*[text()='My Estimated Loan Repayment Obligation']" />
+			<element name="MyCreditBalancesPaidtoMeText" descriptor="XPATH" value="//*[text()='My Credit Balances Paid to Me']|//*[text()='My Credit Balances Paid to Me']" />			
+			<element name="LoanDetailText" descriptor="XPATH" value="//*[text()='Loan Detail']|//*[text()='Loan Detail']" />
+			
+			<element name="RepaymentModelingText" descriptor="XPATH" value="//*[text()='Repayment Modeling']|//*[text()='Repayment Modeling']" />			
+			<element name="BudgetModelingText" descriptor="XPATH" value="//*[text()='Budget Modeling']|//*[text()='Budget Modeling']" />			
+		</page>
+	
+				
+
+		<!-- #### This is the EBOOKS Page Objects -->
+		<page name="EBOOKS">
+			<element name="Header" descriptor="XPATH" value="//span[contains(text(),'EBOOKS')]" />
+			<element name="BackButton" descriptor="XPATH" value="//*[@id='back-button']" />
+			<element name="PrintOnDemand" descriptor="XPATH" value="//li[contains(text(),'Print on Demand')]" />
+			<element name="OrganizationalBehavior" descriptor="XPATH" value="//*[text()='Organizational Behavior']" />
+		</page>     
+        
+		<page name="GoogleChrome">
+			<element name="TabsButton" descriptor="XPATH" value="//*[@resource-id='com.android.chrome:id/tab_switcher_button']" />
+			<element name="TabsMenuButton" descriptor="XPATH" value="//*[@resource-id='com.android.chrome:id/menu_button']" />
+			<element name="CloseAllTabsButton" descriptor="XPATH" value="//*[@content-desc='Close all tabs']" />
+			<element name="History" descriptor="XPATH" value="//*[@content-desc='History']" />
+			<element name="Clear" descriptor="XPATH" value="//*[@id='clear-browsing-data']|//*[contains(@text,'Clear')]|//*[@resource-id='com.android.chrome:id/clear_browsing_data_button']|//*[@text='Clear browsing data…']|//*[text()='CLEAR']|//*[text()='Clear']" />
+			<element name="ClearData" descriptor="XPATH" value="//*[@resource-id='com.android.chrome:id/button_preference']|//*[@resource-id='com.android.chrome:id/clear_button']" />
+			<element name="ClearSite" descriptor="XPATH" value="//*[text()='CLEAR']|//*[text()='Clear']|//*[@resource-id='android:id/button1']" />
+			<element name="CloseHistory" descriptor="XPATH" value="//*[@resource-id='com.android.chrome:id/close_menu_id']" />
+			<element name="Settings" descriptor="XPATH" value="//*[@content-desc='Settings']" />
+			<element name="Site_Settings" descriptor="XPATH" value="//*[@text='Site settings']" />
+			<element name="PopUp" descriptor="XPATH" value="//*[@text='Pop-ups']" />
+			<element name="PopUp_Android" descriptor="XPATH" value="//*[@resource-id='com.android.chrome:id/switch_widget']" />
+		</page>     
+
+		<page name="Safari">
+			<element name="PagesButton" descriptor="XPATH" value="//*[@label='Pages']|//XCUIElementTypeButton[@label='Tabs']" />
+			<element name="DoneButton" descriptor="XPATH" value="//*[@label='Done']" />
+			<element name="CloseAllTabsButton" descriptor="XPATH" value="//*[contains(@label,'Close') and contains(@label,'Tab')]" />
+       		<element name="pages" descriptor="XPATH" value="//*[@label='Pages']" /> 
+			<element name="newpage" descriptor="XPATH" value="//*[@label='New page']" /> 
+			<element name="bookmark" descriptor="XPATH" value="//*[@label='Show Bookmarks']" /> 
+			<element name="History" descriptor="XPATH" value="//*[@label='History']" /> 
+			<element name="clear" descriptor="XPATH" value="//*[@label='Clear']" /> 
+			<element name="Alltime" descriptor="XPATH" value="//*[@label='All time']" /> 
+			<element name="Done" descriptor="XPATH" value="//*[@label='Done']" />			
+			<element name="No_Button" descriptor="XPATH" value="//*[@class='noButton continue-in-browser']" />
+			<element name="Skip" descriptor="XPATH" value="//*[text()='Skip']" />			
+			<element name="Setting" descriptor="XPATH" value="//*[@label='Settings']" />
+			<element name="Safari" descriptor="XPATH" value="//*[@value='Safari']" />
+			<element name="PopUpSwitch" descriptor="XPATH" value="//*[@label='Block Pop-ups' and @class='UIASwitch']" />
+			<element name="OK" descriptor="XPATH" value="//*[@label='OK']" />
+        </page>
+        
+		<page name="Contact_Us">
+			<element name="Left_Menu_Contact" descriptor="XPATH" value="//UIAImage|//*[@id='back-button']" />
+		</page>
+				
+		<page name="RESOURCES">
+			<!-- Native APP objects Below this line -->
+			<!-- DOM objects below this line -->
+			<element name="PageHeader" descriptor="XPATH" value="//SPAN[text()='RESOURCES']" />
+			<element name="Back_Button" descriptor="XPATH" value="//*[@id='back-button']" />
+			<element name="PROGRAMS_AND_COURSES" descriptor="XPATH" value="//*[text()='PROGRAMS AND COURSES']" />
+			<element name="STUDENT_SERVICES" descriptor="XPATH" value="//*[text()='STUDENT SERVICES']" />
+			<element name="CAREER_SERVICES" descriptor="XPATH" value="//*[text()='CAREER SERVICES']" />
+			<element name="MILITARY_STUDENTS" descriptor="XPATH" value="//*[text()='MILITARY STUDENTS']" />
+			<element name="ADDITIONAL_RESOURCES" descriptor="XPATH" value="//*[text()='ADDITIONAL RESOURCES']" />
+			<element name="CCN_MY_DEGREE_AND_COURSES" descriptor="XPATH" value="//div[contains(text(),'MY DEGREE AND COURSES')]" />
+			<element name="CCN_SUPPORT_SERVICES" descriptor="XPATH" value="//*[text()='SUPPORT SERVICES']" />
+			<element name="ACADEMIC_RESOURCES" descriptor="XPATH" value="//*[text()='ACADEMIC RESOURCES']" />
+		</page>
+		
+		<page name="RESOURCES-PROGRAMS_AND_COURSES">
+			<!-- Native APP objects Below this line -->
+			<!-- DOM objects below this line -->
+			<element name="PageHeader" descriptor="XPATH" value="//SPAN[text()='PROGRAMS AND COURSES']" />
+			<element name="Back_Button" descriptor="XPATH" value="//*[@id='back-button']" />
+			<element name="End-of-Term_Survey" descriptor="XPATH" value="//*[text()='End-of-Term Survey']" />
+			<element name="The_HUB" descriptor="XPATH" value="//*[text()='The HUB']" />
+			<element name="Complimentary_Courses" descriptor="XPATH" value="//*[text()='Complimentary Courses']" />
+			<element name="Study_Abroad" descriptor="XPATH" value="//*[text()='Study Abroad']" />
+		</page>
+
+		<page name="MY_DEGREE_AND_COURSES">
+			<element name="PageHeader" descriptor="XPATH" value="//*[text()='MY DEGREE AND COURSES']" />
+			<element name="Back_Button" descriptor="XPATH" value="//*[@id='back-button']" />
+			<element name="Take_Your_Student_Surveys" descriptor="XPATH" value="//*[text()='Take Your Student Surveys']" />
+			<element name="Clinical_Compliance" descriptor="XPATH" value="//*[text()='Clinical Compliance']" />
+			<!--<element name="Resources_and_Compliance_Packet" descriptor="XPATH" value="//*[text()='Resources and Compliance Packet']" />  -->
+			<element name="HIPAA_and_OSHA_Quizzes" descriptor="XPATH" value="//*[text()='HIPAA and OSHA Quizzes']" />
+			<element name="Order_Uniform" descriptor="XPATH" value="//*[text()='Order Uniform']" />			
+			<element name="Post-Licensure_Practicum" descriptor="XPATH" value="//*[text()='Post-Licensure Practicum']" />
+			<element name="MSN_FNP_Immersion_and_Practicums" descriptor="XPATH" value="//*[text()='MSN FNP Immersion and Practicums']" />
+			<element name="MSN_Practicum" descriptor="XPATH" value="//*[text()='MSN Practicum']" />
+			<element name="DNP_Project_Practicum" descriptor="XPATH" value="(//*[contains(text(),'DNP Project') and contains(text(),'Practicum')])[1]" />			
+			<element name="Practicum_Handbooks_and_Resources" descriptor="XPATH" value="//*[text()='Practicum Handbooks and Resources']" />			
+			<element name="Global_Health_Education_Program" descriptor="XPATH" value="(//*[text()='Global Health Education Program'])[1]" />
+			<element name="Clinical_Compliance" descriptor="XPATH" value="//*[text()='Clinical Compliance']" />
+		
+		</page>	
+		
+		<page name="RESOURCES-STUDENT_SERVICES">
+			<!-- Native APP objects Below this line -->
+			<!-- DOM objects below this line -->
+			<element name="PageHeader" descriptor="XPATH" value="//SPAN[text()='STUDENT SERVICES']" />
+			<element name="Back_Button" descriptor="XPATH" value="//*[@id='back-button']" />
+			<element name="Technical_Help" descriptor="XPATH" value="//*[text()='Technical Help']" />
+			<element name="Ask_Student_Services" descriptor="XPATH" value="//*[text()='Ask Student Services']" />
+			<element name="Tutor_Source_Home" descriptor="XPATH" value="//*[text()='Online Tutoring (Tutor.com)']" />
+			<element name="Aspire_Student_Assistance_Program" descriptor="XPATH" value="//*[text()='ASPIRE Student Assistance Program']" />
+			<element name="Smarthinking" descriptor="XPATH" value="//*[@class='small-23 columns fontSize4 letterSpacing2 ng-binding' and text()='Smarthinking']" />
+			<element name="Academic_Success_Center" descriptor="XPATH" value="//*[text()='Academic Success Center']" />
+		</page>
+
+		<page name="CCN-STUDENT_SERVICES">
+			<element name="PageHeader" descriptor="XPATH" value="//SPAN[text()='SUPPORT SERVICES']" />
+			<element name="Back_Button" descriptor="XPATH" value="//*[@id='back-button']" />	
+			<element name="Technical_Help" descriptor="XPATH" value="//*[text()='Technical Help']" />
+			<element name="Ask_Student_Services" descriptor="XPATH" value="//*[text()='Ask Student Services']" />	
+			<element name="The_HUB" descriptor="XPATH" value="//*[text()='The HUB']" />
+			<element name="ASPIRE_Student_Assistance_Program" descriptor="XPATH" value="//*[text()='ASPIRE Student Assistance Program']" />
+			<element name="Device_Inspector" descriptor="XPATH" value="//*[text()='Device Inspector']" />
+			<element name="Student_Handbook" descriptor="XPATH" value="//*[text()='Student Handbook']" />
+			<element name="Student_Catalog" descriptor="XPATH" value="//*[text()='Student Catalog']" />
+			<element name="Career_Services" descriptor="XPATH" value="(//*[text()='Career Services'])[1]" />
+			<element name="Tutor_Resources" descriptor="XPATH" value="//*[text()='Tutor Resources']" />
+			<element name="Student_Insurance_Plan" descriptor="XPATH" value="//*[text()='Student Insurance Plan']" />				
+		</page>
+		
+		<page name="RESOURCES-CAREER_SERVICES">
+			<!-- Native APP objects Below this line -->
+			<!-- DOM objects below this line -->
+			<element name="PageHeader" descriptor="XPATH" value="//SPAN[text()='CAREER SERVICES']" />
+			<element name="Back_Button" descriptor="XPATH" value="//*[@id='back-button']" />
+			<element name="Career_Services_Overview" descriptor="XPATH" value="//*[text()='Career Services Overview']" />
+			<element name="Companies_that_Recruited_Our_Graduates" descriptor="XPATH" value="//*[text()='Companies that Recruited Our Graduates']" />
+			<element name="My_Compass_to_My_Career" descriptor="XPATH" value="//*[text()='My Compass to My Career']" />
+		</page> 
+		
+		<page name="RESOURCES-MILITARY_STUDENTS">
+			<!-- Native APP objects Below this line -->
+			<!-- DOM objects below this line -->
+			<element name="PageHeader" descriptor="XPATH" value="//SPAN[text()='MILITARY STUDENTS']" />
+			<element name="Back_Button" descriptor="XPATH" value="//*[@id='back-button']" />
+			<element name="JST_Transcripts" descriptor="XPATH" value="//*[text()='JST Transcripts']" />
+			<element name="Veterans" descriptor="XPATH" value="//*[text()='Veterans']" />
+			<element name="US_Department_of_Veterans_Affairs" descriptor="XPATH" value="//*[text()='U.S. Department of Veterans Affairs']" />	
+			<element name="Army_National_Guard" descriptor="XPATH" value="//*[text()='Army/National Guard']" />
+			<element name="GoArmyEdu_Portal" descriptor="XPATH" value="//*[text()='GoArmyEdu Portal']" />		
+			<element name="Air_Force" descriptor="XPATH" value="//*[text()='Air Force']" />
+			<element name="AI_Portal_MyCAA" descriptor="XPATH" value="//*[text()='AI Portal/MyCAA']" />			
+			<element name="Navy" descriptor="XPATH" value="//*[text()='Navy']" />		
+			<element name="Navy_College_Program" descriptor="XPATH" value="(//*[text()='Navy College Program'])[1]" />
+			<element name="Navy_Paper_Voucher" descriptor="XPATH" value="(//*[text()='Navy Paper Voucher'])[1]" />			
+			<element name="Marine_Corps" descriptor="XPATH" value="//*[text()='Marine Corps']" />
+			<element name="Marine_College_Program" descriptor="XPATH" value="(//*[text()='Navy College Program'])[2]" />
+			<element name="Marine_Paper_Voucher" descriptor="XPATH" value="(//*[text()='Navy Paper Voucher'])[2]" />									
+			<element name="Coast_Guard" descriptor="XPATH" value="//*[text()='Coast Guard']" />
+			<element name="Coast_Guard_Institute" descriptor="XPATH" value="//*[text()='Coast Guard Institute']" />		
+			<element name="Coast_Guard_Voucher" descriptor="XPATH" value="//*[text()='Coast Guard Voucher']" />					
+			<element name="Selective_Service_Information" descriptor="XPATH" value="//*[text()='Selective Service Information']" />					
+			<element name="Veteran_Assistance" descriptor="XPATH" value="//*[text()='Veteran Assistance']" />					
+		</page> 
+		
+		<page name="RESOURCES-ADDITIONAL_RESOURCES">
+			<!-- Native APP objects Below this line -->
+			<!-- DOM objects below this line -->
+			<element name="PageHeader" descriptor="XPATH" value="//SPAN[text()='ADDITIONAL RESOURCES']" />
+			<element name="Back_Button" descriptor="XPATH" value="//*[@id='back-button']" />
+			<element name="Update_Personal_Information" descriptor="XPATH" value="//*[text()='Update Personal Information']" />
+			<element name="Bookstore" descriptor="XPATH" value="//*[text()='Bookstore']" />
+			<element name="News" descriptor="XPATH" value="//*[text()='News']" />
+			<element name="Library_Database_Access" descriptor="XPATH" value="//*[text()='Library Database Access']" />
+			<element name="Complimentary_Courses" descriptor="XPATH" value="//*[text()='Complimentary Courses']" />
+			<element name="Commencement_Dates" descriptor="XPATH" value="//*[text()='Commencement Dates']" />
+			<element name="Siren" descriptor="XPATH" value="//*[text()='Siren']" />
+			<element name="Device_Inspector" descriptor="XPATH" value="//*[text()='Device Inspector']" />
+			<element name="Merchandise_and_More" descriptor="XPATH" value="//*[text()='Merchandise and More']" />
+			<element name="Merchandise" descriptor="XPATH" value="//*[text()='Merchandise']" />
+			<element name="HP_Store_for_Education" descriptor="XPATH" value="//*[text()='HP Store for Education']" />
+			<element name="Apple_Store_for_Education" descriptor="XPATH" value="//*[text()='Apple Store for Education']" />
+			<element name="Microsoft_Store_for_Education" descriptor="XPATH" value="//*[text()='Microsoft Store for Education']" />
+			<element name="Forwarding_Email_to_Another_Account" descriptor="XPATH" value="//*[text()='Forwarding Email to Another Account']" />
+			<element name="How-To-Guides" descriptor="XPATH" value="//*[text()='How-To Guides']" />
+			<element name="What_is_ASPIRE" descriptor="XPATH" value="//*[text()='What is ASPIRE?']" />
+			<element name="How_to_Order_Printed_eBooks" descriptor="XPATH" value="//*[text()='How to Order Printed eBooks']" />
+			<element name="How_to_Access_Itemized_Statements" descriptor="XPATH" value="//*[text()='How to Access Itemized Statements']" />
+			<element name="How_to_view_Grades" descriptor="XPATH" value="//*[text()='How to view Grades']" />
+			<element name="Requesting_Transcripts" descriptor="XPATH" value="//*[text()='Requesting Transcripts']" />
+			<element name="Setting_Up_Direct_Deposit" descriptor="XPATH" value="//*[text()='Setting Up Direct Deposit']" />
+			<element name="How_to_Order_Books_and_Access_eBooks" descriptor="XPATH" value="//*[text()='How to Order Books and Access eBooks']" />
+			<element name="How_Access_Chamberlain_Care_Student_Success_Strategies" descriptor="XPATH" value="//*[text()='How to Access Chamberlain Care Student Success Strategies']" />
+			<element name="How_to_Submit_Your_Practicum_Application" descriptor="XPATH" value="//*[text()='How to Submit Your Practicum Application']" />			
+			<element name="back-to-top" descriptor="XPATH" value="//*[@id='back-to-top']" />			
+			<element name="School_Locations" descriptor="XPATH" value="//*[text()='School Locations']" />			
+			<element name="Admissions" descriptor="XPATH" value="//*[text()='Admissions']" />
+			<element name="Voter_Registration" descriptor="XPATH" value="//*[text()='Voter Registration']" />
+			<element name="Online_Spirit_Store" descriptor="XPATH" value="//*[text()='Online Spirit Store']" />
+			<element name="ADA-American_with_Disabilities_Act" descriptor="XPATH" value="//*[text()='ADA - American with Disabilities Act']" />			
+			<element name="FERPA-Family_Education_Rights_Privacy_Act_Link" descriptor="XPATH" value="//*[text()='FERPA - Family Education Rights Privacy Act Link']" />
+		</page>  
+
+		<page name="RESOURCES-ACADEMIC-RESOURCES">
+			<!-- Native APP objects Below this line -->
+			<!-- DOM objects below this line -->
+			<element name="PageHeader" descriptor="XPATH" value="//SPAN[text()='ACADEMIC RESOURCES']" />
+			<element name="Back_Button" descriptor="XPATH" value="//*[@id='back-button']" />
+			<element name="ASPIRE_Student_Assistance" descriptor="XPATH" value="//*[text()='ASPIRE Student Assistance']" />
+			<element name="HealthyU-ASPIRE_Student_Blog" descriptor="XPATH" value="//*[text()='HealthyU - ASPIRE Student Blog']" />
+			<element name="Student_Catalog" descriptor="XPATH" value="//*[text()='Student Catalog']" />
+			<element name="Student_Handbook" descriptor="XPATH" value="//*[text()='Student Handbook']" />
+		</page>		
+			  		     				     		
+		<page name="Contact_Us_Technical_Chat">
+			<element name="Left_Menu_Contact" descriptor="XPATH" value="//UIAImage|//*[@id='back-button']" />   				        
+			<element name="BackButton" descriptor="XPATH" value="//UIAImage|//*[@id='back-button']" />
+			<element name="Technical_Chat" descriptor="XPATH" value="//UIAStaticText|//*[text()='Technical Chat']" />
+			<element name="Name" descriptor="XPATH" value="//label[contains(text(),'Please enter your name')]/input" />  
+			<element name="Chat_Problem" descriptor="XPATH" value="//label[contains(text(),'Please provide a short description of your problem')]/textarea"/>	
+			<element name="Email" descriptor="XPATH" value="//label[contains(text(),'Please enter your contact email')]/input" />  
+																
+			<!--<element name="Check_For_Agent" descriptor="XPATH" value="//button[@id='checkForAgents' and contains(text(),'Check For Agents')]" />  --> 
+			<element name="Check_For_Agent" descriptor="XPATH" value="//button[@id='checkForAgents']" /> 			
+			<element name="Connecting_Agent" descriptor="XPATH" value="//*[@label='Connecting to Agent...']" />
+			<element name="BACK" descriptor="XPATH" value="//*[@resourceid='com.devry.mobileapps.devry.debug:id/negative']" />
+			<element name="CALL" descriptor="XPATH" value="//*[@resourceid='com.devry.mobileapps.devry.debug:id/positive']" />
+			<element name="CALL_US" descriptor="XPATH" value="//UIAButton[@name='CALL US']|//*[@text='CALL US']|//*[@resourceid='com.devry.mobileapps.devry:id/positive']" />	
+		</page>	
+		 
+		<page name="ContactUs_Technical_Ticket">    			
+			<element name="Create_Technical_Ticket" descriptor="XPATH" value="//UIAStaticText|//*[text()='Create Technical Ticket']" />
+			<element name="shortDesc" descriptor="XPATH" value="//UIATextField[@name='shortDesc']|//*[@id='shortDesc']"/>
+			<element name="fullDesc" descriptor="XPATH" value="//UIATextField[@name='fullDesc']|//*[@id='fullDesc']" /> 
+			<element name="SUBMIT" descriptor="XPATH" value="//UIAButton[@name='submitButton']|//*[@id='submitButton']" />
+			<element name="ALERT_OK" descriptor="XPATH" value="//UIAButton[@name='OK']|//*[@text='OK']" />
+			<element name="Ticket_Created_Popup" descriptor="XPATH" value="//*[text()='TICKET CREATED']|//*[contains(@resourceid,':id/title')]" />		
+		</page>
+		      		  
+		<page name="ContactUs_Select_Number">  
+		 
+			<element name="Select_Number" descriptor="XPATH" value="//*[text()='Select a Number to Call']" />
+			<element name="Technical_Help_Desk" descriptor="XPATH" value="//*[text()=' TECHNICAL HELP DESK']" />	
+			<!--  <element name="Technical_Help_Desk_Number" descriptor="XPATH" value="//a[text()=' (877) 784-1997 ']|//a[text()=' (800) 240-2071 ']/span[contains(text(),'Option 2')]" />-->
+			<element name="Technical_Help_Desk_Number" descriptor="XPATH" value="//div[text()=' TECHNICAL HELP DESK']/../..//div/a" />				
+			<element name="Student_Support_Advisor" descriptor="XPATH" value="//*[text()=' STUDENT SUPPORT ADVISOR']" />    
+			<element name="Student_Finance" descriptor="XPATH" value="//*[text()=' STUDENT FINANCE']" />
+			<element name="Student_Support_Advisor_Number" descriptor="XPATH" value="//div[text()=' STUDENT SUPPORT ADVISOR']/../..//div/a" />    	
+			<element name="Student_Finance_Number" descriptor="XPATH" value="//a[text()=' (800) 734-4272 ']/span[contains(text(),'Option 1')]|//a[text()=' (800) 442-4048 ']/span[contains(text(),'Option 1')]" />	
+			<element name="Academic_Advising" descriptor="XPATH" value="//*[text()=' ACADEMIC ADVISING']" />	
+			<element name="Academic_Advising_Number" descriptor="XPATH" value="//div[text()=' ACADEMIC ADVISING']/../..//div/a[text()=' (800) 734-4272 ']/span[contains(text(),'Option 3')]|
+			//div[text()=' ACADEMIC ADVISING']/../..//div/a[text()=' (800) 442-4048 ']/span[contains(text(),'Option 3')]" />	
+			<element name="Career_Services" descriptor="XPATH" value="//*[text()=' CAREER SERVICES']" />	
+			<element name="Career_Services_Number" descriptor="XPATH" value="//*[text()=' (800) 261-5156 ']" />	
+			<element name="Aspire_Student_Assistance" descriptor="XPATH" value="//*[text()=' ASPIRE STUDENT ASSISTANCE']" />	
+			<element name="Aspire_Student_Assistance_Number" descriptor="XPATH" value="//*[text()=' (888) 470-1531 ']" />	
+			<element name="Student_Disability_Services" descriptor="XPATH" value="//*[text()=' THE OFFICE OF STUDENT DISABILITY SERVICES']" />	
+			<element name="Student_Disability_SVC_Number" descriptor="XPATH" value="//div[text()=' THE OFFICE OF STUDENT DISABILITY SERVICES']/../..//div/a[text()=' (800) 734-4272 ']/span[contains(text(),'Option 3')]|//div[text()=' THE OFFICE OF STUDENT DISABILITY SERVICES']/../..//div/a[text()=' (800) 442-4048 ']/span[contains(text(),'Option 3')]" />	
+			<element name="Student_Disability_SVC_Email" descriptor="XPATH" value="//a[@href='mailto:adaofficer@devry.edu']" />	
+			<element name="CCN" descriptor="XPATH" value="//*[text()=' CHAMBERLAIN UNIVERSITY']" />
+			<element name="CCN_Number" descriptor="XPATH" value="//div[text()=' CHAMBERLAIN UNIVERSITY']/../..//div/a" />	
+			<element name="CCN_Acad_Advising" descriptor="XPATH" value="//*[text()=' CHAMBERLAIN ACADEMIC ADVISING']" />
+			<element name="CCN_Acad_Advising_Number" descriptor="XPATH" value="//div[text()=' CHAMBERLAIN ACADEMIC ADVISING']/../..//div/a" />	
+			<element name="CCN_Student_Disability_SVC_Number" descriptor="XPATH" value="//div[text()=' THE OFFICE OF STUDENT DISABILITY SERVICES']/../..//div/a" />	
+			<element name="CCN_Student_Disability_SVC_Email" descriptor="XPATH" value="//a[@href='mailto:adaofficer@chamberlain.edu']" />				
+		</page>
+		
+		<page name="ContactUs_CreateAcademicCase">  	 
+			<element name="Create_Academic_Case" descriptor="XPATH" value="//UIAStaticText[@label='Create Technical Ticket']|//*[text()='Create Academic Case']" />
+			<element name="Salesforce" descriptor="XPATH" value="//*[@contentDesc='Login | DeVry/Keller Community']" />
+			<element name="Tabs" descriptor="XPATH" value="//*[@resourceid='com.android.chrome:id/tab_switcher_button']" />    				     
+			<element name="CONTACT_MENU" descriptor="XPATH" value="//*[@class='fontSize4 letterSpacing1 ng-binding']" />
+		</page>		
+
+		<page name="Feedback">
+			<element name="Left_Menu_Messages" descriptor="XPATH" value="//UIAImage|//*[@id='back-button']" /> 
+			<element name="Help_us_improve" descriptor="XPATH" value="//UIAImage|//*[@id='clipboard']"/> 
+			<element name="Help_us_improve_Text" descriptor="XPATH" value="//*[contains(text(),'Help Us Improve')]"/> 
+			<element name="Student_Mobile_Feedback" descriptor="XPATH" value="//*[contains(text(),'Student Mobile Feedback')]"/> 
+			<element name="Feedback_Header" descriptor="XPATH" value="//*[contains(text(),'FEEDBACK')]"/> 
+			<element name="Very_Satisfied" descriptor="XPATH" value="//UIATextField[@name='Very Satisfied']|//*[text()='Very Satisfied']"  /> 
+			<element name="Yes" descriptor="XPATH" value="//UIATextField[@name='Yes']|//*[text()='Yes']"  />
+			<element name="App_Better" descriptor="XPATH" value="//*[@class='DOMUIATextField']|//*[@class='ng-pristine ng-untouched ng-valid ng-scope']" />
+			<element name="SUBMIT" descriptor="XPATH" value="//*[@label='Submit']|//*[text()='Submit']" />
+		    <element name="Question" descriptor="XPATH" value="//*[text()='What can we do to make the app better?']" />  		
+			<element name="OK" descriptor="XPATH" value="//UIAButton[@name='OK']|//*[@text='OK']" />
+		</page>
+		<page name="PREFERENCES">
+			<!-- Native APP objects Below this line -->
+			<element name="SUCCESS" descriptor="XPATH" value="//*[contains(@resource-id,':id/title') and @text='Success']|//*[@value='Success']|//*[contains(@resource-id,':id/title') and @text='SUCCESS']|//*[@value='SUCCESS']" />
+			<element name="OK_BUTTON" descriptor="XPATH" value="//*[contains(@resource-id,':id/positive') and @text='OK']|//*[@label='OK']" />
+			<element name="ALERTS_CHECKBOX_NATIVE" descriptor="XPATH" value="//UIAStaticText[@label='ALERTS']/following::UIASwitch|//android.view.View[android.widget.CheckBox[@resource-id='topic_switch_0']]" />
+			<element name="REMINDERS_CHECKBOX_NATIVE" descriptor="XPATH" value="//UIAStaticText[@label='REMINDERS']/following::UIASwitch|//android.view.View[android.widget.CheckBox[@resource-id='topic_switch_1']]" />
+			
+			<!-- DOM objects below this line -->
+			<element name="PageHeader" descriptor="XPATH" value="//SPAN[text()='PREFERENCES']" />
+			<element name="Back_Button" descriptor="XPATH" value="//*[@id='back-button']" />
+			<element name="NOTIFICATIONS" descriptor="XPATH" value="//*[text()='NOTIFICATIONS']" />
+			<element name="ALERTS" descriptor="XPATH" value="//*[text()='ALERTS']" />
+			<element name="ALERTS_CHECKBOX" descriptor="XPATH" value="//input[@id='topic_switch_0' and @type='checkbox']" />
+			<element name="ALERTS_CHECKED" descriptor="XPATH" value="//*[@id='topic_switch_0' and @class='ng-untouched ng-valid ng-dirty ng-valid-parse']" />
+			<element name="ALERTS_NOT_CHECKED" descriptor="XPATH" value="//*[@id='topic_switch_0' and @class='ng-pristine ng-untouched ng-valid']" />
+			<element name="ALERTS_ERROR" descriptor="XPATH" value="//*[@id='topic_switch_0' and @class='ng-valid ng-dirty ng-valid-parse ng-touched']" />
+			<element name="REMINDERS" descriptor="XPATH" value="//*[text()='REMINDERS']" />
+			<element name="REMINDERS_CHECKBOX" descriptor="XPATH" value="//input[@id='topic_switch_1' and @type='checkbox']" />
+			<element name="UPDATE_BUTTON" descriptor="XPATH" value="//*[text()='UPDATE']" />			
+		</page>
+			
+		<page name="Acad_Calendar">	
+			<element name="Calendar_Header" descriptor="XPATH" value="//*[text()='CALENDAR']" />
+			<element name="Left_Menu" descriptor="XPATH" value="//UIAImage|//*[@id='back-button']" />			
+		</page>
+		
+		<page name="Messages">	
+			<element name="Messages_Header" descriptor="XPATH" value="//*[text()='MESSAGES']" />
+			<element name="Left_Menu" descriptor="XPATH" value="//UIAImage|//*[@id='back-button']" />			
+		</page>		
+		
+		<page name="AUC-RESOURCES">
+			<element name="PageHeader" descriptor="XPATH" value="//SPAN[text()='RESOURCES']" />
+			<element name="Back_Button" descriptor="XPATH" value="//*[@id='back-button']" />			
+			<element name="Academics" descriptor="XPATH" value="//*[text()='ACADEMICS']" />			
+			<element name="Administrative" descriptor="XPATH" value="//*[text()='ADMINISTRATIVE']" />
+			<element name="Financial_Aid_and_Scholarship" descriptor="XPATH" value="//*[text()='FINANCIAL AID &amp; SCHOLARSHIP']" />
+			<element name="Handbook" descriptor="XPATH" value="//*[text()='HANDBOOK']" />
+			<element name="Housing" descriptor="XPATH" value="//*[text()='HOUSING']" />
+			<element name="Clinical" descriptor="XPATH" value="//*[text()='CLINICAL']" />
+			<element name="Residency" descriptor="XPATH" value="//*[text()='RESIDENCY']" />
+			<element name="Graduation" descriptor="XPATH" value="//*[text()='GRADUATION']" />
+			<element name="Alumni" descriptor="XPATH" value="//*[text()='ALUMNI']" />
+			<element name="Student_Services" descriptor="XPATH" value="//*[text()='STUDENT SERVICES']" />	
+			<element name="Additional_Resources" descriptor="XPATH" value="//*[text()='ADDITIONAL RESOURCES']" />						
+			<element name="Academic_Catalogue" descriptor="XPATH" value="//*[text()='Academic Catalogue']" />
+			<element name="Transcript_Request" descriptor="XPATH" value="//*[text()='Transcript Request']" />
+			<element name="Enrollment_Verification_Form" descriptor="XPATH" value="//*[text()='Enrollment Verification Form']" />
+			<element name="Opt_Back_into_Ebooks" descriptor="XPATH" value="//*[text()='Opt Back into Ebooks']" />
+			<element name="Alumni_Contact_Network_Request_Form" descriptor="XPATH" value="//*[text()='Alumni Contact Network Request Form']" />
+			<element name="NAGICO_Health_Claim_Form" descriptor="XPATH" value="//*[text()='NAGICO Health Claim Form']" />
+			<element name="Aetna_Student_Health_Insurance_Information" descriptor="XPATH" value="//*[text()='Aetna Student Health Insurance Information']" />
+			<element name="Clinical_Health_Insurance_Waiver_Request" descriptor="XPATH" value="//*[text()='Clinical Health Insurance Waiver Request']" />
+			<element name="Family_Educational_Rights_and_Privacy_Act" descriptor="XPATH" value="//*[text()='Family Educational Rights and Privacy Act']" />
+			<element name="Administrative_Review_and_Grievance_Procedures_Document" descriptor="XPATH" value="//*[text()='Administrative Review and Grievance Procedures Document']" />
+			<element name="Non-Discrimination_Policy" descriptor="XPATH" value="//*[text()='Non-Discrimination Policy']" />
+			<element name="Sex_and_Gender_Based_Misconduct_Prevention_Resources" descriptor="XPATH" value="//*[text()='Sex and Gender Based Misconduct Prevention Resources']" />
+			<element name="UK_Clinical_Health_Insurance_Waiver_Request" descriptor="XPATH" value="//*[text()='UK Clinical Health Insurance Waiver Request']" />
+			<element name="Reinstatement_of_Health_Insurance_Form" descriptor="XPATH" value="//*[text()='Reinstatement of Health Insurance Form']" />
+			<element name="Financial_Planning_Guide" descriptor="XPATH" value="//*[text()='Financial Planning Guide']" />
+			<element name="Financial_Aid_Checklist" descriptor="XPATH" value="//*[text()='Financial Aid Checklist']" />
+			<element name="Canadian_Financial_Planning_Guide" descriptor="XPATH" value="//*[text()='Canadian Financial Planning Guide']" />
+			<element name="Financial_Aid_FAQ" descriptor="XPATH" value="//*[text()='Financial Aid FAQ']" />
+			<element name="Adtalem_Scholarship_Fund" descriptor="XPATH" value="//*[text()='Adtalem Scholarship Fund']" />
+			<element name="Dr_Karl_Stockhuasen_Memorial_Scholarship" descriptor="XPATH" value="//*[contains(text(),'Karl Stockhuasen Memorial Scholarship')]" />
+			<element name="Loan_Estimator" descriptor="XPATH" value="//*[text()='Loan Estimator']" />
+			<element name="Student_Engagement_Award" descriptor="XPATH" value="//*[text()='Student Engagement Award']" />
+			<element name="Social_Accountability_Award" descriptor="XPATH" value="//*[text()='Social Accountability Award']" />
+			<element name="AUC_Student_Handbook" descriptor="XPATH" value="//*[contains(text(),'AUC Student Handbook')]" />
+
+
+
+								
+			<element name="AUC_Website" descriptor="XPATH" value="//*[text()='AUC Website']" />
+			<element name="Facebook" descriptor="XPATH" value="//*[text()='Facebook']" />
+			<element name="News" descriptor="XPATH" value="//*[text()='News']" />
+			<element name="Refund_Site_CashNet" descriptor="XPATH" value="//*[text()='Refund Site - CashNet']" />
+			<element name="UpToDate" descriptor="XPATH" value="//*[text()='UpToDate']" />
+			<element name="Student_Email" descriptor="XPATH" value="//*[text()='Student Email']" />
+			<element name="Housing_Website" descriptor="XPATH" value="//*[text()='Housing Website']" />
+			<element name="AUC_Library" descriptor="XPATH" value="//*[text()='AUC Library']" />
+			<element name="Angel_LMS" descriptor="XPATH" value="//*[text()='Angel LMS']" />
+			<element name="Bookstore" descriptor="XPATH" value="//*[text()='Bookstore']" />		
+		</page>	
+		
+		<page name="AUC_Schedule">
+			<element name="Left_Menu" descriptor="XPATH" value="//UIAImage|//*[@id='back-button']" />				
+			<element name="Right_Hamburger_Menu" descriptor="XPATH" value="//UIAWebView/UIALink[2]|//*[@class='right menu-button']//*[@class='menu-icon']" />
+			<element name="Schedule_Label" descriptor="XPATH" value="//*[@label='SCHEDULE']|//*[contains(text(),'SCHEDULE')]" />
+			<element name="E*Value_Button" descriptor="XPATH" value="//*[@label='E*Value']|//*[contains(text(),'E*Value')]" />
+			<element name="Event_Calendar_Button" descriptor="XPATH" value="//*[@label='Event Calendar']|//*[contains(text(),'Event Calendar')]" />
+			<element name="Attendance_Button" descriptor="XPATH" value="//*[@label='Attendance']|//*[contains(text(),'Attendance')]" />
+			<element name="Schedule_Menu" descriptor="XPATH" value="//*[@label='SCHEDULE']|//*[@text='SCHEDULE']" />
+			<element name="Registration_Status_Button" descriptor="XPATH" value="//*[contains(text(),'Registration Status')]" />			
+		</page>	
+		
+		<page name="AUC_Grades">
+			<element name="Left_Menu" descriptor="XPATH" value="//UIAImage|//*[@id='back-button']" />				
+			<element name="Right_Hamburger_Menu" descriptor="XPATH" value="//UIAWebView/UIALink[2]|//*[@class='right menu-button']//*[@class='menu-icon']" />
+			<element name="Grades_Label" descriptor="XPATH" value="//*[@label='GRADES']|//*[contains(text(),'GRADES')]" />
+			<element name="Print_Grades_Button" descriptor="XPATH" value="//*[@label='Print Grades']|//*[contains(text(),'Print Grades')]" />
+			<element name="Unofficial_Transcripts_Button" descriptor="XPATH" value="//*[@label='Unofficial Transcripts']|//*[contains(text(),'Unofficial Transcripts')]" />
+			<element name="Grades_Menu" descriptor="XPATH" value="//UIATableCell[@name='GRADES']|//*[@label='GRADES']|//*[@text='GRADES']" />
+		</page>						
+
+		<page name="AUC_ContactUs">  
+			<element name="Phone_and_Email_Label" descriptor="XPATH" value="//*[contains(text(),'PHONE AND EMAIL')]" />			
+			<element name="Help_Desk" descriptor="XPATH" value="//*[text()=' HELPDESK']" />	
+			<element name="Help_Desk_Number" descriptor="XPATH" value="//div[text()=' HELPDESK']/../..//div/a[text()=' (721) 545-2298 ']/span[contains(text(),'(x401-1259)')]" />						
+			<element name="Help_Desk_email" descriptor="XPATH" value="//a[@href='mailto:helpdesk@aucmed.edu']" />						
+			<element name="Student_Accounts" descriptor="XPATH" value="//*[text()=' STUDENT ACCOUNTS']" />	
+			<element name="Student_Accounts_Number" descriptor="XPATH" value="//div[text()=' STUDENT ACCOUNTS']/../..//div/a[text()=' (305) 446-0600 ']/span[contains(text(),'(Option 2)')]" />						
+			<element name="Student_Accounts_email" descriptor="XPATH" value="//a[@href='mailto:accounts@aucmed.edu']" />						
+			<element name="Financial_Aid" descriptor="XPATH" value="//*[text()=' FINANCIAL AID']" />	
+			<element name="Financial_Aid_Number" descriptor="XPATH" value="//div[text()=' FINANCIAL AID']/../..//div/a[text()=' (305) 446-0600 ']/span[contains(text(),'(Option 3)')]" />						
+			<element name="Financial_Aid_email" descriptor="XPATH" value="//a[@href='mailto:finaid@aucmed.edu']" />						
+			<element name="OFFICE_OF_CLINICAL_STUDENT_AFFAIRS" descriptor="XPATH" value="//*[text()=' OFFICE OF CLINICAL STUDENT AFFAIRS']" />	
+			<element name="OFFICE_OF_CLINICAL_STUDENT_AFFAIRS_Number" descriptor="XPATH" value="//div[text()=' OFFICE OF CLINICAL STUDENT AFFAIRS']/../..//div/a[text()=' (305) 446-0600 ']/span[contains(text(),'(Option 4)')]" />						
+			<element name="OFFICE_OF_CLINICAL_STUDENT_AFFAIRS_email" descriptor="XPATH" value="//a[@href='mailto:advisors@aucmed.edu']" />	
+			<element name="OFFICE_OF_THE_REGISTRAR" descriptor="XPATH" value="//*[text()=' OFFICE OF THE REGISTRAR']" />	
+			<element name="OFFICE_OF_THE_REGISTRAR_Number" descriptor="XPATH" value="//div[text()=' OFFICE OF THE REGISTRAR']/../..//div/a[text()=' (305) 446-0600 ']/span[contains(text(),'(Option 5)')]" />						
+			<element name="OFFICE_OF_THE_REGISTRAR_email" descriptor="XPATH" value="//a[@href='mailto:aucregistrar@aucmed.edu']" />						
+			<element name="OFFICE_OF_STUDENT_PROFESSIONAL_DEVELOPMENT" descriptor="XPATH" value="//*[text()=' OFFICE OF STUDENT PROFESSIONAL DEVELOPMENT']" />	
+			<element name="OFFICE_OF_STUDENT_PROFESSIONAL_DEVELOPMENT_Number" descriptor="XPATH" value="//div[text()=' OFFICE OF STUDENT PROFESSIONAL DEVELOPMENT']/../..//div/a[text()=' (305) 446-0600 ']/span[contains(text(),'(Option 6)')]" />						
+			<element name="OFFICE_OF_STUDENT_PROFESSIONAL_DEVELOPMENT_email" descriptor="XPATH" value="//a[@href='mailto:ospd@aucmed.edu']" />	
+			<element name="Back_Button" descriptor="XPATH" value="//*[@id='back-button']" />										
+		</page>
+
+		<page name="CAR_ContactUs">
+			<element name="Phone_and_Email_Label" descriptor="XPATH" value="//*[contains(text(),'PHONE AND EMAIL')]" />			
+			<element name="ADMISSIONS" descriptor="XPATH" value="//*[text()=' ADMISSIONS']" />		
+			<element name="ADMISSIONS_Number" descriptor="XPATH" value="//div[text()=' ADMISSIONS']/../..//div/a[text()=' (855) 777-1921 ']/span[contains(text(),'(Option 2)')]" />								
+			<element name="STUDENT_SERVICES" descriptor="XPATH" value="//*[text()=' STUDENT SERVICES']" />
+			<element name="STUDENT_SERVICES_Number" descriptor="XPATH" value="//div[text()=' STUDENT SERVICES']/../..//div/a[text()=' (855) 777-1921 ']/span[contains(text(),'(Option 2)')]" />								
+			<element name="CAREER_SERVICES" descriptor="XPATH" value="//*[text()=' CAREER SERVICES']" />		
+			<element name="CAREER_SERVICES_Number" descriptor="XPATH" value="//div[text()=' CAREER SERVICES']/../..//div/a[text()=' (855) 777-1921 ']/span[contains(text(),'(Option 2)')]" />								
+			<element name="STUDENT_RECORDS" descriptor="XPATH" value="//*[text()=' STUDENT RECORDS']" />		
+			<element name="STUDENT_RECORDS_Number" descriptor="XPATH" value="//div[text()=' STUDENT RECORDS']/../..//div/a[text()=' (855) 777-1921 ']/span[contains(text(),'(Option 2)')]" />								
+			<element name="OFFICE_OF_STUDENT_DISABILITY_SERVICES" descriptor="XPATH" value="//*[text()=' OFFICE OF STUDENT DISABILITY SERVICES']" />		
+			<element name="OFFICE_OF_STUDENT_DISABILITY_SERVICES_Number" descriptor="XPATH" value="//div[text()=' OFFICE OF STUDENT DISABILITY SERVICES']/../..//div/a[text()=' (855) 777-1921 ']/span[contains(text(),'(Option 2)')]" />								
+			<element name="OFFICE_OF_STUDENT_DISABILITY_SERVICES_email" descriptor="XPATH" value="//a[@href='mailto:ADACarrington@carrington.edu']" />	
+			<element name="ECOLLEGE_TECH_SUPPORT" descriptor="XPATH" value="//*[text()=' ECOLLEGE TECH SUPPORT']" />	
+			<element name="ECOLLEGE_TECH_SUPPORT_Number" descriptor="XPATH" value="//div[text()=' ECOLLEGE TECH SUPPORT']/../..//div/a[text()=' (602) 324-5555 ']" />															
+			<element name="ASPIRE" descriptor="XPATH" value="//*[text()=' ASPIRE']" />
+			<element name="ASPIRE_Number" descriptor="XPATH" value="//div[text()=' ASPIRE']/../..//div/a[text()=' (888) 470-1531 ']" />											
+			<element name="Back_Button" descriptor="XPATH" value="//*[@id='back-button']" />												
+		</page> 	
+		
+		<page name="CAR_DOCUMENT_CENTER">
+			<element name="Document_Center_Label" descriptor="XPATH" value="//*[contains(text(),'DOCUMENT CENTER')]" />
+			<element name="Select_document_type_Label" descriptor="XPATH" value="//*[contains(text(),'Select document type:')]" />
+			<element name="AD-Carrington_Diploma" descriptor="XPATH" value="//*[text()='AD - Carrington  Diploma']" />
+			<element name="AD-Carrington_Diploma_Choose_a_file" descriptor="XPATH" value="(//span[text()='CHOOSE A FILE'])[1]" />
+			<element name="AD-Carrington_Diploma_Upload" descriptor="XPATH" value="(//*[contains(text(),' Upload')])[1]" />
+			
+			<element name="CS-Career_Services" descriptor="XPATH" value="//*[text()='CS - Career Services Orientation']" />
+			<element name="CS-Career_Services_Choose_a_file" descriptor="XPATH" value="(//span[text()='CHOOSE A FILE'])[2]" />
+			<element name="CS-Career_Services_Upload" descriptor="XPATH" value="(//*[contains(text(),' Upload')])[2]" />
+
+			<element name="CS-Final_Evaluation" descriptor="XPATH" value="//*[text()='CS - Final Evaluation']" />
+			<element name="CS-Final_Evaluation_Choose_a_file" descriptor="XPATH" value="(//span[text()='CHOOSE A FILE'])[3]" />
+			<element name="CS-Final_Evaluation_Upload" descriptor="XPATH" value="(//*[contains(text(),' Upload')])[3]" />
+			<element name="CS-Employment_Verification" descriptor="XPATH" value="//*[text()='CS - Employment Verification']" />
+			<element name="CS-Employment_Verification_Choose_a_file" descriptor="XPATH" value="(//span[text()='CHOOSE A FILE'])[4]" />
+			<element name="CS-Employment_Verification_Upload" descriptor="XPATH" value="(//*[contains(text(),' Upload')])[4]" />
+			<element name="Back_Button" descriptor="XPATH" value="//*[@id='back-button']" />
+		</page>			
+
+		<page name="Landing_Page">
+            <element name="Sign_In" descriptor="XPATH" value="//div[contains(text(),'Sign In')]" />
+            <element name="Sign_In_Tablet" descriptor="XPATH" value="//button[contains(text(),'SIGN IN')]|//*[text()='SIGN IN']" />
+            <!--<element name="Sign_Out" descriptor="XPATH" value="//span[contains(text(),'SIGN OUT')]" />   -->
+            <element name="Welcome_Button" descriptor="XPATH" value="//*[@id='profile-dropdown-button']" />
+            <element name="SIGN_OUT" descriptor="XPATH" value="//span[contains(text(),'SIGN OUT')]|//*[text()='SIGN OUT']" />
+            <element name="SIGN_OUT_Menu" descriptor="XPATH" value="//button[contains(text(),'SIGN OUT')]|//*[text()='SIGN OUT']" />
+            <element name="HOME_MENU" descriptor="XPATH" value="//*[@href='/home']" />
+            <element name="GOTOCLASS" descriptor="XPATH" value="//p[contains(text(),'GO TO CLASS')]|//*[text()='GO TO CLASS']" />
+            <element name="EBOOKS" descriptor="XPATH" value="//button[contains(text(),'EBOOKS')]|//*[text()='EBOOKS']" />
+            <element name="SCHEDULE" descriptor="XPATH" value="//button[contains(text(),'SCHEDULE')]|//*[text()='SCHEDULE']" />
+            <element name="LIBRARY" descriptor="XPATH" value="//p[contains(text(),'LIBRARY')]|//*[text()='LIBRARY']" />
+            <element name="GRADES" descriptor="XPATH" value="//p[contains(text(),'GRADES')]|//*[text()='GRADES']" />
+            <element name="STUDENT_FINANCE" descriptor="XPATH" value="//p[contains(text(),'STUDENT FINANCE')]|//*[text()='STUDENT FINANCE']" />
+            <element name="About" descriptor="XPATH" value="//p[contains(text(),'ABOUT')]" />
+            <element name="App_Updated_OK" descriptor="XPATH" value="//*[@id='dialog-positive-button']" />
+            <element name="MENU_LINK" descriptor="XPATH" value="//*[@id='leftMenuWeb']" />
+            <element name="Menu_Link" descriptor="XPATH" value="//*[@class='left menu-button']" />
+            <element name="PopUp" descriptor="XPATH" value="//*[@label='Allow']"  />
+            <element name="Quicklink_StudentFinance" descriptor="XPATH" value="//*[text()='Student Finance']" />
+		</page>
+
+		<page name="DVU_Login">
+			<element name="LOGO" descriptor="XPATH" value="//UIAWebView//UIAImage[1]" />
+			<element name="BACK" descriptor="XPATH" value="//UIAWebView//UIAImage" />
+			<element name="DETAILS" descriptor="XPATH" value="//UIAStaticText[@name='ENTER DETAILS']" />
+			<!--<element name="USER_ID" descriptor="XPATH" value="//UIATextField[@name='Username']|//UIATextField" />  -->
+			<!--<element name="PASSWORD" descriptor="XPATH" value="//UIASecureTextField[@name='Password']|//UIASecureTextField" />  -->
+	        <element name="USER_ID" descriptor="XPATH" value="//input[@name='username']" />
+	        <element name="PASSWORD" descriptor="XPATH" value="//input[@name='password']" />
+	        <element name="SIGN_IN_BUTTON" descriptor="XPATH" value="//button[@id='loginButton']" />
+	        <element name="FORGOT_PASSWORD" descriptor="XPATH" value="//UIAButton[@name='Forgot Password?']" />
+	        <element name="SIGN_IN" descriptor="XPATH" value="//UIAButton[@name='Sign In']" />
+	        <element name="GO" descriptor="XPATH" value="//UIAButton[@name='Go']" />
+	        <element name="HIDE" descriptor="XPATH" value="//UIAButton[@name='Hide keyboard']" />
+	        <element name="ALERT" descriptor="XPATH" value="//UIAStaticText[@name='Alert']" />
+	        <element name="ALERT_OK" descriptor="XPATH" value="//UIAButton[@name='OK']" />
+	        <element name="SIGN_OUT" descriptor="XPATH" value="//UIAButton[@name='Sign Out']" />
+		</page>
+		
+		
+		<!-- ##################### ROSS APPLY NOW ########################################### -->
+		
+		<page name="ROSSMED_APPLY_NOW">
+			<element name="APPLY_NOW_CARD" descriptor="XPATH" value="//a[@id='applyNowCard']" /> 
+		
+		<!-- ####### Start Application Process/ Personal Information -->
+			<element name="Start_Application" descriptor="XPATH" value="//a[text()='Start Application Process']|//*[@id='apply-now-link']" />
+			<element name="FirstName" descriptor="XPATH" value="//input[@name='applicationFormFirstName']" />
+			<element name="MiddleName" descriptor="XPATH" value="//input[@name='applicationFormMiddleName']" />
+			<element name="LastName" descriptor="XPATH" value="//input[@name='applicationFormLastName']" />
+			<element name="PEmail" descriptor="XPATH" value="//input[@name='applicationFormPrimaryEmail']|//*[@id='application-form-primary-email']" />
+			<element name="Password" descriptor="XPATH" value="//input[@name='applicationFormPassword']" />
+			<element name="CPassword" descriptor="XPATH" value="//input[@name='applicationFormPasswordConfirmation']" />
+			<element name="Submit" descriptor="XPATH" value="//button[@id='submitButton']" />
+			<element name="ContinueApplication" descriptor="XPATH" value="//*[text()='Continue Application']" />		
+			<element name="SignOut" descriptor="XPATH" value="//*[text()='Sign Out']" />
+			<element name="OtherName" descriptor="XPATH" value="//input[@name='applicationFormOtherNames']" />
+			<element name="StreetAddress" descriptor="XPATH" value="//textarea[@name='applicationFormStreetAddress']" />
+			<element name="City" descriptor="XPATH" value="//input[@name='applicationFormCity']" />
+			<element name="Country" descriptor="XPATH" value="//select[@name='applicationFormCountry']" />
+			<element name="State" descriptor="XPATH" value="//select[@name='applicationFormState']" />
+			<element name="Zip" descriptor="XPATH" value="//input[@name='applicationFormZipCode']" />
+			<element name="PhoneType" descriptor="XPATH" value="//select[@name='applicationFormPrimaryPhoneDesc']" />
+			<element name="CountryCode" descriptor="XPATH" value="//select[@name='applicationFormPrimaryPhoneCountryCode']" />
+			<element name="PhoneNumber" descriptor="XPATH" value="//input[@name='applicationFormPhoneNumber']" />
+			<element name="Different_PermanentAddress" descriptor="XPATH" value="//*[@id='application-form-different-permanent-address']" />
+			<element name="Same_PermanentAddress" descriptor="XPATH" value="//*[@id='application-form-same-permanent-address']" />
+			<element name="DOB" descriptor="XPATH" value="//input[@name='applicationFormDOB']" />
+			<element name="And_DOB" descriptor="XPATH" value="//*[@resource-id='com.devry.mobileapps.aucmed:id/date_picker_year']" />
+			<element name="DOB_Mth" descriptor="XPATH" value= "//UIAPickerWheel[1]" />
+            <element name="DOB_Day" descriptor="XPATH" value= "//UIAPickerWheel[2]" />       
+            <element name="DOB_year" descriptor="XPATH" value= "//UIAPickerWheel[3]|//*[@content-desc='2017 selected'] " />
+			<element name="SET" descriptor="XPATH" value= "//a[text()='Set']" />	
+			<element name="Okay" descriptor="XPATH" value= "//*[@label='Okay']|//*[@text='OK']" />			
+			<element name="gender" descriptor="XPATH" value="//select[@name='applicationFormGender']" />
+			<element name="Citizenship" descriptor="XPATH" value="//select[@name='applicationFormCitizenship']" />
+			<element name="BirthCountry" descriptor="XPATH" value="//select[@name='applicationFormCountryOfBirth']" />
+			<element name="SSN" descriptor="XPATH" value="//input[@name='applicationFormSSN']" />
+			<element name="MaritalStatus" descriptor="XPATH" value="//select[@name='applicationFormMaritalStatus']" />
+			<element name="Language" descriptor="XPATH" value="//*[@id='personal-information']/ul/li[1]/div/div/div[6]/div[2]/label[1]|//*[@id='personal-information']/admission-accordion/ul/admission-accordion-item[1]/li/div/div/div/div[6]/div[2]/label[2]/input" /> <!-- Change label number to select different language -->
+			<element name="Yes_Hispanic" descriptor="XPATH" value="//*[@id='application-form-is-hispanic-or-latino']" />
+			<element name="No_Hispanic" descriptor="XPATH" value="//*[@id='application-form-is-not-hispanic-or-latino']" />
+			<element name="Ethnicity" descriptor="XPATH" value="//*[@id='personal-information']/ul/li[1]/div/div/div[8]/label[2]|//*[@id='personal-information']/admission-accordion/ul/admission-accordion-item[1]/li/div/div/div/div[8]/label[2]" /> <!-- Change label number to select different Ethnicity -->
+			<element name="Save" descriptor="XPATH" value="//a[text()='Save']" />
+			
+			<!-- PRELIMINARY QUESTIONS -->
+			<element name="ApplyingTerm" descriptor="XPATH" value="//select[@name='applicationFormApplyingTerm']|//select[@id='application-form-applying-term']" />
+			<element name="PrimaryUndergradInst" descriptor="XPATH" value="//input[@name='applicationFormPrimaryUndergradInst']" />
+			<element name="NotVet" descriptor="XPATH" value="//label[@for='application-form-never-enrolled-at-other-med-vet-school']" />
+			<element name="NotSubmitted" descriptor="XPATH" value="//label[@for='application-form-previously-didnot-submit-application-to-rossmed']" />
+			<element name="applicationFormFirstHear" descriptor="XPATH" value="//select[@name='applicationFormFirstHear']" />
+			<element name="Save_PQ" descriptor="XPATH" value="//*[@id='personal-information']/ul/li[2]/div/div/a|//a[@ng-click='applicationStep1VM.savePreliminaryQuestions()']" />
+			
+			<!-- TELL US ABOUT YOURSELF -->
+			<element name="AreaOfInterest" descriptor="XPATH" value="//select[@name='applicationFormAreaOfInterest']" />
+			<element name="Experiences" descriptor="XPATH" value="//textarea[@name='applicationFormExperiences']" />
+			<element name="ExtraActivities" descriptor="XPATH" value="//textarea[@name='applicationFormExtraActivities']" />
+			<element name="OtherSchools" descriptor="XPATH" value="//input[@name='applicationFormOtherSchools']" />
+			<element name="CurrentOccupation" descriptor="XPATH" value="//input[@name='applicationFormCurrentOccupation']" />
+			<element name="Save_TY" descriptor="XPATH" value="//*[@id='personal-information']/ul/li[3]/div/div/a|//a[@ng-click='applicationStep1VM.saveAboutYourself()']" />
+			
+			<!-- FAMILY FRIENDS -->
+			
+			<element name="RelativeOrFriendName" descriptor="XPATH" value="//input[@name='applicationFormCloseRelativeOrFriendName']" />
+			<element name="RelativeOrFriendRelationship" descriptor="XPATH" value="//select[@name='applicationFormCloseRelativeOrFriendRelationship']" />
+			<element name="RelativeOrFriendStatus" descriptor="XPATH" value="//select[@name='applicationFormCloseRelativeOrFriendStatus']" />
+			<element name="AddFamily" descriptor="XPATH" value="//a[@id='add-family-friend-button']" />
+			<element name="Continue_btn" descriptor="XPATH" value="//a[@id='continue-btn']" />
+			
+			<!-- Academic Information  -->
+			<element name="InstituteName" descriptor="XPATH" value="//input[@id='institute-name']" />
+			<element name="Major" descriptor="XPATH" value="//select[@id='major']" />
+			<element name="FromMonth" descriptor="XPATH" value="//div[@id='date-attended-from']//select[@id='month']" />
+			<element name="FromYear" descriptor="XPATH" value="//div[@id='date-attended-from']//select[@id='year']" />
+			<element name="ToMonth" descriptor="XPATH" value="//div[@id='date-attended-to']//select[@id='month']" />
+			<element name="ToYear" descriptor="XPATH" value="//div[@id='date-attended-to']//select[@id='year']" />
+			<element name="DegreeAwarded" descriptor="XPATH" value="//select[@name='degreeAwarded']" />
+			<element name="GradMonth" descriptor="XPATH" value="//div[@id='graduation-date']//select[@id='month']" />
+			<element name="GradYear" descriptor="XPATH" value="//div[@id='graduation-date']//select[@id='year']" />
+			<element name="PrimaryInstitution" descriptor="XPATH" value="//input[@id='primary-institution']" />
+			<element name="SubmitAcademicHistory" descriptor="XPATH" value="//button[text()='Submit Academic History']" />
+			<element name="MCAT_Yes" descriptor="XPATH" value="//input[@id='is-mcat-taken-yes']" />
+			<element name="MCAT_No" descriptor="XPATH" value="//input[@id='is-mcat-taken-no']" />
+			<element name="MCAT_BeforeApril" descriptor="XPATH" value="//a[text()='Add MCAT Taken Before April 17,2015']|//*[text()='Add MCAT Taken Before April 17, 2015']" />
+			<element name="VerbalReasoning" descriptor="XPATH" value="//input[@name='mcatVerbalReasoning']" />
+			<element name="PhysicalScience" descriptor="XPATH" value="//input[@name='mcatPhysicalScience']" />
+			<element name="BiologicalScience" descriptor="XPATH" value="//input[@name='mcatBiologicalScience']" />
+			<element name="WritingSample" descriptor="XPATH" value="//input[@name='mcatWritingSample']" />
+			<element name="BeforeDateTaken" descriptor="XPATH" value="//input[@name='mcatDateTaken']" />
+			<element name="MCAT_AfterApril" descriptor="XPATH" value="//a[text()='Add MCAT Taken After April 17, 2015']|//*[text()='Add MCAT Taken After April 17, 2015']" />
+			<element name="BiocFnd" descriptor="XPATH" value="//input[@name='mcatBiolBiocFnd']" />
+			<element name="PhysFnd" descriptor="XPATH" value="//input[@name='mcatChemPhysFnd']" />
+			<element name="PsycSocFnd" descriptor="XPATH" value="//input[@name='mcatPsycSocFnd']" />
+			<element name="AnalysisReasoning" descriptor="XPATH" value="//input[@name='mcatAnalysisReasoning']" />
+			<element name="BeforemcatTotal" descriptor="XPATH" value="//input[@id='mcat-total-0']" />
+			<element name="BeforeDateTaken" descriptor="XPATH" value="//input[@id='mcat-date-taken-0']" />
+			<element name="MCAT_Mth" descriptor="XPATH" value= "//UIAPickerWheel[1]" />
+			<element name="MCAT_Day" descriptor="XPATH" value= "//UIAPickerWheel[2]" />	
+			<element name="MCAT_year" descriptor="XPATH" value= "//UIAPickerWheel[3]" />
+			
+			<element name="MCAT" descriptor="XPATH" value="//*[text()='MCAT']" />
+			<element name="MCAT_Schedule_Yes" descriptor="XPATH" value="//input[@id='is-schedul-mcat-yes']" />
+			<element name="MCAT_Schedule_No" descriptor="XPATH" value="//input[@id='is-schedul-mcat-no']" />
+			<element name="MCAT_Month" descriptor="XPATH" value="//div[@id='schedule-mcat-date']//select[@id='month']" />
+			<element name="MCAT_Year" descriptor="XPATH" value="//div[@id='schedule-mcat-date']//select[@id='year']" />
+			<element name="ContinueAH" descriptor="XPATH" value="//a[text()='Continue']" />
+			<element name="AftermcatTotal" descriptor="XPATH" value="//input[@id='mcat-after-total-1']" />
+			<element name="AfterDateTaken" descriptor="XPATH" value="//input[@id='mcat-date-taken-after-1']" />
+			<element name="Continue_Mcat" descriptor="XPATH" value="//a[text()='Continue']" />
+			
+			<!-- Documents -->
+			<element name="AddEssay" descriptor="XPATH" value="//*[@id='essay-upload']//*[@class='ng-binding']" />
+			<element name="Continue_Doc" descriptor="XPATH" value="//button[text()='Continue']" />
+			<element name="Action_No" descriptor="XPATH" value="//*[@name='finalQuestion1' and @value='false']" />
+			<element name="Felony_No" descriptor="XPATH" value="//*[@name='finalQuestion2' and @value='false']" />
+		
+			<!-- Sign and Pay -->
+			<element name="Signature" descriptor="XPATH" value="//input[@id='signature']" />
+			<element name="Date" descriptor="XPATH" value="//input[@id='sign-date']" />
+			<element name="PayOnline" descriptor="XPATH" value="//*[text()='Pay Online']" />
+			<element name="PayByMail" descriptor="XPATH" value="//*[text()='Pay By Mail']" />
+			<element name="OK" descriptor="XPATH" value="//button[text()='OK']" />
+			<element name="SubmitApplication" descriptor="XPATH" value="//button[text()='Submit Application']" />
+			<element name="ApplicationSubmitted" descriptor="XPATH" value="//div[text()='SUBMIT APPLICATION']" />
+			<element name="SubmitApp" descriptor="XPATH" value="//button[text()='Ok Submit App']" />
+			<element name="Success" descriptor="XPATH" value="//div[text()='Your application has been successfully submitted.']" />
+			<element name="Status" descriptor="XPATH" value="//*[text()=' Application Submitted']" />
+		</page>
+				
+		<page name="AUCMED_APPLY_NOW">
+			<element name="APPLY_NOW_CARD" descriptor="XPATH" value="//*[@id='applyNowCard']" /> 
+			<element name="FirstApplication_Yes" descriptor="XPATH" value="//*[@id='previouslyApplied-0']" /> 
+			<element name="EnrollementSession" descriptor="XPATH" value="//select[@name='enrollmentSessionSelect']" /> 
+			<element name="APPLY_TEXT" descriptor="XPATH" value="//*[text()='APPLY']" /> 
+		
+			<!-- ####### Start Application Process/ Personal Information -->
+			<element name="Start_Application" descriptor="XPATH" value="//a[contains(text(),'Start Application Process')]" />
+			<element name="FirstName" descriptor="XPATH" value="//input[@name='applicationFormFirstNameInput']" />
+			<element name="MiddleName" descriptor="XPATH" value="//input[@name='applicationFormMiddleNameInput']" />
+			<element name="LastName" descriptor="XPATH" value="//input[@name='applicationFormLastNameInput']" />
+			<element name="PhoneNumber" descriptor="XPATH" value="//input[@name='applicationFormPhoneNumberInput']" />
+			<element name="PEmail" descriptor="XPATH" value="//input[@name='applicationFormPrimaryEmailInput']" />
+			<element name="Password" descriptor="XPATH" value="//input[@name='applicationFormPassword']" />
+			<element name="CPassword" descriptor="XPATH" value="//input[@name='applicationFormPasswordConfirmation']" />
+			<element name="Submit" descriptor="XPATH" value="//*[@id='submitButton']" />
+			<element name="ContinueApplication" descriptor="XPATH" value="//*[text()='Continue Application']" />
+			
+			<!-- ####### Date of Birth ###### -->
+			<element name="DOB" descriptor="XPATH" value="//input[@name='applicationFormDOBDatepicker']" />
+			<element name="And_DOB" descriptor="XPATH" value="//*[@resource-id='com.devry.mobileapps.aucmed:id/date_picker_year']" />
+			<element name="DOB_year_And" descriptor="XPATH" value= "//*[@class='android.widget.ListView']" />
+			<element name="DOB_year_Value" descriptor="XPATH" value= "//*[@content-desc='2007']" />
+			<element name="DOB_Mth" descriptor="XPATH" value= "//UIAPickerWheel[1]" />
+            <element name="DOB_Day" descriptor="XPATH" value= "//UIAPickerWheel[2]" />       
+            <element name="DOB_year" descriptor="XPATH" value= "//UIAPickerWheel[3]|//*[@content-desc='2017 selected'] " />
+			<element name="SET" descriptor="XPATH" value= "//a[text()='Set']" />	
+			<element name="Okay" descriptor="XPATH" value= "//*[@label='Okay']|//*[@text='OK']|//*[@label='OK']" />
+			
+			<!-- ####### Place of Birth ###### -->
+			<element name="BirthCity" descriptor="XPATH" value="//input[@name='applicationFormPlaceOfBirthCityInput']" />
+			<element name="BirthCountry" descriptor="XPATH" value="//select[@name='applicationFormPlaceOfBirthCountrySelect']" />
+			<element name="BirthState" descriptor="XPATH" value="(//select[@id='application-form-state-select'])[1]" />
+			<element name="SSN" descriptor="XPATH" value="//input[@name='applicationFormSSNInput']" />
+			
+			<!-- ####### Permanent Address ###### -->
+			<element name="StreetAddress" descriptor="XPATH" value="//textarea[@name='applicationFormStreetAddressTextarea']" />
+			<element name="City" descriptor="XPATH" value="//input[@name='applicationFormCityInput']" />
+			<element name="Country" descriptor="XPATH" value="//select[@name='applicationFormCountrySelect']" />
+			<element name="State" descriptor="XPATH" value="(//select[@id='application-form-state-select'])[2]" />
+			<element name="Zip" descriptor="XPATH" value="//input[@name='applicationFormZipCodeInput']" />
+			<element name="Save_PersonalInfo" descriptor="XPATH" value="//*[@ng-click='applicationStep1VM.savePersonalInfo()']|//*[text()='Save this section']" />
+			
+			<!-- ####### Statistical Demographic Information ###### -->
+			<element name="Statistical" descriptor="XPATH" value="//div[text()='Statistical Demographic Information']" />
+			<element name="gender" descriptor="XPATH" value="//input[@id='applicationFormGender-0']" />
+			<element name="Citizenship" descriptor="XPATH" value="//select[@name='applicationFormCountryOfCitizenshipSelect']" />
+			<element name="PermanentResidence" descriptor="XPATH" value="//select[@name='applicationFormPermanentResidentStatusSelect']" />
+			<element name="Yes_Hispanic" descriptor="XPATH" value="//*[@id='applicationFormEthnicity-0']" />
+			<element name="No_Hispanic" descriptor="XPATH" value="//*[@id='applicationFormEthnicity-1']" />
+			<element name="Ethnicity" descriptor="XPATH" value="//*[@id='personal-information']/admission-accordion/ul/admission-accordion-item[2]/li/div/ng-include/div/div/div/checkbox-form-group/label[3]/input|//*[@id='demographic-info-section']/li/div/ng-include/div/div/div/checkbox-form-group/label[3]" />
+			<element name="Save_Demo" descriptor="XPATH" value="//*[@ng-click='applicationStep1VM.saveDemographicInfo()']" />
+			
+			<!-- ####### Military ###### -->
+			<element name="Military" descriptor="XPATH" value="//div[text()='Military']" />
+			<element name="CurrentMilitary_Yes" descriptor="XPATH" value="//input[@id='applicationFormCurrentlyMilitary-0']" />
+			<element name="CurrentMilitary_No" descriptor="XPATH" value="//input[@id='applicationFormCurrentlyMilitary-1']" />
+			<element name="CurrentBranch" descriptor="XPATH" value="//select[@name='applicationFormCurrentlyMilitaryDivisionSelect']" />
+			<element name="ExMilitary_Yes" descriptor="XPATH" value="//input[@id='applicationFormExMilitary-0']" />
+			<element name="ExMilitary_No" descriptor="XPATH" value="//input[@id='applicationFormExMilitary-1']" />
+			<element name="ExBranch" descriptor="XPATH" value="//select[@name='applicationFormExMilitaryDivisionSelect']" />
+			<element name="Save_Military" descriptor="XPATH" value="//button[@ng-click='applicationStep1VM.saveMilitary()']" />
+			
+			<!-- FAMILY FRIENDS -->
+			<element name="Family" descriptor="XPATH" value="//*[text()='Family and Friends']" />
+			<element name="RelativeOrFriendName" descriptor="XPATH" value="//input[@name='applicationFormCloseRelativeOrFriendNameInput']|//*[@id='application-form-close-relative-or-friend-name-input']" />
+			<element name="RelativeOrFriendRelationship" descriptor="XPATH" value="//select[@name='applicationFormCloseRelativeOrFriendRelationshipSelect']" />
+			<element name="RelativeOrFriendStatus" descriptor="XPATH" value="//select[@name='applicationFormCloseRelativeOrFriendStatusSelect']" />
+			<element name="AddFamily" descriptor="XPATH" value="//button[@id='add-family-friend-button']" />
+			<element name="Family_Ok" descriptor="XPATH" value="//*[@label='OK']|//*[text()='OK']" />
+			<element name="Continue_btn" descriptor="XPATH" value="//a[@id='continue-btn']" />
+			
+			<!-- Preliminary Questions -->
+			<element name="HearAboutAUC" descriptor="XPATH" value="//*[text()='How did you hear about AUC?']" />
+			<element name="PreliminaryQuestions" descriptor="XPATH" value="//div[text()='Preliminary Questions']" />
+			<element name="HearAbout" descriptor="XPATH" value="//*[@id='personal-information']/admission-accordion/ul/admission-accordion-item[6]/li/div/ng-include/div/checkbox-form-group/label[7]/input|//*[@id='preliminary-questions-section']/li/div/ng-include/div/checkbox-form-group/label[7]" />
+			<element name="Save_Preliminary" descriptor="XPATH" value="//button[@ng-click='applicationStep1VM.savePreliminaryQuestions()']" />
+			<element name="Continue_btn" descriptor="XPATH" value="//button[@ng-click='applicationStep1VM.continueToStep2()']" />
+			
+			<!--  Academic Qualification -->
+			<element name="EnrollmentSession" descriptor="XPATH" value="//select[@name='enrollmentSessionSelect']" />
+			<element name="EnrollmentType" descriptor="XPATH" value="//select[@name='enrollmentDesiredSelect']" />
+			<element name="Save_Enrollment" descriptor="XPATH" value="//button[@ng-click='applicationStep1VM.saveAcademicInformation()']" />
+			
+			<!-- Academic Information  -->
+			<element name="InstituteName" descriptor="XPATH" value="//input[@id='institute-name']" />
+			<element name="Major" descriptor="XPATH" value="//select[@id='application-form-major-select']" />
+			<element name="FromMonth" descriptor="XPATH" value="//*[@id='date-attended-from']//*[@id='month']" />
+			<element name="FromYear" descriptor="XPATH" value="//*[@id='date-attended-from']//*[@id='year']" />
+			<element name="ToMonth" descriptor="XPATH" value="//*[@id='date-attended-to']//*[@id='month']" />
+			<element name="ToYear" descriptor="XPATH" value="//*[@id='date-attended-to']//*[@id='year']" />
+			<element name="DegreeAwarded" descriptor="XPATH" value="//select[@name='applicationFormDegreeAwardedSelect']" />
+			<element name="GradMonth" descriptor="XPATH" value="//div[@id='graduation-date']//select[@id='month']" />
+			<element name="GradYear" descriptor="XPATH" value="//div[@id='graduation-date']//select[@id='year']" />
+			<element name="HaveYouGraduated_Yes" descriptor="XPATH" value="//input[@id='haveYouGraduated-0']" />
+			<element name="GradMonth" descriptor="XPATH" value="//*[@id='graduation-date']//*[@id='month']" />
+			<element name="GradYear" descriptor="XPATH" value="//*[@id='graduation-date']//*[@id='year']" />
+			<element name="PrimaryInstitution" descriptor="XPATH" value="//input[@id='primary-institution']" />
+			<element name="SubmitAcademicHistory" descriptor="XPATH" value="//button[text()='Submit Academic History']" />
+			<element name="Academic_Ok" descriptor="XPATH" value="//*[@label='OK']|//*[@text='OK']" />
+			<element name="MCAT_Yes" descriptor="XPATH" value="//*[@id='hasTakenMCAT-0']" />
+			<element name="MCAT_No" descriptor="XPATH" value="//*[@id='hasTakenMCAT-1']" />
+			<element name="MCAT_AfterApril" descriptor="XPATH" value="//a[text()='Add MCAT Taken After April 17, 2015']|//*[text()='Add MCAT Taken After April 17, 2015']" />
+			<element name="MCAT_BeforeApril" descriptor="XPATH" value="//a[text()='Add MCAT Taken Before April 17,2015']|//*[text()='Add MCAT Taken Before April 17, 2015']" />
+			<element name="VerbalReasoning" descriptor="XPATH" value="//input[@name='mcatVerbalReasoningInput']" />
+			<element name="PhysicalScience" descriptor="XPATH" value="//input[@name='mcatPhysicalScienceInput']" />
+			<element name="BiologicalScience" descriptor="XPATH" value="//input[@name='mcatBiologicalScienceInput']" />
+			<element name="WritingSample" descriptor="XPATH" value="//input[@name='mcatWritingSampleInput']" />
+			<element name="Datetaken_Before" descriptor="XPATH" value="//*[@id='mcat-date-taken-0-datepicker']" />
+			<element name="Save_MCAT_BeforeApril" descriptor="XPATH" value="//button[@ng-disabled='applicationStep2VM.isMcatAddButtonDisabled(mcatBeforeApril)']" />
+			<element name="DateTaken" descriptor="XPATH" value="//input[@id='mcat-date-taken-after-0-datepicker']" />
+			<element name="BiocFnd" descriptor="XPATH" value="//input[@name='mcatBiolBiocFndInput']" />
+			<element name="PhysFnd" descriptor="XPATH" value="//input[@name='mcatChemPhysFndInput']" />
+			<element name="PsycSocFnd" descriptor="XPATH" value="//input[@name='mcatPsycSocFndInput']" />
+			<element name="AnalysisReasoning" descriptor="XPATH" value="//input[@name='mcatAnalysisReasoningInput']" />
+			<element name="Save_MCAT_AfterApril" descriptor="XPATH" value="//button[@ng-disabled='applicationStep2VM.isMcatAddButtonDisabled(mcatAfterApril)']|//*[@class='button mcat-button ng-scope']" />
+			<element name="Datetaken_After" descriptor="XPATH" value="//*[@id='mcat-date-taken-after-1-datepicker']" />
+			<element name="MCAT_Mth" descriptor="XPATH" value= "//UIAPickerWheel[1]" />
+            <element name="MCAT_Day" descriptor="XPATH" value= "//UIAPickerWheel[2]" />       
+            <element name="MCAT_year" descriptor="XPATH" value= "//UIAPickerWheel[3]" />
+			<element name="MCAT" descriptor="XPATH" value="//*[text()='MCAT/UKCAT']" />
+			<element name="MCAT_Schedule_Yes" descriptor="XPATH" value="//*[@id='hasScheduledMCAT-0']" />
+			<element name="MCAT_Schedule_No" descriptor="XPATH" value="//*[@id='hasScheduledMCAT-1']" />
+			
+			<element name="UKCAT_Yes" descriptor="XPATH" value="//input[@id='isUkcatTaken-0']" />
+			<element name="UKCAT_No" descriptor="XPATH" value="//input[@id='isUkcatTaken-1']" />
+			<element name="Schedule_UKCAT_Yes" descriptor="XPATH" value="//input[@id='isUkcatScheduled-0']" />
+			<element name="Schedule_UKCAT_No" descriptor="XPATH" value="//input[@id='isUkcatScheduled-1']" />
+			<element name="Continue_Mcat" descriptor="XPATH" value="//button[@ng-click='applicationStep2VM.continueToStep3()']" />
+		
+			<!-- Supplemental Information -->
+			<element name="SupplementalInformation" descriptor="XPATH" value="//a[text()='Supplemental Information']|//*[text()='Supplemental Information']" />
+			<element name="graduateSchoolStatusRadio" descriptor="XPATH" value="//*[@name='graduateSchoolStatusRadio' and @value='No']" />
+			<element name="disciplinaryActionStatusRadio" descriptor="XPATH" value="//*[@name='disciplinaryActionStatusRadio' and @value='No']" />
+			<element name="convictionStatusRadio" descriptor="XPATH" value="//*[@name='convictionStatusRadio' and @value='No']" />
+			<element name="Continue_SupplementalInformation" descriptor="XPATH" value="//button[@ng-click='applicationStep3VM.continueToStep4()']" />
+		
+			<!-- Sign and Pay -->
+			<element name="Signature_Application" descriptor="XPATH" value="//input[@id='application-form-certification-signature-input']" />
+			<element name="ApplicationDate" descriptor="XPATH" value="//input[@id='application-form-certification-date-datepicker']" />
+			<element name="MERPConsent" descriptor="XPATH" value="//a[text()='MERP Consent']|//*[text()='MERP Consent']" />
+			<element name="Signature_MERPConsent" descriptor="XPATH" value="//input[@id='application-form-merp-consent-signature-input']" />
+			<element name="MERPConsentDate" descriptor="XPATH" value="//input[@id='application-form-merp-consent-date-datepicker']" />
+			<element name="TechnicalStandards" descriptor="XPATH" value="//a[text()='Technical Standards']|//*[text()='Technical Standards']" />
+			<element name="Signature_TechnicalStandards" descriptor="XPATH" value="//input[@id='application-form-technical-standards-signature-input']" />
+			<element name="TechnicalStandardsDate" descriptor="XPATH" value="//input[@id='application-form-technical-standards-date-datepicker']" />
+			<element name="StateofMissouriAddendum" descriptor="XPATH" value="//a[text()='State of Missouri Addendum']|//*[text()='State of Missouri Addendum']" />
+			<element name="Signature_StateofMissouriAddendum" descriptor="XPATH" value="//input[@id='application-form-state-of-missouri-addendum-signature-input']" />
+			<element name="GainfulEmployment" descriptor="XPATH" value="//a[text()='Gainful Employment']|//*[text()='Gainful Employment']" />
+			<element name="Signature_GainfulEmployment" descriptor="XPATH" value="//input[@id='application-gainful-employment-signature-input']" />
+			<element name="GainfulEmploymentDate" descriptor="XPATH" value="//input[@id='application-form-gainful-employment-date-datepicker']" />
+			<element name="ElectronicConsent" descriptor="XPATH" value="//a[text()='Electronic Consent']|//*[text()='Electronic Consent']" />
+			<element name="ElectronicConsent_Yes" descriptor="XPATH" value="//input[@id='electronicConsent-0']" />
+			
+			<element name="Save_Signature" descriptor="XPATH" value="//button[@ng-click='applicationStep4VM.saveSignatures()']" />
+			
+			<element name="Payment" descriptor="XPATH" value="//*[text()='Payment']" />
+			<element name="PayOnline" descriptor="XPATH" value="//*[text()='Pay Online']" />
+			<element name="PayByMail" descriptor="XPATH" value="//*[text()='Pay By Mail']" />
+			<element name="OK" descriptor="XPATH" value="//*[@label='Okay']|//*[@text='OK']|//*[@label='OK']|//*[@resourceid='com.devry.mobileapps.aucmed:id/positive']" />
+			<element name="Confirm" descriptor="XPATH" value="//button[text()='Confirm']" />
+			<element name="SubmitApplication" descriptor="XPATH" value="//button[text()='Submit Application']" />
+			<element name="ApplicationSubmitted" descriptor="XPATH" value="//*[text()='SUBMIT APPLICATION']|//*[text()='Submit Application']|//*[@text='Submit Application']" />
+			<element name="SubmitAppAUC" descriptor="XPATH" value="//*[text()='Ok Submit App']|//*[@label='Ok Submit App']|//*[@text='Ok Submit App']" />
+			<element name="Success" descriptor="XPATH" value="//div[text()='Your application has been successfully submitted.']" />
+			<element name="AUCStatus" descriptor="XPATH" value="//*[text()='Application Submitted']" />
+		</page>
+		
+		<!-- Canvas Page Elements -->
+		<page name= "Canvas_Courses">
+			<element name="American_History" descriptor="XPATH" value="//p[contains(text(),'American History 101')]" />
+			<element name="ACCT_440" descriptor="XPATH" value="//p[contains(text(),'ACCT-440')]" />
+			<element name="NR_351" descriptor="XPATH" value="//*[contains(text(),'NR351 RN to BSN')]" />
+			<element name="Groups_button" descriptor="XPATH" value="//a[contains(text(),'Groups')]" />
+			<element name="Courses_button" descriptor="XPATH" value="//a[contains(text(),'Courses')]" />
+		</page>
+				
+		<page name= "Groups">
+			<element name="Coll_Test_Group" descriptor="XPATH" value="//div[contains(text(),'COLL Test Group')]" />
+			<element name="WGD242Test" descriptor="XPATH" value="//div[contains(text(),'WGD242Test')]" />
+			<!--<element name="Test_Group" descriptor="XPATH" value="//div[contains(text(),'Test Group')]" />-->
+			<element name="Test_Group" descriptor="XPATH" value="//div[text()='Test Group'] " />
+			<element name="Test_Team1" descriptor="XPATH" value="//div[contains(text(),'Test Team 1')]" />
+			<element name="TestGroup_Hamburgericon" descriptor="XPATH" value="//*[@class='right menu-button']//*[@class='menu-icon']" />
+		</page>
+		
+		<page name= "Groups-Test_Group">
+		<element name="Announcement" descriptor="XPATH" value="//*[@text='Announcements']|//*[@label='Announcements']" />
+		<element name="People" descriptor="XPATH" value="//*[@text='People']|//*[@label='People']|//UIAStaticText[@name='People']" />
+		<element name="Files" descriptor="XPATH" value="//*[@text='Files']|//*[@label='Files']|//UIAStaticText[@name='Files']|//AppiumAUT/UIAApplication[1]/UIAWindow[1]/UIATableView[1]/UIATableCell[6]/UIAStaticText[1]" />
+		<element name="Discussion" descriptor="XPATH" value="//*[@text='Discussions']|//*[@label='Discussions']|//UIAStaticText[@name='Discussions']" />
+		<element name="Pages" descriptor="XPATH" value="//*[@text='Pages']|//*[@label='Pages']|//UIAStaticText[@name='Pages']|//AppiumAUT/UIAApplication[1]/UIAWindow[1]/UIATableView[1]/UIATableCell[4]/UIAStaticText[1]" />
+		<element name="Test_Group_Header" descriptor="XPATH" value="//div[contains(text(),'TEST GROUP')]" />
+		<element name="AddAnnouncementButton" descriptor="XPATH" value="//button[@class='ng-binding']|//* [text()='Add Announcement']" />
+		<!-- #############Page elements for Announcement menu item -->
+		<element name="Test_Group_AddAnnouncement_TopicTitle" descriptor="XPATH" value="//input[@id='newTopicTitle']" />
+		<element name="Test_Group_AddAnnouncement_MessageBox" descriptor="XPATH" value="//textarea[@id='announcementMessage']" />
+		<element name="Test_Group_AddAnnouncement_options_Usermustpost" descriptor="XPATH" value="//div[@class='check-box light-background unchecked']" />
+		<element name="Test_Group_AddAnnouncement_options_AllowLiking" descriptor="XPATH" value="//label[@for='allow-rating']|//*[text()='Allow liking']" />
+		<element name="Test_Group_AddAnnouncement_SaveButton" descriptor="XPATH" value="//button[@type='submit']|//*[text()='Save']" />
+		<element name="Test_Group_AddAnnouncement_BackButton" descriptor="XPATH" value="//*[@id='back-button']" />
+				
+		<element name="Test_Group_AddAnnouncement_CancelButton" descriptor="XPATH" value="//button[@class='secondary cancel-button ng-binding']|//*[text()='Cancel']" />
+		
+		<!-- #############Page elements for Page menu item -->
+		<element name="Test_Group_Pages_FirstPage" descriptor="XPATH" value="//div[contains(text(),'First page')]|//*[text()='First page']" />
+		<element name="Test_Group_Pages_SecondPage" descriptor="XPATH" value="//div[contains(text(),'Second Page')]" />
+		
+		<!-- #############Page elements for Groups-TestGroup-Discussion menu item -->
+		
+		<element name="Test_Group_Discussion_AddTopicButton" descriptor="XPATH" value="//button[@type='button']|//* [text()='Add Topic']" />
+		<element name="Test_Group_AddDiscussion_TopicTitle" descriptor="XPATH" value="//input[@id='newTopicTitle']" />
+		<element name="Test_Group_AddDiscussion_MessageBox" descriptor="XPATH" value="//textarea[@id='announcementMessage']" />
+		<element name="Test_Group_AddDiscussion_options_Usermustpost" descriptor="XPATH" value="//div[@class='check-box light-background unchecked']" />
+		<element name="Test_Group_AddDiscussion_options_AllowLiking" descriptor="XPATH" value="//label[@for='allow-rating']|//*[text()='Allow liking']" />
+		<element name="Test_Group_AddDiscussion_SaveButton" descriptor="XPATH" value="//button[@type='submit']|//*[text()='Save']" />
+		<element name="Test_Group_AddDiscussion_CancelButton" descriptor="XPATH" value="//button[@class='secondary cancel-button ng-binding']|//*[text()='Cancel']" />
+		
+		<element name="Test_Group_AddDiscussion_QAAUTOMATIONTESTING" descriptor="XPATH" value="//*[@class='accordion separated']/li[2]/a[1]/div[1]/div[1]" />
+			
+		</page>
+		
+		
+		
+		<!-- #############Page elements for Groups-TestGroup-People menu item -->
+		<page name= "Groups-Test_Group_People">
+			<element name="Test_Group_People_Students" descriptor="XPATH" value="//div[text()='Students']" />
+			
+			<element name="Test_Group_People_Stu_Jeff" descriptor="XPATH" value="//span[text()='Jeffrey Collier']" />
+			<element name="Test_Group_People_Stu_Jake" descriptor="XPATH" value="//span[text()='Jake Hartman']" />
+			<element name="Test_Group_People_Stu_Jarek" descriptor="XPATH" value="//span[text()='Jarek Kolanko']" />
+			<element name="Test_Group_People_Stu_Kimani" descriptor="XPATH" value="//span[text()='Kimani Levy']" />
+		
+		<element name="Test_Group_People_Stu_Jeff" descriptor="XPATH" value="//span[text()='Jeffrey Collier']" />
+		<element name="Test_Group_People_Stu_Jake" descriptor="XPATH" value="//span[text()='Jake Hartman']" />
+		<element name="Test_Group_People_Stu_Jarek" descriptor="XPATH" value="//span[text()='Jarek Kolanko']" />
+		<element name="Test_Group_People_Stu_Kimani" descriptor="XPATH" value="//span[text()='Kimani Levy']" />
+		
+		</page>
+		
+		<!-- #############Page elements for Groups-TestGroup-Files menu item -->
+		<page name= "Groups-Test_Group_Files">
+		<element name="Test_Group_Files_FilesFolder" descriptor="XPATH" value="//p[text()='files']" />
+		<element name="Test_Group_Files_Unfiled" descriptor="XPATH" value="//p[text()='unfiled']" />
+		<element name="Test_Group_Files_MsgText" descriptor="XPATH" value="//div[@ng-if='!pageVM.displayError.bindHtml']" />
+		<element name="Test_Group_Files_Penguins" descriptor="XPATH" value="//p[text()='Penguins.jpg - 760 KB']" />
+		<element name="Test_Group_Files_Selenium" descriptor="XPATH" value="//p[text()='selenium.ppt - 988 KB']" />
+		<element name="Test_Group_Files_Tulips" descriptor="XPATH" value="//p[text()='Tulips.jpg - 606 KB']" />
+		<element name="Test_Group_Files_VPNIssue" descriptor="XPATH" value="//p[text()='VPN issue.PNG - 655 KB']" />
+		
+		<element name="Test_Group_Files_Alert_Yes" descriptor="XPATH" value="//*[@resource-id='com.devry.mobileapps.devry:id/positive']|//*[@label='YES']|//*[@resource-id='com.devry.mobileapps.keller:id/positive']|//*[@text='YES']" />
+		<element name="Test_Group_Files_Alert_No" descriptor="XPATH" value="//*[@resource-id='com.devry.mobileapps.devry:id/negative']|//*[@label='NO']|//*[@resource-id='com.devry.mobileapps.keller:id/negative']" />
+		<element name="Test_Group_Files_Alert_Yes" descriptor="XPATH" value="//*[@resource-id='com.devry.mobileapps.devry:id/positive']|//*[@label='YES']|//*[@resource-id='com.devry.mobileapps.keller:id/positive']|//*[@resource-id='com.devry.mobileapps.chamberlain:id/positive']" />
+		<element name="Test_Group_Files_Alert_No" descriptor="XPATH" value="//*[@resource-id='com.devry.mobileapps.devry:id/negative']|//*[@label='NO']|//*[@resource-id='com.devry.mobileapps.keller:id/negative']|//*[@resource-id='com.devry.mobileapps.chamberlain:id/negative']" />
+		<element name="Test_Group_Files_iphone_Done" descriptor="XPATH" value="//*[@label='Done']" />
+		
+		<element name="Test_Group_Files_Deny_Button" descriptor="XPATH" value="//*[@resource-id='com.android.packageinstaller:id/permission_deny_button']" />
+		<element name="Test_Group_Files_Allow_Button" descriptor="XPATH" value="//*[@resource-id='com.android.packageinstaller:id/permission_allow_button']" />
+		<element name="Test_Group_Files_Back_Button" descriptor="XPATH" value="//*[@id='back-button']" />
+		
+		<element name="Test_Group_Files_Penguins_Gallery"  descriptor="XPATH" value="//*[@text='Gallery']" />
+		<element name="Test_Group_Files_Penguins_BackArrow"  descriptor="XPATH" value="//*[@content-desc='Navigate up']" />
+		<element name="RighthamburgerMenuFiles"  descriptor="XPATH" value="//*[@class='right menu-button']//*[@class='menu-icon']" />
+		</page>
+		
+		
+		
+		
+		
+		<page name ="Canvas_American_History">
+		<element name="Introduction" descriptor="XPATH" value="//div[contains(text(),'Introduction')]" />
+		<element name="Declaration_Of_Independece" descriptor="XPATH" value="//div[contains(text(),'Declaration of Independence')]" />
+		<element name="Revolution" descriptor="XPATH" value="//div[contains(text(),'Revolution')]" />
+		
+		<element name="Articles_Of_Confederation" descriptor="XPATH" value="//div[contains(text(),'Articles of Confederation and the Constitution')]" />
+		<element name="Bill_Of_Rights" descriptor="XPATH" value="//div[contains(text(),'Bill of Rights')]" />
+		<element name="LTI_Examples" descriptor="XPATH" value="//div[contains(text(),' LTI Examples')]" />
+		</page>
+		
+		
+		
+		<page name ="Module-Canvas_ACCT440">
+		<element name="Introduction and Resources" descriptor="XPATH" value="//div[contains(text(),'Introduction')]" />
+		<element name="Week 1_Accounting Research" descriptor="XPATH" value="//div[contains(text(),'Week 1: Accounting Research')]" />
+		<element name="Week 2_Problem Identification" descriptor="XPATH" value="//div[contains(text(),'Week 2: Problem Identification and Research Questions')]" />
+		<element name="Week 3_IdentificationOfKeysearch" descriptor="XPATH" value="//div[contains(text(),'Week 3: Identification of Key Search Criteria')]" />
+		<element name="Week4: Gathering Data" descriptor="XPATH" value="//div[contains(text(),'Week 4: Gathering Data')]"/>
+		<element name="Week5: OrganizingYourResearch" descriptor="XPATH" value="//div[contains(text(),' Week 5: Organizing Your Research and Additional Research Tools')]" />
+		<element name="Week6:TaxAndAuditingResearch" descriptor="XPATH" value="//div[contains(text(),'Week 6: Tax and Auditing Research, Recommendations, and Conclusions')]" />
+		<element name="Week7:CommunicatingYourResearch" descriptor="XPATH" value="//div[contains(text(),'Week 7: Communicating Your Research')]" />
+		<element name="Week8:FinalWeek_CommunicatingYourResearch" descriptor="XPATH" value="//div[contains(text(),'Week 8: Final Week - Communicating Your Research II')]" />
+		</page>
+		
+		
+		<page name ="Module-ACCT440_IntroAndResources">
+		<element name="CourseOverview" descriptor="XPATH" value="//div[contains(text(),'Course Overview')]" />
+		<element name="Book:AccountingAuditingResearchHeader"  descriptor="XPATH" value="//div[contains(text(),'Book: Accounting') and contains(text(),'Auditing Research: Tools ') and contains(text(),'Strategies')] " />
+		<element name="QAFORUM"  descriptor="XPATH" value="//div[contains(text(),'Q') and contains(text(),'A Forum')] " />
+		<element name="CourseProjectOverview" descriptor="XPATH" value="//div[contains(text(),'Course Project Overview')]" />
+		<element name="CrseOverview_Introduction" descriptor="XPATH" value="//h2[contains(text(),'Introduction')]" />
+		<element name="CourseResources" descriptor="XPATH" value="//div[contains(text(),'Course Resources')]" />
+		<element name="ResearchCases" descriptor="XPATH" value="//div[contains(text(),'ACCT440 Research Cases for Course Project.docx')]" />
+		<element name="CrseOverview_rightmenu" descriptor="XPATH" value="//*[@class='right menu-button']//*[@class='menu-icon'] " />		
+		<element name="CourseProjectGoesHereHeader" descriptor="XPATH" value="//h2[contains(text(),'Course Project Name Goes Here')]" />
+		<element name="ObjectivesHeader" descriptor="XPATH" value="//h2[contains(text(),'Objectives')] " />	
+		<element name="Guidelines" descriptor="XPATH" value="//h2[contains(text(),'Guidelines')] " />			
+		<element name="Milestones" descriptor="XPATH" value="//h2[contains(text(),'Milestones')]" />			
+		<element name="GradingRubrics" descriptor="XPATH" value="//h2[contains(text(),'Grading Rubrics')] " />
+		<element name="RubricForPowerPoint" descriptor="XPATH" value="//strong[contains(text(),'Rubric for the PowerPoint Presentation')] " />			
+		<element name="ALERT_YES" descriptor="XPATH" value="//button[@class='ng-binding']|//*[text()='YES'] |//*[@resource-id='com.devry.mobileapps.devry:id/positive']|//*[@label='YES']|//*[@resource-id='com.devry.mobileapps.chamberlain:id/positive'] |//*[@resource-id='com.devry.mobileapps.keller:id/positive']" />
+		<element name="ALERT_NO" descriptor="XPATH" value="//*[@resource-id='com.devry.mobileapps.devry:id/negative']|//*[@label='NO']|//*[@resource-id='com.devry.mobileapps.chamberlain:id/negative']|//*[@resource-id='com.devry.mobileapps.keller:id/negative']"/>
+		
+		</page>
+		
+		<page name ="Module-ACCT440_Week1_Acct_Research">
+		<element name="Week1_Introduction" descriptor="XPATH" value="//div[contains(text(),'Week 1 Introduction')]" />
+		<element name="Week1_Intr_Welcome" descriptor="XPATH" value="//h2[contains(text(),'Welcome to Week ')]" />
+		<!-- The page elements are for  Week1 Lesson page -->
+		<element name="Week1_Lesson" descriptor="XPATH" value="//div[contains(text(),'Week 1: Lesson')]" />
+		<element name="Week1_Lesson_IntrToAccountingResearcvhHeader" descriptor="XPATH" value="//h2[contains(text(),'Introduction to Accounting Research')]" />
+		<element name="Week1_Lesson_Introduction" descriptor="XPATH" value="//div[@class='btt']/h2[contains(text(),'Introduction')]" />
+		
+		<element name="Week1_Lesson_Intro_Lock" descriptor="XPATH" value="//*[@class='content remove-padding active']//*[@class='fi-lock']" />
+		
+		<element name="Week1_Lesson_AccountingResearch" descriptor="XPATH" value="//div[@class='btt']/h2[contains(text(),'Accounting Research')]" />
+		
+		<element name="Week1_Lesson_ResearchTools" descriptor="XPATH" value="//h2[contains(text(),'Research Tools')]" />
+		<element name="Week1_Lesson_AuthoritativeBodies" descriptor="XPATH" value="//h2[contains(text(),'Authoritative Bodies in Accounting')]" />
+		<element name="Week1_Lesson_ResearchProcess" descriptor="XPATH" value="//h2[contains(text(),'The Research Process')]" />
+		<element name="Week1_Lesson_References" descriptor="XPATH" value="//h2[contains(text(),'References')]" />
+		
+		<!-- This  is for the heading under Discussion activities-Week 1 Introduction page -->
+		<element name="DiscussionActivities" descriptor="XPATH" value="//div[contains(text(),'Discussion Activities')]" />
+		<element name="Dis_Week1Introductions" descriptor="XPATH" value="//div[contains(text(),'Week 1: Introductions')]" />
+		<element name="Dis_Week1Intro_Week1IntroductionsHeader" descriptor="XPATH" value="//div[@id='discussion-topic']/h2[contains(text(),'Week 1: Introductions')]" />
+		<element name="Dis_MyResponsesText" descriptor="XPATH" value="//p[contains(text(),'My Responses:')]" />
+		<element name="Dis_TotalResponsesText" descriptor="XPATH" value="//p[contains(text(),'Total Responses:')]" />
+		<element name="Dis_NumberOfUnreadText" descriptor="XPATH" value="//p[contains(text(),'Number of Unread:')]" />
+		<element name="Dis_JeffNameText" descriptor="XPATH" value="//div[@class='response-author ellipsis ng-binding']" />
+		<!-- The response/reply under Jeff Collier -->
+		<element name="Dis_IamIntroducingText" descriptor="XPATH" value="//p[contains(text(),'im introducing again')]" />
+		<element name="Dis_Likeicon" descriptor="XPATH" value="//button[@class='small secondary ng-scope']|//i[@class='icon-like']" />
+		
+		
+		<!-- Week 1 Research heading page elements -->	
+		
+		<element name="Week1Research" descriptor="XPATH" value="//div[contains(text(),'Week 1: Research')]"/>
+		
+		<element name="Resrch_Week1ResearchHeader" descriptor="XPATH" value="//div[@id='discussion-topic']/h2[contains(text(),'Week 1: Research')]" />
+		<element name="Resrch_MyResponsesText" descriptor="XPATH" value="//div[@id='text']/p[contains(text(),'My Responses:')]" />
+		<element name="Resrch_TotalResponsesText" descriptor="XPATH" value="//div[@id='text']/p[contains(text(),'Total Responses:')]" />
+		<element name="Resrch_NumberOfUnreadText" descriptor="XPATH" value="//div[@id='text']/p[contains(text(),'Number of Unread:')]" />
+		<element name="Resrch_ReplyButton" descriptor="XPATH" value="//*[@ng-click='discussionVM.startReply(0)']" />
+		<element name="Resrch_JeffNameText" descriptor="XPATH" value="//div[@class='response-author ellipsis ng-binding']" />
+		
+
+		
+		<element name="Resrch_AttachButton" descriptor="XPATH" value="//button[@ng-click='uploadVM.uploadFile()']|//input[@id='fileUpload_discussionAttachment']" />
+		<element name="Resrch_AttachButton_Allow_Button" descriptor="XPATH" value="//*[@resource-id='com.android.packageinstaller:id/permission_allow_button']|//hierarchy/android.widget.FrameLayout[1]/android.widget.FrameLayout[1]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]/android.widget.ScrollView[1]/android.widget.LinearLayout[1]/android.widget.LinearLayout[1]/android.widget.LinearLayout[1]/android.widget.Button[2]" />
+		<element name="Resrch_PostButton" descriptor="XPATH" value="//*[text()='Post']" />
+		<!-- The response/reply under Jeff Collier -->
+		
+		
+		
+		
+		
+		<element name="Week1AuthoritativeSources" descriptor="XPATH" value="//div[contains(text(),'Week 1: Authoritative Sources')]" />
+		
+		<element name="Week1AuthoritativeSources_Header" descriptor="XPATH" value="//h2[contains(text(),'Week 1: Authoritative Sources')]" />
+					
+		<element name="Assignments" descriptor="XPATH" value="//div[contains(text(),'Assignments')]" />
+		<element name="Week1Reading" descriptor="XPATH" value="//div[contains(text(),'Week 1: Reading')]" />
+		
+		<element name="Week1ReadingHeader" descriptor="XPATH" value="//h2[contains(text(),'Week 1: Reading')]" />
+		
+		<element name="Week1Homework" descriptor="XPATH" value="//div[contains(text(),' Week 1: Homework Assignment')]" />
+		<element name="Week1HomeworkHeader" descriptor="XPATH" value="//*[contains(@content-desc,'Week 1: Homework Assignment')]" />
+		
+		<element name="Week1CourseProject" descriptor="XPATH" value="//div[contains(text(),'Week 1: Course Project')]" />
+		
+		
+		<element name="Week5CourseProject" descriptor="XPATH" value="//div[contains(text(),'Week 5: Course Project')]" />
+		
+		<element name="Week5CourseProjectHeader" descriptor="XPATH" value="//h2[contains(text(),'Week 5: Course Project')]" />			
+		</page>
+		
+		<page name ="Module-ACCT440_Week2_ProblemIdentification">
+		<element name="Week2_Introduction" descriptor="XPATH" value="//div[contains(text(),'Week 2 Introduction')]" />
+		<element name="Week2_Introduction_Header" descriptor="XPATH" value="//h2[contains(text(),'Welcome to Week ')]" />
+		<element name="Week2_Lesson" descriptor="XPATH" value="//div[contains(text(),' Week 2: Lesson')]" />
+		<element name="Week2_Lesson_Problem_Header" descriptor="XPATH" value="//h2[contains(text(),'Problem Identification and Research Question Formulation')]" />
+		<element name="Week2_Problem_Identy" descriptor="XPATH" value="//h2[(text()='Problem Identification')]" />	
+		<element name="Week2_Lesson_QuesToAsk" descriptor="XPATH" value="//h4[(text()='Questions you may want to ask include the following:')]" />
+		<element name="Week2_Lesson_ResearchQues" descriptor="XPATH" value="//h2[(text()='The Research Question')]" />
+		<element name="Week2_Lesson_IdentifyResearchAlt" descriptor="XPATH" value="//h2[(text()='Identifying Research Alternatives')]" />
+		<element name="Week2_Lesson_EffectiveWriting" descriptor="XPATH" value="//h2[(text()='Effective Writing and Critical Thinking')]" />
+		<element name="Week2_Lesson_References" descriptor="XPATH" value="//h2[(text()='References')]" />
+				
+		<element name="Week2_DiscussionActivities" descriptor="XPATH" value="//div[contains(text(),'Discussion Activities')]" />
+		
+		<element name="Week2_DisAct_Header" descriptor="XPATH" value="//span[contains(text(),'DISCUSSIONS')]" />
+		
+		
+		<element name="Week2_EffectiveWriting" descriptor="XPATH" value="//div[contains(text(),'Week 2: Effective Writing')]" />
+		<element name="Week2_ProblemStmt" descriptor="XPATH" value="//div[contains(text(),'Week 2: The Problem Statement')]" />
+		
+		<!--  <element name="Week2_ProblemStmt_LikeIcon" descriptor="XPATH" value="//*[@class='content ng-scope active']//*[@class='icon-like']" />-->
+		                                                                      
+		
+		<element name="Week2_ProblemStmt_LikeIcon" descriptor="XPATH" value=" //button[@class='small secondary ng-scope']|//i[@class='icon-like']"/>
+				
+		<element name="Week2_ProblemStmt_Header" descriptor="XPATH" value="//h2[(text()='Week 2: The Problem Statement')]" />
+		
+		<element name="Week2_Assignments" descriptor="XPATH" value="//div[contains(text(),'Assignments')]" />
+		<!-- #####################Add Comment button, post , in Assignments page################## -->
+		<element name="Week2_Homework_Assignment_AddCmmntButton" descriptor="XPATH" value="//div[@class='comment-button']/button[@translate ='CANVAS_COMMENTS_ADD']" />
+		<element name="AddCommentTextBox" descriptor="XPATH" value="//textarea[@name='commentText']" />
+		<element name="PostCommentButton" descriptor="XPATH" value="//button[@class='secondary cancel-button ng-binding']|//*[text()='Post comment']" />
+		<element name="Week2_CancelButton" descriptor="XPATH" value="//button[@translate='CANCEL_BUTTON']" />
+				
+		<!-- ##################### Week 2 Module page elements page################## -->
+		<element name="Week2_Reading" descriptor="XPATH" value="//div[contains(text(),'Week 2: Reading')]" />
+		
+		<element name="Week2_Reading_AssignmentText" descriptor="XPATH" value="//span[contains(text(),'ASSIGNMENTS')]" />
+		<element name="Week2_Reading_AssignmentDue" descriptor="XPATH" value="//strong[contains(text(),'Due')]" />
+		<element name="Week2_Reading_AssignmentPoints" descriptor="XPATH" value="//strong[contains(text(),'Points')]" />
+		<element name="Week2_Reading_AssignmentComments" descriptor="XPATH" value="//strong[contains(text(),'Assignment comments:')]" />
+		<element name="Week2_Reading_AddCommentBtn" descriptor="XPATH" value="//button[@translate='CANVAS_COMMENTS_ADD']" />
+				
+		<element name="Week2_HomeworkAssignment" descriptor="XPATH" value="//div[contains(text(),'Week 2: Homework Assignment')]" />
+		
+		<element name="Week2_HWAssignmentHeader" descriptor="XPATH" value="//h2[(text()='Week 2: Homework Assignment')]" />
+		<element name="Week2_HWAssignmentDue" descriptor="XPATH" value="//strong[contains(text(),'Due')]" />
+		<element name="Week2_HWAssignmentPoints" descriptor="XPATH" value="//strong[contains(text(),'Points')]" />
+		<element name="Week2_HWAssignmentSubmissionAttach" descriptor="XPATH" value="//strong[contains(text(),'Submission attachments:')]" />
+		
+		<element name="Week2AssignmentUploadFileText" descriptor="XPATH" value="//span[contains(text(),'Upload File')]" />
+		
+		<element name="Week2AssignmentUploadBtn" descriptor="XPATH" value="//*[@class='fi-upload fontSize4']" />
+		
+		<!--  <element name="Week2_AssignmentChooseAFileBtn" descriptor="XPATH" value="//*[@id='fileUpload_assignmentsFileUpload']|(//input[@id='fileUpload_assignmentsFileUpload'])[1]" />-->
+		
+	<!--  	<element name="Week2_AssignmentChooseAFileBtn" descriptor="XPATH" value="//span[contains(text(),'CHOOSE A FILE')]" />-->
+		
+		<!--   <element name="Week2_AssignmentChooseAFileBtn" descriptor="XPATH" value="//*[@class='button remove-margin']" />-->
+		
+		 <element name="Week2_AssignmentChooseAFileBtn" descriptor="XPATH" value="//form[@name='uploadForm']/input[@name='fileUpload_assignmentsFileUpload']" />
+		
+		
+		
+		<!-- <element name="Week2_AssignmentChooseAFileBtn" descriptor="XPATH" value="//i[@class='fi-folder fontSize4']" />-->
+		
+		<element name="Week2AssignmentAllowBtn" descriptor="XPATH" value="//*[@resource-id='com.android.packageinstaller:id/permission_allow_button']|//*[@label='OK']|//*[@text='ALLOW']" />
+		
+		
+		
+		
+		<element name="Week2_ChooseAFile_Documents" descriptor="XPATH" value="//*[@text='Documents']|//*[@text='Files']" />
+		
+		<element name="Week2_ChooseAFile_Files" descriptor="XPATH" value="//*[@text='Files']" />
+		
+		
+		<element name="Week2_ChooseAFile_Images" descriptor="XPATH" value="//*[@text='Images']" />
+		
+		<element name="Week2_ChooseAFile_Img_Download" descriptor="XPATH" value="//hierarchy/android.widget.FrameLayout[1]/android.widget.FrameLayout[1]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]/android.support.v4.widget.DrawerLayout[1]/android.widget.LinearLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.support.v7.widget.RecyclerView[1]/android.widget.FrameLayout[1]/android.view.View[1]|//*[@resource-id='com.android.documentsui:id/grid']//*[@class='android.widget.FrameLayout']/android.widget.ImageView[2]" />
+		
+		<element name="Week2_ChooseAFileImgDwnloadTulips" descriptor="XPATH" value="//*[@text='Jun 19']|//*[@text='Tulips.jpg']|//*[@resource-id='com.android.documentsui:id/grid']/android.widget.FrameLayout[2]/android.widget.ImageView[2]|//*[@resource-id='com.android.documentsui:id/grid']/android.widget.FrameLayout[1]/android.widget.ImageView[2]|//*[@resource-id='com.android.documentsui:id/grid']/android.widget.FrameLayout[1]/android.widget.ImageView[2]|//*[@resource-id='com.android.documentsui:id/grid']/android.widget.FrameLayout[2]/android.widget.ImageView[2]|//*[@resource-id='com.android.documentsui:id/grid']/android.widget.FrameLayout[2]/android.widget.ImageView[2]" />
+		
+		
+		<element name="Week2_ChooseAFile_DocPhotos" descriptor="XPATH" value="//*[@text='Photos']" />
+		
+		<element name="Week2_ChooseAFilePhotoLibrary" descriptor="XPATH" value="//*[@label='Photo Library']|//*[@label='Photo Library']|//AppiumAUT/UIAApplication[1]/UIAWindow[1]/UIATableView[3]/UIATableCell[2]/UIAStaticText[1]" />
+		<element name="Week2_ChooseAFilePhotoLibraryAllowAccess" descriptor="XPATH" value="//*[@label='OK']" />
+		<element name="Week2_ChooseAFilePhotoLibraryCameraRoll" descriptor="XPATH" value="//UIAStaticText[@label='Camera Roll']" />
+		
+		
+		<element name="Week2_ChooseAFileCameraRoll" descriptor="XPATH" value="//*[@label='Photo, Landscape, February 07, 2008, 11:33 AM']|//*[@name='PhotosGridView']/UIACollectionCell[1]|//*[@text='Jun 19']|//UIAStaticText[@label='Camera Roll']|//*[@name='PhotosGridView']/UIACollectionCell[4]" /> 
+		
+		
+		<element name="Week2_ChooseAFile_DocPhotos_Download" descriptor="XPATH" value="//*[@text='Download']" />
+		
+		<element name="Week2_PaperClip" descriptor="XPATH" value="//i[@class='fi-paperclip fontSize4']" />
+		
+		<element name="Week2_FileAttachmentsText" descriptor="XPATH" value="//*[text()='File attachments:']" />
+		
+		
+		<element name="Week2_AssignmentReSubmitBtn" descriptor="XPATH" value="//strong[contains(text(),'Submission attachments:')]" />
+		
+		<element name="Week2_AssignmentAlertYes" descriptor="XPATH" value="//*[@resource-id='com.devry.mobileapps.devry:id/positive']|//*[@label='YES']|//*[@resource-id='com.devry.mobileapps.keller:id/positive']|//*[@resource-id='com.devry.mobileapps.chamberlain:id/positive']" />
+		<element name="Week2_AssignmentAlertOK" descriptor="XPATH" value="//*[@resource-id='com.devry.mobileapps.devry:id/positive']|//*[@label='OK']|//*[@resource-id='com.devry.mobileapps.keller:id/positive']|//*[@resource-id='com.devry.mobileapps.chamberlain:id/positive']" />
+		
+		
+		<element name="Week2PhotosName" descriptor="XPATH" value="//*[@content-desc='Photo taken on Feb 17, 2008 11:07:31 PM.']|//*[@resource-id='com.android.documentsui:id/grid']/android.widget.FrameLayout[1]/android.widget.ImageView[2]|//*[@resource-id='com.android.documentsui:id/grid']/android.widget.FrameLayout[1]/android.widget.ImageView[2]|//*[@name='PhotosGridView']/UIACollectionCell[4]|//*[@resource-id='android:id/title']" /> 
+
+		<element name="Week2PhotosNamePenguin" descriptor="XPATH" value="//*[@resource-id='com.android.documentsui:id/grid']/android.widget.FrameLayout[1]/android.widget.ImageView[2]" /> 
+		
+		<element name="Week2PhotosNameTulip" descriptor="XPATH" value="//*[@resource-id='com.android.documentsui:id/grid']/android.widget.FrameLayout[2]/android.widget.ImageView[2]" /> 
+		
+		<element name="Week2_HWAssignmentComments" descriptor="XPATH" value="//strong[contains(text(),'Assignment comments:')]" />
+		<element name="Week2_HWAssignmentTextBox" descriptor="XPATH" value="//textarea[@name='messageBody']" />
+		<element name="Week2_HWAssignmentTypeyourMsgText" descriptor="XPATH" value="//strong[contains(text(),'Type your message here:')]" />
+		<element name="Week2_HWAssignmentResubmitBtn" descriptor="XPATH" value="//*[text()='Re-submit']" />
+		
+					
+		<element name="Week2_CourseProject" descriptor="XPATH" value="//div[contains(text(),' Week 2: Course Project')]" />
+		<element name="Week2_CourseProjectHeader" descriptor="XPATH" value="//h2[(text()='Week 2: Course Project')]" />
+		<element name="Week2_CourseProjectDue" descriptor="XPATH" value="//strong[contains(text(),'Due')]" />
+		<element name="Week2_CourseProjectPoints" descriptor="XPATH" value="//strong[contains(text(),'Points')]" />
+		<element name="Week2_CourseProjectChooseFileBtn" descriptor="XPATH" value="//input[@id='fileUpload_assignmentsFileUpload']" />
+		<element name="Week2_AssignmentComments" descriptor="XPATH" value="//strong[contains(text(),'Assignment comments:')]" />
+		<element name="Week2_CourseProjectTextBox" descriptor="XPATH" value="//textarea[@name='messageBody']" />
+		<element name="Week2_CourseProjectTypeyourMsgText" descriptor="XPATH" value="//strong[contains(text(),'Type your message here:')]" />
+		<element name="Week2_CourseProjectSubmitBtn" descriptor="XPATH" value="//span[contains(text(),'Submit')]" />
+				
+		
+		</page>
+		
+		<!-- ##################### Week 3 Module page elements page################## -->
+		<page name ="Module-ACCT440_Week3_IdentificationKeySearch">
+		<element name="Week3_Introduction" descriptor="XPATH" value="//div[contains(text(),'Week 3 Introduction')]" />
+		
+		<element name="Week3_IntroWelcomeText" descriptor="XPATH" value="//h2[(text()='Welcome to Week ')]" />
+		<element name="Week3_IntroHeader" descriptor="XPATH" value="//span[contains(text(),'Week 3 Introduction')]" />
+					
+		<element name="Week3_Lesson" descriptor="XPATH" value="//div[contains(text(),'Week 3: Lesson')]" />
+		
+		<element name="Week3LessonIdentifyHeader" descriptor="XPATH" value="//h2[(text()='Identification of Key Search Criteria')]" />
+		<element name="Week3LessonKeySearchText" descriptor="XPATH" value="//h2[(text()='Key Search Criteria')]" />
+		<element name="Week3LessonStandardSetText" descriptor="XPATH" value="//h2[(text()='Standard Setting')]" />
+		<element name="Week3LessonCodificationText" descriptor="XPATH" value="//h2[(text()='Codification')]" />
+		<element name="Week3LessonReferencesText" descriptor="XPATH" value="//h2[(text()='References')]" />
+		<element name="Week3LessonScenarioText" descriptor="XPATH" value="//strong[(text()='The Scenario')]" />
+				
+		<element name="Week3_DiscussionActivities" descriptor="XPATH" value="//div[contains(text(),'Discussion Activities')]" />
+		<element name="Week3_SearchingTheInternet" descriptor="XPATH" value="//div[contains(text(),'Week 3: Searching the Internet')]" />
+		
+		<element name="Week3_SearchingTheInternetHeader" descriptor="XPATH" value="//h2[(text()='Week 3: Searching the Internet')]" />
+							
+		<element name="Week3_TheMainIdeas" descriptor="XPATH" value="//div[contains(text(),'Week 3: The Main Ideas')]" />
+		
+		<element name="Week3_MainIdeasHeader" descriptor="XPATH" value="//h2[(text()='Week 3: The Main Ideas')]" />
+					
+		<element name="Week3_Assignments" descriptor="XPATH" value="//div[contains(text(),'Assignments')]" />
+		<element name="Week3_Reading" descriptor="XPATH" value="//div[contains(text(),'Week 3: Reading')]" />
+		<element name="Week3_AssignmentsHeader" descriptor="XPATH" value="//h2[(text()='Week 3: Reading')]" />		
+		<element name="Week3_AssignmentDue" descriptor="XPATH" value="//strong[contains(text(),'Due')]" />
+		<element name="Week3_AssignmentPoints" descriptor="XPATH" value="//strong[contains(text(),'Points')]" />
+		<element name="Week3_AssignmentAddACommentBtn" descriptor="XPATH" value="//button[text()='Add a comment']" />
+		<element name="Week3_AssignmentCommentsText" descriptor="XPATH" value="//strong[contains(text(),'Assignment comments:')]" />
+		<element name="Week3_AssignmentAddCommentBox" descriptor="XPATH" value="//textarea[@name='commentText']" />
+		<element name="Week3_AssignmentCancelBtn" descriptor="XPATH" value="//*[text()='Cancel']" />
+		<element name="Week3_AssignmentPostCommentBtn" descriptor="XPATH" value="//*[text()='Post comment']" />
+		<element name="Week3_AssignmentChooseFileBtn" descriptor="XPATH" value="//input[@id='fileUpload_assignmentsFileUpload']" />
+					
+		<element name="Week3_HomeworkAssignment" descriptor="XPATH" value="//div[contains(text(),' Week 3: Homework Assignment')]" />
+		
+		<element name="Week3HWAssignmentHeader" descriptor="XPATH" value="//h2[(text()='Week 3: Homework Assignment')]" />
+		<element name="Week3HWAssignmentDue" descriptor="XPATH" value="//strong[contains(text(),'Due')]" />
+		<element name="Week3HWAssignmentPoints" descriptor="XPATH" value="//strong[contains(text(),'Points')]" />
+		<element name="Week3HWAssignmentTypeTextBox" descriptor="XPATH" value="//textarea[@name='messageBody']" />
+		<element name="Week3HWAssignmentTypeText" descriptor="XPATH" value="//strong[contains(text(),'Type your message here:')]" />
+		<element name="Week3HWAssignmentSubmitBtn" descriptor="XPATH" value="//span[contains(text(),'Submit')]" />
+				
+		
+		<element name="Week3_CourseProject" descriptor="XPATH" value="//div[contains(text(),' Week 3: Course Project')]" />
+		<element name="Week3_CourseProjectHeaderText" descriptor="XPATH" value="//h2[(text()='Week 3: Course Project')]" />
+				
+		</page>
+		
+		<!-- ##################### Week 4 Module page elements page################## -->
+		<page name ="Module-ACCT440_Week4_GatheringData">
+		
+		<element name="Week4_Introduction" descriptor="XPATH" value="//div[contains(text(),'Week 4 Introduction')]" />
+		
+		<element name="Week4IntroHeader" descriptor="XPATH" value="//span[(text()='Week 4 Introduction')]" />
+						
+		<element name="Week4_Lesson" descriptor="XPATH" value="//div[contains(text(),'Week 4: Lesson')]" />
+		
+		<element name="Week4LessonHeader" descriptor="XPATH" value="//span[(text()='Week 4: Lesson')]" />
+		<element name="Week4LessonGatheringDataText" descriptor="XPATH" value="//h2[(text()='Gathering Data')]" />
+		<element name="Week4LessonIdentifyText" descriptor="XPATH" value="//h2[(text()='Identifying Authoritative Pronouncements')]" />
+		<element name="Week4LessonDocumentationText" descriptor="XPATH" value="//h2[(text()='Documentation')]" />
+		<element name="Week4LessonReferencingText" descriptor="XPATH" value="//h2[(text()='Referencing the Codification')]" />
+		<element name="Week4LessonReferencesText" descriptor="XPATH" value="//h2[(text()='References')]" />
+				
+		<element name="Week4_DiscussionActivities" descriptor="XPATH" value="//div[contains(text(),'Discussion Activities')]" />
+		<element name="Week4_KeySearchTerms" descriptor="XPATH" value="//div[contains(text(),'Week 4: Key Search Terms')]" />
+		
+		<element name="Week4KeySearchTermsText" descriptor="XPATH" value="//h2[(text()='Week 4: Key Search Terms')]" />
+		
+		
+		<element name="Week4_SECResearch" descriptor="XPATH" value="//div[contains(text(),'Week 4: SEC Research')]" />
+		<element name="Week4SECResearchHeader" descriptor="XPATH" value="//h2[(text()='Week 4: SEC Research')]" />
+		
+		<element name="Week4_Assignments" descriptor="XPATH" value="//div[contains(text(),'Assignments')]" />
+		<element name="Week4_Reading" descriptor="XPATH" value="//div[contains(text(),'Week 4: Reading')]" />
+		<element name="Week4ReadingHeader" descriptor="XPATH" value="//h2[(text()='Week 4: Reading')]" />
+		
+		<element name="Week4_HomeworkAssignment" descriptor="XPATH" value="//div[contains(text(),' Week 4: Homework Assignment')]" />
+		<element name="Week4HWAssignmentHeader" descriptor="XPATH" value="//h2[(text()='Week 4: Homework Assignment')]" />
+		
+		<element name="Week4_CourseProject" descriptor="XPATH" value="//div[contains(text(),' Week 4: Course Project')]" />
+		<element name="Week4CourseProjectHeader" descriptor="XPATH" value="//h2[(text()='Week 4: Course Project')]" />
+		</page>
+		<!-- ##################### Week 5 Module page elements page################## -->
+		<page name ="Module-ACCT440_Week5_OrganzingResearch">
+		
+		<element name="Week5_Introduction" descriptor="XPATH" value="//div[contains(text(),'Week 5 Introduction')]" />
+		<element name="Week5IntroHeader" descriptor="XPATH" value="//h2[(text()='Welcome to Week ')]" />
+		
+		<element name="Week5_Lesson" descriptor="XPATH" value="//div[contains(text(),'Week 5: Lesson')]" />
+		<element name="Week5LessonHeader" descriptor="XPATH" value="//h2[(text()='Organizing Your Research and Additional Research Tools')]" />
+		
+		<element name="Week5LessonResrchTools" descriptor="XPATH" value="//h2[(text()='Additional Research Tools')]" />
+		<element name="Week5LesInternationalAcc" descriptor="XPATH" value="//h2[(text()='International Accounting')]" />
+		<element name="Week5LesReferences" descriptor="XPATH" value="//h2[(text()='References')]" />
+		
+			
+		<element name="Week5_DiscussionActivities" descriptor="XPATH" value="//div[contains(text(),'Discussion Activities')]" />
+		<element name="Week5_Codification" descriptor="XPATH" value="//div[contains(text(),'Week 5: Codification')]" />
+		
+		<element name="Week5CodificationHeader" descriptor="XPATH" value="//h2[(text()='Week 5: Codification')]" />
+			
+		
+		<element name="Week5_BusinessResearch" descriptor="XPATH" value="//div[contains(text(),'Week 5: Business Research')]" />
+		<element name="Week5BusinessResrchHeader" descriptor="XPATH" value="//h2[(text()='Week 5: Business Research')]" />
+			
+		
+		
+		<element name="Week5_Assignments" descriptor="XPATH" value="//div[contains(text(),'Assignments')]" />
+		<element name="Week5_Reading" descriptor="XPATH" value="//div[contains(text(),'Week 5: Reading')]" />
+		
+		<element name="Week5ReadingHeader" descriptor="XPATH" value="//h2[(text()='Week 5: Reading')]" />
+		
+		
+		<element name="Week5_HomeworkAssignment" descriptor="XPATH" value="//div[contains(text(),' Week 5: Homework Assignment')]" />
+		
+		<element name="Week5HWAssignmentHeader" descriptor="XPATH" value="//h2[(text()='Week 5: Homework Assignment')]" />
+		
+		<!-- <element name="Week5HWAssignmentChooseFileBtn" descriptor="XPATH" value="//div[contains(text(),' Week 5: Course Project')]" /> -->
+		
+		<element name="Week5_CourseProject" descriptor="XPATH" value="//*[@class='content remove-padding active']|//div[contains(text(),'Week 5: Course Project')]" />
+		
+		<element name="Week5CourseProjectHeader" descriptor="XPATH" value="//h2[(text()='Week 5: Course Project')]" />
+		
+		</page>
+		
+		
+		<!-- ##################### Week 6 Module page elements page################## -->
+		<page name ="Module-ACCT440_Week6_TaxAndAuditingResearch">
+		<element name="Week6_Introduction" descriptor="XPATH" value="//div[contains(text(),'Week 6 Introduction')]" />
+		<element name="Week6IntroTitle" descriptor="XPATH" value="//span[(text()='Week 6 Introduction')]" />
+		<element name="Week6IntroHeader" descriptor="XPATH" value="//*[contains(@content-desc,'Welcome to Week6!')]|//h2[@class='edit-line']" /> 
+			
+		<element name="Week6_Lesson" descriptor="XPATH" value="//div[contains(text(),'Week 6: Lesson')]" />
+		<element name="Week6LessonHeader" descriptor="XPATH" value="//h2[(text()='Tax Research, Auditing Research, and Formulating Recommendations and Conclusions')]" />
+		
+		<element name="Week6LessonTaxText" descriptor="XPATH" value="//h2[(text()='Tax Research')]" />
+		<element name="Week6AuditResearchText" descriptor="XPATH" value="//h2[(text()='Auditing Research')]" />
+		<element name="Week6LessonResrchRecommendText" descriptor="XPATH" value="//h2[(text()='Research Recommendations and Conclusion')]" />
+		<element name="Week6LessonReferencetext" descriptor="XPATH" value="//h2[(text()='References')]" />
+				
+		<element name="Week6_DiscussionActivities" descriptor="XPATH" value="//div[contains(text(),'Discussion Activities')]" />
+		<element name="Week6_TaxResearch" descriptor="XPATH" value="//div[contains(text(),'Week 6: Tax Research')]" />
+		
+		<element name="Week6TaxResrchtext" descriptor="XPATH" value="//h2[(text()='Week 6: Tax Research')]" />
+		<element name="Week6DiscussionTitle" descriptor="XPATH" value="//span[(text()='DISCUSSIONS')]" />
+		
+		<element name="Week6_AuditingResearch" descriptor="XPATH" value="//div[contains(text(),'Week 6: Auditing Research')]" />
+		<element name="Week6AuditResrchtext" descriptor="XPATH" value="//h2[(text()='Week 6: Auditing Research')]" />
+		
+		<element name="Week6_Assignments" descriptor="XPATH" value="//div[contains(text(),'Assignments')]" />
+		<element name="Week6_Reading" descriptor="XPATH" value="//div[contains(text(),'Week 6: Reading')]" />
+		<element name="Week6ReadingTitle" descriptor="XPATH" value="//h2[(text()='Week 6: Reading')]" />
+		
+		<element name="Week6_HomeworkAssignment" descriptor="XPATH" value="//div[contains(text(),' Week 6: Homework Assignment')]" />
+		<element name="Week6HWAssignmentTitle" descriptor="XPATH" value="//h2[(text()='Week 6: Homework Assignment')]" />
+		
+		<element name="Week6_CourseProject" descriptor="XPATH" value="//div[contains(text(),' Week 6: Course Project')]" />
+		<element name="Week6CourseProjectTitle" descriptor="XPATH" value="//h2[(text()='Week 6: Course Project')]" />
+		</page>
+		
+		<!-- ##################### Week 7 Module page elements page################## -->
+		
+		<page name ="Module-ACCT440_Week7_CommunicatingResearch">
+		<element name="Week7_Introduction" descriptor="XPATH" value="//div[contains(text(),'Week 7 Introduction')]" />
+		<element name="Week7IntroHeader" descriptor="XPATH" value="//*[contains(@content-desc,'Welcome to Week 7!')]|//h2[@class='edit-line']" />
+		<element name="Week7IntroTitle" descriptor="XPATH" value="//span[(text()='Week 7 Introduction')]" />
+		
+		<element name="Week7_Lesson" descriptor="XPATH" value="//div[contains(text(),'Week 7: Lesson')]" />
+		
+		<element name="Week7LessonTitle" descriptor="XPATH" value="//span[(text()='Week 7: Lesson')]" />
+		<element name="Week7CommunicatingResrch" descriptor="XPATH" value="//h2[(text()='Communicating Your Research')]" />
+		<element name="Week7ResrchMemorandumHeader" descriptor="XPATH" value="//h2[(text()='Research Memorandum')]" />
+		<element name="Week7FactsText" descriptor="XPATH" value="//Strong[(text()='Facts:')]" />
+		<element name="Week7IssuesText" descriptor="XPATH" value="//Strong[text()='Issues: ']" />
+		<element name="Week7AuthoritiesOnAccountingText" descriptor="XPATH" value="//*[text()='Authorities on accounting for extended warranties:']" />
+		<!--  <element name="Week7ConclusionText" descriptor="XPATH" value="//Strong[(text()='Conclusion:')]" />-->
+		<element name="Week7PresentationText" descriptor="XPATH" value="//*[text()='Presentation']" />
+		<element name="Week7ReferencesText" descriptor="XPATH" value="//h2[text()='References']" />
+		
+		<element name="Week7_DiscussionActivities" descriptor="XPATH" value="//div[contains(text(),'Discussion Activities')]" />
+		<element name="Week7_EthicalConsiderations" descriptor="XPATH" value="//div[contains(text(),'Week 7: Ethical Considerations')]" />
+		
+		<element name="Week7EthicalText" descriptor="XPATH" value="//h2[text()='Week 7: Ethical Considerations']" />
+		
+		
+		<element name="Week7_ResearchMemorandum" descriptor="XPATH" value="//div[contains(text(),'Week 7: Research Memorandum')]" />
+		<element name="Week7ResearchMemorandumTitle" descriptor="XPATH" value="//*[text()='Week 7: Research Memorandum']" />
+		
+		<element name="Week7_Assignments" descriptor="XPATH" value="//div[contains(text(),'Assignments')]" />
+		<element name="Week7_Reading" descriptor="XPATH" value="//div[contains(text(),'Week 7: Reading')]" />
+		<element name="Week7ReadingTitle" descriptor="XPATH" value="//h2[(text()='Week 7: Reading')]" />
+		
+		<element name="Week7_HomeworkAssignment" descriptor="XPATH" value="//div[contains(text(),' Week 7: Homework Assignment')]" />
+		<element name="Week7HWAssignmentTitle" descriptor="XPATH" value="//h2[(text()='Week 7: Homework Assignment')]" />
+		
+		<element name="Week7_CourseProject" descriptor="XPATH" value="//div[contains(text(),' Week 7: Course Project')]" />
+		<element name="Week7CourseProjectTitle" descriptor="XPATH" value="//h2[(text()='Week 7: Course Project')]" />
+		
+		</page>
+		
+		<!-- ##################### Week 8 Module page elements page################## -->
+		<page name ="Module-ACCT440_Week8_FinalWeek">
+		<element name="Week8_Introduction" descriptor="XPATH" value="//div[contains(text(),'Week 8 Introduction')]" />
+		<element name="Week8IntroTitle" descriptor="XPATH" value="//*[text()='Week 8 Introduction']" />
+		<element name="Week8IntroHeader" descriptor="XPATH" value="//*[contains(@content-desc,'Welcome to Week 8!')]|//h2[@class='edit-line']" />
+		
+		<element name="Week8_LookingAhead" descriptor="XPATH" value="//div[contains(text(),'Week 8: Looking Ahead')]" />
+		<element name="Week8LookingAheadTitle" descriptor="XPATH" value="//*[text()='Week 8: Looking Ahead']" />
+		
+		<element name="Week8_DiscussionActivities" descriptor="XPATH" value="//div[contains(text(),'Discussion Activities')]" />
+		<element name="Week8_Assignments" descriptor="XPATH" value="//div[contains(text(),'Assignments')]" />
+		
+		</page>
+		
+		
+		
+		<!-- ##################### Canvas-Hamburger Menu item page elements page################## -->
+		
+		
+		
+		<page name="Canvas_Righthamburgermenu">
+		<element name="RightHamburger_menu" descriptor="XPATH" value="//*[@class='right menu-button']//*[@class='menu-icon'] " />
+		<element name="Modules"  descriptor="XPATH" value="//*[@text='Modules']|//*[@label='Modules']|//UIAStaticText[@name='Modules']|//*[@label='Modules']" />
+		<element name="Syllabus"  descriptor="XPATH" value="//*[@text='Syllabus']|//UIAStaticText[@name='Syllabus']|//*[@label='Syllabus']" />
+		<element name="Announcements"  descriptor="XPATH" value="//*[@text='Announcements']|//*[@label='Announcements']" />
+		<element name="Grades"  descriptor="XPATH" value="//*[@text='Grades']|//*[@label='Grades']"/>
+		<element name="People"  descriptor="XPATH" value="//*[@text='People']|//*[@label='People']" />
+		<element name="Files"  descriptor="XPATH" value="//*[@text='Files']|//*[@label='Files']" />
+		<element name="Todolist"  descriptor="XPATH" value="//*[@text='Todo List']|//*[@label='Todo List']" />
+		<element name="Chat"  descriptor="XPATH" value="//*[@text='Chat']|//*[@label='Chat']" />
+		<element name="Adobe_Connect"  descriptor="XPATH" value="//*[@text='Adobe Connect']" />
+		<element name="VoiceThread"  descriptor="XPATH" value="//*[@text='VoiceThread']" />
+		<element name="Media_Gallery"  descriptor="XPATH" value="//*[@text='Media Gallery']" />
+		<element name="My_Media"  descriptor="XPATH" value="//*[@text='My Media']" />
+		<element name="Bookshelf"  descriptor="XPATH" value="//span[contains(text(),'Bookshelf®')]" />
+		<element name="echo360"  descriptor="XPATH" value="//*[@text='echo360']|//*[@label='echo360']" />
+		<element name="WebEx"  descriptor="XPATH" value="//*[@text='WebEx']|//*[@label='WebEx']" />
+		<element name="Office_365"  descriptor="XPATH" value="//*[@class='com.idunnololz.widgets.AnimatedExpandableListView']/group[6]/text[1]" />
+		<element name="Office_365_2"  descriptor="XPATH" value="//span[contains(text(),'Office 365')]" /> 				
+		<element name="Tutor_com"  descriptor="XPATH" value="//span[contains(text(),'Tutor.com 24/7 Online Tutoring')]|//*[@label='Tutor.com 24/7 Online Tutoring']|//*[@text='Tutor.com 24/7 Online Tutoring']" />
+		<element name="BookStore"  descriptor="XPATH" value="//*[@label='DeVry Bookstore Demo']|//*[@text='DeVry Bookstore Demo']" />	
+		<element name="Left_Back_menu" descriptor="XPATH" value="//*[@class='left menu-button']|//*[@class='left menu-button']//*[@class='menu-icon']" />
+		<element name="Back_Button" descriptor="XPATH" value="//*[@id='back-button']" />
+		<element name="Surveys" descriptor="XPATH" value="//*[@text='Surveys']|//*[@label='Surveys']" />		
+			
+		</page>
+		
+		<!-- #####################ACCT-440- Syllabus Page elements ########################################### -->
+		<page name="Canvas_Righthamburgermenu_Syllabus">
+		
+		<element name="Biography"  descriptor="XPATH" value="//*[@id='profile_bio_label']" />
+		<element name="FacultyInfoHeader"  descriptor="XPATH" value="//h2[contains(text(),'Faculty Information')]" />
+		<element name="ContactHeader"  descriptor="XPATH" value="//h3[contains(text(),'Contact')]" />
+		<element name="CourseInfo"  descriptor="XPATH" value="//h2[contains(text(),'Course Information')]" />
+		<element name="TextbooksAndSupplementalMaterials"  descriptor="XPATH" value="//h2[contains(text(),'Textbooks and Supplemental Materials')]" />
+		<element name="Assignment_ExamDueDatePolicy"  descriptor="XPATH" value="//h2[contains(text(),'Assignment') and contains(text(),'Exam Due Date Policy')] " />
+		<element name="AssignmentList"  descriptor="XPATH" value="//h2[contains(text(),'Assignment List')]" />
+		<element name="UniversityPoliciesProceduresHeader"  descriptor="XPATH" value="//h2[contains(text(),'University Policies and Procedures')]" />
+		<element name="AssignmentValuesLetterGrades"  descriptor="XPATH" value="//h2[contains(text(),'Assignment Values and Letter Grades')]" />
+		
+		
+		</page>
+		<!-- ##################### ACCT-440  Right hamburger Menu-Announcements########################################### -->
+		<page name="Canvas_Righthamburgermenu_Announcements">
+		
+		<element name="Test_Automation"  descriptor="XPATH" value="//div[@class='small-16 columns fontSize3 ellipsis ng-binding']|//*[text()='Test Automation']" />
+		<element name="ListArrow"  descriptor="XPATH" value="//div[@class='list-arrow']" />
+		<element name="DiscussionTopics_TestAutomation"  descriptor="XPATH" value="//div[@class='header-font ng-binding']|//*[text()='Test Automation']" />
+		<element name="MyReponses"  descriptor="XPATH" value="//p[contains(text(),'My Responses:')]" />
+		<element name="TotalResponses"  descriptor="XPATH" value="//p[contains(text(),'Total Responses:')]" />
+		<element name="NumberOfUnread"  descriptor="XPATH" value="//p[contains(text(),'Number of Unread:')]" />
+		<element name="Reply_button"  descriptor="XPATH" value="//*[@ng-click='discussionVM.startReply(0)']" />
+		<element name="ReplyTextBox1"  descriptor="XPATH" value="//*[@class='cke_wysiwyg_frame cke_reset']" />
+		<element name="ReplyTextBox"  descriptor="XPATH" value="//div[@id='cke_testEditor']" />
+		<element name="ReplyTextBoxTextArea"  descriptor="XPATH" value="//div[@id='reply-section']/textarea[@name='testEditor']" />
+		<element name="EditorIframe"  descriptor="XPATH" value="//iframe[@class='cke_wysiwyg_frame cke_reset']" />
+		<element name="IframeLink"  descriptor="XPATH" value="//link[@type='text/css']|//a[@href='https://cdn.ckeditor.com/4.6.1/basic/contents.css?t=GB8C']" />
+		<element name="EditorBody"  descriptor="XPATH" value="//html[@dir='ltr']/body[@class='cke_editable cke_editable_themed cke_contents_ltr']/p" />
+		<element name="EditorText"  descriptor="XPATH" value="//div[@id='cke_testEditor']|//div[@class='class='cke_1 cke cke_reset cke_chrome cke_editor_testEditor cke_ltr cke_browser_webkit']" />
+		<element name="RichTextEditor"  descriptor="XPATH" value="//span[@id='cke_testEditor_arialbl']" />
+		
+		
+		<element name="Editor_TextArea"  descriptor="XPATH" value="///textarea[@name='testEditor']" />
+		<element name="Cancel_button"  descriptor="XPATH" value="//*[@ng-click='discussionVM.cancelReply()']" />
+		<element name="SaveDraft_button"  descriptor="XPATH" value="//*[@ng-click='discussionVM.saveDraft()']" />
+		<element name="PostReply_button"  descriptor="XPATH" value="//*[@ng-click='discussionVM.postReply()']" />
+		<element name="ThumbsUp_button"  descriptor="XPATH" value="//*[@ng-click='discussionVM.rateEntry(reply.id)']" />
+		<element name="Edit_button"  descriptor="XPATH" value="//*[@ng-click='discussionVM.startEdit(reply.id)']|//*[text()='Edit']" />
+		<element name="DisableReply_button"  descriptor="XPATH" value="//*[@ng-click='discussionVM.startReply(reply.id)']|//*[text()='Reply']" />
+		</page>
+		
+		<!-- #####################ACCT-440- Grades Right menu ########################################### -->
+		<page name="Canvas_Righthamburgermenu_Grades">
+		
+		<element name="TotalPointsHeader"  descriptor="XPATH" value="//div[contains(text(),'Total points: 64 / 70')]" />
+		<element name="Week 1:AuthoritativeSourcesHeading"  descriptor="XPATH" value="//div[contains(text(),'Week 1: Authoritative Sources')]" />
+		<element name="Week1_Auth_Src_Grade"  descriptor="XPATH" value="//span[contains(text(),'*/20')]" />
+		<!-- There is a cloud symbol near the grade displayed in the grades page -->
+		<element name="Week1_Auth_Src_Grade_icon"  descriptor="XPATH" value="//i[@class='icon-discussion']" />
+		<!-- After clicking the Week 1 heading ,an Add a comment button is displayed -->
+		<!--  <element name="Week1_Auth_Src_Grade_AddCmmntButton"  descriptor="XPATH" value="//button[contains(text(),'Add a comment')]|//*[@class='content active']//*[@class='ng-scope']||//*[text()='Add a comment']" />-->
+		
+		<element name="Week1_Auth_Src_Grade_AddCmmntButton"  descriptor="XPATH" value="//*[@class='content active']//*[@class='ng-scope']|//*[text()='Add a comment']|//*[@class='accordion separated']/li[2]/div[1]/canvas-comments[1]/div[1]/div[30]/div[1]/button[1]" />
+		
+		
+		<!-- After clicking Add comment,Add comment Text box appears -->
+		<element name="AddCommentText"  descriptor="XPATH" value="//textarea[@name='commentText']" />
+		<element name="PostCommentButton"  descriptor="XPATH" value="//button[contains(text(),'Post comment')]" />
+		
+		<element name="ChooseAFileButton"  descriptor="XPATH" value="//span[contains(text(),'CHOOSE A FILE')]" />
+		<element name="Week1CrseProj"  descriptor="XPATH" value="//div[contains(text(),'Total points: 64 / 70')]" />
+		<element name="Week 1:AuthoritativeSourcesHeading"  descriptor="XPATH" value="//div[contains(text(),'Week 1: Authoritative Sources')]" />
+		<element name="TotalPointsHeader"  descriptor="XPATH" value="//div[contains(text(),'Total points: 64 / 70')]" />
+		<element name="Week 1:AuthoritativeSourcesHeading"  descriptor="XPATH" value="//div[contains(text(),'Week 1: Authoritative Sources')]" />
+		
+		</page>
+		
+		<!-- ##################### ACCT-440  Right hamburger Menu-People########################################### -->
+		<page name="Canvas_Righthamburgermenu_People">
+		
+		<element name="TeachersTitleText"  descriptor="XPATH" value="//div[contains(text(),'Teachers')]" />
+		<element name="StudentsTitleText"  descriptor="XPATH" value="//div[contains(text(),'Students')]" />
+		<element name="VinceSmeraldo"  descriptor="XPATH" value="//a[contains(text(),'Vincent Smeraldo ')]" />
+		
+		</page>
+		
+		
+		<!-- ##################### ACCT-440  Right hamburger Menu-Files########################################### -->
+		<page name="Canvas_Righthamburgermenu_Files">
+		
+		<element name="CourseFilesText"  descriptor="XPATH" value="//p[contains(text(),'course files')]" />
+		<element name="CourseImageText"  descriptor="XPATH" value="//p[contains(text(),'Course Image')]" />
+		<element name="Unfiled"  descriptor="XPATH" value="//p[contains(text(),'unfiled')]" />
+		
+		</page>
+				
+		<!-- ##################### Document Center########################################### -->
+		<page name="DocumentCenter">
+			<element name="TitleHeader"  descriptor="XPATH" value="//span[contains(text(),'DOCUMENT CENTER')]" />
+			<element name="Paragraph"  descriptor="XPATH" value="//span[contains(text(),'You have requested to not be awarded any federal student aid for which you may qualify to receive during the current award year. If this is incorrect or if you would like to discuss additional financing options, please contact your Student Support Advisor or Student Service Advisor.')]|//*[@class='fontSize4 letterSpacing1 small-24 medium-18 columns ng-binding']" />
+			<element name="RequiredButton"  descriptor="XPATH" value="//a[contains(text(),'required')]"/>
+			<element name="CompletedButton"  descriptor="XPATH" value="//a[contains(text(),'completed')]" />				
+			<element name="FAFSAFreeApp"  descriptor="XPATH" value="//*[text()='2017-2018 Free Application for Federal Student Aid (FAFSA)']" />
+			<element name="DocCompleteMsg"  descriptor="XPATH" value="//*[text()='This document has been completed']" />		
+			<element name="FERPAForm2017-2018"  descriptor="XPATH" value="//*[@class='accordion separated ng-scope']/li[2]/a[1]/div[2]/div[1]/div[1]" />
+			<element name="CompletePaperVersion18"  descriptor="XPATH" value="//*[@class='accordion separated ng-scope']/li[2]/div[1]/div[1]/span[1]" />
+			<element name="CompletePaperVersion17"  descriptor="XPATH" value="//*[@class='accordion separated ng-scope']/li[3]/div[1]/div[1]/span[1]" />		
+			<element name="FERPAForm2016-2017"  descriptor="XPATH" value="///*[@class='accordion separated ng-scope']/li[3]/a[1]/div[2]/div[1]/div[1]" />		
+		</page>
+								  
+	</site>
+		
+</elementDefinition>

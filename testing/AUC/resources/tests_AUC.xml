@@ -1,0 +1,1429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+
+
+  <import fileName="functions_General.xml" />
+  <import fileName="functions_AUC.xml" />
+
+	<!-- PAGE OBJECTS -->
+	<model>
+		<page name="Home" />
+		<page name="Menu_Home" />
+		<page name="Login" />
+		<page name="Student Finance" />
+		<page name="Schedule" />
+	</model>
+
+<!-- <step type="STATE" name="Checkpoint" page="Home" /> -->
+	
+	<!-- TEST CASES -->
+	<test active="false" name="TC0001-Login_AUC" timed="true"  dataProvider="AUCLogin">
+	
+		<!--<step name="CLEAN" type="DEVICE" page="Landing_Page">
+			<parameter type="STATIC" value="DeVry" />
+		</step>
+		-->
+		
+		<!--########### Call Test Setup Function ############  -->
+		<!-- Uninstalls app, installs app, verifies app is up and if not, closes it and reopens it. -->
+		<step name="testSetup" page="Login" type="CALL2" >
+			<parameter type="STATIC" value="" />
+		</step>		
+    
+		<!--########### Call Login Function ############  -->		
+		<step name="Login" page="Login" type="CALL2" >
+			<parameter name="LOGINPARAM" type="DATA" value="AUCLogin.accountName" />
+			<parameter name="PWPARAM" type="DATA" value="AUCLogin.password" />
+		</step>
+		
+		<!--########### Call Logout Function ############  -->
+		<step name="Logout" page="Home" type="CALL2" >
+			<parameter type="STATIC" value="" />
+		</step>		
+
+		<step name="CLOSE_APP" site="Devry" page="Home" type="DEVICE" active="true" threshold="10000" timed="false" inverse="false" failureMode="ERROR">
+        	<parameter type="STATIC" name="close" value="AUC_app" />
+        </step>
+
+	</test>	
+	
+	<test active="false" name="TC0002-Schedule_AUC" timed="true"  dataProvider="AUCLogin">
+
+		<!--########### Call Test Setup Function ############  -->
+		<!-- Uninstalls app, installs app, verifies app is up and if not, closes it and reopens it. -->
+		<step name="testSetup" page="Login" type="CALL2" >
+			<parameter type="STATIC" value="" />
+		</step>	   
+
+		<!--########### Call Login Function ############  -->
+		<step name="Login" page="Login" type="CALL2" >
+			<parameter name="LOGINPARAM" type="DATA" value="AUCLogin.accountName" />
+			<parameter name="PWPARAM" type="DATA" value="AUCLogin.password" />
+		</step>
+		
+		<!--########### Click Hamburger Menu ############  -->
+		<step name="Click_Left_Menu_Link" page="Home" type="CALL2" />		
+		
+		<!--########### Swipe Down ############  -->
+		<step type="GESTURE" name="SWIPE" page="Menu_Home" >
+			<parameter type="STATIC" value="DOWN" />
+		</step>		
+		
+		<!--########### Click Schedule ############  -->
+		<step timed="true" name="Schedule_Menu.CLICKABLE" page="AUC_Schedule" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Schedule_Menu" page="AUC_Schedule" type="CLICK" />
+		</step>
+		
+		<!--########### SWITCH TO WEBVIEW APP ############         -->
+		<step timed="true" name="CONTEXT" type="DEVICE">
+        	<parameter type="STATIC" value="WEBVIEW_1" />
+        </step>		
+		
+		<!--########### Verify Elements on Schedule Page ############  -->
+		<step timed="true" name="Schedule_Label.VISIBLE" page="AUC_Schedule" type="WAIT_FOR" threshold="30000"/>
+		
+		<step name="enableCache" page="AUC_Schedule" type="CACHE">
+			<parameter name="Enable" type="STATIC" value="true"/>
+		</step>
+		
+		<step timed="true" name="Right_Hamburger_Menu" page="AUC_Schedule" type="EXISTS" />
+		<step timed="true" name="Schedule_Label" page="AUC_Schedule" type="EXISTS" />
+		<step timed="true" name="E*Value_Button" page="AUC_Schedule" type="EXISTS" />
+		<step timed="true" name="Event_Calendar_Button" page="AUC_Schedule" type="EXISTS" />
+		<step timed="true" name="Attendance_Button" page="AUC_Schedule" type="EXISTS" />
+		
+		<step name="enableCache" page="AUC_Schedule" type="CACHE">
+			<parameter name="Enable" type="STATIC" value="false"/>
+		</step>		
+		
+		<step timed="true" name="Left_Menu.CLICKABLE" page="AUC_Schedule" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Left_Menu" page="AUC_Schedule" type="CLICK" />
+		</step>	
+		
+		<!--########### SWITCH TO NATIVE APP ############ -->        
+		<step timed="true" name="CONTEXT" type="DEVICE">
+			<parameter type="STATIC" value="NATIVE_APP" />
+		</step>
+		
+		<!--########### Call Logout Function ############  -->
+		<step name="Logout" page="Home" type="CALL2" >
+			<parameter type="STATIC" value="" />
+		</step>	
+							
+	</test>
+	
+	<test active="true" name="TC0003-Grades_AUC" timed="true"  dataProvider="AUCLogin">
+
+		<!--########### Call Test Setup Function ############  -->
+		<!-- Uninstalls app, installs app, verifies app is up and if not, closes it and reopens it. -->
+		<step name="testSetup" page="Login" type="CALL2" >
+			<parameter type="STATIC" value="" />
+		</step>		 
+
+		<!--########### Call Login Function ############  -->
+		<step name="Login" page="Login" type="CALL2" >
+			<parameter name="LOGINPARAM" type="DATA" value="AUCLogin.accountName" />
+			<parameter name="PWPARAM" type="DATA" value="AUCLogin.password" />
+		</step>
+		
+		<!--########### Click Hamburger Menu ############  -->
+		<step name="Click_Left_Menu_Link" page="Home" type="CALL2" />		
+
+		<!--########### Swipe Down ############  -->
+		<step type="GESTURE" name="SWIPE" page="Menu_Home" os="Android">
+			<parameter type="STATIC" value="DOWN" />
+		</step>
+		
+		<!--########### Click Grades ############  -->
+		<step timed="true" name="Grades_Menu.CLICKABLE" page="AUC_Grades" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Grades_Menu" page="AUC_Grades" type="CLICK" />
+		</step>
+		
+		<!--########### SWITCH TO WEBVIEW APP ############         -->
+		<step timed="true" name="CONTEXT" type="DEVICE">
+        	<parameter type="STATIC" value="WEBVIEW_1" />
+        </step>	
+        
+		<!--########### Verify Elements on Grades Page ############  -->
+		<step timed="true" name="Grades_Label.VISIBLE" page="AUC_Grades" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Grades_Label" page="AUC_Grades" type="EXISTS" />
+		</step>        	
+		
+		<step name="enableCache" page="AUC_Grades" type="CACHE">
+			<parameter name="Enable" type="STATIC" value="true"/>
+		</step>
+			
+		<step timed="true" name="Right_Hamburger_Menu" page="AUC_Grades" type="EXISTS" />	
+		<step timed="true" name="Grades_Label" page="AUC_Grades" type="EXISTS" />
+		<step timed="true" name="Print_Grades_Button" page="AUC_Grades" type="EXISTS" />	
+		<step timed="true" name="Unofficial_Transcripts_Button" page="AUC_Grades" type="EXISTS" />	
+
+		<step name="enableCache" page="AUC_Grades" type="CACHE">
+			<parameter name="Enable" type="STATIC" value="false"/>
+		</step>
+		
+		<step timed="true" name="Left_Menu.CLICKABLE" page="AUC_Grades" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Left_Menu" page="AUC_Grades" type="CLICK" />
+		</step>	
+		
+		<!--########### SWITCH TO NATIVE APP ############ -->        
+		<step timed="true" name="CONTEXT" type="DEVICE">
+			<parameter type="STATIC" value="NATIVE_APP" />
+		</step>
+		
+		<!--########### Call Logout Function ############  -->
+		<step name="Logout" page="Home" type="CALL2" >
+			<parameter type="STATIC" value="" />
+		</step>				
+		        		
+	</test>		
+
+	<test active="true" name="TC0004-RESOURCES_AUC" timed="true"  dataProvider="AUCLogin">
+	
+		<!-- Quit working on this because iOS and Android are different -->
+
+		<!--########### Call Test Setup Function ############  -->
+		<!-- Uninstalls app, installs app, verifies app is up and if not, closes it and reopens it. -->
+		<step name="testSetup" page="Login" type="CALL2" >
+			<parameter type="STATIC" value="" />
+		</step>	
+
+		<!-- Sign In as user -->
+
+		<step name="Login" page="LOGIN" type="CALL2" >
+			<parameter name="LOGINPARAM" type="DATA" value="AUCLogin.accountName" />
+			<parameter name="PWPARAM" type="DATA" value="AUCLogin.password" />
+		</step>    
+  
+		<!-- Open Left menu -->
+		<step name="Click_Left_Menu_Link" page="Home" type="CALL2" />		
+
+		<!-- RESOURCES -->                                                
+		<step timed="true" name="RESOURCES" page="Menu_Home" type="WAIT_FOR" >
+			<step timed="true" name="RESOURCES" page="Menu_Home" type="CLICK"/>
+		</step>
+		
+		<!--########### SWITCH TO WEBVIEW APP ############  -->
+		<step timed="true" name="CONTEXT" type="DEVICE">
+			<parameter type="STATIC" value="WEBVIEW_1" />
+		</step>  
+		
+		<!-- Wait for the Page Header -->
+		<step timed="true" name="PageHeader" page="AUC-RESOURCES" type="WAIT_FOR" />
+		
+		<!-- Take Screen Shot -->
+		<step name="RESOURCES_PAGE" page="AUC-RESOURCES" type="STATE"/>	
+		
+		<!-- Verify the AUC_Website Exists -->
+		<step timed="true" name="AUC_Website.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="AUC_Website" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	
+		
+		<!--  Verify the AUC Student Handbook Exists-->
+		<step timed="true" name="AUC_Student_Handbook.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="AUC_Student_Handbook" page="AUC-RESOURCES" type="EXISTS" />
+		</step>			
+		
+		<!--  Verify the Verify Facebook Exists -->
+		<step timed="true" name="Facebook.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Facebook" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	
+		
+		<!-- Verify News Exists -->
+		<step timed="true" name="News.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="News" page="AUC-RESOURCES" type="EXISTS" />
+		</step>				
+		
+		<!-- Verify Refund Site-CashNet Exists - Andy - 9/5/17 - Commented out because link doesn't exist anymore.
+		<step timed="true" name="Refund_Site_CashNet.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Refund_Site_CashNet" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	-->
+		
+		<!-- Verify UpToDate Exists -->
+		<step timed="true" name="UpToDate.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="UpToDate" page="AUC-RESOURCES" type="EXISTS" />
+		</step>		
+		
+		<!-- Verify Student_Email Exists -->
+		<step timed="true" name="Student_Email.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Student_Email" page="AUC-RESOURCES" type="EXISTS" />
+		</step>				
+
+		<!-- Verify Housing_Website Exists -->
+		<step timed="true" name="Housing_Website.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Housing_Website" page="AUC-RESOURCES" type="EXISTS" />
+		</step>
+		
+		<!-- Verify AUC_Library Exists -->
+		<step timed="true" name="AUC_Library.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="AUC_Library" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	
+		
+		<!-- Swipe -->	
+		<step type="GESTURE" name="SWIPE" page="Menu_Home" >
+			<parameter type="STATIC" value="UP" />
+		</step>
+		
+		<!-- Angel LMS - Andy - 9/5/2017 - Added Angel LMS -->	
+		<step timed="true" name="Angel_LMS.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Angel_LMS" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	
+		
+		<!-- Bookstore - Andy - 9/5/2017 - Bookstore -->	
+		<step timed="true" name="Bookstore.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Bookstore" page="AUC-RESOURCES" type="EXISTS" />
+		</step>			
+		
+		<!-- Click on Back Button On RESOURCES-PROGRAMS_AND_COURSES -->
+		<step timed="true" name="Back_Button" page="AUC-RESOURCES" type="WAIT_FOR" >
+			<step timed="true" name="Back_Button" page="AUC-RESOURCES" type="CLICK"/>
+		</step>		
+		
+		<!-- Click on Back Button On RESOURCES -->
+		<step timed="true" name="Back_Button" page="RESOURCES" type="WAIT_FOR" >
+			<step timed="true" name="Back_Button" page="RESOURCES" type="CLICK"/>
+		</step>	     
+		
+		<!--########### SWITCH TO NATIVE APP ############ -->        
+		<step timed="true" name="CONTEXT" type="DEVICE">
+			<parameter type="STATIC" value="NATIVE_APP" />
+		</step>
+		
+		<!--########### Call Logout Function ############  -->
+		<step name="Logout" page="Home" type="CALL2" >
+			<parameter type="STATIC" value="" />
+		</step>				
+		
+		<!-- Click on Academics 
+		<step name="Academics" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="Academics.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Academics" page="AUC-RESOURCES" type="EXISTS" />
+			<step timed="true" name="Academics" page="AUC-RESOURCES" type="CLICK" />			
+		</step>	
+		
+		Verify links under Academics
+
+		Academic_Catalogue
+		<step timed="true" name="Academic_Catalogue.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Academic_Catalogue" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	
+		
+		<Transcript_Request
+		<step timed="true" name="Transcript_Request.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Transcript_Request" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	
+		
+		Enrollment_Verification_Form
+		<step timed="true" name="Enrollment_Verification_Form.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Enrollment_Verification_Form" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	
+		
+		Opt_Back_into_Ebooks
+		<step timed="true" name="Opt_Back_into_Ebooks.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Opt_Back_into_Ebooks" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	
+		
+		Alumni_Contact_Network_Request_Form
+		<step timed="true" name="Alumni_Contact_Network_Request_Form.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Alumni_Contact_Network_Request_Form" page="AUC-RESOURCES" type="EXISTS" />
+		</step>		
+		
+		Click Back Button 
+		<step timed="true" name="Back_Button.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Back_Button" page="AUC-RESOURCES" type="CLICK" />
+		</step>		-->
+				
+		<!-- Click on Administrative
+		<step name="Administrative" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="Administrative.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Administrative" page="AUC-RESOURCES" type="EXISTS" />
+			<step timed="true" name="Administrative" page="AUC-RESOURCES" type="CLICK" />			
+		</step>	
+		
+		Verify links under Administrative -->
+		
+		<!-- NAGICO_Health_Claim_Form 
+		<step name="NAGICO_Health_Claim_Form" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="NAGICO_Health_Claim_Form.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="NAGICO_Health_Claim_Form" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	-->
+		
+		<!-- Aetna_Student_Health_Insurance_Information 
+		<step name="Aetna_Student_Health_Insurance_Information" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="Aetna_Student_Health_Insurance_Information.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Aetna_Student_Health_Insurance_Information" page="AUC-RESOURCES" type="EXISTS" />
+		</step>		-->	
+		
+		<!-- Clinical_Health_Insurance_Waiver_Request 
+		<step name="Clinical_Health_Insurance_Waiver_Request" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="Clinical_Health_Insurance_Waiver_Request.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Clinical_Health_Insurance_Waiver_Request" page="AUC-RESOURCES" type="EXISTS" />
+		</step>		-->
+		
+		<!-- Family_Educational_Rights_and_Privacy_Act 
+		<step name="Family_Educational_Rights_and_Privacy_Act" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="Family_Educational_Rights_and_Privacy_Act.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Family_Educational_Rights_and_Privacy_Act" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	-->
+
+		<!-- Administrative_Review_and_Grievance_Procedures_Document 
+		<step name="Administrative_Review_and_Grievance_Procedures_Document" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="Administrative_Review_and_Grievance_Procedures_Document.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Administrative_Review_and_Grievance_Procedures_Document" page="AUC-RESOURCES" type="EXISTS" />
+		</step>				-->	
+				
+		<!-- Non-Discrimination_Policy 
+		<step name="Non-Discrimination_Policy" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="Non-Discrimination_Policy.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Non-Discrimination_Policy" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	-->
+		
+		<!-- Sex_and_Gender_Based_Misconduct_Prevention_Resources 
+		<step name="Sex_and_Gender_Based_Misconduct_Prevention_Resources" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="Sex_and_Gender_Based_Misconduct_Prevention_Resources.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Sex_and_Gender_Based_Misconduct_Prevention_Resources" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	-->
+				
+		<!-- UK_Clinical_Health_Insurance_Waiver_Request 
+		<step name="UK_Clinical_Health_Insurance_Waiver_Request" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="UK_Clinical_Health_Insurance_Waiver_Request.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="UK_Clinical_Health_Insurance_Waiver_Request" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	-->
+		
+		<!-- Reinstatement_of_Health_Insurance_Form 
+		<step name="Reinstatement_of_Health_Insurance_Form" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="Reinstatement_of_Health_Insurance_Form.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Reinstatement_of_Health_Insurance_Form" page="AUC-RESOURCES" type="EXISTS" />
+		</step>				-->	
+		
+		<!-- Click Back Buuton 
+		<step timed="true" name="Back_Button.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Back_Button" page="AUC-RESOURCES" type="CLICK" />
+		</step>			-->			
+				
+		<!-- Click on Financial Aid and Scholarship 
+		<step name="Financial_Aid_and_Scholarship" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>		
+		<step timed="true" name="Financial_Aid_and_Scholarship.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Financial_Aid_and_Scholarship" page="AUC-RESOURCES" type="EXISTS" />
+			<step timed="true" name="Financial_Aid_and_Scholarship" page="AUC-RESOURCES" type="CLICK" />			
+		</step>	-->
+		
+		<!-- Verify links under Financial Aid and Scholarship 
+		
+		<step name="Financial_Planning_Guide" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>		
+		<step timed="true" name="Financial_Planning_Guide.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Financial_Planning_Guide" page="AUC-RESOURCES" type="EXISTS" />
+		</step>
+					
+		
+		<step name="Financial_Aid_Checklist" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>		
+		<step timed="true" name="Financial_Aid_Checklist.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Financial_Aid_Checklist" page="AUC-RESOURCES" type="EXISTS" />
+		</step>			
+		
+		<step name="Canadian_Financial_Planning_Guide" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>		
+		<step timed="true" name="Canadian_Financial_Planning_Guide.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Canadian_Financial_Planning_Guide" page="AUC-RESOURCES" type="EXISTS" />
+		</step>
+		
+		<step name="Adtalem_Scholarship_Fund" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>		
+		<step timed="true" name="Adtalem_Scholarship_Fund.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Adtalem_Scholarship_Fund" page="AUC-RESOURCES" type="EXISTS" />
+		</step>		
+		
+		<step name="Dr_Karl_Stockhuasen_Memorial_Scholarship" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>		
+		<step timed="true" name="Dr_Karl_Stockhuasen_Memorial_Scholarship.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Dr_Karl_Stockhuasen_Memorial_Scholarship" page="AUC-RESOURCES" type="EXISTS" />
+		</step>					
+		
+		<step name="Loan_Estimator" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>		
+		<step timed="true" name="Loan_Estimator.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Loan_Estimator" page="AUC-RESOURCES" type="EXISTS" />
+		</step>			
+		
+		<step name="Student_Engagement_Award" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>		
+		<step timed="true" name="Student_Engagement_Award.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Student_Engagement_Award" page="AUC-RESOURCES" type="EXISTS" />
+		</step>		
+		
+		<step name="Social_Accountability_Award" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>		
+		<step timed="true" name="Social_Accountability_Award.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Social_Accountability_Award" page="AUC-RESOURCES" type="EXISTS" />
+		</step>		-->	
+		
+		<!-- Click Back Button 
+		<step timed="true" name="Back_Button.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Back_Button" page="AUC-RESOURCES" type="CLICK" />
+		</step>		-->	
+				
+		<!-- Click on Handbook 
+		<step name="Handbook" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>				
+		<step timed="true" name="Handbook.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Handbook" page="AUC-RESOURCES" type="EXISTS" />
+			<step timed="true" name="Handbook" page="AUC-RESOURCES" type="CLICK" />			
+		</step>	-->	
+		
+		<!-- Verify Links under Handbook 
+		
+		<step name="AUC_Student_Handbook" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>				
+		<step timed="true" name="AUC_Student_Handbook.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="AUC_Student_Handbook" page="AUC-RESOURCES" type="EXISTS" />
+		</step>		-->	
+		
+		<!-- Click Back Button 
+		<step timed="true" name="Back_Button.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Back_Button" page="AUC-RESOURCES" type="CLICK" />
+		</step>		-->	
+					
+		<!-- Click on Housing
+		<step name="Housing" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>		
+		<step timed="true" name="Housing.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Housing" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	 -->
+				
+		<!-- Click on Clinical 
+		<step name="Clinical" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="Clinical.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Clinical" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	-->
+				
+		<!-- Click on Residency
+		<step name="Residency" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="Residency.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Residency" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	-->
+				
+		<!-- Click on Graduation 
+		<step name="Graduation" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="Graduation.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Graduation" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	-->
+				
+		<!-- Click on Alumni 
+		<step name="Alumni" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="Alumni.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Alumni" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	-->
+				
+		<!-- Click on Student Services 
+		<step name="Student_Services" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="Student_Services.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Student_Services" page="AUC-RESOURCES" type="EXISTS" />
+		</step>	-->
+				
+		<!-- Click on Additional Resources 
+		<step name="Additional_Resources" page="AUC-RESOURCES" type="VISIBLE" active="true" >
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="UP"/>
+		</step>			
+		<step timed="true" name="Additional_Resources.CLICKABLE" page="AUC-RESOURCES" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Additional_Resources" page="AUC-RESOURCES" type="EXISTS" />
+			<step timed="true" name="Additional_Resources" page="AUC-RESOURCES" type="CLICK" />
+		</step>	-->
+		
+		<!-- Check links under Additional Resources -->
+
+	</test>
+				
+	<test active="false" name="TC0005-Contact-Us_AUC" timed="true" dataProvider="AUCLogin" >
+
+		<!--########### Call Test Setup Function ############  -->
+		<!-- Uninstalls app, installs app, verifies app is up and if not, closes it and reopens it. -->
+		<step name="testSetup" page="Login" type="CALL2" >
+			<parameter type="STATIC" value="" />
+		</step>	
+
+		<!-- Sign In as user -->
+		<step name="Login" page="LOGIN" type="CALL2" >
+			<parameter name="LOGINPARAM" type="DATA" value="AUCLogin.accountName" />
+			<parameter name="PWPARAM" type="DATA" value="AUCLogin.password" />
+		</step>		
+		
+		<!-- Pull Advisor Data from Student Finance Page -->
+		
+        <!--########### Open Left menu ###########-->
+		<step name="Click_Left_Menu_Link" page="Home" type="CALL2" />		
+
+        <!-- Select "CONTACT US" -->
+ 		<step timed="true" name="CONTACT.CLICKABLE" page="Menu_Home" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="CONTACT" page="Menu_Home" type="CLICK" />
+		</step>         
+
+		<!--########### SWITCH TO WEBVIEW APP ############  -->
+		<step timed="true" name="CONTEXT" type="DEVICE">
+			<parameter type="STATIC" value="WEBVIEW_1" />
+		</step>
+		
+        <!--########### Verify we are on Phone_and_Email Page ###########-->       
+        <step timed="true" name="Phone_and_Email_Label.VISIBLE" page="AUC_ContactUs" type="WAIT_FOR" threshold="30000" >
+        	<step timed="true" name="Phone_and_Email_Label" page="AUC_ContactUs" type="EXISTS" />
+		</step>		
+		
+		<!-- HELP DESK -->
+		<step timed="true" name="Help_Desk.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="Help_Desk" page="AUC_ContactUs" type="EXISTS" />   
+		<step timed="true" name="Help_Desk" page="AUC_ContactUs" type="CLICK" />
+		<!-- HELP DESK Phone Number and email-->	
+		<step timed="true" name="Help_Desk_Number.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="Help_Desk_Number" page="AUC_ContactUs" type="EXISTS" /> 
+		<step timed="true" name="Help_Desk_email.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="Help_Desk_email" page="AUC_ContactUs" type="EXISTS" /> 
+		<step timed="true" name="Help_Desk" page="AUC_ContactUs" type="CLICK" />
+		
+		<!-- Student_Accounts -->
+		<step timed="true" name="Student_Accounts.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="Student_Accounts" page="AUC_ContactUs" type="EXISTS" />   
+		<step timed="true" name="Student_Accounts" page="AUC_ContactUs" type="CLICK" />
+		<!-- Student_Accounts Phone Number and email-->	
+		<step timed="true" name="Student_Accounts_Number.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="Student_Accounts_Number" page="AUC_ContactUs" type="EXISTS" /> 
+		<step timed="true" name="Student_Accounts_email.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="Student_Accounts_email" page="AUC_ContactUs" type="EXISTS" /> 
+		<step timed="true" name="Student_Accounts" page="AUC_ContactUs" type="CLICK" />
+		
+		<!-- Financial_Aid -->
+		<step timed="true" name="Financial_Aid.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="Financial_Aid" page="AUC_ContactUs" type="EXISTS" />   
+		<step timed="true" name="Financial_Aid" page="AUC_ContactUs" type="CLICK" />
+		<!-- Financial_Aid Phone Number and email-->	
+		<step timed="true" name="Financial_Aid_Number.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="Financial_Aid_Number" page="AUC_ContactUs" type="EXISTS" /> 
+		<step timed="true" name="Financial_Aid_email.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="Financial_Aid_email" page="AUC_ContactUs" type="EXISTS" /> 
+		<step timed="true" name="Financial_Aid" page="AUC_ContactUs" type="CLICK" />	
+		
+		<!-- OFFICE_OF_CLINICAL_STUDENT_AFFAIRS -->
+		<step timed="true" name="OFFICE_OF_CLINICAL_STUDENT_AFFAIRS.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="OFFICE_OF_CLINICAL_STUDENT_AFFAIRS" page="AUC_ContactUs" type="EXISTS" />   
+		<step timed="true" name="OFFICE_OF_CLINICAL_STUDENT_AFFAIRS" page="AUC_ContactUs" type="CLICK" />
+		<!-- OFFICE_OF_CLINICAL_STUDENT_AFFAIRS Phone Number and email-->	
+		<step timed="true" name="OFFICE_OF_CLINICAL_STUDENT_AFFAIRS_Number.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="OFFICE_OF_CLINICAL_STUDENT_AFFAIRS_Number" page="AUC_ContactUs" type="EXISTS" /> 
+		<step timed="true" name="OFFICE_OF_CLINICAL_STUDENT_AFFAIRS_email.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="OFFICE_OF_CLINICAL_STUDENT_AFFAIRS_email" page="AUC_ContactUs" type="EXISTS" /> 
+		<step timed="true" name="OFFICE_OF_CLINICAL_STUDENT_AFFAIRS" page="AUC_ContactUs" type="CLICK" />		
+		
+		<!-- OFFICE_OF_THE_REGISTRAR -->
+		<step timed="true" name="OFFICE_OF_THE_REGISTRAR.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="OFFICE_OF_THE_REGISTRAR" page="AUC_ContactUs" type="EXISTS" />   
+		<step timed="true" name="OFFICE_OF_THE_REGISTRAR" page="AUC_ContactUs" type="CLICK" />
+		<!-- OFFICE_OF_THE_REGISTRAR Phone Number and email-->	
+		<step timed="true" name="OFFICE_OF_THE_REGISTRAR_Number.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="OFFICE_OF_THE_REGISTRAR_Number" page="AUC_ContactUs" type="EXISTS" /> 
+		<step timed="true" name="OFFICE_OF_THE_REGISTRAR_email.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="OFFICE_OF_THE_REGISTRAR_email" page="AUC_ContactUs" type="EXISTS" /> 
+		<step timed="true" name="OFFICE_OF_THE_REGISTRAR" page="AUC_ContactUs" type="CLICK" />	
+				
+		<!-- OFFICE_OF_STUDENT_PROFESSIONAL_DEVELOPMENT -->
+		<step timed="true" name="OFFICE_OF_STUDENT_PROFESSIONAL_DEVELOPMENT.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="OFFICE_OF_STUDENT_PROFESSIONAL_DEVELOPMENT" page="AUC_ContactUs" type="EXISTS" />   
+		<step timed="true" name="OFFICE_OF_STUDENT_PROFESSIONAL_DEVELOPMENT" page="AUC_ContactUs" type="CLICK" />
+		<!-- OFFICE_OF_STUDENT_PROFESSIONAL_DEVELOPMENT Phone Number and email-->	
+		<step timed="true" name="OFFICE_OF_STUDENT_PROFESSIONAL_DEVELOPMENT_Number.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="OFFICE_OF_STUDENT_PROFESSIONAL_DEVELOPMENT_Number" page="AUC_ContactUs" type="EXISTS" /> 
+		<step timed="true" name="OFFICE_OF_STUDENT_PROFESSIONAL_DEVELOPMENT_email.CLICKABLE" page="AUC_ContactUs" type="WAIT_FOR" threshold='30000' />
+		<step timed="true" name="OFFICE_OF_STUDENT_PROFESSIONAL_DEVELOPMENT_email" page="AUC_ContactUs" type="EXISTS" /> 
+		<step timed="true" name="OFFICE_OF_STUDENT_PROFESSIONAL_DEVELOPMENT" page="AUC_ContactUs" type="CLICK" />	
+
+		<!--########### Click on Back Button ############  -->	
+		<step timed="true" name="Back_Button" page="AUC_ContactUs" type="WAIT_FOR" threshold="30000" >
+			<step timed="true" name="Back_Button" page="AUC_ContactUs" type="CLICK" /> 
+		</step>
+	  		  	      
+		<!--########### SWITCH TO NATIVE APP ############ -->        
+		<step timed="true" name="CONTEXT" type="DEVICE">
+			<parameter type="STATIC" value="NATIVE_APP" />
+		</step>	
+
+		<!--########### Call Logout Function ############  -->
+		<step name="Logout" page="Home" type="CALL2" >
+			<parameter type="STATIC" value="" />
+		</step>	
+						
+	</test>
+	
+	<test active="false" name="TC0006-Feedback_AUC" timed="true" dataProvider="AUCLogin" >
+		<step name="Feedback_SmokeTest" page="Login" type="CALL2" >
+			<parameter name="loginID" type="DATA" value="AUCLogin.accountName" />
+			<parameter name="password" type="DATA" value="AUCLogin.password" />	
+		</step>		
+
+	</test>
+
+	<test active="false" name="TC0007-PREFERENCES_AUC" timed="true"  dataProvider="AUCLogin">
+		<!--  This test is not included in the CI suite since it is failing. -->
+		<step name="Preferences_SmokeTest" page="Login" type="CALL2" >
+			<parameter name="uncheckedColor" type="STATIC" value="#dddddd" />
+			<parameter name="checkedColor" type="STATIC" value="#4fc2d4" />			
+		</step>   
+		
+	</test> 	
+	
+	<test active="false" name="TC0008-Academic-Calendar_AUC" timed="true" dataProvider="AUCLogin">
+		<!--  Works -->
+		<step name="Academic_Calendar_SmokeTest" page="Login" type="CALL2" >
+			<parameter name="loginID" type="DATA" value="AUCLogin.accountName" />
+			<parameter name="password" type="DATA" value="AUCLogin.password" />	
+		</step>		
+			
+	</test>
+	
+	<test active="false" name="TC0009-Messages_AUC" timed="true" dataProvider="AUCLogin">
+		<!--  Works -->
+		<step name="Messages_SmokeTest" page="Login" type="CALL2" >
+			<parameter name="loginID" type="DATA" value="AUCLogin.accountName" />
+			<parameter name="password" type="DATA" value="AUCLogin.password" />	
+		</step>				
+			
+	</test>	
+
+	<test active="false" name="TC0010-About_AUC" timed="true" dataProvider="AUCLogin">
+
+		<step name="ABOUT_AUC_Carrington_SmokeTest" page="Login" type="CALL2" >
+			<parameter name="loginID" type="DATA" value="AUCLogin.accountName" />
+			<parameter name="password" type="DATA" value="AUCLogin.password" />	
+		</step>					
+			
+	</test>	
+		
+	<test active="false" name="TC00011-Apply Now_AUC" timed="true"  dataProvider="AUCLogin">
+	<!--########### Call Test Setup Function ############-->
+		<!-- Uninstalls app, installs app, verifies app is up and if not, closes it and reopens it. -->
+		<step name="testSetup" page="Login" type="CALL2" >
+			<parameter type="STATIC" value="" />
+		</step>	   		
+		
+		<!--########### Swipe Up ############-->
+		<step type="GESTURE" name="SWIPE" page="Menu_Home" os="Android,iOS">
+		       <parameter type="STATIC" value="UP" />
+		</step>  
+		
+		<!--########### SWITCH TO WEBVIEW APP ############-->
+		<step timed="true" name="CONTEXT" type="DEVICE">
+        	<parameter type="STATIC" value="WEBVIEW_1" />
+        </step>           
+		
+		<!--########### Click Apply Now ############-->
+		<step timed="true" name="APPLY_NOW_CARD.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="APPLY_NOW_CARD" page="AUCMED_APPLY_NOW" type="CLICK" />
+		</step>
+		
+		<step timed="true" name="APPLY_TEXT.VISIBLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="APPLY_TEXT" page="AUCMED_APPLY_NOW" type="EXISTS" />
+		</step>	
+		
+		<!--########### Click Create new application ############-->
+		<step timed="true" name="Start_Application.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="Start_Application" page="AUCMED_APPLY_NOW" type="CLICK" />
+		</step>	
+		
+		<step timed="true" name="FirstApplication_Yes.VISIBLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="FirstApplication_Yes" page="AUCMED_APPLY_NOW" type="CLICK" />
+		</step>
+		
+		<step name="FIRST_NAME" site="DeVry_Portal" page="AUCMED_APPLY_NOW" type="RANDOM"  threshold="30000" wait="0" failureMode="ERROR" context="R_FIRST" />
+		<step timed="true" name="FirstName" type="SET" page="AUCMED_APPLY_NOW" threshold="10000">
+			<parameter type="CONTEXT" value="R_FIRST"/>  
+		</step>
+		
+		<step timed="true" name="MiddleName" type="SET" page="AUCMED_APPLY_NOW" threshold="10000">
+			<parameter type="STATIC" value="Testing"/>  
+		</step>
+		
+		<step name="LAST_NAME" site="DeVry_Portal" page="AUCMED_APPLY_NOW" type="RANDOM"  threshold="30000" wait="0" failureMode="ERROR" context="R_LAST" />
+		<step timed="true" name="LastName" type="SET" page="AUCMED_APPLY_NOW" threshold="10000">
+			<parameter type="CONTEXT" value="R_LAST"/>  
+		</step>
+
+		<step timed="true" name="PhoneNumber" type="SET" page="AUCMED_APPLY_NOW" threshold="10000">
+				<parameter type="STATIC" value="5464566543"/>  
+		</step>
+		
+		<!-- Enrollment Status-->
+		<step timed="true" name="EnrollementSession" type="SET" page="AUCMED_APPLY_NOW" threshold="10000">
+			<parameter type="STATIC" value="January 2018"/>  
+		</step>				
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="30000"/>
+		
+		<step name="EMAIL_ADDRESS" site="DeVry_Portal" page="AUCMED_APPLY_NOW" type="RANDOM"  threshold="30000" wait="0" failureMode="ERROR" context="R_EMAIL_1">
+      		<parameter type="STATIC" name="Domain" value="devryqaautomation.com" />
+    	</step>
+    	<step timed="true" name="PEmail" type="SET" page="AUCMED_APPLY_NOW" threshold="30000">
+				<parameter type="CONTEXT" value="R_EMAIL_1"/>  
+		</step>
+		
+		<step timed="true" name="Password" type="SET" page="AUCMED_APPLY_NOW" threshold="30000">
+				<parameter type="STATIC" value="Devry123"/>  
+		</step>
+		
+		<step timed="true" name="CPassword" type="SET" page="AUCMED_APPLY_NOW" threshold="30000">
+			<parameter type="STATIC" value="Devry123"/>  
+		</step>
+ 		
+ 		<!--########### Click Submit ############  -->
+		<step timed="true" name="Submit.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="Submit" page="AUCMED_APPLY_NOW" type="CLICK" threshold="120000" />
+		</step>
+		
+		<step timed="true" name="wait" type="WAIT" wait="30000" />
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="30000"/>
+		
+		<step timed="true" name="ContinueApplication.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="60000">
+			<step timed="true" name="ContinueApplication" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<!--####### Date of Birth ########-->
+		
+		<step timed="true" name="DOB" page="AUCMED_APPLY_NOW" type="CLICK" threshold="60000" />
+		        
+		<!--########### SWITCH TO NATIVE APP ############-->        
+		<step timed="true" name="CONTEXT" type="DEVICE">
+			<parameter type="STATIC" value="NATIVE_APP" />
+		</step>
+		
+		<!-- For Android -->
+		<step timed="true" name="And_DOB.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="60000"  os="Android">
+			<step timed="true" name="And_DOB" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="30000"/>
+		
+		<step name="DOB_year_Value" page="AUCMED_APPLY_NOW" type="VISIBLE" active="true" threshold="0" timed="false" inverse="false" wait="0">
+		  <parameter type="STATIC" name="maxScroll" value="10"/>
+		  <parameter type="STATIC" name="direction" value="DOWN"/>
+		</step>
+		
+		
+		
+		<!--########### Swipe Up ############
+		<step type="GESTURE" name="SWIPE" page="AUCMED_APPLY_NOW">
+		  <parameter type="STATIC" value="50,45" />
+		  <parameter type="STATIC" value="50,90" />
+		</step>
+		
+		########### Swipe Up ############
+		<step type="GESTURE" name="SWIPE" page="AUCMED_APPLY_NOW">
+		  <parameter type="STATIC" value="50,45" />
+		  <parameter type="STATIC" value="50,90" />
+		</step>
+		-->
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="30000"/>
+	
+	
+		<step timed="true" name="DOB_year_Value.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="60000"  os="Android">
+			<step timed="true" name="DOB_year_Value" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="30000"/>
+		
+		<!-- For iOS -->
+		<step type="STATE" name="DOB Click" page="AUCMED_APPLY_NOW" />
+		
+		<step timed="true" name="DOB_Mth" page="AUCMED_APPLY_NOW" type="SET" failureMode="LOG_IGNORE" os="iOS">
+            <parameter name="Value to Set" type="STATIC" value="August"/>
+            <parameter name="Set Method" type="STATIC" value="DEFAULT"/>
+        </step>
+              
+		<step timed="true" name="DOB_Day" page="AUCMED_APPLY_NOW" type="SET" failureMode="LOG_IGNORE" os="iOS">
+			<parameter name="Value to Set" type="STATIC" value="11"/>
+			<parameter name="Set Method" type="STATIC" value="DEFAULT"/>
+		</step>
+               
+		<step timed="true" name="DOB_year" page="AUCMED_APPLY_NOW" type="SET"   os="iOS">
+			<parameter name="Value to Set" type="STATIC" value="1999"/>
+			<parameter name="Set Method" type="STATIC" value="SINGLE"/>                     
+		</step> 
+		
+		<step timed="true" name="Okay.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="Okay" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<!--########### SWITCH TO WEBVIEW APP ############-->
+		<step timed="true" name="CONTEXT" type="DEVICE" >
+			<parameter type="STATIC" value="WEBVIEW_1" />
+		</step>
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="30000"/>		
+			
+		<!-- ####### Place of Birth ###### -->
+		<!--########### Swipe Up ############  -->
+		<step type="GESTURE" name="SWIPE" page="Menu_Home" os="Android,iOS">
+			<parameter type="STATIC" value="UP" />
+		</step>
+		
+		<step timed="true" threshold="30000" name="BirthCity" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="Chicago"/>  
+		</step>
+		
+		<step timed="true" threshold="30000" name="BirthCountry" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="United States"/>  
+		</step>
+		  
+		<step timed="true" threshold="30000" name="SSN" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="534117648"/>  
+		</step>
+		
+		<step timed="true" threshold="30000" name="BirthState" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="Illinois"/>  
+		</step>
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="30000"/>	
+			
+		<!-- ####### Permanent Address ###### -->
+		<!--########### Swipe Up ############  -->
+		<step type="GESTURE" name="SWIPE" page="Menu_Home" os="Android,iOS">
+			<parameter type="STATIC" value="UP" />
+		</step>	
+		
+		<step timed="true" name="wait" type="WAIT" wait="30000" />
+		
+		<step timed="true" threshold="30000" name="StreetAddress" type="SET" page="AUCMED_APPLY_NOW" >
+			<parameter type="STATIC" value="814 Commerce dr"/>  
+		</step>
+
+		<step timed="true" threshold="30000" name="City" type="SET" page="AUCMED_APPLY_NOW" >
+			<parameter type="STATIC" value="Oakbrook"/>  
+		</step>
+		
+		<!--########### Swipe Up ############-->
+		<step type="GESTURE" name="SWIPE" page="Menu_Home" os="Android,iOS">
+			<parameter type="STATIC" value="UP" />
+		</step>
+		
+		<step timed="true" threshold="30000" name="Country" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="United States"/>  
+		</step>
+		  
+		<step timed="true" threshold="30000" name="State" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="Illinois"/>  
+		</step>
+		
+		<step timed="true" threshold="30000" name="Zip" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="60523"/>  
+		</step>
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="30000"/>
+		
+		
+		<step timed="true" name="Save_PersonalInfo.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="Save_PersonalInfo" page="AUCMED_APPLY_NOW" type="CLICK" threshold="120000" />
+		</step>
+		
+			
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="10000"/>
+		
+		<step timed="true" name="wait" type="WAIT" wait="30000" />
+	
+			
+		<!--####### Statistical Demographic Information ######-->
+		
+		<step timed="true" name="gender" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step timed="true" threshold="30000" name="Citizenship" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="United States"/>  
+		</step>
+		
+		<step timed="true" threshold="30000" name="PermanentResidence" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="US Citizen"/>  
+		</step>
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="10000"/>
+		
+		<step timed="true" name="No_Hispanic" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step timed="true" name="Ethnicity.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="Ethnicity" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="10000"/>
+		
+		<step timed="true" name="Save_Demo.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="Save_Demo" page="AUCMED_APPLY_NOW" type="CLICK" threshold="120000" />
+		</step>
+
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="30000"/>
+		
+		<!--Military-->
+		<step timed="true" name="CurrentMilitary_No" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		<step timed="true" name="CurrentMilitary_Yes" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step timed="true" threshold="30000" name="CurrentBranch" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="Air Force"/>  
+		</step>
+		
+		<step timed="true" name="ExMilitary_No" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		<step timed="true" name="ExMilitary_Yes" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step timed="true" threshold="30000" name="ExBranch" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="Air Force"/>  
+		</step>
+		
+		<step timed="true" name="Save_Military.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="Save_Military" page="AUCMED_APPLY_NOW" type="CLICK" threshold="60000" />
+		</step>
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="10000"/>
+		
+	
+		<!--Academic Qualification-->
+		
+		<step timed="true" threshold="30000" name="EnrollmentSession" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="January 2018"/>  
+		</step>
+		
+		<step timed="true" threshold="30000" name="EnrollmentType" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="New First Time"/>  
+		</step>
+		
+		<step timed="true" name="Save_Enrollment.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="Save_Enrollment" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+
+		<!-- ####### FAMILY FRIENDS #########
+
+		<step timed="true" threshold="30000" name="RelativeOrFriendName" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="QA Automation"/>  
+		</step>
+		
+		<step timed="true" threshold="30000" name="RelativeOrFriendRelationship" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="Friend"/>  
+		</step>
+		
+		<step timed="true" threshold="30000" name="RelativeOrFriendStatus" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="Alumni"/>  
+		</step>
+		
+		<step timed="true" name="AddFamily.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="AddFamily" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		 -->
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="10000"/>
+		
+		<!--########### SWITCH TO NATIVE APP ############ 
+		<step timed="true" name="CONTEXT" page="Home" type="DEVICE">
+			<parameter type="STATIC" value="NATIVE_APP" />
+		</step> 
+		
+		<step timed="true" name="Family_Ok.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="Family_Ok" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step> -->
+		
+		<!--########### SWITCH TO WEBVIEW APP ############  
+		<step timed="true" name="CONTEXT" type="DEVICE" >
+			<parameter type="STATIC" value="WEBVIEW_1" />
+		</step>-->
+		
+		<!--########### Swipe Up ############-->
+		<step type="GESTURE" name="SWIPE" page="Menu_Home" os="Android,iOS">
+		       <parameter type="STATIC" value="UP" />
+		</step> 
+			
+		<!--Preliminary Questions-->
+		<step timed="true" name="HearAboutAUC.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="HearAboutAUC" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<step timed="true" name="HearAbout" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step timed="true" name="Save_Preliminary.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="Save_Preliminary" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<step timed="true" name="wait" type="WAIT" wait="30000" />
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="10000"/>
+		
+		<step timed="true" name="Continue_btn.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="Continue_btn" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<step timed="true" name="wait" type="WAIT" wait="10000" />
+		
+		<!--####### Academic Information #########-->
+		
+		<step timed="true" threshold="30000" name="InstituteName" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="Argosy University, Chicago"/>  
+		</step>
+		
+		<step timed="true" threshold="30000" name="Major" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="Biological Sciences"/>  
+		</step>	
+		
+		<step timed="true" threshold="30000" name="DegreeAwarded" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="Bachelor of Science"/>  
+		</step>
+		
+		<!--########### Swipe Up ############-->
+		<step type="GESTURE" name="SWIPE" page="Menu_Home" os="Android,iOS">
+		       <parameter type="STATIC" value="UP" />
+		</step> 
+		
+		<step timed="true" threshold="30000" name="FromMonth" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="01"/>  
+		</step>	
+		
+		<step timed="true" threshold="30000" name="FromYear" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="2009"/>  
+		</step>	
+		
+		<step timed="true" threshold="30000" name="ToMonth" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="01"/>  
+		</step>	
+		
+		<step timed="true" threshold="30000" name="ToYear" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="2014"/>  
+		</step>	
+		
+		<step timed="true" name="HaveYouGraduated_Yes" page="AUCMED_APPLY_NOW" type="CLICK" threshold="60000" />
+		
+		<step timed="true" threshold="30000" name="GradMonth" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="01"/>  
+		</step>	
+		
+		<step timed="true" threshold="30000" name="GradYear" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="2015"/>  
+		</step>	
+		
+		<step timed="true" name="PrimaryInstitution" page="AUCMED_APPLY_NOW" type="CLICK" threshold="60000" />
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="30000"/>
+		
+		<step timed="true" name="SubmitAcademicHistory.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="SubmitAcademicHistory" page="AUCMED_APPLY_NOW" type="CLICK" threshold="120000" />
+		</step>
+		
+		<!--########### SWITCH TO NATIVE APP ############-->
+		<step timed="true" name="CONTEXT" page="Home" type="DEVICE">
+			<parameter type="STATIC" value="NATIVE_APP" />
+		</step> 
+		
+		<step timed="true" name="Academic_Ok" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="Academic_Ok" page="AUCMED_APPLY_NOW" type="CLICK" threshold="120000" />
+		</step>
+		
+		<!--########### SWITCH TO WEBVIEW APP ############-->
+		<step timed="true" name="CONTEXT" type="DEVICE" >
+			<parameter type="STATIC" value="WEBVIEW_1" />
+		</step>
+		
+		<step timed="true" name="MCAT.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		     <step timed="true" name="MCAT" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		<step timed="true" name="MCAT_Schedule_No" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		<step timed="true" name="MCAT_Yes" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="30000"/>
+		
+		<!-- ####### MCAT SCORE ##################-->
+		<step timed="true" name="MCAT_AfterApril.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="MCAT_AfterApril" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="30000"/>
+
+		<!--##################### After 2015 MCAT #################-->
+		<step timed="true" threshold="30000" name="BiocFnd" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="200"/>  
+		</step>	
+		
+		<step timed="true" threshold="30000" name="PhysFnd" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="200"/>  
+		</step>	
+		
+		<step timed="true" threshold="30000" name="PsycSocFnd" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="200"/>  
+		</step>	
+		
+		<step timed="true" threshold="30000" name="AnalysisReasoning" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="100"/>  
+		</step>	
+
+		<step timed="true" name="DateTaken" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		
+		<!--########### SWITCH TO NATIVE APP ############-->        
+		<step timed="true" name="CONTEXT" type="DEVICE">
+			<parameter type="STATIC" value="NATIVE_APP" />
+		</step>
+		<!-- 
+		<step type="STATE" name="DOB Click" page="AUCMED_APPLY_NOW" />
+
+		<step timed="true" name="MCAT_Mth" page="AUCMED_APPLY_NOW" type="SET" failureMode="LOG_IGNORE">
+            <parameter name="Value to Set" type="STATIC" value="August"/>
+            <parameter name="Set Method" type="STATIC" value="DEFAULT"/>
+        </step>
+              
+		<step timed="true" name="MCAT_Day" page="AUCMED_APPLY_NOW" type="SET" failureMode="LOG_IGNORE">
+			<parameter name="Value to Set" type="STATIC" value="11"/>
+			<parameter name="Set Method" type="STATIC" value="DEFAULT"/>
+		</step>
+              
+		<step timed="true" name="MCAT_year" page="AUCMED_APPLY_NOW" type="SET" >
+			<parameter name="Value to Set" type="STATIC" value="2015"/>
+			<parameter name="Set Method" type="STATIC" value="SINGLE"/>                     
+		</step>     -->  
+		
+		<step timed="true" name="Okay.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="Okay" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<!--########### SWITCH TO WEBVIEW APP ############-->
+		<step timed="true" name="CONTEXT" type="DEVICE" >
+			<parameter type="STATIC" value="WEBVIEW_1" />
+		</step>
+		
+		
+		<step timed="true" name="wait" type="WAIT" wait="10000" />
+		
+		<step timed="true" name="UKCAT_No" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		<step timed="true" name="Schedule_UKCAT_No" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step timed="true" name="Save_MCAT_AfterApril.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+				<step timed="true" name="Save_MCAT_AfterApril" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="30000"/>
+	
+		<step timed="true" name="wait" type="WAIT" wait="60000" />
+		
+		<!--########### SWITCH TO NATIVE APP ############-->        
+		<step timed="true" name="CONTEXT" type="DEVICE">
+			<parameter type="STATIC" value="NATIVE_APP" />
+		</step>
+		
+		<step timed="true" name="Okay.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="Okay" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<!--########### SWITCH TO WEBVIEW APP ############-->
+		<step timed="true" name="CONTEXT" type="DEVICE" >
+			<parameter type="STATIC" value="WEBVIEW_1" />
+		</step>
+		
+		<step timed="true" name="Continue_Mcat.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+				<step timed="true" name="Continue_Mcat" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="10000"/>
+		<step timed="true" name="wait" type="WAIT" wait="30000" />
+		
+		
+		<!--Supplemental Information-->
+		<step timed="true" name="SupplementalInformation.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       	<step timed="true" name="SupplementalInformation" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<step timed="true" name="graduateSchoolStatusRadio" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step timed="true" name="disciplinaryActionStatusRadio" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step timed="true" name="convictionStatusRadio" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step timed="true" name="wait" type="WAIT" wait="10000" />
+		
+		<step timed="true" name="Continue_SupplementalInformation.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+				<step timed="true" name="Continue_SupplementalInformation" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<step timed="true" name="wait" type="WAIT" wait="30000" />
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="10000"/>
+		
+		<!--Sign and Pay-->
+		<!--$$$$$$$$$$$$$$$$$$$ SIGN AND PAY $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$-->
+		
+		<step timed="true" threshold="30000" name="Signature_Application" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="QA TESTING"/>  
+		</step>
+
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="10000"/>
+		
+		<step timed="true" name="MERPConsent" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step timed="true" threshold="30000" name="Signature_MERPConsent" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="QA TESTING"/>  
+		</step>
+		
+		<step timed="true" name="MERPConsent" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="10000"/>
+		
+		<step timed="true" name="TechnicalStandards" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step timed="true" threshold="30000" name="Signature_TechnicalStandards" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="QA TESTING"/>  
+		</step>
+		
+		<step timed="true" name="TechnicalStandards" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="10000"/>
+		
+		<step timed="true" name="StateofMissouriAddendum" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step timed="true" threshold="30000" name="Signature_StateofMissouriAddendum" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="QA TESTING"/>  
+		</step>
+		
+		<step timed="true" name="StateofMissouriAddendum" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="10000"/>
+
+		<step timed="true" name="GainfulEmployment" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step timed="true" threshold="30000" name="Signature_GainfulEmployment" type="SET" page="AUCMED_APPLY_NOW">
+			<parameter type="STATIC" value="QA TESTING"/>  
+		</step>
+		
+		<step timed="true" name="GainfulEmployment" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="10000"/>
+		
+		<step timed="true" name="ElectronicConsent" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		
+		<step timed="true" name="ElectronicConsent_Yes" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="10000"/>
+		
+		<step timed="true" name="wait" type="WAIT" wait="30000" />
+		
+		
+		<step timed="true" name="SubmitApplication.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+			<step timed="true" name="SubmitApplication" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<step timed="true" name="wait" type="WAIT" wait="10000" />
+		
+		<step timed="true" name="ApplicationSubmitted.VISIBLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000" os="iOS">
+			<step timed="true" name="ApplicationSubmitted" page="AUCMED_APPLY_NOW" type="EXISTS" threshold="30000" />
+		</step>
+		
+		<!--########### SWITCH TO NATIVE APP ############-->
+		<step timed="true" name="CONTEXT" page="Home" type="DEVICE">
+			<parameter type="STATIC" value="NATIVE_APP" />
+		</step> 
+		
+		<step timed="true" name="ApplicationSubmitted.VISIBLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000" os="Android">
+			<step timed="true" name="ApplicationSubmitted" page="AUCMED_APPLY_NOW" type="EXISTS" threshold="30000" />
+		</step>
+		
+		<step name="ApplyNow" page="BROWSER" type="STATE" threshold="10000"/>
+
+		
+		<step timed="true" name="SubmitAppAUC.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="SubmitAppAUC" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<step timed="true" name="OK.CLICKABLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+		       <step timed="true" name="OK" page="AUCMED_APPLY_NOW" type="CLICK" threshold="30000" />
+		</step>
+		
+		<step name="CloseSafariTabs" page="Login" type="CALL2" os="iOS" threshold="40000" >
+			<parameter type="STATIC" value="" />
+		</step>  
+		<step name="CloseChromeTabs" page="Login" type="CALL2" os="Android" threshold="40000" >
+		       <parameter type="STATIC" value="" />
+		</step>  
+		
+		<step name="OPEN_APP" site="DeVry" page="Home" type="DEVICE" active="true" threshold="180000" timed="true" inverse="false" failureMode="ERROR">
+			<parameter type="STATIC" name="new parameter" value="AUC_app" />
+		</step>   
+		
+		<!--########### SWITCH TO WEBVIEW APP ############-->
+		<step timed="true" name="CONTEXT" type="DEVICE">
+			<parameter type="STATIC" value="WEBVIEW_1" />
+		</step>
+	
+		<step timed="true" name="wait" type="WAIT" wait="30000" />
+				
+		<step timed="true" name="AUCStatus.VISIBLE" page="AUCMED_APPLY_NOW" type="WAIT_FOR" threshold="30000">
+				<step timed="true" name="AUCStatus" page="AUCMED_APPLY_NOW" type="EXISTS" threshold="30000" />
+		</step>
+		
+	</test>
+</suite>
