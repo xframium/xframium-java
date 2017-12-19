@@ -177,6 +177,7 @@ public class KWSLoop extends AbstractKeyWordStep
 				    tableName = tableParts[ tableParts.length - 1 ];
 				}
 				
+				int dataCounter = 0;
 				for ( PageData pageData : dataTable )
 				{
 					try
@@ -184,6 +185,7 @@ public class KWSLoop extends AbstractKeyWordStep
 					    
 					    
 						dataMap.put( tableName, pageData );
+						addContext( Element.LOOP_INDEX, dataCounter++, contextMap, executionContext );
 						
 						if ( log.isDebugEnabled() )
 							log.debug( "Execution Function " + functionName + " - with data " + pageData );
@@ -246,6 +248,7 @@ public class KWSLoop extends AbstractKeyWordStep
 					
 					addContext( Element.CONTEXT_ELEMENT, elementArray[ i ], contextMap, executionContext );
 					addContext( Element.CONTEXT_INDEX, i+1, contextMap, executionContext );
+					addContext( Element.LOOP_INDEX, i+1, contextMap, executionContext );
 					
 					try
 					{

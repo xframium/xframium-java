@@ -49,6 +49,18 @@ import org.xframium.spi.Device;
 public class WEBDriverFactory extends AbstractDriverFactory
 {
 
+    private boolean isBlank( String value )
+    {
+        if ( value == null )
+            return true;
+        
+        if ( value.trim().isEmpty() )
+            return true;
+        
+        return false;
+                    
+                    
+    }
     /*
      * (non-Javadoc)
      * 
@@ -84,20 +96,31 @@ public class WEBDriverFactory extends AbstractDriverFactory
             {
                 if (!useCloud.isEmbedded())
                 {
-                    dc.setCapability( useCloud.getCloudActionProvider().getCloudPlatformName(currentDevice), currentDevice.getOs() );
-                	dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
-                	dc.setCapability( MODEL, currentDevice.getModel() );
-                    dc.setCapability( USER_NAME, useCloud.getUserName() );
-                    dc.setCapability( PASSWORD, useCloud.getPassword() );
+                    if ( !isBlank( currentDevice.getOs() ) )
+                        dc.setCapability( useCloud.getCloudActionProvider().getCloudPlatformName(currentDevice), currentDevice.getOs() );
+                    
+                    if ( !isBlank( currentDevice.getOsVersion() ) )
+                        dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
+                    
+                    if ( !isBlank( currentDevice.getModel()) )
+                        dc.setCapability( MODEL, currentDevice.getModel() );
+                    
+                    if ( !isBlank( useCloud.getUserName() ) )
+                        dc.setCapability( USER_NAME, useCloud.getUserName() );
+                    
+                    if ( !isBlank( useCloud.getPassword() ) )
+                        dc.setCapability( PASSWORD, useCloud.getPassword() );
+                    
+                    
                 }
             }
 
-            if ( currentDevice.getBrowserName() != null && !currentDevice.getBrowserName().isEmpty() )
+            if ( !isBlank( currentDevice.getBrowserName() ) )
                 dc.setCapability( BROWSER_NAME,  useCloud.getCloudActionProvider().getCloudBrowserName(currentDevice.getBrowserName()) );
             
             if ( !useCloud.isEmbedded() )
             {
-                if ( currentDevice.getBrowserVersion() != null && !currentDevice.getBrowserVersion().isEmpty() )
+                if ( !isBlank( currentDevice.getBrowserVersion() ) )
                     dc.setCapability( BROWSER_VERSION, currentDevice.getBrowserVersion() );
             }
             
