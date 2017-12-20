@@ -41,7 +41,7 @@
       <artifactId>com.bytezone</artifactId>
       <version>0.1</version>
       <scope>system</scope>
-      <systemPath>${project.basedir}/lib/dm3270.jar</systemPath>
+      <systemPath>${project.basedir}/lib/dm3270Reporter.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>commons-logging</groupId>
