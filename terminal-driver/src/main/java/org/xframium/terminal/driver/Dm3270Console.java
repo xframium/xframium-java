@@ -84,7 +84,7 @@ public class Dm3270Console
     	{
             synchronized( monitor )
             {
-                monitor.wait();
+                monitor.wait(5000);
             }
     	}
     	catch( Exception e )

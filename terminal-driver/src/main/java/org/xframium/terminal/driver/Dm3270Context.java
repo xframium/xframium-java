@@ -72,10 +72,10 @@ public class Dm3270Context
     {
         JavaFxRunnable worker = new JavaFxRunnable()
             {
-                public void run()
+                public void myWork()
+                    throws Exception
                 {
                     setValue( new Integer(console.getScreen().getScreenCursor().getLocation()) );
-                    doNotify();
                 }
             };
 
@@ -89,11 +89,25 @@ public class Dm3270Context
     {
         JavaFxRunnable worker = new JavaFxRunnable()
             {
-                public void run()
+                public void myWork()
+                    throws Exception
                 {
                     console.getScreen().getScreenCursor().moveTo( location );
-                 
-                    doNotify();
+                }
+            };
+
+        Platform.runLater( worker );
+        worker.doWait();
+    }
+
+    public void closeTerminal()
+    {
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void myWork()
+                    throws Exception
+                {
+                    Platform.exit();
                 }
             };
 
@@ -105,7 +119,8 @@ public class Dm3270Context
     {
         JavaFxRunnable worker = new JavaFxRunnable()
             {
-                public void run()
+                public void myWork()
+                    throws Exception
                 {
                     for( int i = 0; i < charSequence.length(); ++i  )
                     {
@@ -125,8 +140,6 @@ public class Dm3270Context
                             robot.keyRelease(KeyCode.SHIFT);
                         }
                     }
-                    
-                    doNotify();
                 }
             };
 
@@ -138,13 +151,12 @@ public class Dm3270Context
     {
         JavaFxRunnable worker = new JavaFxRunnable()
             {
-                public void run()
+                public void myWork()
+                    throws Exception
                 {
                     robot.delay(40);
                     robot.keyPress(keyCodePressed);
                     robot.keyRelease(keyCodePressed);
-                        
-                    doNotify();
                 }
             };
 
@@ -163,7 +175,8 @@ public class Dm3270Context
     {
         JavaFxRunnable worker = new JavaFxRunnable()
             {
-                public void run()
+                public void myWork()
+                    throws Exception
                 {
                     Optional<Field> possibleField = console.getScreen().getFieldManager().getFieldAt( location );
                     
@@ -171,7 +184,6 @@ public class Dm3270Context
                     {
                         setValue( possibleField.get().getText() );
                     }
-                    doNotify();
                 }
             };
 
@@ -185,10 +197,10 @@ public class Dm3270Context
     {
         JavaFxRunnable worker = new JavaFxRunnable()
             {
-                public void run()
+                public void myWork()
+                    throws Exception
                 {
                     setValue( console.getScreen().getScreenDimensions() );
-                    doNotify();
                 }
             };
 
@@ -202,7 +214,8 @@ public class Dm3270Context
     {
         JavaFxRunnable worker = new JavaFxRunnable()
             {
-                public void run()
+                public void myWork()
+                    throws Exception
                 {
                     Scene scene = console.getConsoleScene();
                     
@@ -217,10 +230,6 @@ public class Dm3270Context
                     catch (IOException ex)
                     {
                         log.error( "Snapshot failed with: ", ex );
-                    }
-                    finally
-                    {
-                        doNotify();
                     }
                 }
             };
@@ -313,7 +322,7 @@ public class Dm3270Context
         Dm3270Console.waitForStartup();
     }
 
-    private class JavaFxRunnable
+    private abstract class JavaFxRunnable
         implements Runnable
     {
         private Object monitor = new Object();
@@ -326,23 +335,39 @@ public class Dm3270Context
             {
                 if ( !notified )
                 {
-                    try { monitor.wait(); }
+                    try { monitor.wait(5000); }
                     catch( Exception e) {}
                 }
             }
         }
 
-        public void doNotify()
+        private void doNotify()
         {
             synchronized( monitor )
             {
-                monitor.notify();
                 notified = true;
+                monitor.notify();
             }
         }
 
         public void run()
-        {}
+        {
+            try
+            {
+                myWork();
+            }
+            catch( Exception e )
+            {
+                log.error( "JavaFX action failed with: ", e );
+            }
+            finally
+            {
+                doNotify();
+            }
+        }
+
+        public abstract void myWork()
+            throws Exception;
 
         public Object getValue() { return value; }
         public void setValue( Object v ) { value = v; }
