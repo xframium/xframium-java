@@ -57,12 +57,12 @@ public class AppTest
 
             Tn3270TerminalDriver driver = new Tn3270TerminalDriver( details );
 
-            sleep(1000);
+            sleep(3000);
 
             WebElement element = driver.findElement( new By.ByXPath( "//screen[name='SystemBanner']/link[name='ack']" ));
             element.click();
 
-            sleep(1000);
+            sleep(3000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='Login']/field[name='username']" ));
             element.sendKeys("$000");
@@ -70,24 +70,24 @@ public class AppTest
             element.sendKeys("music");
             element.submit();
 
-            sleep(1000);
+            sleep(3000);
             
             element = driver.findElement( new By.ByXPath( "//screen[name='ABlankScreen']/field[name='menu-entry']" ));
             element.sendKeys("admin");
             element.submit();
 
-            sleep(1000);
+            sleep(3000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='AdminMenu']/field[name='option']" ));
             element.sendKeys("3");
             element.click();
 
-            sleep(1000);
+            sleep(3000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='FileSystemMenu']/link[name='file-system-help']" ));
             element.click();
 
-            sleep(1000);
+            sleep(3000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='FileSystemHelp']/field[name='help-text']" ));
 
@@ -126,12 +126,12 @@ public class AppTest
 
             Tn3270TerminalDriver driver = new Tn3270TerminalDriver( details );
 
-            sleep(1000);
+            sleep(3000);
 
             WebElement element = driver.findElement( new By.ByXPath( "//screen[name='SystemBanner']/link[name='ack']" ));
             element.click();
 
-            sleep(1000);
+            sleep(3000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='Login']/field[name='username']" ));
             element.sendKeys("$000");
@@ -139,30 +139,30 @@ public class AppTest
             element.sendKeys("music");
             element.submit();
 
-            sleep(1000);
+            sleep(3000);
             
             element = driver.findElement( new By.ByXPath( "//screen[name='ABlankScreen']/field[name='menu-entry']" ));
             element.sendKeys("admin");
             element.submit();
 
-            sleep(1000);
+            sleep(3000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='AdminMenu']/field[name='option']" ));
             element.sendKeys("11");
             element.click();
 
-            sleep(1000);
+            sleep(3000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='SystemHelpMenu']/link[name='internet']" ));
             element.click();
 
-            sleep(1000);
+            sleep(3000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='InternetCommands']/field[name='option']" ));
             element.sendKeys("ping");
             element.click();
 
-            sleep(1000);
+            sleep(3000);
 
             element = driver.findElement( new By.ByXPath( "//screen[name='PingDetails']/field[name='ping-syntax']" ));
 

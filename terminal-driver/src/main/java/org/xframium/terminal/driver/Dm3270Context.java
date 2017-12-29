@@ -28,15 +28,15 @@ public class Dm3270Context
     //
 
     private static Log log = LogFactory.getLog( Tn3270TerminalDriver.class );
+    private static Dm3270Console console;
+    private static SceneRobot robot = null;
 
     //
     // Instance Data
     //
     
     private Dm3270Site theSite;
-    private Dm3270Console console;
     private boolean running = true;
-    private SceneRobot robot = null;
     private static Hashtable KEY_CODES = new Hashtable();
 
     //
@@ -48,15 +48,6 @@ public class Dm3270Context
         theSite = site;
 
         init();
-        
-        try
-        {
-            robot = console.getRobot();
-        }
-        catch( Exception e)
-        {
-            log.error( "Robot init failed with: ", e );
-        }
     }
 
     //
@@ -107,7 +98,25 @@ public class Dm3270Context
                 public void myWork()
                     throws Exception
                 {
-                    Platform.exit();
+                    console.getConsolePane().disconnect();
+                }
+            };
+
+        Platform.runLater( worker );
+        worker.doWait();
+    }
+
+    public void openTerminal( Dm3270Site theNewSite )
+    {
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void myWork()
+                    throws Exception
+                {
+                    theSite = theNewSite;
+                    console.setModel( theSite );
+                    console.getConsolePane().setSite( theSite );
+                    console.getConsolePane().connect();
                 }
             };
 
@@ -313,13 +322,46 @@ public class Dm3270Context
             {
                 public void run()
                 {
-                    Dm3270Console.doIt( _this, theSite );
+                    //
+                    // if we have no console reference, we need to initialize the UI
+                    //
+
+                    if ( console == null )
+                    {
+                        Dm3270Console.doIt( _this, theSite );
+                    }
+
+                    //
+                    // otherwise, we'll disconnect from the cirrent site and connect to a new one
+                    //
+
+                    else
+                    {
+                        if ( console.getConsolePane().isConnected() )
+                        {
+                            closeTerminal();
+                        }
+                        
+                        openTerminal( theSite );
+                    }
                 }
             };
         
         new Thread( launcher, "Launch Emulator" ).start();
 
         Dm3270Console.waitForStartup();
+
+        if ( robot == null )
+        {
+            try
+            {
+                robot = console.getRobot();
+            }
+            catch( Exception e)
+            {
+                log.error( "Robot init failed with: ", e );
+            }
+        }
     }
 
     private abstract class JavaFxRunnable
