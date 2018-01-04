@@ -98,6 +98,7 @@ import org.xframium.page.element.SubElement;
 import org.xframium.page.element.provider.CSVElementProvider;
 import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.element.provider.ExcelElementProvider;
+import org.xframium.page.element.provider.QAFElementProvider;
 import org.xframium.page.element.provider.SQLElementProvider;
 import org.xframium.page.element.provider.XMLElementProvider;
 import org.xframium.page.keyWord.KeyWordPage;
@@ -375,6 +376,10 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             case "XML":
 
                 return new XMLElementProvider( findFile( configFolder, new File( xRoot.getModel().getFileName() ) ) );
+                
+            case "QUANTUM":
+
+                return new QAFElementProvider( findFile( configFolder, new File( xRoot.getModel().getFileName() ) ) );
 
             case "SQL":
                 return new SQLElementProvider( configProperties.get( JDBC[0] ),

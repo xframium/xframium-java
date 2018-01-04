@@ -480,6 +480,7 @@
           <enumeration value="CSV" />
           <enumeration value="EXCEL" />
           <enumeration value="LOCAL" />
+          <enumeration value="QUANTUM" />
         </restriction>
       </simpleType>
     </attribute>
