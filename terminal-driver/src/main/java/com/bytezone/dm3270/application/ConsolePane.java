@@ -63,7 +63,8 @@ public class ConsolePane extends BorderPane
   private TelnetListener telnetListener;
   private final TelnetState telnetState;
   private int commandHeaderCount;
-  private final ISite server;
+  private ISite server;
+  private boolean connected = false;
 
   private TerminalServer terminalServer;
   private Thread terminalServerThread;
@@ -130,6 +131,11 @@ public class ConsolePane extends BorderPane
 
     screen.requestFocus ();
   }
+
+    public void setSite( ISite site )
+    {
+        server = site;
+    }
 
   public void setStatusText (String text)
   {
@@ -334,6 +340,13 @@ public class ConsolePane extends BorderPane
 
     terminalServerThread = new Thread (terminalServer);
     terminalServerThread.start ();
+
+    connected = true;
+  }
+
+  public boolean isConnected()
+  {
+      return connected;
   }
 
   public void disconnect ()
@@ -354,6 +367,8 @@ public class ConsolePane extends BorderPane
       {
         e.printStackTrace ();
       }
+
+      connected = false;
     }
   }
 

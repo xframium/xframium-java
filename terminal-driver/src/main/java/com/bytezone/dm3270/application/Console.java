@@ -195,7 +195,7 @@ public class Console extends Application
       optionStage.show ();
   }
 
-  protected void setModel (ISite serverSite)
+  public void setModel (ISite serverSite)
   {
     int model = serverSite.getModel ();
     

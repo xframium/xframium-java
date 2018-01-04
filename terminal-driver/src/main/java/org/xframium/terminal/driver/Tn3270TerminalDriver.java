@@ -220,7 +220,7 @@ public class Tn3270TerminalDriver
   
     public void quit()
     {
-        System.exit(0);
+        context.closeTerminal();
     }
   
     public Set<String> getWindowHandles()
