@@ -134,7 +134,7 @@ public class KWSCall2 extends AbstractKeyWordStep
                 {
 			        
                     //
-			        // A device was specified at the function level so p[ush it onto the device stack
+			        // A device was specified at the function level so push it onto the device stack
 			        //
 			        executionContext.pushDevice( getDevice() );
 			        devicePushed = true;

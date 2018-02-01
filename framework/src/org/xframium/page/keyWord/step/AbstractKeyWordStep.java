@@ -1020,12 +1020,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     {
                         if ( ((ReportiumProvider) webDriver).getReportiumClient() != null )
                         {
-                            ((ReportiumProvider) webDriver).getReportiumClient().testStep( getPageName() + "." + getName() + " (" + getClass().getSimpleName() + ")" );
+                            ((ReportiumProvider) webDriver).getReportiumClient().stepStart( getPageName() + "." + getName() + " (" + getClass().getSimpleName() + ")" );
                         }
                     }
                 }
 
-                
                 returnValue = _executeStep( pageObject, ((alternateWebDriver != null) ? alternateWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext );
 
                 //
@@ -1316,6 +1315,18 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
                 }
             }
+            
+            if ( ((DeviceWebDriver) webDriver).getCloud().getProvider().equals( "PERFECTO" ) )
+            {
+                if ( ArtifactManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
+                {
+                    if ( ((ReportiumProvider) webDriver).getReportiumClient() != null )
+                    {
+                        ((ReportiumProvider) webDriver).getReportiumClient().stepEnd( getPageName() + "." + getName() + " (" + getClass().getSimpleName() + ")" );
+                    }
+                }
+            }
+            
         }
     }
 

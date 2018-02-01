@@ -166,6 +166,8 @@ public class QAFElementProvider extends AbstractElementProvider
     	                    ElementDescriptor eD = new ElementDescriptor( siteName, pageName, elementName.toString() );
     	                    Element e = ElementFactory.instance().createElement( BY.valueOf( descriptorType.toUpperCase() ), descriptorValue, elementName.toString(), pageName, null );
     	                    
+    	                    validateElement( eD, e );
+    	                    
     	                    elementMap.put(eD.toString(), e );
     	                    
     	                    if ( log.isDebugEnabled() )
