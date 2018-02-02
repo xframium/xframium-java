@@ -39,9 +39,20 @@ public class DriverContainer
     private List<String> artifactList = new ArrayList<String>( 20 );
     private boolean secureCloud = false;
     private boolean namesConfigured = false;
+    private String[] executionNames;
     
     
     
+    public String[] getExecutionNames()
+    {
+        return executionNames;
+    }
+
+    public void setExecutionNames(String[] executionNames)
+    {
+        this.executionNames = executionNames;
+    }
+
     public String getTrace()
     {
         return trace;

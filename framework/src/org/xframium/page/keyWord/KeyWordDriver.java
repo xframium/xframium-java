@@ -82,6 +82,8 @@ public class KeyWordDriver
 
     private List<KeyWordListener> stepListenerList = new ArrayList<KeyWordListener>( 10 );
 
+    private List<String> tagList = new ArrayList<String>( 4 );
+    
     public enum TRACE
     {
         OFF,
@@ -91,7 +93,20 @@ public class KeyWordDriver
     
     private TRACE trace = TRACE.OFF;
     
+    public void addTag( String tagName )
+    {
+        tagList.add( tagName );
+    }
     
+    public void removeTag( String tagName )
+    {
+        tagList.remove( tagName );
+    }
+    
+    public String[] getTags()
+    {
+        return tagList.toArray( new String[ 0 ] );
+    }
     
     public TRACE getTrace()
     {

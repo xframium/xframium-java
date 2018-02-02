@@ -210,6 +210,7 @@
         </restriction>
       </simpleType>
     </attribute>
+    <attribute name="executionName" type="string" use="optional" />
   </complexType>
   <complexType name="xTag">
     <annotation>
@@ -536,7 +537,7 @@
           <enumeration value="DISABLE" />
         </restriction>
       </simpleType>
-    </attribute>
+    </attribute> 
   </complexType>
   
   <complexType name="xFunction">

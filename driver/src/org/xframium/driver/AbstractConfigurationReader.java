@@ -182,6 +182,12 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             DeviceManager.instance( xFID ).setFailedTestRetryCount( driverC.getRetryCount() );
             
             KeyWordDriver.instance( xFID ).setTrace( TRACE.valueOf( driverC.getTrace() ) );
+            String[] executionName = driverC.getExecutionNames();
+            if ( executionName != null )
+            {
+                for ( String eN : executionName )
+                    KeyWordDriver.instance( xFID ).addTag( eN );
+            }
             
             if ( driverC.getBeforeTest() != null  )
             {

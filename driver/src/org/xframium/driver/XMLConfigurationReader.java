@@ -995,6 +995,10 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         dC.setRetryCount( Integer.parseInt( getValue( "driver.retryCount", xRoot.getDriver().getRetryCount() + "", configProperties ) ) );
         dC.setTrace( getValue( "driver.trace", xRoot.getDriver().getTrace(), configProperties ) );
         
+        String tagList = getValue( "driver.tagList", xRoot.getDriver().getExecutionName(), configProperties );
+        if ( tagList != null )
+            dC.setExecutionNames( tagList.split( "," ) );
+        
         return dC;
     }
     
