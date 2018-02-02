@@ -101,6 +101,7 @@ import org.xframium.page.element.provider.ExcelElementProvider;
 import org.xframium.page.element.provider.QAFElementProvider;
 import org.xframium.page.element.provider.SQLElementProvider;
 import org.xframium.page.element.provider.XMLElementProvider;
+import org.xframium.page.keyWord.KeyWordDriver.TRACE;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
@@ -992,7 +993,8 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         dC.setDomain( getValue( "driver.domain", xRoot.getDriver().getDomain(), configProperties ) );
         dC.setPhase( getValue( "driver.phase", xRoot.getDriver().getPhase(), configProperties ) );
         dC.setRetryCount( Integer.parseInt( getValue( "driver.retryCount", xRoot.getDriver().getRetryCount() + "", configProperties ) ) );
-
+        dC.setTrace( getValue( "driver.trace", xRoot.getDriver().getTrace(), configProperties ) );
+        
         return dC;
     }
     
@@ -1027,7 +1029,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      */
     private KeyWordTest parseTest( XTest xTest )
     { 
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount(), null, null, null, null, xTest.getPriority(), xTest.getSeverity() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount(), null, null, null, null, xTest.getPriority(), xTest.getSeverity(), xTest.getTrace() );
         test.setReliesOn( xTest.getReliesOn() );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
@@ -1040,7 +1042,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     
     private KeyWordTest parseFunction( XFunction xTest )
     { 
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), null, false, xTest.getLinkId(), null, 0, xTest.getDescription() != null ? xTest.getDescription().getValue() : null, null, null, null, configProperties, 1, xTest.getInputPage(), xTest.getOutputPage(), xTest.getMode(), xTest.getOperations(), 0, 0 );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), null, false, xTest.getLinkId(), null, 0, xTest.getDescription() != null ? xTest.getDescription().getValue() : null, null, null, null, configProperties, 1, xTest.getInputPage(), xTest.getOutputPage(), xTest.getMode(), xTest.getOperations(), 0, 0, TRACE.OFF.name() );
         test.getExpectedParameters().addAll( parseParameters( xTest.getParameter() ) );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
@@ -1070,10 +1072,12 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         for ( XStep xStep : xSteps )
         {
             KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), xStep.getPage(), xStep.isActive(), xStep.getType(),
-                                                                                 xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
-                                                                                 xStep.getOs(), xStep.getBrowser(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
-                                                                                 xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
-                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties, xStep.getVersion(), xStep.getAppContext(), xStep.getWaitFor() );
+                                                                         xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
+                                                                         xStep.getOs(), xStep.getBrowser(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
+                                                                         xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
+                                                                         (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), 
+                                                                         xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties, xStep.getVersion(), 
+                                                                         xStep.getAppContext(), xStep.getWaitFor(), xStep.isTrace() );
             
             step.getParameterList().addAll( parseParameters( xStep.getParameter() ) );
             parseTokens( xStep.getToken(), testName, xStep.getName(), step );

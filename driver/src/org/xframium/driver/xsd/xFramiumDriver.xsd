@@ -201,6 +201,15 @@
     <attribute name="phase" type="string" use="optional" />
     <attribute name="domain" type="string" use="optional" />
     <attribute name="retryCount" type="int" use="optional" default="0" />
+    <attribute name="trace" use="optional" default="OFF">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="ON" />
+          <enumeration value="OFF" />
+          <enumeration value="DISABLE" />
+        </restriction>
+      </simpleType>
+    </attribute>
   </complexType>
   <complexType name="xTag">
     <annotation>
@@ -519,6 +528,15 @@
     <attribute name="priority" type="int" use="optional" default="0" />
     <attribute name="severity" type="int" use="optional" default="0" />
     <attribute name="reliesOn" type="string" use="optional" />
+    <attribute name="trace" use="optional" default="OFF">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="ON" />
+          <enumeration value="OFF" />
+          <enumeration value="DISABLE" />
+        </restriction>
+      </simpleType>
+    </attribute>
   </complexType>
   
   <complexType name="xFunction">
@@ -660,6 +678,7 @@
     <attribute name="version" type="string" use="optional" />
     <attribute name="appContext" type="string" use="optional" />
     <attribute name="waitFor" type="string" use="optional" />
+    <attribute name="trace" type="boolean" use="optional" default="false" />
   </complexType>
   <complexType name="xToken">
     <annotation>

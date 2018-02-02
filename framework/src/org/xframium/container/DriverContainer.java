@@ -16,6 +16,7 @@ public class DriverContainer
     private boolean smartCaching = false;
     private boolean dryRun = false;
     private boolean embeddedServer = false;
+    private String trace = "OFF";
     private String stepTags = "";
     private String testTags = "";
     private String deviceTags = "";
@@ -39,6 +40,17 @@ public class DriverContainer
     private boolean secureCloud = false;
     private boolean namesConfigured = false;
     
+    
+    
+    public String getTrace()
+    {
+        return trace;
+    }
+
+    public void setTrace(String trace)
+    {
+        this.trace = trace;
+    }
 
     public int getRetryCount()
     {

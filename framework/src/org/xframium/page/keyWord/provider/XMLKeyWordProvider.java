@@ -45,6 +45,7 @@ import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.KeyWordToken;
+import org.xframium.page.keyWord.KeyWordDriver.TRACE;
 import org.xframium.page.keyWord.KeyWordToken.TokenType;
 import org.xframium.page.keyWord.gherkinExtension.XMLFormatter;
 import org.xframium.page.keyWord.provider.xsd.Import;
@@ -321,7 +322,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	 */
 	private KeyWordTest parseTest( Test xTest )
 	{
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount(), null, null, null, null, xTest.getPriority(), xTest.getSeverity() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount(), null, null, null, null, xTest.getPriority(), xTest.getSeverity(), xTest.getTrace() );
 		test.setReliesOn( xTest.getReliesOn() );
         
 		KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
@@ -336,7 +337,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	
 	private KeyWordTest parseFunction( XFunction xTest)
     {
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), null, false, xTest.getLinkId(), null, 0, xTest.getDescription() != null ? xTest.getDescription().getValue() : null, null, null, null, configProperties, 1, xTest.getInputPage(), xTest.getOutputPage(), xTest.getMode(), xTest.getOperations(), 0, 0 );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), null, false, xTest.getLinkId(), null, 0, xTest.getDescription() != null ? xTest.getDescription().getValue() : null, null, null, null, configProperties, 1, xTest.getInputPage(), xTest.getOutputPage(), xTest.getMode(), xTest.getOperations(), 0, 0, TRACE.OFF.name() );
         test.getExpectedParameters().addAll( parseParameters( xTest.getParameter() ) );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
@@ -372,7 +373,9 @@ public class XMLKeyWordProvider implements KeyWordProvider
                                                                                  xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
                                                                                  xStep.getOs(), xStep.getBrowser(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
-                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties, xStep.getVersion(), xStep.getAppContext(), xStep.getWaitFor() );
+                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, 
+                                                                                  xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties, xStep.getVersion(), 
+                                                                                  xStep.getAppContext(), xStep.getWaitFor(), xStep.isTrace() );
 		    
 		    step.getParameterList().addAll( parseParameters( xStep.getParameter() ) );
 		    parseTokens( xStep.getToken(), testName, xStep.getName(), step );

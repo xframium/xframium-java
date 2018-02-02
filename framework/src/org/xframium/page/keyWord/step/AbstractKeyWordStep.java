@@ -71,6 +71,7 @@ import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordDriver.TRACE;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordToken;
@@ -136,6 +137,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
     /** The inverse. */
     private boolean inverse = false;
+    
+    private boolean trace = false;
 
     /** The Constant SPLIT. */
     private static final String SPLIT = "-->";
@@ -187,6 +190,16 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     private String image;
     
     
+
+    public boolean isTrace()
+    {
+        return trace;
+    }
+
+    public void setTrace(boolean trace)
+    {
+        this.trace = trace;
+    }
 
     public String getImage()
     {
@@ -1059,10 +1072,41 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 if ( returnValue && waitFor != null && !waitFor.trim().isEmpty() )
                 {
                     String[] pData = waitFor.split("\\.");
-                    KeyWordStep verifyKeyword = KeyWordStepFactory.instance().createStep( pData[ pData.length - 1 ], pData.length>= 2 ? pData[ 1 ] : pageName, true, "VISIBLE", null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, null, null, null, null, null, false, false, null, pData.length == 3 ? pData[ 0 ] : siteName, null, null, null, null );
-                    verifyKeyword.setImage( "VERIFICATION" );
-                    if ( !verifyKeyword.executeStep(pageObject, ((alternateWebDriver != null) ? alternateWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext ) )
-                        throw new ScriptException( "Failed Verification step" );
+                    
+                    String eName = null;
+                    String pName = null;
+                    String sName = null;
+                    
+                    if ( pData.length >= 3 )
+                    {
+                        sName = pData[ 0 ];
+                        pName = pData[ 1 ];
+                        eName = pData[ 2 ];
+                    }
+                    else if ( pData.length == 2 )
+                    {
+                        sName = siteName;
+                        pName = pData[ 0 ];
+                        eName = pData[ 1 ];
+                    }
+                    else if ( pData.length == 1 )
+                    {
+                        sName = siteName;
+                        pName = pageName;
+                        eName = pData[ 0 ];
+                    }
+                    else
+                    {
+                        log.error( "waitFor element name specified incorrectly" );
+                    }
+                        
+                    if ( eName != null )
+                    {
+                        KeyWordStep verifyKeyword = KeyWordStepFactory.instance().createStep( eName, pName, true, "VISIBLE", null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, null, null, null, null, null, false, false, null, sName, null, null, null, null, true );
+                        verifyKeyword.setImage( "VERIFICATION" );
+                        if ( !verifyKeyword.executeStep(pageObject, ((alternateWebDriver != null) ? alternateWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext ) )
+                            throw new ScriptException( "Failed Verification step" );
+                    }
                 }
                 
                 //
@@ -1274,6 +1318,22 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 
             }
             
+            //
+            // If tracing was enabled then perform a named dump state
+            //
+            if ( ( isTrace() || executionContext.getTest().getTrace().equals( TRACE.ON ) ) && !executionContext.getTest().getTrace().equals( TRACE.DISABLED ) )
+            {
+                try
+                {
+                    dumpState( alternateWebDriver != null ? alternateWebDriver : webDriver, contextMap, dataMap, executionContext, getPageName() + "." + getName() );
+                }
+                catch( Exception e )
+                {
+                    log.error( "Error acquiring TRACE data", e);
+                }
+            }
+                
+            
             executionContext.completeStep( stepStatus, stepException );
 
             if ( PageManager.instance( executionContext.getxFID() ).isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
@@ -1354,10 +1414,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
                 }
             }
-            
-            
-                
-            
         }
     }
 
@@ -2097,8 +2153,12 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         this.waitTime = waitAfter;
     }
 
-
     public String dumpState(WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, ExecutionContextTest executionContext )
+    {
+        return dumpState(webDriver, contextMap, dataMap, executionContext, null);
+    }
+    
+    public String dumpState(WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, ExecutionContextTest executionContext, String useName )
     {
         String checkPointName = null;
         int historicalCount = -1;
@@ -2106,7 +2166,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
         File checkPointFolder = null;
 
-        checkPointName = getParameterValue( getParameter( "checkPointName" ), contextMap, dataMap, executionContext.getxFID() );
+        if ( useName != null )
+            checkPointName = useName;
+        else
+            checkPointName = getParameterValue( getParameter( "checkPointName" ), contextMap, dataMap, executionContext.getxFID() );
+        
         if ( checkPointName != null )
         {
             checkPointFolder = new File( DataManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getReportFolder(), "historicalComparison" );
@@ -2130,7 +2194,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         File screenFile = null;
         File domFile = null;
         File xpathFile = null;
-        ;
 
         if ( webDriver instanceof TakesScreenshot )
         {

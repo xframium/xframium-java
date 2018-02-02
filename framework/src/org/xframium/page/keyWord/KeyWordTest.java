@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
@@ -35,6 +36,7 @@ import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
+import org.xframium.page.keyWord.KeyWordDriver.TRACE;
 import org.xframium.page.keyWord.step.SyntheticStep;
 import org.xframium.reporting.ExecutionContextTest;
 
@@ -90,6 +92,7 @@ public class KeyWordTest
     private int priority;
     private int severity;
     private String reliesOn = null;
+    private TRACE trace = TRACE.OFF;
     
     private List<KeyWordParameter> expectedParameters = new ArrayList<KeyWordParameter>( 5 );
     
@@ -100,8 +103,16 @@ public class KeyWordTest
     /** The step list. */
     private List<KeyWordStep> stepList = new ArrayList<KeyWordStep>( 10 );
 
-    
-    
+    public TRACE getTrace()
+    {
+        return trace;
+    }
+
+    public void setTrace(TRACE trace)
+    {
+        this.trace = trace;
+    }
+
     public String getReliesOn()
     {
         return reliesOn;
@@ -158,7 +169,7 @@ public class KeyWordTest
      * @param contentKeys
      *            the content keys
      */
-    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys, String deviceTags, Map<String,String> overrideMap, int count, String inputPage, String outputPages, String mode, String operationList, int priority, int severity )
+    public KeyWordTest( String name, boolean active, String dataProviders, String dataDriver, boolean timed, String linkId, String os, int threshold, String description, String testTags, String contentKeys, String deviceTags, Map<String,String> overrideMap, int count, String inputPage, String outputPages, String mode, String operationList, int priority, int severity, String trace )
     {
         this.name = name;
         this.active = Boolean.parseBoolean( getValue( name, "active", active + "", overrideMap ) );
@@ -216,6 +227,9 @@ public class KeyWordTest
         setOperationList( operationList );
         this.priority = priority;
         this.severity = severity;
+        
+        if ( trace != null )
+            this.trace = TRACE.valueOf( trace );
     }
     
     public List<KeyWordParameter> getExpectedParameters()

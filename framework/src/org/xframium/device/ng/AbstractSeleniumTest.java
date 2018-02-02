@@ -60,6 +60,7 @@ import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordDriver.TRACE;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
@@ -430,7 +431,7 @@ public abstract class AbstractSeleniumTest
                 if ( testPackage.getDevice().getCloud() != null && !testPackage.getDevice().getCloud().trim().isEmpty() )
                     cD = CloudRegistry.instance(tC.getxFID()).getCloud( testPackage.getDevice().getCloud() );
                 
-                KeyWordTest kwt = new KeyWordTest( currentMethod.getName(), true, null, null, false, null, null, 0, currentMethod.getName() + " from " + currentMethod.getClass().getName(), null, null, null, ExecutionContext.instance(tC.getxFID()).getConfigProperties(), 0, null, null, null, null, 0, 0 );
+                KeyWordTest kwt = new KeyWordTest( currentMethod.getName(), true, null, null, false, null, null, 0, currentMethod.getName() + " from " + currentMethod.getClass().getName(), null, null, null, ExecutionContext.instance(tC.getxFID()).getConfigProperties(), 0, null, null, null, null, 0, 0, TRACE.OFF.name() );
                 eC.setTest( kwt );
                 eC.setAut( ApplicationRegistry.instance(tC.getxFID()).getAUT() );
                 eC.setCloud( cD );
@@ -631,7 +632,7 @@ public abstract class AbstractSeleniumTest
      */
     public KeyWordStep createStep( String keyword, String pageName, String elementName, String[] parameterList )
     {
-        KeyWordStep step = KeyWordStepFactory.instance().createStep( elementName, pageName, true, keyword, null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, keyword, null, null, null, null, false, false, null, null, null, null, null, null );
+        KeyWordStep step = KeyWordStepFactory.instance().createStep( elementName, pageName, true, keyword, null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, keyword, null, null, null, null, false, false, null, null, null, null, null, null, false );
         
         if ( parameterList != null )
         {

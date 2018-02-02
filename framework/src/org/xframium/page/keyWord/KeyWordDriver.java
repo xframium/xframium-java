@@ -82,6 +82,27 @@ public class KeyWordDriver
 
     private List<KeyWordListener> stepListenerList = new ArrayList<KeyWordListener>( 10 );
 
+    public enum TRACE
+    {
+        OFF,
+        ON,
+        DISABLED;
+    }
+    
+    private TRACE trace = TRACE.OFF;
+    
+    
+    
+    public TRACE getTrace()
+    {
+        return trace;
+    }
+
+    public void setTrace(TRACE trace)
+    {
+        this.trace = trace;
+    }
+
     /**
      * Instance.
      *
@@ -368,7 +389,6 @@ public class KeyWordDriver
             log.debug( "Attempting to locate function/test [" + testName + "]" );
 
         KeyWordTest test = functionMap.get( testName );
-
         if ( test == null )
         {
             test = testMap.get( testName );
@@ -381,6 +401,8 @@ public class KeyWordDriver
                     throw new ScriptConfigurationException( "The function [" + testName + "] does not exist" );
             }
         }
+        
+        test.setTrace( getTrace() );
 
         if ( test.getDataProviders() != null )
         {
@@ -577,13 +599,14 @@ public class KeyWordDriver
             test = inactiveTestMap.get( testName.getRawName() );
         
         logConsole( "Executing [" + testName + "]" );
-        
+
         try
         {
-            
-    
             if ( test == null )
                 throw new TestConfigurationException( testName.getTestName() );
+            
+            if ( !getTrace().equals( TRACE.OFF ) )
+                test.setTrace( getTrace() );
             
             executionContext.setTest( test );
             executionContext.setDevice( webDriver.getPopulatedDevice() );

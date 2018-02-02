@@ -129,6 +129,9 @@ public interface KeyWordStep
     public String getImage();
     
     
+    public boolean isTrace();
+    public void setTrace(boolean trace);
+    
 	public String getKw();
 	
 	/**

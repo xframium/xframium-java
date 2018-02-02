@@ -53,6 +53,7 @@ import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.element.provider.XMLElementProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordDriver.TRACE;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
@@ -179,6 +180,8 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             DeviceManager.instance( xFID ).setInitializationName( driverC.getBeforeDevice() );
             DeviceManager.instance( xFID ).setFailedTestRetryCount( driverC.getRetryCount() );
+            
+            KeyWordDriver.instance( xFID ).setTrace( TRACE.valueOf( driverC.getTrace() ) );
             
             if ( driverC.getBeforeTest() != null  )
             {
