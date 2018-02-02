@@ -102,6 +102,10 @@ public interface KeyWordStep
 	 */
 	public String getBrowser();
 
+	public String getWaitFor();
+	public void setWaitFor( String waitFor );
+	
+	
 	/**
 	 * Sets the link id.
 	 *
@@ -121,6 +125,10 @@ public interface KeyWordStep
     
     public void setDeviceTags( String[] deviceTags );
 	
+    public void setImage( String imageName );
+    public String getImage();
+    
+    
 	public String getKw();
 	
 	/**

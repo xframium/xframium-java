@@ -162,7 +162,7 @@ public abstract class AbstractPage implements Page
      */
     protected KeyWordStep createStep( String keyword, String pageName, String elementName, String[] parameterList )
     {
-        KeyWordStep step = KeyWordStepFactory.instance().createStep( elementName, pageName, true, keyword, null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, keyword, null, null, null, null, false, false, null, null, null, null, null );
+        KeyWordStep step = KeyWordStepFactory.instance().createStep( elementName, pageName, true, keyword, null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, keyword, null, null, null, null, false, false, null, null, null, null, null, null );
         
         if ( parameterList != null )
         {

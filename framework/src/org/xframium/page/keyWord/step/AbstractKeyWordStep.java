@@ -38,6 +38,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
 import javax.imageio.ImageIO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -99,7 +101,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         category = "Other";
     }
 
-
+    private String waitFor = null;
     /** The name. */
     private String name;
 
@@ -181,6 +183,20 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     protected String kw;
     protected String natualLanguage;
     protected ApplicationVersion version;
+    
+    private String image;
+    
+    
+
+    public String getImage()
+    {
+        return image;
+    }
+
+    public void setImage(String image)
+    {
+        this.image = image;
+    }
 
     protected void addContext( String contextName, Object contextValue, Map<String,Object> contextMap, ExecutionContextTest eC )
     {
@@ -214,6 +230,16 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     
     
     
+    public String getWaitFor()
+    {
+        return waitFor;
+    }
+
+    public void setWaitFor(String waitFor)
+    {
+        this.waitFor = waitFor;
+    }
+
     public String getAppContext()
     {
         return appContext;
@@ -1028,7 +1054,19 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 returnValue = _executeStep( pageObject, ((alternateWebDriver != null) ? alternateWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext );
 
                 //
-                // If threshold was specified then make sure we cam in under it
+                // IF a waitFor verification step was specified, execute it
+                //
+                if ( returnValue && waitFor != null && !waitFor.trim().isEmpty() )
+                {
+                    String[] pData = waitFor.split("\\.");
+                    KeyWordStep verifyKeyword = KeyWordStepFactory.instance().createStep( pData[ pData.length - 1 ], pData.length>= 2 ? pData[ 1 ] : pageName, true, "VISIBLE", null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, null, null, null, null, null, false, false, null, pData.length == 3 ? pData[ 0 ] : siteName, null, null, null, null );
+                    verifyKeyword.setImage( "VERIFICATION" );
+                    if ( !verifyKeyword.executeStep(pageObject, ((alternateWebDriver != null) ? alternateWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext ) )
+                        throw new ScriptException( "Failed Verification step" );
+                }
+                
+                //
+                // If threshold was specified then make sure we came in under it
                 //
                 if ( threshold > 0 )
                 {
@@ -1080,6 +1118,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 log.debug( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed ", e );
 
             }
+
 
             if ( inverse )
                 returnValue = !returnValue;
@@ -1246,7 +1285,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 switch ( sFailure )
                 {
                     case ERROR:
-
+                        returnValue = false;
                         if ( executionContext.getFailedStep() == null )
                             executionContext.setFailedStep( this );
                         
@@ -1316,16 +1355,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 }
             }
             
-            if ( ((DeviceWebDriver) webDriver).getCloud().getProvider().equals( "PERFECTO" ) )
-            {
-                if ( ArtifactManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
-                {
-                    if ( ((ReportiumProvider) webDriver).getReportiumClient() != null )
-                    {
-                        ((ReportiumProvider) webDriver).getReportiumClient().stepEnd( getPageName() + "." + getName() + " (" + getClass().getSimpleName() + ")" );
-                    }
-                }
-            }
+            
+                
             
         }
     }

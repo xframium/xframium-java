@@ -357,7 +357,7 @@ iframe {
 <script type="text/ng-template" id="step.html">
     <div data-nodrag ui-tree-handle  class="tree-node tree-node-content" style="font-size: 8pt; padding-left: 5px; padding-right: 5px;cursor: default" ng-class="{'filteredStep text-muted' : stepDef.stepStatus == 'FILTERED'}" style="text-overflow: ellipsis">
         
-        <img src="../../../assets/{{stepDef.step.kw}}.png" width="16" style="margin-right: 2px"/>
+        <img src="../../../assets/{{stepDef.step.image == null || stepDef.step.image == 'null'  ? stepDef.step.kw : stepDef.step.image}}.png" width="16" style="margin-right: 2px"/>
         <a ng-if="stepDef.stepList.length != 0" data-nodrag ng-click="toggle(this)" style="cursor: default" >
             <span ng-if="stepDef.stepList.length != 0" class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }" style="cursor: default"></span>
         </a>
@@ -492,7 +492,11 @@ iframe {
 
         $scope.formatStepText = function( step )
         {
-            var messageText = $scope.stepMessages[step.step.kw];
+        	var imageName = step.step.kw;
+        	if ( step.step.image != null )
+        		imageName = step.step.image;
+        
+            var messageText = $scope.stepMessages[imageName];
 
             if ( messageText == null )
                 messageText = $scope.stepMessages['DEFAULT'];
@@ -550,7 +554,11 @@ iframe {
                 messageText = '<span class="text-info">' + step.step.description + '</span>';
             }
             else {
-                messageText = $scope.stepMessages[step.step.kw];
+            	var imageName = step.step.kw;
+                if ( step.step.image != null )
+                    imageName = step.step.image;
+            
+                var messageText = $scope.stepMessages[imageName];
             }
 
             if ( messageText == null )
@@ -698,6 +706,7 @@ iframe {
             "CONSOLE" : "Console message",
             "TEST" : "{errorMessage}",
             "APPLICATION" : "{name} an {kw}",
+            "CALLBACK" : "{name}",
             "FLOW" : "Flow set to {name}",
             "SELECTED" : "Is {name} selected",
             "RANDOM" : "Generate a random {name}",
@@ -707,6 +716,7 @@ iframe {
             "CONTEXT" : "{name} Context Operation",
             "FUNCTION" : "Call native function {name}",
             "ACCESSIBILITY" : "Verify Accessibility",
+            "VERIFICATION" : "Verification Check Point"
         };
 
     });

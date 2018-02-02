@@ -28,10 +28,12 @@ import org.xframium.container.SuiteContainer;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.Page;
+import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
+import org.xframium.page.keyWord.step.SyntheticStep;
 import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc
@@ -86,6 +88,8 @@ public class KWSCall2 extends AbstractKeyWordStep
 		
 		if ( log.isDebugEnabled() )
 			log.debug( "Execution Function " + getName() );
+		boolean functionSuccess = false;
+		boolean breakCalled = false;
 		
 		try
 		{
@@ -141,7 +145,16 @@ public class KWSCall2 extends AbstractKeyWordStep
                 }
 			    
 				returnValue = KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext );
+				functionSuccess = returnValue;
 			}
+		}
+		catch( Throwable e )
+		{
+		    if ( e instanceof KWSLoopBreak )
+		        breakCalled = true;
+		    else
+		        functionSuccess = false;
+		    throw e;
 		}
 		finally
 		{
@@ -149,6 +162,25 @@ public class KWSCall2 extends AbstractKeyWordStep
 		        executionContext.popDevice();
 			for ( String name : localContextMap.keySet() )
 				contextMap.remove( name );
+			
+			if ( breakCalled )
+			{
+    			executionContext.startStep( new SyntheticStep( "Loop Break Called for " + getName(), "CALLBACK", "Loop Break Called for " + getName() ) , contextMap, dataMap );
+    			executionContext.completeStep( StepStatus.SUCCESS, null );
+			}
+			else
+			{
+			    if ( functionSuccess )
+			    {
+			        executionContext.startStep( new SyntheticStep( "Return from " + getName(), "CALLBACK", "Return from " + getName() ) , contextMap, dataMap );
+	                executionContext.completeStep( StepStatus.SUCCESS, null );
+			    }
+			    else
+			    {
+			        executionContext.startStep( new SyntheticStep( "Failed call to " + getName(), "CALLBACK", "Failed call to " + getName() ) , contextMap, dataMap );
+	                executionContext.completeStep( StepStatus.FAILURE, null );
+			    }
+			}
 		}
 		
 		return returnValue;
@@ -160,3 +192,4 @@ public class KWSCall2 extends AbstractKeyWordStep
     }
 
 }
+
