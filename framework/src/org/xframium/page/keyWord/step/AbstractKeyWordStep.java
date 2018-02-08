@@ -1343,7 +1343,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             {
                 Throwable currentError = executionContext.getStepException();
                 switch ( sFailure )
-                {
+                {   
                     case ERROR:
                         returnValue = false;
                         if ( executionContext.getFailedStep() == null )

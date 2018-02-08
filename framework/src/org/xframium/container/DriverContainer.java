@@ -28,6 +28,10 @@ public class DriverContainer
     private String beforeTest;
     private String afterTest;
     private String beforeDevice;
+    private String beforeStep;
+    private String afterStep;
+    
+
     private Class[] propertyAdapters;
     
     private DriverType driverType;
@@ -41,7 +45,25 @@ public class DriverContainer
     private boolean namesConfigured = false;
     private String[] executionNames;
     
-    
+    public String getBeforeStep()
+    {
+        return beforeStep;
+    }
+
+    public void setBeforeStep(String beforeStep)
+    {
+        this.beforeStep = beforeStep;
+    }
+
+    public String getAfterStep()
+    {
+        return afterStep;
+    }
+
+    public void setAfterStep(String afterStep)
+    {
+        this.afterStep = afterStep;
+    }
     
     public String[] getExecutionNames()
     {

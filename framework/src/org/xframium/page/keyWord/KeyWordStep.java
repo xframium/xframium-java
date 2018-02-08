@@ -50,7 +50,9 @@ public interface KeyWordStep
 		/** The ignore. */
 		IGNORE,
 		/** The log ignore. */
-		LOG_IGNORE
+		LOG_IGNORE,
+		
+		LOG_ERROR
 	}
 	
 	/**

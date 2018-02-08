@@ -189,128 +189,11 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                     KeyWordDriver.instance( xFID ).addTag( eN );
             }
             
-            if ( driverC.getBeforeTest() != null  )
+            if ( driverC.getBeforeTest() != null || driverC.getAfterTest() != null || driverC.getBeforeStep() != null || driverC.getAfterStep() != null )
             {
-                KeyWordDriver.instance( xFID ).addStepListener( new KeyWordListener()
-                {
-                    @Override
-                    public boolean beforeTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC )
-                    {
-                        boolean returnValue = false;
-                        try
-                        {
-                            eC.startStep( new SyntheticStep( driverC.getBeforeTest(), "CALL2" ), contextMap, dataMap );
-                            
-                            KeyWordTest kTest = KeyWordDriver.instance( xFID ).getTest( driverC.getBeforeTest() );
-                            if ( kTest != null )
-                            {
-                                 returnValue = kTest.executeTest( webDriver, contextMap, dataMap, pageMap, sC, eC );
-                                 eC.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
-                            }
-                            else
-                            {
-                                returnValue = false;
-                                eC.completeStep( StepStatus.FAILURE, new ScriptConfigurationException( "Could not locate pre-test function [" + driverC.getBeforeTest() + "]" ) );
-                            }
-                        }
-                        catch( Exception e )
-                        {
-                            eC.completeStep( StepStatus.FAILURE, e );
-                            return false;
-                        }
-                        
-                        return returnValue;
-                    }
-                    
-                    @Override
-                    public boolean beforeStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC )
-                    {
-                        // TODO Auto-generated method stub
-                        return true;
-                    }
-                    
-                    @Override
-                    public void afterTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC )
-                    {
-                        // TODO Auto-generated method stub
-                        
-                    }
-                    
-                    @Override
-                    public void afterStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, StepStatus stepStatus, SuiteContainer sC, ExecutionContextTest eC )
-                    {
-                        // TODO Auto-generated method stub
-                        
-                    }
-                    
-                    @Override
-                    public void afterArtifacts( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC )
-                    {
-                        // TODO Auto-generated method stub
-                        
-                    }
-                });
+                KeyWordDriver.instance( xFID ).addStepListener( new GlobalListener(driverC.getBeforeTest(), driverC.getAfterTest(), driverC.getBeforeStep(), driverC.getAfterStep(), xFID) );
             }
             
-            if ( driverC.getAfterTest() != null  )
-            {
-                KeyWordDriver.instance( xFID ).addStepListener( new KeyWordListener()
-                {
-                    @Override
-                    public boolean beforeTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC )
-                    {
-                       return true;
-                    }
-                    
-                    @Override
-                    public boolean beforeStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC )
-                    {
-                        // TODO Auto-generated method stub
-                        return true;
-                    }
-                    
-                    @Override
-                    public void afterTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC )
-                    {
-                        boolean returnValue = false;
-                        try
-                        {
-                            eC.startStep( new SyntheticStep( driverC.getAfterTest(), "CALL2" ), contextMap, dataMap );
-                            
-                            KeyWordTest kTest = KeyWordDriver.instance( xFID ).getTest( driverC.getAfterTest() );
-                            if ( kTest != null )
-                            {
-                                 returnValue = kTest.executeTest( webDriver, contextMap, dataMap, pageMap, sC, eC );
-                                 eC.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
-                            }
-                            else
-                            {
-                                eC.completeStep( StepStatus.FAILURE, new ScriptConfigurationException( "Could not locate pre-test function [" + driverC.getBeforeTest() + "]" ) );
-                            }
-                        }
-                        catch( Exception e )
-                        {
-                            eC.completeStep( StepStatus.FAILURE, e );
-                        }
-                        
-                        
-                    }
-                    
-                    @Override
-                    public void afterStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, StepStatus stepStatus, SuiteContainer sC, ExecutionContextTest eC )
-                    {
-                        // TODO Auto-generated method stub
-                        
-                    }
-                    
-                    @Override
-                    public void afterArtifacts( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC )
-                    {
-                        // TODO Auto-generated method stub
-                        
-                    }
-                });
-            }
             
             log.info( "Cloud: Configuring Cloud Registry" );
             CloudContainer cC = configureCloud( driverC.isSecureCloud() );
@@ -416,7 +299,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             
             sC.setxFID( xFID );
             //
-            // Add the internal fucntions
+            // Add the internal functions
             //
             XMLKeyWordProvider internalFunctions = new XMLKeyWordProvider( "org/xframium/resource/script/xfNative/functions/functions-xfNative.xml", driverC.getPropertyMap() );
             SuiteContainer sCInternal = internalFunctions.readData( true );

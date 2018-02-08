@@ -129,7 +129,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     private static final String[] OPT_PAGE = new String[] { "pageManagement.query" };
     private static final String[] OPT_DATA = new String[] { "pageManagement.pageData.query" };
     private static final String[] OPT_CONTENT = new String[] { "pageManagement.content.query" };
-    private static final String[] OPT_DEVICE = new String[] { "deviceManagement.device.query", "deviceManagement.capability.query" };
+    private static final String[] OPT_DEVICE = new String[] { "deviceManagement.device.query", "deviceManagement.capa bility.query" };
     private static final String[] OPT_DRIVER = new String[] { "driver.suiteName", "driver.modelQuery", "driver.testSuiteQuery", "driver.testCaseQuery" };
     private XFramiumRoot xRoot;
     private Map<String,String> configProperties = new HashMap<String,String>( 10 );
@@ -956,6 +956,8 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             dC.setBeforeDevice( getValue( "driver.beforeDevice", xRoot.getDependencies().getBeforeDevice(), configProperties ) );
             dC.setBeforeTest( getValue( "driver.beforeTest", xRoot.getDependencies().getBeforeTest(), configProperties ) );
             dC.setAfterTest( getValue( "driver.afterTest", xRoot.getDependencies().getAfterTest(), configProperties ) );
+            dC.setBeforeStep( getValue( "driver.beforeStep", xRoot.getDependencies().getBeforeStep(), configProperties ) );
+            dC.setAfterStep( getValue( "driver.afterStep", xRoot.getDependencies().getAfterStep(), configProperties ) );
         }
         
         if ( xRoot.getDriver().getExtractors() != null )
