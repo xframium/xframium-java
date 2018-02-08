@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+  <test name="Accessibility Test" tagNames="Keyword" timed="false" threshold="0" active="false" priority="1" severity="1">
+    <description>Accessibility Test</description>
+    <step name="KW-AXE" site="xTest" page="home" type="ACCESSIBILITY" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="LOG_IGNORE">
+      <parameter type="STATIC" name="Site Name" value="http://xframium.org" />
+    </step>
+    <step name="KW-AXE" site="xTest" page="home" type="ACCESSIBILITY" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="LOG_IGNORE">
+      <parameter type="STATIC" name="URL" value="http://www.google.com" />
+    </step>
+  </test>
+</suite>

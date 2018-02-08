@@ -29,8 +29,6 @@ public class Utilities
         int lineNum = location.getLine().intValue();
         int colNum = location.getColumn().intValue();
         int termLoc = (( lineNum * screenDimensions.columns ) + colNum );
-
-        System.out.println( "Term Loc: " + (lineNum - 1) + " * " + screenDimensions.columns + " + " + colNum + " = " + termLoc );
         
         return termLoc;
     }
@@ -39,6 +37,20 @@ public class Utilities
     {
         return new Point( terminalLocation / screenDimensions.rows,
                           terminalLocation % screenDimensions.rows );
+    }
+
+    public static void setTerminalVisibility( boolean value )
+    {
+        if ( !value )
+        {
+            System.setProperty("testfx.robot", "glass");
+            System.setProperty("glass.platform", "Monocle" );
+            System.setProperty("testfx.headless", "true");
+            System.setProperty("monocle.platform", "Headless" );
+            System.setProperty("prism.order", "sw");
+            System.setProperty("prism.text", "t2k");
+            System.setProperty("java.awt.headless", "true");
+        }
     }
 
     //

@@ -138,7 +138,7 @@ public class KWSSQL extends AbstractKeyWordStep
 	                PageDataProvider dp = PageDataManager.instance(executionContext.getxFID()).getDataProvider();
 	                dp.addRecordType(getContext(), false);
 	                
-	                for (int i=1; i<resultsArr.length; i++) {
+	                for (int i=0; i<resultsArr.length; i++) {
 	                	resultMap = resultsArr[i];
 		                pageData = new DefaultPageData(getContext(), String.valueOf(i), true);
 		                dp.addRecord(pageData);

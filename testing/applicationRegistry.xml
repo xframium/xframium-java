@@ -5,4 +5,5 @@
 <application name="xTest" version="1.0" url="http://xframium.org/testing.html" />
 <application name="xTest0" version="1.0" url="http://xframium.org/testing.html"/>
 <application name="xTest1" version="1.0" url="http://xframium.org/testing2.html"/>
+<application name="FordPass_NA_v1_15_0" appPackage="com.ford.oa" bundleId="com.ford.fordownerapp" url="" iosInstall="PUBLIC:MK/FPv1.15/5Oct_Torque-NA-Staging-1710051.ipa" androidInstall="PUBLIC:MK/FPv1.15/5Oct_TORQUE-NA-STAGING-1.15.0-20171004-2059.apk" />
 </applicationRegistry>

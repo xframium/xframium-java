@@ -53,7 +53,6 @@ public class WriteStructuredFieldCommand extends Command
           break;
 
         case StructuredField.RESET_PARTITION:
-          System.out.println ("SF_RESET_PARTITION (00) not written yet");
           structuredFields.add (new DefaultStructuredField (buffer, ptr, size));
           break;
 
@@ -62,7 +61,6 @@ public class WriteStructuredFieldCommand extends Command
           break;
 
         case StructuredField.ACTIVATE_PARTITION:
-          System.out.println ("SF_ACTIVATE_PARTITION (0E) not written yet");
           structuredFields.add (new DefaultStructuredField (buffer, ptr, size));
           break;
 

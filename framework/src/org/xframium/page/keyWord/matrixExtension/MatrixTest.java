@@ -1,6 +1,8 @@
 package org.xframium.page.keyWord.matrixExtension;
 
 import java.util.Map;
+
+import org.xframium.page.keyWord.KeyWordDriver.TRACE;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordTest;
 
@@ -94,7 +96,7 @@ public class MatrixTest
     
     public KeyWordTest createTest( Map<String,String> configProperties )
     {
-        KeyWordTest kTest = new KeyWordTest( name, active, dataProvider, dataDriver, timed, linkId, os, threshold, description, tagNames, contentKeys, deviceTags, configProperties, count, null, null, null, null, 0, 0 );
+        KeyWordTest kTest = new KeyWordTest( name, active, dataProvider, dataDriver, timed, linkId, os, threshold, description, tagNames, contentKeys, deviceTags, configProperties, count, null, null, null, null, 0, 0, TRACE.OFF.name() );
         
         int currentPosition = 0;
         

@@ -210,9 +210,26 @@ iframe {
                                 <i>{{selectedElement.step.kwDescription}}</i>
                             </div>
                         </div>
+                        
                         <div class="row" ng-if="selectedElement.message != null && selectedElement.message != '' && selectedElement.message != 'null'">
                             <div class="col-sm-12">
-                                <div class="alert alert-{{selectedState}}" style="color: black">{{selectedElement.message}}</div>
+                                <div class="alert alert-{{selectedState}}" style="color: black">
+                                    <span ng-if="selectedElement.step.kw=='ACCESSIBILITY'">
+                                        <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px" ng-repeat="a in selectedElement.accessibility">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title" style="color: black"><a hRef="{{a.helpUrl}}" target="_blank">{{a.description}}</a> ({{a.nodes.length}})</h3>
+                                            </div>
+                                            <div class="panel-body">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item" ng-repeat="n in a.nodes">
+                                                      <code>{{n.html}}</code>
+                                                    </li>
+                                                </ul> 
+                                            </div>
+                                        </div>
+                                    </span>
+                                    <span ng-if="selectedElement.step.kw!='ACCESSIBILITY'">{{selectedElement.message}}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -240,13 +257,13 @@ iframe {
                                                 Page Name:
                                                 <b>{{selectedElement.step.pageName}}</b>
                                             </li>
-                                            <li class="list-group-item" ng-if="selectedElement.step.orMapping==true">
+                                            <li class="list-group-item">
                                                 Element Name:
                                                 <b>{{selectedElement.step.name}}</b>
                                             </li>
                                             <li class="list-group-item">
                                                 Inverted:
-                                                <b>{{selectedElement.step.inverted}}</b>
+                                                <b>{{selectedElement.step.inverse}}</b>
                                             </li>
                                             <li class="list-group-item" ng-if="selectedElement.step.validation != 'null'">
                                                 Validation:
@@ -301,12 +318,17 @@ iframe {
                                         <ul class="nav nav-pills nav-justified">
                                             <li ng-if="hasExecutionParameter( selectedElement, 'XML' )" role="presentation">
                                                 <div class="col-md-2" stype="text-align: center">
-                                                    <a hRef="{{selectedElement.executionParameter.XML}}" class="btn btn-primary" type="button" target="_blank">Raw Source</a>
+                                                    <a hRef="{{selectedElement.executionParameter.XML}}" class="btn btn-info" type="button" target="_blank">Raw Source</a>
                                                 </div>
                                             </li>
                                             <li ng-if="hasExecutionParameter( selectedElement, 'HTML' )" role="presentation">
                                                 <div class="col-md-2" stype="text-align: center">
                                                     <a hRef="{{selectedElement.executionParameter.HTML}}" class="btn btn-primary" type="button" target="_blank">Formatted Source</a>
+                                                </div>
+                                            </li>
+                                            <li ng-if="hasExecutionParameter( selectedElement, 'XPATH' )" role="presentation">
+                                                <div class="col-md-2" stype="text-align: center">
+                                                    <a hRef="{{selectedElement.executionParameter.XPATH}}" class="btn btn-warning" type="button" target="_blank">Analyze</a>
                                                 </div>
                                             </li>
                                         </ul>
@@ -335,7 +357,7 @@ iframe {
 <script type="text/ng-template" id="step.html">
     <div data-nodrag ui-tree-handle  class="tree-node tree-node-content" style="font-size: 8pt; padding-left: 5px; padding-right: 5px;cursor: default" ng-class="{'filteredStep text-muted' : stepDef.stepStatus == 'FILTERED'}" style="text-overflow: ellipsis">
         
-        <img src="../../../assets/{{stepDef.step.kw}}.png" width="16" style="margin-right: 2px"/>
+        <img src="../../../assets/{{stepDef.step.image == null || stepDef.step.image == 'null'  ? stepDef.step.kw : stepDef.step.image}}.png" width="16" style="margin-right: 2px"/>
         <a ng-if="stepDef.stepList.length != 0" data-nodrag ng-click="toggle(this)" style="cursor: default" >
             <span ng-if="stepDef.stepList.length != 0" class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }" style="cursor: default"></span>
         </a>
@@ -470,7 +492,11 @@ iframe {
 
         $scope.formatStepText = function( step )
         {
-            var messageText = $scope.stepMessages[step.step.kw];
+        	var imageName = step.step.kw;
+        	if ( step.step.image != null )
+        		imageName = step.step.image;
+        
+            var messageText = $scope.stepMessages[imageName];
 
             if ( messageText == null )
                 messageText = $scope.stepMessages['DEFAULT'];
@@ -510,6 +536,11 @@ iframe {
             }
             else
                 $scope.selectedState = 'primary';
+            console.log( "here" );
+            if ( $scope.selectedElement.step.kw == 'ACCESSIBILITY' && $scope.selectedElement.accessibility == null )
+                $scope.selectedElement.accessibility = JSON.parse( $scope.selectedElement.message );
+            
+            console.log( $scope.selectedElement.accessibility );
         }
 
         $scope.formatStep = function( step )
@@ -520,10 +551,14 @@ iframe {
                 //
                 // Allows a custom description 
                 //
-                messageText = '<span class="text-info">' + step.step.description + '</span>';
+                messageText = '<span class="text-info">' + step.steabp.description + '</span>';
             }
             else {
-                messageText = $scope.stepMessages[step.step.kw];
+            	var imageName = step.step.kw;
+                if ( step.step.image != null && step.step.image != 'null' )
+                    imageName = step.step.image;
+            
+                var messageText = $scope.stepMessages[imageName];
             }
 
             if ( messageText == null )
@@ -671,6 +706,7 @@ iframe {
             "CONSOLE" : "Console message",
             "TEST" : "{errorMessage}",
             "APPLICATION" : "{name} an {kw}",
+            "CALLBACK" : "{name}",
             "FLOW" : "Flow set to {name}",
             "SELECTED" : "Is {name} selected",
             "RANDOM" : "Generate a random {name}",
@@ -678,7 +714,9 @@ iframe {
             "DATE" : "Date Operation",
             "DEBUG" : "***** DEBUG *****",
             "CONTEXT" : "{name} Context Operation",
-            "FUNCTION" : "Call native function {name}"
+            "FUNCTION" : "Call native function {name}",
+            "ACCESSIBILITY" : "Verify Accessibility",
+            "VERIFICATION" : "Verification Check Point"
         };
 
     });

@@ -178,7 +178,7 @@ public class ScreenWatcher
       if (" Menu".equals (text) && menuField.isAlphanumeric () && menuField.isProtected ()
           && menuField.isVisible () && menuField.isIntensified ())
       {
-        System.out.println ("Possible menu");
+          // System.out.println ("Possible menu");
       }
     }
   }
@@ -308,7 +308,7 @@ public class ScreenWatcher
     else
     {
       // Could be: Matched in list REFLIST
-      System.out.println ("Unexpected text: " + locationText);
+      // System.out.println ("Unexpected text: " + locationText);
       return false;
     }
 

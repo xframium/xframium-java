@@ -48,12 +48,12 @@
     <dependency>
       <groupId>org.xframium</groupId>
       <artifactId>xframium-java</artifactId>
-      <version>1.0.12-SNAPSHOT</version>
+      <version>1.0.14</version>
     </dependency>
     <dependency>
       <groupId>org.xframium</groupId>
       <artifactId>xframium-driver</artifactId>
-      <version>1.0.12c-SNAPSHOT</version>
+      <version>1.0.14</version>
     </dependency>
   </dependencies>
 </project>

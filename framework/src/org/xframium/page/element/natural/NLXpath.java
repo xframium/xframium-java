@@ -6,5 +6,6 @@ import org.xframium.device.factory.DeviceWebDriver;
 public interface NLXpath
 {
     public WebElement getElement( DeviceWebDriver webDriver, NaturalLanguageDescriptor nL );
+    public String generateXPath( NaturalLanguageDescriptor nL );
     
 }

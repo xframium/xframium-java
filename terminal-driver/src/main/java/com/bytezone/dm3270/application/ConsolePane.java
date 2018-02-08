@@ -63,7 +63,8 @@ public class ConsolePane extends BorderPane
   private TelnetListener telnetListener;
   private final TelnetState telnetState;
   private int commandHeaderCount;
-  private final ISite server;
+  private ISite server;
+  private boolean connected = false;
 
   private TerminalServer terminalServer;
   private Thread terminalServerThread;
@@ -118,21 +119,23 @@ public class ConsolePane extends BorderPane
         {
           char direction = offset.charAt (3);
           int value = Integer.parseInt (offset.substring (4));
-          System.out.printf ("Time offset : %s %d%n", direction, value);
           ZonedDateTime now = ZonedDateTime.now (ZoneOffset.UTC);
-          System.out.println ("UTC         : " + now);
           if (direction == '+')
             now = now.plusHours (value);
           else
             now = now.minusHours (value);
-          System.out.println ("Site        : " + now);
-          System.out.println ();
+      
         }
       }
     }
 
     screen.requestFocus ();
   }
+
+    public void setSite( ISite site )
+    {
+        server = site;
+    }
 
   public void setStatusText (String text)
   {
@@ -337,6 +340,13 @@ public class ConsolePane extends BorderPane
 
     terminalServerThread = new Thread (terminalServer);
     terminalServerThread.start ();
+
+    connected = true;
+  }
+
+  public boolean isConnected()
+  {
+      return connected;
   }
 
   public void disconnect ()
@@ -357,6 +367,8 @@ public class ConsolePane extends BorderPane
       {
         e.printStackTrace ();
       }
+
+      connected = false;
     }
   }
 
@@ -393,4 +405,12 @@ public class ConsolePane extends BorderPane
     setStatusText (evt.keyboardLocked ? evt.keyName : "       ");
     insertMode.setText (evt.insertMode ? "Insert" : "      ");
   }
+
+    public void setHidden( boolean val )
+    {
+        setVisible( val );
+        menuBar.setVisible( val );
+        screen.setVisible( val );
+        statusPane.setVisible( val );
+    }
 }

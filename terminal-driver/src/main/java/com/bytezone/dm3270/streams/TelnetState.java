@@ -185,38 +185,32 @@ public class TelnetState implements Runnable
 
   public void setDoes3270Extended (boolean state)
   {
-    System.out.println ("Does Extended        : " + state);
     does3270Extended = state;
   }
 
   public void setDoesEOR (boolean state)
   {
-    System.out.println ("Does EOR             : " + state);
     doesEOR = state;
   }
 
   public void setDoesBinary (boolean state)
   {
-    System.out.println ("Does Binary          : " + state);
     doesBinary = state;
   }
 
   public void setDoesTerminalType (boolean state)
   {
-    System.out.println ("Does Terminal type  : " + state);
     doesTerminalType = state;
   }
 
   public void setTerminal (String terminal)
   {
-    System.out.println ("Terminal            : " + terminal);
     this.terminal = terminal;
   }
 
   // called from TN3270ExtendedSubcommand.process()
   public void setDeviceType (String deviceType)
   {
-    System.out.println ("Device Type          : " + deviceType);
     this.deviceType = deviceType;
 
     modelNo = 0;
@@ -252,13 +246,11 @@ public class TelnetState implements Runnable
   // called from TN3270ExtendedSubcommand.process()
   public void setFunctions (List<Function> functions)
   {
-    System.out.println ("Functions            : " + functions);
     this.functions = functions;
   }
 
   public void setLogicalUnit (String luName)
   {
-    System.out.println ("LU name              : " + luName);
     this.luName = luName;
   }
 
@@ -347,7 +339,6 @@ public class TelnetState implements Runnable
   public void setDoDeviceType (int modelNo)
   {
     doDeviceType = terminalTypes[modelNo];
-    System.out.println ("setting: " + doDeviceType);
   }
 
   @Override

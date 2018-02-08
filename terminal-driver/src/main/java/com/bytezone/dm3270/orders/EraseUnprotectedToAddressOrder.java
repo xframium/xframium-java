@@ -62,10 +62,6 @@ public class EraseUnprotectedToAddressOrder extends Order
 
             screen.restoreKeyboard();
         }
-        else
-        {
-            System.out.println ("EraseUnprotectedToAddress not finished");
-        }
     }
 
   @Override

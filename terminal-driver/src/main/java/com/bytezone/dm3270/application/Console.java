@@ -195,10 +195,10 @@ public class Console extends Application
       optionStage.show ();
   }
 
-  protected void setModel (ISite serverSite)
+  public void setModel (ISite serverSite)
   {
     int model = serverSite.getModel ();
-    System.out.println ("model: " + model);
+    
     switch (model)
     {
       case 2:
@@ -260,7 +260,7 @@ public class Console extends Application
     primaryStage.show ();
   }
 
-    protected Scene getConsoleScene()
+    public Scene getConsoleScene()
     {
         return consoleScene;
     }
@@ -316,6 +316,11 @@ public class Console extends Application
     public ConsoleKeyPress getKeyPresHandler()
     {
         return keyPressHandler;
+    }
+
+    public Stage getPrimaryStage()
+    {
+        return primaryStage;
     }
 
   private void savePreferences ()

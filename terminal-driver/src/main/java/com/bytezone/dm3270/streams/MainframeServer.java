@@ -92,7 +92,7 @@ public class MainframeServer implements Runnable
     }
     catch (SocketException e)     // caused by closing the clientServerSocket
     {
-      System.out.println ("Connection attempt cancelled");
+        System.out.println(e);
     }
     catch (IOException e)
     {
@@ -119,7 +119,6 @@ public class MainframeServer implements Runnable
 
     if (buffer[bytesRead - 1] != (byte) 0xEF && buffer[bytesRead - 2] != (byte) 0xFF)
     {
-      System.out.println ("Unfinished buffer");
       tempBuffer = new byte[bytesRead];
       System.arraycopy (buffer, 0, tempBuffer, 0, bytesRead);
       return 0;

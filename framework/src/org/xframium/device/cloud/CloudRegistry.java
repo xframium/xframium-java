@@ -191,7 +191,9 @@ public class CloudRegistry
 	        
 	        if ( !isListening( "127.0.0.1", 4444 ) )
 	        {
-	            _server = new SeleniumServer( new StandaloneConfiguration() );
+	            StandaloneConfiguration c = new StandaloneConfiguration();
+	            c.enablePassThrough = true;
+	            _server = new SeleniumServer( c );
 	            _server.boot();
 	        }
 	        else

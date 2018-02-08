@@ -16,6 +16,7 @@ public class DriverContainer
     private boolean smartCaching = false;
     private boolean dryRun = false;
     private boolean embeddedServer = false;
+    private String trace = "OFF";
     private String stepTags = "";
     private String testTags = "";
     private String deviceTags = "";
@@ -27,6 +28,10 @@ public class DriverContainer
     private String beforeTest;
     private String afterTest;
     private String beforeDevice;
+    private String beforeStep;
+    private String afterStep;
+    
+
     private Class[] propertyAdapters;
     
     private DriverType driverType;
@@ -38,7 +43,47 @@ public class DriverContainer
     private List<String> artifactList = new ArrayList<String>( 20 );
     private boolean secureCloud = false;
     private boolean namesConfigured = false;
+    private String[] executionNames;
     
+    public String getBeforeStep()
+    {
+        return beforeStep;
+    }
+
+    public void setBeforeStep(String beforeStep)
+    {
+        this.beforeStep = beforeStep;
+    }
+
+    public String getAfterStep()
+    {
+        return afterStep;
+    }
+
+    public void setAfterStep(String afterStep)
+    {
+        this.afterStep = afterStep;
+    }
+    
+    public String[] getExecutionNames()
+    {
+        return executionNames;
+    }
+
+    public void setExecutionNames(String[] executionNames)
+    {
+        this.executionNames = executionNames;
+    }
+
+    public String getTrace()
+    {
+        return trace;
+    }
+
+    public void setTrace(String trace)
+    {
+        this.trace = trace;
+    }
 
     public int getRetryCount()
     {

@@ -42,8 +42,8 @@ public class KWSExecJS extends AbstractKeyWordStep
         kwName = "Execute JavaScript";
         kwDescription = "Allows the script to execute a piece of JavaScript code";
         kwHelp = "https://www.xframium.org/keyword.html#kw-execjs";
-        orMapping = false;
-        category = "Utility";
+        orMapping = true;
+        category = "Web";
     }
     /* (non-Javadoc)
      * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
@@ -53,9 +53,14 @@ public class KWSExecJS extends AbstractKeyWordStep
     {
         Object script = null;
                 
-        if ( getParameterList().size() == 1 )
+        boolean addElement = false;
+        if ( getParameterList().size() > 0 )
         {
             script = getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() );
+            
+            if ( getParameterList().size() > 1 )
+                addElement = Boolean.parseBoolean( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) );
+           
             if ( !( script instanceof String ) )
                 throw new ScriptConfigurationException( "Script value must be of type String" );
         }
@@ -68,11 +73,14 @@ public class KWSExecJS extends AbstractKeyWordStep
         
         try
         {
-            result = ((JavascriptExecutor) webDriver).executeScript( (String) script );
+            if ( addElement )
+                result = ((JavascriptExecutor) webDriver).executeScript( (String) script, getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).getNative() );
+            else
+                result = ((JavascriptExecutor) webDriver).executeScript( (String) script );
         }
         catch( Exception e )
         {
-            log.info( "JavaScript call failed with " + e.getMessage() );
+            throw new ScriptException( "JavaScript call failed with " + e.getMessage() );
         }
 		
         if (( result instanceof String ) &&

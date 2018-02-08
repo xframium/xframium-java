@@ -344,8 +344,6 @@ public class SystemMessage
     // collect screen lines into screenWidth strings
     int skipLines = -1;
     int totLines = 0;
-    if (screenWidth != 80)
-      System.out.println ("fix this");
 
     for (Order order : orders)
       if (order.isText ())

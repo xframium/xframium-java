@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
+import org.xframium.page.keyWord.step.spi.KWSAccessibility;
 import org.xframium.page.keyWord.step.spi.KWSAddDevice;
 import org.xframium.page.keyWord.step.spi.KWSAddDevice2;
 import org.xframium.page.keyWord.step.spi.KWSAlert;
@@ -209,6 +210,7 @@ public class KeyWordStepFactory
         addKeyWord( "DATE", KWSDate.class );
         addKeyWord( "DEBUG", KWSDebug.class );
         addKeyWord( "CONTEXT", KWSContext.class );
+        addKeyWord( "ACCESSIBILITY", KWSAccessibility.class );
     }
 
     /**
@@ -269,9 +271,8 @@ public class KeyWordStepFactory
      * @return the key word step
      */
     public KeyWordStep createStep( String name, String pageName, boolean active, String type, String linkId, boolean timed, StepFailure sFailure, boolean inverse, String os, String browser, String poi, int threshold, String description, long waitTime, String context,
-            String validation, String device, ValidationType validationType, String tagNames, boolean startAt, boolean breakpoint, String deviceTags, String siteName, Map<String,String> overrideMap, String version, String appContext )
+            String validation, String device, ValidationType validationType, String tagNames, boolean startAt, boolean breakpoint, String deviceTags, String siteName, Map<String,String> overrideMap, String version, String appContext, String waitFor, boolean trace )
     {
-
         Class kwImpl = stepMap.get( type.toUpperCase() );
 
         if ( kwImpl == null )
@@ -327,8 +328,7 @@ public class KeyWordStepFactory
                 else
                     returnValue.setWait( waitTime );
             }
-            
-            
+        
             returnValue.setValidation( validation );
             returnValue.setValidationType( validationType );
             returnValue.setContext( context );
@@ -341,13 +341,22 @@ public class KeyWordStepFactory
                 returnValue.setSiteName( siteName );
             returnValue.setVersion( version );
             returnValue.setAppContext( appContext );
-
+            returnValue.setWaitFor(waitFor);
+            returnValue.setTrace(trace);
             return returnValue;
         }
         catch ( Exception e )
         {
             throw new IllegalArgumentException( "Unknown KeyWord [" + type + "]", e );
         }
+    }
+    
+    public KeyWordStep createStep( KeyWordStep k )
+    {
+        KeyWordStep kW = createStep( k.getName(), k.getPageName(), k.isActive(), k.getKw(), k.getLinkId(), k.isTimed(), k.getFailure(), k.isInverse(), k.getOs(), k.getBrowser(), k.getPoi(), k.getThreshold(), k.getDescription(), k.getWait(), k.getContext(), k.getValidation(), k.getDevice(), k.getValidationType(), null, k.isStartAt(), k.isBreakpoint(), null, k.getSiteName(), new HashMap<String,String>(), k.getVersion() != null ? k.getVersion().toString() : null, k.getAppContext(), k.getWaitFor(), k.isTrace() );
+        kW.setTagNames( k.getTagNames() );
+        kW.setDeviceTags( k.getDeviceTags() );
+        return kW;
     }
     
     private String getValue( String attributeName, String attributeValue, Map<String,String> overrideMap )

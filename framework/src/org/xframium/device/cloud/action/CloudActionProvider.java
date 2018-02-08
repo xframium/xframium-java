@@ -20,7 +20,7 @@ public interface CloudActionProvider
     public String getCloudPlatformName(Device device);
     public String getCloudBrowserName(String currBrowserName);
     
-    public boolean installApplication( String applicationName, DeviceWebDriver webDriver, boolean instrumentApp, boolean instrumentSensors );
+    public boolean installApplication( String applicationName, DeviceWebDriver webDriver, boolean instrumentApp, boolean instrumentSensors, boolean dataReset );
     public boolean uninstallApplication( String applicationName, DeviceWebDriver webDriver );
     public boolean openApplication( String applicationName, DeviceWebDriver webDriver, String xFID );
     public boolean closeApplication( String applicationName, DeviceWebDriver webDriver );

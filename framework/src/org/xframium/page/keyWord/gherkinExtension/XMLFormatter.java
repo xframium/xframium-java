@@ -15,6 +15,7 @@ import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.keyWord.KeyWordDriver.TRACE;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.model.Background;
@@ -140,7 +141,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
             tagNames = tagNames.substring( 0, tagNames.length() - 1 );
         }
         
-        this.currentScenario = new KeyWordTest( xTest.getName(), true, null, null, false, null, null, 0, xTest.getDescription(), tagNames, null, null, configProperties, 0, null, null, null, null, 0, 0 );
+        this.currentScenario = new KeyWordTest( xTest.getName(), true, null, null, false, null, null, 0, xTest.getDescription(), tagNames, null, null, configProperties, 0, null, null, null, null, 0, 0, TRACE.OFF.name() );
 
         for ( KeyWordStep xStep : backgroundSteps )
             this.currentScenario.addStep( xStep );
@@ -162,7 +163,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
             tagNames = tagNames.substring( 0, tagNames.length() - 1 );
         }
         
-        this.currentScenario = new KeyWordTest( xTest.getName(), true, null, xTest.getName(), false, null, null, 0, xTest.getDescription(), tagNames, null, null, configProperties, 0, null, null, null, null, 0, 0 );
+        this.currentScenario = new KeyWordTest( xTest.getName(), true, null, xTest.getName(), false, null, null, 0, xTest.getDescription(), tagNames, null, null, configProperties, 0, null, null, null, null, 0, 0, TRACE.OFF.name() );
 
         for ( KeyWordStep xStep : backgroundSteps )
             this.currentScenario.addStep( xStep );
@@ -182,7 +183,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
     public void step( Step xStep )
     {
         
-        KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), "bdd", true, "CALL2", "", false, StepFailure.ERROR, false, null, null, null, 0, "", 0, "", null, null, null, null, false, false, null, null, configProperties, null, null );
+        KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), "bdd", true, "CALL2", "", false, StepFailure.ERROR, false, null, null, null, 0, "", 0, "", null, null, null, null, false, false, null, null, configProperties, null, null, null, false );
          
         switch( currentSection )
         {

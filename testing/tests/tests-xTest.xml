@@ -56,5 +56,7 @@
   <import fileName="./xTest/Comparison Test.xml" />
   <import fileName="./xTest/Checkbox Test.xml" />
   <import fileName="./xTest/SQL Test.xml" />
+  <import fileName="./xTest/Accessibility Test.xml" />
+  <import fileName="./xTest/Test.xml" />
   <import fileName="../functions/functions-xTest.xml" />
 </suite>

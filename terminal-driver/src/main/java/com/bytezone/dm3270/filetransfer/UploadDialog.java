@@ -74,7 +74,6 @@ public class UploadDialog extends TransferDialog
     }
     else
     {
-      System.out.println ("not found");
       labelDatasetDate.setText ("");
     }
 

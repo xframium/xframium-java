@@ -6,6 +6,7 @@ import javax.xml.bind.*;
 
 import org.openqa.selenium.*;
 import org.apache.commons.jxpath.*;
+import org.apache.commons.logging.*;
 
 import org.xframium.terminal.driver.screen.model.*;
 import org.xframium.terminal.driver.util.*;
@@ -13,6 +14,7 @@ import org.xframium.terminal.driver.util.*;
 public class Tn3270TerminalDriver
     implements WebDriver,
                SearchContext,
+               TakesScreenshot,
                org.openqa.selenium.internal.FindsByXPath
 {
     //
@@ -20,6 +22,7 @@ public class Tn3270TerminalDriver
     //
 
     private static final String RETURN = "\n";
+    private static Log log = LogFactory.getLog( Tn3270TerminalDriver.class );
     
     //
     // Instance Data
@@ -44,18 +47,19 @@ public class Tn3270TerminalDriver
                                                                       false,
                                                                       "." );
         details = startup;
+        Utilities.setTerminalVisibility( startup.getDisplayEmulator() );
 
         context = new Dm3270Context( site );
         Utilities.setscreenDimensions( context.getScreenDimensions() );
         
-        application = loadApplication( startup.getPathToAppFile() );
+        application = loadApplication( startup.getPathToAppFile(), startup.getAppName() );
         applicationRdeader = JXPathContext.newContext( application );
         workingApp = new ConsumedApplication( application );
         currentScreen = workingApp.getScreenByName( startup.getStartScreen() );
     }
     
     //
-    // Implementation
+    // WebDriver Implementation
     //
     
     public void get(String paramString)
@@ -74,6 +78,10 @@ public class Tn3270TerminalDriver
     {
         return null;
     }
+
+    //
+    // SearchContext Implementation
+    //
   
     public List<WebElement> findElements(By paramBy)
     {
@@ -84,6 +92,83 @@ public class Tn3270TerminalDriver
         
         return ((By.ByXPath) paramBy).findElements( this );
     }
+
+    public WebElement findElement(By paramBy)
+    {
+        if ( !( paramBy instanceof By.ByXPath ))
+        {
+            reportUnsupportedUsage( "Only element selection by XPath is available" );
+        }
+
+        return ((By.ByXPath) paramBy).findElement( this );
+    }
+
+    //
+    // TakesScreenshot Implementation
+    //
+
+    public <X> X getScreenshotAs(OutputType<X> target)
+        throws WebDriverException
+    {
+        X rtn = null;
+        OutputStream ostream = null;
+        File theFile = null;
+        String theFileName = null;
+        ByteArrayOutputStream baos = null;
+        
+        try
+        {
+            if ( OutputType.FILE == target )
+            {
+                theFile = File.createTempFile(application.getName() + "-",
+                                              ".png",
+                                              new File( startup.getPathToImageFolder()));
+                theFileName = theFile.getCanonicalPath();
+                ostream = new FileOutputStream( theFile );
+            }
+            else if ( OutputType.BYTES == target )
+            {
+                baos = new ByteArrayOutputStream();
+                ostream = baos;
+            }
+            else if ( OutputType.BASE64 == target )
+            {
+                baos = new ByteArrayOutputStream();
+                ostream = Base64.getEncoder().wrap( baos );
+            }
+
+            context.takeSnapShot( ostream );
+
+            ostream.flush();
+            ostream.close();
+
+            if ( OutputType.FILE == target )
+            {
+                rtn = (X) theFile;
+            }
+            else if ( OutputType.BYTES == target )
+            {
+                rtn = (X) baos.toByteArray();
+            }
+            else if ( OutputType.BASE64 == target )
+            {
+                rtn = (X) new String( baos.toByteArray() );
+            }
+        }
+        catch( Exception e )
+        {
+            log.error( "Screenshot failed with: ", e );
+        }
+
+        if ( log.isDebugEnabled() )
+            log.debug( "Screenshot saved to: " + (( theFile != null ) ? theFileName : "output buffer" ));
+            
+        return rtn;
+    }
+
+    //
+    // FindsByXPath Implementation
+    //
 
     public List<WebElement> findElementsByXPath(String paramString)
     {
@@ -103,16 +188,6 @@ public class Tn3270TerminalDriver
         }
 
         return rtn;
-    }
-  
-    public WebElement findElement(By paramBy)
-    {
-        if ( !( paramBy instanceof By.ByXPath ))
-        {
-            reportUnsupportedUsage( "Only element selection by XPath is available" );
-        }
-
-        return ((By.ByXPath) paramBy).findElement( this );
     }
 
     public WebElement findElementByXPath(String paramString)
@@ -145,7 +220,7 @@ public class Tn3270TerminalDriver
   
     public void quit()
     {
-        System.exit(0);
+        context.closeTerminal();
     }
   
     public Set<String> getWindowHandles()
@@ -190,14 +265,27 @@ public class Tn3270TerminalDriver
         private int terminalType;
         private String startScreen;
         private String pathToAppFile;
+        private String appName;
+        private String pathToImageFolder;
+        private boolean displayEmulator;
 
-        public StartupDetails( String host, int port, int terminalType, String startScreen, String pathToAppFile )
+        public StartupDetails( String host,
+                               int port,
+                               int terminalType,
+                               String startScreen,
+                               String pathToAppFile,
+                               String appName,
+                               String pathToImageFolder,
+                               boolean displayEmulator )
         {
             this.host = host;
             this.port = port;
             this.terminalType = terminalType;
             this.startScreen = startScreen;
             this.pathToAppFile = pathToAppFile;
+            this.appName = appName;
+            this.pathToImageFolder = pathToImageFolder;
+            this.displayEmulator = displayEmulator;
         }
 
         public String getHost() { return host; }
@@ -205,6 +293,9 @@ public class Tn3270TerminalDriver
         public int getTerminalType() { return terminalType; }
         public String getStartScreen() { return startScreen; }
         public String getPathToAppFile() { return pathToAppFile; }
+        public String getPathToImageFolder() { return pathToImageFolder; }
+        public String getAppName() { return appName; }
+        public boolean getDisplayEmulator() { return displayEmulator; }
     }
 
     private class MyWebElement
@@ -246,11 +337,17 @@ public class Tn3270TerminalDriver
         {
             context.setLocation( Utilities.asTerminalLocation( location ));
             context.sendKey( javafx.scene.input.KeyCode.ENTER );
+
+            if ( log.isDebugEnabled() )
+                log.debug( "Click on: " + dumpContext() );
         }
   
         public void submit()
         {
-            click();
+            context.sendKey( javafx.scene.input.KeyCode.ENTER );
+
+            if ( log.isDebugEnabled() )
+                log.debug( "Submit on: " + dumpContext() );
         }
   
         public void sendKeys(CharSequence... paramVarArgs)
@@ -261,6 +358,9 @@ public class Tn3270TerminalDriver
             {
                 context.sendChars( seq );
             }
+
+            if ( log.isDebugEnabled() )
+                log.debug( "Typed in: " + dumpContext() );
         }
   
         public void clear()
@@ -330,8 +430,23 @@ public class Tn3270TerminalDriver
 
         @Override
         public <X> X getScreenshotAs(OutputType<X> arg0) throws WebDriverException {
-            // TODO Auto-generated method stub
-            return null;
+            return Tn3270TerminalDriver.this.getScreenshotAs( arg0 );
+        }
+
+        //
+        // Helpers
+        //
+
+        private String dumpContext()
+        {
+            StringBuilder buffer = new StringBuilder();
+
+            buffer.append( (( field != null ) ? "Field: " + field.getName() :
+                            (( link != null ) ? "Link: " + link.getName() :
+                             (( action != null ) ? "Action: " + action.getName() : "??? " ))));
+            buffer.append( "[ " ).append( location.getLine() ).append("/").append( location.getColumn() ).append( " ]" );
+
+            return buffer.toString();
         }
     }
 
@@ -421,7 +536,7 @@ public class Tn3270TerminalDriver
     // Helpers
     //
 
-    private Application loadApplication( String pathToFile )
+    private Application loadApplication( String pathToFile, String name )
     {
         Application rtn = null;
         FileReader reader = null;
@@ -436,13 +551,27 @@ public class Tn3270TerminalDriver
             JAXBElement<?> rootElement = (JAXBElement<?>)un.unmarshal( reader );
             RegistryRoot rRoot = (RegistryRoot)rootElement.getValue();
 
-            rtn = rRoot.getApplication().get(0);
+            Iterator<Application> apps = rRoot.getApplication().iterator();
+            while(( rtn == null ) && ( apps.hasNext() ))
+            {
+                Application app = apps.next();
+
+                if ( app.getName().equals( name ))
+                {
+                    rtn = app;
+                }
+            }
 
             reader.close();
         }
         catch ( Exception e )
         {
             e.printStackTrace();
+        }
+
+        if ( rtn == null )
+        {
+            throw new IllegalStateException( "Application: " + name + " is not found" );
         }
 
         return rtn;

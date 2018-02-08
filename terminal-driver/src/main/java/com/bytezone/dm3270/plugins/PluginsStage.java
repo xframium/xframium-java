@@ -219,7 +219,6 @@ public class PluginsStage extends PreferencesStage
 
   private void rebuildMenu ()
   {
-    System.out.println ("rebuilding");
     ObservableList<MenuItem> items = menu.getItems ();
     while (items.size () > baseMenuSize)
       items.remove (menu.getItems ().size () - 1);
@@ -446,7 +445,7 @@ public class PluginsStage extends PreferencesStage
       }
       catch (ClassNotFoundException | InstantiationException | IllegalAccessException e)
       {
-        System.out.printf ("Instantiation failed: %s - %s%n", name, className);
+          System.out.println(e);
       }
       return plugin;
     }
