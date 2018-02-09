@@ -309,7 +309,7 @@ public class KWSString2 extends AbstractKeyWordStep
 
                 newValue = originalValue.substring( beginIndex, endIndex );
 
-                if ( getParameter( VALUE ) != null )
+                if ( getParameter( COMPARE ) != null )
                 {
                     String compareTo = getParameterValue( getParameter( COMPARE ), contextMap, dataMap, executionContext.getxFID() );
                     rtn = newValue.equals( compareTo );
