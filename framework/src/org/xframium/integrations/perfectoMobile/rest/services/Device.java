@@ -171,4 +171,19 @@ public interface Device extends PerfectoService
     @Operation( operationName="command" )
     @PerfectoCommand( commandName="media", subCommandName = "put" )
     public Execution putFile( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId, @Parameter( name="repositoryFile" ) String repositoryFile, @Parameter( name="handsetFile" ) String handsetFile );
+    
+    /**
+   	 * Locks the screen for 10 seconds (default)
+   	 *
+   	 * @param executionId the execution id
+   	 * @param handsetId the handset id
+   	 * @param coordinates the coordinates
+   	 * @return the execution
+   	 */
+   	@Operation( operationName="command" )
+   	@PerfectoCommand( commandName="screen", subCommandName = "lock" )
+   	public Execution lockScreen( @ResourceID String executionId, @Parameter( name="handsetId" ) String handsetId );
+   	
+
+    
 }

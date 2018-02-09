@@ -103,7 +103,9 @@ public interface DeviceAction
 		
 		HOME(25, "HOME", "Returns to the home screen"),
 		
-		FINGERPRINT( 26, "FINGERPRINT", "Simulates a fingerprint action");
+		FINGERPRINT( 26, "FINGERPRINT", "Simulates a fingerprint action"),
+		
+		LOCK_SCREEN( 27, "LOCK_SCREEN", "Screen lock action");
 	    
 	    public List<ActionType> getSupportedActions()
 	    {
@@ -132,6 +134,7 @@ public interface DeviceAction
 	        supportedList.add( ActionType.COPY_FILE );
 	        supportedList.add( ActionType.HOME );
 	        supportedList.add( ActionType.FINGERPRINT );
+	        supportedList.add( ActionType.LOCK_SCREEN);
 	        return supportedList;
 	    }
 	    
