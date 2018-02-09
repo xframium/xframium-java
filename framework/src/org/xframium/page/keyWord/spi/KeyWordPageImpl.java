@@ -54,18 +54,16 @@ public class KeyWordPageImpl extends AbstractPage implements KeyWordPage, Page
 	public KeyWordPageImpl( ElementProvider elementProvider, String siteName )
 	{
 	    this.elementProvider = elementProvider;
-	    System.err.println( "SET TO: " + elementProvider);
 	    this.siteName = siteName;
 	}
 	
 	public KeyWordPageImpl()
     {
-        System.err.println( "BLANK");
+
     }
 	
 	public void setDriver( Object webDriver )
     {
-		System.err.println( "SET " + ( (DeviceWebDriver) webDriver ).getxFID() );
         this.webDriver = webDriver;
         this.elementProvider = PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID() ).getElementProvider();
         this.siteName = PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID() ).getSiteName();
