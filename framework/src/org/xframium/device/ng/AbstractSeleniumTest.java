@@ -112,7 +112,7 @@ public abstract class AbstractSeleniumTest
     {
         String xFID = null;
         if ( Initializable.xFID == null || Initializable.xFID.get() == null )
-            xFID = (String) testContext.getAttribute( "xFID" );
+        	xFID = (String) ((testContext.getAttribute( "xFID" ) != null)?(testContext.getAttribute( "xFID" )):testContext.getSuite().getAttribute( "xFID" ));
         else
             xFID = Initializable.xFID.get();
 
