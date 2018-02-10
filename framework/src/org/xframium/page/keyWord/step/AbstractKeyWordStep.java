@@ -77,6 +77,7 @@ import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.step.spi.KWSElse;
 import org.xframium.page.keyWord.step.spi.KWSLoopBreak;
+import org.xframium.page.keyWord.step.transform.ValueTransformationFactory;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextStep;
 import org.xframium.reporting.ExecutionContextTest;
@@ -1064,8 +1065,23 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     }
                 }
 
-                returnValue = _executeStep( pageObject, ((alternateWebDriver != null) ? alternateWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext );
-
+                try
+                {
+                    returnValue = _executeStep( pageObject, ((alternateWebDriver != null) ? alternateWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext );
+                }
+                finally
+                {
+                    if ( ((DeviceWebDriver) webDriver).getCloud().getProvider().equals( "PERFECTO" ) )
+                    {
+                        if ( ArtifactManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
+                        {
+                            if ( ((ReportiumProvider) webDriver).getReportiumClient() != null )
+                            {
+                                ((ReportiumProvider) webDriver).getReportiumClient().stepEnd( "Finished: " + getClass().getSimpleName() );
+                            }
+                        }
+                    }
+                }
                 //
                 // IF a waitFor verification step was specified, execute it
                 //
@@ -1778,7 +1794,12 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         if ( returnValue == null )
             return "";
         else
-            return returnValue + "";
+        {
+            //
+            // Apply value transformation 
+            //
+            return ValueTransformationFactory.instance().transformValue( returnValue + "" );
+        }
     }
 
     /**
@@ -1794,30 +1815,31 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      */
     public String getTokenValue( KeyWordToken token, Map<String, Object> contextMap, Map<String, PageData> dataMap, String xFID )
     {
+        String returnValue = null;
         switch ( token.getType() )
         {
             case CONTEXT:
-                return contextMap.get( token.getValue() ) + "";
+                returnValue = contextMap.get( token.getValue() ) + "";
+                break;
 
             case STATIC:
-                return token.getValue();
+                returnValue = token.getValue();
+                break;
 
             case PROPERTY:
-                String returnValue2 = null;
-                returnValue2 = System.getProperty( token.getValue(), "" );
-                if ( "".equals(returnValue2) )
-                    returnValue2 = KeyWordDriver.instance( xFID ).getConfigProperties().getProperty( token.getValue() );
+                returnValue = System.getProperty( token.getValue(), "" );
+                if ( "".equals(returnValue) )
+                    returnValue = KeyWordDriver.instance( xFID ).getConfigProperties().getProperty( token.getValue() );
                 
-                if ( returnValue2 == null )
-                    returnValue2 = "";
+                if ( returnValue == null )
+                    returnValue = "";
                 
-                return returnValue2;
-                
-                
+                break;
 
             case CONTENT:
-                return ContentManager.instance(xFID).getContentValue( token.getValue() + "" );
-
+                returnValue = ContentManager.instance(xFID).getContentValue( token.getValue() + "" );
+                break;
+                
             case DATA:
                 //
                 // We allow data to be overriden by context
@@ -1834,16 +1856,27 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     throw new ScriptConfigurationException( Thread.currentThread().getName() + ": The Page Data record type [" + tableName + "] does not exist for this test - chexk your dataProvider or dataDriver attribute" );
                 }
 
-                Object returnValue = pageData.getData( recordName );
+                Object rV = pageData.getData( recordName );
 
-                if ( returnValue == null )
+                if ( rV == null )
                     throw new ScriptConfigurationException(
                             Thread.currentThread().getName() + ": The Page Data field [" + recordName + "] does not exist for the page data record type [" + tableName + "] - Reference one of the following fields - " + pageData );
 
-                return returnValue + "";
+                returnValue = rV + "";
+                break;
 
             default:
                 throw new ScriptConfigurationException( Thread.currentThread().getName() + ": Unknown Token Type [" + token.getValue() + "]" );
+        }
+        
+        if ( returnValue == null )
+            return "";
+        else
+        {
+            //
+            // Apply value transformation 
+            //
+            return ValueTransformationFactory.instance().transformValue( returnValue + "" );
         }
     }
 

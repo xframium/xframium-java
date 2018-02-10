@@ -35,8 +35,10 @@ public class GlobalListener implements KeyWordListener
     @Override
     public boolean beforeStep(WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC)
     {
-        if  ( beforeStep == null || beforeStep.trim().isEmpty() )
+        if  ( afterStep == null || afterStep.trim().isEmpty() || currentStep instanceof SyntheticStep || eC.isInStepListener() )
             return true;
+        eC.setInStepListener( true );
+        
         boolean returnValue = false;
         try
         {
@@ -59,6 +61,10 @@ public class GlobalListener implements KeyWordListener
             eC.completeStep( StepStatus.FAILURE, e );
             return false;
         }
+        finally
+        {
+            eC.setInStepListener( false );
+        }
         
         return returnValue;
     }
@@ -66,8 +72,9 @@ public class GlobalListener implements KeyWordListener
     @Override
     public void afterStep(WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, StepStatus stepStatus, SuiteContainer sC, ExecutionContextTest eC)
     {
-        if  ( afterStep == null || afterStep.trim().isEmpty() )
+        if  ( afterStep == null || afterStep.trim().isEmpty() || currentStep instanceof SyntheticStep || eC.isInStepListener() )
             return;
+        eC.setInStepListener( true );
         
         boolean returnValue = false;
         try
@@ -89,6 +96,11 @@ public class GlobalListener implements KeyWordListener
         {
             eC.completeStep( StepStatus.FAILURE, e );
         }
+        finally
+        {
+            eC.setInStepListener( false );
+        }
+        
     }
 
     @Override

@@ -36,6 +36,7 @@ public class ExecutionContextTest
         SKIPPED;
     }
 
+    private boolean inStepListener = false;
     private String xFID = null;
     private ExceptionType exceptionType;
     private KeyWordTest test;
@@ -77,6 +78,16 @@ public class ExecutionContextTest
 
     
     
+    public boolean isInStepListener()
+    {
+        return inStepListener;
+    }
+
+    public void setInStepListener(boolean inStepListener)
+    {
+        this.inStepListener = inStepListener;
+    }
+
     public int getIterationCount()
     {
         return iterationCount;
