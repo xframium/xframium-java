@@ -85,7 +85,8 @@ public class CloudDescriptor
 	    SELENIUM( 1, "SELENIUM", "Browsers hosted in a Selenium Grid" ),
 	    SAUCELABS( 2, "SAUCELABS", "Devices and Browsers hosted at SauceLabs" ),
 	    PERFECTO( 3, "PERFECTO", "Devices and Browsers hosted at Perfecto" ),
-	    WINDOWS( 4, "WINDOWS", "Windows applications using the Windows Application Driver" );
+	    WINDOWS( 4, "WINDOWS", "Windows applications using the Windows Application Driver" ),
+	    BROWSERSTACK( 5, "BROWSERSTACK", "Devices and Browsers hosted at BrowserStack" );
 	    
 	    private ProviderType( int id, String name, String description )
         {
@@ -105,6 +106,7 @@ public class CloudDescriptor
             supportedList.add( ProviderType.SAUCELABS );
             supportedList.add( ProviderType.PERFECTO );
             supportedList.add( ProviderType.WINDOWS );
+            supportedList.add( ProviderType.BROWSERSTACK );
             return supportedList;
         }
 	}
@@ -201,8 +203,10 @@ public class CloudDescriptor
 		        else
 		            return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/perfectomobile/wd/hub";
 		    }
+		    else if ( provider != null && provider.name != null && provider.name.equals( "BROWSERSTACK" ) )
+                return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/wd/hub";
 		    else if ( provider != null && provider.name != null && provider.name.equals( "SAUCELABS" ) )
-		    	return "http://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/wd/hub";
+		        return "http://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/wd/hub";
 		    else if ( provider != null && provider.name != null && provider.name.equals( "WINDOWS" ) )
                 return "http://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName();
 		    else
