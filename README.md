@@ -1,7 +1,4 @@
-# BrowserStack
-Thanks to BrowserStack for sponsoring the xFramium initiative!  See the results of the xFramium integration tests on the BrowserStack platform below
 
-[![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=SHZaV3BGaXl3OWJRVVVOUld2YVF2VzNWcGxteVF1dm8rdUpVVERzbm5oST0tLWpmZlAzeVEzMkY2UDlqMXhTOGNhM3c9PQ==--5adfa07b72b025b5170c5a2b48ac3b1189ae7bb8)](https://www.browserstack.com/automate/public-build/SHZaV3BGaXl3OWJRVVVOUld2YVF2VzNWcGxteVF1dm8rdUpVVERzbm5oST0tLWpmZlAzeVEzMkY2UDlqMXhTOGNhM3c9PQ==--5adfa07b72b025b5170c5a2b48ac3b1189ae7bb8)
 
 # xframium-java
 [xFramium](http://www.xframium.org) - Rapid unified test case development
@@ -30,6 +27,11 @@ Refer to the [contributing guidelines](https://github.com/xframium/xframium-java
 
 ## Versioning
 xFramium development adheres to the [the Semantic Versioning guidelines](http://semver.org/) as closely as possible for all release information.  All release can be found via the [download and release notes](http://xframium.org/download.html#rn) section of the xframium.org website.
+
+# BrowserStack
+Thanks to BrowserStack for sponsoring the xFramium initiative!  See the results of the xFramium integration tests on the BrowserStack platform below
+
+[![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=SHZaV3BGaXl3OWJRVVVOUld2YVF2VzNWcGxteVF1dm8rdUpVVERzbm5oST0tLWpmZlAzeVEzMkY2UDlqMXhTOGNhM3c9PQ==--5adfa07b72b025b5170c5a2b48ac3b1189ae7bb8)](https://www.browserstack.com/automate/public-build/SHZaV3BGaXl3OWJRVVVOUld2YVF2VzNWcGxteVF1dm8rdUpVVERzbm5oST0tLWpmZlAzeVEzMkY2UDlqMXhTOGNhM3c9PQ==--5adfa07b72b025b5170c5a2b48ac3b1189ae7bb8)
 
 ## Copyright and License
 
