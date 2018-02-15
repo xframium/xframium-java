@@ -32,9 +32,12 @@ import org.xframium.application.ApplicationRegistry;
 import org.xframium.content.ContentManager;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.cloud.CloudDescriptor.ProviderType;
 import org.xframium.device.factory.AbstractDriverFactory;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.DeviceConfigurationException;
+import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.reporting.ExecutionContext;
 import org.xframium.spi.Device;
 import io.appium.java_client.android.AndroidDriver;
 
@@ -91,7 +94,14 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
                 String localeToConfigure = ContentManager.instance(xFID).getContentValue( Device.LOCALE );
 
                 dc.setCapability( Device.LOCALE, localeToConfigure );
-            }		
+            }	
+            
+            if ( ProviderType.BROWSERSTACK.equals( ProviderType.valueOf( useCloud.getProvider() ) ) )
+            {
+                dc.setCapability( "project", ExecutionContext.instance(xFID).getSuiteName() );
+                if ( KeyWordDriver.instance(xFID).getTags() != null )
+                    dc.setCapability( "build", KeyWordDriver.instance(xFID).getTags()[ 0 ] );
+            }
 			
             URL hubUrl = new URL( useCloud.getCloudUrl( dc ) );
             
