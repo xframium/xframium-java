@@ -17,7 +17,6 @@ import com.bytezone.dm3270.filetransfer.TransferManager;
 import com.bytezone.dm3270.filetransfer.TransferManager.TransferStatus;
 import com.bytezone.dm3270.utilities.Site;
 import com.bytezone.dm3270.utilities.WindowSaver;
-import com.bytezone.reporter.application.ReporterNode;
 
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -37,7 +36,7 @@ public class TransfersStage extends Stage implements ScreenChangeListener,
 
   private final Preferences prefs = Preferences.userNodeForPackage (this.getClass ());
   private final WindowSaver windowSaver;
-  private final MenuBar menuBar;
+    //private final MenuBar menuBar;
   protected Site currentSite;
 
   private final TSOCommand tsoCommand;
@@ -89,12 +88,12 @@ public class TransfersStage extends Stage implements ScreenChangeListener,
     anchorPane.getChildren ().addAll (tsoCommand.getBox (), btnHide);
 
     BorderPane borderPane = new BorderPane ();
-    menuBar = filesTab.getMenuBar ();
-    borderPane.setTop (menuBar);
+    //menuBar = filesTab.getMenuBar ();
+    //borderPane.setTop (menuBar);
     borderPane.setCenter (tabPane);
     borderPane.setBottom (anchorPane);
 
-    menuBar.setUseSystemMenuBar (SYSTEM_MENUBAR);
+    //menuBar.setUseSystemMenuBar (SYSTEM_MENUBAR);
 
     Scene scene = new Scene (borderPane, 800, 500);             // width/height
     setScene (scene);
@@ -122,11 +121,6 @@ public class TransfersStage extends Stage implements ScreenChangeListener,
   {
     if (tabSelected != null)
       ((AbstractTransferTab) tabSelected).setText ();
-  }
-
-  public ReporterNode getReporterNode ()
-  {
-    return filesTab.getReporterNode ();
   }
 
   public void closeWindow ()
@@ -187,12 +181,5 @@ public class TransfersStage extends Stage implements ScreenChangeListener,
   }
 
   private void update (TransferStatus status, Transfer transfer)
-  {
-    ReporterNode reporterNode = filesTab.getReporterNode ();
-
-    if (transfer.getSiteFolderName ().isEmpty ())
-      reporterNode.addBuffer (transfer.getDatasetName (), transfer.combineDataBuffers ());
-    else
-      reporterNode.addFile (transfer.getFile (), transfer.getSiteFolderName ());
-  }
+  {}
 }
