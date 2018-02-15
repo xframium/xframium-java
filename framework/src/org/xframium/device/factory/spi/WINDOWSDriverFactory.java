@@ -29,13 +29,17 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.cloud.CloudDescriptor.ProviderType;
 import org.xframium.device.factory.AbstractDriverFactory;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.reporting.ExecutionContext;
 import org.xframium.spi.Device;
 import io.appium.java_client.ios.IOSDriver;
 
 // TODO: Auto-generated Javadoc
 /**
+ * 
  * A factory for creating IOSDriver objects.
  */
 public class WINDOWSDriverFactory extends AbstractDriverFactory
@@ -51,13 +55,15 @@ public class WINDOWSDriverFactory extends AbstractDriverFactory
 		try
 		{
 			DesiredCapabilities dc = new DesiredCapabilities();
-			
 
-            
             DeviceManager.instance( xFID ).setCurrentCloud( useCloud );
-			
-			
-	
+
+            if ( ProviderType.BROWSERSTACK.equals( ProviderType.valueOf( useCloud.getProvider() ) ) )
+            {
+                dc.setCapability( "project", ExecutionContext.instance(xFID).getSuiteName() );
+                if ( KeyWordDriver.instance(xFID).getTags() != null )
+                    dc.setCapability( "build", KeyWordDriver.instance(xFID).getTags()[ 0 ] );
+            }
 			
 			for ( String name : currentDevice.getCapabilities().keySet() )
 				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
