@@ -100,6 +100,8 @@ public interface Element
         FRAME( 10, "FRAME", "Waits for a frame and switches to it"),
         
         CLICKABLE_THEN_CLICK( 11, "CLICKABLE_THEN_CLICK", "Waits for Clickable then clicks on the element"),
+        
+        WINDOW( 12, "WINDOW", "Waits for Clickable then clicks on the element")
         ;
 	    
 	    private WAIT_FOR( int id, String name, String description )

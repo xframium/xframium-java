@@ -50,7 +50,9 @@ public interface KeyWordStep
 		/** The ignore. */
 		IGNORE,
 		/** The log ignore. */
-		LOG_IGNORE
+		LOG_IGNORE,
+		
+		LOG_ERROR
 	}
 	
 	/**
@@ -102,6 +104,10 @@ public interface KeyWordStep
 	 */
 	public String getBrowser();
 
+	public String getWaitFor();
+	public void setWaitFor( String waitFor );
+	
+	
 	/**
 	 * Sets the link id.
 	 *
@@ -121,6 +127,13 @@ public interface KeyWordStep
     
     public void setDeviceTags( String[] deviceTags );
 	
+    public void setImage( String imageName );
+    public String getImage();
+    
+    
+    public boolean isTrace();
+    public void setTrace(boolean trace);
+    
 	public String getKw();
 	
 	/**

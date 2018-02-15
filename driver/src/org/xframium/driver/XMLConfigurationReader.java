@@ -101,6 +101,7 @@ import org.xframium.page.element.provider.ExcelElementProvider;
 import org.xframium.page.element.provider.QAFElementProvider;
 import org.xframium.page.element.provider.SQLElementProvider;
 import org.xframium.page.element.provider.XMLElementProvider;
+import org.xframium.page.keyWord.KeyWordDriver.TRACE;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
@@ -128,7 +129,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     private static final String[] OPT_PAGE = new String[] { "pageManagement.query" };
     private static final String[] OPT_DATA = new String[] { "pageManagement.pageData.query" };
     private static final String[] OPT_CONTENT = new String[] { "pageManagement.content.query" };
-    private static final String[] OPT_DEVICE = new String[] { "deviceManagement.device.query", "deviceManagement.capability.query" };
+    private static final String[] OPT_DEVICE = new String[] { "deviceManagement.device.query", "deviceManagement.capa bility.query" };
     private static final String[] OPT_DRIVER = new String[] { "driver.suiteName", "driver.modelQuery", "driver.testSuiteQuery", "driver.testCaseQuery" };
     private XFramiumRoot xRoot;
     private Map<String,String> configProperties = new HashMap<String,String>( 10 );
@@ -955,6 +956,8 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             dC.setBeforeDevice( getValue( "driver.beforeDevice", xRoot.getDependencies().getBeforeDevice(), configProperties ) );
             dC.setBeforeTest( getValue( "driver.beforeTest", xRoot.getDependencies().getBeforeTest(), configProperties ) );
             dC.setAfterTest( getValue( "driver.afterTest", xRoot.getDependencies().getAfterTest(), configProperties ) );
+            dC.setBeforeStep( getValue( "driver.beforeStep", xRoot.getDependencies().getBeforeStep(), configProperties ) );
+            dC.setAfterStep( getValue( "driver.afterStep", xRoot.getDependencies().getAfterStep(), configProperties ) );
         }
         
         if ( xRoot.getDriver().getExtractors() != null )
@@ -992,7 +995,12 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         dC.setDomain( getValue( "driver.domain", xRoot.getDriver().getDomain(), configProperties ) );
         dC.setPhase( getValue( "driver.phase", xRoot.getDriver().getPhase(), configProperties ) );
         dC.setRetryCount( Integer.parseInt( getValue( "driver.retryCount", xRoot.getDriver().getRetryCount() + "", configProperties ) ) );
-
+        dC.setTrace( getValue( "driver.trace", xRoot.getDriver().getTrace(), configProperties ) );
+        
+        String tagList = getValue( "driver.tagList", xRoot.getDriver().getExecutionName(), configProperties );
+        if ( tagList != null )
+            dC.setExecutionNames( tagList.split( "," ) );
+        
         return dC;
     }
     
@@ -1027,7 +1035,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
      */
     private KeyWordTest parseTest( XTest xTest )
     { 
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount(), null, null, null, null, xTest.getPriority(), xTest.getSeverity() );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), xTest.getDataDriver(), xTest.isTimed(), xTest.getLinkId(), xTest.getOs(), xTest.getThreshold(), xTest.getDescription() != null ? xTest.getDescription().getValue() : null, xTest.getTagNames(), xTest.getContentKeys(), xTest.getDeviceTags(), configProperties, xTest.getCount(), null, null, null, null, xTest.getPriority(), xTest.getSeverity(), xTest.getTrace() );
         test.setReliesOn( xTest.getReliesOn() );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
@@ -1040,7 +1048,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     
     private KeyWordTest parseFunction( XFunction xTest )
     { 
-        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), null, false, xTest.getLinkId(), null, 0, xTest.getDescription() != null ? xTest.getDescription().getValue() : null, null, null, null, configProperties, 1, xTest.getInputPage(), xTest.getOutputPage(), xTest.getMode(), xTest.getOperations(), 0, 0 );
+        KeyWordTest test = new KeyWordTest( xTest.getName(), xTest.isActive(), xTest.getDataProvider(), null, false, xTest.getLinkId(), null, 0, xTest.getDescription() != null ? xTest.getDescription().getValue() : null, null, null, null, configProperties, 1, xTest.getInputPage(), xTest.getOutputPage(), xTest.getMode(), xTest.getOperations(), 0, 0, TRACE.OFF.name() );
         test.getExpectedParameters().addAll( parseParameters( xTest.getParameter() ) );
         
         KeyWordStep[] steps = parseSteps( xTest.getStep(), xTest.getName() );
@@ -1070,10 +1078,12 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         for ( XStep xStep : xSteps )
         {
             KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), xStep.getPage(), xStep.isActive(), xStep.getType(),
-                                                                                 xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
-                                                                                 xStep.getOs(), xStep.getBrowser(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
-                                                                                 xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
-                                                                                 (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties, xStep.getVersion(), xStep.getAppContext() );
+                                                                         xStep.getLinkId(), xStep.isTimed(), StepFailure.valueOf( xStep.getFailureMode() ), xStep.isInverse(),
+                                                                         xStep.getOs(), xStep.getBrowser(), xStep.getPoi(), xStep.getThreshold().intValue(), "", xStep.getWait().intValue(),
+                                                                         xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
+                                                                         (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), 
+                                                                         xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties, xStep.getVersion(), 
+                                                                         xStep.getAppContext(), xStep.getWaitFor(), xStep.isTrace() );
             
             step.getParameterList().addAll( parseParameters( xStep.getParameter() ) );
             parseTokens( xStep.getToken(), testName, xStep.getName(), step );

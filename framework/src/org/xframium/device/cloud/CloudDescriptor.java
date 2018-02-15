@@ -207,7 +207,7 @@ public class CloudDescriptor
                 return "http://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName();
 		    else
 		    {
-		        if ( getUserName() == null || getUserName().isEmpty() )
+		        if ( getUserName() == null || getUserName().isEmpty() || getUserName().equals( "null") )
 		            return "http://" + getHostName() + "/wd/hub";
 		        else
 		            return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/wd/hub";

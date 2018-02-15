@@ -252,13 +252,20 @@ public class XMLTestDriver extends AbstractSeleniumTest
                     
                     if ( testPackage.getConnectedDevice().getWebDriver().getAut() != null && testPackage.getConnectedDevice().getWebDriver().getAut().getName() != null && !testPackage.getConnectedDevice().getWebDriver().getAut().getName().isEmpty() && !testPackage.getConnectedDevice().getWebDriver().getAut().getName().equals( "NOOP" ) )
                         tagList.add( testPackage.getConnectedDevice().getWebDriver().getAut().getName() );
-                    
+
                     if ( test.getTags() != null && test.getTags().length > 0 )
                     {
                         for ( String tag : test.getTags() )
                             tagList.add( tag );
                     }
                     
+                    String[] globalTags = KeyWordDriver.instance(executionContextTest.getxFID()).getTags();
+                    if ( globalTags != null )
+                    {
+                        for ( String tN : globalTags )
+                            tagList.add( tN );
+                    }
+
                     PerfectoExecutionContext perfectoExecutionContext = new PerfectoExecutionContext.PerfectoExecutionContextBuilder().withProject( new Project( ExecutionContext.instance( executionContextTest.getxFID() ).getSuiteName(), "" ) ).withContextTags( tagList.toArray( new String[ 0 ] ) )
                             .withWebDriver( testPackage.getConnectedDevice().getWebDriver() ).build();
                     testPackage.getConnectedDevice().getWebDriver().setReportiumClient( new ReportiumClientFactory().createPerfectoReportiumClient( perfectoExecutionContext ) );

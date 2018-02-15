@@ -18,23 +18,36 @@
  *
  * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>
  *******************************************************************************/
-package org.xframium;
+package org.xframium.gesture.device.action.spi.perfecto;
 
-import java.util.Map;
+import java.util.List;
+
+import org.openqa.selenium.WebDriver;
+import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.gesture.device.action.AbstractDefaultAction;
+import org.xframium.gesture.device.action.DeviceAction;
+import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Interface Initializable.
+ * The Class LockScreenAction.
  */
-public interface Initializable
+public class LockScreenAction extends AbstractDefaultAction implements DeviceAction
 {
-    public static ThreadLocal<String> xFID = new ThreadLocal<String>();
-	public static final String VERSION = "1.0.15D";
-	/**
-	 * Initialize.
-	 *
-	 * @param propertyPrefix the property prefix
-	 * @param propertyMap the property map
-	 */
-	public void initialize( String propertyPrefix, Map<String,String> propertyMap );
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.perfectoMobile.gesture.device.action.AbstractDefaultAction#
+     * _executeAction(org.openqa.selenium.WebDriver, java.util.List)
+     */
+    @Override
+    public boolean _executeAction( WebDriver webDriver, List<Object> parameterList )
+    {
+    	String executionId = getExecutionId( webDriver );
+		String deviceName = getDeviceName( webDriver );		
+		PerfectoMobile.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).device().lockScreen( executionId, deviceName );		
+        return true;
+    }
+
 }

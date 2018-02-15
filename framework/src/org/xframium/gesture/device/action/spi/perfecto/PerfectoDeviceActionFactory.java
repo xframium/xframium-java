@@ -63,6 +63,7 @@ public class PerfectoDeviceActionFactory implements DeviceActionFactory
 		DeviceActionManager.instance().registerAction( ActionType.COPY_FILE, CopyFileAction.class );
 		DeviceActionManager.instance().registerAction( ActionType.HOME, HomeAction.class );
 		DeviceActionManager.instance().registerAction( ActionType.FINGERPRINT, FingerPrintAction.class );
+		DeviceActionManager.instance().registerAction( ActionType.LOCK_SCREEN, LockScreenAction.class );
 	}
 
 }

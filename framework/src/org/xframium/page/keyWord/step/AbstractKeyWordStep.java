@@ -38,6 +38,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
 import javax.imageio.ImageIO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -69,11 +71,13 @@ import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordDriver.TRACE;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordToken;
 import org.xframium.page.keyWord.step.spi.KWSElse;
 import org.xframium.page.keyWord.step.spi.KWSLoopBreak;
+import org.xframium.page.keyWord.step.transform.ValueTransformationFactory;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextStep;
 import org.xframium.reporting.ExecutionContextTest;
@@ -99,7 +103,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         category = "Other";
     }
 
-
+    private String waitFor = null;
     /** The name. */
     private String name;
 
@@ -134,6 +138,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
     /** The inverse. */
     private boolean inverse = false;
+    
+    private boolean trace = false;
 
     /** The Constant SPLIT. */
     private static final String SPLIT = "-->";
@@ -181,6 +187,30 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     protected String kw;
     protected String natualLanguage;
     protected ApplicationVersion version;
+    
+    private String image;
+    
+    
+
+    public boolean isTrace()
+    {
+        return trace;
+    }
+
+    public void setTrace(boolean trace)
+    {
+        this.trace = trace;
+    }
+
+    public String getImage()
+    {
+        return image;
+    }
+
+    public void setImage(String image)
+    {
+        this.image = image;
+    }
 
     protected void addContext( String contextName, Object contextValue, Map<String,Object> contextMap, ExecutionContextTest eC )
     {
@@ -214,6 +244,16 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     
     
     
+    public String getWaitFor()
+    {
+        return waitFor;
+    }
+
+    public void setWaitFor(String waitFor)
+    {
+        this.waitFor = waitFor;
+    }
+
     public String getAppContext()
     {
         return appContext;
@@ -1020,16 +1060,73 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     {
                         if ( ((ReportiumProvider) webDriver).getReportiumClient() != null )
                         {
-                            ((ReportiumProvider) webDriver).getReportiumClient().testStep( getPageName() + "." + getName() + " (" + getClass().getSimpleName() + ")" );
+                            ((ReportiumProvider) webDriver).getReportiumClient().stepStart( getPageName() + "." + getName() + " (" + getClass().getSimpleName() + ")" );
                         }
                     }
                 }
 
-                
-                returnValue = _executeStep( pageObject, ((alternateWebDriver != null) ? alternateWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext );
-
+                try
+                {
+                    returnValue = _executeStep( pageObject, ((alternateWebDriver != null) ? alternateWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext );
+                }
+                finally
+                {
+                    if ( ((DeviceWebDriver) webDriver).getCloud().getProvider().equals( "PERFECTO" ) )
+                    {
+                        if ( ArtifactManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).isArtifactEnabled( ArtifactType.REPORTIUM.name() ) )
+                        {
+                            if ( ((ReportiumProvider) webDriver).getReportiumClient() != null )
+                            {
+                                ((ReportiumProvider) webDriver).getReportiumClient().stepEnd( "Finished: " + getClass().getSimpleName() );
+                            }
+                        }
+                    }
+                }
                 //
-                // If threshold was specified then make sure we cam in under it
+                // IF a waitFor verification step was specified, execute it
+                //
+                if ( returnValue && waitFor != null && !waitFor.trim().isEmpty() )
+                {
+                    String[] pData = waitFor.split("\\.");
+                    
+                    String eName = null;
+                    String pName = null;
+                    String sName = null;
+                    
+                    if ( pData.length >= 3 )
+                    {
+                        sName = pData[ 0 ];
+                        pName = pData[ 1 ];
+                        eName = pData[ 2 ];
+                    }
+                    else if ( pData.length == 2 )
+                    {
+                        sName = siteName;
+                        pName = pData[ 0 ];
+                        eName = pData[ 1 ];
+                    }
+                    else if ( pData.length == 1 )
+                    {
+                        sName = siteName;
+                        pName = pageName;
+                        eName = pData[ 0 ];
+                    }
+                    else
+                    {
+                        log.error( "waitFor element name specified incorrectly" );
+                    }
+                        
+                    if ( eName != null )
+                    {
+                        KeyWordStep verifyKeyword = KeyWordStepFactory.instance().createStep( eName, pName, true, "VISIBLE", null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, null, null, null, null, null, false, false, null, sName, null, null, null, null, true );
+                        verifyKeyword.setImage( "VERIFICATION" );
+                        if ( !verifyKeyword.executeStep(pageObject, ((alternateWebDriver != null) ? alternateWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext ) )
+                            throw new ScriptException( "Failed Verification step" );
+                    }
+                }
+                
+                //
+                // If threshold was specified then make sure we came in under it
                 //
                 if ( threshold > 0 )
                 {
@@ -1081,6 +1178,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 log.debug( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed ", e );
 
             }
+
 
             if ( inverse )
                 returnValue = !returnValue;
@@ -1236,6 +1334,22 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 
             }
             
+            //
+            // If tracing was enabled then perform a named dump state
+            //
+            if ( ( isTrace() || executionContext.getTest().getTrace().equals( TRACE.ON ) ) && !executionContext.getTest().getTrace().equals( TRACE.DISABLED ) )
+            {
+                try
+                {
+                    dumpState( alternateWebDriver != null ? alternateWebDriver : webDriver, contextMap, dataMap, executionContext, getPageName() + "." + getName() );
+                }
+                catch( Exception e )
+                {
+                    log.error( "Error acquiring TRACE data", e);
+                }
+            }
+                
+            
             executionContext.completeStep( stepStatus, stepException );
 
             if ( PageManager.instance( executionContext.getxFID() ).isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
@@ -1245,9 +1359,9 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             {
                 Throwable currentError = executionContext.getStepException();
                 switch ( sFailure )
-                {
+                {   
                     case ERROR:
-
+                        returnValue = false;
                         if ( executionContext.getFailedStep() == null )
                             executionContext.setFailedStep( this );
                         
@@ -1680,7 +1794,12 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         if ( returnValue == null )
             return "";
         else
-            return returnValue + "";
+        {
+            //
+            // Apply value transformation 
+            //
+            return ValueTransformationFactory.instance().transformValue( returnValue + "" );
+        }
     }
 
     /**
@@ -1696,30 +1815,31 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
      */
     public String getTokenValue( KeyWordToken token, Map<String, Object> contextMap, Map<String, PageData> dataMap, String xFID )
     {
+        String returnValue = null;
         switch ( token.getType() )
         {
             case CONTEXT:
-                return contextMap.get( token.getValue() ) + "";
+                returnValue = contextMap.get( token.getValue() ) + "";
+                break;
 
             case STATIC:
-                return token.getValue();
+                returnValue = token.getValue();
+                break;
 
             case PROPERTY:
-                String returnValue2 = null;
-                returnValue2 = System.getProperty( token.getValue(), "" );
-                if ( "".equals(returnValue2) )
-                    returnValue2 = KeyWordDriver.instance( xFID ).getConfigProperties().getProperty( token.getValue() );
+                returnValue = System.getProperty( token.getValue(), "" );
+                if ( "".equals(returnValue) )
+                    returnValue = KeyWordDriver.instance( xFID ).getConfigProperties().getProperty( token.getValue() );
                 
-                if ( returnValue2 == null )
-                    returnValue2 = "";
+                if ( returnValue == null )
+                    returnValue = "";
                 
-                return returnValue2;
-                
-                
+                break;
 
             case CONTENT:
-                return ContentManager.instance(xFID).getContentValue( token.getValue() + "" );
-
+                returnValue = ContentManager.instance(xFID).getContentValue( token.getValue() + "" );
+                break;
+                
             case DATA:
                 //
                 // We allow data to be overriden by context
@@ -1736,16 +1856,27 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     throw new ScriptConfigurationException( Thread.currentThread().getName() + ": The Page Data record type [" + tableName + "] does not exist for this test - chexk your dataProvider or dataDriver attribute" );
                 }
 
-                Object returnValue = pageData.getData( recordName );
+                Object rV = pageData.getData( recordName );
 
-                if ( returnValue == null )
+                if ( rV == null )
                     throw new ScriptConfigurationException(
                             Thread.currentThread().getName() + ": The Page Data field [" + recordName + "] does not exist for the page data record type [" + tableName + "] - Reference one of the following fields - " + pageData );
 
-                return returnValue + "";
+                returnValue = rV + "";
+                break;
 
             default:
                 throw new ScriptConfigurationException( Thread.currentThread().getName() + ": Unknown Token Type [" + token.getValue() + "]" );
+        }
+        
+        if ( returnValue == null )
+            return "";
+        else
+        {
+            //
+            // Apply value transformation 
+            //
+            return ValueTransformationFactory.instance().transformValue( returnValue + "" );
         }
     }
 
@@ -2055,8 +2186,12 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         this.waitTime = waitAfter;
     }
 
-
     public String dumpState(WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, ExecutionContextTest executionContext )
+    {
+        return dumpState(webDriver, contextMap, dataMap, executionContext, null);
+    }
+    
+    public String dumpState(WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, ExecutionContextTest executionContext, String useName )
     {
         String checkPointName = null;
         int historicalCount = -1;
@@ -2064,7 +2199,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
         File checkPointFolder = null;
 
-        checkPointName = getParameterValue( getParameter( "checkPointName" ), contextMap, dataMap, executionContext.getxFID() );
+        if ( useName != null )
+            checkPointName = useName;
+        else
+            checkPointName = getParameterValue( getParameter( "checkPointName" ), contextMap, dataMap, executionContext.getxFID() );
+        
         if ( checkPointName != null )
         {
             checkPointFolder = new File( DataManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getReportFolder(), "historicalComparison" );
@@ -2088,7 +2227,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         File screenFile = null;
         File domFile = null;
         File xpathFile = null;
-        ;
 
         if ( webDriver instanceof TakesScreenshot )
         {

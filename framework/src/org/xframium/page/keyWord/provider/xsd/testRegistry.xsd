@@ -49,6 +49,15 @@
     <attribute name="priority" type="int" use="optional" default="0" />
     <attribute name="severity" type="int" use="optional" default="0" />
     <attribute name="reliesOn" type="string" use="optional" />
+    <attribute name="trace" use="optional" default="OFF">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="ON" />
+          <enumeration value="OFF" />
+          <enumeration value="DISABLE" />
+        </restriction>
+      </simpleType>
+    </attribute>
   </complexType>
   <complexType name="xFunction">
     <sequence>
@@ -179,6 +188,8 @@
     <attribute name="deviceTags" type="string" use="optional" />
     <attribute name="version" type="string" use="optional" />
     <attribute name="appContext" type="string" use="optional" />
+    <attribute name="waitFor" type="string" use="optional" />
+    <attribute name="trace" type="boolean" use="optional" default="false" />
   </complexType>
   <complexType name="Token">
     <attribute name="type" use="optional">

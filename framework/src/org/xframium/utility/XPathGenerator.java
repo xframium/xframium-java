@@ -83,7 +83,7 @@ public class XPathGenerator
         {"UIAStatusBar", "XCUIElementTypeStatusBar"},
         {"UIASwitch", "XCUIElementTypeSwitch"},
         {"UIATabBar", "XCUIElementTypeTabBar"},
-        {"UIATableCell", "XCUIElementTypeTableColumn"},
+        {"UIATableCell", "XCUIElementTypeCell"},
         {"UIATableGroup", "XCUIElementTypeOther"},
         {"UIATableView", "XCUIElementTypeTable"},
         {"UIATextField", "XCUIElementTypeTextField"},

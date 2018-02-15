@@ -81,11 +81,12 @@ public abstract class AbstractPage implements Page
      */
     public void registerElement( ElementDescriptor elementDescriptor, Element currentElement )
     {
+        Element useElement = currentElement.cloneElement();
     	if ( log.isDebugEnabled() )
-    		log.debug( "Registering CACHED element using [" + elementDescriptor.toString() + "] as " + currentElement + " on " + getClass().getName() );
-    	elementCache.put( elementDescriptor.toString(), currentElement );
-    	elementList.add( currentElement );
-    	currentElement.setDriver( webDriver );
+    		log.debug( "Registering CACHED element using [" + elementDescriptor.toString() + "] as " + useElement + " on " + getClass().getName() );
+    	elementCache.put( elementDescriptor.toString(), useElement );
+    	elementList.add( useElement );
+    	useElement.setDriver( webDriver );
     }
     
     /**
@@ -162,7 +163,7 @@ public abstract class AbstractPage implements Page
      */
     protected KeyWordStep createStep( String keyword, String pageName, String elementName, String[] parameterList )
     {
-        KeyWordStep step = KeyWordStepFactory.instance().createStep( elementName, pageName, true, keyword, null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, keyword, null, null, null, null, false, false, null, null, null, null, null );
+        KeyWordStep step = KeyWordStepFactory.instance().createStep( elementName, pageName, true, keyword, null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, keyword, null, null, null, null, false, false, null, null, null, null, null, null, false );
         
         if ( parameterList != null )
         {
