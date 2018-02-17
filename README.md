@@ -1,3 +1,5 @@
+
+
 # xframium-java
 [xFramium](http://www.xframium.org) - Rapid unified test case development
 
@@ -26,27 +28,10 @@ Refer to the [contributing guidelines](https://github.com/xframium/xframium-java
 ## Versioning
 xFramium development adheres to the [the Semantic Versioning guidelines](http://semver.org/) as closely as possible for all release information.  All release can be found via the [download and release notes](http://xframium.org/download.html#rn) section of the xframium.org website.
 
-## Current Release
-1.0.3
+# BrowserStack
+Thanks to BrowserStack for sponsoring the xFramium initiative!  See the results of the xFramium integration tests on the BrowserStack platform below
 
-
-Hades
-8/1/2016
-
- - Added the operator keyword for evaluating multiple parameter based conditions (see OPERATOR Keyword)
- - Added the ability to specify the Driver Configuration via XML (see xFramium Schema)
- - Added more logging and reporting capabilities and formatting changes including historical reports and natural language output (see an example here)
- - Added BDD style definitions of test cases (see BDD)
- - Added ability to define matrix style tests to support Excel and SQL based tests
- - Added support for Perfectos upcoming cloud based Reporting Services (see Artifacts)
- - Added multi cloud support to allow for execution across devices in multiple cloud instances (see devices)
- - Added categorized failures. Each failure is placed in one of the following buckets
- -     Configuration: Indicates a configuration error in the script such as mispelled page name, element name or incorrect page data definitions
-   - Cloud: Indicates a cloud/device specific issue such as unable to connect
-   - Script: Indicates a script failure such as cant locate XPATH
-   - Application: Indicates a failure in the application
-   -  Fail: Indicate a general failure
- - Added multi cloud support to allow for execution across devices in multiple cloud instances (see devices)
+[![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=SHZaV3BGaXl3OWJRVVVOUld2YVF2VzNWcGxteVF1dm8rdUpVVERzbm5oST0tLWpmZlAzeVEzMkY2UDlqMXhTOGNhM3c9PQ==--5adfa07b72b025b5170c5a2b48ac3b1189ae7bb8)](https://www.browserstack.com/automate/public-build/SHZaV3BGaXl3OWJRVVVOUld2YVF2VzNWcGxteVF1dm8rdUpVVERzbm5oST0tLWpmZlAzeVEzMkY2UDlqMXhTOGNhM3c9PQ==--5adfa07b72b025b5170c5a2b48ac3b1189ae7bb8)
 
 ## Copyright and License
 

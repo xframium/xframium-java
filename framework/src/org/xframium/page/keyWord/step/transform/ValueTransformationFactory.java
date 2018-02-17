@@ -27,7 +27,12 @@ public class ValueTransformationFactory
         Matcher m = transformationPattern.matcher( value );
         
         if ( m.matches() )
-            return vMap.get( m.group( 1 ) ).transformValue( m.group( 2 ) );
+        {
+        	ValueTransformation vT = vMap.get( m.group( 1 ) );
+        	if ( vT == null )
+        		return value;
+            return vT.transformValue( m.group( 2 ) );
+        }
         else
             return value;
     }
