@@ -29,25 +29,29 @@ public class ReadPartitionQuery extends Command
         break;
 
       case (byte) 0x03:
-        switch (data[3])
-        {
-          case 0:
-            System.out.println ("QCode List not written yet");
-            break;
+          setReply (new ReadStructuredFieldCommand (screen.getTelnetState ()));      // build a QueryReply
+          typeName = "Read Partition (QueryList)";
+          break;
+          
+        // switch (data[3])
+        // {
+        //   case 0:
+        //     System.out.println ("QCode List not written yet");
+        //     break;
 
-          case 1:
-            System.out.println ("Equivalent + QCode List not written yet");
-            break;
+        //   case 1:
+        //     System.out.println ("Equivalent + QCode List not written yet");
+        //     break;
 
-          case 2:
-            setReply (new ReadStructuredFieldCommand (screen.getTelnetState ()));      // build a QueryReply
-            typeName = "Read Partition (QueryList)";
-            break;
+        //   case 2:
+        //     setReply (new ReadStructuredFieldCommand (screen.getTelnetState ()));      // build a QueryReply
+        //     typeName = "Read Partition (QueryList)";
+        //     break;
 
-          default:
-            System.out.printf ("Unknown query type: %02X%n", data[3]);
-        }
-        break;
+        //   default:
+        //     System.out.printf ("Unknown query type: %02X%n", data[3]);
+        // }
+        // break;
 
       default:
         System.out.printf ("Unknown ReadStructuredField type: %02X%n", data[2]);
