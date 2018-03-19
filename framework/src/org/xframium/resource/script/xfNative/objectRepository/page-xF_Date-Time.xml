@@ -24,7 +24,7 @@
       </element>
       <element name="xF-SelectedTimeZone" descriptor="COMPLEX">
         <element descriptor="XPATH" value="//UIATableCell[ contains( @name, '{timeZone}' ) ]" os="IOS" />
-        <element descriptor="XPATH" value="//android.widget.TextView[ @text='{timeZone}' ]" os="ANDROID" />
+        <element descriptor="XPATH" value="//android.widget.TextView[ @text='{timeZone}' ]|//android.widget.TextView[ @text='{timeZoneStatic}' ]" os="ANDROID" />
       </element>
       <element descriptor="XPATH" value="//android.widget.ImageButton[contains( @resource-id, 'next' )]" name="Next" />
       <element descriptor="XPATH" value="//android.widget.ImageButton[contains( @resource-id, 'prev' )]" name="Previous" />

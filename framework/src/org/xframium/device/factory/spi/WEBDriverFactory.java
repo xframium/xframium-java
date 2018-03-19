@@ -37,9 +37,12 @@ import org.xframium.Initializable;
 import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
+import org.xframium.device.cloud.CloudDescriptor.ProviderType;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.AbstractDriverFactory;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.reporting.ExecutionContext;
 import org.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc
@@ -131,6 +134,15 @@ public class WEBDriverFactory extends AbstractDriverFactory
                 for ( String name : ApplicationRegistry.instance( xFID ).getAUT().getCapabilities().keySet() )
                 	dc = setCapabilities(ApplicationRegistry.instance( xFID ).getAUT().getCapabilities().get( name ), dc, name);
 			}
+			
+			if ( ProviderType.BROWSERSTACK.equals( ProviderType.valueOf( useCloud.getProvider() ) ) )
+            {
+                dc.setCapability( "project", ExecutionContext.instance(xFID).getSuiteName() );
+                if ( KeyWordDriver.instance(xFID).getTags() != null )
+                    dc.setCapability( "build", KeyWordDriver.instance(xFID).getTags()[ 0 ] );
+                dc.setCapability( "name", currentDevice.getCapabilities().get( "_testName" ) );
+            }
+			
 
 			if ( useCloud.isEmbedded() )
 			{

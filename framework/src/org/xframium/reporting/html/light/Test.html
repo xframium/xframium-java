@@ -287,11 +287,11 @@ iframe {
                                         </div>
                                         <div class="panel-body">
                                             <ul class="list-group">
-                                                <li class="list-group-item" ng-repeat="p in selectedElement.parameterList">
-                                                    {{p}}
-                                                    <sup ng-if="selectedElement.step.parameterList[ $index ].name != 'null' && selectedElement.step.parameterList[ $index ].name != null && selectedElement.step.parameterList[ $index ].name != ''">({{selectedElement.step.parameterList[
+                                                <li class="list-group-item" ng-repeat="p in selectedElement.step.parameterList">
+                                                    {{p.value}}
+                                                    <sup ng-if="p[ $index ].name != 'null' && p[ $index ].name != null && p[ $index ].name != ''">({{p[
                                                         $index ].name}})</sup>
-                                                    <span class="badge">{{selectedElement.step.parameterList[$index ].type}}</span>
+                                                    <span class="badge">{{p[$index ].type}}</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -551,7 +551,7 @@ iframe {
                 //
                 // Allows a custom description 
                 //
-                messageText = '<span class="text-info">' + step.steabp.description + '</span>';
+                messageText = '<span class="text-info">' + step.step.description + '</span>';
             }
             else {
             	var imageName = step.step.kw;

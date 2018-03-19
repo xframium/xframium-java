@@ -464,25 +464,46 @@
           <parameter type="STATIC" name="Condition 2B" value="true" />
           <step name="xF-Automatic Time" site="xF_Native" page="xF_Date-Time" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" />
         </step>
+        
+              
         <step name="DATE" site="xF_Native" page="xF_Date-Time" type="STRING2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="localTimeZone">
           <parameter type="STATIC" name="Format" value="zzzz" />
           <parameter type="CONTEXT" name="Original Value" value="xF-Time" />
         </step>
         <step name="xF-TimeZone" site="xF_Native" page="xF_Date-Time" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+        
+          <step name="EMPTY" site="New Test" page="Search" type="STRING2" failureMode="IGNORE">
+            <parameter type="PROPERTY" name="Original Value" value="timeZone"/>
+            <step name="SET" page="LOGIN" type="CONTEXT" >
+              <parameter type="STATIC" name="Name" value="timeZoneStatic" />
+              <parameter type="CONTEXT" name="Value" value="localTimeZone" />
+            </step>
+            <step name="ELSE" page="LOGIN" type="ELSE" >
+              <step name="SET" page="LOGIN" type="CONTEXT" >
+                <parameter type="STATIC" name="Name" value="timeZoneStatic" />
+                <parameter type="PROPERTY" name="Value" value="timeZone" />
+              </step>
+            </step>
+          </step>
+              
           <step name="xF-SelectedTimeZone" site="xF_Native" page="xF_Date-Time" type="VISIBLE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE" os="ANDROID">
             <parameter type="STATIC" name="new parameter" value="10" />
             <parameter type="STATIC" name="new parameter" value="UP" />
             <token type="CONTEXT" name="timeZone" value="localTimeZone" />
+            <token type="CONTEXT" name="timeZoneStatic" value="timeZoneStatic" />
             <step name="Undefined" site="New Test" page="Search" type="ELSE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
               <step name="xF-SelectedTimeZone" site="xF_Native" page="xF_Date-Time" type="VISIBLE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
                 <parameter type="STATIC" name="new parameter" value="25" />
                 <parameter type="STATIC" name="new parameter" value="DOWN" />
                 <token type="CONTEXT" name="timeZone" value="localTimeZone" />
+                <token type="CONTEXT" name="timeZoneStatic" value="timeZoneStatic" />
               </step>
             </step>
-            <step name="xF-SelectedTimeZone" site="xF_Native" page="xF_Date-Time" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0">
-              <token type="CONTEXT" name="timeZone" value="localTimeZone" />
-            </step>
+            
+          </step>
+          <step name="xF-SelectedTimeZone" site="xF_Native" page="xF_Date-Time" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" os="ANDROID">
+            <token type="CONTEXT" name="timeZone" value="localTimeZone" />
+            <token type="CONTEXT" name="timeZoneStatic" value="timeZoneStatic" />
           </step>
           <step name="xF-TimeZoneSearch" site="xF_Native" page="xF_Date-Time" type="SET" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE" os="IOS">
             <parameter type="PROPERTY" name="timeZone" value="timeZone" />
