@@ -1,7 +1,15 @@
 package org.xframium.integrations.jira;
 
 import java.io.File;
+import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.util.List;
+
+import org.apache.http.HttpHost;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.xframium.integrations.jira.util.JIRAConnectorUtil;
 
 /**
  * Connector interface used for ZAPI(JIRA) connection
@@ -32,6 +40,7 @@ public interface JIRAConnector {
 	
 	public static final String JSON_CONTENT_TYPE = "application/json";
 	public static final int STATUS_OK = 200;
+	public static final String SECURED_URL_PREFIX = "https";
 	
 	
 	
@@ -114,5 +123,60 @@ public interface JIRAConnector {
 	 */
 	String getExecutionId(String testCycleID, String issueKey) throws Exception;
 	
+	
+	/**
+	 * Creates an HTTPClient to make rest request
+	 * @param url
+	 * @param useProxy
+	 * @param proxyHost
+	 * @return
+	 * @throws Exception
+	 */
+	static HttpClient getHttpClient(String url, boolean useProxy, HttpHost proxyHost) throws Exception{
+		HttpClient client  = null;
+		if(url.startsWith(SECURED_URL_PREFIX))
+			client = HttpClients.custom().setSSLContext(JIRAConnectorUtil.getMockCertificate()).build();
+		else
+			client = HttpClientBuilder.create().build();
+		
+		if (useProxy)
+			client = HttpClientBuilder.create().setProxy(proxyHost).build();
+		
+		return client;
+	}
+	
+	
+	/**
+	 * Based on the URL, it will create HTTP/HTTPS connections.
+	 * @param url
+	 * @param credentials
+	 * @param useProxy
+	 * @param proxy
+	 * @return
+	 * @throws Exception
+	 */
+	static HttpURLConnection getHttpConnection(String url, String credentials, boolean useProxy, Proxy proxy) throws Exception{
+		HttpURLConnection httpUrlConn = null;
+		
+		if(url.startsWith(SECURED_URL_PREFIX)){
+			
+			if (useProxy)
+				httpUrlConn = JIRAConnectorUtil.getHttpsURLConnection(url, HTTPMethod.GET, credentials,
+						useProxy, proxy);
+			else
+				httpUrlConn = JIRAConnectorUtil.getHttpsURLConnection(url, HTTPMethod.GET, credentials,
+						useProxy, null);
+		}else{
+			
+			if (useProxy)
+				httpUrlConn = JIRAConnectorUtil.getHttpURLConnection(url, HTTPMethod.GET, credentials, useProxy,
+						proxy);
+			else
+				httpUrlConn = JIRAConnectorUtil.getHttpURLConnection(url, HTTPMethod.GET, credentials, useProxy,
+						null);	
+		}
 
+		return httpUrlConn;
+	}
+	
 }
