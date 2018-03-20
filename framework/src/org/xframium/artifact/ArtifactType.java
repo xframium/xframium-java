@@ -103,7 +103,8 @@ public enum ArtifactType
     TIMING_HTML( 32, "TIMING_HTML", "xFramium Test Timing Report" ),
     STATISTICS( 33, "STATISTICS", "Device Statistics" ),
     JIRA_UPDATE_STATUS( 34, "JIRA_UPDATE_STATUS", "Update Execution Staus To JIRA" ),
-    ASSETS( 35, "ASSETS", "Cache the xFramium HTML Report assets" )
+    ASSETS( 35, "ASSETS", "Cache the xFramium HTML Report assets" ),
+    ALL_IN_ONE( 36, "ALL_IN_ONE", "Creates an self contained single test report for distributions referencing external artifacts" )
     ;
     
     /** The time. */

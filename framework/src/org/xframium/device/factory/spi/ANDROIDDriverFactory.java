@@ -99,7 +99,7 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
             if ( ProviderType.BROWSERSTACK.equals( ProviderType.valueOf( useCloud.getProvider() ) ) )
             {
                 dc.setCapability( "project", ExecutionContext.instance(xFID).getSuiteName() );
-                if ( KeyWordDriver.instance(xFID).getTags() != null )
+                if ( KeyWordDriver.instance(xFID).getTags() != null && KeyWordDriver.instance(xFID).getTags().length > 0 )                	
                     dc.setCapability( "build", KeyWordDriver.instance(xFID).getTags()[ 0 ] );
                 dc.setCapability( "name", currentDevice.getCapabilities().get( "_testName" ) );
             }
