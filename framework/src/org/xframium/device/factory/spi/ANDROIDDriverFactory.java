@@ -101,6 +101,7 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
                 dc.setCapability( "project", ExecutionContext.instance(xFID).getSuiteName() );
                 if ( KeyWordDriver.instance(xFID).getTags() != null )
                     dc.setCapability( "build", KeyWordDriver.instance(xFID).getTags()[ 0 ] );
+                dc.setCapability( "name", currentDevice.getCapabilities().get( "_testName" ) );
             }
 			
             URL hubUrl = new URL( useCloud.getCloudUrl( dc ) );

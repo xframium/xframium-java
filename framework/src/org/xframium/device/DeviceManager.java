@@ -462,6 +462,8 @@ public class DeviceManager
                     if ( testPackage.getTestName().getPersonaName() != null && !testPackage.getTestName().getPersonaName().isEmpty() )
                         currentDevice.addCapability( "windTunnelPersona", testPackage.getTestName().getPersonaName(), "STRING" );
                     
+                    currentDevice.addCapability( "_testName", testPackage.getTestName().getTestName(), "STRING" );
+                    
                     webDriver = DriverManager.instance().getDriverFactory( currentDevice.getDriverType() ).createDriver( currentDevice, testPackage.getxFID() );
                     
                     if ( webDriver != null )

@@ -146,5 +146,10 @@ public class VisualWebElement implements WebElement
     {
         return null;
     }
+    
+    public String toString()
+    {
+    	return location == null ? "NO LOCATION DATA" : location.toString() + " - " + size == null ? "NO SIZING DATA" : size.toString();
+    }
 
 }
