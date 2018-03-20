@@ -789,9 +789,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     log.debug( Thread.currentThread().getName() + ": CONTEXT element found as " + currentElement );
 
                 ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance( executionContext.getxFID() ).getSiteName(), getPageName(), elementName );
-                Element myElement = pageObject.getElement( elementDescriptor ).cloneElement();
-                
+                Element originalElement = pageObject.getElement( elementDescriptor );
+                if ( originalElement == null )
+                    throw new ObjectConfigurationException( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance( executionContext.getxFID() ).getSiteName(), getPageName(), elementName );
 
+                Element myElement = originalElement.cloneElement();
                 if ( myElement == null )
                 {
                     log.error( Thread.currentThread().getName() + ": **** COULD NOT LOCATE ELEMENT [" + elementDescriptor.toString() + "]  Make sure your Page Name and Element Name are spelled correctly and that they have been defined" );
@@ -822,7 +824,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     log.info( Thread.currentThread().getName() + ": Cloning Element " + useName + " on page " + pageName );
 
                 ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance( executionContext.getxFID() ).getSiteName(), pageName, useName );
-                Element originalElement = pageObject.getElement( elementDescriptor ).cloneElement();
+                
+                Element originalElement = pageObject.getElement( elementDescriptor );
                 if ( originalElement == null )
                     throw new ObjectConfigurationException( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance( executionContext.getxFID() ).getSiteName(), pageName, useName );
 
