@@ -65,6 +65,11 @@ public class ConsoleKeyPress implements EventHandler<KeyEvent>
           keyEvent.consume ();
           break;
 
+        case C:
+          consolePane.sendAID (AIDCommand.AID_CLEAR, "CLR");
+          keyEvent.consume ();
+          break;
+
         case H:                   // OSX ctrl-h conflicts with Hide Windows command
           cursor.home ();
           keyEvent.consume ();
@@ -109,6 +114,11 @@ public class ConsoleKeyPress implements EventHandler<KeyEvent>
       {
         case H:
           cursor.home ();
+          keyEvent.consume ();
+          break;
+          
+        case C:
+          consolePane.sendAID (AIDCommand.AID_CLEAR, "CLR");
           keyEvent.consume ();
           break;
 
