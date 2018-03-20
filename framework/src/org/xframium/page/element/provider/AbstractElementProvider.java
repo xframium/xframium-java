@@ -124,7 +124,7 @@ public abstract class AbstractElementProvider implements ElementProvider
             siteList.add( siteContainer );
         }
         
-        siteContainer.getPage( pageName ).getActivityList().add( pageActivity );
+        siteContainer.getPage( pageName, null ).getActivityList().add( pageActivity );
         
         
     }
@@ -137,7 +137,7 @@ public abstract class AbstractElementProvider implements ElementProvider
 	 */
 	protected abstract Element _getElement( ElementDescriptor elementDescriptor	 );
 	
-	protected boolean validateElement( ElementDescriptor elementDescriptor, Element currentElement ) throws Exception
+	protected boolean validateElement( ElementDescriptor elementDescriptor, Element currentElement, String className ) throws Exception
 	{
 	    SiteContainer siteContainer = siteTree.get( elementDescriptor.getSiteName() );
 	    
@@ -148,7 +148,7 @@ public abstract class AbstractElementProvider implements ElementProvider
 	        siteList.add( siteContainer );
 	    }
 	    
-	    PageContainer elementList = siteContainer.getPage( elementDescriptor.getPageName() );
+	    PageContainer elementList = siteContainer.getPage( elementDescriptor.getPageName(), className );
 	    elementList.getElementList().add( currentElement );
 	    
 	    

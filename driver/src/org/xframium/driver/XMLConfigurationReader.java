@@ -461,7 +461,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                                 siteList.add( siteContainer );
                             }
                             
-                            PageContainer elementList = siteContainer.getPage( elementDescriptor.getPageName() );
+                            PageContainer elementList = siteContainer.getPage( elementDescriptor.getPageName(), page.getClazz() );
                             elementList.getElementList().add( currentElement );
                             
                             elementMap.put(elementDescriptor.toString(), currentElement );

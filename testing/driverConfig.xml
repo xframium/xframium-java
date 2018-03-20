@@ -1,10 +1,10 @@
 <xFramium xmlns="http://www.xframium.org/xFramiumDriver" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/xFramiumDriver http://www.xframium.org/xsd/xFramiumDriver.xsd">
-  <cloud provider="XML" fileName="cloudRegistry.xml" name="grid" />
+  <cloud provider="XML" fileName="cloudRegistry.xml" name="browserstack" />
   <application provider="XML" fileName="applicationRegistry.xml" name="xTest" />
   <devices provider="LOCAL">
-    <device browserName="firefox" model="Firefox" manufacturer="Mozilla" availableDevices="5" driverType="WEB" name="windows_nt firefox" cloud="grid" active="true" />
+    <device browserName="firefox" model="Firefox" manufacturer="Mozilla" availableDevices="5" driverType="WEB" name="windows_nt firefox" cloud="grid" active="false" />
     <device browserName="firefox" model="Firefox" manufacturer="Mozilla" availableDevices="5" driverType="WEB" name="windows_nt firefox b" cloud="browserstack" active="true" />
-    <device browserName="chrome" os="WIN8_1" model="Chrome" manufacturer="Google" availableDevices="5" driverType="WEB" name="windows_nt chrome" cloud="grid" active="true" />
+    <device browserName="chrome" os="WIN8_1" model="Chrome" manufacturer="Google" availableDevices="5" driverType="WEB" name="windows_nt chrome" cloud="grid" active="false" />
     <device browserName="chrome" os="WIN8_1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Chrome Local" cloud="grid" active="false" />
     <device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Windows 8.1 chrome 53" cloud="saucelabs" active="true" />
     <device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Chrome SauceLabs" cloud="saucelabs" active="false" />
@@ -47,6 +47,7 @@
     <artifact type="TIMING_HTML" />
     <artifact type="DEBUGGER" />
     <artifact type="STATISTICS" />
+    <artifact type="ALL_IN_ONE" />
     <extractor name="ANCHOR" descriptor="//a[@href!='#']">
       <description>HTML anchor tags</description>
     </extractor>

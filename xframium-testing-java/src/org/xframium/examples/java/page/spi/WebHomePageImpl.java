@@ -20,8 +20,14 @@
  *******************************************************************************/
 package org.xframium.examples.java.page.spi;
 
+import java.util.concurrent.TimeUnit;
+
+import org.testng.Assert;
 import org.xframium.examples.java.page.WebHomePage;
 import org.xframium.page.AbstractPage;
+import org.xframium.page.StepStatus;
+import org.xframium.page.keyWord.KeyWordPage;
+import org.xframium.page.keyWord.step.spi.KWSCompare2.CompareType;
 
 public class WebHomePageImpl extends AbstractPage implements WebHomePage
 {
@@ -36,7 +42,21 @@ public class WebHomePageImpl extends AbstractPage implements WebHomePage
     {
         try
         {
-            executeStep( "COMPARE2", "page", "element", new String[ 0 ]);
+            
+            //
+            // Optionally start a step container to allowing for reporting structure
+            //
+            String beforeClick = getElement( WebHomePage.TOGGLE_VALUE ).getValue();
+            getElement( WebHomePage.TOGGLE_BUTTON ).click();
+            String afterClick = getElement( WebHomePage.TOGGLE_VALUE ).getValue();
+            
+            Assert.assertNotEquals( afterClick,  beforeClick );
+            
+            String typeAttribute = getElement( WebHomePage.TOGGLE_BUTTON ).getAttribute( "type" );
+            
+            Assert.assertFalse( getElement( WebHomePage.DELETE_BUTTON ).isVisible() );
+            getElement( WebHomePage.ACCORDIAN_OPEN ).click();
+            Assert.assertTrue( getElement( WebHomePage.DELETE_BUTTON ).waitForVisible( 12, TimeUnit.SECONDS ) );
             
         }
         catch( Exception e )

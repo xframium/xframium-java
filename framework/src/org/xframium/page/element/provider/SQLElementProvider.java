@@ -160,7 +160,7 @@ public class SQLElementProvider
                 if ( log.isInfoEnabled() )
                     log.info( "Adding SQL Element using [" + elementDescriptor.toString() + "] as [" + currentElement );
                 
-                elementsRead = elementsRead & validateElement( elementDescriptor, currentElement );
+                elementsRead = elementsRead & validateElement( elementDescriptor, currentElement, null );
                 elementMap.put(elementDescriptor.toString(), currentElement );
             }
             

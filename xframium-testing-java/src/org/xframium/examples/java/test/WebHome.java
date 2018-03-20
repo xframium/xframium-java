@@ -125,7 +125,7 @@ public class WebHome extends AbstractJavaTest
         // Specify your xFramium configuration file here as TXT or XML
         //
         
-        File configurationFile = new File( "resources\\driverConfig.xml" );
+        File configurationFile = new File( "resources" + System.getProperty( "file.separator" ) + "driverConfig.xml" );
         System.out.println( configurationFile.getAbsolutePath() );
         
         if ( configurationFile.getName().toLowerCase().endsWith( ".xml" ) )
@@ -177,7 +177,7 @@ public class WebHome extends AbstractJavaTest
         
         
         
-        Assert.assertTrue( (Boolean) executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + beforeClick, "Value Two==" + afterClick }, webDriver ).get( "RESULT" ) );
+        Assert.assertFalse( (Boolean) executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + beforeClick, "Value Two==" + afterClick }, webDriver ).get( "RESULT" ) );
         dumpState( webDriver );
         
         stopStep( testName, StepStatus.SUCCESS, null );
@@ -275,8 +275,6 @@ public class WebHome extends AbstractJavaTest
         webDriver.findElement( By.xpath( "//button[text()='Toggle Value']" ) ).click();
         String afterClick = webDriver.findElement( By.id( "singleModel" ) ).getText();
         
-        Assert.assertTrue( false );
-        
         Assert.assertFalse( (Boolean) executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + beforeClick, "Value Two==" + afterClick }, webDriver ).get( "RESULT" ) );
         dumpState( webDriver );
         
@@ -288,14 +286,14 @@ public class WebHome extends AbstractJavaTest
         String typeAttribute = webDriver.findElement( By.xpath( "//button[text()='Toggle Value']" ) ).getAttribute( "type" );
         Assert.assertTrue( (Boolean) executeStep( "COMPARE2", "Step One", CompareType.STRING.name(), new String[] { "Value One==" + typeAttribute, "Value Two==button" }, webDriver ).get( "RESULT" ) );
         stopStep( testName, StepStatus.SUCCESS, null );
-        dumpState( webDriver, "afterAttribute", 5, 5 );
+        dumpState( webDriver, "afterAttribute", 5, 50 );
         
         startStep( testName, "Step Three", "Testing Wait For" );
         Assert.assertFalse( webDriver.findElement( By.id( "deleteButton" ) ).isDisplayed() );
         webDriver.findElement( By.xpath( "//div[@id='aOpen']//a" ) ).click();
         Assert.assertTrue( new WebDriverWait( webDriver, 12 ).ignoring( NotFoundException.class ).until( ExpectedConditions.visibilityOfElementLocated( By.id( "deleteButton" ) ) ).isDisplayed() );
         stopStep( testName, StepStatus.SUCCESS, null );
-        dumpState( webDriver, "afterWaitFor", 2, 5 );
+        dumpState( webDriver, "afterWaitFor", 2, 50 );
 
     }
     
