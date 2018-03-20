@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    xFramium
+   
+    Copyright 2017 by Moreland Labs LTD (http://www.morelandlabs.com)
+   
+    Some open source application is free software: you can redistribute 
+    it and/or modify it under the terms of the GNU General Public 
+    License as published by the Free Software Foundation, either 
+    version 3 of the License, or (at your option) any later version.
+     
+    Some open source application is distributed in the hope that it will 
+    be useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
+    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+     
+    You should have received a copy of the GNU General Public License
+    along with xFramium.  If not, see <http://www.gnu.org/licenses/>.
+   
+    @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>
+ -->
+
+<data>
+  <recordType name="callTest">
+    <record active="true" name="one" value="one" height="100" length="25" />
+  </recordType>
+  
+  <recordType name="dataLoop">
+    <record name="one" value="one" />
+    <record name="two" value="two" />
+    <record name="three" value="three" />
+  </recordType>
+  
+  <recordType name="parentData">
+    <record name="one" value="one" childRecord="|childRecords:[value='childOne']|" />
+    <record name="two" value="two" childRecord="|childRecords:[value='childTwo']|" />
+    <record name="two" value="two" childRecord="|childRecords:[value='childTwo']|" />
+  </recordType>
+  
+  <recordType name="childRecords">
+    <record name="childOne" value="childOne" loopData="|dataLoop|" />
+    <record name="childTwo" value="childTwo" loopData="|dataLoop:[value='two']|" />
+  </recordType>
+  
+  <recordType name="authData" >
+    <record name="userOne" active="true" userName="allen" password="secret" ssn="123456789" />
+    <record name="userOne" active="true" userName="bob" password="secret" ssn="123456789" />
+    <record name="userOne" active="true" userName="kevin" password="secret" ssn="123456789" />
+    <record name="userOne" active="true" userName="rich" password="secret" ssn="123456789" />
+  </recordType>
+  
+  
+</data>

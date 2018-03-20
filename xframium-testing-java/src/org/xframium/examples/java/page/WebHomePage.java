@@ -21,6 +21,7 @@
 package org.xframium.examples.java.page;
 
 import org.xframium.page.Page;
+import org.xframium.page.data.PageData;
 
 public interface WebHomePage extends Page
 {
@@ -37,4 +38,6 @@ public interface WebHomePage extends Page
     public static final String DELETE_BUTTON = "deleteButton";
     
     public void testKeyword();
+    
+    public void testKeywordWithData( PageData pageData );
 }

@@ -11,7 +11,6 @@
     <propertyAdapter className="org.xframium.device.property.SeleniumPropertyAdapter" />
     <artifact type="FAILURE_SOURCE" />
     <artifact type="DEVICE_LOG" />
-    <artifact type="WCAG_REPORT" />
     <artifact type="EXECUTION_RECORD_HTML" />
     <artifact type="EXECUTION_RECORD_JSON" />
     <artifact type="CONSOLE_LOG" />
@@ -22,9 +21,13 @@
   </driver>
   <model provider="XML" siteName="xTest" fileName="page-home.xml" />
   <suite provider="LOCAL">
-    <test name="Call Function" timed="false" threshold="0" active="true" priority="1" severity="1">
+    <test name="Call Function" timed="false" threshold="0" active="true" priority="1" severity="1" dataProvider="authData">
       <description>Calls a simple JAVA based function</description>
       <step type="FUNCTION" name="testKeyword" page="WebHomePage" />
+      <step type="FUNCTION" name="testKeywordWithData" page="WebHomePage">
+        <parameter type="STATIC" value="data{authData}" />
+      </step>
     </test>
   </suite>
+  <data provider="XML" fileName="pageData.xml" />
 </xFramium>

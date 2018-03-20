@@ -25,9 +25,7 @@ import java.util.concurrent.TimeUnit;
 import org.testng.Assert;
 import org.xframium.examples.java.page.WebHomePage;
 import org.xframium.page.AbstractPage;
-import org.xframium.page.StepStatus;
-import org.xframium.page.keyWord.KeyWordPage;
-import org.xframium.page.keyWord.step.spi.KWSCompare2.CompareType;
+import org.xframium.page.data.PageData;
 
 public class WebHomePageImpl extends AbstractPage implements WebHomePage
 {
@@ -38,14 +36,22 @@ public class WebHomePageImpl extends AbstractPage implements WebHomePage
 
     }
     
+    public void testKeywordWithData( PageData pageData )
+    {
+    		String beforeClick = getElement( WebHomePage.TOGGLE_VALUE ).getValue();
+        getElement( WebHomePage.TOGGLE_BUTTON ).click();
+        String afterClick = getElement( WebHomePage.TOGGLE_VALUE ).getValue();
+        
+        Assert.assertNotEquals( afterClick,  beforeClick );
+        
+        System.out.println( pageData );
+    }
+    
     public void testKeyword()
     {
         try
         {
             
-            //
-            // Optionally start a step container to allowing for reporting structure
-            //
             String beforeClick = getElement( WebHomePage.TOGGLE_VALUE ).getValue();
             getElement( WebHomePage.TOGGLE_BUTTON ).click();
             String afterClick = getElement( WebHomePage.TOGGLE_VALUE ).getValue();
