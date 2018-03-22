@@ -8,6 +8,7 @@
   <element name="xFramium" type="tns:xFramiumRoot" />
   <complexType name="xFramiumRoot">
     <sequence>
+      <element name="references" type="tns:xReferences" minOccurs="0" maxOccurs="1" />
       <element name="cloud" type="tns:xCloud" minOccurs="1" maxOccurs="1" />
       <element name="application" type="tns:xApplication" minOccurs="1" maxOccurs="1" />
       <element name="devices" type="tns:xDevices" minOccurs="1" maxOccurs="1" />
@@ -22,6 +23,29 @@
       <element name="favorites" type="string" minOccurs="0" maxOccurs="1" />
     </sequence>
   </complexType>
+  <complexType name="xReferences">
+    <annotation>
+        <documentation>Defines a list references to external driver configuration files</documentation>
+    </annotation>
+    <sequence>
+      <element name="reference" type="tns:xReference" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+  </complexType>
+  
+  <complexType name="xReference">
+    <annotation>
+        <documentation>Defines a reference to an external driver config file</documentation>
+    </annotation>
+    <attribute name="fileName" type="string" use="required" />
+    <attribute name="tests" type="boolean" use="optional" default="false" />
+    <attribute name="functions" type="boolean" use="optional" default="true" />
+    <attribute name="elements" type="boolean" use="optional" default="true" />
+    <attribute name="applications" type="boolean" use="optional" default="false" />
+    <attribute name="devices" type="boolean" use="optional" default="false" />
+    <attribute name="data" type="boolean" use="optional" default="false" />
+    <attribute name="active" type="boolean" use="optional" default="true" />
+  </complexType>
+  
   <complexType name="xSecurity">
     <annotation>
         <documentation>Defines elements needed for securing the configuration files.</documentation>

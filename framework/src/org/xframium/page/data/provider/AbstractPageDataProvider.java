@@ -63,6 +63,18 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 
 	private Map<String,String> overrideMap = new HashMap<String,String>( 20 ); 
 	
+	public void addPageData( PageDataProvider dP )
+	{
+		if ( dP instanceof AbstractPageDataProvider )
+		{
+			recordMap.putAll( ( (AbstractPageDataProvider) dP ).recordMap );
+			idMap.putAll( ( (AbstractPageDataProvider) dP ).idMap );
+			allRecordMap.putAll( ( (AbstractPageDataProvider) dP ).allRecordMap );
+			overrideMap.putAll( ( (AbstractPageDataProvider) dP ).overrideMap );
+			pC.addAll( ( (AbstractPageDataProvider) dP ).pC );
+		}
+	}
+	
 	public String toString()
 	{
 	    StringBuilder sB = new StringBuilder();
@@ -76,6 +88,8 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	    
 	    return sB.toString();
 	}
+	
+	
 	
 	/**
 	 * Populate trees.

@@ -92,6 +92,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     public abstract CloudContainer configureCloud( boolean secured );
 
     protected abstract boolean configureProxy();
+    protected abstract boolean readReferences( SuiteContainer sC );
 
     public abstract ApplicationContainer configureApplication();
 
@@ -306,6 +307,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             eP.addElementProvider( internalObjectRepository );
             
             
+            
             PageManager.instance( xFID ).setSiteName( sC.getSiteName() );
             log.info( "Extracted " + sC.getTestList().size() + " test cases (" + sC.getActiveTestList().size() + " active)" );
 
@@ -323,10 +325,13 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
 	            		}
 	            }
             }
+            PageManager.instance( xFID ).setElementProvider( eP );
+            
+            readReferences( sC );
             
             KeyWordDriver.instance( xFID ).loadTests( sC );
             
-            PageManager.instance( xFID ).setElementProvider( eP );
+            
             
 
             log.info( "Artifact: Configuring Artifact Production" );

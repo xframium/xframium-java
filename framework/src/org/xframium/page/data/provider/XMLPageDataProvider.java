@@ -63,6 +63,8 @@ public class XMLPageDataProvider extends AbstractPageDataProvider
 	private byte[] resourceData;
 	
 	private boolean asResource = false;
+	
+	
 
 	/**
 	 * Instantiates a new XML page data provider.
