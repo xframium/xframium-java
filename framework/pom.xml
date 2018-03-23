@@ -1,6 +1,5 @@
-<!-- xFramium Copyright 2016 by Moreland Labs, Ltd. (http://www.morelandlabs.com) Some open source application is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, 
-  either version 3 of the License, or (at your option) any later version. Some open source application is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-  PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with Foobar. If not, see <http://www.gnu.org/licenses/>. @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+> -->
+<!-- xFramium Copyright 2016 by Moreland Labs, Ltd. (http://www.morelandlabs.com) Some open source application is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. Some open source application is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
+  PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with Foobar. If not, see <http://www.gnu.org/licenses/>. @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+> -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.xframium</groupId>
@@ -112,6 +111,11 @@
       <version>3.6.0</version>
     </dependency>
     <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>0.9.11</version>
+    </dependency>
+    <dependency>
       <groupId>io.appium</groupId>
       <artifactId>java-client</artifactId>
       <version>5.0.4</version>
@@ -187,6 +191,11 @@
       <groupId>com.perfectomobile</groupId>
       <artifactId>http-client</artifactId>
       <version>10.10.0.4</version>
+    </dependency>
+    <dependency>
+      <groupId>info.cukes</groupId>
+      <artifactId>cucumber-java</artifactId>
+      <version>1.2.5</version>
     </dependency>
     <dependency>
       <groupId>info.cukes</groupId>

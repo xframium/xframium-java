@@ -20,12 +20,14 @@
  *******************************************************************************/
 package org.xframium.page.keyWord;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
@@ -84,6 +86,8 @@ public class KeyWordDriver
 
     private List<String> tagList = new ArrayList<String>( 4 );
     
+    private Map<String,GherkinContainer> methodMap = new HashMap<String,GherkinContainer>( 25 );
+    
     public enum TRACE
     {
         OFF,
@@ -92,6 +96,11 @@ public class KeyWordDriver
     }
     
     private TRACE trace = TRACE.OFF;
+    
+    public Map<String,GherkinContainer> getMethodMap()
+    {
+    		return methodMap;
+    }
     
     public void addTag( String tagName )
     {

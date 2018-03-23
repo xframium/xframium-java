@@ -20,16 +20,21 @@
  *******************************************************************************/
 package org.xframium.examples.java.page.spi;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import org.testng.Assert;
 import org.xframium.examples.java.page.WebHomePage;
 import org.xframium.page.AbstractPage;
 import org.xframium.page.data.PageData;
+import org.xframium.page.keyWord.provider.GherkinKeyWordProvider;
 
+import cucumber.api.java.en.Then;
+import cucumber.runtime.java.StepDefAnnotation;
+
+@StepDefAnnotation
 public class WebHomePageImpl extends AbstractPage implements WebHomePage
 {
-
     public void initializePage()
     {
         // TODO Auto-generated method stub
@@ -67,11 +72,11 @@ public class WebHomePageImpl extends AbstractPage implements WebHomePage
         }
         catch( Exception e )
         {
-            
+            e.printStackTrace();
         }
-        
-        
-        
     }
-
+    
+    
+    
+    
 }

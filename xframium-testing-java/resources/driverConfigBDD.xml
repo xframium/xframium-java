@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- xFramium Copyright 2017 by Moreland Labs LTD (http://www.morelandlabs.com) Some open source application is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. Some open source application is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+  PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with xFramium. If not, see <http://www.gnu.org/licenses/>. @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+> -->
+<xFramium xmlns="http://www.xframium.org/xFramiumDriver" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/xFramiumDriver http://www.xframium.org/xsd/xFramiumDriver.xsd">
+  <cloud provider="XML" fileName="cloudRegistry.xml" name="saucelabs" />
+  <application provider="XML" name="xTest" fileName="applicationRegistry.xml" />
+  <devices provider="XML" fileName="deviceRegistry.xml">
+  </devices>
+  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" >
+    <property name="selenium.timeouts.implicitWait">5000</property>
+    <property name="gherkin.packages">org.xframium.examples</property>
+    <propertyAdapter className="org.xframium.device.property.SeleniumPropertyAdapter" />
+    <artifact type="FAILURE_SOURCE" />
+    <artifact type="DEVICE_LOG" />
+    <artifact type="EXECUTION_RECORD_HTML" />
+    <artifact type="EXECUTION_RECORD_JSON" />
+    <artifact type="CONSOLE_LOG" />
+    <artifact type="GRID_REPORT" />
+    <artifact type="TAB_WEBHOME" />
+    <artifact type="SAUCE_LABS" />
+    <artifact type="REPORTIUM" />
+  </driver>
+  <model provider="XML" siteName="xTest" fileName="page-home.xml" />
+  <suite provider="GHERKIN" fileName="." />
+
+  <data provider="XML" fileName="pageData.xml" />
+</xFramium>

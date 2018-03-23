@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.page.keyWord.KeyWordStep;
@@ -65,6 +66,7 @@ import org.xframium.page.keyWord.step.spi.KWSFocus;
 import org.xframium.page.keyWord.step.spi.KWSFork;
 import org.xframium.page.keyWord.step.spi.KWSFunction;
 import org.xframium.page.keyWord.step.spi.KWSGesture;
+import org.xframium.page.keyWord.step.spi.KWSGherkin;
 import org.xframium.page.keyWord.step.spi.KWSLoop;
 import org.xframium.page.keyWord.step.spi.KWSMath;
 import org.xframium.page.keyWord.step.spi.KWSMouse;
@@ -86,6 +88,7 @@ import org.xframium.page.keyWord.step.spi.KWSVisual;
 import org.xframium.page.keyWord.step.spi.KWSWait;
 import org.xframium.page.keyWord.step.spi.KWSWaitFor;
 import org.xframium.page.keyWord.step.spi.KWSWindow;
+
 import com.xframium.serialization.SerializationManager;
 import com.xframium.serialization.json.ReflectionSerializer;
 
@@ -211,6 +214,7 @@ public class KeyWordStepFactory
         addKeyWord( "DEBUG", KWSDebug.class );
         addKeyWord( "CONTEXT", KWSContext.class );
         addKeyWord( "ACCESSIBILITY", KWSAccessibility.class );
+        addKeyWord( "GHERKIN", KWSGherkin.class );
     }
 
     /**

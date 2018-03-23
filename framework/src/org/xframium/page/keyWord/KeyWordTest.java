@@ -299,7 +299,7 @@ public class KeyWordTest
         String keyName = testName + "." + attributeName;
         if ( System.getProperty( keyName ) != null )
             return System.getProperty( keyName );
-        if ( overrideMap.containsKey( keyName ) )
+        if ( overrideMap != null && overrideMap.containsKey( keyName ) )
             return overrideMap.get( keyName );
         else
             return attributeValue;

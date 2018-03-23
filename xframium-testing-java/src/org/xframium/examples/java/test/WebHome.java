@@ -25,8 +25,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NotFoundException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -51,6 +53,8 @@ import org.xframium.page.StepStatus;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.step.spi.KWSCompare2.CompareType;
 import org.xframium.reporting.ExecutionContextStep;
+
+import cucumber.api.java.en.Then;
 
 public class WebHome extends AbstractJavaTest
 {
@@ -195,6 +199,42 @@ public class WebHome extends AbstractJavaTest
         stopStep( testName, StepStatus.SUCCESS, null );
         dumpState( webDriver, "afterWaitFor", 2, 5 );
 
+    }
+    
+    @Then( "^I call method one$")
+    public void cucumberMethodOne( WebDriver webDriver )
+    {
+    		try
+        {
+    			WebHomePage wPage = (WebHomePage) createPage( WebHomePage.class, (DeviceWebDriver) webDriver );
+            String beforeClick = wPage.getElement( WebHomePage.TOGGLE_VALUE ).getValue();
+            wPage.getElement( WebHomePage.TOGGLE_BUTTON ).click();
+            String afterClick = wPage.getElement( WebHomePage.TOGGLE_VALUE ).getValue();
+            
+            Assert.assertNotEquals( afterClick,  beforeClick );
+            
+            String typeAttribute = wPage.getElement( WebHomePage.TOGGLE_BUTTON ).getAttribute( "type" );
+            
+            Assert.assertFalse( wPage.getElement( WebHomePage.DELETE_BUTTON ).isVisible() );
+            wPage.getElement( WebHomePage.ACCORDIAN_OPEN ).click();
+            Assert.assertTrue( wPage.getElement( WebHomePage.DELETE_BUTTON ).waitForVisible( 12, TimeUnit.SECONDS ) );
+            
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    @Then( "^I call method two with '(\\w*')$")
+    public void cucumberMethodTwo( String p1, WebDriver webDriver )
+    {
+    		System.out.println( "do stuff with " + p1 );
+    		
+    		WebHomePage wPage = (WebHomePage) createPage( WebHomePage.class, (DeviceWebDriver) webDriver );
+        String beforeClick = wPage.getElement( WebHomePage.TOGGLE_VALUE ).getValue();
+        wPage.getElement( WebHomePage.TOGGLE_BUTTON ).click();
+        String afterClick = wPage.getElement( WebHomePage.TOGGLE_VALUE ).getValue();
     }
     
     /**

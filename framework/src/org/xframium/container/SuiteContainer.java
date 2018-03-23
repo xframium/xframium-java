@@ -1,12 +1,15 @@
 package org.xframium.container;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.element.provider.ElementProvider;
+import org.xframium.page.keyWord.GherkinContainer;
 import org.xframium.page.keyWord.KeyWordTest;
 
 public class SuiteContainer
@@ -74,12 +77,21 @@ public class SuiteContainer
     private PageDataProvider dataProvider;
     private Map<String, List<KeyWordTest>> tagMap = new HashMap<String, List<KeyWordTest>>( 10 );
     private String xFID;
+    private Map<String,GherkinContainer> methodMap = new HashMap<String,GherkinContainer>( 25 );
 
     private String siteName;
 
     
     
-    public String getxFID()
+    public Map<String, GherkinContainer> getMethodMap() {
+		return methodMap;
+	}
+
+	public void setMethodMap(Map<String, GherkinContainer> methodMap) {
+		this.methodMap = methodMap;
+	}
+
+	public String getxFID()
     {
         return xFID;
     }
