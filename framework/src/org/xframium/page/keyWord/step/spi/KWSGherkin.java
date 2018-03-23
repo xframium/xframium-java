@@ -40,8 +40,8 @@ public class KWSGherkin extends AbstractKeyWordStep
 {
     public KWSGherkin()
     {
-        kwName = "Call Test/Function";
-        kwDescription = "Allows the script to call another pre-defined function or test.  You can pass named context parameters that are scoped to the =function call by adding parameters with names and values.  OVERRIDE is the only reserved name using for overriding data provider names";
+        kwName = "Gherkin Call";
+        kwDescription = "Allows the script to call a predefined Gherkin step";
         kwHelp = "https://www.xframium.org/keyword.html#kw-call";
         orMapping = false;
         category = "Flow Control";
