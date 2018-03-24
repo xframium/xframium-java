@@ -9,13 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.xpath.XPathFactory;
+
 import org.openqa.selenium.Platform;
 import org.xframium.Initializable;
 import org.xframium.application.ApplicationDescriptor;
+import org.xframium.application.ApplicationRegistry;
 import org.xframium.application.ApplicationVersion;
 import org.xframium.application.CSVApplicationProvider;
 import org.xframium.application.ExcelApplicationProvider;
@@ -75,6 +78,7 @@ import org.xframium.driver.xsd.XPage;
 import org.xframium.driver.xsd.XParameter;
 import org.xframium.driver.xsd.XProperty;
 import org.xframium.driver.xsd.XPropertyAdapter;
+import org.xframium.driver.xsd.XReference;
 import org.xframium.driver.xsd.XSimpleElement;
 import org.xframium.driver.xsd.XStep;
 import org.xframium.driver.xsd.XTag;
@@ -84,6 +88,7 @@ import org.xframium.driver.xsd.XValidator;
 import org.xframium.page.BY;
 import org.xframium.page.ElementDescriptor;
 import org.xframium.page.Page;
+import org.xframium.page.PageManager;
 import org.xframium.page.activity.ActivityInitiator;
 import org.xframium.page.activity.ActivityValidator;
 import org.xframium.page.activity.PageActivity;
@@ -102,6 +107,7 @@ import org.xframium.page.element.provider.QAFElementProvider;
 import org.xframium.page.element.provider.SQLElementProvider;
 import org.xframium.page.element.provider.XMLElementProvider;
 import org.xframium.page.keyWord.KeyWordDriver.TRACE;
+import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
@@ -114,10 +120,12 @@ import org.xframium.page.keyWord.KeyWordToken.TokenType;
 import org.xframium.page.keyWord.gherkinExtension.XMLFormatter;
 import org.xframium.page.keyWord.matrixExtension.MatrixTest;
 import org.xframium.page.keyWord.provider.ExcelKeyWordProvider;
+import org.xframium.page.keyWord.provider.GherkinKeyWordProvider;
 import org.xframium.page.keyWord.provider.SQLKeyWordProvider;
 import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import org.xframium.spi.Device;
+
 import gherkin.parser.Parser;
 
 public class XMLConfigurationReader extends AbstractConfigurationReader implements ElementProvider
@@ -153,6 +161,77 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     protected Map<String,String> getConfigurationProperties()
     {
         return configProperties;
+    }
+    
+    @Override
+    protected boolean readReferences( SuiteContainer sC ) 
+    {
+    		if ( xRoot.getReferences() != null && xRoot.getReferences().getReference() != null && xRoot.getReferences().getReference().size() > 0 )
+    		{
+    			for ( XReference xR : xRoot.getReferences().getReference() )
+    			{
+    				if ( !xR.isActive() )
+    					continue;
+    				XMLConfigurationReader xReader = new XMLConfigurationReader();
+    				xReader.readFile( findFile(configFolder, new File( xR.getFileName() ) ) );
+    				
+    				if ( xR.isElements() )
+    				{
+    					ElementProvider eP = xReader.configurePageManagement( null );
+    					if ( eP != null )
+    						PageManager.instance( xFID ).getElementProvider().addElementProvider( eP );
+    					
+    				}
+    				
+    				if ( xR.isFunctions() || xR.isTests() )
+    				{
+    					SuiteContainer s2 = xReader.configureTestCases( null, true );
+    					if ( xR.isTests() )
+    					{
+    						sC.getActiveTestList().addAll( s2.getActiveTestList() );
+    						sC.getInactiveTestList().addAll( s2.getActiveTestList() );
+    					}
+    					
+    					if ( xR.isFunctions() )
+    						sC.getFunctionList().addAll( s2.getFunctionList() );
+    					
+    				}
+    				
+    				if ( xR.isApplications() )
+    				{
+    					for ( ApplicationDescriptor aD : xReader.configureApplication().getAppList() )
+    					{
+    						ApplicationRegistry.instance( xFID ).addApplicationDescriptor( aD );
+    					}
+    				}
+    				
+    				if ( xR.isDevices() )
+    				{
+    					DeviceContainer dC = xReader.configureDevice();
+    					for ( Device d : dC.getActiveDevices() )
+    		                DeviceManager.instance( xFID ).registerDevice( d );
+    		            
+    		            for ( Device d : dC.getInactiveDevices() )
+    		                DeviceManager.instance( xFID ).registerInactiveDevice( d );
+    				}
+    				
+    				if ( xR.isData() )
+    				{
+    					PageDataProvider pD = xReader.configureData();
+    					if ( pD != null )
+    					{
+    						if ( PageDataManager.instance( xFID ).getDataProvider() == null )
+    							PageDataManager.instance( xFID ).setPageDataProvider( pD );
+    						else
+    						{
+    							PageDataManager.instance( xFID ).getDataProvider().addPageData( pD );
+    						}
+    					}
+    				}
+    				
+    			}
+    		}
+    		return true;
     }
     
     @Override
@@ -461,7 +540,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                                 siteList.add( siteContainer );
                             }
                             
-                            PageContainer elementList = siteContainer.getPage( elementDescriptor.getPageName() );
+                            PageContainer elementList = siteContainer.getPage( elementDescriptor.getPageName(), page.getClazz() );
                             elementList.getElementList().add( currentElement );
                             
                             elementMap.put(elementDescriptor.toString(), currentElement );
@@ -895,6 +974,19 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     sC = new XMLKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ), configProperties ).readData( true );
     
                     break;
+                
+                case "GHERKIN":
+                		String[] folders = xRoot.getSuite().getFileName().split( "," );
+                		String[] packages = getValue( "gherkin.packages", "org.xframium", configProperties ).split( "," );
+                	
+                		File[] fileArray = new File[ folders.length ];
+                		for ( int i=0; i<folders.length; i++ )
+                			fileArray[ i ] = findFile( configFolder, new File( folders[ i ] ) );
+                		
+                    sC = new GherkinKeyWordProvider( fileArray, packages ).readData( true );
+                    KeyWordDriver.instance(xFID).getMethodMap().putAll( sC.getMethodMap() );
+    
+                    break;
                     
                 case "EXCEL":
                     sC =  new ExcelKeyWordProvider( findFile( configFolder, new File( xRoot.getSuite().getFileName() ) ), configProperties ).readData( true );
@@ -1225,6 +1317,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     {
         switch ( xRoot.getSuite().getProvider() )
         {
+        		case "GHERKIN":
             case "XML":
             case "SQL":
             case "EXCEL": 

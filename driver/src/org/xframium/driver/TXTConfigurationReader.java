@@ -94,6 +94,12 @@ public class TXTConfigurationReader extends AbstractConfigurationReader
         }
     }
     
+    @Override
+    protected boolean readReferences( SuiteContainer sC ) {
+    	// TODO Auto-generated method stub
+    	return true;
+    }
+    
     protected Map<String,String> getConfigurationProperties()
     {
         return configProperties;

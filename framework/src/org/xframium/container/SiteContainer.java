@@ -32,12 +32,12 @@ public class SiteContainer implements Iterable<PageContainer>
         this.siteName = siteName;
     }
 
-    public PageContainer getPage( String pageName )
+    public PageContainer getPage( String pageName, String className )
     {
         PageContainer pC = pageMap.get( pageName );
         if ( pC == null )
         {
-            pC = new PageContainer( pageName, KeyWordPage.class.getName() );
+            pC = new PageContainer( pageName, (className == null || className.trim().isEmpty()) ? KeyWordPage.class.getName() : className );
             pageMap.put( pageName, pC );
             pageList.add( pC );
         }

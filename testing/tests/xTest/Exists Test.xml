@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-<test name="Exists Test" timed="false" threshold="0" active="true" priority="1" severity="1">
+<test name="Exists Test" timed="false" threshold="0" active="true" priority="1" severity="1" trace="ON">
 <description>Exists Test</description>
-<step name="kw-exists" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="kw-exists" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" trace="true"/>
+<step name="kw-align" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="kw-attribute" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="kw-get" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
 </test>
+<test name="Exists Test 2" timed="false" threshold="0" active="true" priority="1" severity="1" trace="OFF">
+<description>Exists Test</description>
+<step name="kw-exists" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" trace="true"/>
+<step name="kw-align" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="kw-attribute" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+<step name="kw-get" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
+</test>
+  <function name="numberOne">
+    <step type="REPORT" name="beforeStep" />
+  </function>
+  <function name="numberTwo">
+    <step type="REPORT" name="afterStep" />
+  </function>
 </suite>

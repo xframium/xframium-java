@@ -250,7 +250,7 @@ public class XMLElementProvider extends AbstractElementProvider
 	            if ( ele.getDeviceContext() != null )
 	                currentElement.setDeviceContext( ele.getDeviceContext() );
 	            
-	            elementsRead = elementsRead & validateElement( elementDescriptor, currentElement );
+	            elementsRead = elementsRead & validateElement( elementDescriptor, currentElement, page.getClazz() );
 	            
 	            elementMap.put(elementDescriptor.toString(), currentElement );
 	            

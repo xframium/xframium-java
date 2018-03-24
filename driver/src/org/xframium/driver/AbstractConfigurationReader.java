@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openqa.selenium.WebDriver;
 import org.testng.TestNG;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
@@ -25,45 +25,33 @@ import org.xframium.container.DeviceContainer;
 import org.xframium.container.DriverContainer;
 import org.xframium.container.FavoriteContainer;
 import org.xframium.container.ModelContainer;
+import org.xframium.container.PageContainer;
+import org.xframium.container.SiteContainer;
 import org.xframium.container.SuiteContainer;
 import org.xframium.debugger.DebugManager;
-import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudDescriptor.ProviderType;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.logging.ThreadedFileHandler;
-import org.xframium.device.ng.AbstractSeleniumTest;
 import org.xframium.device.proxy.ProxyRegistry;
-import org.xframium.exception.ScriptConfigurationException;
-import org.xframium.gesture.GestureManager;
 import org.xframium.gesture.device.action.DeviceActionManager;
 import org.xframium.gesture.device.action.spi.perfecto.PerfectoDeviceActionFactory;
-import org.xframium.gesture.factory.spi.PerfectoGestureFactory;
 import org.xframium.integrations.perfectoMobile.rest.PerfectoMobile;
 import org.xframium.integrations.rest.bean.factory.BeanManager;
 import org.xframium.integrations.rest.bean.factory.XMLBeanFactory;
-import org.xframium.page.Page;
 import org.xframium.page.PageManager;
-import org.xframium.page.StepStatus;
-import org.xframium.page.data.PageData;
 import org.xframium.page.data.PageDataManager;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.element.provider.ElementProvider;
 import org.xframium.page.element.provider.XMLElementProvider;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordDriver.TRACE;
-import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
-import org.xframium.page.keyWord.step.SyntheticStep;
-import org.xframium.page.listener.KeyWordListener;
 import org.xframium.reporting.ExecutionContext;
-import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
-import org.xframium.utility.SeleniumSessionManager;
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 public abstract class AbstractConfigurationReader implements ConfigurationReader
 {
@@ -104,6 +92,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
     public abstract CloudContainer configureCloud( boolean secured );
 
     protected abstract boolean configureProxy();
+    protected abstract boolean readReferences( SuiteContainer sC );
 
     public abstract ApplicationContainer configureApplication();
 
@@ -318,15 +307,31 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
             eP.addElementProvider( internalObjectRepository );
             
             
+            
             PageManager.instance( xFID ).setSiteName( sC.getSiteName() );
             log.info( "Extracted " + sC.getTestList().size() + " test cases (" + sC.getActiveTestList().size() + " active)" );
 
             for ( ModelContainer mC : sC.getModel() )
                 KeyWordDriver.instance( xFID ).addPage( mC.getSiteName(), mC.getPageName(), mC.getClassName() ); 
             
+            if ( eP.getSiteList() != null )
+            {
+	            for ( SiteContainer currentSite : eP.getSiteList() )
+	            {
+	            		for ( PageContainer currentPage : currentSite )
+	            		{
+	            			if ( currentPage.getClassName() != null && !currentPage.getClassName().trim().isEmpty() )
+	            				KeyWordDriver.instance( xFID ).addPage( currentSite.getSiteName(), currentPage.getPageName(), Class.forName( currentPage.getClassName() ) ); 
+	            		}
+	            }
+            }
+            PageManager.instance( xFID ).setElementProvider( eP );
+            
+            readReferences( sC );
+            
             KeyWordDriver.instance( xFID ).loadTests( sC );
             
-            PageManager.instance( xFID ).setElementProvider( eP );
+            
             
 
             log.info( "Artifact: Configuring Artifact Production" );

@@ -20,32 +20,63 @@
  *******************************************************************************/
 package org.xframium.examples.java.page.spi;
 
+import java.io.File;
+import java.util.concurrent.TimeUnit;
+
+import org.testng.Assert;
 import org.xframium.examples.java.page.WebHomePage;
 import org.xframium.page.AbstractPage;
+import org.xframium.page.data.PageData;
+import org.xframium.page.keyWord.provider.GherkinKeyWordProvider;
 
+import cucumber.api.java.en.Then;
+import cucumber.runtime.java.StepDefAnnotation;
+
+@StepDefAnnotation
 public class WebHomePageImpl extends AbstractPage implements WebHomePage
 {
-
     public void initializePage()
     {
         // TODO Auto-generated method stub
 
     }
     
+    public void testKeywordWithData( PageData pageData )
+    {
+    		String beforeClick = getElement( WebHomePage.TOGGLE_VALUE ).getValue();
+        getElement( WebHomePage.TOGGLE_BUTTON ).click();
+        String afterClick = getElement( WebHomePage.TOGGLE_VALUE ).getValue();
+        
+        Assert.assertNotEquals( afterClick,  beforeClick );
+        
+        System.out.println( pageData );
+    }
+    
     public void testKeyword()
     {
         try
         {
-            executeStep( "COMPARE2", "page", "element", new String[ 0 ]);
+            
+            String beforeClick = getElement( WebHomePage.TOGGLE_VALUE ).getValue();
+            getElement( WebHomePage.TOGGLE_BUTTON ).click();
+            String afterClick = getElement( WebHomePage.TOGGLE_VALUE ).getValue();
+            
+            Assert.assertNotEquals( afterClick,  beforeClick );
+            
+            String typeAttribute = getElement( WebHomePage.TOGGLE_BUTTON ).getAttribute( "type" );
+            
+            Assert.assertFalse( getElement( WebHomePage.DELETE_BUTTON ).isVisible() );
+            getElement( WebHomePage.ACCORDIAN_OPEN ).click();
+            Assert.assertTrue( getElement( WebHomePage.DELETE_BUTTON ).waitForVisible( 12, TimeUnit.SECONDS ) );
             
         }
         catch( Exception e )
         {
-            
+            e.printStackTrace();
         }
-        
-        
-        
     }
-
+    
+    
+    
+    
 }

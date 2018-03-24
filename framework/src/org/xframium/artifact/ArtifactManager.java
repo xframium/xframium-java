@@ -27,6 +27,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.artifact.spi.ALMDefectArtifact;
+import org.xframium.artifact.spi.AllInOneReportArtifact;
 import org.xframium.artifact.spi.CSVDataArtifact;
 import org.xframium.artifact.spi.ConsoleLogArtifact;
 import org.xframium.artifact.spi.DefaultHistoryReportingArtifact;
@@ -132,6 +133,7 @@ public class ArtifactManager
         registerArtifact( ArtifactTime.AFTER_ARTIFACTS, ArtifactType.EXECUTION_TEST_JSON.name(), JSONArtifact.class );
         registerArtifact( ArtifactTime.AFTER_ARTIFACTS, ArtifactType.EXECUTION_TEST_HTML.name(), DefaultReportingArtifact.class );
         registerArtifact( ArtifactTime.AFTER_ARTIFACTS, ArtifactType.JIRA_UPDATE_STATUS.name(), JIRAUpdateExecutionArtifact.class );
+        registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.ALL_IN_ONE.name(), AllInOneReportArtifact.class );
     }
     
     public void registerArtifact( ArtifactTime artifactTime, String aType, Class artifactImplementation )

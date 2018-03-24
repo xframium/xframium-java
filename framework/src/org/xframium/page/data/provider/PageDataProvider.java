@@ -29,7 +29,7 @@ import org.xframium.page.data.PageData;
  */
 public interface PageDataProvider
 {
-	
+	public void addPageData( PageDataProvider dP );
 	/**
 	 * Gets the record.
 	 *

@@ -46,7 +46,7 @@ public abstract class AbstractElementProvider implements ElementProvider
 	/** The log. */
 	protected Log log = LogFactory.getLog(ElementProvider.class);
 	
-	private ElementProvider internalElementProvider = null;
+	private List<ElementProvider> providerList = new ArrayList<ElementProvider>( 10 );
 	
 	private ThreadLocal<Element> previousElement = new ThreadLocal<Element>();
 	private ThreadLocal<ElementDescriptor> previousElementDescriptor = new ThreadLocal<ElementDescriptor>();
@@ -66,21 +66,21 @@ public abstract class AbstractElementProvider implements ElementProvider
 	public Element getElement( ElementDescriptor elementDescriptor )
 	{
 	    Element returnElement = null;
-	    if ( internalElementProvider != null )
-	        returnElement = internalElementProvider.getElement( elementDescriptor );
+	    for ( ElementProvider eP : providerList )
+	    {
+	    		returnElement = eP.getElement( elementDescriptor);
+	    		if ( returnElement != null )
+	    			return returnElement;
+	    }
 	    
-	    if ( returnElement == null )
-	        returnElement = _getElement( elementDescriptor );
 
-	    
-	    return returnElement;
+	    return _getElement( elementDescriptor );
 	}
 	
 	@Override
 	public void addElementProvider( ElementProvider elementProvider )
 	{
-	    this.internalElementProvider = elementProvider;
-	    
+	    providerList.add( elementProvider );
 	}
 	
 	private boolean initialized = false;
@@ -124,7 +124,7 @@ public abstract class AbstractElementProvider implements ElementProvider
             siteList.add( siteContainer );
         }
         
-        siteContainer.getPage( pageName ).getActivityList().add( pageActivity );
+        siteContainer.getPage( pageName, null ).getActivityList().add( pageActivity );
         
         
     }
@@ -137,7 +137,7 @@ public abstract class AbstractElementProvider implements ElementProvider
 	 */
 	protected abstract Element _getElement( ElementDescriptor elementDescriptor	 );
 	
-	protected boolean validateElement( ElementDescriptor elementDescriptor, Element currentElement ) throws Exception
+	protected boolean validateElement( ElementDescriptor elementDescriptor, Element currentElement, String className ) throws Exception
 	{
 	    SiteContainer siteContainer = siteTree.get( elementDescriptor.getSiteName() );
 	    
@@ -148,7 +148,7 @@ public abstract class AbstractElementProvider implements ElementProvider
 	        siteList.add( siteContainer );
 	    }
 	    
-	    PageContainer elementList = siteContainer.getPage( elementDescriptor.getPageName() );
+	    PageContainer elementList = siteContainer.getPage( elementDescriptor.getPageName(), className );
 	    elementList.getElementList().add( currentElement );
 	    
 	    

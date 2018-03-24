@@ -10,7 +10,7 @@
 <parameter type="STATIC" value="RIGHT=promptValue"/>
 </step>
 <step name="confirmValue" site="xTest" page="home" type="ALIGN" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="STATIC" value="RIGHT=promptValue(50)"/>
+<parameter type="STATIC" value="secure{==QKwUDKlVHbhZFdw12byBXPUh0RJJVFAAAACAwG3VAAtzqQI10}"/>
 </step>
 <step name="alertButton" site="xTest" page="home" type="ALIGN" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
 <parameter type="STATIC" value="TOP=confirmButton"/>

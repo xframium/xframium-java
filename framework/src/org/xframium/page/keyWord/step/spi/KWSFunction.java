@@ -22,9 +22,10 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.lang.reflect.Method;
 import java.util.Map;
+
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
-import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
@@ -72,7 +73,9 @@ public class KWSFunction extends AbstractKeyWordStep
 		{
 			Object[] parameterArray = getParameters( contextMap, dataMap, executionContext.getxFID() );
 			Method method = findMethod( pageObject.getClass(), getName(), parameterArray );
+			( (DeviceWebDriver) webDriver ).setReportingElement( true );
 			method.invoke( pageObject, parameterArray );
+			( (DeviceWebDriver) webDriver ).setReportingElement( false );
 			return true;
 		}
 		catch( Exception e )

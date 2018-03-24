@@ -22,7 +22,6 @@ package org.xframium.page.keyWord.step;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.InputStream;
@@ -38,9 +37,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.OutputType;
@@ -94,6 +95,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     private static final Map<String,String> HASH_CACHE = new HashMap<String,String>(20);
     private static final String[] WEB_PERFORMANCE = new String[] { "navigationStart", "redirectStart", "redirectEnd", "fetchStart", "domainLookupStart", "domainLookupEnd", "connectStart", "connectEnd", "requestStart", "responseStart", "responseEnd", "unloadStart", "unloadEnd", "domLoading", "domInteractive", "domContentLoaded", "domComplete", "loadEventStart", "loadEventEnd" };
     private static NumberFormat numberFormat = new DecimalFormat( "0000" );
+    
+    private static Pattern DATA_PATTERN = Pattern.compile( "data\\{(\\w*)\\}" );
 
     public AbstractKeyWordStep()
     {
@@ -786,9 +789,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     log.debug( Thread.currentThread().getName() + ": CONTEXT element found as " + currentElement );
 
                 ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance( executionContext.getxFID() ).getSiteName(), getPageName(), elementName );
-                Element myElement = pageObject.getElement( elementDescriptor ).cloneElement();
-                
+                Element originalElement = pageObject.getElement( elementDescriptor );
+                if ( originalElement == null )
+                    throw new ObjectConfigurationException( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance( executionContext.getxFID() ).getSiteName(), getPageName(), elementName );
 
+                Element myElement = originalElement.cloneElement();
                 if ( myElement == null )
                 {
                     log.error( Thread.currentThread().getName() + ": **** COULD NOT LOCATE ELEMENT [" + elementDescriptor.toString() + "]  Make sure your Page Name and Element Name are spelled correctly and that they have been defined" );
@@ -819,7 +824,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     log.info( Thread.currentThread().getName() + ": Cloning Element " + useName + " on page " + pageName );
 
                 ElementDescriptor elementDescriptor = new ElementDescriptor( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance( executionContext.getxFID() ).getSiteName(), pageName, useName );
-                Element originalElement = pageObject.getElement( elementDescriptor ).cloneElement();
+                
+                Element originalElement = pageObject.getElement( elementDescriptor );
                 if ( originalElement == null )
                     throw new ObjectConfigurationException( siteName != null && siteName.trim().length() > 0 ? siteName : PageManager.instance( executionContext.getxFID() ).getSiteName(), pageName, useName );
 
@@ -1896,6 +1902,20 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         for ( int i = 0; i < parameterList.size(); i++ )
         {
             parameterArray[i] = getParameterValue( parameterList.get( i ), contextMap, dataMap, xFID );
+            
+            if ( parameterArray[ i ] instanceof String )
+            {
+            		Matcher m = DATA_PATTERN.matcher( (String) parameterArray[ i ] );
+            		if ( m.matches() )
+            		{
+            			//
+            			// A page data object was specified so insert it here
+            			//
+            			parameterArray[ i ] = dataMap.get( m.group( 1 ) );
+            		}
+            }
+            
+            
         }
 
         return parameterArray;
@@ -2038,7 +2058,9 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 }
             }
             else
+            {
                 return (value == null || classType.isInstance( value ));
+            }
         }
         catch ( Exception e )
         {

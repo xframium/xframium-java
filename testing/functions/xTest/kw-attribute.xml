@@ -6,7 +6,7 @@
 <parameter type="STATIC" value="button"/>
 <parameter type="STATIC" value="type"/>
 </step>
-<step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="targetClass">
+<step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="targetClass" trace="true">
 <parameter type="STATIC" value="class"/>
 </step>
 <step name="toggleButton" site="xTest" page="home" type="ATTRIBUTE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="targetToggle">

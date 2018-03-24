@@ -22,7 +22,7 @@
 
 <elementDefinition xmlns="http://www.xframium.org/pageRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/pageRegistry http://www.xframium.org/xsd/pageManagement/pageRegistry.xsd">
   <site name="xTest">
-    <page name="WebHomePage" class="org.xframium.examples.java.page.spi.WebHomePageImpl">
+    <page name="WebHomePage" class="org.xframium.examples.java.page.WebHomePage">
       <element name="toggleButton" value="//button[text()='Toggle Value']" descriptor="XPATH" />
       <element name="toggleValue" value="singleModel" descriptor="ID" />
       <element name="aOpen" value="//div[@id='aOpen']//a" descriptor="XPATH" />

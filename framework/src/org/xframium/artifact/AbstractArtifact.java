@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.device.factory.DeviceWebDriver;
@@ -107,6 +109,11 @@ public abstract class AbstractArtifact implements Artifact
     
     protected File writeToDisk( File rootFolder, String useName, InputStream inputStream )
     {
+    		return writeToDisk( rootFolder, useName, inputStream, null );
+    }
+    
+    protected File writeToDisk( File rootFolder, String useName, InputStream inputStream, Map<String,String> replacementMap )
+    {
         if ( inputStream == null )
             return null;
         
@@ -125,8 +132,27 @@ public abstract class AbstractArtifact implements Artifact
         try
         {
             BufferedOutputStream oStream = new BufferedOutputStream( new FileOutputStream( fileName ) );
-            while ( ( bytesRead = inputStream.read( buffer ) ) > 0 )
-                oStream.write( buffer, 0, bytesRead );
+            
+            
+            if ( replacementMap == null )
+            {
+	            while ( ( bytesRead = inputStream.read( buffer ) ) > 0 )
+	                oStream.write( buffer, 0, bytesRead );
+	            
+	            
+            }
+            else
+            {
+            		StringBuilder sBuilder = new StringBuilder();
+            		while ( ( bytesRead = inputStream.read( buffer ) ) > 0 )
+            			sBuilder.append( new String( buffer, 0, bytesRead ) );
+            		
+            		String fileData = sBuilder.toString();
+            		for ( String keyName : replacementMap.keySet() )
+            			fileData = fileData.replace( keyName, replacementMap.get( keyName ) );
+            		
+            		oStream.write( fileData.getBytes() );
+            }
             
             oStream.flush();
             oStream.close();
