@@ -93,12 +93,13 @@ public class WriteCommand extends Command
     int cursorLocation = cursor.getLocation ();
     //    screen.lockKeyboard ("Inhibit");
     boolean screenDrawRequired = false;
+    boolean resetFields = (orders.size () > 0);
 
     if (eraseWrite)
     {
       screen.setCurrentScreen (alternate ? ScreenOption.ALTERNATE : ScreenOption.DEFAULT);
       screen.lockKeyboard ("Erase Write");
-      screen.clearScreen ();            // resets pen
+      screen.clearScreen (resetFields);            // resets pen
     }
     else
       screen.lockKeyboard ("Write");
