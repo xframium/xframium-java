@@ -576,10 +576,15 @@ public class Screen extends Canvas
   @Override
   public void clearScreen ()
   {
+      clearScreen ( true );
+  }
+
+  public void clearScreen ( boolean resetFields )
+  {
     eraseScreen ();
     cursor.moveTo (0);
     pen.clearScreen ();
-    fieldManager.reset ();
+    if (resetFields) fieldManager.reset ();
   }
 
   @Override

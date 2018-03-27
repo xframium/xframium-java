@@ -67,6 +67,7 @@ public class ConsoleKeyPress implements EventHandler<KeyEvent>
 
         case C:
           consolePane.sendAID (AIDCommand.AID_CLEAR, "CLR");
+          screen.clearScreen ();
           keyEvent.consume ();
           break;
 
@@ -119,6 +120,7 @@ public class ConsoleKeyPress implements EventHandler<KeyEvent>
           
         case C:
           consolePane.sendAID (AIDCommand.AID_CLEAR, "CLR");
+          screen.clearScreen ();
           keyEvent.consume ();
           break;
 
