@@ -27,7 +27,6 @@ import java.util.function.Function;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.security.UserAndPassword;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xframium.container.SuiteContainer;
@@ -52,8 +51,7 @@ public class KWSAlert extends AbstractKeyWordStep
     {
         ACCEPT( 1, "ACCEPT", "Accept"),
         DISMISS( 2, "DISMISS", "Dismiss"),
-        SEND_KEYS (3, "SEND_KEYS", "Send Keys"),
-        AUTHENTICATE( 4, "AUTHENTICATE", "Authenticate");
+        SEND_KEYS (3, "SEND_KEYS", "Send Keys");
 
 
 		private ALERT_TYPE( int id, String name, String description )
@@ -114,10 +112,6 @@ public class KWSAlert extends AbstractKeyWordStep
     		        currentAlert.accept();
     		        break;
 
-    		    case AUTHENTICATE:
-    		        currentAlert.authenticateUsing( new UserAndPassword(  getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "",  getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "" ) );
-                    break;
-    		        
     		    default:
     		        log.warn( "Unhandled Alert Type: " + getName() );
     		            

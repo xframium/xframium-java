@@ -192,7 +192,6 @@ public class CloudRegistry
 	        if ( !isListening( "127.0.0.1", 4444 ) )
 	        {
 	            StandaloneConfiguration c = new StandaloneConfiguration();
-	            c.enablePassThrough = true;
 	            _server = new SeleniumServer( c );
 	            _server.boot();
 	        }
@@ -243,7 +242,17 @@ public class CloudRegistry
 	    try
 	    {
     	    if ( serverStarted && embeddedGrid && _server != null )
+    	    {
+    	    	log.warn( "Stopping EMBEDDED Selenium Grid" );
     	        _server.stop();
+    	        Thread.sleep( 2000 );
+    	        _server.stop();
+    	        log.warn( "Stopped EMBEDDED Selenium Grid" );
+    	        _server = null;
+    	        
+    	    }
+    	    
+    	    
     	    
     	    serverStarted = false;
 	    }
