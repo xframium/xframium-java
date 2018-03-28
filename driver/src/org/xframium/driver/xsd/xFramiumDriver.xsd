@@ -695,6 +695,7 @@
           <enumeration value="CONSOLE" />
           <enumeration value="DATE" />
           <enumeration value="DEBUG" />
+          <enumeration value="GHERKIN" />
         </restriction>
       </simpleType>
     </attribute>
