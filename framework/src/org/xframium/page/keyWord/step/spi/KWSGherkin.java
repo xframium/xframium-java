@@ -20,6 +20,7 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,10 +29,12 @@ import java.util.regex.Matcher;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.GherkinContainer;
 import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.reporting.ExecutionContextTest;
 
@@ -53,31 +56,48 @@ public class KWSGherkin extends AbstractKeyWordStep
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext ) throws Exception
 	{
 		boolean executed = false;
-		for ( GherkinContainer g : KeyWordDriver.instance(executionContext.getxFID()).getMethodMap().values() )
+		
+		KeyWordTest kT = KeyWordDriver.instance(executionContext.getxFID()).getTest( getName() );
+		
+		if ( kT != null )
 		{
-			Matcher m = g.getRegex().matcher( getName() );
-			if ( m.matches() )
+			kT.executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext);
+		}
+		else
+		{
+			for ( GherkinContainer g : KeyWordDriver.instance(executionContext.getxFID()).getMethodMap().values() )
 			{
-				List<Object> parameterArray = new ArrayList<Object>( 10 );;
-				Object methodClass = g.getMethod().getDeclaringClass().newInstance();
-				for ( int i=1; i<m.groupCount() + 1; i++ )
-					parameterArray.add( m.group( i ) );
-				
-				for ( int i=0; i<g.getMethod().getParameterTypes().length; i++ )
+				Matcher m = g.getRegex().matcher( getName() );
+				if ( m.matches() )
 				{
-					Class c = g.getMethod().getParameterTypes()[ i ];
-					if ( c.isAssignableFrom( WebDriver.class ) )
+					List<Object> parameterArray = new ArrayList<Object>( 10 );;
+					Object methodClass = g.getMethod().getDeclaringClass().newInstance();
+					for ( int i=1; i<m.groupCount() + 1; i++ )
+						parameterArray.add( m.group( i ) );
+					
+					for ( int i=0; i<g.getMethod().getParameterTypes().length; i++ )
 					{
-						parameterArray.add( i, webDriver );
+						Class c = g.getMethod().getParameterTypes()[ i ];
+						if ( c.isAssignableFrom( WebDriver.class ) )
+						{
+							parameterArray.add( i, webDriver );
+						}
 					}
+					
+					boolean reportingElement = ( (DeviceWebDriver) webDriver ).isReportingElement();
+					( (DeviceWebDriver) webDriver ).setReportingElement( true );
+					try
+					{
+						g.getMethod().invoke( methodClass, parameterArray.toArray() );
+					}
+					catch( InvocationTargetException e )
+					{
+						throw new ScriptException( e.getCause().getMessage() );
+					}
+					executed = true;
+					( (DeviceWebDriver) webDriver ).setReportingElement(reportingElement);
+					break;
 				}
-				
-				boolean reportingElement = ( (DeviceWebDriver) webDriver ).isReportingElement();
-				( (DeviceWebDriver) webDriver ).setReportingElement( true );
-				g.getMethod().invoke( methodClass, parameterArray.toArray() );
-				executed = true;
-				( (DeviceWebDriver) webDriver ).setReportingElement(reportingElement);
-				break;
 			}
 		}
 

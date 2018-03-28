@@ -12,22 +12,23 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * Defines a list references to external driver configuration files
+ * Defines a list of packages to scan for Annotations
  * 
- * <p>Java class for xReferences complex type.
+ * <p>Java class for xPackages complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="xReferences">
+ * &lt;complexType name="xPackages">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="reference" type="{http://www.xframium.org/xFramiumDriver}xReference" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="package" type="{http://www.xframium.org/xFramiumDriver}xPackage" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -37,40 +38,41 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "xReferences", propOrder = {
-    "reference"
+@XmlType(name = "xPackages", propOrder = {
+    "_package"
 })
-public class XReferences {
+public class XPackages {
 
-    protected List<XReference> reference;
+    @XmlElement(name = "package")
+    protected List<XPackage> _package;
 
     /**
-     * Gets the value of the reference property.
+     * Gets the value of the package property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the reference property.
+     * This is why there is not a <CODE>set</CODE> method for the package property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getReference().add(newItem);
+     *    getPackage().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link XReference }
+     * {@link XPackage }
      * 
      * 
      */
-    public List<XReference> getReference() {
-        if (reference == null) {
-            reference = new ArrayList<XReference>();
+    public List<XPackage> getPackage() {
+        if (_package == null) {
+            _package = new ArrayList<XPackage>();
         }
-        return this.reference;
+        return this._package;
     }
 
 }

@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -16,6 +18,9 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.xpath.XPathFactory;
 
 import org.openqa.selenium.Platform;
+import org.reflections.Reflections;
+import org.reflections.scanners.MethodAnnotationsScanner;
+import org.reflections.util.ConfigurationBuilder;
 import org.xframium.Initializable;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
@@ -74,6 +79,7 @@ import org.xframium.driver.xsd.XLibrary;
 import org.xframium.driver.xsd.XModel;
 import org.xframium.driver.xsd.XObjectDeviceCapability;
 import org.xframium.driver.xsd.XOptions;
+import org.xframium.driver.xsd.XPackage;
 import org.xframium.driver.xsd.XPage;
 import org.xframium.driver.xsd.XParameter;
 import org.xframium.driver.xsd.XProperty;
@@ -106,8 +112,9 @@ import org.xframium.page.element.provider.ExcelElementProvider;
 import org.xframium.page.element.provider.QAFElementProvider;
 import org.xframium.page.element.provider.SQLElementProvider;
 import org.xframium.page.element.provider.XMLElementProvider;
-import org.xframium.page.keyWord.KeyWordDriver.TRACE;
+import org.xframium.page.keyWord.GherkinContainer;
 import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordDriver.TRACE;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
@@ -126,6 +133,11 @@ import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import org.xframium.spi.Device;
 
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.But;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import gherkin.parser.Parser;
 
 public class XMLConfigurationReader extends AbstractConfigurationReader implements ElementProvider
@@ -902,6 +914,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         }
         else
         {
+                	
             switch ( xRoot.getSuite().getProvider() )
             {
                 case "LOCAL":
@@ -984,7 +997,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 			fileArray[ i ] = findFile( configFolder, new File( folders[ i ] ) );
                 		
                     sC = new GherkinKeyWordProvider( fileArray, packages ).readData( true );
-                    KeyWordDriver.instance(xFID).getMethodMap().putAll( sC.getMethodMap() );
+                    
     
                     break;
                     
@@ -1010,6 +1023,56 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     break;
                 }
             }
+            
+            if ( xRoot.getSuite().getPackages() != null && xRoot.getSuite().getPackages().getPackage() != null && !xRoot.getSuite().getPackages().getPackage().isEmpty() )
+        	{
+        		log.info( "Scanning for annotated methods" );
+        		Map <String,GherkinContainer> methodMap = new HashMap<String,GherkinContainer>( 10 );
+
+        		try
+        		{
+        			List<String> packageList = new ArrayList<String>( 20 );
+        			for ( XPackage p : xRoot.getSuite().getPackages().getPackage() )
+        			{
+        				packageList.add( p.getName() );
+        			}
+        			
+        			ConfigurationBuilder cB = new ConfigurationBuilder().forPackages(packageList.toArray( new String[ 0 ] ) ).setScanners( new MethodAnnotationsScanner() );
+        			Reflections r = new Reflections( cB );
+        			for ( Method m : r.getMethodsAnnotatedWith( Then.class ) )
+        			{
+        				log.info( "Adding GHERKIN [Then] as [" + m.getAnnotation( Then.class ).value() + "] for [" + m.getName() + "]" );
+        				methodMap.put(m.getAnnotation( Then.class ).value() , new GherkinContainer( m.getAnnotation( Then.class ).value(), Pattern.compile( m.getAnnotation( Then.class ).value() ), m ) );
+        			}
+        			for ( Method m : r.getMethodsAnnotatedWith( But.class ) )
+        			{
+        				log.info( "Adding GHERKIN [But] as [" + m.getAnnotation( But.class ).value() + "] for [" + m.getName() + "]" );
+        				methodMap.put(m.getAnnotation( But.class ).value() , new GherkinContainer( m.getAnnotation( But.class ).value(), Pattern.compile( m.getAnnotation( But.class ).value() ), m ) );
+        			}
+        			for ( Method m : r.getMethodsAnnotatedWith( And.class ) )
+        			{
+        				log.info( "Adding GHERKIN [And] as [" + m.getAnnotation( And.class ).value() + "] for [" + m.getName() + "]" );
+        				methodMap.put(m.getAnnotation( And.class ).value() , new GherkinContainer( m.getAnnotation( And.class ).value(), Pattern.compile( m.getAnnotation( And.class ).value() ), m ) );
+        			}
+        			for ( Method m : r.getMethodsAnnotatedWith( Given.class ) )
+        			{
+        				log.info( "Adding GHERKIN [Given] as [" + m.getAnnotation( Given.class ).value() + "] for [" + m.getName() + "]" );
+        				methodMap.put(m.getAnnotation( Given.class ).value() , new GherkinContainer( m.getAnnotation( Given.class ).value(), Pattern.compile( m.getAnnotation( Given.class ).value() ), m ) );
+        			}
+        			for ( Method m : r.getMethodsAnnotatedWith( When.class ) )
+        			{
+        				log.info( "Adding GHERKIN [When] as [" + m.getAnnotation( When.class ).value() + "] for [" + m.getName() + "]" );
+        				methodMap.put(m.getAnnotation( When.class ).value() , new GherkinContainer( m.getAnnotation( When.class ).value(), Pattern.compile( m.getAnnotation( When.class ).value() ), m ) );
+        			}
+
+        			KeyWordDriver.instance(xFID).getMethodMap().putAll( methodMap );
+        		}
+        		catch( Exception e )
+        		{
+        			e.printStackTrace();
+        		}
+        	}
+            
         }
         
         if ( sC != null && pdp != null )

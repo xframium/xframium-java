@@ -86,7 +86,7 @@ iframe {
                                 <a style="cursor: default; margin-left: 23px" ng-click="selectElement( 'Imaging Analysis', null )" ng-if="rootNode == 'Imaging Analysis'">{{rootNode}}</a>
                             </div>
                             <ol ui-tree-nodes ng-model="testData.stepList" ng-class="{hidden: collapsed}" ng-if="rootNode == 'Steps'">
-                                <li ui-tree-node ng-repeat="stepDef in testData.stepList | filter:filterBy"  ng-include="'step.html'" collapsed="false"></li>
+                                <li ui-tree-node ng-repeat="stepDef in testData.stepList | filter:filterBy"  ng-include="'step.html'" collapsed="true"></li>
                             </ol>
                             <ol ui-tree-nodes ng-model="links" ng-if="rootNode == 'Logs'" ng-class="{hidden: collapsed}" style="cursor: default; font-size: 8pt">
                                 <li ui-tree-node collapsed="true" ng-repeat="log in logTypes">
