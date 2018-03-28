@@ -26,12 +26,31 @@
   <suite provider="LOCAL">
     <test name="Call Function" timed="false" threshold="0" active="true" priority="1" severity="1" dataProvider="authData">
       <description>Calls a simple JAVA based function</description>
-      <step type="FUNCTION" name="testKeyword" page="WebHomePage" />
-      <step type="FUNCTION" name="testKeywordWithData" page="WebHomePage">
+      <step type="FUNCTION" name="testKeyword" page="WebHomePage"  failureMode="IGNORE" />
+      <step type="FUNCTION" name="testKeywordWithData" page="WebHomePage" failureMode="IGNORE">
         <parameter type="STATIC" value="data{authData}" />
       </step>
       <step type="GHERKIN" name="I call method one" page="home" failureMode="IGNORE"/>
       <step type="CALL2" name="kw-exists" page="home" failureMode="IGNORE"/>
+      <step type="FUNCTION" name="testKeyword" page="WebHomePage"  failureMode="IGNORE" />
+      <step type="FUNCTION" name="testKeywordWithData" page="WebHomePage" failureMode="IGNORE">
+        <parameter type="STATIC" value="data{authData}" />
+      </step>
+      <step type="GHERKIN" name="I call method one" page="home" failureMode="IGNORE"/>
+      <step type="CALL2" name="kw-exists" page="home" failureMode="IGNORE"/>
+      <step type="FUNCTION" name="testKeyword" page="WebHomePage"  failureMode="IGNORE" />
+      <step type="FUNCTION" name="testKeywordWithData" page="WebHomePage" failureMode="IGNORE">
+        <parameter type="STATIC" value="data{authData}" />
+      </step>
+      <step type="GHERKIN" name="I call method one" page="home" failureMode="IGNORE"/>
+      <step type="CALL2" name="kw-exists" page="home" failureMode="IGNORE"/>
+      <step type="FUNCTION" name="testKeyword" page="WebHomePage"  failureMode="IGNORE" />
+      <step type="FUNCTION" name="testKeywordWithData" page="WebHomePage" failureMode="IGNORE">
+        <parameter type="STATIC" value="data{authData}" />
+      </step>
+      <step type="GHERKIN" name="I call method one" page="home" failureMode="IGNORE"/>
+      <step type="CALL2" name="kw-exists" page="home" failureMode="IGNORE"/>
+      
     </test>
     <packages>
       <package name="org.xframium.examples">Pull from the EXAMPLES packages</package>

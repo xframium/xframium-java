@@ -293,6 +293,7 @@
           <enumeration value="EXECUTION_TEST_HTML" />
           <enumeration value="TIMING_HTML" />
           <enumeration value="STATISTICS" />
+          <enumeration value="ALL_IN_ONE" />
         </restriction>
       </simpleType>
     </attribute>

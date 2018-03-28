@@ -12,12 +12,11 @@
 <script src="./History.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-<link href="./assets/toolkit-inverse.css" rel="stylesheet">
 <link href="./assets/application.css" rel="stylesheet">
 <link href="./assets/angular-ui-tree.css" rel="stylesheet">
 </head>
 <body ng-controller="xTestController" data-ng-init="initialize()">
-    <div class="container">
+    <div class="container-fluid">
         <div class="col-sm-12 content">
             <div class="dashhead">
                 <span class="pull-right text-muted">{{testData[0].pageData.startTime.dateOnly}} at {{testData[0].pageData.startTime.timeOnly}}</span>
@@ -26,23 +25,21 @@
                 
             </div>
         </div>
-        <div class="row" style="margin-top: 20px">
-            <div class="col-sm-8">
-                <h5 class="text-primary" style="margin-bottom: 10px; text-align: center">Execution History</h5>
-                <canvas class="chart chart-line" chart-series="execSeries" chart-data="execData" chart-labels="execLabels" chart-colors="chartColors" ></canvas>
-            </div>
-            <div class="col-sm-4" ng-if="envLabels.length > 2">
+        <div class="row">
+            <div class="col-lg-2 col-sm-1"></div>
+            <div class="col-lg-8 col-sm-10" ng-if="envLabels.length > 2">
                 <h6 class="text-primary" style="margin-bottom: 10px; text-align: center">Environment Coverage</h6>
                 <canvas class="chart chart-radar" chart-series="envSeries" chart-data="envData" chart-labels="envLabels" chart-colors="chartColors"  chart-options="radarChartOptions"></canvas>
             </div>
             
-            <div class="col-sm-4" ng-if="envLabels.length < 3">
+            <div class="col-lg-8 col-sm-10" ng-if="envLabels.length < 3">
                 <h6 class="text-primary" style="margin-bottom: 10px; text-align: center">Environment Coverage</h6>
                 <canvas class="chart chart-bar" chart-series="envSeries" chart-data="envData" chart-labels="envLabels" chart-colors="chartColors" ></canvas>
             </div>
+            <div class="col-lg-2 col-sm-1"></div>
         </div>
         
-        <div class="row" style="margin-top: 20px">
+        <div class="row" style="margin-top: 0px">
             <div class="col-sm-12">
                 <div class="panel panel-primary">
                     <div class=panel-heading>
@@ -92,6 +89,12 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+              <h5 class="text-primary" style="margin-bottom: 10px; text-align: center">Execution History</h5>
+              <canvas class="chart chart-line" chart-series="execSeries" chart-data="execData" chart-labels="execLabels" chart-colors="chartColors" ></canvas>
+          </div>
         </div>
     </div>
 </body>
@@ -187,8 +190,10 @@
             
             for ( var key in $scope.envSummary ) 
             {
-                _passList.push( $scope.envSummary[key][ 'passed' ] );
-                _failList.push( $scope.envSummary[key][ 'failed' ] );
+            	var total = $scope.envSummary[key][ 'passed' ] + $scope.envSummary[key][ 'failed' ];
+            	var failed = $scope.envSummary[key][ 'failed' ];
+                _passList.push( 100 - Math.round( failed / total * 100 ) );
+                _failList.push( Math.round( failed / total * 100 ) );
                 $scope.envLabels.push( key );
             }
             
