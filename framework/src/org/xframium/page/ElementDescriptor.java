@@ -75,6 +75,25 @@ public class ElementDescriptor
 		this.pageName = pageName;
 		this.elementName = elementName;
 	}
+	
+	public ElementDescriptor( String elementDescriptor )
+	{
+		String[] elementData = elementDescriptor.split( "\\." );
+		
+		if ( elementData.length == 1 )
+			this.elementName = elementDescriptor;
+		else if ( elementData.length == 2 )
+		{
+			this.pageName = elementData[ 0 ];
+			this.elementName = elementData[ 1 ];
+		}
+		else if ( elementData.length > 2 )
+		{
+			this.siteName = elementData[ 0 ];
+			this.pageName = elementData[ 1 ];
+			this.elementName = elementData[ 2 ];
+		}
+	}
 
 	/**
 	 * Gets the site name.

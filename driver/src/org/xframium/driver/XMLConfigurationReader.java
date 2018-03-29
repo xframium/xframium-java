@@ -80,6 +80,7 @@ import org.xframium.driver.xsd.XModel;
 import org.xframium.driver.xsd.XObjectDeviceCapability;
 import org.xframium.driver.xsd.XOptions;
 import org.xframium.driver.xsd.XPackage;
+import org.xframium.driver.xsd.XPackages;
 import org.xframium.driver.xsd.XPage;
 import org.xframium.driver.xsd.XParameter;
 import org.xframium.driver.xsd.XProperty;
@@ -130,6 +131,7 @@ import org.xframium.page.keyWord.provider.ExcelKeyWordProvider;
 import org.xframium.page.keyWord.provider.GherkinKeyWordProvider;
 import org.xframium.page.keyWord.provider.SQLKeyWordProvider;
 import org.xframium.page.keyWord.provider.XMLKeyWordProvider;
+import org.xframium.page.keyWord.provider.gherkin.CommonGherkin;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 import org.xframium.spi.Device;
 
@@ -998,6 +1000,13 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 		
                     sC = new GherkinKeyWordProvider( fileArray, packages ).readData( true );
                     
+                    if ( xRoot.getSuite().getPackages() == null )
+                    	xRoot.getSuite().setPackages( new XPackages() );
+                    
+                    XPackage xP = new XPackage();
+                    xP.setName( CommonGherkin.class.getPackage().getName() );
+                    xP.setValue( "Common Gherkin functions provided by xFramium" );
+                    xRoot.getSuite().getPackages().getPackage().add( xP );
     
                     break;
                     

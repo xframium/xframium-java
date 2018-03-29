@@ -84,6 +84,26 @@ public class KWSGherkin extends AbstractKeyWordStep
 						}
 					}
 					
+					for ( int i=0; i<g.getMethod().getParameterTypes().length; i++ )
+					{
+						Class c = g.getMethod().getParameterTypes()[ i ];
+						if ( c.isAssignableFrom( SuiteContainer.class ) )
+						{
+							parameterArray.add( i, sC );
+						}
+					}
+					
+					for ( int i=0; i<g.getMethod().getParameterTypes().length; i++ )
+					{
+						Class c = g.getMethod().getParameterTypes()[ i ];
+						if ( c.isAssignableFrom( ExecutionContextTest.class ) )
+						{
+							parameterArray.add( i, executionContext );
+						}
+					}
+					
+					
+					
 					boolean reportingElement = ( (DeviceWebDriver) webDriver ).isReportingElement();
 					( (DeviceWebDriver) webDriver ).setReportingElement( true );
 					try
