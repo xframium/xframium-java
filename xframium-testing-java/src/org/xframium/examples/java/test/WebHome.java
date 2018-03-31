@@ -211,13 +211,13 @@ public class WebHome extends AbstractJavaTest
             wPage.getElement( WebHomePage.TOGGLE_BUTTON ).click();
             String afterClick = wPage.getElement( WebHomePage.TOGGLE_VALUE ).getValue();
             
-            Assert.assertNotEquals( afterClick,  beforeClick );
+            Assert.assertNotEquals( afterClick,  beforeClick, "Expected counter to not be equal after click" );
             
             String typeAttribute = wPage.getElement( WebHomePage.TOGGLE_BUTTON ).getAttribute( "type" );
             
-            Assert.assertFalse( wPage.getElement( WebHomePage.DELETE_BUTTON ).isVisible() );
+            Assert.assertFalse( wPage.getElement( WebHomePage.DELETE_BUTTON ).isVisible(), "Expected DELETE to be invisible");
             wPage.getElement( WebHomePage.ACCORDIAN_OPEN ).click();
-            Assert.assertTrue( wPage.getElement( WebHomePage.DELETE_BUTTON ).waitForVisible( 12, TimeUnit.SECONDS ) );
+            Assert.assertTrue( wPage.getElement( WebHomePage.DELETE_BUTTON ).waitForVisible( 12, TimeUnit.SECONDS ), "Expected DELETE to be visible" );
             
         }
         catch( Exception e )

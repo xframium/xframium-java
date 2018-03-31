@@ -2,7 +2,7 @@
   <cloud provider="XML" fileName="cloudRegistry.xml" name="EMBEDDED" />
   <application provider="XML" fileName="applicationRegistry.xml" name="NOOP" />
   <devices provider="XML" fileName="deviceRegistry.xml" />
-  <driver suiteName="Web Test" type="WEB" outputFolder="test-output" displayResults="EXECUTION_SUITE_HTML" dryRun="false" embeddedServer="false">
+  <driver suiteName="Web Test" type="WEB" outputFolder="test-output" displayResults="EXECUTION_SUITE_HTML" dryRun="false" embeddedServer="true">
     <artifact type="EXECUTION_RECORD_HTML" />
     <artifact type="FAILURE_SOURCE" />
     <artifact type="DEVICE_LOG" />

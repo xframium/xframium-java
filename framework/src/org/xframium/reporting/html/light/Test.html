@@ -22,6 +22,7 @@ iframe {
 
 .scrollable {
     overflow: auto;
+    overflow-x: hidden;
 }
 
 .list-group-item {
@@ -44,7 +45,7 @@ iframe {
 </head>
 <body ng-controller="xTestController" data-ng-init="initialize()" ng-cloak style="padding-top: 10px">
     <div class="container-fluid">
-
+      <div class="row">
         <div class="col-sm-12 content">
             <div class="dashhead">
                 <span class="pull-right text-muted">
@@ -61,8 +62,10 @@ iframe {
                 </h6>
             </div>
         </div>
-        <div class="col-sm-3">
-            <div class="panel panel-primary" style="margin-bottom: 0px; margin-top: 5px">
+     </div>
+     <div class="row" style="max-height: 100%">
+        <div class="col-sm-6 col-md-5 col-lg-4">
+            <div class="scrollable panel panel-primary" style="margin-bottom: 0px; margin-top: 5px;">
                 <div class="panel-heading">
                     <div class="input-group" >
                         <span class="input-group-addon" id="basic-addon2">Test Details</span>
@@ -73,7 +76,7 @@ iframe {
                         <span class="input-group-addon" id="basic-addon2" style="padding-left: 3px; padding-right: 3px"><a hRef="#" class="glyphicon glyphicon-remove text-danger" ng-click="filterBy='FAILURE'" uib-tooltip="Failed Steps"></a></span>
                     </div>
                 </div>
-                <div data-drag-enabled="false" ui-tree id="tree-root" class="scrollable panel-body" style="padding-left: 5px; max-height: 700px">
+                <div data-drag-enabled="false" ui-tree id="tree-root" class="panel-body" style="padding-left: 5px;">
                     <ol style="cursor: default" ui-tree-nodes ng-model="rootTree">
                         <li ui-tree-node style="cursor: default" ng-repeat="rootNode in rootTree" collapsed="rootNode == 'Steps' ? false : true">
                             <div style="cursor: default" ui-tree-handle class="tree-node tree-node-content">
@@ -86,7 +89,7 @@ iframe {
                                 <a style="cursor: default; margin-left: 23px" ng-click="selectElement( 'Imaging Analysis', null )" ng-if="rootNode == 'Imaging Analysis'">{{rootNode}}</a>
                             </div>
                             <ol ui-tree-nodes ng-model="testData.stepList" ng-class="{hidden: collapsed}" ng-if="rootNode == 'Steps'">
-                                <li ui-tree-node ng-repeat="stepDef in testData.stepList | filter:filterBy"  ng-include="'step.html'" collapsed="false"></li>
+                                <li ui-tree-node ng-repeat="stepDef in testData.stepList | filter:filterBy"  ng-include="'step.html'" collapsed="true"></li>
                             </ol>
                             <ol ui-tree-nodes ng-model="links" ng-if="rootNode == 'Logs'" ng-class="{hidden: collapsed}" style="cursor: default; font-size: 8pt">
                                 <li ui-tree-node collapsed="true" ng-repeat="log in logTypes">
@@ -165,7 +168,7 @@ iframe {
                 </div>
             </div>
         </div>
-        <div class="col-sm-9 content">
+        <div class="col-sm-6 col-md-7 col-lg-8 content">
             <div class="panel panel-{{selectedState}}" style="margin-bottom: 0px; margin-top: 5px">
                 <div class="panel-heading">
                     <h3 class="panel-title" style="color: {{selectedState== 'primary'? 'white': 'black'">{{selectedContext}}</h3>
@@ -352,10 +355,11 @@ iframe {
                 </div>
             </div>
         </div>
+     </div>
     </div>
 </body>
 <script type="text/ng-template" id="step.html">
-    <div data-nodrag ui-tree-handle  class="tree-node tree-node-content" style="font-size: 8pt; padding-left: 5px; padding-right: 5px;cursor: default" ng-class="{'filteredStep text-muted' : stepDef.stepStatus == 'FILTERED'}" style="text-overflow: ellipsis">
+    <div data-nodrag ui-tree-handle  class="tree-node tree-node-content" style="font-size: 8pt; padding-left: 5px; padding-right: 5px;cursor: default;" ng-class="{'filteredStep text-muted' : stepDef.stepStatus == 'FILTERED'}">
         
         <img src="../../../assets/{{stepDef.step.image == null || stepDef.step.image == 'null'  ? stepDef.step.kw : stepDef.step.image}}.png" width="16" style="margin-right: 2px"/>
         <a ng-if="stepDef.stepList.length != 0" data-nodrag ng-click="toggle(this)" style="cursor: default" >

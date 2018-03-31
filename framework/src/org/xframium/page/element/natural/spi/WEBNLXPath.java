@@ -44,6 +44,7 @@ public class WEBNLXPath extends AbstractNLXPath
                 
             case TEXTBOX:
                 builderList.add( new StringBuilder( "//input[@type='text']" ) );
+                builderList.add( new StringBuilder( "//input[@type='email']" ) );
                 break;
                 
             case PASSWORD:

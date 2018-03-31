@@ -20,12 +20,13 @@
  *******************************************************************************/
 package org.xframium.page.keyWord.step.spi;
 
-import org.openqa.selenium.Alert;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.security.UserAndPassword;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.factory.MorelandWebElement;
 import org.xframium.exception.ScriptConfigurationException;
@@ -34,12 +35,7 @@ import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
-import org.xframium.page.keyWord.step.spi.KWSMath.MATH_TYPE;
 import org.xframium.reporting.ExecutionContextTest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 // TODO: Auto-generated Javadoc
 /**

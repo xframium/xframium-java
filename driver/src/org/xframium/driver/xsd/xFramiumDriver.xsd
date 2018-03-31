@@ -293,6 +293,7 @@
           <enumeration value="EXECUTION_TEST_HTML" />
           <enumeration value="TIMING_HTML" />
           <enumeration value="STATISTICS" />
+          <enumeration value="ALL_IN_ONE" />
         </restriction>
       </simpleType>
     </attribute>
@@ -483,17 +484,37 @@
       <element name="flow" type="tns:xFlow" minOccurs="0" maxOccurs="1" />
       <element name="test" type="tns:xTest" minOccurs="0" maxOccurs="unbounded" />
       <element name="function" type="tns:xFunction" minOccurs="0" maxOccurs="unbounded" />
+      <element name="packages" type="tns:xPackages" minOccurs="0" maxOccurs="1" />
     </sequence>
     <attribute name="fileName" type="string" use="optional" />
     <attribute name="provider" use="optional" default="LOCAL">
       <simpleType>
         <restriction base="string">
           <enumeration value="XML" />
+          <enumeration value="GHERKIN" />
           <enumeration value="EXCEL" />
           <enumeration value="LOCAL" />
         </restriction>
       </simpleType>
     </attribute>
+    
+  </complexType>
+  
+  <complexType name="xPackages">
+    <annotation>
+        <documentation>Defines a list of packages to scan for Annotations</documentation>
+    </annotation>
+    <sequence>
+      <element name="package" type="tns:xPackage" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+  </complexType>
+  
+  <complexType name="xPackage">
+    <simpleContent>
+      <extension base="string" >
+        <attribute name="name" type="string" use="required" />
+      </extension>
+    </simpleContent>
   </complexType>
   
   <complexType name="xFlow">
@@ -675,6 +696,7 @@
           <enumeration value="CONSOLE" />
           <enumeration value="DATE" />
           <enumeration value="DEBUG" />
+          <enumeration value="GHERKIN" />
         </restriction>
       </simpleType>
     </attribute>

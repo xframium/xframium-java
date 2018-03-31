@@ -8,7 +8,6 @@
   </devices>
   <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" >
     <property name="selenium.timeouts.implicitWait">5000</property>
-    <property name="gherkin.packages">org.xframium.examples</property>
     <propertyAdapter className="org.xframium.device.property.SeleniumPropertyAdapter" />
     <artifact type="FAILURE_SOURCE" />
     <artifact type="DEVICE_LOG" />
@@ -21,7 +20,11 @@
     <artifact type="REPORTIUM" />
   </driver>
   <model provider="XML" siteName="xTest" fileName="page-home.xml" />
-  <suite provider="GHERKIN" fileName="." />
+  <suite provider="GHERKIN" fileName="." >
+    <packages>
+      <package name="org.xframium.examples">Pull from the EXAMPLES packages</package>
+    </packages>
+  </suite>
 
   <data provider="XML" fileName="pageData.xml" />
 </xFramium>

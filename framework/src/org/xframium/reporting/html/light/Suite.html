@@ -22,30 +22,21 @@
     <div class="container-fluid">
         <div class="col-sm-12 content">
             <div class="dashhead">
-                <span class="pull-right text-muted">{{suiteData.startTime.dateOnly}} at {{suiteData.startTime.timeOnly}}</span>
-                <h6 class="dashhead-subtitle">xFramium 1.0.14 (Atlas)</h6>
+                <span class="pull-right">{{suiteData.startTime.dateOnly}} at {{suiteData.startTime.timeOnly}}</span>
+                <h6 class="dashhead-subtitle text-muted">xFramium 1.0.14 (Atlas)</h6>
                 <h3 class="dashhead-title">{{suiteData.suiteName}}</h3>
-                <h6>Test Suite Execution Summary</h6>
-            </div>
-            <div class="row" style="margin-top: 10px">
-                <div class="col-sm-1"></div>
-                <div class="col-sm-2">
-                    <canvas class="chart chart-doughnut" chart-data="executionData" chart-labels="executionLabels" chart-options="chartOptions" chart-colors="chartColors"></canvas>
-                    <h5 class="text-primary text-muted" style="margin-top: 10px; text-align: center">Test Breakdown</h5>
-                    <canvas class="chart chart-doughnut" chart-data="stepData" chart-labels="stepLabels" chart-options="chartOptions" chart-colors="chartColors" style="margin-top: 30px"></canvas>
-                    <h5 class="text-primary text-muted" style="margin-top: 10px; text-align: center">Step Breakdown</h5>
-                </div>
-                <div class="col-sm-8">
-                    <h4 class="text-primary" style="margin-bottom: 10px; text-align: center">Environment Coverage</h4>
-                    <canvas class="chart chart-bar" chart-series="envSeries" chart-data="envData" chart-labels="envLabels" chart-options="barChartOptions" chart-colors="radarChartColors"></canvas>
-
-                </div>
-                <div class="col-sm-1"></div>
             </div>
             
             <a hRef="../index.html" class="pull-right" style="margin-bottom: 10px; margin-right: 10px"><span>Execution History</span></a>
             <div class="row" style="margin-top: 20px">
-                <div class="col-sm-12">
+              <div class="col-sm-2">
+                    <canvas class="chart chart-doughnut" chart-data="executionData" chart-labels="executionLabels" chart-options="chartOptions" chart-colors="chartColors"></canvas>
+                    <h5 class="text-primary text-muted" style="margin-top: 10px; text-align: center">Test Breakdown</h5>
+                    
+                    <canvas ng-if="suiteData.executionSummary.length > 10" class="chart chart-doughnut" chart-data="stepData" chart-labels="stepLabels" chart-options="chartOptions" chart-colors="chartColors" style="margin-top: 30px"></canvas>
+                    <h5 ng-if="suiteData.executionSummary.length > 10" class="text-primary text-muted" style="margin-top: 10px; text-align: center">Step Breakdown</h5>
+                </div>
+                <div class="col-sm-10">
                     <div class="panel panel-primary">
                         <div class=panel-heading>
                             <div class=panel-title>
@@ -62,10 +53,10 @@
                         <div class=panel-body>
                             <table class="table table-hover table-condensed">
                                 <tr>
-                                    <th width="40%" style="text-align: center">Test</th>
-                                    <th width="40%" style="text-align: center">Environment</th>
-                                    <th width="10%" style="text-align: center">Duration</th>
-                                    <th width="10%" style="text-align: center">Steps</th>
+                                    <th style="text-align: center">Test</th>
+                                    <th style="text-align: center">Environment</th>
+                                    <th style="text-align: center">Duration</th>
+                                    <th style="text-align: center">Steps</th>
                                     <th style="text-align: center">Status</th>
                                 </tr>
                                 <tbody>
@@ -74,11 +65,9 @@
                                             <a href='{{escapeFolderName(exec.folderName)}}/index.html'>{{exec.name}}</a>
                                         </td>
                                         <td>
-                                            <div class="row">
-                                                <div class="col-sm-1"><img ng-if="exec.cloud.provider.name != null" src="http://xframium.org/images/{{exec.cloud.provider.name}}.png" width="16" alt="{{exec.cloud.provider.name}}" /><img ng-if="exec.cloud.provider.name == null" src="http://xframium.org/images/{{exec.cloud.provider}}.png" width="16" alt="{{exec.cloud.provider}}" /> </div>
-                                                <div class="col-sm-11">{{exec.device.environment}}</div>
-                                                
-                                            </div>
+                                          <img ng-if="exec.cloud.provider.name != null" src="http://xframium.org/images/{{exec.cloud.provider.name}}.png" width="16" alt="{{exec.cloud.provider.name}}" /><img ng-if="exec.cloud.provider.name == null" src="http://xframium.org/images/{{exec.cloud.provider}}.png" width="16" alt="{{exec.cloud.provider}}" />
+                                          <span style="margin-left: 25px">{{exec.device.environment}}</span>
+                                            
                                         </td>
                                         <td>{{formatTestDuration( exec )}}</td>
                                         <td style="text-align: center">{{exec.total}}</td>
@@ -94,20 +83,54 @@
                     </div>
                 </div>
             </div>
-            <div class="row" style="margin-top: 10px">
+            <div class="col-sm-6">
+              <div class="row">
                 <div class="col-sm-12">
-                    <h4 class="text-primary" style="margin-bottom: 10px; text-align: center">Function Efficiency</h4>
-                    <canvas class="chart chart-radar" chart-labels="functionSeries" chart-data="functionData" chart-colors="functionChartColors"></canvas>
+                  <div class="panel panel-info">
+                    <div class=panel-heading>
+                        <div class=panel-title>Environment Coverage</div>
+                    </div>
+                    <div class=panel-body>
+                      <canvas class="chart chart-bar" chart-series="envSeries" chart-data="envData" chart-labels="envLabels" chart-options="barChartOptions" chart-colors="radarChartColors"></canvas>
+                    </div>
+                  </div>
                 </div>
+              </div>
+              <div class="row" ng-if="functionData[ 0 ].length > 3" >
+                <div class="col-sm-12">
+                  <div class="panel panel-info">
+                    <div class=panel-heading>
+                        <div class=panel-title>Function Failure Percentage</div>
+                    </div>
+                    <div class=panel-body>
+                      <canvas class="chart chart-radar" chart-labels="functionSeries" chart-data="functionData" chart-colors="functionChartColors"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
             </div>
-            <div class="row" style="margin-top: 10px">
-                <div class="col-sm-8">
-                    <h4 class="text-primary" style="margin-bottom: 10px; text-align: center">Page Efficiency</h4>
-                    <canvas class="chart chart-radar" chart-labels="pageUsageSeries" chart-data="pageUsageData" chart-colors="pageUsageChartColors"></canvas>
-                </div>
-                <div class="col-sm-4">
-                    <h4 class="text-primary" style="margin-bottom: 10px; text-align: center">Element Efficiency</h4>
-                    <table class="table table-hover table-condensed">
+            <div class="col-sm-6">
+              <div class="row" ng-if="pageUsageData 0 ].length > 3">
+                <div class="col-sm-12">
+                  <div class="panel panel-info">
+                      <div class=panel-heading>
+                          <div class=panel-title>Page Efficiency</div>
+                      </div>
+                      <div class=panel-body>
+                        <canvas class="chart chart-radar" chart-labels="pageUsageSeries" chart-data="pageUsageData" chart-colors="pageUsageChartColors"></canvas>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                <div class="panel panel-info">
+                    <div class=panel-heading>
+                        <div class=panel-title>Element Efficiency</div>
+                    </div>
+                    <div class=panel-body>
+                      <table class="table table-hover table-condensed">
                         <tr>
                             <th width="30%" style="text-align: center">Site</th>
                             <th width="30%" style="text-align: center">Page</th>
@@ -124,9 +147,12 @@
                                 <td>{{value.failCount}}</td>
                             </tr>
                         </tbody>
-                    </table>
-                </div>
-            </div>
+                      </table>
+                    </div>
+                  </div>
+                  </div>
+              </div>
+            </div>            
         </div>
     </div>
 </body>
@@ -427,8 +453,10 @@
             {
                 
                 $scope.functionSeries.push( key );
-                functionFail.push( $scope.functionMap[ key ][ 'failed' ] );
-                functionTotal.push( $scope.functionMap[ key ][ 'failed' ] + $scope.functionMap[ key ][ 'passed' ] );
+                var total = $scope.functionMap[ key ][ 'failed' ] + $scope.functionMap[ key ][ 'passed' ];
+                var failed = $scope.functionMap[ key ][ 'failed' ];
+                functionFail.push( Math.round( failed / total * 100 ) );
+                functionTotal.push( 100 );
                 
             }
             

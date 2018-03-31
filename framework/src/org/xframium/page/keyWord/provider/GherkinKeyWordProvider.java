@@ -105,48 +105,6 @@ public class GherkinKeyWordProvider extends AbstractPageDataProvider implements 
 			readFile( f );
 		}
 		
-		log.info( "Scanning for annotated methods" );
-		Map <String,GherkinContainer> methodMap = new HashMap<String,GherkinContainer>( 10 );
-
-		try
-		{
-			ConfigurationBuilder cB = new ConfigurationBuilder().forPackages(packageList).setScanners( new MethodAnnotationsScanner() );
-			Reflections r = new Reflections( cB );
-			for ( Method m : r.getMethodsAnnotatedWith( Then.class ) )
-			{
-				log.info( "Adding GHERKIN Then as [" + m.getAnnotation( Then.class ).value() + "] for [" + m.getName() + "]" );
-				methodMap.put(m.getAnnotation( Then.class ).value() , new GherkinContainer( m.getAnnotation( Then.class ).value(), Pattern.compile( m.getAnnotation( Then.class ).value() ), m ) );
-			}
-			for ( Method m : r.getMethodsAnnotatedWith( But.class ) )
-			{
-				log.info( "Adding GHERKIN But as [" + m.getAnnotation( But.class ).value() + "] for [" + m.getName() + "]" );
-				methodMap.put(m.getAnnotation( But.class ).value() , new GherkinContainer( m.getAnnotation( But.class ).value(), Pattern.compile( m.getAnnotation( But.class ).value() ), m ) );
-			}
-			for ( Method m : r.getMethodsAnnotatedWith( And.class ) )
-			{
-				log.info( "Adding GHERKIN And as [" + m.getAnnotation( And.class ).value() + "] for [" + m.getName() + "]" );
-				methodMap.put(m.getAnnotation( And.class ).value() , new GherkinContainer( m.getAnnotation( And.class ).value(), Pattern.compile( m.getAnnotation( And.class ).value() ), m ) );
-			}
-			for ( Method m : r.getMethodsAnnotatedWith( Given.class ) )
-			{
-				log.info( "Adding GHERKIN Given as [" + m.getAnnotation( Given.class ).value() + "] for [" + m.getName() + "]" );
-				methodMap.put(m.getAnnotation( Given.class ).value() , new GherkinContainer( m.getAnnotation( Given.class ).value(), Pattern.compile( m.getAnnotation( Given.class ).value() ), m ) );
-			}
-			for ( Method m : r.getMethodsAnnotatedWith( When.class ) )
-			{
-				log.info( "Adding GHERKIN When as [" + m.getAnnotation( When.class ).value() + "] for [" + m.getName() + "]" );
-				methodMap.put(m.getAnnotation( When.class ).value() , new GherkinContainer( m.getAnnotation( When.class ).value(), Pattern.compile( m.getAnnotation( When.class ).value() ), m ) );
-			}
-
-			suiteContainer.getMethodMap().putAll( methodMap );
-		}
-		catch( Exception e )
-		{
-			e.printStackTrace();
-		}
-	
-		
-		
 		return suiteContainer;
 	}
 	
