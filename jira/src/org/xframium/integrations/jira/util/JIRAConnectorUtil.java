@@ -7,9 +7,16 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.client.methods.HttpPost;
@@ -35,6 +42,22 @@ public class JIRAConnectorUtil {
 			throws IOException {
 		HttpURLConnection httpCon = createHttpCon(url, method.getValue(), credentials, useProxy, proxy);
 		return httpCon;
+	}
+	
+	
+	/**
+	 * Used for creating an instance of HttpsURLConnection
+	 * @param url
+	 * @param credentials
+	 * @param useProxy
+	 * @param proxy
+	 * @return
+	 * @throws IOException
+	 */
+	public static HttpsURLConnection getHttpsURLConnection(final String url,HTTPMethod method,  String credentials, boolean useProxy, Proxy proxy)
+			throws Exception {
+		HttpsURLConnection httpsCon = createHttpsCon(url, method.getValue(), credentials, useProxy, proxy);
+		return httpsCon;
 	}
 
 	/**
@@ -87,6 +110,44 @@ public class JIRAConnectorUtil {
 
 		return httpCon;
 	}
+	
+	
+	
+	/**
+	 * created HttpsURLConnection
+	 * @param url
+	 * @param method
+	 * @param credentials
+	 * @param useProxy
+	 * @param proxy
+	 * @return
+	 * @throws IOException
+	 */
+	private static HttpsURLConnection createHttpsCon(final String url, final String method, String credentials, boolean useProxy,
+			Proxy proxy) throws Exception {
+		HttpsURLConnection.setDefaultSSLSocketFactory(getMockCertificate().getSocketFactory());
+		
+		final HttpsURLConnection httpsCon;
+		if (useProxy) {
+			httpsCon = (HttpsURLConnection) new URL(url).openConnection(proxy);
+		} else {
+			httpsCon = (HttpsURLConnection) new URL(url).openConnection();
+		}
+
+		httpsCon.setDoOutput(true);
+		httpsCon.setRequestMethod(method);
+
+		if (!credentials.isEmpty()) {
+			final String encoding = new Base64().encodeToString(credentials.getBytes());
+			httpsCon.setRequestProperty("Authorization", "Basic " + encoding);
+		}
+
+		httpsCon.setRequestProperty("Content-type", "application/json");
+		
+
+		return httpsCon;
+	}
+	
 	
 	/**
 	 * Create POST request
@@ -146,6 +207,36 @@ public class JIRAConnectorUtil {
 		}
 		
 		return data.toString();
+	}
+	
+	/**
+	 * Returns a mock certificate
+	 * @return
+	 */
+	public static SSLContext getMockCertificate() throws Exception{
+		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+
+				@Override
+				public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+				}
+	
+				@Override
+				public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+	
+				}
+	
+				@Override
+				public X509Certificate[] getAcceptedIssuers() {
+					return new X509Certificate[0];
+				}
+
+		}};
+		
+		SSLContext sc = SSLContext.getInstance("SSL");
+		sc.init(null, trustAllCerts, new java.security.SecureRandom());
+		
+		return sc;
+		
 	}
 	
     

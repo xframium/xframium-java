@@ -14,15 +14,14 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -62,6 +61,9 @@ public class JIRAConnectorImpl implements JIRAConnector {
 
 	/** proxy */
 	private Proxy proxy;
+	
+	/** proxy */
+	private HttpHost proxyHost;
 
 	/**
 	 * Initialize connector with proxy
@@ -77,8 +79,11 @@ public class JIRAConnectorImpl implements JIRAConnector {
 		this.useProxy = true;
 		this.credentials = credentials;
 
-		if (useProxy)
+		if (useProxy){
+			this.proxyHost = new HttpHost(proxyServer, proxyPort);
 			this.proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyServer, proxyPort));
+		}
+			
 	}
 
 	/**
@@ -103,16 +108,12 @@ public class JIRAConnectorImpl implements JIRAConnector {
 
 		JIRAProject projectEntity = new JIRAProject();
 		projectEntity.setProjectKey(projectKey);
-
-		HttpURLConnection httpUrlConn = null;
-		if (useProxy)
-			httpUrlConn = JIRAConnectorUtil.getHttpURLConnection(projectURL, HTTPMethod.GET, credentials, useProxy,
-					proxy);
-		else
-			httpUrlConn = JIRAConnectorUtil.getHttpURLConnection(projectURL, HTTPMethod.GET, credentials, useProxy,
-					null);
-
-		JSONArray projects = new JSONArray(JIRAConnectorUtil.httpGetJSONString(httpUrlConn.getInputStream()));
+		
+		JSONArray projects = null;
+		
+		HttpURLConnection httpUrlConn = JIRAConnector.getHttpConnection(projectURL, credentials, useProxy, proxy);
+		projects = new JSONArray(JIRAConnectorUtil.httpGetJSONString(httpUrlConn.getInputStream()));
+		
 
 		Iterator<?> projectsIterator = projects.iterator();
 
@@ -142,16 +143,11 @@ public class JIRAConnectorImpl implements JIRAConnector {
 		JIRAVersion version = new JIRAVersion();
 		version.setProjectId(projectId);
 		version.setVersionName(versionName);
-
-		HttpURLConnection httpUrlConn = null;
-		if (useProxy)
-			httpUrlConn = JIRAConnectorUtil.getHttpURLConnection(versionURL, HTTPMethod.GET, credentials, useProxy,
-					proxy);
-		else
-			httpUrlConn = JIRAConnectorUtil.getHttpURLConnection(versionURL, HTTPMethod.GET, credentials, useProxy,
-					null);
-
-		JSONObject project = new JSONObject(JIRAConnectorUtil.httpGetJSONString(httpUrlConn.getInputStream()));
+		
+		JSONObject project  = null;
+		
+		HttpURLConnection httpUrlConn = JIRAConnector.getHttpConnection(versionURL, credentials, useProxy, proxy);
+		project = new JSONObject(JIRAConnectorUtil.httpGetJSONString(httpUrlConn.getInputStream()));
 
 		JSONArray versions = (JSONArray) project.get(VERSION_TAG);
 
@@ -203,13 +199,7 @@ public class JIRAConnectorImpl implements JIRAConnector {
 		 */
 		postRequest.setEntity(input);
 
-		HttpClient client = HttpClientBuilder.create().build();
-		if (useProxy)
-			client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy); // need
-																					// to
-																					// find
-																					// another
-																					// way
+		HttpClient client = JIRAConnector.getHttpClient(createCycleURL, useProxy, proxyHost);
 
 		HttpResponse response = client.execute(postRequest);
 
@@ -252,18 +242,9 @@ public class JIRAConnectorImpl implements JIRAConnector {
 		String projectURL = serverUrl.concat(GET_A_CYCLE_URL).concat(VERSION_ID_EQUALS)
 				.concat(testCycle.getVersionId());
 
-		JSONArray versionDataList = null;
-
-		HttpURLConnection httpUrlConn = null;
-		if (useProxy)
-			httpUrlConn = JIRAConnectorUtil.getHttpURLConnection(projectURL, HTTPMethod.GET, credentials, useProxy,
-					proxy);
-		else
-
-			httpUrlConn = JIRAConnectorUtil.getHttpURLConnection(projectURL, HTTPMethod.GET, credentials, useProxy,
-					null);
-
-		BufferedReader br = new BufferedReader(new InputStreamReader(httpUrlConn.getInputStream()));
+		BufferedReader br = null;
+		HttpURLConnection httpUrlConn = JIRAConnector.getHttpConnection(projectURL, credentials, useProxy, proxy);
+		br = new BufferedReader(new InputStreamReader(httpUrlConn.getInputStream()));	
 
 		final StringBuffer httpResponse = new StringBuffer();
 		String line = "";
@@ -323,13 +304,7 @@ public class JIRAConnectorImpl implements JIRAConnector {
 		 */
 		postRequest.setEntity(input);
 
-		HttpClient client = HttpClientBuilder.create().build();
-		if (useProxy)
-			client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy); // need
-																					// to
-																					// find
-																					// another
-																					// way
+		HttpClient client = JIRAConnector.getHttpClient(addTestCaseURL, useProxy, proxyHost);
 
 		HttpResponse response = client.execute(postRequest);
 
@@ -349,6 +324,13 @@ public class JIRAConnectorImpl implements JIRAConnector {
 		execution.setCycleId(testCycleID);
 		execution.setIssueKey(issueKey);
 		execution.setStatus(status);
+		
+		StringBuilder commentBuilder = new StringBuilder();
+		for(String commentPart: comment.split("\r\n")){
+			commentBuilder.append(commentPart.trim()).append(",");
+		}
+		comment = commentBuilder.toString().substring(0,700);
+		
 		execution.setComment(comment);
 
 		String executionId = getExecutionId(execution.getCycleId(), execution.getIssueKey());
@@ -369,13 +351,8 @@ public class JIRAConnectorImpl implements JIRAConnector {
 		content.setContentType(JSON_CONTENT_TYPE);
 		putRequest.setEntity(content);
 
-		HttpClient client = HttpClientBuilder.create().build();
-		if (useProxy)
-			client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy); // need
-																					// to
-																					// find
-																					// another
-																					// way
+		HttpClient client = JIRAConnector.getHttpClient(updateExecutionURL, useProxy, proxyHost);
+
 		HttpResponse response = client.execute(putRequest);
 
 		if (response.getStatusLine().getStatusCode() == STATUS_OK) {
@@ -415,14 +392,8 @@ public class JIRAConnectorImpl implements JIRAConnector {
 		final HttpEntity multipart = builder.build();
 		postRequest.setEntity(multipart);
 
-		HttpClient client = HttpClientBuilder.create().build();
-		if (useProxy)
-			client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy); // need
-																					// to
-																					// find
-																					// another
-																					// way
-
+		HttpClient client = JIRAConnector.getHttpClient(addAttachmentURL, useProxy, proxyHost);
+		
 		HttpResponse response = client.execute(postRequest);
 
 		if (response.getStatusLine().getStatusCode() == STATUS_OK)
@@ -445,16 +416,11 @@ public class JIRAConnectorImpl implements JIRAConnector {
 		execution.setIssueKey(issueKey);
 
 		String findExecutionURL = serverUrl.concat(FIND_EXECUTION_URL).concat(execution.getCycleId());
+		
+		BufferedReader br = null;
+		HttpURLConnection httpUrlConn = JIRAConnector.getHttpConnection(findExecutionURL, credentials, useProxy, proxy);
+		br = new BufferedReader(new InputStreamReader(httpUrlConn.getInputStream()));
 
-		HttpURLConnection httpUrlConn = null;
-		if (useProxy)
-			httpUrlConn = JIRAConnectorUtil.getHttpURLConnection(findExecutionURL, HTTPMethod.GET, credentials,
-					useProxy, proxy);
-		else
-			httpUrlConn = JIRAConnectorUtil.getHttpURLConnection(findExecutionURL, HTTPMethod.GET, credentials,
-					useProxy, null);
-
-		BufferedReader br = new BufferedReader(new InputStreamReader(httpUrlConn.getInputStream()));
 
 		StringBuffer httpResponse = new StringBuffer();
 
