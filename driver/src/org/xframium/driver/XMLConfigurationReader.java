@@ -203,7 +203,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     					if ( xR.isTests() )
     					{
     						sC.getActiveTestList().addAll( s2.getActiveTestList() );
-    						sC.getInactiveTestList().addAll( s2.getActiveTestList() );
+    						sC.getInactiveTestList().addAll( s2.getInactiveTestList() );
     					}
     					
     					if ( xR.isFunctions() )
