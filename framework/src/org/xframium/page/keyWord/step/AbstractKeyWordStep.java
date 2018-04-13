@@ -1522,7 +1522,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     {
         for ( KeyWordParameter p : parameterList )
         {
-            if ( parameterName.equals( p.getName() ) )
+            if ( parameterName.equalsIgnoreCase( p.getName() ) )
                 return p;
         }
         return null;
@@ -1532,7 +1532,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     {
         for ( KeyWordParameter p : parameterList )
         {
-            if ( parameterName.equals( p.getName() ) )
+            if ( parameterName.equalsIgnoreCase( p.getName() ) )
             {
                 return getParameterValue( p, contextMap, dataMap, xFID );
             }
