@@ -399,20 +399,25 @@ public class WebServiceClientUtil
             {
                 int responseCode = con.getResponseCode();
 
-                if ( responseCode == HttpURLConnection.HTTP_OK ) // success
+                if ( responseCode >= 200 && responseCode < 300 ) // success
                 {
-                    BufferedReader in = new BufferedReader( new InputStreamReader( con.getInputStream() ) );
-                    String inputLine;
-                    StringBuffer response = new StringBuffer();
-
-                    while ( (inputLine = in.readLine()) != null )
-                    {
-                        response.append( inputLine );
-                    }
-
-                    in.close();
-
-                    rtn = new Responce( response.toString() );
+                	if ( con.getInputStream() != null )
+                	{
+	                    BufferedReader in = new BufferedReader( new InputStreamReader( con.getInputStream() ) );
+	                    String inputLine;
+	                    StringBuffer response = new StringBuffer();
+	
+	                    while ( (inputLine = in.readLine()) != null )
+	                    {
+	                        response.append( inputLine );
+	                    }
+	
+	                    in.close();
+	
+	                    rtn = new Responce( response.toString() );
+                	}
+                	else
+                		rtn = new Responce( "" );
                 }
             }
             else if ( (HTTP_POST.equals( callDetails.method )) || (HTTP_PUT.equals( callDetails.method )) )

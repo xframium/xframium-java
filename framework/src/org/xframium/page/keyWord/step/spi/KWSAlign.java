@@ -21,8 +21,14 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
+
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.cloud.action.CloudActionProvider;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
@@ -73,30 +79,37 @@ public class KWSAlign extends AbstractKeyWordStep
 		    
 		    Element baseElement = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
 		    Element compareElement = getElement( pageObject, contextMap, webDriver, dataMap, elementName, executionContext );
+		    CloudActionProvider aP = ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider();
+		    
+		    Point baseLocation = aP.translatePoint( ( (DeviceWebDriver) webDriver), ( (WebElement) baseElement.getNative() ).getLocation() );
+		    Point compareLocation = aP.translatePoint( ( (DeviceWebDriver) webDriver), ( (WebElement) compareElement.getNative() ).getLocation() );
+		    Dimension baseSize = aP.translateDimension( (DeviceWebDriver) webDriver, ((WebElement) baseElement.getNative()).getSize() );
+		    Dimension compareSize = aP.translateDimension( (DeviceWebDriver) webDriver, ((WebElement) compareElement.getNative()).getSize() );
+		    
 		    int actualDeviation = 0;
 		    
 		    switch ( align )
 		    {
 		        case BOTTOM:
-		            actualDeviation = Math.abs( (baseElement.getAt().getY() + baseElement.getSize().getHeight()) - (compareElement.getAt().getY() + compareElement.getSize().getHeight()) );
+		            actualDeviation = Math.abs( (baseLocation.getY() + baseSize.getHeight()) - (compareLocation.getY() + compareSize.getHeight()) );
 		            if ( actualDeviation > deviation )
 		                throw new ScriptException( "Alignment to the bottom of [" + getName() + "] of the element [" + elementName + "] was off by " + actualDeviation );
                     break;
                     
 		        case LEFT:
-		            actualDeviation = Math.abs( baseElement.getAt().getX() - compareElement.getAt().getX() );
+		            actualDeviation = Math.abs( baseLocation.getX() - compareLocation.getX() );
 		            if ( actualDeviation > deviation )
 		                throw new ScriptException( "Alignment to the left of [" + getName() + "] of the element [" + elementName + "] was off by " + actualDeviation );
 		            break;
 		            
 		        case RIGHT:
-		            actualDeviation = Math.abs( (baseElement.getAt().getX() + baseElement.getSize().getWidth()) - (compareElement.getAt().getX() + compareElement.getSize().getWidth()) );
+		            actualDeviation = Math.abs( (baseLocation.getX() + baseSize.getWidth()) - (compareLocation.getX() + compareSize.getWidth()) );
 		            if ( actualDeviation > deviation )
 		                throw new ScriptException( "Alignment to the right of [" + getName() + "] of the element [" + elementName + "] was off by " + actualDeviation );
                     break;
                     
 		        case TOP:
-		            actualDeviation = Math.abs( baseElement.getAt().getY() - compareElement.getAt().getY() );
+		            actualDeviation = Math.abs( baseLocation.getY() - compareLocation.getY() );
 		            if ( actualDeviation > deviation )
 		                throw new ScriptException( "Alignment to the top of [" + getName() + "] of the element [" + elementName + "] was off by " + actualDeviation );
                     break;

@@ -20,6 +20,7 @@ import org.openqa.selenium.ContextAware;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.Rectangle;
+import org.openqa.selenium.WebDriver;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xframium.application.ApplicationDescriptor;
@@ -45,6 +46,7 @@ import org.xframium.page.element.Element;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
 import edu.emory.mathcs.backport.java.util.Collections;
+import io.appium.java_client.ios.IOSDriver;
 
 public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 {
@@ -62,6 +64,76 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 	        stringBuilder.append( "Unknown Action" );
 	    
 	    return stringBuilder.toString();
+	}
+	
+	private int deviceWidth = 0;
+	private int deviceHeight = 0;
+	
+	@Override
+	public Point translatePoint(DeviceWebDriver webDriver, Point currentPoint ) 
+	{
+		log.error( "Translating potin from " + currentPoint );
+		
+		if ( deviceWidth == 0 || deviceHeight == 0 )
+		{
+			if ( webDriver.getPopulatedDevice().getResolution() == null )
+			{
+				deviceWidth = -1;
+				deviceHeight = -1;
+				return currentPoint;
+			}
+			
+			String[] deviceResolution = webDriver.getPopulatedDevice().getResolution().split( "x" );
+			
+			if ( deviceResolution.length != 2 )
+			{
+				deviceWidth = -1;
+				deviceHeight = -1;
+				return currentPoint;
+			}
+			
+			try
+			{
+				deviceWidth = Integer.parseInt( deviceResolution[ 0 ] );
+				deviceHeight = Integer.parseInt( deviceResolution[ 1 ] );
+			}
+			catch( Exception e )
+			{
+				
+			}
+			
+			log.error( "Resolution is " + deviceWidth + ", " + deviceHeight);
+
+			if ( deviceWidth == 0 || deviceHeight == 0 )
+			{
+				deviceWidth = -1;
+				deviceHeight = -1;
+				return currentPoint;
+			}
+		}
+		
+		if ( deviceWidth == -1 || deviceHeight == -1 )
+			return currentPoint;		
+		//
+		// If we are here then we have a resolution
+		//
+		
+		Point returnValue = new Point( currentPoint.getX(), currentPoint.getY() );
+		Dimension wD = webDriver.manage().window().getSize();
+		
+		if ( deviceWidth > wD.getWidth() )
+			returnValue.x = returnValue.x * ( deviceWidth / wD.getWidth() );
+		else if ( deviceWidth < wD.getWidth() )
+			returnValue.x = returnValue.x * ( wD.getWidth() / deviceWidth );
+		
+		if ( deviceHeight > wD.getHeight() )
+			returnValue.y = returnValue.y * ( deviceHeight / wD.getHeight() );
+		else if ( deviceHeight < wD.getHeight() )
+			returnValue.y = returnValue.y * ( wD.getHeight() / deviceHeight );
+		
+		log.error( "New Point " + returnValue );
+		
+		return returnValue;
 	}
 	
 	@Override

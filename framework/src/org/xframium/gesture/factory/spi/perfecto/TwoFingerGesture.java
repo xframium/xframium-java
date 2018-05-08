@@ -20,8 +20,10 @@
  *******************************************************************************/
 package org.xframium.gesture.factory.spi.perfecto;
 
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.AbstractTwoFingerGesture;
 import org.xframium.integrations.common.PercentagePoint;
@@ -48,14 +50,19 @@ public class TwoFingerGesture extends AbstractTwoFingerGesture
 			
 			if ( webElement != null )
 			{
-				if ( webElement.getLocation() != null && webElement.getSize() != null && webElement.getSize().getWidth() > 0 && webElement.getSize().getHeight() > 0 )
+				CloudActionProvider aP = ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider();
+		        
+		        Point at = aP.translatePoint( ( (DeviceWebDriver) webDriver), webElement.getLocation() );
+		        Dimension size = aP.translateDimension( (DeviceWebDriver) webDriver, webElement.getSize() );
+				
+		        if ( at != null && size != null && size.getWidth() > 0 && size.getHeight() > 0 )
 				{
-					int x = getStartOne().getX() * webElement.getSize().getWidth() + webElement.getLocation().getX();
-					int y = getStartOne().getY() * webElement.getSize().getHeight() + webElement.getLocation().getY();
+					int x = getStartOne().getX() * size.getWidth() + at.getX();
+					int y = getStartOne().getY() * size.getHeight() + at.getY();
 					Point swipeStart = new Point( x, y );
 					
-					x = getEndOne().getX() * webElement.getSize().getWidth() + webElement.getLocation().getX();
-					y = getEndOne().getY() * webElement.getSize().getHeight() + webElement.getLocation().getY();
+					x = getEndOne().getX() * size.getWidth() + at.getX();
+					y = getEndOne().getY() * size.getHeight() + at.getY();
 					Point swipeEnd = new Point( x, y );
 					
 					PerfectoMobile.instance(( (DeviceWebDriver) webDriver ).getxFID() ).gestures().pinch( executionId, deviceName, new PercentagePoint( swipeStart.getX(), swipeStart.getY(), false ), new PercentagePoint( swipeEnd.getX(), swipeEnd.getY(), false ) );

@@ -291,10 +291,10 @@ iframe {
                                         <div class="panel-body">
                                             <ul class="list-group">
                                                 <li class="list-group-item" ng-repeat="p in selectedElement.step.parameterList">
-                                                    {{p.value}}
-                                                    <sup ng-if="p[ $index ].name != 'null' && p[ $index ].name != null && p[ $index ].name != ''">({{p[
-                                                        $index ].name}})</sup>
-                                                    <span class="badge">{{p[$index ].type}}</span>
+                                                    <span ng-if="p.type == 'STATIC'">{{p.value}}</span>
+                                                    <span ng-if="p.type != 'STATIC'">{{selectedElement.parameterList[ $index ]}} as ({{p.value}})</span>
+                                                    <sup ng-if="p.name != 'null' && p.name != null && p.name != ''">({{p.name}})</sup>
+                                                    <span class="badge">{{p.type}}</span>
                                                 </li>
                                             </ul>
                                         </div>

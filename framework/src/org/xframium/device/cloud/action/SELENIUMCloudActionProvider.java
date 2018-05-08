@@ -2,6 +2,7 @@ package org.xframium.device.cloud.action;
 
 import java.util.Date;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
@@ -36,6 +37,12 @@ public class SELENIUMCloudActionProvider extends AbstractCloudActionProvider
 	{
 	    
 	    
+	}
+	
+	@Override
+	public Point translatePoint(DeviceWebDriver webDriver, Point currentPoint) {
+		// TODO Auto-generated method stub
+		return currentPoint;
 	}
 	
 	@Override

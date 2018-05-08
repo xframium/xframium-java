@@ -23,9 +23,11 @@ package org.xframium.gesture.factory.spi.perfecto;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.AbstractSwipeGesture;
 import org.xframium.integrations.common.PercentagePoint;
@@ -52,14 +54,19 @@ public class SwipeGesture extends AbstractSwipeGesture
 			
 			if ( webElement != null )
 			{
-				if (  webElement.getLocation() != null && webElement.getSize() != null && webElement.getSize().getWidth() > 0 && webElement.getSize().getHeight() > 0 )
+				CloudActionProvider aP = ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider();
+		        
+		        Point at = aP.translatePoint( ( (DeviceWebDriver) webDriver), webElement.getLocation() );
+		        Dimension size = aP.translateDimension( (DeviceWebDriver) webDriver, webElement.getSize() );
+				
+		        if ( at != null && size != null && size.getWidth() > 0 && size.getHeight() > 0 )
 				{
-					int x = (int)( ( getSwipeStart().getX() / 100.0 ) * (double) webElement.getSize().getWidth() + webElement.getLocation().getX() );
-					int y = (int) ( ( getSwipeStart().getY() / 100.0 ) * (double) webElement.getSize().getHeight() + webElement.getLocation().getY() );
+					int x = (int)( ( getSwipeStart().getX() / 100.0 ) * (double) size.getWidth() + at.getX() );
+					int y = (int) ( ( getSwipeStart().getY() / 100.0 ) * (double) size.getHeight() + at.getY() );
 					Point swipeStart = new Point( x, y );
 					
-					x = (int) ( ( getSwipeEnd().getX() / 100.0 ) * (double) webElement.getSize().getWidth() + webElement.getLocation().getX() );
-					y = (int) ( ( getSwipeEnd().getY() / 100.0 ) * (double) webElement.getSize().getHeight() + webElement.getLocation().getY() );
+					x = (int) ( ( getSwipeEnd().getX() / 100.0 ) * (double) size.getWidth() + at.getX() );
+					y = (int) ( ( getSwipeEnd().getY() / 100.0 ) * (double) size.getHeight() + at.getY() );
 					Point swipeEnd = new Point( x, y );
 					
 					Map<String, Object> params = new HashMap<>();
@@ -67,7 +74,6 @@ public class SwipeGesture extends AbstractSwipeGesture
 					params.put( "end", new PercentagePoint( swipeEnd.getX(), swipeEnd.getY(), false ).toString() );
 					params.put( "duration", "2" );
 					String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript("mobile:touch:swipe", params) + "";
-					//PerfectoMobile.instance().gestures().swipe( executionId, deviceName, new PercentagePoint( swipeStart.getX(), swipeStart.getY(), false ), new PercentagePoint( swipeEnd.getX(), swipeEnd.getY(), false ), 3 );
 					return true;
 				}
 				else
@@ -82,8 +88,7 @@ public class SwipeGesture extends AbstractSwipeGesture
 			params.put( "end", new PercentagePoint( getSwipeEnd().getX(), getSwipeEnd().getY() ).toString() );
 			params.put( "duration", "2" );
 			String result = ((RemoteWebDriver) ((DeviceWebDriver) webDriver).getWebDriver()).executeScript("mobile:touch:swipe", params) + "";
-			
-			//PerfectoMobile.instance().gestures().swipe( executionId, deviceName, new PercentagePoint( getSwipeStart().getX(), getSwipeStart().getY() ), new PercentagePoint( getSwipeEnd().getX(), getSwipeEnd().getY() ), 3 );
+
 			return true;
 		}
 		else

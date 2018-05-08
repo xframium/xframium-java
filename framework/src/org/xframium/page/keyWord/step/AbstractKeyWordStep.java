@@ -1343,7 +1343,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             //
             // If tracing was enabled then perform a named dump state
             //
-            if ( ( isTrace() || executionContext.getTest().getTrace().equals( TRACE.ON ) ) && !executionContext.getTest().getTrace().equals( TRACE.DISABLED ) )
+            if ( ( isTrace() || ( executionContext.getTest() != null && executionContext.getTest().getTrace() != null && executionContext.getTest().getTrace().equals( TRACE.ON ) ) ) && executionContext.getTest() != null && executionContext.getTest().getTrace() != null && !executionContext.getTest().getTrace().equals( TRACE.DISABLED ) )
             {
                 try
                 {

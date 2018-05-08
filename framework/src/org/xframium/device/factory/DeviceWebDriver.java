@@ -138,6 +138,9 @@ public class DeviceWebDriver
     private double widthModifier = 1;
     private double heightModifier = 1;
     
+    private int deviceHeight;
+    private int deviceWidth;
+    
     private boolean keepAliveRunning = false;
     private long lastAction = System.currentTimeMillis();
     
@@ -152,6 +155,8 @@ public class DeviceWebDriver
     
     
     private File artifactFolder = null;
+    
+    
     
     
     
@@ -744,6 +749,16 @@ public class DeviceWebDriver
             heightModifier = 1;
             widthModifier = 1;
         }
+    }
+    
+    public void setDeviceHeight( int deviceWidth )
+    {
+    	
+    }
+    
+    public void setDeviceWidth( int deviceWidth )
+    {
+    	
     }
     
     public int getModifiedX( int currentX )

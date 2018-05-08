@@ -26,7 +26,9 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
@@ -102,7 +104,10 @@ public class KWSCheckColor extends AbstractKeyWordStep
 		
 		long fileKey = System.currentTimeMillis();
 		Resolution resolution = Resolution.valueOf( ( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" ).toLowerCase() );
-		Point location = createPoint( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
+		
+		CloudActionProvider aP = ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider();
+		Point location = aP.translatePoint( ( (DeviceWebDriver) webDriver), createPoint( getParameterValue( getParameterList().get( 1 ), contextMap, dataMap, executionContext.getxFID() ) + "" ) );
+		
 		int percentDeviation = 0;
 		String colorCode = null;
 		
