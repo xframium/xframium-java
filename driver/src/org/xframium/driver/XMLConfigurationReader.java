@@ -203,7 +203,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     					if ( xR.isTests() )
     					{
     						sC.getActiveTestList().addAll( s2.getActiveTestList() );
-    						sC.getInactiveTestList().addAll( s2.getActiveTestList() );
+    						sC.getInactiveTestList().addAll( s2.getInactiveTestList() );
     					}
     					
     					if ( xR.isFunctions() )
@@ -1113,7 +1113,6 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         dC.getPropertyMap().putAll( configProperties );
         dC.setEmbeddedServer( Boolean.parseBoolean( getValue( "driver.embeddedServer", xRoot.getDriver().isEmbeddedServer() + "", configProperties ) ) );
         dC.setDriverType( DriverType.valueOf( xRoot.getDriver().getType() ) );
-        dC.setDeviceTags( getValue( "driver.deviceTags", xRoot.getDriver().getDeviceTags(), configProperties ) );
         
         if ( xRoot.getDependencies() != null )
         {
@@ -1283,7 +1282,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
             if ( p.getType() != null )
                 ptype = ParameterType.valueOf( p.getType() );
             
-            KeyWordParameter kp = new KeyWordParameter( ptype, p.getValue(), null, null );
+            KeyWordParameter kp = new KeyWordParameter( ptype, p.getValue(), p.getName(), p.getUsage() );
             
             if ( p.getToken() != null && !p.getToken().isEmpty() )
             {

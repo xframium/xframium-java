@@ -1,5 +1,6 @@
 package org.xframium.device.cloud.action;
 
+import org.openqa.selenium.Point;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.integrations.common.PercentagePoint;
@@ -32,6 +33,12 @@ public class WINDOWSCloudActionProvider extends AbstractCloudActionProvider
         return null;
         
     }
+	
+	@Override
+	public Point translatePoint(DeviceWebDriver webDriver, Point currentPoint) {
+		// TODO Auto-generated method stub
+		return currentPoint;
+	}
 	
 	@Override
     public boolean startApp( DeviceWebDriver webDriver, String executionId, String deviceId, String appName, String appIdentifier )

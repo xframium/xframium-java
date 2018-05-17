@@ -52,7 +52,7 @@ iframe {
                     Started {{testData.startTime.dateOnly}} at {{testData.startTime.timeOnly}} and ran for
                     <b>{{formattedDuration}}</b>
                 </span>
-                <h6 class="dashhead-subtitle">xFramium 1.0.14 (Atlas)</h6>
+                <h6 class="dashhead-subtitle">xFramium 1.0.16 (Typhon)</h6>
                 <h3 class="dashhead-title">{{testData.test.name}}<span class="glyphicon glyphicon-ok" ng-class="{'glyphicon-ok text-success': testData.testStatus=='PASSED', 'glyphicon-remove text-danger': testData.testStatus!='PASSED' }" style="margin-left: 15px"></span><sup style="margin-left: 5px" ng-if="testData.iterationCount > 0">x {{(+testData.iterationCount+1)}}</sup></h3>
                 <h6>
                     {{testData.device.environment}} on {{testData.cloudDescriptor.hostName}} ({{testData.cloudDescriptor.provider.name}})
@@ -291,10 +291,10 @@ iframe {
                                         <div class="panel-body">
                                             <ul class="list-group">
                                                 <li class="list-group-item" ng-repeat="p in selectedElement.step.parameterList">
-                                                    {{p.value}}
-                                                    <sup ng-if="p[ $index ].name != 'null' && p[ $index ].name != null && p[ $index ].name != ''">({{p[
-                                                        $index ].name}})</sup>
-                                                    <span class="badge">{{p[$index ].type}}</span>
+                                                    <span ng-if="p.type == 'STATIC'">{{p.value}}</span>
+                                                    <span ng-if="p.type != 'STATIC'">{{selectedElement.parameterList[ $index ]}} as ({{p.value}})</span>
+                                                    <sup ng-if="p.name != 'null' && p.name != null && p.name != ''">({{p.name}})</sup>
+                                                    <span class="badge">{{p.type}}</span>
                                                 </li>
                                             </ul>
                                         </div>

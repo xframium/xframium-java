@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.xframium</groupId>
   <artifactId>xframium-driver</artifactId>
-  <version>1.0.16-SNAPSHOT</version>
+  <version>1.0.17-SNAPSHOT</version>
   <name>XFramium Driver</name>
   <repositories>
     <repository>
@@ -137,7 +137,7 @@
     <dependency>
       <groupId>org.xframium</groupId>
       <artifactId>xframium-java</artifactId>
-      <version>1.0.16-SNAPSHOT</version>
+      <version>1.0.17-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>

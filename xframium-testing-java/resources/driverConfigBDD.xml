@@ -7,7 +7,7 @@
   <devices provider="XML" fileName="deviceRegistry.xml">
   </devices>
   <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" >
-    <property name="selenium.timeouts.implicitWait">5000</property>
+    <property name="selenium.timeouts.implicitWait">3000</property>
     <propertyAdapter className="org.xframium.device.property.SeleniumPropertyAdapter" />
     <artifact type="FAILURE_SOURCE" />
     <artifact type="DEVICE_LOG" />
@@ -18,8 +18,15 @@
     <artifact type="TAB_WEBHOME" />
     <artifact type="SAUCE_LABS" />
     <artifact type="REPORTIUM" />
+    <artifact type="ALL_IN_ONE"/>
+    <artifact type="DEBUGGER"/>
+    <artifact type="STATISTICS"/>
+    <artifact type="TIMING_HTML"/>
   </driver>
   <model provider="XML" siteName="xTest" fileName="page-home.xml" />
+  <references>
+    <reference fileName="../../testing/driverConfig.xml" tests="true" functions="true" elements="true" applications="false" devices="false" data="true"/>
+  </references>
   <suite provider="GHERKIN" fileName="." >
     <packages>
       <package name="org.xframium.examples">Pull from the EXAMPLES packages</package>
@@ -27,4 +34,5 @@
   </suite>
 
   <data provider="XML" fileName="pageData.xml" />
+  
 </xFramium>

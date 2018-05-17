@@ -21,6 +21,7 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
+
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
@@ -51,6 +52,11 @@ public class KWSDumpState extends AbstractKeyWordStep
         
         if ( getContext() != null )
             addContext( getContext(), rawSource, contextMap, executionContext );
+        
+        System.out.println( webDriver.manage().window().getSize() );
+       
+        
+        
         
         return true;
 	}

@@ -226,7 +226,12 @@ public class SeleniumElement extends AbstractElement
                     try
                     {
                         BufferedImage fullImage = ImageIO.read( new ByteArrayInputStream( imageData ) );
-                        return fullImage.getSubimage( imageElement.getLocation().getX(), imageElement.getLocation().getY(), imageElement.getSize().getWidth(), imageElement.getSize().getHeight() );
+                        CloudActionProvider aP = getWebDriver().getCloud().getCloudActionProvider();
+                        
+                        Point imageLocation = aP.translatePoint( getWebDriver(), imageElement.getLocation() );
+                        Dimension imageSize = aP.translateDimension( getWebDriver(), imageElement.getSize() );
+
+                        return fullImage.getSubimage( imageLocation.getX(), imageLocation.getY(), imageSize.getWidth(), imageSize.getHeight() );
                     }
                     catch ( Exception e )
                     {
@@ -504,11 +509,18 @@ public class SeleniumElement extends AbstractElement
                 }
                 else if ( ((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver )
                 {
-                    double x = webElement.getLocation().getX() + (webElement.getSize().getWidth() / 2);
-                    double y = webElement.getLocation().getY() + (webElement.getSize().getHeight() / 2);
+                	CloudActionProvider aP = getWebDriver().getCloud().getCloudActionProvider();
+                    
+                    Point clickLocation = aP.translatePoint( getWebDriver(), webElement.getLocation() );
+                    Dimension clickSize = aP.translateDimension( getWebDriver(), webElement.getSize() );
+                    Dimension windowSize = aP.translateDimension( getWebDriver(), getWebDriver().manage().window().getSize() );
+                	
+                	
+                    double x = clickLocation.getX() + (clickSize.getWidth() / 2);
+                    double y = clickLocation.getY() + (clickSize.getHeight() / 2);
 
-                    int percentX = (int) ( x / getWebDriver().manage().window().getSize().getWidth() * 100.0 );
-                    int percentY = (int) ( y / getWebDriver().manage().window().getSize().getHeight() * 100.0 );
+                    int percentX = (int) ( x / windowSize.getWidth() * 100.0 );
+                    int percentY = (int) ( y / windowSize.getHeight() * 100.0 );
                     
                     try
                     {
@@ -569,7 +581,8 @@ public class SeleniumElement extends AbstractElement
         if ( webElement != null )
         {
 
-            Dimension elementSize = webElement.getSize();
+        	CloudActionProvider aP = getWebDriver().getCloud().getCloudActionProvider();
+        	Dimension elementSize = aP.translateDimension( getWebDriver(), webElement.getSize() );
 
             int useX = (int) ((double) elementSize.getWidth() * ((double) offsetX / 100.0));
             int useY = (int) ((double) elementSize.getHeight() * ((double) offsetY / 100.0));

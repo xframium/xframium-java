@@ -2,6 +2,7 @@ package org.xframium.device.cloud.action;
 
 import java.util.Date;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
@@ -42,6 +43,12 @@ public class SAUCELABSCloudActionProvider extends AbstractCloudActionProvider
                 return true;
         }
     }
+    
+    @Override
+	public Point translatePoint(DeviceWebDriver webDriver, Point currentPoint) {
+		// TODO Auto-generated method stub
+		return currentPoint;
+	}
     
     @Override
     public void tap( DeviceWebDriver webDriver, PercentagePoint location, int lengthInMillis )

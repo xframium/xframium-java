@@ -1343,7 +1343,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             //
             // If tracing was enabled then perform a named dump state
             //
-            if ( ( isTrace() || executionContext.getTest().getTrace().equals( TRACE.ON ) ) && !executionContext.getTest().getTrace().equals( TRACE.DISABLED ) )
+            if ( ( isTrace() || ( executionContext.getTest() != null && executionContext.getTest().getTrace() != null && executionContext.getTest().getTrace().equals( TRACE.ON ) ) ) && executionContext.getTest() != null && executionContext.getTest().getTrace() != null && !executionContext.getTest().getTrace().equals( TRACE.DISABLED ) )
             {
                 try
                 {
@@ -1522,7 +1522,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     {
         for ( KeyWordParameter p : parameterList )
         {
-            if ( parameterName.equals( p.getName() ) )
+            if ( parameterName.equalsIgnoreCase( p.getName() ) )
                 return p;
         }
         return null;
@@ -1532,7 +1532,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     {
         for ( KeyWordParameter p : parameterList )
         {
-            if ( parameterName.equals( p.getName() ) )
+            if ( parameterName.equalsIgnoreCase( p.getName() ) )
             {
                 return getParameterValue( p, contextMap, dataMap, xFID );
             }

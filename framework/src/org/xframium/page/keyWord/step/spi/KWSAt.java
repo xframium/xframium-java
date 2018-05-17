@@ -21,12 +21,14 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
+
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.xframium.container.SuiteContainer;
-import org.xframium.exception.ScriptConfigurationException;
+import org.xframium.device.cloud.action.CloudActionProvider;
+import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element;
@@ -56,9 +58,16 @@ public class KWSAt extends AbstractKeyWordStep
     {
         Element currentElement = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).cloneElement();
         currentElement.setCacheNative( true );
-        Point at = ((WebElement) currentElement.getNative()).getLocation();
-        Dimension size = ((WebElement) currentElement.getNative()).getSize();
-
+        
+        
+        CloudActionProvider aP = ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider();
+        
+        Point at = aP.translatePoint( ( (DeviceWebDriver) webDriver), ((WebElement) currentElement.getNative()).getLocation() );
+        Dimension size = aP.translateDimension( (DeviceWebDriver) webDriver, ((WebElement) currentElement.getNative()).getSize() );
+        Dimension windowSize = aP.translateDimension( (DeviceWebDriver) webDriver, webDriver.manage().window().getSize() );
+        
+        
+        
         String contextName = getContext();
         if ( contextName == null )
             contextName = getName();
@@ -71,15 +80,15 @@ public class KWSAt extends AbstractKeyWordStep
             addContext( contextName + ".x", at.getX() + "", contextMap, executionContext );
             addContext( contextName + ".y", at.getY() + "", contextMap, executionContext );
 
-            addContext( contextName + ".x%", ((int) (((double) at.getX() / (double) webDriver.manage().window().getSize().getWidth()) * 100.0)) + "", contextMap, executionContext );
-            addContext( contextName + ".y%", ((int) (((double) at.getY() / (double) webDriver.manage().window().getSize().getHeight()) * 100.0)) + "", contextMap, executionContext );
+            addContext( contextName + ".x%", ((int) (((double) at.getX() / (double) windowSize.getWidth()) * 100.0)) + "", contextMap, executionContext );
+            addContext( contextName + ".y%", ((int) (((double) at.getY() / (double) windowSize.getHeight()) * 100.0)) + "", contextMap, executionContext );
 
             addContext( contextName + ".width", size.getWidth() + "", contextMap, executionContext );
             addContext( contextName + ".height", size.getHeight() + "", contextMap, executionContext );
             addContext( contextName + ".centerx", at.getX() + (size.getWidth() / 2) + "", contextMap, executionContext );
             addContext( contextName + ".centery", at.getY() + (size.getHeight() / 2) + "", contextMap, executionContext );
-            addContext( contextName + ".centerx%", ((int) ((((double) at.getX() + ((double) size.getWidth() / 2.0)) / (double) webDriver.manage().window().getSize().getWidth()) * 100.0)) + "", contextMap, executionContext );
-            addContext( contextName + ".centery%", ((int) ((((double) at.getY() + ((double) size.getHeight() / 2.0)) / (double) webDriver.manage().window().getSize().getHeight()) * 100.0)) + "", contextMap, executionContext );
+            addContext( contextName + ".centerx%", ((int) ((((double) at.getX() + ((double) size.getWidth() / 2.0)) / (double) windowSize.getWidth()) * 100.0)) + "", contextMap, executionContext );
+            addContext( contextName + ".centery%", ((int) ((((double) at.getY() + ((double) size.getHeight() / 2.0)) / (double) windowSize.getHeight()) * 100.0)) + "", contextMap, executionContext );
 
             
             

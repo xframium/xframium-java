@@ -9,6 +9,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.Rectangle;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -58,6 +60,13 @@ public abstract class AbstractCloudActionProvider implements CloudActionProvider
     public Rectangle findImage( DeviceWebDriver webDriver, String imageName, Map<String, String> propertyMap )
     {
         return null;
+    }
+    
+    @Override
+    public Dimension translateDimension(DeviceWebDriver webDriver, Dimension currentDimension) {
+    	Point p = new Point( currentDimension.width, currentDimension.height );
+    	p = translatePoint(webDriver, p);
+    	return new Dimension( p.x, p.y );
     }
     
 }

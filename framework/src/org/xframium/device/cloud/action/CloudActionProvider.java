@@ -2,6 +2,9 @@ package org.xframium.device.cloud.action;
 
 import java.io.InputStream;
 import java.util.Map;
+
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.Rectangle;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.integrations.common.PercentagePoint;
@@ -38,5 +41,8 @@ public interface CloudActionProvider
     
     public Rectangle findImage( DeviceWebDriver webDriver, String imageName, Map<String,String> propertyMap );
     public Rectangle findText( DeviceWebDriver webDriver, String text, Map<String,String> propertyMap );
+    
+    public Point translatePoint( DeviceWebDriver webDriver, Point currentPoint );
+    public Dimension translateDimension( DeviceWebDriver webDriver, Dimension currentDimension );
     
 }

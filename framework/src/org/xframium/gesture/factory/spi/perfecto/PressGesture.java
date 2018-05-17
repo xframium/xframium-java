@@ -20,7 +20,11 @@
  *******************************************************************************/
 package org.xframium.gesture.factory.spi.perfecto;
 
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.AbstractPressGesture;
 import org.xframium.integrations.common.PercentagePoint;
@@ -42,13 +46,17 @@ public class PressGesture extends AbstractPressGesture
 	    String executionId = getExecutionId( webDriver );
         String deviceName = getDeviceName( webDriver );
 		
-		
 		if ( webElement != null )
         {
-            if ( webElement.getLocation() != null && webElement.getSize() != null && webElement.getSize().getWidth() > 0 && webElement.getSize().getHeight() > 0 )
+			CloudActionProvider aP = ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider();
+	        
+	        Point at = aP.translatePoint( ( (DeviceWebDriver) webDriver), webElement.getLocation() );
+	        Dimension size = aP.translateDimension( (DeviceWebDriver) webDriver, webElement.getSize() );
+			
+            if ( at != null && size != null && size.getWidth() > 0 && size.getHeight() > 0 )
             {
-                int x = (int) ( ( getPressPosition().getX() / 100.0 ) * (double) webElement.getSize().getWidth() + webElement.getLocation().getX() );
-                int y = (int) ( ( getPressPosition().getY() / 100.0 ) * (double) webElement.getSize().getHeight() + webElement.getLocation().getY() );
+                int x = (int) ( ( getPressPosition().getX() / 100.0 ) * (double) size.getWidth() + at.getX() );
+                int y = (int) ( ( getPressPosition().getY() / 100.0 ) * (double) size.getHeight() + at.getY() );
                 
                 PercentagePoint pressPosition = new PercentagePoint( x, y, false );
                 

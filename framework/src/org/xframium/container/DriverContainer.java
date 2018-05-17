@@ -19,7 +19,6 @@ public class DriverContainer
     private String trace = "OFF";
     private String stepTags = "";
     private String testTags = "";
-    private String deviceTags = "";
     private String suiteName = "";
     private String phase = "";
     private String domain = "";
@@ -154,16 +153,6 @@ public class DriverContainer
     public void setBeforeDevice( String beforeDevice )
     {
         this.beforeDevice = beforeDevice;
-    }
-
-    public String getDeviceTags()
-    {
-        return deviceTags;
-    }
-
-    public void setDeviceTags( String deviceTags )
-    {
-        this.deviceTags = deviceTags;
     }
 
     public List<TagContainer> getExtractors()

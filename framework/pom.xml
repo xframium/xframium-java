@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.xframium</groupId>
   <artifactId>xframium-java</artifactId>
-  <version>1.0.16-SNAPSHOT</version>
+  <version>1.0.17-SNAPSHOT</version>
   <name>xframium-java</name>
   <repositories>
     <repository>
@@ -98,17 +98,17 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>3.11.0</version>
+      <version>3.9.0</version>
     </dependency>
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-api</artifactId>
-      <version>3.11.0</version>
+      <version>3.9.0</version>
     </dependency>
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-server</artifactId>
-      <version>3.11.0</version>
+      <version>3.9.0</version>
     </dependency>
     <dependency>
       <groupId>org.reflections</groupId>
@@ -235,7 +235,7 @@
     <dependency>
       <groupId>org.xframium</groupId>
       <artifactId>jira</artifactId>
-      <version>1.0.1</version>
+      <version>1.0.2</version>
     </dependency>
     <dependency>
       <groupId>com.googlecode.libphonenumber</groupId>
