@@ -543,7 +543,10 @@ public class Tn3270TerminalDriver
 
         try
         {
-            reader = new FileReader( pathToFile );
+            File theFile = new File( pathToFile );
+            reader = (( theFile.exists() ) ?
+                      new FileReader( pathToFile ) :
+                      new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream( pathToFile )) );
             
             JAXBContext context = JAXBContext.newInstance( ObjectFactory.class );
             Unmarshaller un = context.createUnmarshaller();
