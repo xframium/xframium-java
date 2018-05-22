@@ -91,7 +91,7 @@ public class OptionStage extends Stage
     String optionSelected = prefs.get ("Function", "Terminal");
 
     String runMode = prefs.get ("Mode", "Release");
-    release = false; release = runMode.equals ("Release");
+    release = false; //release = runMode.equals ("Release");
 
     serverSitesListStage = new SiteListStage (prefs, "Server", 10, true);
     clientSitesListStage = new SiteListStage (prefs, "Client", 6, false);

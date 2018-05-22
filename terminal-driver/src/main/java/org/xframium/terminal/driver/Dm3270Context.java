@@ -173,6 +173,27 @@ public class Dm3270Context
         worker.doWait();
     }
 
+    public void sendKeyCombination( KeyCode keyCode1, KeyCode keyCode2 )
+    {
+        JavaFxRunnable worker = new JavaFxRunnable()
+            {
+                public void myWork()
+                    throws Exception
+                {
+                    robot.delay(40);
+                    robot.keyPress(keyCode1);
+                    robot.keyPress(keyCode2);
+                    robot.keyRelease(keyCode2);
+                    robot.keyRelease(keyCode1);
+                }
+            };
+
+        Platform.runLater( worker );
+        worker.doWait();
+    }
+
+    
+
     public String getText()
     {
         int location = getCurrentLocation();
