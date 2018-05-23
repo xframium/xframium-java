@@ -356,7 +356,10 @@ public class Tn3270TerminalDriver
 
             for( CharSequence seq : paramVarArgs )
             {
-                context.sendChars( seq );
+                if ( !specialKeysHandled( seq ))
+                {
+                    context.sendChars( seq );
+                }
             }
 
             if ( log.isDebugEnabled() )
@@ -539,11 +542,14 @@ public class Tn3270TerminalDriver
     private Application loadApplication( String pathToFile, String name )
     {
         Application rtn = null;
-        FileReader reader = null;
+        Reader reader = null;
 
         try
         {
-            reader = new FileReader( pathToFile );
+            File theFile = new File( pathToFile );
+            reader = (( theFile.exists() ) ?
+                      new FileReader( pathToFile ) :
+                      new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream( pathToFile )) );
             
             JAXBContext context = JAXBContext.newInstance( ObjectFactory.class );
             Unmarshaller un = context.createUnmarshaller();
@@ -580,6 +586,213 @@ public class Tn3270TerminalDriver
     private void reportUnsupportedUsage( String msg )
     {
         throw new UnsupportedOperationException( msg );
+    }
+
+    private boolean specialKeysHandled( CharSequence seq )
+    {
+        boolean rtn = false;
+        String value = seq.toString();
+
+        switch( value )
+        {
+            case Tn3270SpecialKeyCodes.CTRL_C:
+            {
+                context.sendKeyCombination(  javafx.scene.input.KeyCode.CONTROL, javafx.scene.input.KeyCode.C );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.PA1:
+            {
+                context.sendKeyCombination(  javafx.scene.input.KeyCode.CONTROL, javafx.scene.input.KeyCode.F1 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.PA2:
+            {
+                context.sendKeyCombination(  javafx.scene.input.KeyCode.CONTROL, javafx.scene.input.KeyCode.F2 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.PA3:
+            {
+                context.sendKeyCombination(  javafx.scene.input.KeyCode.CONTROL, javafx.scene.input.KeyCode.F3 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F1:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F1 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F2:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F2 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F3:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F3 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F4:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F4 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F5:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F5 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F6:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F6 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F7:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F7 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F8:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F8 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F9:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F9 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F10:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F10 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F11:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F11 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F12:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F12 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F13:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F13 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F14:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F14 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F15:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F15 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F16:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F16 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F17:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F17 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F18:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F18 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F19:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F19 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F20:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F20 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F21:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F21 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F22:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F22 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F23:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F23 );
+                rtn = true;
+                break;
+            }
+
+            case Tn3270SpecialKeyCodes.F24:
+            {
+                context.sendKey( javafx.scene.input.KeyCode.F24 );
+                rtn = true;
+                break;
+            }
+        }
+
+        return rtn;
     }
 }
 
