@@ -16,6 +16,7 @@ public class SyntheticStep extends AbstractKeyWordStep implements KeyWordStep
         this.setName( name );
         this.kw = kwName;
         this.setDescription( description );
+        this.orMapping = false;
     }
     
     public SyntheticStep( String name, String kwName )
