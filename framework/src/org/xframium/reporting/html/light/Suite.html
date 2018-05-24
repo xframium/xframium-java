@@ -225,7 +225,7 @@
           else if (item[ 'testStatus' ] == 'PASSED' && filterPassed)
             filtered.push(item);
         } else {
-          if (item['name'].includes(filterTestsBy)) {
+          if (item['name'].toLowerCase().includes(filterTestsBy.toLowerCase()) || item['device']['environment'].toLowerCase().includes(filterTestsBy.toLowerCase()) ) {
             if (item['testStatus'] == 'SKIPPED' && filterSkipped)
               filtered.push(item);
             else if (item['exceptionType'] == 'CLOUD' && filterCloud)
