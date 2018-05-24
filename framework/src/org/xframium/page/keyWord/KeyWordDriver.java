@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.Semaphore;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -634,6 +635,22 @@ public class KeyWordDriver
             
             executionContext.setTest( test );
             executionContext.setDevice( webDriver.getPopulatedDevice() );
+            
+            //
+            // Set context variables for populated device
+            //
+            contextMap.put( "_device.manufacturer", webDriver.getPopulatedDevice().getManufacturer() );
+            contextMap.put( "_device.model", webDriver.getPopulatedDevice().getModel() );
+            contextMap.put( "_device.os", webDriver.getPopulatedDevice().getOs() );
+            contextMap.put( "_device.osVersion", webDriver.getPopulatedDevice().getOsVersion() );
+            contextMap.put( "_device.browserName", webDriver.getPopulatedDevice().getBrowserName() );
+            contextMap.put( "_device.browserVersion", webDriver.getPopulatedDevice().getBrowserVersion() );
+            contextMap.put( "_device.name", webDriver.getPopulatedDevice().getDeviceName() );
+            contextMap.put( "_device.phoneNumber", webDriver.getPopulatedDevice().getPhoneNumber() );
+            contextMap.put( "_device.resolution", webDriver.getPopulatedDevice().getResolution() );
+            contextMap.put( "_device.environment", webDriver.getPopulatedDevice().getEnvironment() );
+            contextMap.put( "_device.cloud", webDriver.getPopulatedDevice().getCloud() );
+            
             executionContext.setCloud( webDriver.getCloud() );
             
             executionContext.setDataMap( dataMap );
