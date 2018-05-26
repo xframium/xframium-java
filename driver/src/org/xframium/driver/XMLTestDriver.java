@@ -138,7 +138,7 @@ public class XMLTestDriver extends AbstractSeleniumTest
         if ( !testPackage.getConnectedDevice().getWebDriver().isConnected() )
         {
             executionContextTest.setTest( test );
-            executionContextTest.setDevice( testPackage.getDevice() );
+            executionContextTest.setDevice( testPackage.getPopulatedDevice() );
             executionContextTest.setCloud( cD );
             executionContextTest.completeTest( TestStatus.FAILED, new DeviceException( "Could not connect to " + testPackage.getDevice() ) );
             testName.setTest( executionContextTest );

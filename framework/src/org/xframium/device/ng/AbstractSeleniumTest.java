@@ -30,12 +30,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.testng.IRetryAnalyzer;
 import org.testng.ITestContext;
-import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -52,9 +51,9 @@ import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
-import org.xframium.device.factory.DriverManager;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
+import org.xframium.page.Page;
 import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
@@ -663,7 +662,9 @@ public abstract class AbstractSeleniumTest
         KeyWordPage p = new KeyWordPageImpl(PageManager.instance(webDriver.getxFID()).getElementProvider(), PageManager.instance(webDriver.getxFID()).getSiteName());
         p.setPageName( step.getPageName() );
         Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
-        contextMap.put( "RESULT", step.executeStep( p, webDriver, contextMap, null, null, null, webDriver.getExecutionContext() ) );
+        Map<String,Page> pageMap = new HashMap<String,Page>( 10 );
+        Map<String,PageData> dataMap = new HashMap<String,PageData>( 10 );
+        contextMap.put( "RESULT", step.executeStep( p, webDriver, contextMap, dataMap, pageMap	, null, webDriver.getExecutionContext() ) );
         return contextMap;
     }
     
@@ -682,7 +683,9 @@ public abstract class AbstractSeleniumTest
         KeyWordPage p = new KeyWordPageImpl(PageManager.instance(webDriver.getxFID()).getElementProvider(), PageManager.instance(webDriver.getxFID()).getSiteName());
         p.setPageName( pageName );
         Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
-        contextMap.put( "RESULT", createStep( keyword, pageName, elementName, parameterList ).executeStep( p, webDriver, null, null, null, null, webDriver.getExecutionContext() ) );
+        Map<String,Page> pageMap = new HashMap<String,Page>( 10 );
+        Map<String,PageData> dataMap = new HashMap<String,PageData>( 10 );
+        contextMap.put( "RESULT", createStep( keyword, pageName, elementName, parameterList ).executeStep( p, webDriver, contextMap, dataMap, pageMap, null, webDriver.getExecutionContext() ) );
         return contextMap;
     }
 

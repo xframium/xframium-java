@@ -434,7 +434,7 @@ public class WebServiceClientUtil
 
                 int responseCode = con.getResponseCode();
 
-                if ( responseCode == HttpURLConnection.HTTP_OK ) // success
+                if ( responseCode >= 200 && responseCode < 300 ) // success
                 {
                     BufferedReader in = new BufferedReader( new InputStreamReader( con.getInputStream() ) );
                     String inputLine;
