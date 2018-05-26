@@ -124,6 +124,11 @@ public class ConsoleKeyPress implements EventHandler<KeyEvent>
           keyEvent.consume ();
           break;
 
+        case I:
+          screen.toggleInsertMode ();
+          keyEvent.consume ();
+          break;
+
         default:
           break;
       }
