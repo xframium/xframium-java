@@ -6,8 +6,7 @@ import java.util.List;
 import com.bytezone.dm3270.display.Cursor;
 import com.bytezone.dm3270.display.Screen;
 import com.bytezone.dm3270.display.Screen.ScreenOption;
-import com.bytezone.dm3270.orders.Order;
-import com.bytezone.dm3270.orders.TextOrder;
+import com.bytezone.dm3270.orders.*;
 
 public class WriteCommand extends Command
 {
@@ -93,7 +92,7 @@ public class WriteCommand extends Command
     int cursorLocation = cursor.getLocation ();
     //    screen.lockKeyboard ("Inhibit");
     boolean screenDrawRequired = false;
-    boolean resetFields = (orders.size () > 0);
+    boolean resetFields = containsFields(); //(orders.size () > 0);
 
     if (eraseWrite)
     {
@@ -110,7 +109,7 @@ public class WriteCommand extends Command
         order.process (screen);         // modifies pen
 
       cursor.moveTo (cursorLocation);
-      screen.buildFields (writeControlCharacter);
+      if (resetFields) screen.buildFields (writeControlCharacter);
       screenDrawRequired = true;
     }
 
@@ -172,4 +171,16 @@ public class WriteCommand extends Command
 
     return text.toString ();
   }
+
+    private boolean containsFields() 
+    {
+        boolean rtn = false;
+	
+        for (Order order : orders)
+        {
+            rtn = ( rtn || (order instanceof StartFieldOrder ) || (order instanceof StartFieldExtendedOrder ));
+        }
+        
+        return rtn;
+    }
 }
