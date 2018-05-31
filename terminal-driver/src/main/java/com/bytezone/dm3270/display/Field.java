@@ -261,8 +261,8 @@ public class Field implements Iterable<ScreenPosition>
       if (!screenPosition.isStartField ())           // skip the start field attribute
         if (ptr < buffer.length)
           buffer[ptr++] = screenPosition.getChar ();
-        else
-          System.out.printf ("Too long: %d%n", ptr);
+    //else
+    //System.out.printf ("Too long: %d%n", ptr);
 
     return new String (buffer);
   }

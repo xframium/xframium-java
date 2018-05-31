@@ -87,7 +87,7 @@ public class TelnetCommand extends AbstractTelnetCommand
       else if (type == TelnetSubcommand.TN3270E)
         commandType = CommandType.TN3270_EXTENDED;
       else {
-          System.out.println(String.format ("Unknown telnet command type: %02X %02X%n", command, type));
+          //System.out.println(String.format ("Unknown telnet command type: %02X %02X%n", command, type));
           commandType = CommandType.UNKNOWN;
       }
     }
