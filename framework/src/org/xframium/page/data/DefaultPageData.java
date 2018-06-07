@@ -149,6 +149,7 @@ public class DefaultPageData implements PageData
 	    return null;
 	}
 	
+	private static final String EMPTY = "EMPTY";
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.data.PageData#populateTreeStructure()
 	 */
@@ -168,50 +169,59 @@ public class DefaultPageData implements PageData
 	                
 	                String lookupValue = (String) recordMap.get( keyName );
 	                
-	                Matcher selectorMatcher = SELECTOR.matcher( lookupValue );
-	                boolean matchFound = false;
-	                while( selectorMatcher.find() )
+	                if ( EMPTY.equals( lookupValue ) )
 	                {
-	                    matchFound = true;
-	                    String recordType = selectorMatcher.group( 1 );
-	                    
-	                    Map<String,String> criteriaMap = new HashMap<String,String>( 5 );
-	                    
-	                    Matcher valueMatcher = VALUES.matcher( selectorMatcher.group( 2 ) );
-	                    while( valueMatcher.find() )
-	                    {
-	                        criteriaMap.put( valueMatcher.group( 1 ), valueMatcher.group( 2 ) );
-	                    }
-	                    
-	                    PageData[] dataArray = dataProvider.getRecords( recordType );
-	                    
-	                    for ( PageData pageData : dataArray )
-	                    {
-	                        boolean addData = true;
-	                        for ( String criteriaField : criteriaMap.keySet() )
-	                        {
-	                            String compareTo = pageData.getData( criteriaField );
-	                            if ( compareTo == null || !compareTo.equals( criteriaMap.get( criteriaField ) ) )
-	                            {
-	                                addData = false;
-	                                break;
-	                            }
-	                        }
-	                        
-	                        if ( addData )
-	                            addPageData( useKey, pageData );
-	                    }
+	                	addPageData( useKey, null );
 	                }
-	                
-	                if ( !matchFound )
+	                else
 	                {
-	                    PageData[] dataArray = dataProvider.getRecords( lookupValue.replace( "|", "" ).trim() );
-	                    if ( dataArray != null )
-	                    {
-	                        for ( PageData pageData : dataArray )
-	                            addPageData( useKey, pageData );
-	                    }
-	                            
+		                Matcher selectorMatcher = SELECTOR.matcher( lookupValue );
+		                boolean matchFound = false;
+		                while( selectorMatcher.find() )
+		                {
+		                    matchFound = true;
+		                    String recordType = selectorMatcher.group( 1 );
+		                    
+		                    Map<String,String> criteriaMap = new HashMap<String,String>( 5 );
+		                    
+		                    Matcher valueMatcher = VALUES.matcher( selectorMatcher.group( 2 ) );
+		                    while( valueMatcher.find() )
+		                    {
+		                        criteriaMap.put( valueMatcher.group( 1 ), valueMatcher.group( 2 ) );
+		                    }
+		                    
+		                    PageData[] dataArray = dataProvider.getRecords( recordType );
+		                    
+		                    for ( PageData pageData : dataArray )
+		                    {
+		                        boolean addData = true;
+		                        for ( String criteriaField : criteriaMap.keySet() )
+		                        {
+		                            String compareTo = pageData.getData( criteriaField );
+		                            if ( compareTo == null || !compareTo.equals( criteriaMap.get( criteriaField ) ) )
+		                            {
+		                                addData = false;
+		                                break;
+		                            }
+		                        }
+		                        
+		                        if ( addData )
+		                            addPageData( useKey, pageData );
+		                    }
+		                }
+	                
+	                
+		                if ( !matchFound )
+		                {
+		                    PageData[] dataArray = dataProvider.getRecords( lookupValue.replace( "|", "" ).trim() );
+		                    if ( dataArray != null )
+		                    {
+		                        for ( PageData pageData : dataArray )
+		                            addPageData( useKey, pageData );
+		                    }
+		                            
+		                }
+		                
 	                }
 	            }
 	        }
@@ -251,7 +261,8 @@ public class DefaultPageData implements PageData
 	        recordMap.put( fieldName, dataList );
 	    }
 	    
-	    dataList.add( pageData );
+	    if ( pageData != null )
+	    	dataList.add( pageData 	);
 	}
 	
 	/**

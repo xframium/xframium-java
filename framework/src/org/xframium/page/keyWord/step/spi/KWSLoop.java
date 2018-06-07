@@ -146,6 +146,11 @@ public class KWSLoop extends AbstractKeyWordStep
 				    // This is a context table from the current record - we only go 1 level deep now
 				    //
 				    tableName = tableName.substring( 1 );
+				    
+				    String[] overrideParts = tableName.split( "=" );
+					tableName = overrideParts.length == 1 ? overrideParts[ 0 ] : overrideParts[ 1 ];
+				    
+				    
 				    String[] valueSet = tableName.split( "\\." );
 				    if ( valueSet.length >= 2 )
 				    {
@@ -169,12 +174,24 @@ public class KWSLoop extends AbstractKeyWordStep
 				            throw new ScriptConfigurationException( useValue + " was found but referenced a single value rather than a list" );
 				        }
 				    }
+				    
+				    if ( overrideParts.length > 1 )
+				    	tableName = overrideParts[ 0];
+				    
 				}
 				else
 				{
+					String[] overrideParts = tableName.split( "=" );
+					tableName = overrideParts.length == 1 ? overrideParts[ 0 ] : overrideParts[ 1 ];
+					
 				    dataTable = PageDataManager.instance(executionContext.getxFID()).getRecords( tableName );
 				    String[] tableParts = tableName.split(  "\\." );
 				    tableName = tableParts[ tableParts.length - 1 ];
+				    
+				    
+				    if ( overrideParts.length > 1 )
+				    	tableName = overrideParts[ 0];
+				    
 				}
 				
 				int dataCounter = 0;

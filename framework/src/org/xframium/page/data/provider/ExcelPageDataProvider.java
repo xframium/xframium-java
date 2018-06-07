@@ -65,6 +65,15 @@ public class ExcelPageDataProvider extends AbstractPageDataProvider
         this.tabNames = tabNames;
         this.fileName = fileName;
     }
+	
+	public static void main( String args[] )
+	{
+		ExcelPageDataProvider p = new ExcelPageDataProvider( new File( "c:\\projects\\aviva\\SAMPLE_DATA.xlsx" ), "TestCase,BPHabCoverage,AdditionalCoverages,BPHabDiscount,BPHabEndorsement" );
+		p.readPageData();
+		p.populateTrees();
+		System.out.println( p.toString() );
+		
+	}
 
 	/**
 	 * Instantiates a new XML page data provider.

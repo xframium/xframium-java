@@ -219,6 +219,22 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
                     else
                         return (PageData[]) p.get( newName );
                 }
+                
+                for ( String s : p.getFieldNames() )
+                {
+                	if ( s.equals( useType ) )
+                	{
+                		String newName = recordType.substring( recordType.indexOf( "." ) + 1 );
+                        newName = newName.substring( newName.indexOf( "." ) + 1 );                    
+                        if ( newName.trim().isEmpty() )
+                            return new PageData[] { p };
+                        else
+                            return (PageData[]) p.get( newName );
+                	}
+                }
+                
+                
+                
             }
             return dataList.toArray( new PageData[ 0 ] );
 	    }

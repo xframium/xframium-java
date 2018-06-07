@@ -46,11 +46,13 @@ public class KeyPressGesture extends AbstractKeyPressGesture
 		
 		for (String keyCode : keyCodes) {
 			
-			if (Keys.valueOf(keyCode) != null) {
+			try
+			{
 				charSequence.add(Keys.valueOf(keyCode.toUpperCase()));
-			
-			} else {
-				throw new IllegalArgumentException( "Unsupported KeyPressGesture Type " + keyCode );
+			}
+			catch( Exception e )
+			{
+				charSequence.add( keyCode );
 			}
 			
 		}
@@ -58,7 +60,14 @@ public class KeyPressGesture extends AbstractKeyPressGesture
 		if (charSequence.size() > 0) {
 			Iterable<CharSequence> iterable = charSequence;
 			keyPressed = Keys.chord(iterable);
-			new Actions( webDriver ).moveToElement( webElement ).sendKeys(keyPressed).perform();
+			
+			if ( webElement != null )
+				new Actions( webDriver ).sendKeys(keyPressed).perform();
+			else
+				new Actions( webDriver ).sendKeys(keyPressed).perform();
+			
+			
+			new Actions( webDriver ).moveToElement( webElement ).keyDown( Keys.CONTROL ).sendKeys( "A" ).keyUp( Keys.CONTROL ).perform();
 		}
 		return true;
 	}
