@@ -24,12 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriver.TargetLocator;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.factory.DeviceWebDriver;
@@ -72,12 +74,13 @@ public class KWSBrowser extends AbstractKeyWordStep
         SCROLL_UP( 21, "SCROLL_UP", "Scroll up on a page by the specified number of pixels" ),
         SCROLL_DOWN( 22, "SCROLL_DOWN", "Scroll down on a page by the specified number of pixels" ),
         PAGE_UP( 23, "PAGE_UP", "Scroll up be the specified number of pages" ),
-        PAGE_DOWN( 24, "PAGE_DOWN", "Scroll down be the specified number of pages" );
+        PAGE_DOWN( 24, "PAGE_DOWN", "Scroll down be the specified number of pages" ), SWITCH_NEW( 25, "SWITCH_NEW", "Switch to a newly created window" );
         
 
         public List<SwitchType> getSupported()
         {
             List<SwitchType> supportedList = new ArrayList<SwitchType>( 10 );
+            supportedList.add( SwitchType.SWITCH_NEW );
             supportedList.add( SwitchType.SWITCH_BY_TITLE );
             supportedList.add( SwitchType.SWITCH_BY_URL );
             supportedList.add( SwitchType.SWITCH_NAMED_FRAME );
@@ -151,6 +154,9 @@ public class KWSBrowser extends AbstractKeyWordStep
                 case SWITCH_BY_URL:
                     return verifySwitchWindow( webDriver, getName(), getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
 
+                case SWITCH_NEW:
+                    return verifySwitchWindow( webDriver, getName(), "" );    
+                    
                 case SWITCH_NAMED_FRAME:
                     webDriver.switchTo().frame( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
                     break;
@@ -395,26 +401,60 @@ public class KWSBrowser extends AbstractKeyWordStep
         String winActValue = "";
         Set<String> availableWindows = webDriver.getWindowHandles();
 
+        String currentWindow = webDriver.getWindowHandle();
+        
         if ( !availableWindows.isEmpty() )
         {
             for ( String windowId : availableWindows )
             {
-                if ( byTitleOrUrl.equalsIgnoreCase( "SWITCH_BY_TITLE" ) )
-                {
-                    winActValue = webDriver.switchTo().window( windowId ).getTitle().trim().toLowerCase();
-                }
-                else
-                {
-                    winActValue = webDriver.switchTo().window( windowId ).getCurrentUrl().trim().toLowerCase();
-                }
-
-                winExpValue = winExpValue.trim().toLowerCase();
-
-                if ( winActValue.contains( winExpValue ) )
-                {
-                    bSwitchWindow = true;
-                    break;
-                }
+            	try
+            	{
+            		webDriver.switchTo().window( windowId );
+            		
+            		if ( byTitleOrUrl.equalsIgnoreCase( "SWITCH_TO_NEW" ) )
+	                {
+            			if ( !currentWindow.equals( webDriver.getWindowHandle() ) )
+            			{
+            				bSwitchWindow = true;
+    	                    break;
+            			}
+	                }
+            		else if ( byTitleOrUrl.equalsIgnoreCase( "SWITCH_BY_TITLE" ) )
+	                {
+	                    winActValue = webDriver.getTitle().trim().toLowerCase();
+	                }
+	                else
+	                {
+	                    winActValue = webDriver.getCurrentUrl().trim().toLowerCase();
+	                }
+	
+	                winExpValue = winExpValue.trim().toLowerCase();
+	
+	                if ( winActValue.contains( winExpValue ) )
+	                {
+	                    bSwitchWindow = true;
+	                    break;
+	                }
+            	}
+            	catch( UnhandledAlertException e )
+            	{
+            		try
+            		{
+            			log.info( "Attempting to handle alert" );
+            			Alert alert = webDriver.switchTo().alert();
+            			log.warn( "Dismissing alert as " + alert.getText() );
+            			alert.dismiss();
+            		}
+            		catch( Exception e2 )
+            		{
+            			log.error( "Could not dismiss alert due to " + e2.getMessage() );
+            		}
+            		
+            	}
+            	catch( Exception e )
+            	{
+            		log.error( "Could not switch to window [" + windowId + "] due to " + e.getMessage() );
+            	}
             }
         }
 

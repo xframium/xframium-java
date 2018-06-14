@@ -149,7 +149,7 @@ public class DefaultPageData implements PageData
 	    return null;
 	}
 	
-	private static final String EMPTY = "EMPTY";
+	private static final String EMPTY = "[EMPTY]|";
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.data.PageData#populateTreeStructure()
 	 */
@@ -168,8 +168,8 @@ public class DefaultPageData implements PageData
 	                
 	                
 	                String lookupValue = (String) recordMap.get( keyName );
-	                
-	                if ( EMPTY.equals( lookupValue ) )
+	              
+	                if ( lookupValue.endsWith( EMPTY ) )
 	                {
 	                	addPageData( useKey, null );
 	                }

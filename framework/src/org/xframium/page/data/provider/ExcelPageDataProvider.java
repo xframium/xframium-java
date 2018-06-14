@@ -68,7 +68,7 @@ public class ExcelPageDataProvider extends AbstractPageDataProvider
 	
 	public static void main( String args[] )
 	{
-		ExcelPageDataProvider p = new ExcelPageDataProvider( new File( "c:\\projects\\aviva\\SAMPLE_DATA.xlsx" ), "TestCase,BPHabCoverage,AdditionalCoverages,BPHabDiscount,BPHabEndorsement" );
+		ExcelPageDataProvider p = new ExcelPageDataProvider( new File( "C:\\Users\\Allen\\git\\xframium-java\\sampleWebTest\\resources\\data\\SAMPLE_DATA.xlsx" ), "TestCase,BPHabCoverage,AdditionalCoverages,BPHabDiscount,BPHabEndorsement" );
 		p.readPageData();
 		p.populateTrees();
 		System.out.println( p.toString() );
@@ -205,7 +205,6 @@ public class ExcelPageDataProvider extends AbstractPageDataProvider
     		                
     		                if ( currentValue == null )
     		                    currentValue = "";
-    		                
     		                if ( currentValue.startsWith( PageData.TREE_MARKER ) && currentValue.endsWith( PageData.TREE_MARKER ) )
     		                {
     		                    //
@@ -223,7 +222,6 @@ public class ExcelPageDataProvider extends AbstractPageDataProvider
 					}
 					catch( Exception e )
 					{
-					    e.printStackTrace();
 					    log.error( "Ignoring Row: " + e.getMessage() );
 					}
 				}
