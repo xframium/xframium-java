@@ -28,6 +28,8 @@ import org.xframium.gesture.AbstractPressGesture;
 import org.xframium.spi.driver.NativeDriverProvider;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.PointOption;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -59,7 +61,7 @@ public class PressGesture extends AbstractPressGesture
 		Point pressPosition = getActualPoint( getPressPosition(), screenDimension );
 		
 		TouchAction swipeAction = new TouchAction( appiumDriver );
-		swipeAction.press(  pressPosition.getX(), pressPosition.getY() ).waitAction( Duration.ofMillis( getPressLength() ) ).release().perform();
+		swipeAction.press( PointOption.point( pressPosition.getX(), pressPosition.getY() ) ).waitAction( WaitOptions.waitOptions( Duration.ofMillis( getPressLength() ) ) ).release().perform();
 		
 		return true;
 	}

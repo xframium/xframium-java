@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
+  <test name="GroupDataTest" dataProvider="TestCase.GroupDataTest" active="true">
+    <step type="REPORT" name="TestCase.BPHabCoverageIDS.BPHabDiscountIDs.name">
+      <parameter value="TestCase.BPHabCoverageIDS.BPHabDiscountIDs.name" type="DATA"></parameter>
+    </step>
+
+    <step type="REPORT" name="TestCase.BPHabCoverageIDS.name">
+      <parameter value="TestCase.BPHabCoverageIDS.name" type="DATA"></parameter>
+    </step>
+
+    <step type="LOOP" name="callcoverageloop">
+      <parameter type="STATIC" value="data{CID=TestCase.BPHabCoverageIDS}" />
+      <parameter type="STATIC" value="coverageloop" />
+    </step>
+
+    <step type="REPORT" name="testing context">
+      <parameter type="CONTEXT" name="Value" value="testindex" />
+    </step>
+
+    <step type="REPORT" name="testing 2nd iteration">
+      <parameter type="DATA" value="TestCase.BPHabCoverageIDS2" />
+    </step>
+
+    <step type="REPORT" name="TestCase.BPHabCoverageIDS2.BPHabDiscountIDs.name">
+      <parameter value="TestCase.BPHabCoverageIDS2.BPHabDiscountIDs.name" type="DATA"></parameter>
+    </step>
+
+    <step type="REPORT" name="TestCase.BPHabCoverageIDS2.name">
+      <parameter value="TestCase.BPHabCoverageIDS2.name" type="DATA"></parameter>
+    </step>
+
+    <step type="LOOP" name="callcoverageloop2ndTime">
+      <parameter type="STATIC" value="data{CID=TestCase.BPHabCoverageIDS2}" />
+      <parameter type="STATIC" value="coverageloop" />
+    </step>
+
+  </test>
+
+  <function name="coverageloop" active="true">
+    <step type="REPORT" name="Testing">
+      <parameter value=".CID.BPHabDiscountIDs" type="DATA"></parameter>
+      <!-- <parameter value="in loop" type="STATIC"></parameter> -->
+    </step>
+    <step type="LOOP" name="calldiscountloop">
+      <parameter type="STATIC" value="data{.CID.BPHabDiscountIDs}" />
+      <parameter type="STATIC" value="discountloop" />
+    </step>
+
+    <!-- <step type="LOOP" name="calldiscountloop"> <parameter type="STATIC" value="data{TestCase.BPHabCoverageIDS2.BPHabDiscountIDs}"/> <parameter type="STATIC" value="discountloop" /> </step> -->
+
+    <step type="LOOP" name="calladditionalcovloop">
+      <parameter type="STATIC" value="data{.ADD=CID.AdditionalCoveragesID}" />
+      <parameter type="STATIC" value="additionalcovloop" />
+    </step>
+    <!-- <step type="CALL2" name="additionalcovloop"></step> -->
+  </function>
+
+  <function name="discountloop" active="true">
+    <step type="REPORT" name="Testing">
+      <parameter value=".BPHabDiscountIDs.DiscountDescription" type="DATA"></parameter>
+    </step>
+  </function>
+
+  <function name="additionalcovloop" active="true">
+    <step type="REPORT" name="Testing">
+      <parameter value=".ADD.name" type="DATA"></parameter>
+    </step>
+    <step type="LOOP" name="callendorsementloop">
+      <parameter type="STATIC" value="data{.ADD.BPHabEndorsementIDs}" />
+      <parameter type="STATIC" value="endorsementloop" />
+    </step>
+  </function>
+
+  <function name="endorsementloop" active="true">
+    <step type="REPORT" name="Testing">
+      <parameter value=".BPHabEndorsementIDs.EndorsementDescription" type="DATA"></parameter>
+    </step>
+    <step type="MATH" name="add step">
+
+    </step>
+    <!-- <step name="SET" page="LOGIN" type="CONTEXT" > <parameter type="STATIC" name="Name" value="testindex" /> <parameter type="CONTEXT" name="Value" value="_LOOP.INDEX" /> </step> -->
+    <step name="add" type="MATH" context="testindex">
+      <parameter type="STATIC" name="Value One" value="1" />
+      <parameter type="CONTEXT" name="Value two" value="_LOOP.INDEX" />
+    </step>
+  </function>
+
+</suite>

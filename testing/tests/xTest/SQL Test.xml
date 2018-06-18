@@ -1,7 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-<test name="SQL Test" tagNames="keyword" timed="false" threshold="0" active="false" priority="1" severity="1">
-<description>Calls the SQL Functions</description>
-<step name="kw-sql" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR"/>
-</test>
+  <test name="SQL Test" tagNames="keyword" timed="false" threshold="0" active="false" priority="1" severity="1" dataProvider="authData">
+    <description>SQL Keyword Usage</description>
+    <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
+      <parameter type="STATIC" value="CREATE TABLE XF_TEST ( ID INT, NAME VARCHAR(24), PASSWORD VARCHAR(24) )" />
+      <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0">
+        <parameter type="STATIC" value="INSERT INTO XF_TEST (ID, NAME, PASSWORD) VALUES ( 1, ?, ? )" />
+        <parameter type="DATA" value="authData.userName" />
+        <parameter type="STATIC" value="authData.password" />
+      </step>
+    </step>
+    <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0" context="XF_SQL_1">
+      <parameter type="STATIC" value="SELECT ID, NAME, PASSWORD FROM XF_TEST WHERE ID = 1" />
+    </step>
+    <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0">
+      <parameter type="CONTEXT" name="Value One" value="XF_SQL_1_NAME" />
+      <parameter type="DATA" name="Value Two" value="authData.userName" />
+      <parameter type="STATIC" name="Operator" value="EQUALS" />
+    </step>
+  </test>
+  
+  
+  <test name="SQL Test" tagNames="keyword" timed="false" threshold="0" active="false" priority="1" severity="1" dataDriver="authData">
+    <description>SQL Keyword Usage</description>
+    <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE">
+      <parameter type="STATIC" value="CREATE TABLE XF_TEST ( ID INT, NAME VARCHAR(24), PASSWORD VARCHAR(24) )" />
+      <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0">
+        <parameter type="STATIC" value="INSERT INTO XF_TEST (ID, NAME, PASSWORD) VALUES ( 1, ?, ? )" />
+        <parameter type="DATA" value="authData.userName" />
+        <parameter type="STATIC" value="authData.password" />
+      </step>
+    </step>
+    <step name="Undefined" site="xTest" page="home" type="SQL" active="true" threshold="0" timed="false" inverse="false" wait="0" context="XF_SQL_1">
+      <parameter type="STATIC" value="SELECT ID, NAME, PASSWORD FROM XF_TEST WHERE ID = 1" />
+    </step>
+    <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0">
+      <parameter type="CONTEXT" name="Value One" value="XF_SQL_1_NAME" />
+      <parameter type="DATA" name="Value Two" value="authData.userName" />
+      <parameter type="STATIC" name="Operator" value="EQUALS" />
+    </step>
+  </test>
 </suite>

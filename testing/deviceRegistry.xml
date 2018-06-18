@@ -14,5 +14,7 @@
     <capability name="appiumVersion" class="STRING">1.5.3</capability>
     <capability name="platform" class="STRING">ANDROID</capability>
   </device>
-  <device browserVersion="53" browserName="Chrome" os="Windows" osVersion="10" model="chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Windows 10 Chrome 53" cloud="perfecto" active="false" />
+  <device browserVersion="53" browserName="Chrome" os="Windows" osVersion="10" model="chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Windows 10 Chrome 53" cloud="perfecto" active="false" >
+    <capability name="langugage">French</capability>
+  </device>
 </deviceRegistry>

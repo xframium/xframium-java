@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xFramium xmlns="http://www.xframium.org/xFramiumDriver" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/xFramiumDriver http://www.xframium.org/xsd/xFramiumDriver.xsd">
+  <cloud provider="LOCAL" providerType="SELENIUM" name="xFramium" userName="" password="" hostName="" proxyHost="" />
+  <application provider="LOCAL" name="firstgoogle" appPackage="" bundleId="" url="" iosInstall="" androidInstall="" />
+  <devices provider="LOCAL">
+    <device name="Chrome Local" manufacturer="Google" model="Chrome" active="true" availableDevices="1" os="Windows" browserName="chrome" osVersion="8.1" cloud="EMBEDDED" tagNames="demo" />
+  </devices>
+  <driver suiteName="soaptest" type="WEB" outputFolder="../../../test-output" displayResults="true" embeddedServer="true">
+    <artifact type="EXECUTION_RECORD_HTML" />
+    <artifact type="DEVICE_LOG" />
+    <artifact type="CONSOLE_LOG" />
+  </driver>
+
+  <model provider="LOCAL">
+    <site name="xTest">
+      <page name="Home">
+      </page>
+    </site>
+  </model>
+
+
+  <suite provider="LOCAL">
+    <test name="Estadistica de Cotizaciones" active="true" tagNames="reg1">
+      <step name="REST Call" site="xTest" page="Home" type="EXECWS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="rest">
+        <parameter type="STATIC" name="url" value="http://services.groupkt.com/state/search/IND?text={nameCountry}" usage="input">
+          <token type="STATIC" name="nameCountry" value="Uttarakhand" />
+        </parameter>
+        <parameter type="STATIC" name="method" value="GET" usage="input" />
+        <parameter type="STATIC" name="media-type" value="text/xml" usage="input" />
+        <parameter type="STATIC" name="type" value="REST" usage="input" />
+
+        <parameter type="STATIC" name="type" value="xml" usage="output" />
+        <parameter type="STATIC" name="var1" value="//double" usage="output" />
+      </step>
+
+      <step name="compare" site="xTest" page="Home" type="COMPARE" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+        <parameter type="STATIC" value="Uttarakhand" />
+        <parameter type="CONTEXT" value="rest_var1" />
+      </step>
+
+    </test>
+  </suite>
+</xFramium>
+

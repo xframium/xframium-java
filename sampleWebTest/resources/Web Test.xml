@@ -3,6 +3,7 @@
   <application provider="XML" fileName="applicationRegistry.xml" name="NOOP" />
   <devices provider="XML" fileName="deviceRegistry.xml" />
   <driver suiteName="Web Test" type="WEB" outputFolder="test-output" displayResults="EXECUTION_SUITE_HTML" dryRun="false" embeddedServer="true">
+  <property name="pageManagement.pageData.tabNames">TestCase,BPHabCoverage,AdditionalCoverages,BPHabDiscount,BPHabEndorsement</property>
     <artifact type="EXECUTION_RECORD_HTML" />
     <artifact type="FAILURE_SOURCE" />
     <artifact type="DEVICE_LOG" />
@@ -10,7 +11,6 @@
     <artifact type="CONSOLE_LOG" />
   </driver>
   <model provider="XML" fileName="./objectRepository/Web Test/objectRepository.xml" siteName="New Test" />
-  <suite provider="XML" fileName="./tests/tests-Web Test.xml" />
-  <dependencies afterTest="Reporting" />
-  <data provider="XML" fileName="./data/testData.xml" />
+  <suite provider="XML" fileName="./tests/GroupDataTest.xml" />
+  <data provider="EXCEL" fileName="./data/SAMPLE_DATA.xlsx" />
 </xFramium>
