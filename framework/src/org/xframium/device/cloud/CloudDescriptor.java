@@ -86,7 +86,8 @@ public class CloudDescriptor
 	    SAUCELABS( 2, "SAUCELABS", "Devices and Browsers hosted at SauceLabs" ),
 	    PERFECTO( 3, "PERFECTO", "Devices and Browsers hosted at Perfecto" ),
 	    WINDOWS( 4, "WINDOWS", "Windows applications using the Windows Application Driver" ),
-	    BROWSERSTACK( 5, "BROWSERSTACK", "Devices and Browsers hosted at BrowserStack" );
+	    BROWSERSTACK( 5, "BROWSERSTACK", "Devices and Browsers hosted at BrowserStack" ),
+	    APPIUM( 6, "APPIUM", "Devices in a Appium compatible server" );
 	    
 	    private ProviderType( int id, String name, String description )
         {
@@ -107,6 +108,7 @@ public class CloudDescriptor
             supportedList.add( ProviderType.PERFECTO );
             supportedList.add( ProviderType.WINDOWS );
             supportedList.add( ProviderType.BROWSERSTACK );
+            supportedList.add( ProviderType.APPIUM );
             return supportedList;
         }
 	}

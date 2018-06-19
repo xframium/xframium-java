@@ -103,6 +103,14 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
                     dc.setCapability( "build", KeyWordDriver.instance(xFID).getTags()[ 0 ] );
                 dc.setCapability( "name", currentDevice.getCapabilities().get( "_testName" ) );
             }
+            
+            if ( ProviderType.SAUCELABS.equals( ProviderType.valueOf( useCloud.getProvider() ) ) )
+            {
+                dc.setCapability( "testobject_suite_name", ExecutionContext.instance(xFID).getSuiteName() );
+                if ( KeyWordDriver.instance(xFID).getTags() != null && KeyWordDriver.instance(xFID).getTags().length > 0 )                	
+                    dc.setCapability( "build", KeyWordDriver.instance(xFID).getTags()[ 0 ] );
+                dc.setCapability( "testobject_test_name", currentDevice.getCapabilities().get( "_testName" ) );
+            }
 			
             URL hubUrl = new URL( useCloud.getCloudUrl( dc ) );
             
@@ -115,10 +123,10 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 			
 			Capabilities caps = ( (AndroidDriver) webDriver.getWebDriver() ).getCapabilities();
 			webDriver.setExecutionId( useCloud.getCloudActionProvider().getExecutionId( webDriver ) );
-			webDriver.setReportKey( caps.getCapability( "reportKey" ).toString() );
-			webDriver.setDeviceName( caps.getCapability( "deviceName" ).toString() );
+			webDriver.setReportKey( caps.getCapability( "reportKey" ) + "" );
+			webDriver.setDeviceName( caps.getCapability( "deviceName" )+ "" );
 			if ( useCloud.getProvider().equals( "PERFECTO" ) && caps.getCapability( "windTunnelReportUrl" ) != null )
-                webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ).toString() );
+                webDriver.setWindTunnelReport( caps.getCapability( "windTunnelReportUrl" ) + "" );
 			webDriver.context( "NATIVE_APP" );
 			
 			if( ApplicationRegistry.instance(xFID).getAUT() != null && ApplicationRegistry.instance(xFID).getAUT().getAndroidIdentifier() != null && !ApplicationRegistry.instance(xFID).getAUT().getAndroidIdentifier().isEmpty() )

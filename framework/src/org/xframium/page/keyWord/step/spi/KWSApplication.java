@@ -23,6 +23,8 @@ package org.xframium.page.keyWord.step.spi;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.openqa.selenium.WebDriver;
 import org.xframium.application.ApplicationDescriptor;
 import org.xframium.application.ApplicationRegistry;
@@ -32,7 +34,6 @@ import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
-import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextTest;
 
 
@@ -58,7 +59,10 @@ public class KWSApplication extends AbstractKeyWordStep
         UNINSTALL( 2, "UNINSTALL", "Uninstall an application" ),
         OPEN( 3, "OPEN", "Launch an application" ),
         CLOSE( 4, "CLOSE", "Close an application" ),
-        UPGRADE( 5, "UPGRADE", "Upgrade an application without removing data" );
+        UPGRADE( 5, "UPGRADE", "Upgrade an application without removing data" ),
+        SWITCH_CONTEXT( 6, "SWITCH_CONTEXT", "Changes the current application context" ),
+        GET_CONTEXT( 7, "GET_CONTEXT", "Gets the current application context"),
+        LIST_CONTEXT( 8, "LIST_CONTEXT", "Lists the available application contexts");
 
         public List<ApplicationAction> getSupported()
         {
@@ -68,6 +72,9 @@ public class KWSApplication extends AbstractKeyWordStep
             supportedList.add( ApplicationAction.OPEN );
             supportedList.add( ApplicationAction.CLOSE );
             supportedList.add( ApplicationAction.UPGRADE );
+            supportedList.add( ApplicationAction.SWITCH_CONTEXT );
+            supportedList.add( ApplicationAction.GET_CONTEXT );
+            supportedList.add( ApplicationAction.LIST_CONTEXT );
             return supportedList;
         }
 
@@ -94,6 +101,7 @@ public class KWSApplication extends AbstractKeyWordStep
 	@Override
 	public boolean _executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest executionContext )
 	{
+		Set<String> contextList = null;
 		CloudActionProvider cP = ( (DeviceWebDriver) webDriver ).getCloud().getCloudActionProvider();
 	    switch ( ApplicationAction.valueOf( getName().toUpperCase() ) )
         {
@@ -124,6 +132,37 @@ public class KWSApplication extends AbstractKeyWordStep
 	            
 	        case UNINSTALL:
 	            return cP.uninstallApplication( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ) + "", (DeviceWebDriver)webDriver );
+	            
+	        case GET_CONTEXT:
+	        	if ( getContext() != null && !getContext().trim().isEmpty() )
+	        		contextMap.put( getContext(), ((DeviceWebDriver)webDriver).getContext() );
+	        
+	        case LIST_CONTEXT:
+	        	contextList = ( (DeviceWebDriver) webDriver ).getContextHandles();
+	        	if ( log.isWarnEnabled() )
+	        	{
+	        		for ( String s : contextList )
+	        			log.warn( "Context Found [" + s + "]" );
+	        	}
+	        	
+	        	
+	        case SWITCH_CONTEXT:
+	        	contextList = ( (DeviceWebDriver) webDriver ).getContextHandles();
+	        	if ( log.isWarnEnabled() )
+	        	{
+	        		for ( String s : contextList )
+	        		{
+	        			if ( s.toLowerCase().contains( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ).toLowerCase() ) )
+	        			{
+	        				if ( log.isInfoEnabled() )
+	        					log.info( "Switch to Application Context " + s );
+	        				( (DeviceWebDriver) webDriver ).context( s );
+	        			}
+	        				
+	        		}
+	        	}
+	        	
+	        
         }
 		
 		return false;

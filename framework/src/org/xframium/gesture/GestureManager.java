@@ -66,12 +66,17 @@ public class GestureManager
             case SAUCELABS:
                 gM.gestureFactory = SELENIUM;
                 break;
+            case BROWSERSTACK:
+                gM.gestureFactory = SELENIUM;
+                break;
             case SELENIUM:
                 gM.gestureFactory = SELENIUM;
                 break;
             case WINDOWS:
                 gM.gestureFactory = SELENIUM;
                 break;
+            case APPIUM:
+            	gM.gestureFactory = APPIUM;
         }
         
         return gM;
