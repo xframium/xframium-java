@@ -136,6 +136,8 @@ public class KWSApplication extends AbstractKeyWordStep
 	        case GET_CONTEXT:
 	        	if ( getContext() != null && !getContext().trim().isEmpty() )
 	        		contextMap.put( getContext(), ((DeviceWebDriver)webDriver).getContext() );
+	        	
+	        	return true;
 	        
 	        case LIST_CONTEXT:
 	        	contextList = ( (DeviceWebDriver) webDriver ).getContextHandles();
@@ -144,6 +146,7 @@ public class KWSApplication extends AbstractKeyWordStep
 	        		for ( String s : contextList )
 	        			log.warn( "Context Found [" + s + "]" );
 	        	}
+	        	return true;
 	        	
 	        	
 	        case SWITCH_CONTEXT:
@@ -157,10 +160,13 @@ public class KWSApplication extends AbstractKeyWordStep
 	        				if ( log.isInfoEnabled() )
 	        					log.info( "Switch to Application Context " + s );
 	        				( (DeviceWebDriver) webDriver ).context( s );
+	        				return true;
 	        			}
 	        				
 	        		}
 	        	}
+	        	
+	        	return true;
 	        	
 	        
         }
