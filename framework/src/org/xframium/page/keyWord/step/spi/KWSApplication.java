@@ -151,20 +151,17 @@ public class KWSApplication extends AbstractKeyWordStep
 	        	
 	        case SWITCH_CONTEXT:
 	        	contextList = ( (DeviceWebDriver) webDriver ).getContextHandles();
-	        	if ( log.isWarnEnabled() )
-	        	{
-	        		for ( String s : contextList )
-	        		{
-	        			if ( s.toLowerCase().contains( getParameterValue( getParameter( "Application Context" ), contextMap, dataMap, executionContext.getxFID() ).toLowerCase() ) )
-	        			{
-	        				if ( log.isInfoEnabled() )
-	        					log.info( "Switch to Application Context " + s );
-	        				( (DeviceWebDriver) webDriver ).context( s );
-	        				return true;
-	        			}
-	        				
-	        		}
-	        	}
+        		for ( String s : contextList )
+        		{
+        			if ( s.toLowerCase().contains( getParameterValue( getParameter( "Application Context" ), contextMap, dataMap, executionContext.getxFID() ).toLowerCase() ) )
+        			{
+        				if ( log.isInfoEnabled() )
+        					log.info( "Switch to Application Context " + s );
+        				( (DeviceWebDriver) webDriver ).context( s );
+        				return true;
+        			}
+        				
+        		}
 	        	
 	        	return true;
 	        	
