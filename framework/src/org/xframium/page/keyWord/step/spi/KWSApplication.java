@@ -152,7 +152,7 @@ public class KWSApplication extends AbstractKeyWordStep
 	        	{
 	        		for ( String s : contextList )
 	        		{
-	        			if ( s.toLowerCase().contains( getParameterValue( getParameter( "Application Name" ), contextMap, dataMap, executionContext.getxFID() ).toLowerCase() ) )
+	        			if ( s.toLowerCase().contains( getParameterValue( getParameter( "Application Context" ), contextMap, dataMap, executionContext.getxFID() ).toLowerCase() ) )
 	        			{
 	        				if ( log.isInfoEnabled() )
 	        					log.info( "Switch to Application Context " + s );
