@@ -182,8 +182,8 @@ public class APPIUMCloudActionProvider extends AbstractCloudActionProvider
     @Override
     public boolean closeApplication( String applicationName, DeviceWebDriver webDriver )
     {
-    	AppiumDriver aD = (AppiumDriver) webDriver.getNativeDriver();
-		aD.closeApp();
+    	//AppiumDriver aD = (AppiumDriver) webDriver.getNativeDriver();
+		//aD.closeApp();
 		return true;
     }
 
