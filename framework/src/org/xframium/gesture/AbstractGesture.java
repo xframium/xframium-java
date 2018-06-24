@@ -34,6 +34,8 @@ import org.openqa.selenium.WebElement;
 import org.xframium.spi.PropertyProvider;
 import org.xframium.spi.driver.NativeDriverProvider;
 
+import io.appium.java_client.touch.offset.PointOption;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class AbstractGesture.
@@ -99,6 +101,14 @@ public abstract class AbstractGesture implements Gesture
 		
 		return new Point( (int) ( (percentagePoint.getX() / 100.0 ) * (double)screenDimension.getWidth() ), (int) ( (percentagePoint.getY() / 100.0 ) * (double)screenDimension.getHeight() ) );
 	}
+	
+	protected PointOption createPoint( WebElement webElement )
+    {
+    	int x = webElement.getLocation().getX() + ( webElement.getSize().getWidth() / 2 );
+    	int y = webElement.getLocation().getX() + ( webElement.getSize().getWidth() / 2 );
+    	
+    	return PointOption.point(x, y);
+    }
 	
 	/**
 	 * Gets the execution id.

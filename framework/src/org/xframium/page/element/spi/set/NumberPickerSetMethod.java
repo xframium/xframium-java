@@ -15,6 +15,7 @@ import org.xframium.exception.ScriptException;
 import org.xframium.page.element.SeleniumElement;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
+import io.appium.java_client.touch.offset.PointOption;
 
 public class NumberPickerSetMethod extends AbstractSetMethod
 {
@@ -79,20 +80,20 @@ public class NumberPickerSetMethod extends AbstractSetMethod
 
             Dimension elementSize = webElement.getSize();
 
-            int useX = (int) ((double) elementSize.getWidth() * ((double) x / 100.0));
-            int useY = (int) ((double) elementSize.getHeight() * ((double) y / 100.0));
+            int useX = (int) ((double) elementSize.getWidth() * ((double) x / 100.0)) + webElement.getLocation().getX();
+            int useY = (int) ((double) elementSize.getHeight() * ((double) y / 100.0)) + webElement.getLocation().getY();
 
 
             if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof AppiumDriver )
             {
-                new TouchAction( (AppiumDriver) ((DeviceWebDriver) webDriver).getNativeDriver() ).moveTo( webElement ).tap( webElement, useX, useY ).perform();
+                new TouchAction( (AppiumDriver) ((DeviceWebDriver) webDriver).getNativeDriver() ).press( PointOption.point( useX, useY ) ).perform();
             }
             else if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof RemoteWebDriver )
             {
                 if ( ((DeviceWebDriver) webDriver).getNativeDriver() instanceof HasTouchScreen )
-                    new TouchActions( webDriver ).moveToElement( webElement, useX, useY ).click().build().perform();
+                    new TouchActions( webDriver ).move( useX, useY ).click().build().perform();
                 else
-                    new Actions( webDriver ).moveToElement( webElement, useX, useY ).click().build().perform();
+                    new Actions( webDriver ).moveByOffset(useX,  useY ).click().build().perform();
             }
 
         }

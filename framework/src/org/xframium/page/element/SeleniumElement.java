@@ -74,6 +74,8 @@ import org.xframium.utility.XPathGenerator;
 import org.xframium.utility.html.HTMLElementLookup;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.PointOption;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -435,6 +437,15 @@ public class SeleniumElement extends AbstractElement {
 	 * 
 	 * @see com.perfectoMobile.page.element.AbstractElement#_moveTo()
 	 */
+	
+	private PointOption createPoint( WebElement webElement )
+    {
+    	int x = webElement.getLocation().getX() + ( webElement.getSize().getWidth() / 2 );
+    	int y = webElement.getLocation().getX() + ( webElement.getSize().getWidth() / 2 );
+    	
+    	return PointOption.point(x, y);
+    }
+	
 	public boolean _moveTo() {
 		WebElement webElement = getElement();
 		if (webElement != null && webElement.getSize().getHeight() > 0 && webElement.getSize().getWidth() > 0) {
@@ -444,7 +455,7 @@ public class SeleniumElement extends AbstractElement {
 
 				if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver) {
 					new TouchAction((AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver())
-							.moveTo(webElement).perform();
+							.moveTo( createPoint( webElement ) ).perform();
 				} else if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver) {
 					if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof HasTouchScreen)
 						new TouchActions(getWebDriver()).moveToElement(webElement).build().perform();
@@ -472,7 +483,7 @@ public class SeleniumElement extends AbstractElement {
 
 				if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver) {
 					new TouchAction((AppiumDriver<?>) ((DeviceWebDriver) getWebDriver()).getNativeDriver())
-							.press(webElement).waitAction(Duration.ofMillis(length)).release().perform();
+							.press( createPoint( webElement ) ).waitAction( WaitOptions.waitOptions( Duration.ofMillis(length) ) ).release().perform();
 				} else if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver) {
 					CloudActionProvider aP = getWebDriver().getCloud().getCloudActionProvider();
 
@@ -518,7 +529,7 @@ public class SeleniumElement extends AbstractElement {
 
 				if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver) {
 					new TouchAction((AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver())
-							.press(webElement).perform();
+							.press( createPoint( webElement ) ).perform();
 				} else if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver) {
 					if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof HasTouchScreen)
 						new TouchActions(getWebDriver()).clickAndHold(webElement).build().perform();
@@ -541,8 +552,9 @@ public class SeleniumElement extends AbstractElement {
 			CloudActionProvider aP = getWebDriver().getCloud().getCloudActionProvider();
 			Dimension elementSize = aP.translateDimension(getWebDriver(), webElement.getSize());
 
-			int useX = (int) ((double) elementSize.getWidth() * ((double) offsetX / 100.0));
-			int useY = (int) ((double) elementSize.getHeight() * ((double) offsetY / 100.0));
+			int useX = (int) ((double) elementSize.getWidth() * ((double) offsetX / 100.0) + webElement.getLocation().getX() );
+			int useY = (int) ((double) elementSize.getHeight() * ((double) offsetY / 100.0) + webElement.getLocation().getY() );
+			
 
 			if (log.isInfoEnabled())
 				log.info("Clicking " + useX + "," + useY + " pixels relative to " + getName());
@@ -552,11 +564,10 @@ public class SeleniumElement extends AbstractElement {
 					getActionProvider().startTimer((DeviceWebDriver) getWebDriver(), this, getExecutionContext());
 
 				if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver) {
-					new TouchAction((AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver())
-							.moveTo(webElement).tap(webElement, useX, useY).perform();
+					new TouchAction((AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver()).press( PointOption.point( useX, useY ) ).perform();
 				} else if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver) {
 					if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof HasTouchScreen)
-						new TouchActions(getWebDriver()).moveToElement(webElement, useX, useY).click().build()
+						new TouchActions(getWebDriver()).move( useX, useY ).click().build()
 								.perform();
 					else
 						new Actions(getWebDriver()).moveToElement(webElement, useX, useY).click().build().perform();
@@ -585,8 +596,8 @@ public class SeleniumElement extends AbstractElement {
 					getActionProvider().startTimer((DeviceWebDriver) getWebDriver(), this, getExecutionContext());
 
 				if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver) {
-					new TouchAction((AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver()).tap(webElement)
-							.tap(webElement).perform();
+					new TouchAction((AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver()).tap( createPoint( webElement ) )
+							.tap( createPoint( webElement ) ).perform();
 				} else if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver) {
 					if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof HasTouchScreen)
 						new TouchActions(getWebDriver()).doubleClick().build().perform();

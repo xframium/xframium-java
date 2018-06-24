@@ -4,8 +4,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.gesture.AbstractDragDropGesture;
+
+import com.perfectomobile.intellij.connector.impl.client.ProcessOutputLogAdapter;
+
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
+import io.appium.java_client.touch.LongPressOptions;
+import io.appium.java_client.touch.offset.ElementOption;
+import io.appium.java_client.touch.offset.PointOption;
 
 public class DragDropGesture extends AbstractDragDropGesture
 {
@@ -18,20 +24,26 @@ public class DragDropGesture extends AbstractDragDropGesture
         WebElement fromElement = (WebElement) getFromElement().getNative();
         WebElement toElement = (WebElement) getToElement().getNative();
         
+        
+        
         switch( getInitialAction() )
         {
             case LONG_PRESS:
-                dAction.longPress( fromElement );
+            	
+                dAction.longPress( LongPressOptions.longPressOptions().withElement( ElementOption.element( fromElement ) ) );
                 break;
                 
             case PRESS:
-                dAction.press( fromElement );
+                dAction.press( createPoint( fromElement ) );
                 break;
         }
         
-        dAction.moveTo( toElement ).release().perform();
+        dAction.moveTo( createPoint( fromElement ) ).release().perform();
         
         return true;
     }
+    
+    
+    
 
 }

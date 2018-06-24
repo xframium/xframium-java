@@ -25,8 +25,10 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.xframium.gesture.AbstractSwipeGesture;
 import org.xframium.spi.driver.NativeDriverProvider;
+
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
+import io.appium.java_client.touch.offset.PointOption;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -59,7 +61,7 @@ public class SwipeGesture extends AbstractSwipeGesture
 		Point actualEnd = getActualPoint( getSwipeEnd(), screenDimension );
 		
 		TouchAction swipeAction = new TouchAction( appiumDriver );
-		swipeAction.press( actualStart.getX(), actualStart.getY() ).moveTo( actualEnd.getX(), actualEnd.getY() ).release().perform();
+		swipeAction.press( PointOption.point(actualStart.getX(), actualStart.getY() ) ).moveTo( PointOption.point(actualEnd.getX(), actualEnd.getY() ) ).release().perform();
 		
 		return true;
 	}

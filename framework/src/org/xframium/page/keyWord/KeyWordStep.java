@@ -36,8 +36,7 @@ import org.xframium.spi.Device;
 /**
  * The Interface KeyWordStep.
  */
-public interface KeyWordStep
-{
+public interface KeyWordStep {
 
 	/** The Constant TYPE. */
 	public static final String TYPE = "TYPE";
@@ -45,8 +44,7 @@ public interface KeyWordStep
 	/**
 	 * The Enum StepFailure.
 	 */
-	public enum StepFailure
-	{
+	public enum StepFailure {
 
 		/** The error. */
 		ERROR,
@@ -54,37 +52,44 @@ public interface KeyWordStep
 		IGNORE,
 		/** The log ignore. */
 		LOG_IGNORE,
-		
+
 		LOG_ERROR
 	}
-	
+
 	/**
 	 * The Enum StepFailure.
 	 */
-	public enum ValidationType
-	{
-		
+	public enum ValidationType {
+
 		/** The regex. */
 		REGEX,
-		
+
 		/** The empty. */
 		EMPTY,
-		
+
 		/** The not empty. */
 		NOT_EMPTY;
 	}
 
-	public void setTagNames( String tagNames );
-	public void setDeviceTags( String tagNames );
-	public Object getParameterValue( KeyWordParameter param, Map<String, Object> contextMap, Map<String, PageData> dataMap, String xFID );
-	public String getTokenValue( KeyWordToken token, Map<String, Object> contextMap, Map<String, PageData> dataMap, String xFID );
-	
+	public void setTagNames(String tagNames);
+
+	public void setDeviceTags(String tagNames);
+
+	public Object getParameterValue(KeyWordParameter param, Map<String, Object> contextMap,
+			Map<String, PageData> dataMap, String xFID);
+
+	public String getTokenValue(KeyWordToken token, Map<String, Object> contextMap, Map<String, PageData> dataMap,
+			String xFID);
+
 	public ApplicationVersion getVersion();
-	public void setVersion( String appVersion );
+
+	public void setVersion(String appVersion);
+
 	public boolean isOrMapping();
-	
-	public String dumpState(WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, ExecutionContextTest executionContext );
-	
+
+	public String dumpState(WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap,
+			ExecutionContextTest executionContext);
+
 	/**
 	 * Gets the link id.
 	 *
@@ -95,9 +100,10 @@ public interface KeyWordStep
 	/**
 	 * Sets the link id.
 	 *
-	 * @param os the new os
+	 * @param os
+	 *            the new os
 	 */
-	public void setOs( String os );
+	public void setOs(String os);
 
 	/**
 	 * Gets the link id.
@@ -107,37 +113,39 @@ public interface KeyWordStep
 	public String getBrowser();
 
 	public String getWaitFor();
-	public void setWaitFor( String waitFor );
-	
-	
+
+	public void setWaitFor(String waitFor);
+
 	/**
 	 * Sets the link id.
 	 *
-	 * @param browser the new os
+	 * @param browser
+	 *            the new os
 	 */
-	public void setBrowser( String browser );
+	public void setBrowser(String browser);
 
 	public List<KeyWordParameter> getParameterList();
-	
+
 	public List<KeyWordToken> getTokenList();
 
 	public String[] getTagNames();
 
-    public String[] getDeviceTags();
-    
-    public void setTagNames( String[] tagNames );
-    
-    public void setDeviceTags( String[] deviceTags );
-	
-    public void setImage( String imageName );
-    public String getImage();
-    
-    
-    public boolean isTrace();
-    public void setTrace(boolean trace);
-    
+	public String[] getDeviceTags();
+
+	public void setTagNames(String[] tagNames);
+
+	public void setDeviceTags(String[] deviceTags);
+
+	public void setImage(String imageName);
+
+	public String getImage();
+
+	public boolean isTrace();
+
+	public void setTrace(boolean trace);
+
 	public String getKw();
-	
+
 	/**
 	 * Gets the link id.
 	 *
@@ -151,7 +159,7 @@ public interface KeyWordStep
 	 * @param linkId
 	 *            the new link id
 	 */
-	public void setLinkId( String linkId );
+	public void setLinkId(String linkId);
 
 	/**
 	 * Gets the failure.
@@ -166,7 +174,7 @@ public interface KeyWordStep
 	 * @param sf
 	 *            the new failure
 	 */
-	public void setFailure( StepFailure sf );
+	public void setFailure(StepFailure sf);
 
 	/**
 	 * Adds the parameter.
@@ -174,7 +182,7 @@ public interface KeyWordStep
 	 * @param param
 	 *            the param
 	 */
-	public void addParameter( KeyWordParameter param );
+	public void addParameter(KeyWordParameter param);
 
 	/**
 	 * Gets the name.
@@ -189,8 +197,7 @@ public interface KeyWordStep
 	 * @param name
 	 *            the new name
 	 */
-	public void setName( String name );
-	
+	public void setName(String name);
 
 	/**
 	 * Checks if is active.
@@ -205,7 +212,7 @@ public interface KeyWordStep
 	 * @param active
 	 *            the new active
 	 */
-	public void setActive( boolean active );
+	public void setActive(boolean active);
 
 	/**
 	 * Checks if is inverse.
@@ -220,19 +227,19 @@ public interface KeyWordStep
 	 * @param inverse
 	 *            the new inverse
 	 */
-	public void setInverse( boolean inverse );
-	
+	public void setInverse(boolean inverse);
+
 	public boolean isStartAt();
-	
-	public void setStartAt( boolean startAt );
-	
+
+	public void setStartAt(boolean startAt);
+
 	public boolean isBreakpoint();
-    
-    public void setBreakpoint( boolean breakpoint );
-    
-    public void setAppContext( String appContext );
-    
-    public String getAppContext();
+
+	public void setBreakpoint(boolean breakpoint);
+
+	public void setAppContext(String appContext);
+
+	public String getAppContext();
 
 	/**
 	 * Gets the page name.
@@ -247,17 +254,17 @@ public interface KeyWordStep
 	 * @param pageName
 	 *            the new page name
 	 */
-	public void setPageName( String pageName );
-	
+	public void setPageName(String pageName);
+
 	public String getSiteName();
 
-    /**
-     * Sets the page name.
-     *
-     * @param pageName
-     *            the new page name
-     */
-    public void setSiteName( String siteName );
+	/**
+	 * Sets the page name.
+	 *
+	 * @param pageName
+	 *            the new page name
+	 */
+	public void setSiteName(String siteName);
 
 	/**
 	 * Checks if is timed.
@@ -272,7 +279,7 @@ public interface KeyWordStep
 	 * @param timed
 	 *            the new timed
 	 */
-	public void setTimed( boolean timed );
+	public void setTimed(boolean timed);
 
 	/**
 	 * Adds the all steps.
@@ -280,7 +287,7 @@ public interface KeyWordStep
 	 * @param step
 	 *            the step
 	 */
-	public void addAllSteps( KeyWordStep[] step );
+	public void addAllSteps(KeyWordStep[] step);
 
 	/**
 	 * Adds the step.
@@ -288,7 +295,7 @@ public interface KeyWordStep
 	 * @param step
 	 *            the step
 	 */
-	public void addStep( KeyWordStep step );
+	public void addStep(KeyWordStep step);
 
 	/**
 	 * Gets the step list.
@@ -310,37 +317,46 @@ public interface KeyWordStep
 	 * @param fork
 	 *            the new fork
 	 */
-	public void setFork( boolean fork );
-	
+	public void setFork(boolean fork);
+
 	/**
 	 * Adds the token.
 	 *
 	 * @param token
 	 *            the token
 	 */
-	public void addToken( KeyWordToken token  );
+	public void addToken(KeyWordToken token);
 
 	/**
 	 * Execute step.
 	 *
-	 * @param pageObject            the page object
-	 * @param webDriver            the web driver
-	 * @param contextMap            the context map
-	 * @param dataMap            the data map
-	 * @param pageMap the page map
-	 * @param exeuctionContext TODO
+	 * @param pageObject
+	 *            the page object
+	 * @param webDriver
+	 *            the web driver
+	 * @param contextMap
+	 *            the context map
+	 * @param dataMap
+	 *            the data map
+	 * @param pageMap
+	 *            the page map
+	 * @param exeuctionContext
+	 *            TODO
 	 * @return true, if successful
-	 * @throws Exception the exception
+	 * @throws Exception
+	 *             the exception
 	 */
-	public boolean executeStep( Page pageObject, WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String,Page> pageMap, SuiteContainer sC, ExecutionContextTest exeuctionContext ) throws Exception;
-	
+	public boolean executeStep(Page pageObject, WebDriver webDriver, Map<String, Object> contextMap,
+			Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC,
+			ExecutionContextTest exeuctionContext) throws Exception;
+
 	/**
 	 * To error.
 	 *
 	 * @return the string
 	 */
 	public String toError();
-	
+
 	/**
 	 * Gets the context.
 	 *
@@ -348,108 +364,116 @@ public interface KeyWordStep
 	 */
 	public String getContext();
 
-        /**
+	/**
 	 * Gets the device name.
 	 *
 	 * @return the device
 	 */
 	public String getDevice();
-	
+
 	/**
 	 * Gets the validation.
 	 *
 	 * @return the validation
 	 */
 	public String getValidation();
-	
+
 	/**
 	 * Sets the validation.
 	 *
-	 * @param validation the new validation
+	 * @param validation
+	 *            the new validation
 	 */
-	public void setValidation( String validation );
-	
+	public void setValidation(String validation);
+
 	/**
 	 * Gets the validation type.
 	 *
 	 * @return the validation type
 	 */
 	public ValidationType getValidationType();
-	
+
 	/**
 	 * Sets the validation type.
 	 *
-	 * @param validationType the new validation type
+	 * @param validationType
+	 *            the new validation type
 	 */
-	public void setValidationType( ValidationType validationType );
-	
+	public void setValidationType(ValidationType validationType);
+
 	/**
 	 * Sets the context.
 	 *
-	 * @param contextName the new context
+	 * @param contextName
+	 *            the new context
 	 */
-	public void setContext( String contextName );
+	public void setContext(String contextName);
 
-        /**
+	/**
 	 * Sets the device name.
 	 *
-	 * @param deviceName the altername device anme
+	 * @param deviceName
+	 *            the altername device anme
 	 */
-	public void setDevice( String deviceName );
-	
+	public void setDevice(String deviceName);
+
 	/**
 	 * Sets the threshold.
 	 *
-	 * @param threshold the new threshold
+	 * @param threshold
+	 *            the new threshold
 	 */
-	public void setThreshold( int threshold );
-	
+	public void setThreshold(int threshold);
+
 	/**
 	 * Gets the threshold.
 	 *
 	 * @return the threshold
 	 */
 	public int getThreshold();
-	
+
 	/**
 	 * Sets the description.
 	 *
-	 * @param description the new description
+	 * @param description
+	 *            the new description
 	 */
-	public void setDescription( String description );
-	
+	public void setDescription(String description);
+
 	/**
 	 * Gets the description.
 	 *
 	 * @return the description
 	 */
 	public String getDescription();
-	
+
 	/**
 	 * Sets the poi.
 	 *
-	 * @param poi the new poi
+	 * @param poi
+	 *            the new poi
 	 */
-	public void setPoi( String poi );
-	
+	public void setPoi(String poi);
+
 	/**
 	 * Gets the poi.
 	 *
 	 * @return the poi
 	 */
 	public String getPoi();
-	
+
 	/**
 	 * Gets the wait.
 	 *
 	 * @return the wait
 	 */
 	public long getWait();
-	
+
 	/**
 	 * Sets the wait.
 	 *
-	 * @param waitAfter the new wait
+	 * @param waitAfter
+	 *            the new wait
 	 */
-	public void setWait( long waitAfter );
+	public void setWait(long waitAfter);
 }

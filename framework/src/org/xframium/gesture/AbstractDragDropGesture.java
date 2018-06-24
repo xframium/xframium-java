@@ -20,8 +20,11 @@
  *******************************************************************************/
 package org.xframium.gesture;
 
+import org.openqa.selenium.WebElement;
 import org.xframium.page.Page;
 import org.xframium.page.element.Element;
+
+import io.appium.java_client.touch.offset.PointOption;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -80,4 +83,6 @@ public abstract class AbstractDragDropGesture extends AbstractGesture
     {
         this.toElement = toElement;
     }
+    
+    
 }

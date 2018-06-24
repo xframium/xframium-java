@@ -28,6 +28,7 @@ import org.xframium.spi.driver.NativeDriverProvider;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MultiTouchAction;
 import io.appium.java_client.TouchAction;
+import io.appium.java_client.touch.offset.PointOption;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -66,10 +67,10 @@ public class TwoFingerGesture extends AbstractTwoFingerGesture
 		MultiTouchAction tAction = new MultiTouchAction( appiumDriver );
 		
 		TouchAction fingerOne = new TouchAction( appiumDriver );
-		fingerOne.press(  startOne.getX(), startOne.getY() ).moveTo( endOne.getX(), endOne.getY() ).release();
+		fingerOne.press( PointOption.point( startOne.getX(), startOne.getY() ) ).moveTo( PointOption.point(endOne.getX(), endOne.getY() ) ).release();
 		
 		TouchAction fingerTwo = new TouchAction( appiumDriver );
-		fingerTwo.press(  startTwo.getX(), startTwo.getY() ).moveTo( endTwo.getX(), endTwo.getY() ).release();
+		fingerTwo.press( PointOption.point( startTwo.getX(), startTwo.getY() ) ).moveTo( PointOption.point(endTwo.getX(), endTwo.getY() ) ).release();
 		
 		tAction.add( fingerOne ).add( fingerTwo ).perform();
 		return true;

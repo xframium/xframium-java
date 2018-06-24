@@ -8,7 +8,7 @@
     <device browserName="chrome" os="WIN8_1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Chrome Local" cloud="grid" active="false" />
     <device browserVersion="67" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="5" driverType="WEB" name="Windows 8.1 chrome 53" cloud="saucelabs" active="true" />
     <device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Chrome SauceLabs" cloud="saucelabs" active="false" />
-    <device os="iOS" model="iPhone-7" tagNames="Perfecto" manufacturer="Apple" availableDevices="1" driverType="WEB" name="iPhone-7 iOS" cloud="perfecto" active="false" />
+    <device os="iOS" model="iPhone-7*" tagNames="Perfecto" manufacturer="Apple" availableDevices="5" driverType="WEB" name="iPhone-7 iOS" cloud="ford" active="true" />
     <device os="iOS" model="iPhone-7 Plus" tagNames="Perfecto" manufacturer="Apple" availableDevices="1" driverType="WEB" name="iPhone-7 Plus iOS" cloud="perfecto" active="false" />
     <device os="iOS" model="iPhone.*" tagNames="Perfecto" manufacturer="Apple" availableDevices="4" driverType="WEB" name="iPhone iOS" cloud="perfecto" active="false" />
     <device browserName="Chrome" os="Android" model="Galaxy.*" tagNames="Perfecto" manufacturer="Samsung" availableDevices="3" driverType="WEB" name="Android Chrome" cloud="perfecto" active="false" />
