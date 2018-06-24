@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
 import org.openqa.selenium.WebDriver;
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.spi.Device;
 
 public class TestContainer
 {
@@ -20,6 +22,8 @@ public class TestContainer
     private Map<String, Page> pageMap;
     private Boolean stepPass;
     private int stepsSent = 0;
+    private CloudDescriptor cD;
+    private Device d;
     
     private ReentrantLock tLock = new ReentrantLock();
     private boolean stepAhead = false;
@@ -68,13 +72,15 @@ public class TestContainer
 
     private List<StepContainer> stepList = new ArrayList<StepContainer>( 50 );
     
-    public TestContainer( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap )
+    public TestContainer( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, CloudDescriptor cD, Device d )
     {
         this.webDriver = webDriver;
         this.keyWordTest = keyWordTest;
         this.contextMap = contextMap;
         this.dataMap = dataMap;
         this.pageMap = pageMap;
+        this.cD = cD;
+        this.d = d;
     }
     
     public int getStepsSent()

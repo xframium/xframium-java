@@ -188,22 +188,22 @@ public class SeleniumElement extends AbstractElement {
 		if (imageElement != null) {
 			if (imageElement.getLocation() != null && imageElement.getSize() != null
 					&& imageElement.getSize().getWidth() > 0 && imageElement.getSize().getHeight() > 0) {
-				String fileKey = "PRIVATE:" + getDeviceName() + ".png";
+				//String fileKey = "PRIVATE:" + getDeviceName() + ".png";
 
 				byte[] imageData = null;
 
-				String cloudName = ((DeviceWebDriver) getWebDriver()).getDevice().getCloud();
-				if (cloudName == null || cloudName.trim().isEmpty())
-					cloudName = CloudRegistry.instance(((DeviceWebDriver) getWebDriver()).getxFID()).getCloud()
-							.getName();
-
-				if (CloudRegistry.instance(((DeviceWebDriver) getWebDriver()).getxFID()).getCloud(cloudName)
-						.getProvider().equals("PERFECTO")) {
-					PerfectoMobile.instance(getWebDriver().getxFID()).imaging().screenShot(getExecutionId(),
-							getDeviceName(), fileKey, Screen.primary, ImageFormat.png, imageResolution);
-					imageData = PerfectoMobile.instance(getWebDriver().getxFID()).repositories()
-							.download(RepositoryType.MEDIA, fileKey);
-				} else {
+//				String cloudName = ((DeviceWebDriver) getWebDriver()).getDevice().getCloud();
+//				if (cloudName == null || cloudName.trim().isEmpty())
+//					cloudName = CloudRegistry.instance(((DeviceWebDriver) getWebDriver()).getxFID()).getCloud()
+//							.getName();
+//
+//				if (CloudRegistry.instance(((DeviceWebDriver) getWebDriver()).getxFID()).getCloud(cloudName)
+//						.getProvider().equals("PERFECTO")) {
+//					PerfectoMobile.instance(getWebDriver().getxFID()).imaging().screenShot(getExecutionId(),
+//							getDeviceName(), fileKey, Screen.primary, ImageFormat.png, imageResolution);
+//					imageData = PerfectoMobile.instance(getWebDriver().getxFID()).repositories()
+//							.download(RepositoryType.MEDIA, fileKey);
+//				} else {
 					if (getWebDriver() instanceof TakesScreenshot) {
 						try {
 							imageData = ((TakesScreenshot) getWebDriver()).getScreenshotAs(OutputType.BYTES);
@@ -211,7 +211,7 @@ public class SeleniumElement extends AbstractElement {
 							log.error("Error taking screenshot", e);
 						}
 					}
-				}
+				//}
 				if (imageData != null && imageData.length > 0) {
 					try {
 						BufferedImage fullImage = ImageIO.read(new ByteArrayInputStream(imageData));
@@ -226,8 +226,7 @@ public class SeleniumElement extends AbstractElement {
 						log.error(Thread.currentThread().getName() + ": Error extracting image data", e);
 					}
 				} else
-					log.warn(Thread.currentThread().getName() + ": No image data could be retrieved for [" + fileKey
-							+ "]");
+					log.warn(Thread.currentThread().getName() + ": No image data could be retrieved");
 
 			} else
 				log.warn(Thread.currentThread().getName() + ": The element returned via " + getKey()

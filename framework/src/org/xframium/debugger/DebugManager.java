@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Capabilities;
@@ -25,7 +26,6 @@ import org.xframium.page.Page;
 import org.xframium.page.StepStatus;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.SeleniumElement;
-import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordStep;
 import org.xframium.page.keyWord.KeyWordTest;
@@ -34,10 +34,11 @@ import org.xframium.page.keyWord.spi.KeyWordPageImpl;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.page.listener.KeyWordListener;
 import org.xframium.reporting.ExecutionContextTest;
+
 import com.sun.net.httpserver.HttpServer;
 import com.xframium.serialization.SerializationManager;
-import com.xframium.serialization.json.ReflectionSerializer;
 import com.xframium.serialization.json.MapSerializer;
+import com.xframium.serialization.json.ReflectionSerializer;
 
 @SuppressWarnings ( "restriction")
 public class DebugManager implements KeyWordListener
@@ -129,6 +130,8 @@ public class DebugManager implements KeyWordListener
     {
         String executionId = ((DeviceWebDriver) webDriver).getExecutionId();
         TestContainer testContainer = activeTests.get( executionId );
+        
+        
 
         if ( testContainer != null )
         {
@@ -146,7 +149,7 @@ public class DebugManager implements KeyWordListener
     @Override
     public boolean beforeTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC )
     {
-        activeTests.put( ((DeviceWebDriver) webDriver).getExecutionId(), new TestContainer( webDriver, keyWordTest, contextMap, dataMap, pageMap ) );
+        activeTests.put( ((DeviceWebDriver) webDriver).getExecutionId(), new TestContainer( webDriver, keyWordTest, contextMap, dataMap, pageMap, eC.getCloud(), eC.getDevice() ) );
         return true;
     }
 

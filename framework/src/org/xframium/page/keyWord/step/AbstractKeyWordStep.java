@@ -54,6 +54,7 @@ import org.xframium.artifact.ArtifactType;
 import org.xframium.container.SuiteContainer;
 import org.xframium.content.ContentManager;
 import org.xframium.device.ConnectedDevice;
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.FilteredException;
@@ -82,6 +83,7 @@ import org.xframium.page.keyWord.step.transform.ValueTransformationFactory;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextStep;
 import org.xframium.reporting.ExecutionContextTest;
+import org.xframium.spi.Device;
 import org.xframium.spi.driver.ReportiumProvider;
 import org.xframium.utility.ImageUtility;
 import org.xframium.utility.XMLEscape;
@@ -106,7 +108,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         category = "Other";
     }
 
-    private String waitFor = null;
+	private String waitFor = null;
     /** The name. */
     private String name;
 

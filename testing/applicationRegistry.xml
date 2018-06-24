@@ -6,4 +6,8 @@
 <application name="xTest0" version="1.0" url="http://xframium.org/testing.html"/>
 <application name="xTest1" version="1.0" url="http://xframium.org/testing2.html"/>
 <application name="FordPass_NA_v1_15_0" appPackage="com.ford.oa" bundleId="com.ford.fordownerapp" url="" iosInstall="PUBLIC:MK/FPv1.15/5Oct_Torque-NA-Staging-1710051.ipa" androidInstall="PUBLIC:MK/FPv1.15/5Oct_TORQUE-NA-STAGING-1.15.0-20171004-2059.apk" />
+
+<application name="Test object" version="1.0" url="">
+  <capability name="testobject_api_key">14342FB55D4449C9806D428078E0D4ED</capability>
+</application>
 </applicationRegistry>

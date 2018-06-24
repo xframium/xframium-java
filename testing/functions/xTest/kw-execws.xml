@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-  <function name="kw-execws" active="true">
+  <function name="kw-execws" active="false">
     <description></description>
-    <step name="SOAP Call" site="xTest" page="Home" type="EXECWS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="soap">
+    <step name="SOAP Call" site="xTest" page="Home" type="EXECWS" active="false" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="soap">
       <parameter type="STATIC" name="url" value="http://www.webservicex.net/FinanceService.asmx" />
       <parameter type="STATIC" name="method" value="POST" />
       <parameter type="STATIC" name="media-type" value="text/xml" />

@@ -3,10 +3,10 @@
   <application provider="XML" fileName="applicationRegistry.xml" name="xTest" />
   <devices provider="LOCAL">
     <device browserName="firefox" model="Firefox" manufacturer="Mozilla" availableDevices="5" driverType="WEB" name="windows_nt firefox" cloud="grid" active="false" />
-    <device browserName="firefox" model="Firefox" manufacturer="Mozilla" availableDevices="5" driverType="WEB" name="windows_nt firefox b" cloud="browserstack" active="true" />
-    <device browserName="chrome" os="WIN8_1" model="Chrome" manufacturer="Google" availableDevices="5" driverType="WEB" name="windows_nt chrome" cloud="grid" active="false" />
+    <device browserName="firefox" model="Firefox" manufacturer="Mozilla" availableDevices="2" driverType="WEB" name="windows_nt firefox b" cloud="browserstack" active="true" />
+    <device browserName="chrome" os="WIN8_1" model="Chrome" manufacturer="Google" availableDevices="5" driverType="WEB" name="windows_nt chrome" cloud="grid" active="true" />
     <device browserName="chrome" os="WIN8_1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Chrome Local" cloud="grid" active="false" />
-    <device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="5" driverType="WEB" name="Windows 8.1 chrome 53" cloud="saucelabs" active="true" />
+    <device browserVersion="67" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="5" driverType="WEB" name="Windows 8.1 chrome 53" cloud="saucelabs" active="true" />
     <device browserVersion="53" browserName="chrome" os="Windows" osVersion="8.1" model="Chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Chrome SauceLabs" cloud="saucelabs" active="false" />
     <device os="iOS" model="iPhone-7" tagNames="Perfecto" manufacturer="Apple" availableDevices="1" driverType="WEB" name="iPhone-7 iOS" cloud="perfecto" active="false" />
     <device os="iOS" model="iPhone-7 Plus" tagNames="Perfecto" manufacturer="Apple" availableDevices="1" driverType="WEB" name="iPhone-7 Plus iOS" cloud="perfecto" active="false" />
@@ -17,9 +17,12 @@
       <capability name="appiumVersion" class="STRING">1.5.3</capability>
       <capability name="platform" class="STRING">ANDROID</capability>
     </device>
-    <device browserVersion="53" browserName="Chrome" os="Windows" osVersion="10" model="chrome" manufacturer="Google" availableDevices="1" driverType="WEB" name="Windows 10 Chrome 53" cloud="perfecto" active="false" />
+    <device browserVersion="67" browserName="Chrome" os="Windows" osVersion="10" model="chrome" manufacturer="Google" availableDevices="10" driverType="WEB" name="Windows 10 Chrome 67" cloud="partners" active="true" />
+    <device model="Galaxy S7" os="Android" osVersion="7" manufacturer="Samsung" availableDevices="5" driverType="WEB" name="testobject device" cloud="saucelabs" active="false" >
+  
+    </device>
   </devices>
-  <driver suiteName="xTest" type="WEB" outputFolder="test-output" displayResults="true" domain="PROFESSIONAL_SERVICES" dryRun="false" embeddedServer="false" retryCount="1" >
+  <driver suiteName="xTest" type="WEB" outputFolder="test-output" displayResults="true" domain="PROFESSIONAL_SERVICES" dryRun="false" embeddedServer="false" retryCount="0">
   <propertyAdapter className="org.xframium.device.property.SeleniumPropertyAdapter"></propertyAdapter>
     <property name="selenium.timeouts.implicitWait">3000</property>
     <property name="jdbc.password"></property>

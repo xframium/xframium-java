@@ -35,7 +35,7 @@ li.selected {
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">xFramium Debugger - <span class="text-muted">xFramium 1.0.16 (Typhon)</span></a>
+                <a class="navbar-brand" href="#">xFramium Debugger - <span class="text-muted">xFramium 1.0.17 (Hera)</span></a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
@@ -55,6 +55,7 @@ li.selected {
                 <caption>Active Tests</caption>
                 <tr>
                     <th>Name</th>
+                    <th>Environment</th>
                     <th width="10%">Steps</th>
                     <th width="10%">Steps Run</th>
                     <th width="15%">Last Step</th>
@@ -62,6 +63,7 @@ li.selected {
                 </tr>
                 <tr ng-repeat="(key, value) in active">
                     <td><a ng-attr-href="/testCase?executionId={{key}}">{{value.keyWordTest.name}}</a></td>
+                    <td><img ng-if="value.cD.provider.name != null" src="http://xframium.org/images/{{value.cD.provider.name}}.png" width="16" alt="{{value.cD.provider.name}}" /><img ng-if="value.cD.provider.name == null" src="http://xframium.org/images/{{value.cD.provider}}.png" width="16" alt="{{value.cD.provider}}" /> <span style="margin-left: 25px">{{value.d.environment}}</span></td>
                     <td>{{value.keyWordTest.stepList.length}}</td>
                     <td>{{value.stepList.length}}</td>
                     <td>{{value.stepList[value.stepList.length-1].stepType}}</td>
@@ -77,12 +79,14 @@ li.selected {
                 <caption>Completed Tests</caption>
                 <tr>
                     <th>Name</th>
+                    <th>Environment</th>
                     <th width="10%">Steps</th>
                     <th width="10%">Steps Run</th>
                     <th width="15%">Last Step</th>
                 </tr>
                 <tr ng-repeat="(key, value) in completed">
                     <td><a ng-attr-href="/testCase?executionId={{key}}">{{value.keyWordTest.name}}</a></td>
+                    <td><img ng-if="value.cD.provider.name != null" src="http://xframium.org/images/{{value.cD.provider.name}}.png" width="16" alt="{{value.cD.provider.name}}" /><img ng-if="value.cD.provider.name == null" src="http://xframium.org/images/{{value.cD.provider}}.png" width="16" alt="{{value.cD.provider}}" /> <span style="margin-left: 25px">{{value.d.environment}}</span></td>
                     <td>{{value.keyWordTest.stepList.length}}</td>
                     <td>{{value.stepList.length}}</td>
                     <td>{{value.stepList[value.stepList.length-1].stepType}}</td>

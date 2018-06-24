@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.xframium</groupId>
   <artifactId>xframium-java</artifactId>
-  <version>1.0.17-SNAPSHOT</version>
+  <version>1.0.17</version>
   <name>xframium-java</name>
   <repositories>
     <repository>

@@ -29,6 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.FlowException;
 import org.xframium.exception.ObjectConfigurationException;
@@ -39,6 +40,7 @@ import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordDriver.TRACE;
 import org.xframium.page.keyWord.step.SyntheticStep;
 import org.xframium.reporting.ExecutionContextTest;
+import org.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -102,6 +104,7 @@ public class KeyWordTest
 
     /** The step list. */
     private List<KeyWordStep> stepList = new ArrayList<KeyWordStep>( 10 );
+
 
     public TRACE getTrace()
     {

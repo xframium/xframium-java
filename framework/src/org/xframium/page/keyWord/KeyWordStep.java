@@ -22,12 +22,15 @@ package org.xframium.page.keyWord;
 
 import java.util.List;
 import java.util.Map;
+
 import org.openqa.selenium.WebDriver;
 import org.xframium.application.ApplicationVersion;
 import org.xframium.container.SuiteContainer;
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.reporting.ExecutionContextTest;
+import org.xframium.spi.Device;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -79,7 +82,6 @@ public interface KeyWordStep
 	public ApplicationVersion getVersion();
 	public void setVersion( String appVersion );
 	public boolean isOrMapping();
-	
 	
 	public String dumpState(WebDriver webDriver, Map<String, Object> contextMap, Map<String, PageData> dataMap, ExecutionContextTest executionContext );
 	

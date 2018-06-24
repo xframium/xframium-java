@@ -5,7 +5,7 @@
       <element name="toggleButtonWeb" value="//button[text()='Toggle Value']" descriptor="XPATH" />
       <element name="toggleButtonNative" value="//button[text()='Toggle Value']" descriptor="XPATH" />
       <element name="toggleButton" value="//button[text()='Toggle Value']" descriptor="XPATH" />
-      <element name="toggleValue" value="singleModel" descriptor="ID" />
+      <element name="toggleValue" value="//*[@id='singleModel']" descriptor="XPATH" />
       <element name="elementList" value="#elementList>pre" descriptor="CSS" />
       <element name="alertButton" value="//button[text()='Alert Button']" descriptor="XPATH" />
       <element name="confirmButton" value="//button[text()='Confirm Button']" descriptor="XPATH" />
