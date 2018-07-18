@@ -31,6 +31,7 @@ import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.Initializable;
@@ -124,7 +125,10 @@ public class WEBDriverFactory extends AbstractDriverFactory
             if ( !useCloud.isEmbedded() )
             {
                 if ( !isBlank( currentDevice.getBrowserVersion() ) )
+                {
                     dc.setCapability( BROWSER_VERSION, currentDevice.getBrowserVersion() );
+                    dc.setCapability( VERSION, currentDevice.getBrowserVersion() );
+                }
             }
             
             for ( String name : currentDevice.getCapabilities().keySet() )
@@ -217,8 +221,8 @@ public class WEBDriverFactory extends AbstractDriverFactory
 			}
 			
 			URL hubUrl = new URL( useCloud.getCloudUrl( dc ) );
-            if ( log.isDebugEnabled() )
-                log.debug( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
+            //if ( log.isDebugEnabled() )
+                log.warn( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
             
             webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance( xFID ).isCachingEnabled(), currentDevice, dc );
             webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );

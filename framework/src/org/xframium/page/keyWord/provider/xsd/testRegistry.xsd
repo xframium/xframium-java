@@ -168,6 +168,7 @@
       <simpleType>
         <restriction base="string">
           <enumeration value="ERROR" />
+          <enumeration value="FAILURE" />
           <enumeration value="IGNORE" />
           <enumeration value="LOG_IGNORE" />
         </restriction>

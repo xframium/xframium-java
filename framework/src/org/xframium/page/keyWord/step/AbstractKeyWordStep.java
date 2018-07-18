@@ -57,6 +57,7 @@ import org.xframium.device.ConnectedDevice;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.exception.BubbledFailureException;
 import org.xframium.exception.FilteredException;
 import org.xframium.exception.FlowException;
 import org.xframium.exception.ObjectConfigurationException;
@@ -1053,7 +1054,6 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 
                 
                  
-                //WebDriver altWebDriver = getAltWebDriver();
                 //
                 // Listener integrations for individual steps
                 //
@@ -1073,9 +1073,17 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     }
                 }
 
+                //
+                // Step EXECUTION
+                //
                 try
                 {
                     returnValue = _executeStep( pageObject, ((alternateWebDriver != null) ? alternateWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext );
+                }
+                catch( BubbledFailureException be )
+                {
+                	if ( !inverse )
+                		throw be;
                 }
                 finally
                 {
@@ -1090,6 +1098,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         }
                     }
                 }
+                
                 //
                 // IF a waitFor verification step was specified, execute it
                 //
@@ -1157,6 +1166,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
                 throw lb;
             }
+            catch( BubbledFailureException be )
+            {
+            	executionContext.completeStep( StepStatus.FAILURE, be.getException() );
+                throw be;
+            }
             catch ( FilteredException e )
             {
                 stepException = e;
@@ -1177,6 +1191,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 returnValue = false;
                 try
                 {
+                	
                     KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).notifyAfterStep( alternateWebDriver != null ? alternateWebDriver : webDriver, this, pageObject, contextMap, dataMap, pageMap, StepStatus.FAILURE, sC, executionContext );
                 }
                 catch ( Exception e2 )
@@ -1219,6 +1234,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
                         throw lb;
                     }
+                    catch( BubbledFailureException be )
+                    {
+                    	executionContext.completeStep( StepStatus.FAILURE, be.getException() );
+                        throw be;
+                    }
                     catch ( Exception e )
                     {
                         stepException = e;
@@ -1229,11 +1249,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     if ( !subReturnValue )
                     {
                         returnValue = false;
-                        if ( step.getFailure().equals( StepStatus.FAILURE_IGNORED ) )
+                        returnValue = false;
+                        //if ( step.getFailure().equals( StepStatus.FAILURE_IGNORED ) )
                             subFailure = false;
-                        else
-                            subFailure = true;
-                        break;
+                        //else
+                        //    subFailure = true;
                     }
 
                 }
@@ -1269,6 +1289,11 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                                     executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
                                     throw lb;
                                 }
+                                catch( BubbledFailureException be )
+                                {
+                                	executionContext.completeStep( StepStatus.FAILURE, be.getException() );
+                                    throw be;
+                                }
                                 catch ( Exception e )
                                 {
                                     stepException = e;
@@ -1279,10 +1304,10 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                                 if ( !subReturnValue )
                                 {
                                     returnValue = false;
-                                    if ( step.getFailure().equals( StepStatus.FAILURE_IGNORED ) )
+                                    //if ( step.getFailure().equals( StepStatus.FAILURE_IGNORED ) )
                                         subFailure = false;
-                                    else
-                                        subFailure = true;
+                                    //else
+                                    //    subFailure = true;
                                     break;
                                 }
                             }
@@ -1320,6 +1345,17 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                             stepStatus = StepStatus.FAILURE_IGNORED;
                             if ( stepException == null )
                                 stepException = new ScriptException( kwName + " has failed to complete" );
+                         
+                        case FAILURE:
+                        	stepStatus = StepStatus.FAILURE;
+                            if ( stepException == null )
+                                stepException = new BubbledFailureException( new ScriptException( kwName + " has failed to complete" ) );
+                            else
+                            {
+                            	if ( !(stepException instanceof BubbledFailureException) )
+                            		stepException = new BubbledFailureException( stepException );
+                            }
+                        
                     }
                 }
             }
@@ -1369,6 +1405,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 switch ( sFailure )
                 {   
                     case ERROR:
+                    case FAILURE:
                         returnValue = false;
                         if ( executionContext.getFailedStep() == null )
                             executionContext.setFailedStep( this );
@@ -1388,6 +1425,10 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         }
                         log.warn( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed");
                         log.info( Thread.currentThread().getName() + ": ***** Step " + name + " on page " + pageName + " failed", currentError );
+                        
+                        if ( stepException instanceof BubbledFailureException )
+                        	throw stepException;
+                        
                         return false;
 
                     case LOG_IGNORE:

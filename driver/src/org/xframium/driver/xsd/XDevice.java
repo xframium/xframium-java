@@ -71,9 +71,9 @@ public class XDevice {
     protected List<XObjectDeviceCapability> objectCapability;
     @XmlAttribute(name = "name", required = true)
     protected String name;
-    @XmlAttribute(name = "manufacturer", required = true)
+    @XmlAttribute(name = "manufacturer")
     protected String manufacturer;
-    @XmlAttribute(name = "model", required = true)
+    @XmlAttribute(name = "model")
     protected String model;
     @XmlAttribute(name = "os")
     protected String os;

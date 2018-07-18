@@ -110,8 +110,8 @@
       <element name="objectCapability" type="tns:xObjectDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="name" type="string" use="required" />
-    <attribute name="manufacturer" type="string" use="required" />
-    <attribute name="model" type="string" use="required" />
+    <attribute name="manufacturer" type="string" use="optional" />
+    <attribute name="model" type="string" use="optional" />
     <attribute name="os" type="string" use="optional" />
     <attribute name="id" type="string" use="optional" />
     <attribute name="osVersion" type="string" use="optional" />
@@ -715,6 +715,7 @@
       <simpleType>
         <restriction base="string">
           <enumeration value="ERROR" />
+          <enumeration value="FAILURE" />
           <enumeration value="IGNORE" />
           <enumeration value="LOG_IGNORE" />
         </restriction>

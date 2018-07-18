@@ -760,7 +760,22 @@ public class KeyWordDriver
             if ( log.isInfoEnabled() )
                 log.info( Thread.currentThread().getName() + ": Executing Test=" + returnValue );
             if ( returnValue )
+            {
                 returnValue = test.executeTest( webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+                
+                if ( !returnValue )
+                {
+                	if ( executionContext.getStepException() != null && executionContext.getStepException() instanceof XFramiumException )
+                	{
+                		contextMap.put( "XF_TEST_STATUS", TestStatus.FAILED.name() );
+                        executionContext.startStep( new SyntheticStep( test == null ? testName.getTestName() : test.getName(), "TEST" ), contextMap, dataMap );
+                        executionContext.completeStep( StepStatus.FAILURE, executionContext.getStepException() );
+                        executionContext.completeTest( TestStatus.FAILED, null );
+                        return executionContext;
+                	}
+                }
+                
+            }
             
             contextMap.put( "XF_TEST_STATUS", returnValue ? TestStatus.PASSED.name() : TestStatus.FAILED.name() );
             executionContext.completeTest( returnValue ? TestStatus.PASSED : TestStatus.FAILED, null );
@@ -793,7 +808,7 @@ public class KeyWordDriver
             contextMap.put( "XF_TEST_STATUS", TestStatus.FAILED.name() );
             executionContext.startStep( new SyntheticStep( test == null ? testName.getTestName() : test.getName(), "TEST" ), contextMap, dataMap );
             executionContext.completeStep( StepStatus.FAILURE, e );
-            executionContext.completeTest( TestStatus.FAILED, e );
+            executionContext.completeTest( TestStatus.FAILED, null );
 
             log.info( "Error executing Test " + testName, e );
             return executionContext;
@@ -803,7 +818,7 @@ public class KeyWordDriver
             contextMap.put( "XF_TEST_STATUS", TestStatus.FAILED.name() );
             executionContext.startStep( new SyntheticStep( test == null ? testName.getTestName() : test.getName(), "TEST" ), contextMap, dataMap );
             executionContext.completeStep( StepStatus.FAILURE, new ScriptException( e.getMessage() ) );
-            executionContext.completeTest( TestStatus.FAILED, new ScriptException( e.getMessage() ) );
+            executionContext.completeTest( TestStatus.FAILED, null );
             log.info( "Error executing Test " + testName, e );
             return executionContext;
         }

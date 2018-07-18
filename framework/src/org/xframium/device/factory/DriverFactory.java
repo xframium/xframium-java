@@ -89,6 +89,7 @@ public interface DriverFactory
 	
 	/** The Constant BROWSER VERSION. */
 	public static final String BROWSER_VERSION = "browserVersion";
+	public static final String VERSION = "version";
 	
 	/** The Constant BROWSER VERSION. */
     public static final String DEVICE_INTERRUPT = "deviceInterrupt";

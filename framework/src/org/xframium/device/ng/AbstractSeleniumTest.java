@@ -351,7 +351,7 @@ public abstract class AbstractSeleniumTest
         if ( finalList.isEmpty() && xmlMode )
         {
             log.fatal( "No scripts were defined - nothign to do!" );
-            throw new ScriptConfigurationException( "No scripts were defined - nothign to do!" );
+            throw new ScriptConfigurationException( "No scripts were defined - nothing to do!" );
         }
         
         

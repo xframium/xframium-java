@@ -251,16 +251,17 @@ iframe {
                                         <h3 class="panel-title" style="color: black">Step Information</h3>
                                     </div>
                                     <div class="panel-body">
+                                        <div ng-if="selectedElement.step.description != 'null' && selectedElement.step.description != ''"></div>
                                         <ul class="list-group">
-                                            <li class="list-group-item" ng-if="selectedElement.step.orMapping==true">
+                                            <li class="list-group-item" ng-if="selectedElement.step.orMapping==true && selectedElement.step.siteName != 'null' && selectedElement.step.siteName != null">
                                                 Site Name:
                                                 <b>{{selectedElement.step.siteName}}</b>
                                             </li>
-                                            <li class="list-group-item" ng-if="selectedElement.step.orMapping==true">
+                                            <li class="list-group-item" ng-if="selectedElement.step.orMapping==true && selectedElement.step.pageName != 'null' && selectedElement.step.pageName != null">
                                                 Page Name:
                                                 <b>{{selectedElement.step.pageName}}</b>
                                             </li>
-                                            <li class="list-group-item">
+                                            <li class="list-group-item" ng-if="selectedElement.step.name != null && selectedElement.step.name != 'null'">
                                                 Element Name:
                                                 <b>{{selectedElement.step.name}}</b>
                                             </li>
@@ -268,9 +269,17 @@ iframe {
                                                 Inverted:
                                                 <b>{{selectedElement.step.inverse}}</b>
                                             </li>
+                                            <li class="list-group-item" ng-if="selectedElement.step.sFailure != 'null'">
+                                                Failure Mode:
+                                                <b>{{selectedElement.step.sFailure}}</b>
+                                            </li>
                                             <li class="list-group-item" ng-if="selectedElement.step.validation != 'null'">
                                                 Validation:
                                                 <b>{{selectedElement.step.validation}} ({{selectedElement.step.validationType}})</b>
+                                            </li>
+                                            <li class="list-group-item" ng-if="selectedElement.step.threshold > 0">
+                                                Threshold:
+                                                <b>{{selectedElement.step.threshold}}</b>
                                             </li>
                                         </ul>
                                     </div>
@@ -366,7 +375,10 @@ iframe {
             <span ng-if="stepDef.stepList.length != 0" class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }" style="cursor: default"></span>
         </a>
         <span data-nodrag ng-if="stepDef.stepList.length == 0" style="margin-left: 15px"></span>
-        <a hRef="#" ng-click="selectElement( 'Step', stepDef )" data-nodrag compile="formatStep(stepDef)" style="cursor: default"></a>
+
+        <a hRef="#" ng-click="selectElement( 'Step', stepDef )" data-nodrag compile="formatStep(stepDef)" style="cursor: default" ng-if="stepDef.step.kw != 'TEST'"></a>
+
+		<span ng-if="stepDef.step.kw == 'TEST'" class="text-danger">Cause of Failure: {{stepDef.message}}</span>
 
         <span ng-if="stepDef.stepStatus == 'SUCCESS'" data-nodrag class="pull-right text-success glyphicon glyphicon-ok" style="cursor: default;"></span>
         <span ng-if="stepDef.stepStatus == 'FAILURE'" data-nodrag class="pull-right text-danger glyphicon glyphicon-remove" style="cursor: default;"></span>
@@ -572,7 +584,7 @@ iframe {
             messageText = messageText.replace("{name}", '<i>' + step.step.name + "</i>");
             messageText = messageText.replace("{subName}", step.step.subName);
             messageText = messageText.replace("{pageName}", step.step.pageName);
-            messageText = messageText.replace("{errorMessage}", step.throwable);
+            messageText = messageText.replace("{errorMessage}", step.message);
             for ( var i = 0; i < step.parameterList.length; i++ ) {
                 messageText = messageText.replace("{$p" + (i + 1) + "}", '<span class="text-info">' + step.parameterList[i] + "</span>");
             }
@@ -708,7 +720,7 @@ iframe {
             "COMMAND" : "Execute Command",
             "EMAIL" : "Email Operation",
             "CONSOLE" : "Console message",
-            "TEST" : "{errorMessage}",
+            "TEST" : "Cause of Failure: {errorMessage}",
             "APPLICATION" : "{name} an {kw}",
             "CALLBACK" : "{name}",
             "FLOW" : "Flow set to {name}",

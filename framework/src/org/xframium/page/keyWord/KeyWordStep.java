@@ -53,7 +53,9 @@ public interface KeyWordStep {
 		/** The log ignore. */
 		LOG_IGNORE,
 
-		LOG_ERROR
+		LOG_ERROR,
+		
+		FAILURE
 	}
 
 	/**
