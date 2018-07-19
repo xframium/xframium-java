@@ -88,6 +88,7 @@
   </complexType>
   <complexType name="Step">
     <sequence>
+      <element name="reporting" type="tns:Reporting" minOccurs="0" maxOccurs="1" />
       <element name="parameter" type="tns:Parameter" minOccurs="0" maxOccurs="unbounded" />
       <element name="token" type="tns:Token" minOccurs="0" maxOccurs="unbounded" />
       <element name="step" type="tns:Step" minOccurs="0" maxOccurs="unbounded" />
@@ -193,6 +194,15 @@
     <attribute name="waitFor" type="string" use="optional" />
     <attribute name="trace" type="boolean" use="optional" default="false" />
   </complexType>
+  
+  <complexType name="Reporting">
+    <sequence>
+      <element name="token" type="tns:Token" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+    <attribute name="success" type="string" use="optional" />
+    <attribute name="failure" type="string" use="optional" />
+  </complexType>
+  
   <complexType name="Token">
     <attribute name="type" use="optional">
       <simpleType>

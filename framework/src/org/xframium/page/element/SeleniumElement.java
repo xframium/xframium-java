@@ -564,7 +564,7 @@ public class SeleniumElement extends AbstractElement {
 					getActionProvider().startTimer((DeviceWebDriver) getWebDriver(), this, getExecutionContext());
 
 				if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver) {
-					new TouchAction((AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver()).press( PointOption.point( useX, useY ) ).perform();
+					new TouchAction((AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver()).tap( PointOption.point( useX, useY ) ).perform();
 				} else if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver) {
 					if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof HasTouchScreen)
 						new TouchActions(getWebDriver()).move( useX, useY ).click().build()

@@ -102,7 +102,19 @@ public abstract class AbstractJavaTest extends AbstractSeleniumTest
      */
     public void stopStep( TestName testName, StepStatus stepStatus, Throwable e )
     {
-        testName.getTest().completeStep( stepStatus, e );
+        testName.getTest().completeStep( stepStatus, e, null );
+    }
+    
+    /**
+     * Completes a custom step with a custom message
+     *
+     * @param testName the test name
+     * @param stepStatus the step status
+     * @param e provided on failure
+     */
+    public void stopStep( TestName testName, StepStatus stepStatus, Throwable e, String customMessage )
+    {
+        testName.getTest().completeStep( stepStatus, e, customMessage );
     }
     
     

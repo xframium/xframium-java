@@ -915,14 +915,14 @@ public class DeviceWebDriver
         {
             try
             {
-                executionContext.startStep( KeyWordStepFactory.instance().createStep( by.toString(), "SELENIUM", true, "EXISTS", "", false, StepFailure.IGNORE, false, "", "", "", 0, "", 0, "", "", "", null, "", false, false, "", "", null, "", "", null, false ), null, null );
+                executionContext.startStep( KeyWordStepFactory.instance().createStep( by.toString(), "SELENIUM", true, "EXISTS", "", false, StepFailure.IGNORE, false, "", "", "", 0, "", 0, "", "", "", null, "", false, false, "", "", null, "", "", null, false, null, null ), null, null );
                 WebElement webElement = new ReportingWebElementAdapter( new MorelandWebElement( this, webDriver.findElement( by ) ), this, by );
-                executionContext.completeStep( webElement == null ? StepStatus.FAILURE : StepStatus.SUCCESS, null );
+                executionContext.completeStep( webElement == null ? StepStatus.FAILURE : StepStatus.SUCCESS, null, null );
                 return webElement;
             }
             catch( Exception e )
             {
-                executionContext.completeStep( StepStatus.FAILURE, e );
+                executionContext.completeStep( StepStatus.FAILURE, e, null );
                 return null;
             }
             

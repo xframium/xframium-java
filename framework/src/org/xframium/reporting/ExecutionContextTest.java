@@ -602,13 +602,14 @@ public class ExecutionContextTest
         }
     }
 
-    public boolean completeStep( StepStatus stepStatus, Throwable throwable )
+    public boolean completeStep( StepStatus stepStatus, Throwable throwable, String customMessage )
     {
         if ( currentStep == null )
             return false;
         currentStep.setEndTime( System.currentTimeMillis() );
         currentStep.setStepStatus( stepStatus );
         currentStep.setThrowable( throwable );
+        currentStep.setCustomMessage(customMessage);
         if ( currentStep.getParentStep() != null )
             currentStep = currentStep.getParentStep();
         else
@@ -622,7 +623,7 @@ public class ExecutionContextTest
         if ( stepList == null || stepList.size() == 0 )
         {
             startStep( new SyntheticStep( test.getName(), "TEST" ), contextMap, dataMap );
-            completeStep( StepStatus.FAILURE, testException );
+            completeStep( StepStatus.FAILURE, testException, null );
         }
         
         

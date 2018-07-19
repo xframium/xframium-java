@@ -752,7 +752,7 @@ public class KeyWordDriver
                         executionContext.startStep( new SyntheticStep( "Device Initialization", "CALL2" ), contextMap, dataMap );
                         returnValue = initTest.executeTest( webDriver, contextMap, dataMap, pageMap, sC, executionContext );
                         DeviceManager.instance( xFID ).setDeviceInitialized( webDriver.getPopulatedDevice() );
-                        executionContext.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                        executionContext.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null, null );
                     }  
                 }
             }
@@ -769,7 +769,7 @@ public class KeyWordDriver
                 	{
                 		contextMap.put( "XF_TEST_STATUS", TestStatus.FAILED.name() );
                         executionContext.startStep( new SyntheticStep( test == null ? testName.getTestName() : test.getName(), "TEST" ), contextMap, dataMap );
-                        executionContext.completeStep( StepStatus.FAILURE, executionContext.getStepException() );
+                        executionContext.completeStep( StepStatus.FAILURE, executionContext.getStepException(), null );
                         executionContext.completeTest( TestStatus.FAILED, null );
                         return executionContext;
                 	}
@@ -789,7 +789,7 @@ public class KeyWordDriver
             {
                 
                 executionContext.startStep( new SyntheticStep( test.getName(), "TEST" ), contextMap, dataMap );
-                executionContext.completeStep( StepStatus.FAILURE, e );
+                executionContext.completeStep( StepStatus.FAILURE, e, null );
                 executionContext.completeTest( TestStatus.FAILED, e );
                 contextMap.put( "XF_TEST_STATUS", TestStatus.FAILED.name() );
                 log.info( "Error executing Test " + testName, e );
@@ -797,7 +797,7 @@ public class KeyWordDriver
             }
             else
             {
-                executionContext.completeStep( StepStatus.SUCCESS, null );
+                executionContext.completeStep( StepStatus.SUCCESS, null, null );
                 executionContext.completeTest( TestStatus.PASSED, null );
                 contextMap.put( "XF_TEST_STATUS", TestStatus.PASSED.name() );
             }
@@ -807,7 +807,7 @@ public class KeyWordDriver
         {
             contextMap.put( "XF_TEST_STATUS", TestStatus.FAILED.name() );
             executionContext.startStep( new SyntheticStep( test == null ? testName.getTestName() : test.getName(), "TEST" ), contextMap, dataMap );
-            executionContext.completeStep( StepStatus.FAILURE, e );
+            executionContext.completeStep( StepStatus.FAILURE, e, null );
             executionContext.completeTest( TestStatus.FAILED, null );
 
             log.info( "Error executing Test " + testName, e );
@@ -817,7 +817,7 @@ public class KeyWordDriver
         {
             contextMap.put( "XF_TEST_STATUS", TestStatus.FAILED.name() );
             executionContext.startStep( new SyntheticStep( test == null ? testName.getTestName() : test.getName(), "TEST" ), contextMap, dataMap );
-            executionContext.completeStep( StepStatus.FAILURE, new ScriptException( e.getMessage() ) );
+            executionContext.completeStep( StepStatus.FAILURE, new ScriptException( e.getMessage() ), null );
             executionContext.completeTest( TestStatus.FAILED, null );
             log.info( "Error executing Test " + testName, e );
             return executionContext;

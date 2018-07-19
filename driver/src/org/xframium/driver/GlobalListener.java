@@ -48,17 +48,17 @@ public class GlobalListener implements KeyWordListener
             if ( kTest != null )
             {
                  returnValue = kTest.executeTest( webDriver, contextMap, dataMap, pageMap, sC, eC );
-                 eC.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                 eC.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null, null );
             }
             else
             {
                 returnValue = false;
-                eC.completeStep( StepStatus.FAILURE, new ScriptConfigurationException( "Could not locate pre-step function [" + beforeStep+ "]" ) );
+                eC.completeStep( StepStatus.FAILURE, new ScriptConfigurationException( "Could not locate pre-step function [" + beforeStep+ "]" ), null );
             }
         }
         catch( Exception e )
         {
-            eC.completeStep( StepStatus.FAILURE, e );
+            eC.completeStep( StepStatus.FAILURE, e, null );
             return false;
         }
         finally
@@ -85,16 +85,16 @@ public class GlobalListener implements KeyWordListener
             if ( kTest != null )
             {
                  returnValue = kTest.executeTest( webDriver, contextMap, dataMap, pageMap, sC, eC );
-                 eC.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                 eC.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null, null );
             }
             else
             {
-                eC.completeStep( StepStatus.FAILURE, new ScriptConfigurationException( "Could not locate post-step function [" + afterStep + "]" ) );
+                eC.completeStep( StepStatus.FAILURE, new ScriptConfigurationException( "Could not locate post-step function [" + afterStep + "]" ), null );
             }
         }
         catch( Exception e )
         {
-            eC.completeStep( StepStatus.FAILURE, e );
+            eC.completeStep( StepStatus.FAILURE, e, null );
         }
         finally
         {
@@ -117,17 +117,17 @@ public class GlobalListener implements KeyWordListener
             if ( kTest != null )
             {
                  returnValue = kTest.executeTest( webDriver, contextMap, dataMap, pageMap, sC, eC );
-                 eC.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                 eC.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null, null );
             }
             else
             {
                 returnValue = false;
-                eC.completeStep( StepStatus.FAILURE, new ScriptConfigurationException( "Could not locate pre-test function [" + beforeTest+ "]" ) );
+                eC.completeStep( StepStatus.FAILURE, new ScriptConfigurationException( "Could not locate pre-test function [" + beforeTest+ "]" ), null );
             }
         }
         catch( Exception e )
         {
-            eC.completeStep( StepStatus.FAILURE, e );
+            eC.completeStep( StepStatus.FAILURE, e, null );
             return false;
         }
         
@@ -149,16 +149,16 @@ public class GlobalListener implements KeyWordListener
             if ( kTest != null )
             {
                  returnValue = kTest.executeTest( webDriver, contextMap, dataMap, pageMap, sC, eC );
-                 eC.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                 eC.completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null, null );
             }
             else
             {
-                eC.completeStep( StepStatus.FAILURE, new ScriptConfigurationException( "Could not locate pre-test function [" + afterTest + "]" ) );
+                eC.completeStep( StepStatus.FAILURE, new ScriptConfigurationException( "Could not locate pre-test function [" + afterTest + "]" ), null );
             }
         }
         catch( Exception e )
         {
-            eC.completeStep( StepStatus.FAILURE, e );
+            eC.completeStep( StepStatus.FAILURE, e, null );
         }
 
     }

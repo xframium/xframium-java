@@ -25,6 +25,7 @@ public class ExecutionContextStep
     private Map<String,Object> executionParameter = new HashMap<String,Object>( 10 );
     private List<String> parameterList = new ArrayList<String>( 10 );
     private List<ByResult> locatorResult = null;
+    private String customMessage = null;
 
     public String toString()
     {
@@ -170,8 +171,18 @@ public class ExecutionContextStep
     {
         this.message = message;
     }
+    
+    
 
-    public boolean getStatus()
+    public String getCustomMessage() {
+		return customMessage;
+	}
+
+	public void setCustomMessage(String customMessage) {
+		this.customMessage = customMessage;
+	}
+
+	public boolean getStatus()
     {
         if ( stepStatus != null && stepStatus.equals( StepStatus.FAILURE ) )
             return false;

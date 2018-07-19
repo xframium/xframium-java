@@ -31,7 +31,7 @@ public class ReportingWebElementAdapter implements WebElement
     
     private KeyWordStep createStep( String type )
     {
-        return KeyWordStepFactory.instance().createStep( by.toString(), "SELENIUM", true, type, "", false, StepFailure.IGNORE, false, "", "", "", 0, "", 0, "", "", "", null, "", false, false, "", "", null, "", "", null, false );
+        return KeyWordStepFactory.instance().createStep( by.toString(), "SELENIUM", true, type, "", false, StepFailure.IGNORE, false, "", "", "", 0, "", 0, "", "", "", null, "", false, false, "", "", null, "", "", null, false, null, null );
     }
     
     @Override
@@ -50,10 +50,10 @@ public class ReportingWebElementAdapter implements WebElement
         }
         catch( Exception e )
         {
-            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
         }
         
-        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
 
     }
 
@@ -67,10 +67,10 @@ public class ReportingWebElementAdapter implements WebElement
         }
         catch( Exception e )
         {
-            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
         }
         
-        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
 
     }
 
@@ -86,10 +86,10 @@ public class ReportingWebElementAdapter implements WebElement
         }
         catch( Exception e )
         {
-            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
         }
         
-        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
 
     }
 
@@ -103,10 +103,10 @@ public class ReportingWebElementAdapter implements WebElement
         }
         catch( Exception e )
         {
-            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
         }
         
-        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
 
     }
 
@@ -129,10 +129,10 @@ public class ReportingWebElementAdapter implements WebElement
         }
         catch( Exception e )
         {
-            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
         }
         
-        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -148,10 +148,10 @@ public class ReportingWebElementAdapter implements WebElement
         }
         catch( Exception e )
         {
-            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
         }
         
-        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -167,10 +167,10 @@ public class ReportingWebElementAdapter implements WebElement
         }
         catch( Exception e )
         {
-            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
         }
         
-        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -186,10 +186,10 @@ public class ReportingWebElementAdapter implements WebElement
         }
         catch( Exception e )
         {
-            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
         }
         
-        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -217,10 +217,10 @@ public class ReportingWebElementAdapter implements WebElement
         }
         catch( Exception e )
         {
-            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
         }
         
-        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -236,10 +236,10 @@ public class ReportingWebElementAdapter implements WebElement
         }
         catch( Exception e )
         {
-            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
         }
         
-        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -255,10 +255,10 @@ public class ReportingWebElementAdapter implements WebElement
         }
         catch( Exception e )
         {
-            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
         }
         
-        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -274,10 +274,10 @@ public class ReportingWebElementAdapter implements WebElement
         }
         catch( Exception e )
         {
-            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
         }
         
-        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -293,10 +293,10 @@ public class ReportingWebElementAdapter implements WebElement
         }
         catch( Exception e )
         {
-            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            webDriver.getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
         }
         
-        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        webDriver.getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }

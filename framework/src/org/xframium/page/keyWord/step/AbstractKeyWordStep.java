@@ -196,9 +196,79 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     
     private String image;
     
+    private String successReport;
+    private String failureReport;
+    private List<KeyWordToken> reportingTokens = new ArrayList<KeyWordToken>( 10 );
+    
+    
+    
+    
+    protected String getReportMessage( StepStatus stepStatus, Map<String,Object> contextMap, Map<String, PageData> dataMap, String xFID )
+    {
+    	String returnValue = null;
+    	
+    	 switch( stepStatus )
+    	 {
+    	 	case FAILURE:
+    	 	case FAILURE_IGNORED:
+    	 		returnValue = failureReport;
+    	 		break;
+    	 		
+    	 	case SUCCESS:
+    	 		returnValue = successReport;
+    	 		break;
+    	 		
+    	 	default:
+    	 		returnValue = null;
+    	 		break;
+    	 }
+    	 
+    	if ( returnValue != null && reportingTokens != null && reportingTokens.size() > 0 )
+        {
+            for ( KeyWordToken token : reportingTokens )
+            {
+                if ( log.isDebugEnabled() )
+                    log.debug( "Applying token " + token.getName() );
+
+                returnValue = ( returnValue + "").replace( "{" + token.getName() + "}", getTokenValue( token, contextMap, dataMap, xFID ) );
+            }
+        }
+    	
+    	return returnValue;
+    }
+    
     
 
-    public boolean isTrace()
+    public String getSuccessReport() {
+		return successReport;
+	}
+
+
+
+	public void setSuccessReport(String successReport) {
+		this.successReport = successReport;
+	}
+
+
+
+	public String getFailureReport() {
+		return failureReport;
+	}
+
+
+
+	public void setFailureReport(String failureReport) {
+		this.failureReport = failureReport;
+	}
+	
+	@Override
+	public List<KeyWordToken> getReportTokenList() {
+		return reportingTokens;
+	}
+
+
+
+	public boolean isTrace()
     {
         return trace;
     }
@@ -216,6 +286,15 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     public void setImage(String image)
     {
         this.image = image;
+    }
+    
+    @Override
+    public void addReportingToken(KeyWordToken t) {
+    	if ( reportingTokens == null )
+    		reportingTokens = new ArrayList<KeyWordToken>( 5 );
+    	
+    	reportingTokens.add( t );
+    	
     }
 
     protected void addContext( String contextName, Object contextValue, Map<String,Object> contextMap, ExecutionContextTest eC )
@@ -1135,7 +1214,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         
                     if ( eName != null )
                     {
-                        KeyWordStep verifyKeyword = KeyWordStepFactory.instance().createStep( eName, pName, true, "VISIBLE", null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, null, null, null, null, null, false, false, null, sName, null, null, null, null, true );
+                        KeyWordStep verifyKeyword = KeyWordStepFactory.instance().createStep( eName, pName, true, "VISIBLE", null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, null, null, null, null, null, false, false, null, sName, null, null, null, null, true, null, null );
                         verifyKeyword.setImage( "VERIFICATION" );
                         if ( !verifyKeyword.executeStep(pageObject, ((alternateWebDriver != null) ? alternateWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext ) )
                             throw new ScriptException( "Failed Verification step" );
@@ -1158,17 +1237,17 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             }
             catch ( KWSLoopBreak lb )
             {
-                executionContext.completeStep( StepStatus.SUCCESS, null );
+                executionContext.completeStep( StepStatus.SUCCESS, null, getReportMessage( StepStatus.SUCCESS, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
                 throw lb;
             }
             catch ( FlowException lb )
             {
-                executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null, getReportMessage( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
                 throw lb;
             }
             catch( BubbledFailureException be )
             {
-            	executionContext.completeStep( StepStatus.FAILURE, be.getException() );
+            	executionContext.completeStep( StepStatus.FAILURE, be.getException(), getReportMessage( StepStatus.FAILURE, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
                 throw be;
             }
             catch ( FilteredException e )
@@ -1226,17 +1305,17 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     }
                     catch ( KWSLoopBreak e )
                     {
-                        executionContext.completeStep( StepStatus.SUCCESS, null );
+//                        executionContext.completeStep( StepStatus.SUCCESS, null, getReportMessage( StepStatus.SUCCESS, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
                         throw e;
                     }
                     catch ( FlowException lb )
                     {
-                        executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                        executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null, getReportMessage( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
                         throw lb;
                     }
                     catch( BubbledFailureException be )
                     {
-                    	executionContext.completeStep( StepStatus.FAILURE, be.getException() );
+                    	executionContext.completeStep( StepStatus.FAILURE, be.getException(), getReportMessage( StepStatus.FAILURE, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
                         throw be;
                     }
                     catch ( Exception e )
@@ -1281,17 +1360,17 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                                 }
                                 catch ( KWSLoopBreak e )
                                 {
-                                    executionContext.completeStep( StepStatus.SUCCESS, null );
+                                    executionContext.completeStep( StepStatus.SUCCESS, null, getReportMessage( StepStatus.SUCCESS, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
                                     throw e;
                                 }
                                 catch ( FlowException lb )
                                 {
-                                    executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+                                    executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null, getReportMessage( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
                                     throw lb;
                                 }
                                 catch( BubbledFailureException be )
                                 {
-                                	executionContext.completeStep( StepStatus.FAILURE, be.getException() );
+                                	executionContext.completeStep( StepStatus.FAILURE, be.getException(), getReportMessage( StepStatus.FAILURE, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
                                     throw be;
                                 }
                                 catch ( Exception e )
@@ -1394,7 +1473,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             }
                 
             
-            executionContext.completeStep( stepStatus, stepException );
+            executionContext.completeStep( stepStatus, stepException, getReportMessage( stepStatus, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
 
             if ( PageManager.instance( executionContext.getxFID() ).isWindTunnelEnabled() && getPoi() != null && !getPoi().isEmpty() )
                 PerfectoMobile.instance( ((DeviceWebDriver)webDriver).getxFID()).windTunnel().addPointOfInterest( getExecutionId( webDriver ), getPoi() + "(" + getPageName() + "." + getName() + ")", returnValue ? Status.success : Status.failure );
@@ -1463,7 +1542,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         }
         catch ( FlowException lb )
         {
-            executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+            executionContext.completeStep( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, null, getReportMessage( lb.isSuccess() ? StepStatus.SUCCESS : StepStatus.FAILURE, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
             throw lb;
         }
         finally

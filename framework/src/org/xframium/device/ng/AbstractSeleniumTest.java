@@ -519,7 +519,7 @@ public abstract class AbstractSeleniumTest
                         {
                             log.error( "Uncaught test failure", testResult.getThrowable() );
                             testPackage.getConnectedDevice().getWebDriver().getExecutionContext().getStep().getStep().dumpState( testPackage.getConnectedDevice().getWebDriver(), new HashMap<String,Object>(0), new HashMap<String,PageData>(0), testPackage.getConnectedDevice().getWebDriver().getExecutionContext() );
-                            testPackage.getConnectedDevice().getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, new ScriptException( exceptionToString( testResult.getThrowable() ) ) );
+                            testPackage.getConnectedDevice().getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, new ScriptException( exceptionToString( testResult.getThrowable() ) ), null );
                         }
                     }
                 }
@@ -631,7 +631,7 @@ public abstract class AbstractSeleniumTest
      */
     public KeyWordStep createStep( String keyword, String pageName, String elementName, String[] parameterList )
     {
-        KeyWordStep step = KeyWordStepFactory.instance().createStep( elementName, pageName, true, keyword, null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, keyword, null, null, null, null, false, false, null, null, null, null, null, null, false );
+        KeyWordStep step = KeyWordStepFactory.instance().createStep( elementName, pageName, true, keyword, null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, keyword, null, null, null, null, false, false, null, null, null, null, null, null, false, null, null );
         
         if ( parameterList != null )
         {

@@ -101,7 +101,7 @@ public class KWSLoop extends AbstractKeyWordStep
 				    {
                         if ( !sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext) )
                         {
-                            executionContext.completeStep( StepStatus.FAILURE, null );
+                            executionContext.completeStep( StepStatus.FAILURE, null, getReportMessage( StepStatus.FAILURE, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
                             return false;
                         }
 				    }
@@ -109,20 +109,20 @@ public class KWSLoop extends AbstractKeyWordStep
                     {
                         if ( !KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext ) )
                         {
-                            executionContext.completeStep( StepStatus.FAILURE, null );
+                            executionContext.completeStep( StepStatus.FAILURE, null, getReportMessage( StepStatus.FAILURE, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
                             return false;
                         }
                     }
-				    executionContext.completeStep( StepStatus.SUCCESS, null );
+				    executionContext.completeStep( StepStatus.SUCCESS, null, getReportMessage( StepStatus.SUCCESS, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
 				}
 				catch( KWSLoopBreak e )
 				{
-				    executionContext.completeStep( StepStatus.SUCCESS, null );
+				    executionContext.completeStep( StepStatus.SUCCESS, null, getReportMessage( StepStatus.SUCCESS, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
 					return true;
 				}
 				catch( Exception e )
 				{
-				    executionContext.completeStep( StepStatus.FAILURE, e );
+				    executionContext.completeStep( StepStatus.FAILURE, e, getReportMessage( StepStatus.FAILURE, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
 				    throw e;
 				}
 			}
@@ -211,7 +211,7 @@ public class KWSLoop extends AbstractKeyWordStep
 	                    {
 	                        if ( !sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext) )
 	                        {
-                                executionContext.completeStep( StepStatus.FAILURE, null );
+                                executionContext.completeStep( StepStatus.FAILURE, null, getReportMessage( StepStatus.FAILURE, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
                                 return false;
                             }
 	                    }
@@ -219,20 +219,20 @@ public class KWSLoop extends AbstractKeyWordStep
 	                    {
 	                        if ( !KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext ) )
 	                        {
-                                executionContext.completeStep( StepStatus.FAILURE, null );
+                                executionContext.completeStep( StepStatus.FAILURE, null, getReportMessage( StepStatus.FAILURE, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
                                 return false;
                             }
 	                    }
-						executionContext.completeStep( StepStatus.SUCCESS, null );
+						executionContext.completeStep( StepStatus.SUCCESS, null, getReportMessage( StepStatus.SUCCESS, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
 					}
 					catch( KWSLoopBreak lb )
 					{
-					    executionContext.completeStep( StepStatus.SUCCESS, null );
+					    executionContext.completeStep( StepStatus.SUCCESS, null, getReportMessage( StepStatus.SUCCESS, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
 						return true;
 					}
 					catch( Exception e )
 					{
-					    executionContext.completeStep( StepStatus.FAILURE, e );
+					    executionContext.completeStep( StepStatus.FAILURE, e, getReportMessage( StepStatus.FAILURE, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
 					    throw e;
 					}
 				}
@@ -274,7 +274,7 @@ public class KWSLoop extends AbstractKeyWordStep
 	                    {
 	                        if ( !sC.getTest( functionName ).executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext) )
 	                        {
-                                executionContext.completeStep( StepStatus.FAILURE, null );
+                                executionContext.completeStep( StepStatus.FAILURE, null, getReportMessage( StepStatus.SUCCESS, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
                                 return false;
                             }
 	                    }
@@ -282,21 +282,21 @@ public class KWSLoop extends AbstractKeyWordStep
 	                    {
 	                        if ( !KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).executionFunction( functionName, webDriver, dataMap, pageMap, contextMap, sC, executionContext ) )
 	                        {
-	                            executionContext.completeStep( StepStatus.FAILURE, null );
+	                            executionContext.completeStep( StepStatus.FAILURE, null, getReportMessage( StepStatus.FAILURE, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
 	                            return false;
 	                        }
 	                    }
-					    executionContext.completeStep( StepStatus.SUCCESS, null );
+					    executionContext.completeStep( StepStatus.SUCCESS, null, getReportMessage( StepStatus.SUCCESS, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
 						
 					}
 					catch( KWSLoopBreak lb )
 					{
-					    executionContext.completeStep( StepStatus.SUCCESS, null );
+					    executionContext.completeStep( StepStatus.SUCCESS, null, getReportMessage( StepStatus.SUCCESS, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
 						return true;
 					}
 					catch( Exception e )
 					{
-					    executionContext.completeStep( StepStatus.FAILURE, e );
+					    executionContext.completeStep( StepStatus.FAILURE, e, getReportMessage( StepStatus.FAILURE, contextMap, dataMap, ( (DeviceWebDriver) webDriver ).getxFID() ) );
 					    throw e;
 					}
 				}

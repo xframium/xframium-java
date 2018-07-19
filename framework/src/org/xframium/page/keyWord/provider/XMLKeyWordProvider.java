@@ -25,18 +25,20 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageDataManager;
+import org.xframium.page.keyWord.KeyWordDriver.TRACE;
 import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
@@ -45,7 +47,6 @@ import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordStep.ValidationType;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.KeyWordToken;
-import org.xframium.page.keyWord.KeyWordDriver.TRACE;
 import org.xframium.page.keyWord.KeyWordToken.TokenType;
 import org.xframium.page.keyWord.gherkinExtension.XMLFormatter;
 import org.xframium.page.keyWord.provider.xsd.Import;
@@ -58,6 +59,7 @@ import org.xframium.page.keyWord.provider.xsd.Test;
 import org.xframium.page.keyWord.provider.xsd.Token;
 import org.xframium.page.keyWord.provider.xsd.XFunction;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
+
 import gherkin.parser.Parser;
 
 // TODO: Auto-generated Javadoc
@@ -375,10 +377,17 @@ public class XMLKeyWordProvider implements KeyWordProvider
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
                                                                                  (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, 
                                                                                   xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties, xStep.getVersion(), 
-                                                                                  xStep.getAppContext(), xStep.getWaitFor(), xStep.isTrace() );
+                                                                                  xStep.getAppContext(), xStep.getWaitFor(), xStep.isTrace(), xStep.getReporting() != null ? xStep.getReporting().getSuccess() : null, xStep.getReporting() != null ? xStep.getReporting().getFailure() : null);
 		    
 		    step.getParameterList().addAll( parseParameters( xStep.getParameter() ) );
 		    parseTokens( xStep.getToken(), testName, xStep.getName(), step );
+		    
+		    
+		    if ( xStep.getReporting() != null && xStep.getReporting().getToken() != null )
+		    {
+		    	for ( Token t : xStep.getReporting().getToken() )
+		    		step.addReportingToken( new KeyWordToken( TokenType.valueOf(t.getType() ), t.getValue(), t.getName() ) );
+		    }
 		    
 		    step.addAllSteps( parseSteps( xStep.getStep(), testName ) );
 		    stepList.add( step );

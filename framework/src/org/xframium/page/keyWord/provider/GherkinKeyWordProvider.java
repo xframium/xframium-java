@@ -289,7 +289,7 @@ public class GherkinKeyWordProvider extends AbstractPageDataProvider implements 
 
 	@Override
 	public void step(gherkin.formatter.model.Step xStep) {
-		KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), "bdd", true, "GHERKIN", "", false, StepFailure.ERROR, false, null, null, null, 0, "", 0, "", null, null, null, null, false, false, null, null, null, null, null, null, false );
+		KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), "bdd", true, "GHERKIN", "", false, StepFailure.ERROR, false, null, null, null, 0, "", 0, "", null, null, null, null, false, false, null, null, null, null, null, null, false, null, null );
         
         switch( currentSection )
         {

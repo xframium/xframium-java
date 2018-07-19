@@ -105,7 +105,7 @@ public class ReportingElementAdapter implements Element
 
     private KeyWordStep createStep( String type )
     {
-        return KeyWordStepFactory.instance().createStep( getElementName(), getPageName(), true, type, "", false, StepFailure.IGNORE, false, "", "", "", 0, "", 0, "", "", "", null, "", false, false, "", "", null, "", "", null, false );
+        return KeyWordStepFactory.instance().createStep( getElementName(), getPageName(), true, type, "", false, StepFailure.IGNORE, false, "", "", "", 0, "", 0, "", "", "", null, "", false, false, "", "", null, "", "", null, false, null, null );
     }
     
     @Override
@@ -120,11 +120,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+        getWebDriver().getExecutionContext().completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null, null );
         
         return returnValue;
     }
@@ -141,11 +141,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+        getWebDriver().getExecutionContext().completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null, null );
         
         return returnValue;
     }
@@ -168,11 +168,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+        getWebDriver().getExecutionContext().completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null, null );
         
         return returnValue;
     }
@@ -189,11 +189,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -210,11 +210,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null );
+        getWebDriver().getExecutionContext().completeStep( returnValue ? StepStatus.SUCCESS : StepStatus.FAILURE, null, null );
         
         return returnValue;
     }
@@ -238,11 +238,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -259,11 +259,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -280,11 +280,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -301,11 +301,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -328,11 +328,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -349,11 +349,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -370,11 +370,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -397,11 +397,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -427,11 +427,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         
         return returnValue;
     }
@@ -454,11 +454,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
 
     }
 
@@ -590,11 +590,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
     }
 
     @Override
@@ -607,11 +607,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
 
     }
 
@@ -626,11 +626,11 @@ public class ReportingElementAdapter implements Element
         }
         catch( Exception e )
         {
-            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e );
+            getWebDriver().getExecutionContext().completeStep( StepStatus.FAILURE, e, null );
             throw e;
         }
         
-        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null );
+        getWebDriver().getExecutionContext().completeStep( StepStatus.SUCCESS, null, null );
         return returnValue;
     }
 

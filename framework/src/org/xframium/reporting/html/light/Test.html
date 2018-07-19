@@ -512,7 +512,12 @@ iframe {
         	if ( step.step.image != null )
         		imageName = step.step.image;
         
-            var messageText = $scope.stepMessages[imageName];
+        	var messageText = $scope.stepMessages[imageName];
+        	
+        	console.log( step );
+        	
+        	if ( step.customMessage != null && step.customMessage != 'null' && step.customMessage != '' )
+        		messageText = step.customMessage;
 
             if ( messageText == null )
                 messageText = $scope.stepMessages['DEFAULT'];
@@ -552,7 +557,7 @@ iframe {
             }
             else
                 $scope.selectedState = 'primary';
-            console.log( "here" );
+            
             if ( $scope.selectedElement.step.kw == 'ACCESSIBILITY' && $scope.selectedElement.accessibility == null )
                 $scope.selectedElement.accessibility = JSON.parse( $scope.selectedElement.message );
             
@@ -563,18 +568,16 @@ iframe {
         {
             var messageText = null;
 
-            if ( step.step.description != null && step.step.description != '' && step.step.description != 'null' ) {
-                //
-                // Allows a custom description 
-                //
-                messageText = '<span class="text-info">' + step.step.description + '</span>';
-            }
-            else {
+            if ( step.customMessage != null && step.customMessage != 'null' && step.customMessage != '' )
+        		messageText = '<span class="text-info">' + step.customMessage + "</span>";
+            
+        	if ( messageText == null )
+            {
             	var imageName = step.step.kw;
                 if ( step.step.image != null && step.step.image != 'null' )
                     imageName = step.step.image;
             
-                var messageText = $scope.stepMessages[imageName];
+                messageText = $scope.stepMessages[imageName];
             }
 
             if ( messageText == null )

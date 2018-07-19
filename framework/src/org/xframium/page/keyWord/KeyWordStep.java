@@ -129,6 +129,8 @@ public interface KeyWordStep {
 	public List<KeyWordParameter> getParameterList();
 
 	public List<KeyWordToken> getTokenList();
+	
+	public void addReportingToken( KeyWordToken t );
 
 	public String[] getTagNames();
 
@@ -154,7 +156,16 @@ public interface KeyWordStep {
 	 * @return the link id
 	 */
 	public String getLinkId();
-
+	
+	public void setSuccessReport( String message );
+	public void setFailureReport( String message );
+	
+	public String getSuccessReport();
+	public String getFailureReport();
+	
+	public List<KeyWordToken> getReportTokenList();
+	
+	
 	/**
 	 * Sets the link id.
 	 *

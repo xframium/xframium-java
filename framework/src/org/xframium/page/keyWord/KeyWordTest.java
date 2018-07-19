@@ -515,7 +515,7 @@ public class KeyWordTest
                     {
                         
                         executionContext.startStep( new SyntheticStep( step.getPageName(), "PAGE" ), contextMap, dataMap );
-                        executionContext.completeStep( StepStatus.FAILURE, new ObjectConfigurationException( step.getSiteName() == null ? PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getSiteName() : step.getSiteName(), step.getPageName(), null ) );
+                        executionContext.completeStep( StepStatus.FAILURE, new ObjectConfigurationException( step.getSiteName() == null ? PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getSiteName() : step.getSiteName(), step.getPageName(), null ), null );
                         
                         stepSuccess = false;
                         return false;

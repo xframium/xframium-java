@@ -1246,7 +1246,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                                                                          xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
                                                                          (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, xStep.getTagNames(), 
                                                                          xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties, xStep.getVersion(), 
-                                                                         xStep.getAppContext(), xStep.getWaitFor(), xStep.isTrace() );
+                                                                         xStep.getAppContext(), xStep.getWaitFor(), xStep.isTrace(), null, null );
             
             step.getParameterList().addAll( parseParameters( xStep.getParameter() ) );
             parseTokens( xStep.getToken(), testName, xStep.getName(), step );

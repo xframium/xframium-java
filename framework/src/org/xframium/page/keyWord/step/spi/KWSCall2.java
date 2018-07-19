@@ -166,19 +166,19 @@ public class KWSCall2 extends AbstractKeyWordStep
 			if ( breakCalled )
 			{
     			executionContext.startStep( new SyntheticStep( "Loop Break Called for " + getName(), "CALLBACK", "Loop Break Called for " + getName() ) , contextMap, dataMap );
-    			executionContext.completeStep( StepStatus.SUCCESS, null );
+    			executionContext.completeStep( StepStatus.SUCCESS, null, null );
 			}
 			else
 			{
 			    if ( functionSuccess )
 			    {
 			        executionContext.startStep( new SyntheticStep( "Return from " + getName(), "CALLBACK", "Return from " + getName() ) , contextMap, dataMap );
-	                executionContext.completeStep( StepStatus.SUCCESS, null );
+	                executionContext.completeStep( StepStatus.SUCCESS, null, null );
 			    }
 			    else
 			    {
 			        executionContext.startStep( new SyntheticStep( "Failed call to " + getName(), "CALLBACK", "Failed call to " + getName() ) , contextMap, dataMap );
-	                executionContext.completeStep( StepStatus.FAILURE, null );
+	                executionContext.completeStep( StepStatus.FAILURE, null, null );
 			    }
 			}
 		}
