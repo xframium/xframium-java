@@ -15,7 +15,7 @@ xFramium is an easy to use test automation framework design around rapid test de
 * [Copyright and License](#copyright-and-license)
 
 ## Quick Start
-* [Download the stable release](http://www.xframium.org/repository/org/xframium/xframium-java/1.0.1/xframium-java-1.0.1.jar)
+* [Download the stable release](http://www.xframium.org/repository/org/xframium/xframium-java/1.0.17/xframium-java-1.0.17.jar)
 * [Installing](http://xframium.org/installation.html)
 * [Git the source](https://github.com/xframium/xframium-java)
 
