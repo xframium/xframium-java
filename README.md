@@ -15,12 +15,12 @@ xFramium is an easy to use test automation framework design around rapid test de
 * [Copyright and License](#copyright-and-license)
 
 ## Quick Start
-* [Download the stable release](http://www.xframium.org/repository/org/xframium/xframium-java/1.0.1/xframium-java-1.0.1.jar)
+* [Download the stable release](http://www.xframium.org/repository/org/xframium/xframium-java/1.0.17/xframium-java-1.0.17.jar)
 * [Installing](http://xframium.org/installation.html)
 * [Git the source](https://github.com/xframium/xframium-java)
 
 ## Documentation
-All xFramium documentation is available from the [xFramium](http://www.xframium.org) website under the getting started and documentation menus.  You can also Git the contents from the xFramium.org website documentation [the xFramium documentation source repository](https://github.com/xframium/xframium-documentation).
+All xFramium documentation is available from the [xFramium](http://www.xframium.org) website under documentation tab. 
 
 ## Contributing
 Refer to the [contributing guidelines](https://github.com/xframium/xframium-java/blob/master/CONTRIBUTING.md) for contribution instructions, opening issues, standards and development information.  Please ensure all code is tested and unit tests and results are included with your pull request.
