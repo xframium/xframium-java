@@ -40,7 +40,7 @@
     <attribute name="tests" type="boolean" use="optional" default="false" />
     <attribute name="functions" type="boolean" use="optional" default="true" />
     <attribute name="elements" type="boolean" use="optional" default="true" />
-    <attribute name="applications" type="boolean" use="optional" default="false" />
+  <attribute name="applications" type="boolean" use="optional" default="false" />
     <attribute name="devices" type="boolean" use="optional" default="false" />
     <attribute name="data" type="boolean" use="optional" default="false" />
     <attribute name="active" type="boolean" use="optional" default="true" />
@@ -107,7 +107,6 @@
     </annotation>
     <sequence>
       <element name="capability" type="tns:xDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
-      <element name="objectCapability" type="tns:xObjectDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="name" type="string" use="required" />
     <attribute name="manufacturer" type="string" use="optional" />
@@ -169,7 +168,6 @@
     </annotation>
     <sequence>
       <element name="capability" type="tns:xDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
-      <element name="objectCapability" type="tns:xObjectDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
     </sequence>
     <attribute name="fileName" type="string" use="optional" />
     <attribute name="provider" use="optional" default="LOCAL">
@@ -330,9 +328,9 @@
           <simpleType>
             <restriction base="string">
               <enumeration value="BOOLEAN" />
-              <enumeration value="OBJECT" />
               <enumeration value="PLATFORM" />
               <enumeration value="STRING" />
+              <enumeration value="CLASS" />
             </restriction>
           </simpleType>
         </attribute>
@@ -781,34 +779,5 @@
     <attribute name="name" type="string" use="optional" />
     <attribute name="usage" type="string" use="optional" />
   </complexType>
-  <complexType name="xObjectDeviceCapability">
-    <sequence>
-      <element name="capabilities" type="tns:xCapabilities" minOccurs="0" maxOccurs="unbounded" />
-    </sequence>
-    <attribute name="name" type="string" use="required" />
-  </complexType>
-  <complexType name="xCapabilities">
-    <annotation>
-        <documentation>Defines capabilities for a device</documentation>
-    </annotation>
-    <sequence>
-      <element name="options" type="tns:xOptions" minOccurs="0" maxOccurs="unbounded" />
-    </sequence>
-    <attribute name="factoryName" use="required">
-      <simpleType>
-        <restriction base="string">
-          <enumeration value="ChromeOptions" />
-          <enumeration value="FirefoxProfile" />
-        </restriction>
-      </simpleType>
-    </attribute>
-  </complexType>
-  <complexType name="xOptions">
-    <simpleContent>
-      <extension base="string">
-        <attribute name="name" type="string" use="required" />
-        <attribute name="key" type="string" use="optional" />
-      </extension>
-    </simpleContent>
-  </complexType>
+  
 </schema>

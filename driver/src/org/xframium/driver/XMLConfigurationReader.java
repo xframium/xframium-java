@@ -67,7 +67,6 @@ import org.xframium.device.proxy.ProxyRegistry;
 import org.xframium.driver.xsd.ObjectFactory;
 import org.xframium.driver.xsd.XActivity;
 import org.xframium.driver.xsd.XArtifact;
-import org.xframium.driver.xsd.XCapabilities;
 import org.xframium.driver.xsd.XDevice;
 import org.xframium.driver.xsd.XDeviceCapability;
 import org.xframium.driver.xsd.XElement;
@@ -77,8 +76,6 @@ import org.xframium.driver.xsd.XFunction;
 import org.xframium.driver.xsd.XInitiator;
 import org.xframium.driver.xsd.XLibrary;
 import org.xframium.driver.xsd.XModel;
-import org.xframium.driver.xsd.XObjectDeviceCapability;
-import org.xframium.driver.xsd.XOptions;
 import org.xframium.driver.xsd.XPackage;
 import org.xframium.driver.xsd.XPackages;
 import org.xframium.driver.xsd.XPage;
@@ -405,6 +402,17 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     case "PLATFORM":
                         capabilities.put( cap.getName(), Platform.valueOf( cap.getValue().toUpperCase() ) );
                         break;
+                        
+                    case "CLASS":
+                    	try
+                    	{
+                    		capabilities.put( cap.getName(), Class.forName( cap.getValue() ).newInstance() );
+	                    	break;
+                    	}
+                    	catch( Exception e )
+                    	{
+                    		log.error( "Could not create Object Instance as " + cap.getValue(), e );
+                    	}
                 }
             }
         }
@@ -814,68 +822,17 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     case "PLATFORM":
                         currentDevice.addCapability( cap.getName(), Platform.valueOf( cap.getValue().toUpperCase() ), cap.getClazz() );
                         break;
-                }
-            }
-            
-            // Parse the Object Capability element for browser options
-            if ( device.getObjectCapability() != null )
-            {
-
-                for ( XObjectDeviceCapability cap : device.getObjectCapability() )
-                {
-
-                    browserOptionMap = new HashMap<String, Object>();
-
-                    if ( cap.getCapabilities() != null )
-                    {
-
-                        for ( XCapabilities capabilities : cap.getCapabilities() )
-                        {
-
-                            factoryName = capabilities.getFactoryName();
-
-                            if ( capabilities.getOptions() != null )
-                            {
-
-                                for ( XOptions option : capabilities.getOptions() )
-                                {
-
-                                    if ( option.getKey() == null )
-                                    {
-
-                                        if ( browserOptionMap.get( option.getName() ) == null )
-                                        {
-                                            list = new ArrayList<Object>();
-
-                                        }
-                                        else
-                                        {
-                                            list = (List<Object>) browserOptionMap.get( option.getName() );
-                                        }
-                                        browserOptionMap.put( option.getName(), list );
-                                        list.add( option.getValue() );
-
-                                    }
-                                    else
-                                    {
-
-                                        if ( browserOptionMap.get( option.getName() ) == null )
-                                        {
-                                            keyOptions = new HashMap<String, Object>();
-
-                                        }
-                                        else
-                                        {
-                                            keyOptions = (HashMap<String, Object>) browserOptionMap.get( option.getName() );
-                                        }
-                                        keyOptions.put( option.getKey(), option.getValue() );
-                                        browserOptionMap.put( option.getName(), keyOptions );
-                                    }
-                                    currentDevice.addCapability( factoryName, browserOptionMap, "OBJECT" );
-                                }
-                            }
-                        }
-                    }
+                        
+                    case "CLASS":
+                    	try
+                    	{
+                    		currentDevice.addCapability( cap.getName(), Class.forName( cap.getValue() ).newInstance(), cap.getClazz() );
+	                    	break;
+                    	}
+                    	catch( Exception e )
+                    	{
+                    		log.error( "Could not create Object Instance as " + cap.getValue(), e );
+                    	}
                 }
             }
             

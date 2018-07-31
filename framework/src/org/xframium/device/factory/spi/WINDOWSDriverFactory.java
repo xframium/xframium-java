@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudDescriptor.ProviderType;
@@ -66,8 +67,7 @@ public class WINDOWSDriverFactory extends AbstractDriverFactory
                 dc.setCapability( "name", currentDevice.getCapabilities().get( "_testName" ) );
             }
 			
-			for ( String name : currentDevice.getCapabilities().keySet() )
-				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
+            addCapabilities( dc, currentDevice, ApplicationRegistry.instance( xFID ).getAUT() );
 			
 			URL hubUrl = new URL( useCloud.getCloudUrl( dc ) );
 			

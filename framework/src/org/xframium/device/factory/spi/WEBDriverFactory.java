@@ -29,9 +29,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
-import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.Initializable;
@@ -65,13 +65,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
                     
                     
     }
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.perfectoMobile.device.factory.AbstractDriverFactory#_createDriver(com
-     * .perfectoMobile.device.Device)
-     */
+
     @Override
     protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID )
     {
@@ -131,13 +125,8 @@ public class WEBDriverFactory extends AbstractDriverFactory
                 }
             }
             
-            for ( String name : currentDevice.getCapabilities().keySet() )
-				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
-			if ( ApplicationRegistry.instance( xFID ).getAUT() != null )
-			{
-                for ( String name : ApplicationRegistry.instance( xFID ).getAUT().getCapabilities().keySet() )
-                	dc = setCapabilities(ApplicationRegistry.instance( xFID ).getAUT().getCapabilities().get( name ), dc, name);
-			}
+            addCapabilities( dc, currentDevice, ApplicationRegistry.instance( xFID ).getAUT() );
+            
 			
 			if ( ProviderType.BROWSERSTACK.equals( ProviderType.valueOf( useCloud.getProvider() ) ) )
             {
@@ -146,6 +135,8 @@ public class WEBDriverFactory extends AbstractDriverFactory
                     dc.setCapability( "build", KeyWordDriver.instance(xFID).getTags()[ 0 ] );
                 dc.setCapability( "name", currentDevice.getCapabilities().get( "_testName" ) );
             }
+			
+			
 			
 
 			if ( useCloud.isEmbedded() )
@@ -221,8 +212,8 @@ public class WEBDriverFactory extends AbstractDriverFactory
 			}
 			
 			URL hubUrl = new URL( useCloud.getCloudUrl( dc ) );
-            //if ( log.isDebugEnabled() )
-                log.warn( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
+            if ( log.isInfoEnabled() )
+                log.info( Thread.currentThread().getName() + ": Acquiring Device as: \r\n" + capabilitiesToString( dc ) + "\r\nagainst " + hubUrl );
             
             webDriver = new DeviceWebDriver( new RemoteWebDriver( hubUrl, dc ), DeviceManager.instance( xFID ).isCachingEnabled(), currentDevice, dc );
             webDriver.manage().timeouts().implicitlyWait( 10, TimeUnit.SECONDS );

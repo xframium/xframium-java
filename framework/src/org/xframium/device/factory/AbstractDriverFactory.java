@@ -26,13 +26,17 @@ package org.xframium.device.factory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.xframium.application.ApplicationDescriptor;
+import org.xframium.application.ApplicationRegistry;
 import org.xframium.browser.capabilities.BrowserCapabilityManager;
 import org.xframium.device.SimpleDevice;
+import org.xframium.device.capability.CapabilityBridge;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.cloud.action.CloudActionProvider;
@@ -73,6 +77,29 @@ public abstract class AbstractDriverFactory implements DriverFactory
             return null;
         }
     }
+    
+    protected void addCapabilities( DesiredCapabilities dC, Device currentDevice, ApplicationDescriptor aD )
+    {
+    	for ( String name : currentDevice.getCapabilities().keySet() )
+        {
+        	if ( currentDevice.getCapabilities().get(name) instanceof CapabilityBridge )
+				( (CapabilityBridge) currentDevice.getCapabilities().get(name) ).addCapabilities( dC );
+        	else
+        		dC = setCapabilities(currentDevice.getCapabilities().get(name), dC, name);
+        }
+        
+		if ( aD != null )
+		{
+            for ( String name : aD.getCapabilities().keySet() )
+            {
+            	if ( aD.getCapabilities().get( name ) instanceof CapabilityBridge )
+					( (CapabilityBridge) aD.getCapabilities().get( name ) ).addCapabilities( dC );
+            	else
+            		dC = setCapabilities( aD.getCapabilities().get( name ), dC, name);
+            }
+		}
+    }
+    
 
     /*
      * (non-Javadoc)

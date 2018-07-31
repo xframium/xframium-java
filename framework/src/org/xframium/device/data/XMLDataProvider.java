@@ -28,23 +28,19 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Platform;
-import org.xframium.device.DeviceManager;
 import org.xframium.device.SimpleDevice;
-import org.xframium.device.data.xsd.Capabilities;
 import org.xframium.device.data.xsd.DeviceCapability;
-import org.xframium.device.data.xsd.ObjectDeviceCapability;
 import org.xframium.device.data.xsd.ObjectFactory;
-import org.xframium.device.data.xsd.Options;
 import org.xframium.device.data.xsd.RegistryRoot;
 import org.xframium.spi.Device;
 
@@ -158,10 +154,6 @@ public class XMLDataProvider implements DataProvider
 	private Device parseDevice( org.xframium.device.data.xsd.Device device )
 	{
 		String driverName = "";
-		List<Object> list = null;
-		String factoryName = null;
-		Map<String, Object> keyOptions = null;
-		Map<String, Object> browserOptionMap = null;
 		DriverType tempDriverType = driverType;
 		
 		if ( device.getDriverType() != null && !device.getDriverType().isEmpty() )
@@ -214,55 +206,19 @@ public class XMLDataProvider implements DataProvider
 		            case "PLATFORM":
 		                currentDevice.addCapability( cap.getName(), Platform.valueOf( cap.getValue().toUpperCase() ), cap.getClazz() );
                         break;
+                        
+		            case "CLASS":
+                    	try
+                    	{
+                    		currentDevice.addCapability( cap.getName(), Class.forName( cap.getValue() ).newInstance(), cap.getClazz() );
+	                    	break;
+                    	}
+                    	catch( Exception e )
+                    	{
+                    		log.error( "Could not create Object Instance as " + cap.getValue(), e );
+                    	}
 		        }
 		    }
-		}
-		
-		//Parse the Object Capability element for browser options
-		if (device.getObjectCapability() != null) {
-			
-			for (ObjectDeviceCapability cap : device.getObjectCapability()) {
-				
-				browserOptionMap = new HashMap<String, Object>();
-
-				if (cap.getCapabilities() != null) {
-					
-					for (Capabilities capabilities : cap.getCapabilities()) {
-						
-						factoryName = capabilities.getFactoryName();
-
-						if (capabilities.getOptions() != null) {
-							
-							for (Options option : capabilities.getOptions()) {
-							
-								if (option.getKey() == null) {
-								
-									if (browserOptionMap.get(option.getName()) == null) {
-										list = new ArrayList<Object>();
-									
-									} else {
-										list = (List<Object>) browserOptionMap.get(option.getName());
-									}
-									browserOptionMap.put(option.getName(), list);
-									list.add(option.getValue());
-								    
-								} else {
-									
-									if (browserOptionMap.get(option.getName()) == null) {
-										keyOptions = new HashMap<String, Object>();
-									
-									} else {
-										keyOptions = (HashMap<String, Object>) browserOptionMap.get(option.getName());
-									}
-									keyOptions.put(option.getKey(), option.getValue());
-									browserOptionMap.put(option.getName(), keyOptions);
-								}
-								currentDevice.addCapability(factoryName, browserOptionMap, "OBJECT");
-							}
-						}
-					}
-				}
-			}
 		}
 		
 		return currentDevice;

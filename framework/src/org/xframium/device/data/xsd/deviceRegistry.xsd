@@ -12,14 +12,12 @@
 	<complexType name="RegistryRoot">
 		<sequence>
 			<element name="device" type="tns:Device" minOccurs="1" maxOccurs="unbounded" />
-			<element name="objectCapability" type="tns:ObjectDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
 		</sequence>
 	</complexType>
 
 	<complexType name="Device">
 		<sequence>
 			<element name="capability" type="tns:DeviceCapability" minOccurs="0" maxOccurs="unbounded" />
-			<element name="objectCapability" type="tns:ObjectDeviceCapability" minOccurs="0" maxOccurs="unbounded" />
 		</sequence>
 		<attribute name="name" type="string" use="required" />
 		<attribute name="manufacturer" type="string" use="optional" />
@@ -54,40 +52,10 @@
 							<enumeration value="BOOLEAN" />
 							<enumeration value="PLATFORM" />
 							<enumeration value="STRING" />
+                            <enumeration value="CLASS" />
 						</restriction>
 					</simpleType>
 				</attribute>
-			</extension>
-		</simpleContent>
-	</complexType>
-	
-	<!-- ObjectDeviceCapability is required when the Capability Class is Object  -->
-	<complexType name="ObjectDeviceCapability">
-		<sequence>
-			<element name="capabilities" type="tns:Capabilities" minOccurs="0" maxOccurs="unbounded" />
-		</sequence>
-		<attribute name="name" type="string" use="required" />
-	</complexType>
-
-	<complexType name="Capabilities">
-		<sequence>
-			<element name="options" type="tns:Options" minOccurs="0" maxOccurs="unbounded" />
-		</sequence>
-		<attribute name="factoryName" use="required">
-			<simpleType>
-				<restriction base="string">
-					<enumeration value="ChromeOptions" />
-					<enumeration value="FirefoxProfile"/>
-				</restriction>
-			</simpleType>
-		</attribute>
-	</complexType>
-	
-	<complexType name="Options">
-		<simpleContent>
-			<extension base="string">
-				<attribute name="name" type="string" use="required" />
-				<attribute name="key" type="string" use="optional" />
 			</extension>
 		</simpleContent>
 	</complexType>

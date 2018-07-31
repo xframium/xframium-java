@@ -7,10 +7,23 @@
 
   <test name="ERROR Test" tagNames="Keyword" timed="false" threshold="0" active="true" priority="1" severity="1">
     <description>Testing errors</description>
-    <step name="error function" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE" />
+    <step name="error function" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="IGNORE" >
+      <reporting success="error function complete successfully {message}" failure="error function failed {message}">
+        <token name="message" type="STATIC" value="my message here" />
+      </reporting>
+    </step>
+    
+    <step name="error function" site="xTest" page="home" type="CALL2" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="IGNORE" >
+      <reporting success="error function complete successfully {message}" failure="error function failed {message}">
+        <token name="message" type="STATIC" value="my message here" />
+      </reporting>
+    </step>
     
     
     <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="1000" timed="false" inverse="false" wait="0" failureMode="IGNORE">
+      <reporting success="Compared Test to Test2" failure="Compared Test to Test2 ">
+        <token name="message" type="STATIC" value="my message here" />
+      </reporting>
       <parameter type="STATIC" name="Value One" value="Test" />
       <parameter type="STATIC" name="Value Two" value="Test2" />
       <parameter type="STATIC" name="Operator" value="EQUALS" />
@@ -36,7 +49,7 @@
       <parameter type="STATIC" name="Value One" value="Test" />
       <parameter type="STATIC" name="Value Two" value="Test2" />
       <parameter type="STATIC" name="Operator" value="EQUALS" />
-      <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="FAILURE">
+      <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
         <parameter type="STATIC" name="Value One" value="Test3" />
         <parameter type="STATIC" name="Value Two" value="Test4" />
         <parameter type="STATIC" name="Operator" value="EQUALS" />

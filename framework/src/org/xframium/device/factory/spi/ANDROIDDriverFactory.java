@@ -25,6 +25,7 @@ package org.xframium.device.factory.spi;
 
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -39,6 +40,7 @@ import org.xframium.exception.DeviceConfigurationException;
 import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.spi.Device;
+
 import io.appium.java_client.android.AndroidDriver;
 
 // TODO: Auto-generated Javadoc
@@ -77,14 +79,7 @@ public class ANDROIDDriverFactory extends AbstractDriverFactory
 			dc.setCapability( USER_NAME, useCloud.getUserName() );
 			dc.setCapability( PASSWORD, useCloud.getPassword() );
 			
-			for ( String name : currentDevice.getCapabilities().keySet() )
-				dc = setCapabilities(currentDevice.getCapabilities().get(name), dc, name);
-			
-			if ( ApplicationRegistry.instance(xFID).getAUT() != null )
-			{
-    			for ( String name : ApplicationRegistry.instance(xFID).getAUT().getCapabilities().keySet() )
-    				dc = setCapabilities(ApplicationRegistry.instance(xFID).getAUT().getCapabilities().get( name ), dc, name);
-			}
+			addCapabilities( dc, currentDevice, ApplicationRegistry.instance( xFID ).getAUT() );
 			
 			dc.setCapability( AUTOMATION_NAME, "Appium" );
 			

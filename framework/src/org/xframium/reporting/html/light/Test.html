@@ -63,6 +63,7 @@ iframe {
             </div>
         </div>
      </div>
+     {{testData.executionParameters[ 'TIMING_HTML_FILE' ] == null}}
      <div class="row" style="max-height: 100%">
         <div class="col-sm-6 col-md-5 col-lg-4">
             <div class="scrollable panel panel-primary" style="margin-bottom: 0px; margin-top: 5px;">
@@ -85,7 +86,7 @@ iframe {
                                 </a>
                                 <span style="cursor: default; margin-left: 5px" ng-if="rootNode != 'Environment' && rootNode != 'Performance' && rootNode != 'Imaging Analysis'">{{rootNode}}</span>
                                 <a style="cursor: default; margin-left: 23px" ng-click="selectElement( 'Environment', null )" ng-if="rootNode == 'Environment'">{{rootNode}}</a>
-                                <a style="cursor: default; margin-left: 23px" ng-click="selectElement( 'Performance', null )" ng-if="rootNode == 'Performance'">{{rootNode}}</a>
+                                <a style="cursor: default; margin-left: 23px" ng-click="selectElement( 'Performance', null )" ng-if="rootNode == 'Performance'" >{{rootNode}}</a>
                                 <a style="cursor: default; margin-left: 23px" ng-click="selectElement( 'Imaging Analysis', null )" ng-if="rootNode == 'Imaging Analysis'">{{rootNode}}</a>
                             </div>
                             <ol ui-tree-nodes ng-model="testData.stepList" ng-class="{hidden: collapsed}" ng-if="rootNode == 'Steps'">
@@ -176,7 +177,7 @@ iframe {
                 <div class="panel-body">
                     <iframe ng-if="selectedContext=='Device Log'" src="{{testData.executionParameters[ 'DEVICE_LOG_FILE' ]}}" frameborder="0" height="1024" width="100%"></iframe>
                     <iframe ng-if="selectedContext=='Console Log'" src="{{testData.executionParameters[ 'CONSOLE_LOG_FILE' ]}}" frameborder="0" height="1024" width="100%"></iframe>
-                    <iframe ng-if="selectedContext=='Performance'" src="{{testData.executionParameters[ 'TIMING_HTML_FILE' ]}}" frameborder="0" height="1024" width="100%"></iframe>
+                    <iframe ng-if="selectedContext=='Performance'" src="{{testData.executionParameters[ 'TIMING_HTML_FILE' ] == null ? '../../../assets/perf.html' : testData.executionParameters[ 'TIMING_HTML_FILE' ]}}" frameborder="0" height="1024" width="100%"></iframe>
                     <span ng-if="selectedContext=='Derived Capabilities'">
                         <ol class="list-group">
                             <li class="list-group-item" ng-repeat="(key,value) in testData.dC">

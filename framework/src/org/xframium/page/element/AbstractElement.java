@@ -880,6 +880,7 @@ public abstract class AbstractElement implements Element
 		}	
 		catch( Exception e )
 		{
+			log.error( "Error", e );
 			if(e instanceof XFramiumException)
 			    throw e;
 			else
