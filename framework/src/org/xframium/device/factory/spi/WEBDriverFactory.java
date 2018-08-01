@@ -53,18 +53,6 @@ import org.xframium.spi.Device;
 public class WEBDriverFactory extends AbstractDriverFactory
 {
 
-    private boolean isBlank( String value )
-    {
-        if ( value == null )
-            return true;
-        
-        if ( value.trim().isEmpty() )
-            return true;
-        
-        return false;
-                    
-                    
-    }
 
     @Override
     protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID )
@@ -83,12 +71,10 @@ public class WEBDriverFactory extends AbstractDriverFactory
             DeviceManager.instance( xFID ).setCurrentCloud( useCloud );
             
             
-
+            useCloud.getCloudActionProvider().addAuthenticationCapabilities( useCloud, dc );
             if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )
             {
                 dc.setCapability( ID, currentDevice.getDeviceName() );
-                dc.setCapability( USER_NAME, useCloud.getUserName() );
-                dc.setCapability( PASSWORD, useCloud.getPassword() );
             }
             else
             {
@@ -102,14 +88,6 @@ public class WEBDriverFactory extends AbstractDriverFactory
                     
                     if ( !isBlank( currentDevice.getModel()) )
                         dc.setCapability( MODEL, currentDevice.getModel() );
-                    
-                    if ( !isBlank( useCloud.getUserName() ) )
-                        dc.setCapability( USER_NAME, useCloud.getUserName() );
-                    
-                    if ( !isBlank( useCloud.getPassword() ) )
-                        dc.setCapability( PASSWORD, useCloud.getPassword() );
-                    
-                    
                 }
             }
 

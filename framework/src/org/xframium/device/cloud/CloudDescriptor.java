@@ -200,10 +200,21 @@ public class CloudDescriptor
 		{
 		    if ( provider != null && provider.name != null && provider.name.equals( "PERFECTO" ) )
 		    {
-		        if ( c.is( "perfectoFastWeb" ) )
-		            return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/perfectomobile/wd/hub/fast";
-		        else
-		            return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/perfectomobile/wd/hub";
+
+		    	if ( getUserName() == null || getUserName().isEmpty() || getUserName().equals( "null") )
+		    	{
+		    		if ( c.is( "perfectoFastWeb" ) )
+			            return "https://" + getHostName() + "/nexperience/perfectomobile/wd/hub/fast";
+			        else
+			            return "https://" + getHostName() + "/nexperience/perfectomobile/wd/hub";
+		    	}
+		    	else
+		    	{
+			        if ( c.is( "perfectoFastWeb" ) )
+			            return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/perfectomobile/wd/hub/fast";
+			        else
+			            return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/nexperience/perfectomobile/wd/hub";
+		    	}
 		    }
 		    else if ( provider != null && provider.name != null && provider.name.equals( "BROWSERSTACK" ) )
                 return "https://" + URLEncoder.encode( getUserName(), "UTF-8" ) + ":" + URLEncoder.encode( getPassword(), "UTF-8" ) + "@" + getHostName() + "/wd/hub";

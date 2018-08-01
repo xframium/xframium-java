@@ -698,7 +698,7 @@ public abstract class AbstractSeleniumTest
         {
             testFlow.info( Thread.currentThread().getName() + ": Attempting to clean up " + testName.getTestName() + " on " + device.getPopulatedDevice().getEnvironment() );
         }
-        
+        File rootFolder = null;
         try
         {
             if ( webDriver != null )
@@ -718,7 +718,7 @@ public abstract class AbstractSeleniumTest
                 if ( DataManager.instance( testPackage.getxFID() ).getReportFolder() == null )
                     DataManager.instance( testPackage.getxFID() ).setReportFolder( new File( "." ) );
                 
-                File rootFolder = null;
+                
                 try
                 {
                     try
@@ -792,6 +792,18 @@ public abstract class AbstractSeleniumTest
                 if ( testFlow.isInfoEnabled() )
                     testFlow.info( Thread.currentThread().getName() + ": Quiting WebDriver " );
                 webDriver.quit();
+                
+
+                List<String> aList = ArtifactManager.instance( testPackage.getxFID() ).getEnabledArtifacts( ArtifactTime.AFTER_DEVICE );
+                
+                if ( aList != null )
+                {
+                    for ( String artifactType : aList )
+                    {
+                        if ( rootFolder != null )
+                            ArtifactManager.instance( testPackage.getxFID() ).generateArtifact( artifactType, rootFolder.getAbsolutePath(), webDriver, webDriver.getxFID() );
+                    }
+                }
                 
             }
             catch ( Exception e )

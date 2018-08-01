@@ -57,7 +57,7 @@ public class SELENIUMCloudActionProvider extends AbstractCloudActionProvider
                 for ( LogEntry logEntry : logEntries )
                     logBuilder.append( dateFormat.format( new Date( logEntry.getTimestamp() ) ) ).append( ": " ).append( logEntry.getMessage() ).append( "\r\n" );
 
-                logBuilder.toString();
+                return logBuilder.toString();
             }
             return null;
         }

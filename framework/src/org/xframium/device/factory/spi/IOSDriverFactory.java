@@ -66,19 +66,23 @@ public class IOSDriverFactory extends AbstractDriverFactory
 			
 			
 	
-			if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )
+            if ( currentDevice.getDeviceName() != null && !currentDevice.getDeviceName().isEmpty() )
 			{
 				dc.setCapability( ID, currentDevice.getDeviceName() );
 			}
 			else
-			{
-				dc.setCapability( useCloud.getCloudActionProvider().getCloudPlatformName(currentDevice), currentDevice.getOs() );
-				dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
-				dc.setCapability( MODEL, currentDevice.getModel() );
+			{				
+				if ( !isBlank( currentDevice.getOs() ) ) 
+					dc.setCapability( useCloud.getCloudActionProvider().getCloudPlatformName(currentDevice), currentDevice.getOs() );
+				
+				if ( !isBlank( currentDevice.getOsVersion() ) )
+					dc.setCapability( PLATFORM_VERSION, currentDevice.getOsVersion() );
+				
+				if ( !isBlank( currentDevice.getModel() ) )
+					dc.setCapability( MODEL, currentDevice.getModel() );
 			}
 			
-			dc.setCapability( USER_NAME, useCloud.getUserName() );
-			dc.setCapability( PASSWORD, useCloud.getPassword() );
+			useCloud.getCloudActionProvider().addAuthenticationCapabilities( useCloud, dc );
 			
 			addCapabilities( dc, currentDevice, ApplicationRegistry.instance( xFID ).getAUT() );
 			

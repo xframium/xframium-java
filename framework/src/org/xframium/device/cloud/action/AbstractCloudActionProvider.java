@@ -12,9 +12,12 @@ import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.Rectangle;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.device.factory.DriverFactory;
 
 public abstract class AbstractCloudActionProvider implements CloudActionProvider
 {
@@ -67,6 +70,29 @@ public abstract class AbstractCloudActionProvider implements CloudActionProvider
     	Point p = new Point( currentDimension.width, currentDimension.height );
     	p = translatePoint(webDriver, p);
     	return new Dimension( p.x, p.y );
+    }
+    
+    @Override
+    public void addAuthenticationCapabilities(CloudDescriptor cD, DesiredCapabilities dC) {
+    	if ( !isBlank( cD.getUserName() ) )
+    		dC.setCapability(DriverFactory.USER_NAME, cD.getUserName() );
+    	
+    	if ( !isBlank( cD.getPassword() ) )
+    		dC.setCapability(DriverFactory.PASSWORD, cD.getPassword() );
+    	
+    }
+    
+    protected boolean isBlank( String value )
+    {
+        if ( value == null )
+            return true;
+        
+        if ( value.trim().isEmpty() )
+            return true;
+        
+        return false;
+                    
+                    
     }
     
 }

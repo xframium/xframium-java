@@ -1,26 +1,31 @@
 
 package org.xframium.device.cloud.action;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.json.JSONObject;
 import org.openqa.selenium.ContextAware;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.Rectangle;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xframium.application.ApplicationDescriptor;
@@ -28,6 +33,7 @@ import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.SimpleDevice;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.device.factory.DriverFactory;
 import org.xframium.exception.DeviceConfigurationException;
 import org.xframium.exception.DeviceException;
 import org.xframium.exception.ScriptConfigurationException;
@@ -45,8 +51,12 @@ import org.xframium.page.BY;
 import org.xframium.page.element.Element;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+
 import edu.emory.mathcs.backport.java.util.Collections;
-import io.appium.java_client.ios.IOSDriver;
 
 public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 {
@@ -180,14 +190,19 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 	{
 	    try
         {
-            CloudDescriptor currentCloud = webDriver.getCloud();
-            
-            StringBuilder urlBuilder = new StringBuilder();
-            urlBuilder.append( "https://" ).append( currentCloud.getHostName() ).append( "/services/reports/" ).append( webDriver.getReportKey());
-            urlBuilder.append( "?operation=download" ).append( "&user=" ).append( currentCloud.getUserName() ).append( "&password=" ).append( currentCloud.getPassword() );
-            urlBuilder.append( "&format=xml" );
-            
-            return new URL( urlBuilder.toString() ).openStream();
+	    	if ( webDriver.getCapabilities().is( "reportPdfUrl" ) ) 
+	    		return new URL( webDriver.getCapabilities().getCapability( "reportPdfUrl") + "" ).openStream();
+	    	else
+	    	{
+	    		CloudDescriptor currentCloud = webDriver.getCloud();
+	            
+	            StringBuilder urlBuilder = new StringBuilder();
+	            urlBuilder.append( "https://" ).append( currentCloud.getHostName() ).append( "/services/reports/" ).append( webDriver.getReportKey());
+	            urlBuilder.append( "?operation=download" ).append( "&user=" ).append( currentCloud.getUserName() ).append( "&password=" ).append( currentCloud.getPassword() );
+	            urlBuilder.append( "&format=xml" );
+	            
+	            return new URL( urlBuilder.toString() ).openStream();
+	    	}
         }
         catch (Exception e)
         {
@@ -199,38 +214,36 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 	@Override
 	public String getLog( DeviceWebDriver webDriver )
 	{
-	    try
-        {
-            Document xmlDocument = getExecutionReport( webDriver );
-            
-            NodeList nodeList = getNodes( xmlDocument, "//dataItem[@type='log']/attachment" );
-            if ( nodeList != null && nodeList.getLength() > 0 )
-            {
-                byte[] zipFile = PerfectoMobile.instance( webDriver.getxFID() ).reports().download( webDriver.getReportKey() , nodeList.item( 0 ).getTextContent(), false );
-                ZipInputStream zipStream = new ZipInputStream( new ByteArrayInputStream( zipFile ) );
-                ZipEntry entry = zipStream.getNextEntry();
-                
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                byte[] bytesIn = new byte[ 512 ];
-                int bytesRead = 0;
-                while ( ( bytesRead = zipStream.read( bytesIn ) ) != -1 )
-                {
-                    outputStream.write( bytesIn, 0, bytesRead );
-                }
-                
-                zipStream.close();
-                
-                return outputStream.toString();
-            }
-            
-            return null;
-            
-        }
-        catch( Exception e )
-        {
-            log.error( "Error download device log data", e );
-        }
-        return null;
+		
+		if ( webDriver.getDevice().getOs().equalsIgnoreCase( "IOS" ) || webDriver.getDevice().getOs().equalsIgnoreCase( "ANDROID" ) )
+		{
+			Map<String, Object> pars = new HashMap<>();
+			pars.put("tail", 1000);
+			return (String) webDriver.executeScript("mobile:device:log", pars); 
+		}
+		else
+		{
+			try
+	        {
+	            LogEntries logEntries = webDriver.manage().logs().get( LogType.BROWSER );
+	            if ( logEntries != null )
+	            {
+	                StringBuilder logBuilder = new StringBuilder();
+	                for ( LogEntry logEntry : logEntries )
+	                    logBuilder.append( dateFormat.format( new Date( logEntry.getTimestamp() ) ) ).append( ": " ).append( logEntry.getMessage() ).append( "\r\n" );
+	
+	                return logBuilder.toString();
+	            }
+	            return null;
+	        }
+	        catch ( Exception e )
+	        {
+	            log.info( "Could not generate device logs", e );
+	            return null;
+	        }
+		}
+		
+		
 	}
 	
 	@Override
@@ -325,6 +338,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
             device.setDeviceName( handSet.getDeviceId() );
 
             ((SimpleDevice) device).setDeviceName( deviceId );
+
             return true;
         }
         catch ( Exception e )
@@ -546,12 +560,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
     
         if ( appDesc.isWeb() )
         {
-            //String selectLinkOpeninNewTab = Keys.chord(Keys.CONTROL,"t");
-            //if ( webDriver.getWindowHandles() != null && webDriver.getWindowHandles().size() > 0 )
-            //    webDriver.findElement(By.tagName("body")).sendKeys(selectLinkOpeninNewTab);
-            
             webDriver.get( appDesc.getUrl() );
-                
         }
         else
         {
@@ -587,6 +596,18 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         }
         return true;
     }
+    
+    @Override
+    public void addAuthenticationCapabilities(CloudDescriptor cD, DesiredCapabilities dC) {
+    	if ( isBlank( cD.getUserName() ) && !isBlank( cD.getPassword() ) )
+    	{
+    		dC.setCapability("securityToken", cD.getPassword() );
+    		dC.setCapability("_securityToken", cD.getPassword() );
+    	}
+    	else
+    		super.addAuthenticationCapabilities(cD, dC);
+    	
+    }
 
     @Override
     public boolean closeApplication( String applicationName, DeviceWebDriver webDriver )
@@ -619,5 +640,7 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
         
         return true;
     }
+    
+    
     
 }

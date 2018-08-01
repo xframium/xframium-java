@@ -35,6 +35,8 @@ public enum ArtifactTime
     /** The after test. */
     AFTER_TEST,
     
+    AFTER_DEVICE,
+    
     AFTER_SUITE,
     
     AFTER_ARTIFACTS,

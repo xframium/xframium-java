@@ -6,6 +6,8 @@ import java.util.Map;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.Rectangle;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.integrations.common.PercentagePoint;
 import org.xframium.page.BY;
@@ -44,5 +46,7 @@ public interface CloudActionProvider
     
     public Point translatePoint( DeviceWebDriver webDriver, Point currentPoint );
     public Dimension translateDimension( DeviceWebDriver webDriver, Dimension currentDimension );
+    
+    public void addAuthenticationCapabilities( CloudDescriptor cD, DesiredCapabilities dC );
     
 }

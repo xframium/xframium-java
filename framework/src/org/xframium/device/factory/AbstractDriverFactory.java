@@ -100,6 +100,19 @@ public abstract class AbstractDriverFactory implements DriverFactory
 		}
     }
     
+    protected boolean isBlank( String value )
+    {
+        if ( value == null )
+            return true;
+        
+        if ( value.trim().isEmpty() )
+            return true;
+        
+        return false;
+                    
+                    
+    }
+    
 
     /*
      * (non-Javadoc)
