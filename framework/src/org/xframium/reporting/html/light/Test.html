@@ -52,7 +52,7 @@ iframe {
                     Started {{testData.startTime.dateOnly}} at {{testData.startTime.timeOnly}} and ran for
                     <b>{{formattedDuration}}</b>
                 </span>
-                <h6 class="dashhead-subtitle">xFramium 1.0.17 (Hera)</h6>
+                <h6 class="dashhead-subtitle">xFramium 1.0.18 (Aura)</h6>
                 <h3 class="dashhead-title">{{testData.test.name}}<span class="glyphicon glyphicon-ok" ng-class="{'glyphicon-ok text-success': testData.testStatus=='PASSED', 'glyphicon-remove text-danger': testData.testStatus!='PASSED' }" style="margin-left: 15px"></span><sup style="margin-left: 5px" ng-if="testData.iterationCount > 0">x {{(+testData.iterationCount+1)}}</sup></h3>
                 <h6>
                     {{testData.device.environment}} on {{testData.cloudDescriptor.hostName}} ({{testData.cloudDescriptor.provider.name}})
