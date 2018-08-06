@@ -21,16 +21,14 @@
 package org.xframium.page.keyWord.step.spi;
 
 import java.util.Map;
-import org.apache.derby.impl.sql.compile.GetCurrentConnectionNode;
+
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.ConnectedDevice;
 import org.xframium.device.DeviceManager;
 import org.xframium.device.factory.DeviceWebDriver;
-import org.xframium.device.ng.TestName;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.page.Page;
-import org.xframium.page.PageManager;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.reporting.ExecutionContextTest;
