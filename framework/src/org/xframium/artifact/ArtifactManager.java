@@ -107,7 +107,7 @@ public class ArtifactManager
         registerArtifact( ArtifactTime.ON_FAILURE, ArtifactType.FAILURE_SOURCE_HTML.name(), HTMLSourceArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.CONSOLE_LOG.name(), ConsoleLogArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.STATISTICS.name(), VitalsArtifact.class );
-        registerArtifact( ArtifactTime.AFTER_DEVICE, ArtifactType.DEVICE_LOG.name(), DeviceLogArtifact.class );
+        registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.DEVICE_LOG.name(), DeviceLogArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.IMAGING_ANALYSIS.name(), ImagingArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.ADD_TO_CSV.name(), CSVDataArtifact.class );
         registerArtifact( ArtifactTime.AFTER_ARTIFACTS, ArtifactType.EXECUTION_RECORD_JSON.name(), JSONArtifact.class );
