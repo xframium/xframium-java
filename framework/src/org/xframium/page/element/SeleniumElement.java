@@ -563,16 +563,9 @@ public class SeleniumElement extends AbstractElement {
 				if (isTimed())
 					getActionProvider().startTimer((DeviceWebDriver) getWebDriver(), this, getExecutionContext());
 
-				if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver) {
-					new TouchAction((AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver()).tap( PointOption.point( useX, useY ) ).perform();
-				} else if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver) {
-					if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof HasTouchScreen)
-						new TouchActions(getWebDriver()).move( useX, useY ).click().build()
-								.perform();
-					else
-						new Actions(getWebDriver()).moveToElement(webElement, useX, useY).click().build().perform();
-				}
-
+				aP.tap( getWebDriver(), new PercentagePoint( useX, useY, false ), 500 );
+				
+				
 				return true;
 			}
 
@@ -594,10 +587,9 @@ public class SeleniumElement extends AbstractElement {
 			if (getWebDriver() instanceof HasInputDevices) {
 				if (isTimed())
 					getActionProvider().startTimer((DeviceWebDriver) getWebDriver(), this, getExecutionContext());
-
+				
 				if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver) {
-					new TouchAction((AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver()).tap( createPoint( webElement ) )
-							.tap( createPoint( webElement ) ).perform();
+					new TouchActions((AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver()).doubleTap( webElement ).perform();
 				} else if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver) {
 					if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof HasTouchScreen)
 						new TouchActions(getWebDriver()).doubleClick().build().perform();

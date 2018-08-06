@@ -3,6 +3,7 @@ package org.xframium.device.cloud.action;
 import java.util.Date;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
@@ -35,7 +36,8 @@ public class SELENIUMCloudActionProvider extends AbstractCloudActionProvider
 	@Override
 	public void tap( DeviceWebDriver webDriver, PercentagePoint location, int lengthInMillis )
 	{
-	    
+		
+		new Actions(webDriver).moveByOffset( location.getX(), location.getY() ).click().build().perform();
 	    
 	}
 	
