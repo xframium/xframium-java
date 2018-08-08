@@ -3,7 +3,6 @@ package org.xframium.device.cloud.action;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -17,7 +16,6 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.json.JSONObject;
 import org.openqa.selenium.ContextAware;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
@@ -33,7 +31,6 @@ import org.xframium.application.ApplicationRegistry;
 import org.xframium.device.SimpleDevice;
 import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.factory.DeviceWebDriver;
-import org.xframium.device.factory.DriverFactory;
 import org.xframium.exception.DeviceConfigurationException;
 import org.xframium.exception.DeviceException;
 import org.xframium.exception.ScriptConfigurationException;
@@ -52,11 +49,6 @@ import org.xframium.page.element.Element;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
 {
