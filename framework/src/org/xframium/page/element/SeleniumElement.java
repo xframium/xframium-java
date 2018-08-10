@@ -726,7 +726,7 @@ public class SeleniumElement extends AbstractElement {
 					else
 						elementList = ((WebDriver) getWebDriver()).findElements((By) useBy);
 
-					if ( elementList == null )
+					if ( elementList == null || elementList.size() == 0 ) 
 						throw new ScriptException( "Could not locate elements using " + useBy.toString() );
 					
 					if (elementList.size() == 1)

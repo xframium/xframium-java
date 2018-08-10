@@ -24,6 +24,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
@@ -141,8 +142,8 @@ public class KWSVisual extends AbstractKeyWordStep
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
-			return false;
+			throw new ScriptException( "VISUAL failed with: " + e.getMessage() );
+			
 		}
 	}
 
