@@ -1,51 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
-<function name="kw-random" active="true">
-<description>Tests the generation of synthetic data values</description>
-<step name="WORD" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_WORD">
-<parameter type="STATIC" name="Word List" value="this,is,a,test"/>
-</step>
-<step name="NUMBER" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_NUMBER">
-<parameter type="STATIC" name="Minimum" value="10"/>
-<parameter type="STATIC" name="Maximum" value="10000"/>
-<parameter type="STATIC" name="Format" value="$###.0#"/>
-</step>
-<step name="TEXT" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_TEXT">
-<parameter type="STATIC" name="Format" value="TTTtttxxx###"/>
-</step>
-<step name="DATE" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_DATE">
-<parameter type="STATIC" name="Minimum" value="last christmas"/>
-<parameter type="STATIC" name="Maximum" value="today"/>
-<parameter type="STATIC" name="Format" value="mm/dd/yyyy"/>
-</step>
-<step name="DATE" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_DATE_2">
-<parameter type="STATIC" name="Minimum" value="1/1/2015"/>
-<parameter type="STATIC" name="Maximum" value="2/1/2016"/>
-<parameter type="STATIC" name="Format" value="MMMM dd yyyy"/>
-</step>
-<step name="FIRST_NAME" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_FIRST"/>
-<step name="LAST_NAME" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_LAST"/>
-<step name="ADDRESS" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_ADDRESS"/>
-<step name="EMAIL_ADDRESS" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_EMAIL_1">
-<parameter type="STATIC" name="Domain" value="xframium.org"/>
-</step>
-<step name="EMAIL_ADDRESS" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_EMAIL_2"/>
-<step name="Undefined" site="xTest" page="home" type="REPORT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
-<parameter type="CONTEXT" name="Item One" value="R_WORD"/>
-<parameter type="CONTEXT" name="new parameter" value="R_NUMBER"/>
-<parameter type="CONTEXT" name="new parameter" value="R_TEXT"/>
-<parameter type="CONTEXT" name="new parameter" value="R_DATE"/>
-<parameter type="CONTEXT" name="new parameter" value="R_DATE_2"/>
-<parameter type="CONTEXT" name="new parameter" value="R_FIRST"/>
-<parameter type="CONTEXT" name="new parameter" value="R_LAST"/>
-<parameter type="CONTEXT" name="new parameter" value="R_ADDRESS_ADDRESS_ONE"/>
-<parameter type="CONTEXT" name="new parameter" value="R_ADDRESS_STREET"/>
-<parameter type="CONTEXT" name="new parameter" value="R_ADDRESS_HOUSE_NUMBER"/>
-<parameter type="CONTEXT" name="new parameter" value="R_ADDRESS_CITY"/>
-<parameter type="CONTEXT" name="new parameter" value="R_ADDRESS_STATE"/>
-<parameter type="CONTEXT" name="new parameter" value="R_ADDRESS_ZIP"/>
-<parameter type="CONTEXT" name="new parameter" value="R_EMAIL_1"/>
-<parameter type="CONTEXT" name="new parameter" value="R_EMAIL_2"/>
-</step>
-</function>
+  <function name="kw-random" active="true">
+    <description>Tests the generation of synthetic data values</description>
+    <step name="WORD" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_WORD">
+      <parameter type="STATIC" name="Word List" value="this,is,a,test" />
+    </step>
+    <step name="NUMBER" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_NUMBER">
+      <parameter type="STATIC" name="Minimum" value="10" />
+      <parameter type="STATIC" name="Maximum" value="10000" />
+      <parameter type="STATIC" name="Format" value="$###.0#" />
+    </step>
+    <step name="TEXT" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_TEXT">
+      <parameter type="STATIC" name="Format" value="TTTtttxxx###" />
+    </step>
+    <step name="TEXT" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_TEXT">
+      <parameter type="STATIC" name="Format" value="TT\Ttt\txx\x##\#-xFramium" />
+    </step>
+    <step name="TEXT" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_TEXT_ESCAPE">
+      <parameter type="STATIC" name="Format" value="\T\t\#" />
+    </step>
+    <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" name="Value One" value="Tt#" />
+      <parameter type="CONTEXT" name="Value Two" value="R_TEXT_ESCAPE" />
+      <parameter type="STATIC" name="Operator" value="EQUALS" />
+    </step>
+    <step name="DATE" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_DATE">
+      <parameter type="STATIC" name="Minimum" value="last christmas" />
+      <parameter type="STATIC" name="Maximum" value="today" />
+      <parameter type="STATIC" name="Format" value="mm/dd/yyyy" />
+    </step>
+    <step name="DATE" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_DATE_2">
+      <parameter type="STATIC" name="Minimum" value="1/1/2015" />
+      <parameter type="STATIC" name="Maximum" value="2/1/2016" />
+      <parameter type="STATIC" name="Format" value="MMMM dd yyyy" />
+    </step>
+    <step name="FIRST_NAME" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_FIRST" />
+    <step name="LAST_NAME" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_LAST" />
+    <step name="ADDRESS" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_ADDRESS" />
+    <step name="EMAIL_ADDRESS" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_EMAIL_1">
+      <parameter type="STATIC" name="Domain" value="xframium.org" />
+    </step>
+    <step name="EMAIL_ADDRESS" site="xTest" page="home" type="RANDOM" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="R_EMAIL_2" />
+    <step name="Undefined" site="xTest" page="home" type="REPORT" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="CONTEXT" name="Item One" value="R_WORD" />
+      <parameter type="CONTEXT" name="new parameter" value="R_NUMBER" />
+      <parameter type="CONTEXT" name="new parameter" value="R_TEXT" />
+      <parameter type="CONTEXT" name="new parameter" value="R_DATE" />
+      <parameter type="CONTEXT" name="new parameter" value="R_DATE_2" />
+      <parameter type="CONTEXT" name="new parameter" value="R_FIRST" />
+      <parameter type="CONTEXT" name="new parameter" value="R_LAST" />
+      <parameter type="CONTEXT" name="new parameter" value="R_ADDRESS_ADDRESS_ONE" />
+      <parameter type="CONTEXT" name="new parameter" value="R_ADDRESS_STREET" />
+      <parameter type="CONTEXT" name="new parameter" value="R_ADDRESS_HOUSE_NUMBER" />
+      <parameter type="CONTEXT" name="new parameter" value="R_ADDRESS_CITY" />
+      <parameter type="CONTEXT" name="new parameter" value="R_ADDRESS_STATE" />
+      <parameter type="CONTEXT" name="new parameter" value="R_ADDRESS_ZIP" />
+      <parameter type="CONTEXT" name="new parameter" value="R_EMAIL_1" />
+      <parameter type="CONTEXT" name="new parameter" value="R_EMAIL_2" />
+    </step>
+  </function>
 </suite>

@@ -59,6 +59,14 @@
       <element name="Check Five" value="checkFive" descriptor="ID" />
       <element name="allChecks" value="//input[@type='checkbox']" descriptor="XPATH" />
       
+      <element name="Button Value One" value="buttonOne" descriptor="ID" />
+      <element name="Button Value Two" value="buttonTwo" descriptor="ID" />
+      <element name="Button Value Three" value="buttonThree" descriptor="ID" />
+      
+      
+      <element name="buttonOne" value="//button[text()='Button One']" descriptor="XPATH" />
+      <element name="buttonTwo" value="//button[text()='Button Two']" descriptor="XPATH" />
+      <element name="buttonThree" value="//button[text()='Button Three']" descriptor="XPATH" />
     </page>
   </site>
 </elementDefinition>

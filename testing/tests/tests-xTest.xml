@@ -27,6 +27,7 @@
   <import fileName="./xTest/Browser Test.xml" />
   <import fileName="./xTest/Cache Test.xml" />
   <import fileName="./xTest/Call Test.xml" />
+  <import fileName="./xTest/Compare Test.xml" />
   <import fileName="./xTest/Verify Color Test.xml" />
   <import fileName="./xTest/Verify Contrast Test.xml" />
   <import fileName="./xTest/Click Test.xml" />

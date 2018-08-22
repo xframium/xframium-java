@@ -2,6 +2,25 @@
 <suite xmlns="http://www.xframium.org/testRegistry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xframium.org/testRegistry http://www.xframium.org/xsd/pageManagement/testRegistry.xsd">
   <function name="kw-compare2" active="true">
     <description>Added tests for compare2</description>
+    
+    <step name="switch" site="xTest" page="home" type="SWITCH" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" >
+      <parameter type="STATIC" name="Value" value="2" />
+      <parameter type="STATIC" name="Step 1" value="1" />
+      <parameter type="STATIC" name="Step 2" value="2" />
+      <parameter type="STATIC" name="Step 3" value="3" />
+      <step name="buttonOne" site="xTest" page="home" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" />
+      <step name="buttonTwo" site="xTest" page="home" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" />
+      <step name="buttonThree" site="xTest" page="home" type="CLICK" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" />
+    </step>
+    
+    <step name="Button Value Two" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="buttonValueTwo" />
+    
+    <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
+      <parameter type="STATIC" name="Value One" value="0" />
+      <parameter type="CONTEXT" name="Value Two" value="buttonValueTwo" />
+      <parameter type="STATIC" name="Operator" value="EQUALS" />
+    </step>
+    
     <step name="toggleButton" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" context="toggleButtonValue" />
     <step name="STRING" site="xTest" page="home" type="COMPARE2" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR">
       <parameter type="STATIC" name="Value One" value="Toggle Value" />

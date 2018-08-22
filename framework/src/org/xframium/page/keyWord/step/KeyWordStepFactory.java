@@ -82,6 +82,7 @@ import org.xframium.page.keyWord.step.spi.KWSSet;
 import org.xframium.page.keyWord.step.spi.KWSSetContentKey;
 import org.xframium.page.keyWord.step.spi.KWSString;
 import org.xframium.page.keyWord.step.spi.KWSString2;
+import org.xframium.page.keyWord.step.spi.KWSSwitch;
 import org.xframium.page.keyWord.step.spi.KWSSync;
 import org.xframium.page.keyWord.step.spi.KWSValue;
 import org.xframium.page.keyWord.step.spi.KWSVisible;
@@ -216,6 +217,7 @@ public class KeyWordStepFactory
         addKeyWord( "CONTEXT", KWSContext.class );
         addKeyWord( "ACCESSIBILITY", KWSAccessibility.class );
         addKeyWord( "GHERKIN", KWSGherkin.class );
+        addKeyWord( "SWITCH", KWSSwitch.class );
     }
 
     /**
