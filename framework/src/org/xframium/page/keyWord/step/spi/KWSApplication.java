@@ -135,7 +135,7 @@ public class KWSApplication extends AbstractKeyWordStep
 	            
 	        case GET_CONTEXT:
 	        	if ( getContext() != null && !getContext().trim().isEmpty() )
-	        		contextMap.put( getContext(), ((DeviceWebDriver)webDriver).getContext() );
+	        		addContext( getContext(), ((DeviceWebDriver)webDriver).getContext(), contextMap, executionContext );
 	        	
 	        	return true;
 	        

@@ -105,7 +105,7 @@ public class ReportingElementAdapter implements Element
 
     private KeyWordStep createStep( String type )
     {
-        return KeyWordStepFactory.instance().createStep( getElementName(), getPageName(), true, type, "", false, StepFailure.IGNORE, false, "", "", "", 0, "", 0, "", "", "", null, "", false, false, "", "", null, "", "", null, false, null, null );
+        return KeyWordStepFactory.instance().createStep( getElementName(), getPageName(), true, type, "", false, StepFailure.IGNORE, false, "", "", "", 0, "", 0, "", "", "", null, "", false, false, "", "", null, "", "", null, false, null, null, false );
     }
     
     @Override
@@ -639,5 +639,17 @@ public class ReportingElementAdapter implements Element
     {
         return baseElement.getName();
     }
+
+	@Override
+	public boolean isAllowMultiple() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setAllowMultiple(boolean allowMultiple) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -35,7 +35,7 @@ public class GlobalListener implements KeyWordListener
     @Override
     public boolean beforeStep(WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC)
     {
-        if  ( afterStep == null || afterStep.trim().isEmpty() || currentStep instanceof SyntheticStep || eC.isInStepListener() )
+        if  ( beforeStep == null || beforeStep.trim().isEmpty() || currentStep instanceof SyntheticStep || eC.isInStepListener() )
             return true;
         eC.setInStepListener( true );
         

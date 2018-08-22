@@ -197,7 +197,7 @@ public class KWSBrowser extends AbstractKeyWordStep
                         throw new ScriptException( "GET_TITLE Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + pageTitle + "]" );
 
                     if ( getContext() != null && !getContext().trim().isEmpty() )
-                        contextMap.put( getContext(), pageTitle );
+                        addContext( getContext(), pageTitle, contextMap, executionContext );
 
                     break;
 
@@ -216,7 +216,7 @@ public class KWSBrowser extends AbstractKeyWordStep
                         throw new ScriptException( "GET_URL Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + currentUrl + "]" );
 
                     if ( getContext() != null && !getContext().trim().isEmpty() )
-                        contextMap.put( getContext(), currentUrl );
+                        addContext( getContext(), currentUrl, contextMap, executionContext );
 
                     break;
 
@@ -302,7 +302,7 @@ public class KWSBrowser extends AbstractKeyWordStep
                             buffer.append( cookie.getName() + ":" + cookie.getValue() ).append( ";" );
                             if ( getContext() != null )
                             {
-                                contextMap.put( getContext() + "_" + cookie.getName(), cookie.getValue() );
+                                addContext( getContext() + "_" + cookie.getName(), cookie.getValue(), contextMap, executionContext );
                             }
                         }
                         String cookieValue = buffer.toString();
@@ -313,7 +313,7 @@ public class KWSBrowser extends AbstractKeyWordStep
 
                         if ( getContext() != null )
                         {
-                            contextMap.put( getContext(), cookieValue );
+                            addContext( getContext(), cookieValue, contextMap, executionContext );
                         }
 
                     }
@@ -332,7 +332,7 @@ public class KWSBrowser extends AbstractKeyWordStep
 
                         if ( getContext() != null )
                         {
-                            contextMap.put( getContext(), getCookie.getValue() );
+                            addContext( getContext(), getCookie.getValue(), contextMap, executionContext );
                         }
                     }
 

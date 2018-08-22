@@ -193,6 +193,7 @@
     <attribute name="appContext" type="string" use="optional" />
     <attribute name="waitFor" type="string" use="optional" />
     <attribute name="trace" type="boolean" use="optional" default="false" />
+    <attribute name="allowMultiple" type="boolean" use="optional" default="false" />
   </complexType>
   
   <complexType name="Reporting">

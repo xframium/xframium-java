@@ -199,7 +199,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     private String successReport;
     private String failureReport;
     private List<KeyWordToken> reportingTokens = new ArrayList<KeyWordToken>( 10 );
-    
+    private boolean allowMultiple = false;
     
     
     
@@ -239,7 +239,19 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     
     
 
-    public String getSuccessReport() {
+    public boolean isAllowMultiple() {
+		return allowMultiple;
+	}
+
+
+
+	public void setAllowMultiple(boolean allowMultiple) {
+		this.allowMultiple = allowMultiple;
+	}
+
+
+
+	public String getSuccessReport() {
 		return successReport;
 	}
 
@@ -852,6 +864,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 currentElement = currentElement.cloneElement();
                 currentElement.setTimed( isTimed() );
                 currentElement.setExecutionContext( executionContext );
+                currentElement.setAllowMultiple( isAllowMultiple() );
 
                 if ( log.isDebugEnabled() )
                     log.debug( Thread.currentThread().getName() + ": CONTEXT element found as " + currentElement );
@@ -884,6 +897,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 
                 myElement.setTimed( isTimed() );
                 myElement.setDriver( webDriver );
+                myElement.setAllowMultiple( isAllowMultiple() );
 
                 for ( KeyWordToken token : tokenList )
                 {
@@ -919,6 +933,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     clonedElement.addToken( token.getName(), getTokenValue( token, contextMap, dataMap, executionContext.getxFID() ) );
                 }
 
+                clonedElement.setAllowMultiple( isAllowMultiple() );
                 clonedElement.setCacheNative( true );
                 clonedElement.setExecutionContext( executionContext );
                 clonedElement.setTimed( isTimed() );
@@ -934,6 +949,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     elt.setCacheNative( true );
                     elt.setExecutionContext( executionContext );
                     elt.setTimed( isTimed() );
+                    elt.setAllowMultiple( isAllowMultiple() );
                     return elt;
                 }
                 catch ( NullPointerException e )
@@ -1214,7 +1230,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         
                     if ( eName != null )
                     {
-                        KeyWordStep verifyKeyword = KeyWordStepFactory.instance().createStep( eName, pName, true, "VISIBLE", null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, null, null, null, null, null, false, false, null, sName, null, null, null, null, true, null, null );
+                        KeyWordStep verifyKeyword = KeyWordStepFactory.instance().createStep( eName, pName, true, "VISIBLE", null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, null, null, null, null, null, false, false, null, sName, null, null, null, null, true, null, null, false );
                         verifyKeyword.setImage( "VERIFICATION" );
                         if ( !verifyKeyword.executeStep(pageObject, ((alternateWebDriver != null) ? alternateWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext ) )
                             throw new ScriptException( "Failed Verification step" );
@@ -2385,8 +2401,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
                 if ( contextMap != null )
                 {
-                    contextMap.put( "_SCREENSHOT_ABS", screenFile.getAbsolutePath() );
-                    contextMap.put( "_SCREENSHOT", "../../artifacts/" + screenFile.getName() );
+                    addContext( "_SCREENSHOT_ABS", screenFile.getAbsolutePath(), contextMap, executionContext );
+                    addContext( "_SCREENSHOT", "../../artifacts/" + screenFile.getName(), contextMap, executionContext );
                 }
                 
                 executionContext.getStep().addExecutionParameter( "SCREENSHOT_ABS", screenFile.getPath() );
@@ -2481,10 +2497,10 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
             if ( contextMap != null )
             {
-                contextMap.put( "_DOM_XML_ABS", xmlFile.getAbsolutePath() );
-                contextMap.put( "_DOM_XML", "../../artifacts/" + xmlFile.getName() );
-                contextMap.put( "_DOM_HTML_ABS", domFile.getAbsolutePath() );
-                contextMap.put( "_DOM_HTML", "../../artifacts/" + domFile.getName() );
+                addContext( "_DOM_XML_ABS", xmlFile.getAbsolutePath(), contextMap, executionContext );
+                addContext( "_DOM_XML", "../../artifacts/" + xmlFile.getName(), contextMap, executionContext );
+                addContext( "_DOM_HTML_ABS", domFile.getAbsolutePath(), contextMap, executionContext );
+                addContext( "_DOM_HTML", "../../artifacts/" + domFile.getName(), contextMap, executionContext );
             }
 
             executionContext.getStep().addExecutionParameter( "XML_ABS", xmlFile.getPath() );

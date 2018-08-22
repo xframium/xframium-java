@@ -276,7 +276,7 @@ public class KeyWordStepFactory
      * @return the key word step
      */
     public KeyWordStep createStep( String name, String pageName, boolean active, String type, String linkId, boolean timed, StepFailure sFailure, boolean inverse, String os, String browser, String poi, int threshold, String description, long waitTime, String context,
-            String validation, String device, ValidationType validationType, String tagNames, boolean startAt, boolean breakpoint, String deviceTags, String siteName, Map<String,String> overrideMap, String version, String appContext, String waitFor, boolean trace, String successReport, String failureReport )
+            String validation, String device, ValidationType validationType, String tagNames, boolean startAt, boolean breakpoint, String deviceTags, String siteName, Map<String,String> overrideMap, String version, String appContext, String waitFor, boolean trace, String successReport, String failureReport, boolean allowMultiple )
     {
         Class kwImpl = stepMap.get( type.toUpperCase() );
 
@@ -299,6 +299,7 @@ public class KeyWordStepFactory
             returnValue.setPoi( poi );
             returnValue.setSuccessReport( successReport );
             returnValue.setFailureReport( failureReport );
+            returnValue.setAllowMultiple(allowMultiple);
 
             if ( threshold > 0 )
             {
@@ -360,7 +361,7 @@ public class KeyWordStepFactory
     
     public KeyWordStep createStep( KeyWordStep k )
     {
-        KeyWordStep kW = createStep( k.getName(), k.getPageName(), k.isActive(), k.getKw(), k.getLinkId(), k.isTimed(), k.getFailure(), k.isInverse(), k.getOs(), k.getBrowser(), k.getPoi(), k.getThreshold(), k.getDescription(), k.getWait(), k.getContext(), k.getValidation(), k.getDevice(), k.getValidationType(), null, k.isStartAt(), k.isBreakpoint(), null, k.getSiteName(), new HashMap<String,String>(), k.getVersion() != null ? k.getVersion().toString() : null, k.getAppContext(), k.getWaitFor(), k.isTrace(), k.getSuccessReport(), k.getFailureReport() );
+        KeyWordStep kW = createStep( k.getName(), k.getPageName(), k.isActive(), k.getKw(), k.getLinkId(), k.isTimed(), k.getFailure(), k.isInverse(), k.getOs(), k.getBrowser(), k.getPoi(), k.getThreshold(), k.getDescription(), k.getWait(), k.getContext(), k.getValidation(), k.getDevice(), k.getValidationType(), null, k.isStartAt(), k.isBreakpoint(), null, k.getSiteName(), new HashMap<String,String>(), k.getVersion() != null ? k.getVersion().toString() : null, k.getAppContext(), k.getWaitFor(), k.isTrace(), k.getSuccessReport(), k.getFailureReport(), k.isAllowMultiple() );
         kW.setTagNames( k.getTagNames() );
         kW.setDeviceTags( k.getDeviceTags() );
         

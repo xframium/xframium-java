@@ -117,6 +117,9 @@ public interface KeyWordStep {
 	public String getWaitFor();
 
 	public void setWaitFor(String waitFor);
+	
+	public boolean isAllowMultiple();
+	public void setAllowMultiple(boolean allowMultiple); 
 
 	/**
 	 * Sets the link id.

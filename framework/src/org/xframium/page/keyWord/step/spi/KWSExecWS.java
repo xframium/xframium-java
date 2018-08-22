@@ -116,7 +116,7 @@ public class KWSExecWS extends AbstractKeyWordStep
                     if ( log.isDebugEnabled() )
                         log.debug( "Setting Context Data to [" + value + "] for [" + context_name + "]" );
 
-                    contextMap.put( context_name, value );
+                    addContext( context_name, value, contextMap, executionContext );
                 }
             }
             

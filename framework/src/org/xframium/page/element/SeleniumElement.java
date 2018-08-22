@@ -190,30 +190,15 @@ public class SeleniumElement extends AbstractElement {
 		if (imageElement != null) {
 			if (imageElement.getLocation() != null && imageElement.getSize() != null
 					&& imageElement.getSize().getWidth() > 0 && imageElement.getSize().getHeight() > 0) {
-				//String fileKey = "PRIVATE:" + getDeviceName() + ".png";
 
 				byte[] imageData = null;
-
-//				String cloudName = ((DeviceWebDriver) getWebDriver()).getDevice().getCloud();
-//				if (cloudName == null || cloudName.trim().isEmpty())
-//					cloudName = CloudRegistry.instance(((DeviceWebDriver) getWebDriver()).getxFID()).getCloud()
-//							.getName();
-//
-//				if (CloudRegistry.instance(((DeviceWebDriver) getWebDriver()).getxFID()).getCloud(cloudName)
-//						.getProvider().equals("PERFECTO")) {
-//					PerfectoMobile.instance(getWebDriver().getxFID()).imaging().screenShot(getExecutionId(),
-//							getDeviceName(), fileKey, Screen.primary, ImageFormat.png, imageResolution);
-//					imageData = PerfectoMobile.instance(getWebDriver().getxFID()).repositories()
-//							.download(RepositoryType.MEDIA, fileKey);
-//				} else {
-					if (getWebDriver() instanceof TakesScreenshot) {
-						try {
-							imageData = ((TakesScreenshot) getWebDriver()).getScreenshotAs(OutputType.BYTES);
-						} catch (Exception e) {
-							log.error("Error taking screenshot", e);
-						}
+				if (getWebDriver() instanceof TakesScreenshot) {
+					try {
+						imageData = ((TakesScreenshot) getWebDriver()).getScreenshotAs(OutputType.BYTES);
+					} catch (Exception e) {
+						log.error("Error taking screenshot", e);
 					}
-				//}
+				}
 				if (imageData != null && imageData.length > 0) {
 					try {
 						BufferedImage fullImage = ImageIO.read(new ByteArrayInputStream(imageData));
@@ -437,15 +422,14 @@ public class SeleniumElement extends AbstractElement {
 	 * 
 	 * @see com.perfectoMobile.page.element.AbstractElement#_moveTo()
 	 */
-	
-	private PointOption createPoint( WebElement webElement )
-    {
-    	int x = webElement.getLocation().getX() + ( webElement.getSize().getWidth() / 2 );
-    	int y = webElement.getLocation().getX() + ( webElement.getSize().getWidth() / 2 );
-    	
-    	return PointOption.point(x, y);
-    }
-	
+
+	private PointOption createPoint(WebElement webElement) {
+		int x = webElement.getLocation().getX() + (webElement.getSize().getWidth() / 2);
+		int y = webElement.getLocation().getX() + (webElement.getSize().getWidth() / 2);
+
+		return PointOption.point(x, y);
+	}
+
 	public boolean _moveTo() {
 		WebElement webElement = getElement();
 		if (webElement != null && webElement.getSize().getHeight() > 0 && webElement.getSize().getWidth() > 0) {
@@ -455,7 +439,7 @@ public class SeleniumElement extends AbstractElement {
 
 				if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver) {
 					new TouchAction((AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver())
-							.moveTo( createPoint( webElement ) ).perform();
+							.moveTo(createPoint(webElement)).perform();
 				} else if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver) {
 					if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof HasTouchScreen)
 						new TouchActions(getWebDriver()).moveToElement(webElement).build().perform();
@@ -483,7 +467,8 @@ public class SeleniumElement extends AbstractElement {
 
 				if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver) {
 					new TouchAction((AppiumDriver<?>) ((DeviceWebDriver) getWebDriver()).getNativeDriver())
-							.press( createPoint( webElement ) ).waitAction( WaitOptions.waitOptions( Duration.ofMillis(length) ) ).release().perform();
+							.press(createPoint(webElement))
+							.waitAction(WaitOptions.waitOptions(Duration.ofMillis(length))).release().perform();
 				} else if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver) {
 					CloudActionProvider aP = getWebDriver().getCloud().getCloudActionProvider();
 
@@ -529,7 +514,7 @@ public class SeleniumElement extends AbstractElement {
 
 				if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver) {
 					new TouchAction((AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver())
-							.press( createPoint( webElement ) ).perform();
+							.press(createPoint(webElement)).perform();
 				} else if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver) {
 					if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof HasTouchScreen)
 						new TouchActions(getWebDriver()).clickAndHold(webElement).build().perform();
@@ -552,9 +537,10 @@ public class SeleniumElement extends AbstractElement {
 			CloudActionProvider aP = getWebDriver().getCloud().getCloudActionProvider();
 			Dimension elementSize = aP.translateDimension(getWebDriver(), webElement.getSize());
 
-			int useX = (int) ((double) elementSize.getWidth() * ((double) offsetX / 100.0) + webElement.getLocation().getX() );
-			int useY = (int) ((double) elementSize.getHeight() * ((double) offsetY / 100.0) + webElement.getLocation().getY() );
-			
+			int useX = (int) ((double) elementSize.getWidth() * ((double) offsetX / 100.0)
+					+ webElement.getLocation().getX());
+			int useY = (int) ((double) elementSize.getHeight() * ((double) offsetY / 100.0)
+					+ webElement.getLocation().getY());
 
 			if (log.isInfoEnabled())
 				log.info("Clicking " + useX + "," + useY + " pixels relative to " + getName());
@@ -563,9 +549,8 @@ public class SeleniumElement extends AbstractElement {
 				if (isTimed())
 					getActionProvider().startTimer((DeviceWebDriver) getWebDriver(), this, getExecutionContext());
 
-				aP.tap( getWebDriver(), new PercentagePoint( useX, useY, false ), 500 );
-				
-				
+				aP.tap(getWebDriver(), new PercentagePoint(useX, useY, false), 500);
+
 				return true;
 			}
 
@@ -587,9 +572,10 @@ public class SeleniumElement extends AbstractElement {
 			if (getWebDriver() instanceof HasInputDevices) {
 				if (isTimed())
 					getActionProvider().startTimer((DeviceWebDriver) getWebDriver(), this, getExecutionContext());
-				
+
 				if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof AppiumDriver) {
-					new TouchActions((AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver()).doubleTap( webElement ).perform();
+					new TouchActions((AppiumDriver) ((DeviceWebDriver) getWebDriver()).getNativeDriver())
+							.doubleTap(webElement).perform();
 				} else if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof RemoteWebDriver) {
 					if (((DeviceWebDriver) getWebDriver()).getNativeDriver() instanceof HasTouchScreen)
 						new TouchActions(getWebDriver()).doubleClick().build().perform();
@@ -726,14 +712,15 @@ public class SeleniumElement extends AbstractElement {
 					else
 						elementList = ((WebDriver) getWebDriver()).findElements((By) useBy);
 
-					if ( elementList == null || elementList.size() == 0 ) 
-						throw new ScriptException( "Could not locate elements using " + useBy.toString() );
+					if (elementList == null || elementList.size() == 0)
+						throw new ScriptException("Could not locate elements using " + useBy.toString());
 					
 					if (elementList.size() == 1)
 						webElement = elementList.get(0);
-					else if (elementList.size() > 1)
-						throw new ScriptConfigurationException(
-								getKey() + " returned multiple values while 1 was expected");
+					else if ( elementList.size() > 1 && isAllowMultiple() )
+						webElement = elementList.get(0);
+					else if (elementList.size() > 1 && !isAllowMultiple() )
+						throw new ScriptConfigurationException( getKey() + " returned multiple values while 1 was expected");
 
 				}
 

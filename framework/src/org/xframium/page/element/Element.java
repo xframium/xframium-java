@@ -147,6 +147,9 @@ public interface Element
     public String getElementProperty( String name );
     public void addSubElement( SubElement subElement );
     public DeviceWebDriver getWebDriver();
+    
+    public boolean isAllowMultiple();
+	public void setAllowMultiple(boolean allowMultiple); 
 	
 	public BY getBy();
 	

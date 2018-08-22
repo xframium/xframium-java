@@ -95,7 +95,7 @@ public class KWSAlert extends AbstractKeyWordStep
 			} );
     		
     		if ( getContext() != null && !getContext().isEmpty() )
-    		    contextMap.put( getContext(), currentAlert.getText() );
+    		    addContext( getContext(), currentAlert.getText(), contextMap, executionContext );
     		
     		switch( ALERT_TYPE.valueOf( getName() ) )
     		{

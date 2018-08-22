@@ -377,7 +377,7 @@ public class XMLKeyWordProvider implements KeyWordProvider
                                                                                  xStep.getContext(), xStep.getValidation(), xStep.getDevice(),
                                                                                  (xStep.getValidationType() != null && !xStep.getValidationType().isEmpty() ) ? ValidationType.valueOf( xStep.getValidationType() ) : null, 
                                                                                   xStep.getTagNames(), xStep.isStartAt(), xStep.isBreakpoint(), xStep.getDeviceTags(), xStep.getSite(), configProperties, xStep.getVersion(), 
-                                                                                  xStep.getAppContext(), xStep.getWaitFor(), xStep.isTrace(), xStep.getReporting() != null ? xStep.getReporting().getSuccess() : null, xStep.getReporting() != null ? xStep.getReporting().getFailure() : null);
+                                                                                  xStep.getAppContext(), xStep.getWaitFor(), xStep.isTrace(), xStep.getReporting() != null ? xStep.getReporting().getSuccess() : null, xStep.getReporting() != null ? xStep.getReporting().getFailure() : null, xStep.isAllowMultiple() );
 		    
 		    step.getParameterList().addAll( parseParameters( xStep.getParameter() ) );
 		    parseTokens( xStep.getToken(), testName, xStep.getName(), step );

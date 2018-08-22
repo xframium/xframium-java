@@ -60,8 +60,17 @@ public abstract class AbstractElement implements Element
 	
 	/** The web driver. */
     private DeviceWebDriver webDriver;
+    private boolean allowMultiple = false;
     
     
+
+	public boolean isAllowMultiple() {
+		return allowMultiple;
+	}
+
+	public void setAllowMultiple(boolean allowMultiple) {
+		this.allowMultiple = allowMultiple;
+	}
 
 	protected List<SubElement> subElementList = new ArrayList<SubElement>( 10 );
 	
@@ -165,6 +174,8 @@ public abstract class AbstractElement implements Element
 	    
 	    return contextList.toArray( new SubElement[ 0 ] );
 	}
+	
+	
 	
 	public void setExecutionContext( ExecutionContextTest executionContext )
 	{

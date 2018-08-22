@@ -31,7 +31,7 @@ public class ReportingWebElementAdapter implements WebElement
     
     private KeyWordStep createStep( String type )
     {
-        return KeyWordStepFactory.instance().createStep( by.toString(), "SELENIUM", true, type, "", false, StepFailure.IGNORE, false, "", "", "", 0, "", 0, "", "", "", null, "", false, false, "", "", null, "", "", null, false, null, null );
+        return KeyWordStepFactory.instance().createStep( by.toString(), "SELENIUM", true, type, "", false, StepFailure.IGNORE, false, "", "", "", 0, "", 0, "", "", "", null, "", false, false, "", "", null, "", "", null, false, null, null, true );
     }
     
     @Override

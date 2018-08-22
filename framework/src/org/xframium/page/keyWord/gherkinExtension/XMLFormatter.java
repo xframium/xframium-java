@@ -183,7 +183,7 @@ public class XMLFormatter extends AbstractPageDataProvider implements Formatter
     public void step( Step xStep )
     {
         
-        KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), "bdd", true, "CALL2", "", false, StepFailure.ERROR, false, null, null, null, 0, "", 0, "", null, null, null, null, false, false, null, null, configProperties, null, null, null, false, null, null );
+        KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), "bdd", true, "CALL2", "", false, StepFailure.ERROR, false, null, null, null, 0, "", 0, "", null, null, null, null, false, false, null, null, configProperties, null, null, null, false, null, null, false );
          
         switch( currentSection )
         {

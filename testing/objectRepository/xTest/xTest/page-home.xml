@@ -58,6 +58,7 @@
       <element name="Chech Four" value="checkFour" descriptor="ID" />
       <element name="Check Five" value="checkFive" descriptor="ID" />
       <element name="allChecks" value="//input[@type='checkbox']" descriptor="XPATH" />
+      
     </page>
   </site>
 </elementDefinition>

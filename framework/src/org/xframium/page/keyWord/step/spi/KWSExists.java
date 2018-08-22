@@ -114,7 +114,13 @@ public class KWSExists extends AbstractKeyWordStep
                 {
                     if ( log.isDebugEnabled() )
                         log.debug( "Setting Context Data to [" + currentElement.getValue() + "] for [" + getContext() + "]" );
-                    contextMap.put( getContext() + "_count", elementCount + "" );
+                    addContext( getContext() + "_count", elementCount + "", contextMap, executionContext );
+                }
+                else if ( elementCount == 1 )
+                {
+                	if ( log.isDebugEnabled() )
+                        log.debug( "Setting Context Data to [" + currentElement.getValue() + "] for [" + getContext() + "]" );
+                	addContext( getContext() + "_count", "1", contextMap, executionContext );
                 }
     
                 if ( log.isDebugEnabled() )
