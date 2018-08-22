@@ -65,27 +65,49 @@ public class Randomizer
     
     public String randomText( String format )
     {
+    	StringBuilder returnValue = new StringBuilder();
         byte[] buffer = format.getBytes();
+        int bufferPosition = 0;
+        
+        boolean isEscape = false;
+        
         for ( int i=0; i<format.length(); i++ )
         {
+        	if ( isEscape )
+        	{
+        		returnValue.append( (char) buffer[ i ] );
+        		isEscape = false;
+        		continue;
+        	}
+        	
             switch ( buffer[ i ] )
             {
                 case 84:
-                    buffer[ i ] = (byte) (numberGenerator.nextInt( 26 ) + 65);
+                    returnValue.append( (char) (numberGenerator.nextInt( 26 ) + 65) );
                     break;
                     
                 case 116:
-                    buffer[ i ] = (byte) (numberGenerator.nextInt( 26 ) + 97);
+                	returnValue.append( (char) (numberGenerator.nextInt( 26 ) + 97) );
                     break;
                     
                 case 35:
-                    buffer[ i ] = (byte) ( numberGenerator.nextInt( 10 ) + 48 );
+                	returnValue.append( (char) (numberGenerator.nextInt( 26 ) + 48) );
                     break;
+                    
+                case 92:
+                	isEscape = true;
+                	break;
+                	
+                default:
+                	returnValue.append( (char) buffer[ i ] );
+                	break;
             }
         }
         
-        return new String( buffer );
+        return returnValue.toString();
     }
+    
+	
     
     public String randomDate( Date fromDate, Date toDate, String format )
     {
@@ -184,24 +206,8 @@ public class Randomizer
     
     public static void main( String[] args )
     {
-        System.out.println( Randomizer.instance().randomWord( "allen,is,cool" ) );
         
-        System.out.println( Randomizer.instance().randomNumber( 1, 100, "$##0.00 Dollars" ));
-        System.out.println( Randomizer.instance().randomNumber( 1, 100, "$##0.00 Dollars" ));
-        
-        
-        System.out.println( Randomizer.instance().randomText( "tT###tttTTTAllen" ) );
-        
-        System.out.println( Randomizer.instance().randomFirstName(  ) );
-        System.out.println( Randomizer.instance().randomLastName(  ) );
-        System.out.println( Randomizer.instance().randomDomain(  ) );
-        System.out.println( Randomizer.instance().randomEmailAddress( null ) );
-        System.out.println( Randomizer.instance().randomEmailAddress( "morelandlabs.com" ) );
-        
-        System.out.println( Randomizer.instance().randomCityName(  ) );
-        System.out.println( Randomizer.instance().randomState(  ) );
-        System.out.println( Randomizer.instance().randomStreetName(  ) );
-        System.out.println( Randomizer.instance().randomDate( new Date(System.currentTimeMillis() / 2), new Date(System.currentTimeMillis()), "HH.mm.ss" ) );
+        System.out.println( Randomizer.instance().randomText( "\\T\\t\\#" ) );
     }
     
 }
