@@ -1440,6 +1440,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                             stepStatus = StepStatus.FAILURE_IGNORED;
                             if ( stepException == null )
                                 stepException = new ScriptException( kwName + " has failed to complete" );
+                            break;
                          
                         case FAILURE:
                         	stepStatus = StepStatus.FAILURE;

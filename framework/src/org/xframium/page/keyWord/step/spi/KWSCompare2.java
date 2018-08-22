@@ -81,7 +81,7 @@ public class KWSCompare2 extends AbstractKeyWordStep
     
     private enum OperatorType
     {
-        GREATER,LESS,EQUALS;
+        GREATER,LESS,EQUALS,BETWEEN,BETWEEN_INCLUSIVE;
     }
     
 	/* (non-Javadoc)
@@ -97,11 +97,14 @@ public class KWSCompare2 extends AbstractKeyWordStep
 	    
 	    String valueOne = getParameterValue( getParameter( "Value One" ), contextMap, dataMap, executionContext.getxFID() );
 	    String valueTwo = getParameterValue( getParameter( "Value Two" ), contextMap, dataMap, executionContext.getxFID() );
+	    String valueThree = getParameterValue( getParameter( "Value Three" ), contextMap, dataMap, executionContext.getxFID() );
 
 	    switch( CompareType.valueOf( getName().toUpperCase() ) )
 	    {
 	        case DATE:
 	            int dateCompare = Long.compare( (DateUtility.instance().parseDate( valueOne ).getTime() / 1000 ) * 1000, ( DateUtility.instance().parseDate( valueTwo ).getTime() / 1000 ) * 1000 );
+	            int dateCompare2 = 0;
+	            
 	            
                 switch( operatorType )
                 {
@@ -117,10 +120,22 @@ public class KWSCompare2 extends AbstractKeyWordStep
                         if ( dateCompare >= 0 )
                             throw new ScriptException( "COMPARE Expected [" + DateUtility.instance().parseDate( valueOne ) + "] less than [" + DateUtility.instance().parseDate( valueTwo ) + "]" );
                         break;
+                    case BETWEEN:
+                    	validateParameters( new String[] { "Value One", "Value Two", "Value Three" } );
+                    	dateCompare2 = Long.compare( (DateUtility.instance().parseDate( valueOne ).getTime() / 1000 ) * 1000, ( DateUtility.instance().parseDate( valueThree ).getTime() / 1000 ) * 1000 );
+                    	if ( dateCompare <= 0 || dateCompare2 >= 0 )
+                    		throw new ScriptException( "[" + DateUtility.instance().parseDate( valueOne ) + "] not BETWEEN [" + DateUtility.instance().parseDate( valueTwo ) + "] and [" + DateUtility.instance().parseDate( valueThree ) + "]" );
+                    	
+                    case BETWEEN_INCLUSIVE:
+                    	validateParameters( new String[] { "Value One", "Value Two", "Value Three" } );
+                    	dateCompare2 = Long.compare( (DateUtility.instance().parseDate( valueOne ).getTime() / 1000 ) * 1000, ( DateUtility.instance().parseDate( valueThree ).getTime() / 1000 ) * 1000 );
+                    	if ( dateCompare < 0 || dateCompare2 > 0 )
+                    		throw new ScriptException( "[" + DateUtility.instance().parseDate( valueOne ) + "] not BETWEEN [" + DateUtility.instance().parseDate( valueTwo ) + "] and [" + DateUtility.instance().parseDate( valueThree ) + "]" );
                 }
                 break;
 	        case DECIMAL:
 	            float decCompare = Float.compare( Float.parseFloat( valueOne ), Float.parseFloat( valueTwo ) );
+	            float decCompare2 = 0;
                 switch( operatorType )
                 {
                     case EQUALS:
@@ -135,10 +150,24 @@ public class KWSCompare2 extends AbstractKeyWordStep
                         if ( decCompare >= 0 )
                             throw new ScriptException( "COMPARE Expected [" + valueOne + "] less than [" + valueTwo + "]" );
                         break;
+                    case BETWEEN:
+                    	validateParameters( new String[] { "Value One", "Value Two", "Value Three" } );
+                    	decCompare2 = Float.compare( Float.parseFloat( valueOne ), Float.parseFloat( valueThree ) );
+                        if ( decCompare <= 0 || decCompare2 >= 0 )
+                            throw new ScriptException( "[" + valueOne + "] not BETWEEN [" + valueTwo + "] and [" + valueThree + "]" );
+                        break;
+                    case BETWEEN_INCLUSIVE:
+                    	validateParameters( new String[] { "Value One", "Value Two", "Value Three" } );
+                    	decCompare2 = Float.compare( Float.parseFloat( valueOne ), Float.parseFloat( valueThree ) );
+                        if ( decCompare < 0 || decCompare2 >0 )
+                        	throw new ScriptException( "[" + valueOne + "] not BETWEEN [" + valueTwo + "] and [" + valueThree + "]" );
+                        break;
+                        
                 }
                 break;
 	        case INTEGER:
 	            int wholeCompare = Integer.compare( Integer.parseInt( valueOne ), Integer.parseInt( valueTwo ) );
+	            int wholeCompare2 = 0;
                 switch( operatorType )
                 {
                     case EQUALS:
@@ -153,11 +182,26 @@ public class KWSCompare2 extends AbstractKeyWordStep
                         if ( wholeCompare >= 0 )
                             throw new ScriptException( "COMPARE Expected [" + valueOne + "] less than [" + valueTwo + "]" );
                         break;
+                    case BETWEEN:
+                    	validateParameters( new String[] { "Value One", "Value Two", "Value Three" } );
+                    	wholeCompare2 = Integer.compare( Integer.parseInt( valueOne ), Integer.parseInt( valueThree ) );
+                    	System.out.println( wholeCompare );
+                    	System.out.println( wholeCompare2 );
+                        if ( wholeCompare <= 0 || wholeCompare2 >= 0 )
+                            throw new ScriptException( "[" + valueOne + "] not BETWEEN [" + valueTwo + "] and [" + valueThree + "]" );
+                        break;
+                    case BETWEEN_INCLUSIVE:
+                    	validateParameters( new String[] { "Value One", "Value Two", "Value Three" } );
+                    	wholeCompare2 = Integer.compare( Integer.parseInt( valueOne ), Integer.parseInt( valueThree ) );
+                        if ( wholeCompare < 0 || wholeCompare2 >0 )
+                        	throw new ScriptException( "[" + valueOne + "] not BETWEEN [" + valueTwo + "] and [" + valueThree + "]" );
+                        break;
                 }
                 break;
                 
 	        case STRING:
 	            int stringCompare = valueOne.compareTo( valueTwo );
+	            int stringCompare2 = 0;
 	            switch( operatorType )
 	            {
 	                case EQUALS:
@@ -171,6 +215,18 @@ public class KWSCompare2 extends AbstractKeyWordStep
 	                case LESS:
 	                    if ( stringCompare >= 0 )
                             throw new ScriptException( "COMPARE Expected [" + valueOne + "] less than [" + valueTwo + "]" );
+                        break;
+	                case BETWEEN:
+	                	validateParameters( new String[] { "Value One", "Value Two", "Value Three" } );
+	                	stringCompare2 = valueOne.compareTo( valueThree );
+                        if ( stringCompare <= 0 || stringCompare2 >= 0 )
+                            throw new ScriptException( "[" + valueOne + "] not BETWEEN [" + valueTwo + "] and [" + valueThree + "]" );
+                        break;
+                    case BETWEEN_INCLUSIVE:
+                    	validateParameters( new String[] { "Value One", "Value Two", "Value Three" } );
+                    	stringCompare2 = valueOne.compareTo( valueThree );
+                        if ( stringCompare < 0 || stringCompare2 >0 )
+                        	throw new ScriptException( "[" + valueOne + "] not BETWEEN [" + valueTwo + "] and [" + valueThree + "]" );
                         break;
 	            }
 	            break;

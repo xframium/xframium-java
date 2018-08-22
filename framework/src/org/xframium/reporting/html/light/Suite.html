@@ -25,7 +25,16 @@
         <h3 class="dashhead-title">{{suiteData.suiteName}}</h3>
       </div>
       <a hRef="../index.html" class="pull-right" style="margin-bottom: 10px; margin-right: 10px"><span>Execution History</span></a>
-      <div class="row" style="margin-top: 20px">
+      
+      <div class="row" style="margin-top: 20px"  ng-if="suiteData.executionSummary == null || suiteData.executionSummary.length == 0">
+        <div class="col-sm-12">
+          <h2>Invalid Configuration</h2>
+          <h4>Check your tests and devices to make sure you had active test/device combinations</h4>
+          <p>No scripts were defined - nothing to do!</p>
+        </div>
+      </div>
+      
+      <div class="row" style="margin-top: 20px"  ng-if="suiteData.executionSummary != null && suiteData.executionSummary.length > 0">
         <div class="col-sm-2">
           <canvas class="chart chart-doughnut" chart-data="executionData" chart-labels="executionLabels" chart-options="chartOptions" chart-colors="chartColors"></canvas>
           <h5 class="text-primary text-muted" style="margin-top: 10px; text-align: center">Test Breakdown</h5>
@@ -99,7 +108,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-6" ng-if="suiteData.executionSummary != null && suiteData.executionSummary.length > 0">
         <div class="row">
           <div class="col-sm-12">
             <div class="panel panel-info">
@@ -125,7 +134,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-6" ng-if="suiteData.executionSummary != null && suiteData.executionSummary.length > 0">
         <div class="row" ng-if="pageUsageData[ 0 ].length > 3">
           <div class="col-sm-12">
             <div class="panel panel-info">
