@@ -325,7 +325,7 @@ public abstract class AbstractSeleniumTest
     	if ( preCount != finalCount )
     	{
     		log.warn( "\r\n\r\n*********************************************************\r\n** " + (preCount - finalCount) + " were removed due to duplicate names.   Names must be unique\r\n** If you are using a test driver or BDD examples make sure that you have defined a name field and that all names are unique\r\n*********************************************************" );
-    	}
+        }
         
         TestName[] newArray = null;
 

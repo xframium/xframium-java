@@ -11,7 +11,7 @@
     
     <step name="allChecks" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="true" wait="0" failureMode="ERROR" waitFor="toggleValue" allowMultiple="false" />
     <step name="allChecks" site="xTest" page="home" type="EXISTS" active="true" threshold="0" timed="false" inverse="false" wait="0" failureMode="ERROR" waitFor="toggleValue" allowMultiple="true" context="allData" >
-      <reporting success="{myCount} checks were found" failure="Devry super message">
+      <reporting success="{myCount} checks were found" failure="super message">
         <token name="myCount" type="CONTEXT" value="allData_count"/>
       </reporting>
     </step>

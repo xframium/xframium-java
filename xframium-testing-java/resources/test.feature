@@ -36,3 +36,4 @@ Scenario: Call two methods with a data table
 	 | age    | 10     |
 	 | uName  | uName  | 
 	Then I call method two with shouldBeTestData
+

@@ -966,6 +966,8 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                     
                     
                     
+                    
+                    
                     if ( xRoot.getSuite().getPackages() == null )
                     	xRoot.getSuite().setPackages( new XPackages() );
                     
