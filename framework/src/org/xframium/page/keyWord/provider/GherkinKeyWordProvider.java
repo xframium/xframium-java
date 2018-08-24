@@ -105,6 +105,8 @@ public class GherkinKeyWordProvider extends AbstractPageDataProvider implements 
 			readFile( f );
 		}
 		
+		suiteContainer.setDataProvider( this );
+		
 		return suiteContainer;
 	}
 	
@@ -113,7 +115,6 @@ public class GherkinKeyWordProvider extends AbstractPageDataProvider implements 
 		
 		if ( currentFile.isDirectory() )
 		{
-			log.info( "Reading folder " + currentFile.getAbsolutePath() );
 			File[] fileList = currentFile.listFiles( new FeatureFileFilter() );
 			for ( File file : fileList )
 				readFile( file );
@@ -154,7 +155,7 @@ public class GherkinKeyWordProvider extends AbstractPageDataProvider implements 
 
 	@Override
 	public void background(Background arg0) {
-		// TODO Auto-generated method stub
+		currentSection = Section.BACKGROUND;
 		
 	}
 

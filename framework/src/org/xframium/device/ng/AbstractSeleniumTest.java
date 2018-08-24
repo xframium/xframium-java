@@ -304,6 +304,27 @@ public abstract class AbstractSeleniumTest
         else
             finalList.addAll( rawList );
 
+        //
+        // Strip out duplicate test names
+        //
+        int preCount = finalList.size();
+        Map<String,TestName> strippedList = new HashMap<String,TestName>( 10 );
+        for ( TestName t : finalList )
+        {
+        	if ( !strippedList.containsKey( t.getTestName() ) )
+        		strippedList.put( t.getTestName(), t );
+        }
+        
+        finalList.clear();
+        finalList.addAll( strippedList.values() );
+        
+    	int finalCount = finalList.size();
+    	
+    	if ( preCount != finalCount )
+    	{
+    		log.warn( "\r\n\r\n*********************************************************\r\n** " + (preCount - finalCount) + " were removed due to duplicate names.   Names must be unique\r\n** If you are using a test driver or BDD examples make sure that you have defined a name field and that all names are uniquer\\n*********************************************************" );
+    	}
+        
         TestName[] newArray = null;
 
         newArray = new TestName[(finalList.size() == 0 ? 1 : finalList.size()) * deviceList.size()];
@@ -332,6 +353,9 @@ public abstract class AbstractSeleniumTest
         }
 
         StringBuilder logOut = new StringBuilder();
+        
+       
+        
         
         if ( xmlMode )
         {
@@ -631,6 +655,20 @@ public abstract class AbstractSeleniumTest
      */
     public KeyWordStep createStep( String keyword, String pageName, String elementName, String[] parameterList )
     {
+    	return createStep( keyword, pageName, elementName, parameterList, null, null );
+    }
+    
+    /**
+     * Creates a KeyWord step to be used in a Java test
+     *
+     * @param keyword The name of the keyword
+     * @param pageName the page name
+     * @param elementName the element name
+     * @param parameterList A list of parameter to pass to the keyword.  User name==value for named parameters
+     * @return The created step
+     */
+    public KeyWordStep createStep( String keyword, String pageName, String elementName, String[] parameterList, String successMessage, String failMessage )
+    {
         KeyWordStep step = KeyWordStepFactory.instance().createStep( elementName, pageName, true, keyword, null, false, StepFailure.ERROR, false, null, null, null, 0, null, 0, keyword, null, null, null, null, false, false, null, null, null, null, null, null, false, null, null, false );
         
         if ( parameterList != null )
@@ -644,6 +682,12 @@ public abstract class AbstractSeleniumTest
                     step.addParameter( new KeyWordParameter( ParameterType.STATIC, s, null, null ) );
             }
         }
+        
+        if ( successMessage != null )
+        	step.setSuccessReport( successMessage );
+        
+        if ( failMessage != null )
+        	step.setFailureReport( failMessage );
         
         return step;
         
@@ -680,12 +724,27 @@ public abstract class AbstractSeleniumTest
      */
     public Map<String,Object> executeStep( String keyword, String pageName, String elementName, String[] parameterList, DeviceWebDriver webDriver ) throws Exception
     {
+        return executeStep( keyword, pageName, elementName, parameterList, webDriver, null, null );
+    }
+    
+    /**
+     * Creates and executes a KeyWord step
+     *
+     * @param keyword The name of the keyword
+     * @param pageName the page name
+     * @param elementName the element name
+     * @param parameterList A list of parameter to pass to the keyword.  User name==value for named parameters
+     * @param webDriver The webDriver for the active run
+     * @return The created step
+     */
+    public Map<String,Object> executeStep( String keyword, String pageName, String elementName, String[] parameterList, DeviceWebDriver webDriver, String successMessage, String failMessage ) throws Exception
+    {
         KeyWordPage p = new KeyWordPageImpl(PageManager.instance(webDriver.getxFID()).getElementProvider(), PageManager.instance(webDriver.getxFID()).getSiteName());
         p.setPageName( pageName );
         Map<String,Object> contextMap = new HashMap<String,Object>( 10 );
         Map<String,Page> pageMap = new HashMap<String,Page>( 10 );
         Map<String,PageData> dataMap = new HashMap<String,PageData>( 10 );
-        contextMap.put( "RESULT", createStep( keyword, pageName, elementName, parameterList ).executeStep( p, webDriver, contextMap, dataMap, pageMap, null, webDriver.getExecutionContext() ) );
+        contextMap.put( "RESULT", createStep( keyword, pageName, elementName, parameterList, successMessage, failMessage ).executeStep( p, webDriver, contextMap, dataMap, pageMap, null, webDriver.getExecutionContext() ) );
         return contextMap;
     }
 

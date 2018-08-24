@@ -29,6 +29,7 @@ import java.util.regex.Matcher;
 import org.openqa.selenium.WebDriver;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.factory.DeviceWebDriver;
+import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
@@ -73,7 +74,20 @@ public class KWSGherkin extends AbstractKeyWordStep
 					List<Object> parameterArray = new ArrayList<Object>( 10 );;
 					Object methodClass = g.getMethod().getDeclaringClass().newInstance();
 					for ( int i=1; i<m.groupCount() + 1; i++ )
-						parameterArray.add( m.group( i ) );
+					{
+						String useData = m.group( i );
+						if ( useData.startsWith( "<" ) && useData.endsWith( ">" ) )
+						{
+							useData = useData.substring( 1, useData.length() - 1 );
+							
+							PageData pD = dataMap.get( executionContext.getTest().getName() );
+							if ( pD == null )
+								throw new ScriptConfigurationException( "No Examples were provided for [" + executionContext.getTest().getName() + "]" );
+							
+							useData =pD.getData( useData );
+						}
+						parameterArray.add( useData );
+					}
 					
 					for ( int i=0; i<g.getMethod().getParameterTypes().length; i++ )
 					{
@@ -121,6 +135,9 @@ public class KWSGherkin extends AbstractKeyWordStep
 			}
 		}
 
+		if ( !executed )
+			throw new ScriptConfigurationException( "Could not locate a methed matching [" + getName() + "]" );
+		
 		return executed;
 	}
 	

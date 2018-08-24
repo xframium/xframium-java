@@ -21,8 +21,15 @@ public class SyntheticStep extends AbstractKeyWordStep implements KeyWordStep
     
     public SyntheticStep( String name, String kwName )
     {
+        this( name, kwName, null, null );
+    }
+    
+    public SyntheticStep( String name, String kwName, String successMessage, String failMessage )
+    {
         this.setName( name );
         this.kw = kwName;
+        setSuccessReport( successMessage );
+        setFailureReport( failMessage );
     }
     
     @Override

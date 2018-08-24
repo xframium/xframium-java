@@ -70,6 +70,18 @@ public abstract class AbstractJavaTest extends AbstractSeleniumTest
     }
     
     /**
+     * Allows the script developer to wrap commands inside of a step for reporting purposes
+     *
+     * @param testName the test name
+     * @param stepName the step name
+     * @param description This will show in the report
+     */
+    public void startStep( TestName testName, String stepName, String description, String successMessage, String failMessage )
+    {
+        testName.getTest().startStep( new SyntheticStep( stepName, stepName, description ), null, null );
+    }
+    
+    /**
      * Allows creation of a configuration backed page object without having to define the interface and implemention classes
      * @param pageName The name of the page matched to the name of the page in your object repository
      * @param webDriver The webDriver object
