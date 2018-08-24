@@ -219,16 +219,16 @@ public class XMLKeyWordProvider implements KeyWordProvider
     {
         if ( useFile.exists() || useFile.isAbsolute() )
         {
-            if (log.isWarnEnabled())
-                log.warn( "Found file at [" + useFile.getAbsolutePath() + "]" );
+            if (log.isDebugEnabled())
+                log.debug( "Found file at [" + useFile.getAbsolutePath() + "]" );
             return useFile;
         }
         
         File myFile = new File( rootFolder, useFile.getPath() );
         if ( myFile.exists() )
         {
-            if (log.isWarnEnabled())
-                log.warn( "Found file at [" + useFile.getAbsolutePath() + "]" );
+            if (log.isDebugEnabled())
+                log.debug( "Found file at [" + useFile.getAbsolutePath() + "]" );
             return myFile;
         }
         
@@ -247,8 +247,8 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	    {
 	        try
 	        {
-	            if (log.isInfoEnabled())
-                    log.info( "Attempting to import file [" + imp.getFileName() + "]" );
+	            if (log.isDebugEnabled())
+                    log.debug( "Attempting to import file [" + imp.getFileName() + "]" );
 	            if ( imp.getFileName().toLowerCase().endsWith( ".xml" ) )
 	            {
 	                InputStream inputStream = getClass().getClassLoader().getResourceAsStream( imp.getFileName() );

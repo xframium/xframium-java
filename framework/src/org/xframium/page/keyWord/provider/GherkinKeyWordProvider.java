@@ -25,22 +25,16 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.reflections.Reflections;
-import org.reflections.scanners.MethodAnnotationsScanner;
-import org.reflections.util.ConfigurationBuilder;
 import org.xframium.container.SuiteContainer;
 import org.xframium.page.data.DefaultPageData;
+import org.xframium.page.data.PageData;
+import org.xframium.page.data.PageDataManager;
 import org.xframium.page.data.provider.AbstractPageDataProvider;
-import org.xframium.page.keyWord.GherkinContainer;
 import org.xframium.page.keyWord.KeyWordDriver.TRACE;
 import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.KeyWordParameter.ParameterType;
@@ -49,11 +43,6 @@ import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.But;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.model.Background;
 import gherkin.formatter.model.Examples;
@@ -79,6 +68,7 @@ public class GherkinKeyWordProvider extends AbstractPageDataProvider implements 
     private KeyWordTest currentScenario;
     private Section currentSection = Section.FEATURE;
     private Log log = LogFactory.getLog( GherkinKeyWordProvider.class );
+    private String xFID;
     
     private enum Section
     {
@@ -90,10 +80,11 @@ public class GherkinKeyWordProvider extends AbstractPageDataProvider implements 
 
 	Parser bddParser = new Parser( this );
 	
-	public GherkinKeyWordProvider( File[] folderList, String[] packageList )
+	public GherkinKeyWordProvider( File[] folderList, String[] packageList, String xFID )
 	{
 		this.folderList = folderList;
 		this.packageList = packageList;
+		this.xFID = xFID;
 	}
 	
 	@Override
@@ -105,6 +96,8 @@ public class GherkinKeyWordProvider extends AbstractPageDataProvider implements 
 			readFile( f );
 		}
 		
+		suiteContainer.setDataProvider( this );
+		
 		return suiteContainer;
 	}
 	
@@ -113,7 +106,6 @@ public class GherkinKeyWordProvider extends AbstractPageDataProvider implements 
 		
 		if ( currentFile.isDirectory() )
 		{
-			log.info( "Reading folder " + currentFile.getAbsolutePath() );
 			File[] fileList = currentFile.listFiles( new FeatureFileFilter() );
 			for ( File file : fileList )
 				readFile( file );
@@ -154,7 +146,7 @@ public class GherkinKeyWordProvider extends AbstractPageDataProvider implements 
 
 	@Override
 	public void background(Background arg0) {
-		// TODO Auto-generated method stub
+		currentSection = Section.BACKGROUND;
 		
 	}
 
@@ -198,13 +190,25 @@ public class GherkinKeyWordProvider extends AbstractPageDataProvider implements 
 
 	@Override
 	public void examples(Examples arg0) {
+
 		addRecordType( currentScenario.getName(), false );
         String[] columnNames = null;
         
+        if ( arg0.getName() != null && arg0.getName().toLowerCase().startsWith( "page data=" ) )
+        {
+        	
+        	PageData[] pageData = PageDataManager.instance( xFID ).getRecords( arg0.getName().substring( 10 ) );
+        	for ( PageData p : pageData )
+        	{
+        		addRecord( p, currentScenario.getName() );
+        	}
+        	
+        	return;
+        }
         
+        int namePosition = -1;
         for ( ExamplesTableRow e : arg0.getRows() )
         {
-            int namePosition = -1;
             if ( columnNames == null )
             {
                 

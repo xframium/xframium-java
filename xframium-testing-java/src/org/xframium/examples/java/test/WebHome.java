@@ -225,16 +225,19 @@ public class WebHome extends AbstractJavaTest
             e.printStackTrace();
         }
     }
+
     
-    @Then( "^I call method two with '(\\w*')$")
-    public void cucumberMethodTwo( String p1, WebDriver webDriver )
+    @Then( "^I call method two with (.*)$")
+    public void cucumberMethodTwo( String p1, WebDriver webDriver ) throws Exception
     {
-    		System.out.println( "do stuff with " + p1 );
+    	System.out.println( "do stuff with " + p1 );
     		
-    		WebHomePage wPage = (WebHomePage) createPage( WebHomePage.class, (DeviceWebDriver) webDriver );
+    	executeStep( "REPORT", WebHomePage.class.getName(), "", new String[] { p1 }, (DeviceWebDriver) webDriver, "Parameter set to " + p1, null );
+    	WebHomePage wPage = (WebHomePage) createPage( WebHomePage.class, (DeviceWebDriver) webDriver );
         String beforeClick = wPage.getElement( WebHomePage.TOGGLE_VALUE ).getValue();
         wPage.getElement( WebHomePage.TOGGLE_BUTTON ).click();
         String afterClick = wPage.getElement( WebHomePage.TOGGLE_VALUE ).getValue();
+        
     }
     
     /**

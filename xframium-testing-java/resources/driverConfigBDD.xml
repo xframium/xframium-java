@@ -6,7 +6,7 @@
   <application provider="XML" name="xTest" fileName="applicationRegistry.xml" />
   <devices provider="XML" fileName="deviceRegistry.xml">
   </devices>
-  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" >
+  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true">
     <property name="selenium.timeouts.implicitWait">3000</property>
     <propertyAdapter className="org.xframium.device.property.SeleniumPropertyAdapter" />
     <artifact type="FAILURE_SOURCE" />
@@ -25,7 +25,7 @@
   </driver>
   <model provider="XML" siteName="xTest" fileName="page-home.xml" />
   <references>
-    <reference fileName="../../testing/driverConfig.xml" tests="true" functions="true" elements="true" applications="false" devices="false" data="true"/>
+    <reference fileName="../../testing/driverConfig.xml" tests="false" functions="false" elements="true" applications="false" devices="false" data="true"/>
   </references>
   <suite provider="GHERKIN" fileName="." >
     <packages>

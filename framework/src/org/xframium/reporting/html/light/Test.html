@@ -524,7 +524,7 @@ iframe {
                 messageText = $scope.stepMessages['DEFAULT'];
 
             messageText = messageText.replace("{kw}", step.step.kw);
-            messageText = messageText.replace("{name}", step.step.name);
+            messageText = messageText.replace("{name}", step.step.name.replace( '<', '&lt;' ).replace( '>', '&gt;' )  );
             messageText = messageText.replace("{subName}", step.step.subName);
             messageText = messageText.replace("{pageName}", step.step.pageName);
             messageText = messageText.replace("{device}", $scope.testData.device.key);
@@ -585,7 +585,7 @@ iframe {
                 messageText = $scope.stepMessages['DEFAULT'];
 
             messageText = messageText.replace("{kw}", step.step.kw);
-            messageText = messageText.replace("{name}", '<i>' + step.step.name + "</i>");
+            messageText = messageText.replace("{name}", step.step.name.replace( '<', '&lt;' ).replace( '>', '&gt;' ));
             messageText = messageText.replace("{subName}", step.step.subName);
             messageText = messageText.replace("{pageName}", step.step.pageName);
             messageText = messageText.replace("{errorMessage}", step.message);

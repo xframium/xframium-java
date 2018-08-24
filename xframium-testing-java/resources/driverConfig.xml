@@ -7,9 +7,10 @@
   <devices provider="XML" fileName="deviceRegistry.xml">
   </devices>
   <references>
-    <reference fileName="../../testing/driverConfig.xml" tests="true" functions="true" elements="false" application="false" devices="false" data="true"/>
+    <reference fileName="../../testing/driverConfig.xml" tests="true" functions="true" elements="true" applications="false" devices="false" data="true"/>
+    <reference fileName="./driverConfigBDD.xml" tests="true" functions="true" elements="true" applications="false" devices="false" data="true"/>
   </references>
-  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" testNames="Call Function,Exists Test">
+  <driver type="WEB" outputFolder="test-output" displayResults="true" suiteName="xTest" embeddedServer="true" testNames="Call Function,Exists Test,Call two methods with data,Call two methods">
     <property name="selenium.timeouts.implicitWait">5000</property>
     <propertyAdapter className="org.xframium.device.property.SeleniumPropertyAdapter" />
     <artifact type="FAILURE_SOURCE" />

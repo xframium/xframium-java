@@ -292,13 +292,23 @@ public abstract class AbstractPageDataProvider implements PageDataProvider
 	 */
 	public void addRecord( PageData pageData )
 	{
-	    allRecordMap.get( pageData.getType() ).addRecord( pageData );
+	    addRecord( pageData, pageData.getType() );
+	}
+	
+	/**
+	 * Adds the record.
+	 *
+	 * @param pageData the page data
+	 */
+	public void addRecord( PageData pageData, String recordType )
+	{
+	    allRecordMap.get( recordType ).addRecord( pageData );
 	    
 	    if ( !pageData.isActive() )
 	        return;
 	    
-		Deque<PageData> dataList = recordMap.get( pageData.getType() ).getRecordList();
-		idMap.put( pageData.getType() + "." + pageData.getName(), pageData );
+		Deque<PageData> dataList = recordMap.get( recordType ).getRecordList();
+		idMap.put( recordType + "." + pageData.getName(), pageData );
 		dataList.offer( pageData );
 	}
 	

@@ -184,7 +184,26 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     				if ( !xR.isActive() )
     					continue;
     				XMLConfigurationReader xReader = new XMLConfigurationReader();
+    				xReader.setxFID( xFID );
     				xReader.readFile( findFile(configFolder, new File( xR.getFileName() ) ) );
+    				
+    				PageDataProvider pD = null;
+    				
+    				
+    				if ( xR.isData() )
+    				{
+    					pD = xReader.configureData();
+    					if ( pD != null )
+    					{
+    						if ( PageDataManager.instance( xFID ).getDataProvider() == null )
+    							PageDataManager.instance( xFID ).setPageDataProvider( pD );
+    						else
+    						{
+    							PageDataManager.instance( xFID ).getDataProvider().addPageData( pD );
+    							pD = PageDataManager.instance( xFID ).getDataProvider();
+    						}
+    					}
+    				}
     				
     				if ( xR.isElements() )
     				{
@@ -196,7 +215,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     				
     				if ( xR.isFunctions() || xR.isTests() )
     				{
-    					SuiteContainer s2 = xReader.configureTestCases( null, true );
+    					SuiteContainer s2 = xReader.configureTestCases( pD, true );
     					if ( xR.isTests() )
     					{
     						sC.getActiveTestList().addAll( s2.getActiveTestList() );
@@ -226,19 +245,7 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
     		                DeviceManager.instance( xFID ).registerInactiveDevice( d );
     				}
     				
-    				if ( xR.isData() )
-    				{
-    					PageDataProvider pD = xReader.configureData();
-    					if ( pD != null )
-    					{
-    						if ( PageDataManager.instance( xFID ).getDataProvider() == null )
-    							PageDataManager.instance( xFID ).setPageDataProvider( pD );
-    						else
-    						{
-    							PageDataManager.instance( xFID ).getDataProvider().addPageData( pD );
-    						}
-    					}
-    				}
+    				
     				
     			}
     		}
@@ -955,7 +962,9 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
                 		for ( int i=0; i<folders.length; i++ )
                 			fileArray[ i ] = findFile( configFolder, new File( folders[ i ] ) );
                 		
-                    sC = new GherkinKeyWordProvider( fileArray, packages ).readData( true );
+                    sC = new GherkinKeyWordProvider( fileArray, packages, xFID ).readData( true );
+                    
+                    
                     
                     if ( xRoot.getSuite().getPackages() == null )
                     	xRoot.getSuite().setPackages( new XPackages() );
@@ -1042,7 +1051,12 @@ public class XMLConfigurationReader extends AbstractConfigurationReader implemen
         }
         
         if ( sC != null && pdp != null )
-            sC.setDataProvider( pdp );
+        {
+        	if ( sC.getDataProvider() != null )
+        		pdp.addPageData( sC.getDataProvider() );
+        	
+        	sC.setDataProvider( pdp );
+        }
         return sC;
     }
     

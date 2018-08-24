@@ -65,6 +65,12 @@ public class XMLTestDriver extends AbstractSeleniumTest
         
         TestContainer testContainer = (TestContainer) testContext.getAttribute( "testContainer" );
         
+        if ( testContainer == null || testContainer.getxFID() == null || DeviceManager.instance( testContainer.getxFID() ) == null )
+        {
+        	log.warn( "No test context was defined - was a test started?" );
+        	return;
+        }
+        
         if ( DeviceManager.instance( testContainer.getxFID() ).getFailedTestRetryCount() > 0 )
         {
             
