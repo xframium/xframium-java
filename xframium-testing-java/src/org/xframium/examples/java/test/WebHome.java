@@ -54,7 +54,9 @@ import org.xframium.page.keyWord.KeyWordPage;
 import org.xframium.page.keyWord.step.spi.KWSCompare2.CompareType;
 import org.xframium.reporting.ExecutionContextStep;
 
+import cucumber.api.DataTable;
 import cucumber.api.java.en.Then;
+import gherkin.formatter.model.DataTableRow;
 
 public class WebHome extends AbstractJavaTest
 {
@@ -202,11 +204,14 @@ public class WebHome extends AbstractJavaTest
     }
     
     @Then( "^I call method one$")
-    public void cucumberMethodOne( WebDriver webDriver )
+    public void cucumberMethodOne( WebDriver webDriver, DataTable dT )
     {
-    		try
+    	try
         {
-    			WebHomePage wPage = (WebHomePage) createPage( WebHomePage.class, (DeviceWebDriver) webDriver );
+    		System.out.println( "DT: " + dT );
+    		
+    		
+    		WebHomePage wPage = (WebHomePage) createPage( WebHomePage.class, (DeviceWebDriver) webDriver );
             String beforeClick = wPage.getElement( WebHomePage.TOGGLE_VALUE ).getValue();
             wPage.getElement( WebHomePage.TOGGLE_BUTTON ).click();
             String afterClick = wPage.getElement( WebHomePage.TOGGLE_VALUE ).getValue();
@@ -218,6 +223,14 @@ public class WebHome extends AbstractJavaTest
             Assert.assertFalse( wPage.getElement( WebHomePage.DELETE_BUTTON ).isVisible(), "Expected DELETE to be invisible");
             wPage.getElement( WebHomePage.ACCORDIAN_OPEN ).click();
             Assert.assertTrue( wPage.getElement( WebHomePage.DELETE_BUTTON ).waitForVisible( 12, TimeUnit.SECONDS ), "Expected DELETE to be visible" );
+            
+            
+            if ( dT != null )
+            {
+            	for ( DataTableRow r : dT.getGherkinRows() )
+            		executeStep( "REPORT", WebHomePage.class.getName(), "", new String[] { r.getCells().get( 0 ),r.getCells().get( 1 ) }, (DeviceWebDriver) webDriver, r.getCells().get( 0 ) + " set to " + r.getCells().get( 1 ), null );
+            }
+            
             
         }
         catch( Exception e )

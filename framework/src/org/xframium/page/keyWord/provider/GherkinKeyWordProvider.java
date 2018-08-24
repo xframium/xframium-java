@@ -43,6 +43,8 @@ import org.xframium.page.keyWord.KeyWordStep.StepFailure;
 import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 
+import cucumber.api.DataTable;
+import cucumber.runtime.table.TableConverter;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.model.Background;
 import gherkin.formatter.model.Examples;
@@ -294,7 +296,12 @@ public class GherkinKeyWordProvider extends AbstractPageDataProvider implements 
 	@Override
 	public void step(gherkin.formatter.model.Step xStep) {
 		KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), "bdd", true, "GHERKIN", "", false, StepFailure.ERROR, false, null, null, null, 0, "", 0, "", null, null, null, null, false, false, null, null, null, null, null, null, false, null, null, false );
+		if ( xStep.getRows() != null && !xStep.getRows().isEmpty() )
+		{
+			step.setDataTable( DataTable.create( xStep.getRows() ) );
+		}
         
+		
         switch( currentSection )
         {
             case BACKGROUND:

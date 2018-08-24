@@ -32,6 +32,8 @@ import org.xframium.page.data.PageData;
 import org.xframium.reporting.ExecutionContextTest;
 import org.xframium.spi.Device;
 
+import cucumber.api.DataTable;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Interface KeyWordStep.
@@ -72,6 +74,9 @@ public interface KeyWordStep {
 		/** The not empty. */
 		NOT_EMPTY;
 	}
+	
+	public void setDataTable( DataTable dT );
+	public DataTable getDataTable();
 
 	public void setTagNames(String tagNames);
 

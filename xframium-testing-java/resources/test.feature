@@ -27,3 +27,12 @@ Scenario Outline: Call two methods with local data
 	
 Examples: Page Data=dataLoop
 ||
+
+
+Scenario: Call two methods with a data table
+	Given I call method one
+	 | Fields | Values |
+	 | name   | myName |
+	 | age    | 10     |
+	 | uName  | uName  | 
+	Then I call method two with shouldBeTestData

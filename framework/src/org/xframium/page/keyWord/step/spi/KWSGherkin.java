@@ -39,6 +39,8 @@ import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.reporting.ExecutionContextTest;
 
+import cucumber.api.DataTable;
+
 
 public class KWSGherkin extends AbstractKeyWordStep
 {
@@ -116,6 +118,14 @@ public class KWSGherkin extends AbstractKeyWordStep
 						}
 					}
 					
+					for ( int i=0; i<g.getMethod().getParameterTypes().length; i++ )
+					{
+						Class c = g.getMethod().getParameterTypes()[ i ];
+						if ( c.isAssignableFrom( DataTable.class ) )
+						{
+							parameterArray.add( i, getDataTable() );
+						}
+					}
 					
 					
 					boolean reportingElement = ( (DeviceWebDriver) webDriver ).isReportingElement();

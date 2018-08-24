@@ -54,7 +54,6 @@ import org.xframium.artifact.ArtifactType;
 import org.xframium.container.SuiteContainer;
 import org.xframium.content.ContentManager;
 import org.xframium.device.ConnectedDevice;
-import org.xframium.device.cloud.CloudDescriptor;
 import org.xframium.device.data.DataManager;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.BubbledFailureException;
@@ -84,10 +83,11 @@ import org.xframium.page.keyWord.step.transform.ValueTransformationFactory;
 import org.xframium.reporting.ExecutionContext;
 import org.xframium.reporting.ExecutionContextStep;
 import org.xframium.reporting.ExecutionContextTest;
-import org.xframium.spi.Device;
 import org.xframium.spi.driver.ReportiumProvider;
 import org.xframium.utility.ImageUtility;
 import org.xframium.utility.XMLEscape;
+
+import cucumber.api.DataTable;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -200,10 +200,14 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     private String failureReport;
     private List<KeyWordToken> reportingTokens = new ArrayList<KeyWordToken>( 10 );
     private boolean allowMultiple = false;
+    private DataTable dataTable;
     
     
-    
-    protected String getReportMessage( StepStatus stepStatus, Map<String,Object> contextMap, Map<String, PageData> dataMap, String xFID )
+   
+
+
+
+	protected String getReportMessage( StepStatus stepStatus, Map<String,Object> contextMap, Map<String, PageData> dataMap, String xFID )
     {
     	String returnValue = null;
     	
@@ -237,7 +241,14 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     	return returnValue;
     }
     
-    
+	 public DataTable getDataTable() {
+		return dataTable;
+	}
+
+
+	public void setDataTable(DataTable dataTable) {
+		this.dataTable = dataTable;
+	}
 
     public boolean isAllowMultiple() {
 		return allowMultiple;
