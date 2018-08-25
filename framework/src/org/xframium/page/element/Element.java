@@ -101,7 +101,9 @@ public interface Element
         
         CLICKABLE_THEN_CLICK( 11, "CLICKABLE_THEN_CLICK", "Waits for Clickable then clicks on the element"),
         
-        WINDOW( 12, "WINDOW", "Waits for Clickable then clicks on the element")
+        WINDOW( 12, "WINDOW", "Waits for the window to be available then switches to it"),
+        
+        ENABLED_THEN_SET (13, "ENABLED_THEN_SET", "Waits for an element to be in an enabled state then attempts to set the value" )
         ;
 	    
 	    private WAIT_FOR( int id, String name, String description )
@@ -129,6 +131,8 @@ public interface Element
             wList.add( WAIT_FOR.VISIBLE );
             wList.add( WAIT_FOR.FRAME );
             wList.add( WAIT_FOR.CLICKABLE_THEN_CLICK );
+            wList.add( WAIT_FOR.WINDOW );
+            wList.add( WAIT_FOR.ENABLED_THEN_SET );
             return wList;
         }
     }

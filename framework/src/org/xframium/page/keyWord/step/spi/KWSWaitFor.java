@@ -27,6 +27,7 @@ import org.xframium.container.SuiteContainer;
 import org.xframium.page.Page;
 import org.xframium.page.data.PageData;
 import org.xframium.page.element.Element.WAIT_FOR;
+import org.xframium.page.keyWord.KeyWordParameter;
 import org.xframium.page.keyWord.step.AbstractKeyWordStep;
 import org.xframium.reporting.ExecutionContextTest;
 
@@ -54,19 +55,28 @@ public class KWSWaitFor extends AbstractKeyWordStep
 		
 		int waitFor = 15;
 		
-		if ( getParameterList().size() > 0 )
+		String setValue = "";
+		
+		for ( KeyWordParameter p : getParameterList() )
 		{
-			try
+			if ( "Set Value".equals( p.getName() ) )
+				setValue = getParameterValue( p, contextMap, dataMap, executionContext.getxFID() );
+			else
 			{
-				waitFor = Integer.parseInt( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
+				try
+				{
+					
+					waitFor = Integer.parseInt( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
+				}
+				catch( Exception e ) {}
 			}
-			catch( Exception e ) {}
 		}
+		
 		boolean returnValue = false;
 
         String[] waitType = getName().split( "\\." );
         if ( waitType.length == 2 )
-            returnValue = getElement( pageObject, contextMap, webDriver, dataMap, waitType[ 0 ], executionContext ).waitFor( waitFor, TimeUnit.SECONDS, WAIT_FOR.valueOf( waitType[ 1 ] ), "" );
+            returnValue = getElement( pageObject, contextMap, webDriver, dataMap, waitType[ 0 ], executionContext ).waitFor( waitFor, TimeUnit.SECONDS, WAIT_FOR.valueOf( waitType[ 1 ] ), setValue );
         else
             returnValue = getElement( pageObject, contextMap, webDriver, dataMap, executionContext ).waitForPresent( waitFor, TimeUnit.SECONDS );
 
