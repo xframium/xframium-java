@@ -161,13 +161,30 @@ public class RESTInvocationHandler implements InvocationHandler
         //
 		if ( currentCloud != null )
 		{
-		    urlBuilder.append( "&user=" ).append( currentCloud.getUserName() );
-	        urlBuilder.append( "&password=" ).append( currentCloud.getPassword() );
+			if ( currentCloud.getUserName() == null || currentCloud.getUserName().trim().isEmpty() )
+			{
+				urlBuilder.append( "&securityToken=" ).append( currentCloud.getPassword() );
+			}
+			else
+			{
+			    urlBuilder.append( "&user=" ).append( currentCloud.getUserName() );
+		        urlBuilder.append( "&password=" ).append( currentCloud.getPassword() );
+			}
 		}
 		else
 		{
-    		urlBuilder.append( "&user=" ).append( PerfectoMobile.instance( xFID ).getUserName() );
-    		urlBuilder.append( "&password=" ).append( PerfectoMobile.instance( xFID ).getPassword() );
+			if ( PerfectoMobile.instance( xFID ).getUserName() == null || PerfectoMobile.instance( xFID ).getUserName().trim().isEmpty() )
+			{
+	    		urlBuilder.append( "&securityToken=" ).append( PerfectoMobile.instance( xFID ).getPassword() );
+			}
+			else
+			{
+				urlBuilder.append( "&user=" ).append( PerfectoMobile.instance( xFID ).getUserName() );
+	    		urlBuilder.append( "&password=" ).append( PerfectoMobile.instance( xFID ).getPassword() );
+			}
+			
+			
+    		
 		}
 		
 		PerfectoCommand command = actualMethod.getAnnotation( PerfectoCommand.class );

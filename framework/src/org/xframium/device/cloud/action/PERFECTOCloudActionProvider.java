@@ -355,14 +355,12 @@ public class PERFECTOCloudActionProvider extends AbstractCloudActionProvider
     @Override
     public void disableLogging( DeviceWebDriver webDriver )
     {
-        PerfectoMobile.instance( webDriver.getxFID() ).device().startDebug( webDriver.getExecutionId(), webDriver.getDeviceName() );
         
     }
     
     @Override
     public void enabledLogging( DeviceWebDriver webDriver )
     {
-        PerfectoMobile.instance( webDriver.getxFID() ).device().stopDebug( webDriver.getExecutionId(), webDriver.getDeviceName() );
         
     }
 
