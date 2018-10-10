@@ -77,6 +77,7 @@ import org.xframium.page.keyWord.step.spi.KWSRandom;
 import org.xframium.page.keyWord.step.spi.KWSReport;
 import org.xframium.page.keyWord.step.spi.KWSReturn;
 import org.xframium.page.keyWord.step.spi.KWSSQL;
+import org.xframium.page.keyWord.step.spi.KWSScript;
 import org.xframium.page.keyWord.step.spi.KWSSelected;
 import org.xframium.page.keyWord.step.spi.KWSSet;
 import org.xframium.page.keyWord.step.spi.KWSSetContentKey;
@@ -218,6 +219,7 @@ public class KeyWordStepFactory
         addKeyWord( "ACCESSIBILITY", KWSAccessibility.class );
         addKeyWord( "GHERKIN", KWSGherkin.class );
         addKeyWord( "SWITCH", KWSSwitch.class );
+        addKeyWord( "SCRIPT", KWSScript.class );
     }
 
     /**

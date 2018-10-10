@@ -295,29 +295,28 @@ public class GherkinKeyWordProvider extends AbstractPageDataProvider implements 
 
 	@Override
 	public void step(gherkin.formatter.model.Step xStep) {
-		KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), "bdd", true, "GHERKIN", "", false, StepFailure.ERROR, false, null, null, null, 0, "", 0, "", null, null, null, null, false, false, null, null, null, null, null, null, false, null, null, false );
-		if ( xStep.getRows() != null && !xStep.getRows().isEmpty() )
-		{
-			step.setDataTable( DataTable.create( xStep.getRows() ) );
-		}
+  		KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), "bdd", true, "GHERKIN", "", false, StepFailure.ERROR, false, null, null, null, 0, "", 0, "", null, null, null, null, false, false, null, null, null, null, null, null, false, null, null, false );
+  		if ( xStep.getRows() != null && !xStep.getRows().isEmpty() )
+  		{
+  			step.setDataTable( DataTable.create( xStep.getRows() ) );
+  		}
         
-		
-        switch( currentSection )
-        {
-            case BACKGROUND:
-                backgroundSteps.add( step );
-                break;
-            case FEATURE:
-                break;
-            case OUTLINE:
-                if ( currentScenario.getDataDriver() != null )
-                    step.addParameter( new KeyWordParameter( ParameterType.STATIC, "bdd=" + currentScenario.getDataDriver(), null, null ) );
-                currentScenario.addStep( step );
-                break;
-            case SCENARIOS:
-                currentScenario.addStep( step );
-                break;
-        }
+      switch( currentSection )
+      {
+          case BACKGROUND:
+              backgroundSteps.add( step );
+              break;
+          case FEATURE:
+              break;
+          case OUTLINE:
+              if ( currentScenario.getDataDriver() != null )
+                  step.addParameter( new KeyWordParameter( ParameterType.STATIC, "bdd=" + currentScenario.getDataDriver(), null, null ) );
+              currentScenario.addStep( step );
+              break;
+          case SCENARIOS:
+              currentScenario.addStep( step );
+              break;
+      }
 		
 	}
 

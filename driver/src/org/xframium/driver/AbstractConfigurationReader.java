@@ -178,6 +178,7 @@ public abstract class AbstractConfigurationReader implements ConfigurationReader
                     KeyWordDriver.instance( xFID ).addTag( eN );
             }
             
+            KeyWordDriver.instance(xFID).removeStepListener( GlobalListener.class );
             if ( driverC.getBeforeTest() != null || driverC.getAfterTest() != null || driverC.getBeforeStep() != null || driverC.getAfterStep() != null )
             {
                 KeyWordDriver.instance( xFID ).addStepListener( new GlobalListener(driverC.getBeforeTest(), driverC.getAfterTest(), driverC.getBeforeStep(), driverC.getAfterStep(), xFID) );

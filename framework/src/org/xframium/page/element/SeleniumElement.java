@@ -49,6 +49,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.xframium.container.WindowContainer;
 import org.xframium.device.cloud.CloudRegistry;
 import org.xframium.device.cloud.action.CloudActionProvider;
 import org.xframium.device.factory.DeviceWebDriver;
@@ -1077,6 +1078,7 @@ public class SeleniumElement extends AbstractElement
           });
           break;
 
+          
         case VISIBLE:
           webElement = wait.until(new Function<WebDriver, WebElement>()
           {
@@ -1116,6 +1118,7 @@ public class SeleniumElement extends AbstractElement
           });
           break;
 
+          
         case CLICKABLE_THEN_CLICK:
           webElement = wait.until(new Function<WebDriver, WebElement>()
           {

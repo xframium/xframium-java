@@ -67,9 +67,6 @@ public class KWSExecWS extends AbstractKeyWordStep
     private static final String TOKEN_PWD = "password";
     private static final String TOKEN_HEADERS = "headers";
 
-    private static final String CONTENT_HTML = "html";
-    private static final String CONTENT_XML = "xml";
-    private static final String CONTENT_JSON = "json";
 
     private static final String INPUT = "input";
     private static final String OUTPUT = "output";

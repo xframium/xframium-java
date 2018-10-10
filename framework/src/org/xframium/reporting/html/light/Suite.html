@@ -16,16 +16,37 @@
 <link href="../assets/application.css" rel="stylesheet">
 <link href="../assets/angular-ui-tree.css" rel="stylesheet">
 </head>
-<body ng-controller="xTestController" data-ng-init="initialize()">
+<body ng-controller="xTestController" data-ng-init="initialize()" ng-cloak style="padding-top: 10px">
   <div class="container-fluid">
-    <div class="col-sm-12 content">
-      <div class="dashhead">
-        <span class="pull-right">{{suiteData.startTime.dateOnly}} at {{suiteData.startTime.timeOnly}}</span>
-        <h6 class="dashhead-subtitle text-muted">xFramium 1.0.18 (Aura)</h6>
-        <h3 class="dashhead-title">{{suiteData.suiteName}}</h3>
+    <div class="row">
+      <div class="col-sm-12 content">
+        <div class="dashhead">
+          <div class="row">
+            <div class="col-sm-4 text-left">xFramium 1.0.18 (Aura)</div>
+            <div class="col-sm-4 text-center">
+              <img src="http://xframium.org/partner/mll.png" height="32" />
+            </div>
+            <div class="col-sm-4 text-right">
+              <span class="text-muted">Executed on {{suiteData.startTime.dateOnly}} at {{suiteData.startTime.timeOnly}}</b>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 text-left">
+              <h3>
+                {{suiteData.suiteName}}
+              </h3>
+            </div>
+          </div>
+          <div class="row" style="margin-bottom: 10px">
+            <div class="col-sm-12 text-right">
+              <a hRef="../index.html" class="pull-right" style="margin-right: 10px"><span>Execution History</span></a>
+            </div>
+          </div>
+        </div>
       </div>
-      <a hRef="../index.html" class="pull-right" style="margin-bottom: 10px; margin-right: 10px"><span>Execution History</span></a>
-      
+    </div>
+
       <div class="row" style="margin-top: 20px"  ng-if="suiteData.executionSummary == null || suiteData.executionSummary.length == 0">
         <div class="col-sm-12">
           <h2>Invalid Configuration</h2>

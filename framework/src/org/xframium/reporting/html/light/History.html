@@ -15,16 +15,28 @@
 <link href="./assets/application.css" rel="stylesheet">
 <link href="./assets/angular-ui-tree.css" rel="stylesheet">
 </head>
-<body ng-controller="xTestController" data-ng-init="initialize()">
+<body ng-controller="xTestController" data-ng-init="initialize()" ng-cloak style="padding-top: 10px">
     <div class="container-fluid">
+      <div class="row">
         <div class="col-sm-12 content">
-            <div class="dashhead">
-                <span class="pull-right text-muted">{{testData[0].pageData.startTime.dateOnly}} at {{testData[0].pageData.startTime.timeOnly}}</span>
-                <h6 class="dashhead-subtitle">xFramium 1.0.18 (Aura)</h6>
-                <h3 class="dashhead-title">{{testData[0].pageData.suiteName}}</h3>
-                
+          <div class="dashhead">
+            <div class="row">
+              <div class="col-sm-4 text-left">xFramium 1.0.18 (Aura)</div>
+              <div class="col-sm-4 text-center">
+                <img src="http://xframium.org/partner/mll.png" height="32" />
+              </div>
+
             </div>
+            <div class="row">
+              <div class="col-sm-12 text-left">
+                <h3>
+                  {{testData[0].pageData.suiteName}}
+                </h3>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
         <div class="row">
             <div class="col-lg-2 col-sm-1"></div>
             <div class="col-lg-8 col-sm-10" ng-if="envLabels.length > 2">

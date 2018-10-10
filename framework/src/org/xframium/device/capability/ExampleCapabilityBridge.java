@@ -8,6 +8,9 @@ public class ExampleCapabilityBridge extends AbstractCapabilityBridge
 	@Override
 	protected void _addCapabilities(DesiredCapabilities dC) 
 	{
+	  //
+	  //Set an example capability
+	  //
 		dC.setCapability( "xFramium Version", Initializable.VERSION );
 	}
 }

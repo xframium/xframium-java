@@ -29,18 +29,22 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xframium.exception.ScriptConfigurationException;
 import org.xframium.exception.ScriptException;
+
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
@@ -117,7 +121,9 @@ public class WebServiceClientUtil
         public CallDetails( String url, String method, String media_type, String type, String username, String password, String payload, boolean valid )
         {
             super();
-            this.url = url;
+            this.url = url.replaceAll( "&amp;", "&" ).replaceAll( "&gt;", ">" ).replaceAll( "&lt;", "<" );
+            
+            System.out.println( "UYRL: " + url );
             this.method = method;
             this.media_type = media_type;
             this.type = type;
@@ -174,7 +180,7 @@ public class WebServiceClientUtil
 
         public void setUrl( String url )
         {
-            this.url = url;
+          this.url = url.replaceAll( "&amp;", "&" ).replaceAll( "&gt;", ">" ).replaceAll( "&lt;", "<" );
         }
 
         public void setMethod( String method )
@@ -479,11 +485,16 @@ public class WebServiceClientUtil
         return rtn;
     }
 
+    
     private static String buildURL( CallDetails callDetails )
     {
         StringBuilder rtn = new StringBuilder();
 
+        callDetails.url = callDetails.url.replaceAll( "&amp;", "&" );
+        //callDetails.url = callDetails.url.replaceAll( "&gt;", ">" );
+        //callDetails.url = callDetails.url.replaceAll( "&lt;", "<" );
         rtn.append( callDetails.url );
+        
 
         if ( callDetails.parameters.size() > 0 )
         {
@@ -542,7 +553,10 @@ public class WebServiceClientUtil
             // (https://github.com/jayway/JsonPath) expressions
             //
 
+         
+          
             DocumentContext ctx = JsonPath.parse( result.payload );
+             
 
             Iterator<ResponceVariable> params = responceDetails.parameters.iterator();
             while ( params.hasNext() )
@@ -553,9 +567,9 @@ public class WebServiceClientUtil
 
                 contextMap.put( param.name, value );*/
                 
-                JSONArray value = (JSONArray)ctx.read( param.path );
+                ctx.read( param.path, String.class );
                 
-                contextMap.put( param.name, value.toJSONString() );
+                contextMap.put( param.name, ctx.read( param.path, String.class ) );
             }
         }
     }

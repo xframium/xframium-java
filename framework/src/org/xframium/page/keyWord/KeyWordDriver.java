@@ -221,6 +221,19 @@ public class KeyWordDriver
 
         stepListenerList.add( stepListener );
     }
+    
+    public void removeStepListener( Class listenerClass )
+    {
+      List<KeyWordListener> removeList = new ArrayList<KeyWordListener>( 10 );
+        for ( KeyWordListener l : stepListenerList )
+        {
+          if ( l.getClass().isAssignableFrom( listenerClass ) )
+            removeList.add( l );
+        }
+        
+        for ( KeyWordListener l : removeList )
+          stepListenerList.remove( l );
+    }
 
     public void removeStepListener( KeyWordListener stepListener )
     {

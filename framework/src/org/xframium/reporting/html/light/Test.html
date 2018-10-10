@@ -17,356 +17,299 @@
 <link href="../../../assets/angular-ui-tree.css" rel="stylesheet">
 <style>
 iframe {
-    background-color: #eaeae1;
+	background-color: #eaeae1;
 }
 
 .scrollable {
-    overflow: auto;
-    overflow-x: hidden;
+	overflow: auto;
+	overflow-x: hidden;
 }
 
 .list-group-item {
-    padding-top: 5px;
-    padding-bottom: 5px
+	padding-top: 5px;
+	padding-bottom: 5px
 }
 
 .panel-heading {
-    padding: 8px
+	padding: 8px
 }
 
 .list-group {
-    margin-bottom: 0px
+	margin-bottom: 0px
 }
 
 .filteredStep {
-    text-decoration: line-through;
+	text-decoration: line-through;
 }
 </style>
 </head>
 <body ng-controller="xTestController" data-ng-init="initialize()" ng-cloak style="padding-top: 10px">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-12 content">
-            <div class="dashhead">
-                <span class="pull-right text-muted">
-                    Started {{testData.startTime.dateOnly}} at {{testData.startTime.timeOnly}} and ran for
-                    <b>{{formattedDuration}}</b>
-                </span>
-                <h6 class="dashhead-subtitle">xFramium 1.0.18 (Aura)</h6>
-                <h3 class="dashhead-title">{{testData.test.name}}<span class="glyphicon glyphicon-ok" ng-class="{'glyphicon-ok text-success': testData.testStatus=='PASSED', 'glyphicon-remove text-danger': testData.testStatus!='PASSED' }" style="margin-left: 15px"></span><sup style="margin-left: 5px" ng-if="testData.iterationCount > 0">x {{(+testData.iterationCount+1)}}</sup></h3>
-                <h6>
-                    {{testData.device.environment}} on {{testData.cloudDescriptor.hostName}} ({{testData.cloudDescriptor.provider.name}})
-                    <a hRef="../../index.html" class="pull-right" style="margin-right: 10px">
-                        <span>Test Suite Execution Detail</span>
-                    </a>
-                </h6>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12 content">
+        <div class="dashhead">
+          <div class="row">
+            <div class="col-sm-4 text-left">xFramium 1.0.18 (Aura)</div>
+            <div class="col-sm-4 text-center">
+              <img src="http://xframium.org/partner/mll.png" height="32" />
             </div>
-        </div>
-     </div>
-     {{testData.executionParameters[ 'TIMING_HTML_FILE' ] == null}}
-     <div class="row" style="max-height: 100%">
-        <div class="col-sm-6 col-md-5 col-lg-4">
-            <div class="scrollable panel panel-primary" style="margin-bottom: 0px; margin-top: 5px;">
-                <div class="panel-heading">
-                    <div class="input-group" >
-                        <span class="input-group-addon" id="basic-addon2">Test Details</span>
-                        <input type="text" class="form-control" placeholder="Step Filter" aria-describedby="basic-addon2" ng-model="filterBy">
-                        <span class="input-group-addon" id="basic-addon2" style="padding-left: 3px; padding-right: 3px"><a hRef="#" class="glyphicon glyphicon-eye-close text-info" ng-click="filterBy=''" uib-tooltip="Clear Filter"></a></span>
-                        <span class="input-group-addon" id="basic-addon2" style="padding-left: 3px; padding-right: 3px"><a hRef="#" class="glyphicon glyphicon-ok text-success" ng-click="filterBy='SUCCESS'" uib-tooltip="Successful Steps"></a></span>
-                        <span class="input-group-addon" id="basic-addon2" style="padding-left: 3px; padding-right: 3px"><a hRef="#" class="glyphicon glyphicon-warning-sign text-warning" ng-click="filterBy='IGNORED'" uib-tooltip="Ignored Steps"></a></span>
-                        <span class="input-group-addon" id="basic-addon2" style="padding-left: 3px; padding-right: 3px"><a hRef="#" class="glyphicon glyphicon-remove text-danger" ng-click="filterBy='FAILURE'" uib-tooltip="Failed Steps"></a></span>
-                    </div>
-                </div>
-                <div data-drag-enabled="false" ui-tree id="tree-root" class="panel-body" style="padding-left: 5px;">
-                    <ol style="cursor: default" ui-tree-nodes ng-model="rootTree">
-                        <li ui-tree-node style="cursor: default" ng-repeat="rootNode in rootTree" collapsed="rootNode == 'Steps' ? false : true">
-                            <div style="cursor: default" ui-tree-handle class="tree-node tree-node-content">
-                                <a style="cursor: default" ng-click="toggle(this)" ng-if="rootNode != 'Environment' && rootNode != 'Performance' && rootNode != 'Imaging Analysis'">
-                                    <span class="glyphicon text-default" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }" style="margin-right: 3px; font-size: x-small;"></span>
-                                </a>
-                                <span style="cursor: default; margin-left: 5px" ng-if="rootNode != 'Environment' && rootNode != 'Performance' && rootNode != 'Imaging Analysis'">{{rootNode}}</span>
-                                <a style="cursor: default; margin-left: 23px" ng-click="selectElement( 'Environment', null )" ng-if="rootNode == 'Environment'">{{rootNode}}</a>
-                                <a style="cursor: default; margin-left: 23px" ng-click="selectElement( 'Performance', null )" ng-if="rootNode == 'Performance'" >{{rootNode}}</a>
-                                <a style="cursor: default; margin-left: 23px" ng-click="selectElement( 'Imaging Analysis', null )" ng-if="rootNode == 'Imaging Analysis'">{{rootNode}}</a>
-                            </div>
-                            <ol ui-tree-nodes ng-model="testData.stepList" ng-class="{hidden: collapsed}" ng-if="rootNode == 'Steps'">
-                                <li ui-tree-node ng-repeat="stepDef in testData.stepList | filter:filterBy"  ng-include="'step.html'" collapsed="true"></li>
-                            </ol>
-                            <ol ui-tree-nodes ng-model="links" ng-if="rootNode == 'Logs'" ng-class="{hidden: collapsed}" style="cursor: default; font-size: 8pt">
-                                <li ui-tree-node collapsed="true" ng-repeat="log in logTypes">
-                                    <div data-nodrag ui-tree-handle class="tree-node tree-node-content" style="cursor: default" collapsed="true">
-                                        <img src="../../../assets/referenceIcon.png" width="16" style="margin-right: 2px" />
-                                        <a hRef="#" ng-click="selectElement( log + ' Log', null )" style="margin-left: 15px" class="text-primary">
-                                            <span data-nodrag style="cursor: default;">{{log}}</span>
-                                        </a>
-                                    </div>
-                                </li>
-                            </ol>
-                            <ol ui-tree-nodes ng-model="links" ng-class="{hidden: collapsed}" ng-if="rootNode == 'Links'" style="cursor: default; font-size: 8pt">
-                                <li ui-tree-node ng-repeat="(key, value) in links" ng-if="testData.executionParameters[ key ] != null">
-                                    <div data-nodrag ui-tree-handle class="tree-node tree-node-content linkStep" style="cursor: default;">
-                                        <img src="../../../assets/LINK_TEXT.png" width="16" style="margin-right: 2px" />
-                                        <a ng-if="testData.executionParameters[ key + '_FILE' ] != null" target="_blank" hRef="{{testData.executionParameters[ key + '_FILE' ]}}" style="margin-left: 15px" class="text-primary">
-                                            <span data-nodrag style="cursor: default;">{{value}}</span>
-                                        </a>
-                                        <a ng-if="testData.executionParameters[ key + '_FILE' ] == null" target="_blank" hRef="{{testData.executionParameters[ key ]}}" style="margin-left: 15px" class="text-primary">
-                                            <span data-nodrag style="cursor: default;">{{value}}</span>
-                                        </a>
-                                    </div>
-                                </li>
-                            </ol>
-                            <ol ui-tree-nodes ng-model="links" ng-if="rootNode == 'Data'" ng-class="{hidden: collapsed}">
-                                <li ui-tree-node ng-repeat="(key,value) in testData.dataMap" collapsed="true">
-                                    <div data-nodrag ui-tree-handle class="tree-node tree-node-content linkStep" style="cursor: default; font-size: 8pt">
-                                        <img src="../../../assets/databaseIcon.png" width="16" style="margin-right: 2px" />
-                                        <a ng-if="!angular.equals( {}, value.recordMap )" data-nodrag ng-click="toggle(this)" style="cursor: default">
-                                            <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }" style="cursor: default"></span>
-                                        </a>
-                                        <span data-nodrag style="cursor: default;">
-                                            {{value.recordName}}
-                                            <span style="font-weight: normal;">extracted from</span>
-                                            {{key}}
-                                        </span>
-                                    </div>
-                                    <ol data-nodrag ui-tree-nodes="" ng-model="value.recordMap" ng-if="!angular.equals( {}, value.recordMap )" ng-class="{hidden: collapsed}">
-                                        <li data-nodrag ui-tree-node ng-repeat="(key2, value2) in value.recordMap" style="cursor: default; font-size: 8pt">
-                                            <div data-nodrag ui-tree-handle class="tree-node tree-node-content" style="cursor: default; margin-left: 15px">
-                                                <img src="../../../assets/fieldTitleIcon.png" width="16" style="margin-right: 2px" />
-                                                <span data-nodrag style="cursor: default;">{{key2}}</span>
-                                                <span style="font-weight: normal;"> = </span>
-                                                <span data-nodrag style="cursor: default;">{{value2}}</span>
-                                            </div>
-                                        </li>
-                                    </ol>
-                                </li>
-                            </ol>
-                            <ol ui-tree-nodes ng-model="links" ng-if="rootNode == 'Capabilities'" ng-class="{hidden: collapsed}" style="cursor: default; font-size: 8pt">
-                                <li ui-tree-node ng-repeat="cap in capTypes" collapsed="true">
-                                    <div data-nodrag ui-tree-handle class="tree-node tree-node-content" style="cursor: default">
-                                        <img src="../../../assets/testIcon.png" width="16" style="margin-right: 2px" />
-                                        <a hRef="#" ng-click="selectElement( cap + ' Capabilities', null )" data-nodrag style="cursor: default; margin-left: 15px">{{cap}}</a>
-                                    </div>
-                                </li>
-                            </ol>
-                            <ol ui-tree-nodes ng-model="links" ng-if="rootNode == 'Environment'" ng-class="{hidden: collapsed}" style="cursor: default; font-size: 8pt" ng-model="testData.sPMap">
-                                <li ui-tree-node ng-repeat="(key,value) in testData.sPMap">
-                                    <div data-nodrag ui-tree-handle class="tree-node tree-node-content linkStep" style="cursor: default">
-                                        <img src="../../../assets/env.png" width="16" style="margin-right: 2px" />
-                                        <span data-nodrag style="cursor: default;">{{key}} = {{value}}</span>
-                                    </div>
-                                </li>
-                            </ol>
-                            <ol ui-tree-nodes ng-model="links" ng-if="rootNode == 'Pages'" ng-class="{hidden: collapsed}" style="cursor: default; font-size: 8pt">
-                                <li ui-tree-node ng-repeat="(key,value) in testData.pageMap">
-                                    <div data-nodrag ui-tree-handle class="tree-node tree-node-content" style="cursor: default">
-                                        <img src="../../../assets/pageIcon.png" width="16" style="margin-right: 2px" />
-                                        <span data-nodrag style="margin-left: 15px">{{key}}</span>
-                                    </div>
-                                </li>
-                            </ol>
-                        </li>
-                    </ol>
-                </div>
+            <div class="col-sm-4 text-right">
+              <span class="text-muted"> Started {{testData.startTime.dateOnly}} at {{testData.startTime.timeOnly}} and ran for <b>{{formattedDuration}}</b>
+              </span>
             </div>
-        </div>
-        <div class="col-sm-6 col-md-7 col-lg-8 content">
-            <div class="panel panel-{{selectedState}}" style="margin-bottom: 0px; margin-top: 5px">
-                <div class="panel-heading">
-                    <h3 class="panel-title" style="color: {{selectedState== 'primary'? 'white': 'black'">{{selectedContext}}</h3>
-                </div>
-                <div class="panel-body">
-                    <iframe ng-if="selectedContext=='Device Log'" src="{{testData.executionParameters[ 'DEVICE_LOG_FILE' ]}}" frameborder="0" height="1024" width="100%"></iframe>
-                    <iframe ng-if="selectedContext=='Console Log'" src="{{testData.executionParameters[ 'CONSOLE_LOG_FILE' ]}}" frameborder="0" height="1024" width="100%"></iframe>
-                    <iframe ng-if="selectedContext=='Performance'" src="{{testData.executionParameters[ 'TIMING_HTML_FILE' ] == null ? '../../../assets/perf.html' : testData.executionParameters[ 'TIMING_HTML_FILE' ]}}" frameborder="0" height="1024" width="100%"></iframe>
-                    <span ng-if="selectedContext=='Derived Capabilities'">
-                        <ol class="list-group">
-                            <li class="list-group-item" ng-repeat="(key,value) in testData.dC">
-                                <b>{{key}}: </b>
-                                {{value}}
-                            </li>
-                        </ol>
-                    </span>
-                    <span ng-if="selectedContext=='Supplied Capabilities'">
-                        <ol class="list-group">
-                            <li class="list-group-item" ng-repeat="(key,value) in testData.c">
-                                <b>{{key}}: </b>
-                                {{value}}
-                            </li>
-                        </ol>
-                    </span>
-                    <span ng-if="selectedContext=='Environment'">
-                        <ol class="list-group">
-                            <li class="list-group-item" ng-repeat="(key,value) in testData.sPMap">
-                                <b>{{key}}: </b>
-                                {{value}}
-                            </li>
-                        </ol>
-                    </span>
-                    <span ng-if="selectedContext=='Step'">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <a hRef="{{selectedElement.step.kwHelp}}" target="_blank">
-                                    <b>{{selectedElement.step.kw}}</b>
-                                </a>
-                                <span class="pull-right">{{selectedElement.step.category}}</span>
-                            </div>
-                            <div class="col-sm-12" style="margin-left: 15px; margin-bottom: 10px">
-                                <i>{{selectedElement.step.kwDescription}}</i>
-                            </div>
-                        </div>
-                        
-                        <div class="row" ng-if="selectedElement.message != null && selectedElement.message != '' && selectedElement.message != 'null'">
-                            <div class="col-sm-12">
-                                <div class="alert alert-{{selectedState}}" style="color: black">
-                                    <span ng-if="selectedElement.step.kw=='ACCESSIBILITY'">
-                                        <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px" ng-repeat="a in selectedElement.accessibility">
-                                            <div class="panel-heading">
-                                                <h3 class="panel-title" style="color: black"><a hRef="{{a.helpUrl}}" target="_blank">{{a.description}}</a> ({{a.nodes.length}})</h3>
-                                            </div>
-                                            <div class="panel-body">
-                                                <ul class="list-group">
-                                                    <li class="list-group-item" ng-repeat="n in a.nodes">
-                                                      <code>{{n.html}}</code>
-                                                    </li>
-                                                </ul> 
-                                            </div>
-                                        </div>
-                                    </span>
-                                    <span ng-if="selectedElement.step.kw!='ACCESSIBILITY'">{{selectedElement.message}}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-{{selectedElement.executionParameter.SCREENSHOT == null ? 12 : 6}}">
-                                <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px" ng-if="selectedElement.step.kw=='REPORT'">
-                                    <div class="panel-body">
-                                        <ul class="list-group">
-                                            <li class="list-group-item" ng-repeat="p in selectedElement.parameterList">
-                                                {{p}}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title" style="color: black">Step Information</h3>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div ng-if="selectedElement.step.description != 'null' && selectedElement.step.description != ''"></div>
-                                        <ul class="list-group">
-                                            <li class="list-group-item" ng-if="selectedElement.step.orMapping==true && selectedElement.step.siteName != 'null' && selectedElement.step.siteName != null">
-                                                Site Name:
-                                                <b>{{selectedElement.step.siteName}}</b>
-                                            </li>
-                                            <li class="list-group-item" ng-if="selectedElement.step.orMapping==true && selectedElement.step.pageName != 'null' && selectedElement.step.pageName != null">
-                                                Page Name:
-                                                <b>{{selectedElement.step.pageName}}</b>
-                                            </li>
-                                            <li class="list-group-item" ng-if="selectedElement.step.name != null && selectedElement.step.name != 'null'">
-                                                Element Name:
-                                                <b>{{selectedElement.step.name}}</b>
-                                            </li>
-                                            <li class="list-group-item">
-                                                Inverted:
-                                                <b>{{selectedElement.step.inverse}}</b>
-                                            </li>
-                                            <li class="list-group-item" ng-if="selectedElement.step.sFailure != 'null'">
-                                                Failure Mode:
-                                                <b>{{selectedElement.step.sFailure}}</b>
-                                            </li>
-                                            <li class="list-group-item" ng-if="selectedElement.step.validation != 'null'">
-                                                Validation:
-                                                <b>{{selectedElement.step.validation}} ({{selectedElement.step.validationType}})</b>
-                                            </li>
-                                            <li class="list-group-item" ng-if="selectedElement.step.threshold > 0">
-                                                Threshold:
-                                                <b>{{selectedElement.step.threshold}}</b>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="panel-body" ng-if="selectedElement.locatorResult != null && selectedElement.locatorResult != 'null' && selectedElement.locatorResult.length > 0">
-                                        <ul class="list-group">
-                                            <li class="list-group-item" ng-class="{'list-group-item-success' : locator.success == true, 'list-group-item-danger' : locator.success == false}" ng-repeat="locator in selectedElement.locatorResult">
-                                                {{locator.locator}}
-                                                <span class="badge">{{locator.time}} ms</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <span ng-if="selectedElement.parameterList.length > 0 && selectedElement.step.kw!='REPORT'">
-                                    <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title" style="color: black">Parameters</h3>
-                                        </div>
-                                        <div class="panel-body">
-                                            <ul class="list-group">
-                                                <li class="list-group-item" ng-repeat="p in selectedElement.step.parameterList">
-                                                    <span ng-if="p.type == 'STATIC'">{{p.value}}</span>
-                                                    <span ng-if="p.type != 'STATIC'">{{selectedElement.parameterList[ $index ]}} as ({{p.value}})</span>
-                                                    <sup ng-if="p.name != 'null' && p.name != null && p.name != ''">({{p.name}})</sup>
-                                                    <span class="badge">{{p.type}}</span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </span>
-                                <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px" ng-if="selectedElement.executionParameter.CONTEXT != null">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title" style="color: black">Result</h3>
-                                    </div>
-                                    <div class="panel-body">
-                                        <ul class="list-group">
-                                            <li class="list-group-item" ng-repeat="(key,value) in selectedElement.executionParameter.CONTEXT">
-                                                {{key}}:
-                                                <b>{{value}}</b>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px" ng-if="hasExecutionParameter( selectedElement, 'XML' ) || hasExecutionParameter( selectedElement, 'HTML' )">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title" style="color: black">Source</h3>
-                                    </div>
-                                    <div class="panel-body">
-                                        <ul class="nav nav-pills nav-justified">
-                                            <li ng-if="hasExecutionParameter( selectedElement, 'XML' )" role="presentation">
-                                                <div class="col-md-2" stype="text-align: center">
-                                                    <a hRef="{{selectedElement.executionParameter.XML}}" class="btn btn-info" type="button" target="_blank">Raw Source</a>
-                                                </div>
-                                            </li>
-                                            <li ng-if="hasExecutionParameter( selectedElement, 'HTML' )" role="presentation">
-                                                <div class="col-md-2" stype="text-align: center">
-                                                    <a hRef="{{selectedElement.executionParameter.HTML}}" class="btn btn-primary" type="button" target="_blank">Formatted Source</a>
-                                                </div>
-                                            </li>
-                                            <li ng-if="hasExecutionParameter( selectedElement, 'XPATH' )" role="presentation">
-                                                <div class="col-md-2" stype="text-align: center">
-                                                    <a hRef="{{selectedElement.executionParameter.XPATH}}" class="btn btn-warning" type="button" target="_blank">Analyze</a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6" ng-if="selectedElement.executionParameter.SCREENSHOT != null">
-                                <a hRef="{{selectedElement.executionParameter.SCREENSHOT}}" target="_blank">
-                                    <img width="100%" src="{{selectedElement.executionParameter.SCREENSHOT}}" class="img-rounded" />
-                                </a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <span class="pull-right">
-                                    <i>Started at <b>{{selectedElement.startTime.timeOnly}}</b> then ran for <b>{{selectedElement.endTime.raw - selectedElement.startTime.raw}} ms</b> and ended at <b>{{selectedElement.endTime.timeOnly}}</b></i>
-                                </span>
-                            </div>
-                        </div>
-                    </span>
-                </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 text-left">
+              <h3>
+                {{testData.test.name}}<span class="glyphicon glyphicon-ok" ng-class="{'glyphicon-ok text-success': testData.testStatus=='PASSED', 'glyphicon-remove text-danger': testData.testStatus!='PASSED' }" style="margin-left: 15px"></span>
+              </h3>
+              <sup style="margin-left: 5px" ng-if="testData.iterationCount > 0">x {{(+testData.iterationCount+1)}}</sup>
             </div>
+          </div>
+          <div class="row" style="margin-bottom: 10px">
+            <div class="col-sm-6 text-left">{{testData.device.environment}} on {{testData.cloudDescriptor.hostName}} ({{testData.cloudDescriptor.provider.name}})</div>
+            <div class="col-sm-6 text-right">
+              <a hRef="../../index.html" class="pull-right" style="margin-right: 10px"><span>Test Suite Execution Detail</span></a>
+            </div>
+          </div>
         </div>
-     </div>
+      </div>
     </div>
+    <div class="row" style="max-height: 100%">
+      <div class="col-sm-6 col-md-5 col-lg-4">
+        <div class="scrollable panel panel-primary" style="margin-bottom: 0px; margin-top: 5px;">
+          <div class="panel-heading">
+            <div class="input-group">
+              <span class="input-group-addon" id="basic-addon2">Test Details</span> <input type="text" class="form-control" placeholder="Step Filter" aria-describedby="basic-addon2" ng-model="filterBy"> <span class="input-group-addon" id="basic-addon2" style="padding-left: 3px; padding-right: 3px"><a hRef="#" class="glyphicon glyphicon-eye-close text-info" ng-click="filterBy=''" uib-tooltip="Clear Filter"></a></span> <span class="input-group-addon" id="basic-addon2"
+                style="padding-left: 3px; padding-right: 3px"><a hRef="#" class="glyphicon glyphicon-ok text-success" ng-click="filterBy='SUCCESS'" uib-tooltip="Successful Steps"></a></span> <span class="input-group-addon" id="basic-addon2" style="padding-left: 3px; padding-right: 3px"><a hRef="#" class="glyphicon glyphicon-warning-sign text-warning" ng-click="filterBy='IGNORED'" uib-tooltip="Ignored Steps"></a></span> <span class="input-group-addon" id="basic-addon2"
+                style="padding-left: 3px; padding-right: 3px"><a hRef="#" class="glyphicon glyphicon-remove text-danger" ng-click="filterBy='FAILURE'" uib-tooltip="Failed Steps"></a></span>
+            </div>
+          </div>
+          <div data-drag-enabled="false" ui-tree id="tree-root" class="panel-body" style="padding-left: 5px;">
+            <ol style="cursor: default" ui-tree-nodes ng-model="rootTree">
+              <li ui-tree-node style="cursor: default" ng-repeat="rootNode in rootTree" collapsed="rootNode == 'Steps' ? false : true">
+                <div style="cursor: default" ui-tree-handle class="tree-node tree-node-content">
+                  <a style="cursor: default" ng-click="toggle(this)" ng-if="rootNode != 'Environment' && rootNode != 'Performance' && rootNode != 'Imaging Analysis'"> <span class="glyphicon text-default" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }" style="margin-right: 3px; font-size: x-small;"></span>
+                  </a> <span style="cursor: default; margin-left: 5px" ng-if="rootNode != 'Environment' && rootNode != 'Performance' && rootNode != 'Imaging Analysis'">{{rootNode}}</span> <a style="cursor: default; margin-left: 23px" ng-click="selectElement( 'Environment', null )" ng-if="rootNode == 'Environment'">{{rootNode}}</a> <a style="cursor: default; margin-left: 23px" ng-click="selectElement( 'Performance', null )" ng-if="rootNode == 'Performance'">{{rootNode}}</a> <a
+                    style="cursor: default; margin-left: 23px" ng-click="selectElement( 'Imaging Analysis', null )" ng-if="rootNode == 'Imaging Analysis'">{{rootNode}}</a>
+                </div>
+                <ol ui-tree-nodes ng-model="testData.stepList" ng-class="{hidden: collapsed}" ng-if="rootNode == 'Steps'">
+                  <li ui-tree-node ng-repeat="stepDef in testData.stepList | filter:filterBy" ng-include="'step.html'" collapsed="true"></li>
+                </ol>
+                <ol ui-tree-nodes ng-model="links" ng-if="rootNode == 'Logs'" ng-class="{hidden: collapsed}" style="cursor: default; font-size: 8pt">
+                  <li ui-tree-node collapsed="true" ng-repeat="log in logTypes">
+                    <div data-nodrag ui-tree-handle class="tree-node tree-node-content" style="cursor: default" collapsed="true">
+                      <img src="../../../assets/referenceIcon.png" width="16" style="margin-right: 2px" /> <a hRef="#" ng-click="selectElement( log + ' Log', null )" style="margin-left: 15px" class="text-primary"> <span data-nodrag style="cursor: default;">{{log}}</span>
+                      </a>
+                    </div>
+                  </li>
+                </ol>
+                <ol ui-tree-nodes ng-model="links" ng-class="{hidden: collapsed}" ng-if="rootNode == 'Links'" style="cursor: default; font-size: 8pt">
+                  <li ui-tree-node ng-repeat="(key, value) in links" ng-if="testData.executionParameters[ key ] != null">
+                    <div data-nodrag ui-tree-handle class="tree-node tree-node-content linkStep" style="cursor: default;">
+                      <img src="../../../assets/LINK_TEXT.png" width="16" style="margin-right: 2px" /> <a ng-if="testData.executionParameters[ key + '_FILE' ] != null" target="_blank" hRef="{{testData.executionParameters[ key + '_FILE' ]}}" style="margin-left: 15px" class="text-primary"> <span data-nodrag style="cursor: default;">{{value}}</span>
+                      </a> <a ng-if="testData.executionParameters[ key + '_FILE' ] == null" target="_blank" hRef="{{testData.executionParameters[ key ]}}" style="margin-left: 15px" class="text-primary"> <span data-nodrag style="cursor: default;">{{value}}</span>
+                      </a>
+                    </div>
+                  </li>
+                </ol>
+                <ol ui-tree-nodes ng-model="links" ng-if="rootNode == 'Data'" ng-class="{hidden: collapsed}">
+                  <li ui-tree-node ng-repeat="(key,value) in testData.dataMap" collapsed="true">
+                    <div data-nodrag ui-tree-handle class="tree-node tree-node-content linkStep" style="cursor: default; font-size: 8pt">
+                      <img src="../../../assets/databaseIcon.png" width="16" style="margin-right: 2px" /> <a ng-if="!angular.equals( {}, value.recordMap )" data-nodrag ng-click="toggle(this)" style="cursor: default"> <span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed }" style="cursor: default"></span>
+                      </a> <span data-nodrag style="cursor: default;"> {{value.recordName}} <span style="font-weight: normal;">extracted from</span> {{key}}
+                      </span>
+                    </div>
+                    <ol data-nodrag ui-tree-nodes="" ng-model="value.recordMap" ng-if="!angular.equals( {}, value.recordMap )" ng-class="{hidden: collapsed}">
+                      <li data-nodrag ui-tree-node ng-repeat="(key2, value2) in value.recordMap" style="cursor: default; font-size: 8pt">
+                        <div data-nodrag ui-tree-handle class="tree-node tree-node-content" style="cursor: default; margin-left: 15px">
+                          <img src="../../../assets/fieldTitleIcon.png" width="16" style="margin-right: 2px" /> <span data-nodrag style="cursor: default;">{{key2}}</span> <span style="font-weight: normal;"> = </span> <span data-nodrag style="cursor: default;">{{value2}}</span>
+                        </div>
+                      </li>
+                    </ol>
+                  </li>
+                </ol>
+                <ol ui-tree-nodes ng-model="links" ng-if="rootNode == 'Capabilities'" ng-class="{hidden: collapsed}" style="cursor: default; font-size: 8pt">
+                  <li ui-tree-node ng-repeat="cap in capTypes" collapsed="true">
+                    <div data-nodrag ui-tree-handle class="tree-node tree-node-content" style="cursor: default">
+                      <img src="../../../assets/testIcon.png" width="16" style="margin-right: 2px" /> <a hRef="#" ng-click="selectElement( cap + ' Capabilities', null )" data-nodrag style="cursor: default; margin-left: 15px">{{cap}}</a>
+                    </div>
+                  </li>
+                </ol>
+                <ol ui-tree-nodes ng-model="links" ng-if="rootNode == 'Environment'" ng-class="{hidden: collapsed}" style="cursor: default; font-size: 8pt" ng-model="testData.sPMap">
+                  <li ui-tree-node ng-repeat="(key,value) in testData.sPMap">
+                    <div data-nodrag ui-tree-handle class="tree-node tree-node-content linkStep" style="cursor: default">
+                      <img src="../../../assets/env.png" width="16" style="margin-right: 2px" /> <span data-nodrag style="cursor: default;">{{key}} = {{value}}</span>
+                    </div>
+                  </li>
+                </ol>
+                <ol ui-tree-nodes ng-model="links" ng-if="rootNode == 'Pages'" ng-class="{hidden: collapsed}" style="cursor: default; font-size: 8pt">
+                  <li ui-tree-node ng-repeat="(key,value) in testData.pageMap">
+                    <div data-nodrag ui-tree-handle class="tree-node tree-node-content" style="cursor: default">
+                      <img src="../../../assets/pageIcon.png" width="16" style="margin-right: 2px" /> <span data-nodrag style="margin-left: 15px">{{key}}</span>
+                    </div>
+                  </li>
+                </ol>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-7 col-lg-8 content">
+        <div class="panel panel-{{selectedState}}" style="margin-bottom: 0px; margin-top: 5px">
+          <div class="panel-heading">
+            <h3 class="panel-title" style="color: {{selectedState== 'primary'? 'white': 'black'">{{selectedContext}}</h3>
+          </div>
+          <div class="panel-body">
+            <iframe ng-if="selectedContext=='Device Log'" src="{{testData.executionParameters[ 'DEVICE_LOG_FILE' ]}}" frameborder="0" height="1024" width="100%"></iframe>
+            <iframe ng-if="selectedContext=='Console Log'" src="{{testData.executionParameters[ 'CONSOLE_LOG_FILE' ]}}" frameborder="0" height="1024" width="100%"></iframe>
+            <iframe ng-if="selectedContext=='Performance'" src="{{testData.executionParameters[ 'TIMING_HTML_FILE' ] == null ? '../../../assets/perf.html' : testData.executionParameters[ 'TIMING_HTML_FILE' ]}}" frameborder="0" height="1024" width="100%"></iframe>
+            <span ng-if="selectedContext=='Derived Capabilities'">
+              <ol class="list-group">
+                <li class="list-group-item" ng-repeat="(key,value) in testData.dC"><b>{{key}}: </b> {{value}}</li>
+              </ol>
+            </span> <span ng-if="selectedContext=='Supplied Capabilities'">
+              <ol class="list-group">
+                <li class="list-group-item" ng-repeat="(key,value) in testData.c"><b>{{key}}: </b> {{value}}</li>
+              </ol>
+            </span> <span ng-if="selectedContext=='Environment'">
+              <ol class="list-group">
+                <li class="list-group-item" ng-repeat="(key,value) in testData.sPMap"><b>{{key}}: </b> {{value}}</li>
+              </ol>
+            </span> <span ng-if="selectedContext=='Step'">
+              <div class="row">
+                <div class="col-sm-12">
+                  <a hRef="{{selectedElement.step.kwHelp}}" target="_blank"> <b>{{selectedElement.step.kw}}</b>
+                  </a> <span class="pull-right">{{selectedElement.step.category}}</span>
+                </div>
+                <div class="col-sm-12" style="margin-left: 15px; margin-bottom: 10px">
+                  <i>{{selectedElement.step.kwDescription}}</i>
+                </div>
+              </div>
+              <div class="row" ng-if="selectedElement.message != null && selectedElement.message != '' && selectedElement.message != 'null'">
+                <div class="col-sm-12">
+                  <div class="alert alert-{{selectedState}}" style="color: black">
+                    <span ng-if="selectedElement.step.kw=='ACCESSIBILITY'">
+                      <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px" ng-repeat="a in selectedElement.accessibility">
+                        <div class="panel-heading">
+                          <h3 class="panel-title" style="color: black">
+                            <a hRef="{{a.helpUrl}}" target="_blank">{{a.description}}</a> ({{a.nodes.length}})
+                          </h3>
+                        </div>
+                        <div class="panel-body">
+                          <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="n in a.nodes"><code>{{n.html}}</code></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </span> <span ng-if="selectedElement.step.kw!='ACCESSIBILITY'">{{selectedElement.message}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-{{selectedElement.executionParameter.SCREENSHOT == null ? 12 : 6}}">
+                  <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px" ng-if="selectedElement.step.kw=='REPORT'">
+                    <div class="panel-body">
+                      <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="p in selectedElement.parameterList">{{p}}</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px">
+                    <div class="panel-heading">
+                      <h3 class="panel-title" style="color: black">Step Information</h3>
+                    </div>
+                    <div class="panel-body">
+                      <div ng-if="selectedElement.step.description != 'null' && selectedElement.step.description != ''"></div>
+                      <ul class="list-group">
+                        <li class="list-group-item" ng-if="selectedElement.step.orMapping==true && selectedElement.step.siteName != 'null' && selectedElement.step.siteName != null">Site Name: <b>{{selectedElement.step.siteName}}</b>
+                        </li>
+                        <li class="list-group-item" ng-if="selectedElement.step.orMapping==true && selectedElement.step.pageName != 'null' && selectedElement.step.pageName != null">Page Name: <b>{{selectedElement.step.pageName}}</b>
+                        </li>
+                        <li class="list-group-item" ng-if="selectedElement.step.name != null && selectedElement.step.name != 'null'">Element Name: <b>{{selectedElement.step.name}}</b>
+                        </li>
+                        <li class="list-group-item">Inverted: <b>{{selectedElement.step.inverse}}</b>
+                        </li>
+                        <li class="list-group-item" ng-if="selectedElement.step.sFailure != 'null'">Failure Mode: <b>{{selectedElement.step.sFailure}}</b>
+                        </li>
+                        <li class="list-group-item" ng-if="selectedElement.step.validation != 'null'">Validation: <b>{{selectedElement.step.validation}} ({{selectedElement.step.validationType}})</b>
+                        </li>
+                        <li class="list-group-item" ng-if="selectedElement.step.threshold > 0">Threshold: <b>{{selectedElement.step.threshold}}</b>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="panel-body" ng-if="selectedElement.locatorResult != null && selectedElement.locatorResult != 'null' && selectedElement.locatorResult.length > 0">
+                      <ul class="list-group">
+                        <li class="list-group-item" ng-class="{'list-group-item-success' : locator.success == true, 'list-group-item-danger' : locator.success == false}" ng-repeat="locator in selectedElement.locatorResult">{{locator.locator}} <span class="badge">{{locator.time}} ms</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <span ng-if="selectedElement.parameterList.length > 0 && selectedElement.step.kw!='REPORT'">
+                    <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px">
+                      <div class="panel-heading">
+                        <h3 class="panel-title" style="color: black">Parameters</h3>
+                      </div>
+                      <div class="panel-body">
+                        <ul class="list-group">
+                          <li class="list-group-item" ng-repeat="p in selectedElement.step.parameterList"><span ng-if="p.type == 'STATIC'">{{p.value}}</span> <span ng-if="p.type != 'STATIC'">{{selectedElement.parameterList[ $index ]}} as ({{p.value}})</span> <sup ng-if="p.name != 'null' && p.name != null && p.name != ''">({{p.name}})</sup> <span class="badge">{{p.type}}</span></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </span>
+                  <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px" ng-if="selectedElement.executionParameter.CONTEXT != null">
+                    <div class="panel-heading">
+                      <h3 class="panel-title" style="color: black">Result</h3>
+                    </div>
+                    <div class="panel-body">
+                      <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="(key,value) in selectedElement.executionParameter.CONTEXT">{{key}}: <b>{{value}}</b>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="panel panel-info" style="margin-bottom: 0px; margin-top: 5px" ng-if="hasExecutionParameter( selectedElement, 'XML' ) || hasExecutionParameter( selectedElement, 'HTML' )">
+                    <div class="panel-heading">
+                      <h3 class="panel-title" style="color: black">Source</h3>
+                    </div>
+                    <div class="panel-body">
+                      <ul class="nav nav-pills nav-justified">
+                        <li ng-if="hasExecutionParameter( selectedElement, 'XML' )" role="presentation">
+                          <div class="col-md-2" stype="text-align: center">
+                            <a hRef="{{selectedElement.executionParameter.XML}}" class="btn btn-info" type="button" target="_blank">Raw Source</a>
+                          </div>
+                        </li>
+                        <li ng-if="hasExecutionParameter( selectedElement, 'HTML' )" role="presentation">
+                          <div class="col-md-2" stype="text-align: center">
+                            <a hRef="{{selectedElement.executionParameter.HTML}}" class="btn btn-primary" type="button" target="_blank">Formatted Source</a>
+                          </div>
+                        </li>
+                        <li ng-if="hasExecutionParameter( selectedElement, 'XPATH' )" role="presentation">
+                          <div class="col-md-2" stype="text-align: center">
+                            <a hRef="{{selectedElement.executionParameter.XPATH}}" class="btn btn-warning" type="button" target="_blank">Analyze</a>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6" ng-if="selectedElement.executionParameter.SCREENSHOT != null">
+                  <a hRef="{{selectedElement.executionParameter.SCREENSHOT}}" target="_blank"> <img width="100%" src="{{selectedElement.executionParameter.SCREENSHOT}}" class="img-rounded" />
+                  </a>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <span class="pull-right"> <i>Started at <b>{{selectedElement.startTime.timeOnly}}</b> then ran for <b>{{selectedElement.endTime.raw - selectedElement.startTime.raw}} ms</b> and ended at <b>{{selectedElement.endTime.timeOnly}}</b></i>
+                  </span>
+                </div>
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 <script type="text/ng-template" id="step.html">
     <div data-nodrag ui-tree-handle  class="tree-node tree-node-content" style="font-size: 8pt; padding-left: 5px; padding-right: 5px;cursor: default;" ng-class="{'filteredStep text-muted' : stepDef.stepStatus == 'FILTERED'}">
@@ -420,327 +363,306 @@ iframe {
 </div>
 </script>
 <script>
-    var xTest = angular.module('xTest', [ 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.tree' ]);
+  var xTest = angular.module('xTest', [ 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.tree' ]);
 
-    xTest.config([ '$compileProvider', function( $compileProvider )
-    {
-        $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|file|data|chrome-extension):/);
-    } ]);
+  xTest.config([ '$compileProvider', function($compileProvider) {
+    $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|file|data|chrome-extension):/);
+  } ]);
 
-    xTest.directive('compile', [ '$compile', function( $compile )
-    {
-        return function( scope, element, attrs )
-        {
-            scope.$watch(function( scope )
-            {
-                return scope.$eval(attrs.compile);
-            }, function( value )
-            {
-                element.html(value);
-                $compile(element.contents())(scope);
-            });
-        };
-    } ]);
-    
+  xTest.directive('compile', [ '$compile', function($compile) {
+    return function(scope, element, attrs) {
+      scope.$watch(function(scope) {
+        return scope.$eval(attrs.compile);
+      }, function(value) {
+        element.html(value);
+        $compile(element.contents())(scope);
+      });
+    };
+  } ]);
 
 
-    xTest.controller('xTestController', function XTestController( $scope, $uibModal )
-    {
-        $scope.testData = testData.pageData;
-        $scope.passed = 0;
-        $scope.failed = 0;
-        $scope.ignored = 0;
-        $scope.filtered = 0;
-        $scope.total = 0;
-        $scope.duration = 0;
-        $scope.formattedDuration = 0;
-        $scope.selectedStep;
-        $scope.filterBy = '';
-        $scope.selectedContext = '';
-        $scope.selectedElement = null;
-        $scope.selectedState = 'PRIMARY';
 
-        $scope.rootTree = [ 'Steps', 'Logs', 'Links', 'Data', 'Pages', 'Capabilities', 'Performance', 'Environment', 'Imaging Analysis' ];
+  xTest.controller('xTestController', function XTestController($scope, $uibModal) {
+    $scope.testData = testData.pageData;
+    $scope.passed = 0;
+    $scope.failed = 0;
+    $scope.ignored = 0;
+    $scope.filtered = 0;
+    $scope.total = 0;
+    $scope.duration = 0;
+    $scope.formattedDuration = 0;
+    $scope.selectedStep;
+    $scope.filterBy = '';
+    $scope.selectedContext = '';
+    $scope.selectedElement = null;
+    $scope.selectedState = 'PRIMARY';
 
-        $scope.capTypes = [ 'Supplied', 'Derived' ];
+    $scope.rootTree = [ 'Steps', 'Logs', 'Links', 'Data', 'Pages', 'Capabilities', 'Performance', 'Environment', 'Imaging Analysis' ];
 
-        $scope.logTypes = [ 'Device', 'Console' ];
+    $scope.capTypes = [ 'Supplied', 'Derived' ];
 
-        $scope.hasExecutionParameter = function( step, parameterName )
-        {
-            return step.executionParameter[parameterName] != null;
+    $scope.logTypes = [ 'Device', 'Console' ];
+
+    $scope.hasExecutionParameter = function(step, parameterName) {
+      return step.executionParameter[parameterName] != null;
+    }
+
+    $scope.cancelElement = function() {
+      $scope.elementModalInstance.close();
+    };
+
+    $scope.filterElement = function(step) {
+      return (step.stepStatus == $scope.filterBy || $scope.filterBy.includes(step.name) || $scope.filterBy.includes(step.kw))
+    }
+
+    $scope.showError = function(step) {
+      $scope.selectedStep = step;
+      $scope.errorTitle = $scope.formatStep(step);
+
+      $scope.elementModalInstance = $uibModal.open({
+        animation : true,
+        ariaLabelledBy : 'modal-title',
+        ariaDescribedBy : 'modal-body',
+        templateUrl : 'errorDetail.html',
+        scope : $scope,
+        size : 'lg',
+      });
+    }
+
+    $scope.getPassed = function() {
+      var totalPassed = 0;
+      for (var i = 0; i < $scope.testData.stepList.length; i++) {
+        totalPassed += $scope._getByStatus($scope.testData.stepList[i], 'SUCCESS');
+      }
+
+      return totalPassed;
+    }
+
+    $scope.formatStepText = function(step) {
+      var imageName = step.step.kw;
+      if (step.step.image != null)
+        imageName = step.step.image;
+
+      var messageText = $scope.stepMessages[imageName];
+
+
+      if (step.customMessage != null && step.customMessage != 'null' && step.customMessage != '')
+        messageText = step.customMessage;
+
+      if (messageText == null)
+        messageText = $scope.stepMessages['DEFAULT'];
+
+      messageText = messageText.replace("{kw}", step.step.kw);
+      messageText = messageText.replace("{name}", step.step.name.replace('<', '&lt;').replace('>', '&gt;'));
+      messageText = messageText.replace("{subName}", step.step.subName);
+      messageText = messageText.replace("{pageName}", step.step.pageName);
+      messageText = messageText.replace("{device}", $scope.testData.device.key);
+      for (var i = 0; i < step.parameterList.length; i++) {
+        messageText = messageText.replace("{$p" + (i + 1) + "}", step.parameterList[i]);
+      }
+
+      return messageText;
+    }
+
+    $scope.selectElement = function(context, element) {
+      $scope.selectedContext = context;
+      $scope.selectedElement = element;
+
+      if (context == 'Step') {
+        switch (element.stepStatus) {
+        case 'SUCCESS':
+          $scope.selectedState = 'success';
+          break;
+        case 'FAILURE':
+          $scope.selectedState = 'danger';
+          break;
+        case 'FAILURE_IGNORED':
+          $scope.selectedState = 'warning';
+          break;
+        default:
+          $scope.selectedState = 'info';
+          break;
         }
+      }
+      else
+        $scope.selectedState = 'primary';
 
-        $scope.cancelElement = function()
-        {
-            $scope.elementModalInstance.close();
-        };
-        
-        $scope.filterElement = function( step )
-        {
-            return ( step.stepStatus == $scope.filterBy || $scope.filterBy.includes( step.name ) || $scope.filterBy.includes( step.kw ) )
-        }
+      if ($scope.selectedElement.step.kw == 'ACCESSIBILITY' && $scope.selectedElement.accessibility == null)
+        $scope.selectedElement.accessibility = JSON.parse($scope.selectedElement.message);
 
-        $scope.showError = function( step )
-        {
-            $scope.selectedStep = step;
-            $scope.errorTitle = $scope.formatStep(step);
+      console.log($scope.selectedElement.accessibility);
+    }
 
-            $scope.elementModalInstance = $uibModal.open({
-                animation : true,
-                ariaLabelledBy : 'modal-title',
-                ariaDescribedBy : 'modal-body',
-                templateUrl : 'errorDetail.html',
-                scope : $scope,
-                size : 'lg',
+    $scope.formatStep = function(step) {
+      var messageText = null;
 
-            });
-        }
+      if (step.customMessage != null && step.customMessage != 'null' && step.customMessage != '')
+        messageText = '<span class="text-info">' + step.customMessage + "</span>";
 
-        $scope.getPassed = function()
-        {
-            var totalPassed = 0;
-            for ( var i = 0; i < $scope.testData.stepList.length; i++ ) {
-                totalPassed += $scope._getByStatus($scope.testData.stepList[i], 'SUCCESS');
-            }
+      if (messageText == null) {
+        var imageName = step.step.kw;
+        if (step.step.image != null && step.step.image != 'null')
+          imageName = step.step.image;
 
-            return totalPassed;
-        }
+        messageText = $scope.stepMessages[imageName];
+      }
 
-        $scope.formatStepText = function( step )
-        {
-        	var imageName = step.step.kw;
-        	if ( step.step.image != null )
-        		imageName = step.step.image;
-        
-        	var messageText = $scope.stepMessages[imageName];
-        	
-        	console.log( step );
-        	
-        	if ( step.customMessage != null && step.customMessage != 'null' && step.customMessage != '' )
-        		messageText = step.customMessage;
+      if (messageText == null)
+        messageText = $scope.stepMessages['DEFAULT'];
 
-            if ( messageText == null )
-                messageText = $scope.stepMessages['DEFAULT'];
+      messageText = messageText.replace("{kw}", step.step.kw);
+      messageText = messageText.replace("{name}", step.step.name.replace('<', '&lt;').replace('>', '&gt;'));
+      messageText = messageText.replace("{subName}", step.step.subName);
+      messageText = messageText.replace("{pageName}", step.step.pageName);
+      messageText = messageText.replace("{errorMessage}", step.message);
+      for (var i = 0; i < step.parameterList.length; i++) {
+        messageText = messageText.replace("{$p" + (i + 1) + "}", '<span class="text-info">' + step.parameterList[i] + "</span>");
+      }
 
-            messageText = messageText.replace("{kw}", step.step.kw);
-            messageText = messageText.replace("{name}", step.step.name.replace( '<', '&lt;' ).replace( '>', '&gt;' )  );
-            messageText = messageText.replace("{subName}", step.step.subName);
-            messageText = messageText.replace("{pageName}", step.step.pageName);
-            messageText = messageText.replace("{device}", $scope.testData.device.key);
-            for ( var i = 0; i < step.parameterList.length; i++ ) {
-                messageText = messageText.replace("{$p" + (i + 1) + "}", step.parameterList[i]);
-            }
+      if (step.step.device != 'null' && step.step.device != '' && step.step.device != null) {
+        messageText += ' *';
+      }
 
-            return messageText;
-        }
+      return messageText;
+    }
 
-        $scope.selectElement = function( context, element )
-        {
-            $scope.selectedContext = context;
-            $scope.selectedElement = element;
+    $scope.getStepDuration = function(step) {
+      return step.endTime.raw - step.startTime.raw;
+    }
 
-            if ( context == 'Step' ) {
-                switch ( element.stepStatus ) {
-                case 'SUCCESS':
-                    $scope.selectedState = 'success';
-                    break;
-                case 'FAILURE':
-                    $scope.selectedState = 'danger';
-                    break;
-                case 'FAILURE_IGNORED':
-                    $scope.selectedState = 'warning';
-                    break;
-                default:
-                    $scope.selectedState = 'info';
-                    break;
-                }
-            }
-            else
-                $scope.selectedState = 'primary';
-            
-            if ( $scope.selectedElement.step.kw == 'ACCESSIBILITY' && $scope.selectedElement.accessibility == null )
-                $scope.selectedElement.accessibility = JSON.parse( $scope.selectedElement.message );
-            
-            console.log( $scope.selectedElement.accessibility );
-        }
+    $scope.getFailed = function() {
+      var total = 0;
+      for (var i = 0; i < $scope.testData.stepList.length; i++) {
+        total += $scope._getByStatus($scope.testData.stepList[i], 'FAILURE');
+      }
 
-        $scope.formatStep = function( step )
-        {
-            var messageText = null;
+      return total;
+    }
 
-            if ( step.customMessage != null && step.customMessage != 'null' && step.customMessage != '' )
-        		messageText = '<span class="text-info">' + step.customMessage + "</span>";
-            
-        	if ( messageText == null )
-            {
-            	var imageName = step.step.kw;
-                if ( step.step.image != null && step.step.image != 'null' )
-                    imageName = step.step.image;
-            
-                messageText = $scope.stepMessages[imageName];
-            }
+    $scope.getIgnored = function() {
+      var total = 0;
+      for (var i = 0; i < $scope.testData.stepList.length; i++) {
+        total += $scope._getByStatus($scope.testData.stepList[i], 'FAILURE_IGNORED');
+      }
 
-            if ( messageText == null )
-                messageText = $scope.stepMessages['DEFAULT'];
+      return total;
+    }
 
-            messageText = messageText.replace("{kw}", step.step.kw);
-            messageText = messageText.replace("{name}", step.step.name.replace( '<', '&lt;' ).replace( '>', '&gt;' ));
-            messageText = messageText.replace("{subName}", step.step.subName);
-            messageText = messageText.replace("{pageName}", step.step.pageName);
-            messageText = messageText.replace("{errorMessage}", step.message);
-            for ( var i = 0; i < step.parameterList.length; i++ ) {
-                messageText = messageText.replace("{$p" + (i + 1) + "}", '<span class="text-info">' + step.parameterList[i] + "</span>");
-            }
+    $scope._getByStatus = function(currentStep, status) {
 
-            if ( step.step.device != 'null' && step.step.device != '' && step.step.device != null ) {
-                messageText += ' *';
-            }
+      var total = 0;
+      if (currentStep.stepStatus == status || status == null)
+        total += 1;
+      for (var i = 0; i < currentStep.stepList.length; i++) {
+        total += $scope._getByStatus(currentStep.stepList[i], status);
+      }
 
-            return messageText;
-        }
+      return total;
+    }
 
-        $scope.getStepDuration = function( step )
-        {
-            return step.endTime.raw - step.startTime.raw;
-        }
+    $scope.initialize = function() {
+      $scope.passed = $scope.getPassed();
+      $scope.failed = $scope.getFailed();
+      $scope.ignored = $scope.getIgnored();
+      $scope.total = $scope.passed + $scope.failed + $scope.ignored;
+      $scope.duration = $scope.testData.endTime.raw - $scope.testData.startTime.raw;
+      $scope.formattedDuration = $scope.createDuration($scope.duration);
+    }
 
-        $scope.getFailed = function()
-        {
-            var total = 0;
-            for ( var i = 0; i < $scope.testData.stepList.length; i++ ) {
-                total += $scope._getByStatus($scope.testData.stepList[i], 'FAILURE');
-            }
+    $scope.createDuration = function(duration) {
+      var milliseconds = parseInt((duration % 1000) / 100);
+      var seconds = parseInt((duration / 1000) % 60);
+      var minutes = parseInt((duration / (1000 * 60)) % 60);
+      var hours = parseInt((duration / (1000 * 60 * 60)) % 24);
 
-            return total;
-        }
+      return hours + "h " + minutes + "m " + seconds + "s"
+    }
 
-        $scope.getIgnored = function()
-        {
-            var total = 0;
-            for ( var i = 0; i < $scope.testData.stepList.length; i++ ) {
-                total += $scope._getByStatus($scope.testData.stepList[i], 'FAILURE_IGNORED');
-            }
+    $scope.artifactTabs = {
+      "DEVICE_LOG" : "Device Log",
+      "CONSOLE_LOG" : "Console Log",
+      "IMAGING_ANALYSIS" : "Imaging Analysis",
+      "TIMING_HTML" : "Performance"
+    }
 
-            return total;
-        }
+    $scope.links = {
+      "EXECUTION_REPORT_PDF_FILE" : "Perfecto Legacy Execution Report (PDF)",
+      "EXECUTION_REPORT_FILE" : "Perfecto Legacy Execution Report (PDF)",
+      "EXECUTION_REPORT_CSV_FILE" : "Perfecto Legacy Execution Report (CSV)",
+      "EXECUTION_REPORT_XML_FILE" : "Perfecto Legacy Execution Report (XML)",
+      "EXECUTION_REPORT_HTML_FILE" : "Perfecto Legacy Execution Report (HTML)",
+      "SAUCE_LABS_ARTIFACT_URL" : "SauceLabs Report",
+      "REPORTIUM_ARTIFACT_URL" : "Perfecto Execution Report",
+      "ALM_DEFECT_ARTIFACT_URL" : "HP ALM Defect Detail",
+      "STATISTICS" : "Device Statistics"
+    }
 
-        $scope._getByStatus = function( currentStep, status )
-        {
+    $scope.stepMessages = {
+      "CALL" : "{name}",
+      "CALL2" : "{name}",
+      "MODULE" : "Execute the {kw} named {name}",
+      "SET" : "{kw} the value to {$p1}",
+      "ADD_DEVICE" : "Add {$p1}",
+      "ADD_DEVICE2" : "Add a new device",
+      "WAIT_FOR" : "{kw} for {name}",
+      "NAVIGATE" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use BROWSER)",
+      "LOOP" : "Execute {$p2} in a {kw}",
+      "STATE" : "Extract State",
+      "ALERT" : "{name} to a web-based {kw} ",
+      "VISIBLE" : "Is {name} {kw}",
+      "ALIGN" : "{kw} with {name}",
+      "SET_CONTENT_KEY" : "{kw} to a {$p1}",
+      "BREAK" : "{kw}",
+      "VERIFY_COLOR" : "Verify Color of {name}",
+      "ELSE" : "Else",
+      "EXECWS" : "Execute WebSerivce",
+      "WAIT" : "{kw}",
+      "HAS_FOCUS" : "Does {name} have focus",
+      "OPERATOR" : "Operator Comparison",
+      "ATTRIBUTE" : "Get the attribute {$p1}",
+      "EXISTS" : "Does {name} exist",
+      "ENABLED" : "Is {name} enabled",
+      "IS_ENABLED" : "Is {name} enabled",
+      "VERIFY_CONTRAST" : "Verify Contrast of {name}",
+      "MOUSE" : "Mouse Operation",
+      "DEVICE" : "Device Action",
+      "MATH" : "Math Operation",
+      "REPORT" : "Report Message",
+      "EXECJS" : "Execute JavaScript",
+      "CACHE" : "Cache subsystem",
+      "BROWSER" : "Perform Browser operation",
+      "WINDOW" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use BROWSER)",
+      "GET" : "Get the value for {name}",
+      "COMPARE" : "Compare Values",
+      "COMPARE2" : "Compare Values",
+      "GESTURE" : "Perform a {name}",
+      "STRING2" : "String Operation",
+      "STRING" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use STRING2)",
+      "VISUAL" : "Visual Operation",
+      "DEFAULT" : "{kw} - Unmapped keyword",
+      "CLICK" : "{kw} on {name}",
+      "COMMAND" : "Execute Command",
+      "EMAIL" : "Email Operation",
+      "CONSOLE" : "Console message",
+      "TEST" : "Cause of Failure: {errorMessage}",
+      "APPLICATION" : "{name} an {kw}",
+      "CALLBACK" : "{name}",
+      "FLOW" : "Flow set to {name}",
+      "SELECTED" : "Is {name} selected",
+      "RANDOM" : "Generate a random {name}",
+      "SQL" : "Executing SQL",
+      "DATE" : "Date Operation",
+      "DEBUG" : "***** DEBUG *****",
+      "CONTEXT" : "{name} Context Operation",
+      "FUNCTION" : "Call native function {name}",
+      "ACCESSIBILITY" : "Verify Accessibility",
+      "GHERKIN" : "{name}",
+      "VERIFICATION" : "Verification Check Point",
+      "SWITCH" : "Execute a step based off of data",
+      "SCRIPT" : "Execute a predefined OS script",
+      "SCRIPT_STEP" : "{name}"
+    };
 
-            var total = 0;
-            if ( currentStep.stepStatus == status || status == null )
-                total += 1;
-            for ( var i = 0; i < currentStep.stepList.length; i++ ) {
-                total += $scope._getByStatus(currentStep.stepList[i], status);
-            }
-
-            return total;
-        }
-
-        $scope.initialize = function()
-        {
-            $scope.passed = $scope.getPassed();
-            $scope.failed = $scope.getFailed();
-            $scope.ignored = $scope.getIgnored();
-            $scope.total = $scope.passed + $scope.failed + $scope.ignored;
-            $scope.duration = $scope.testData.endTime.raw - $scope.testData.startTime.raw;
-            $scope.formattedDuration = $scope.createDuration($scope.duration);
-        }
-
-        $scope.createDuration = function( duration )
-        {
-            var milliseconds = parseInt((duration % 1000) / 100);
-            var seconds = parseInt((duration / 1000) % 60);
-            var minutes = parseInt((duration / (1000 * 60)) % 60);
-            var hours = parseInt((duration / (1000 * 60 * 60)) % 24);
-
-            return hours + "h " + minutes + "m " + seconds + "s"
-        }
-
-        $scope.artifactTabs = {
-            "DEVICE_LOG" : "Device Log",
-            "CONSOLE_LOG" : "Console Log",
-            "IMAGING_ANALYSIS" : "Imaging Analysis",
-            "TIMING_HTML" : "Performance"
-        }
-
-        $scope.links = {
-            "EXECUTION_REPORT_PDF_FILE" : "Perfecto Legacy Execution Report (PDF)",
-            "EXECUTION_REPORT_FILE" : "Perfecto Legacy Execution Report (PDF)",
-            "EXECUTION_REPORT_CSV_FILE" : "Perfecto Legacy Execution Report (CSV)",
-            "EXECUTION_REPORT_XML_FILE" : "Perfecto Legacy Execution Report (XML)",
-            "EXECUTION_REPORT_HTML_FILE" : "Perfecto Legacy Execution Report (HTML)",
-            "SAUCE_LABS_ARTIFACT_URL" : "SauceLabs Report",
-            "REPORTIUM_ARTIFACT_URL" : "Perfecto Execution Report",
-            "ALM_DEFECT_ARTIFACT_URL" : "HP ALM Defect Detail",
-            "STATISTICS" : "Device Statistics"
-        }
-
-        $scope.stepMessages = {
-            "CALL" : "{name}",
-            "CALL2" : "{name}",
-            "MODULE" : "Execute the {kw} named {name}",
-            "SET" : "{kw} the value to {$p1}",
-            "ADD_DEVICE" : "Add {$p1}",
-            "ADD_DEVICE2" : "Add a new device",
-            "WAIT_FOR" : "{kw} for {name}",
-            "NAVIGATE" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use BROWSER)",
-            "LOOP" : "Execute {$p2} in a {kw}",
-            "STATE" : "Extract State",
-            "ALERT" : "{name} to a web-based {kw} ",
-            "VISIBLE" : "Is {name} {kw}",
-            "ALIGN" : "{kw} with {name}",
-            "SET_CONTENT_KEY" : "{kw} to a {$p1}",
-            "BREAK" : "{kw}",
-            "VERIFY_COLOR" : "Verify Color of {name}",
-            "ELSE" : "Else",
-            "EXECWS" : "Execute WebSerivce",
-            "WAIT" : "{kw}",
-            "HAS_FOCUS" : "Does {name} have focus",
-            "OPERATOR" : "Operator Comparison",
-            "ATTRIBUTE" : "Get the attribute {$p1}",
-            "EXISTS" : "Does {name} exist",
-            "ENABLED" : "Is {name} enabled",
-            "IS_ENABLED" : "Is {name} enabled",
-            "VERIFY_CONTRAST" : "Verify Contrast of {name}",
-            "MOUSE" : "Mouse Operation",
-            "DEVICE" : "Device Action",
-            "MATH" : "Math Operation",
-            "REPORT" : "Report Message",
-            "EXECJS" : "Execute JavaScript",
-            "CACHE" : "Cache subsystem",
-            "BROWSER" : "Perform Browser operation",
-            "WINDOW" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use BROWSER)",
-            "GET" : "Get the value for {name}",
-            "COMPARE" : "Compare Values",
-            "COMPARE2" : "Compare Values",
-            "GESTURE" : "Perform a {name}",
-            "STRING2" : "String Operation",
-            "STRING" : "<span class='text-danger'>DEPRECATED</span> {kw} operation (use STRING2)",
-            "VISUAL" : "Visual Operation",
-            "DEFAULT" : "{kw} - Unmapped keyword",
-            "CLICK" : "{kw} on {name}",
-            "COMMAND" : "Execute Command",
-            "EMAIL" : "Email Operation",
-            "CONSOLE" : "Console message",
-            "TEST" : "Cause of Failure: {errorMessage}",
-            "APPLICATION" : "{name} an {kw}",
-            "CALLBACK" : "{name}",
-            "FLOW" : "Flow set to {name}",
-            "SELECTED" : "Is {name} selected",
-            "RANDOM" : "Generate a random {name}",
-            "SQL" : "Executing SQL",
-            "DATE" : "Date Operation",
-            "DEBUG" : "***** DEBUG *****",
-            "CONTEXT" : "{name} Context Operation",
-            "FUNCTION" : "Call native function {name}",
-            "ACCESSIBILITY" : "Verify Accessibility",
-            "GHERKIN" : "{name}",
-            "VERIFICATION" : "Verification Check Point",
-            "SWITCH" : "Execute a step based off of data"
-        };
-
-    });
+  });
 </script>
 </html>

@@ -15,6 +15,8 @@ import org.xframium.driver.TestDriver;
 import org.xframium.driver.XMLConfigurationReader;
 import org.xframium.page.data.provider.PageDataProvider;
 import org.xframium.page.element.provider.ElementProvider;
+import org.xframium.reporting.ExecutionContext;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.xframium.serialization.SerializationManager;
 
@@ -35,6 +37,7 @@ public class ExecuteTest extends ECHandler
 
             final File configFile = new File( queryMap.get( "fileName" ) );
             DeviceManager.instance( TestDriver.xFID ).clear();
+            ExecutionContext.instance( TestDriver.xFID ).clear();
             
             new Thread( new Runnable()
             {

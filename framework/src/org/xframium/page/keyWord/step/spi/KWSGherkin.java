@@ -65,6 +65,7 @@ public class KWSGherkin extends AbstractKeyWordStep
 		if ( kT != null )
 		{
 			kT.executeTest(webDriver, contextMap, dataMap, pageMap, sC, executionContext);
+			executed = true;
 		}
 		else
 		{
