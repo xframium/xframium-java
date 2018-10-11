@@ -1293,7 +1293,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             }
             catch ( Exception e )
             {
-                stepException = e;
+                stepException = new ScriptConfigurationException( e.getMessage() );
                 returnValue = false;
                 try
                 {

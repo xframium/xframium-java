@@ -778,7 +778,7 @@ public class KeyWordDriver
                 
                 if ( !returnValue )
                 {
-                	if ( executionContext.getStepException() != null && executionContext.getStepException() instanceof XFramiumException )
+                	if ( executionContext.getStepException() != null && executionContext.getStepList().isEmpty() )
                 	{
                 		contextMap.put( "XF_TEST_STATUS", TestStatus.FAILED.name() );
                         executionContext.startStep( new SyntheticStep( test == null ? testName.getTestName() : test.getName(), "TEST" ), contextMap, dataMap );
