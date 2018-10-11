@@ -82,8 +82,6 @@ public class KWSDate extends AbstractKeyWordStep
         if ( log.isDebugEnabled() )
             log.debug( "Execution Function " + getName() );
 
-        if ( getParameterList().size() < 1 )
-            throw new IllegalArgumentException( "First Parameter Switchtype should be provided with values CURRENTDATE| CUSTOMDATE" );
 
         String operationName = getName();
         String format = getParameterAsString( FORMAT, contextMap, dataMap, executionContext.getxFID() );

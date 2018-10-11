@@ -1146,7 +1146,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 else
                 {
                     //
-                    // A device is not specified, se if one exists in the stack from a CALL
+                    // A device is not specified, see if one exists in the stack from a CALL
                     //
                     if ( executionContext.peekAtDevice() != null )
                     {
@@ -1355,11 +1355,8 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                     if ( !subReturnValue )
                     {
                         returnValue = false;
-                        returnValue = false;
-                        //if ( step.getFailure().equals( StepStatus.FAILURE_IGNORED ) )
-                            subFailure = false;
-                        //else
-                        //    subFailure = true;
+                        subFailure = false;
+                        break;
                     }
 
                 }
