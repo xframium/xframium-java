@@ -26,11 +26,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import org.openqa.selenium.WebDriver;
 import org.xframium.Initializable;
+import org.xframium.container.SuiteContainer;
 import org.xframium.device.cloud.CloudRegistry;
+import org.xframium.page.Page;
+import org.xframium.page.StepStatus;
+import org.xframium.page.data.PageData;
 import org.xframium.page.keyWord.KeyWordDriver;
+import org.xframium.page.keyWord.KeyWordStep;
+import org.xframium.page.keyWord.KeyWordTest;
+import org.xframium.page.listener.KeyWordListener;
 import org.xframium.reporting.ExecutionContext;
-public class TestDriver
+import org.xframium.reporting.ExecutionContextTest;
+public class TestDriver implements KeyWordListener
 {
     private List<SuiteListener> listenerList = new ArrayList<SuiteListener>(3);
     
@@ -46,6 +56,8 @@ public class TestDriver
         
         try
         {
+          
+          
             ConfigurationReader configReader = null;
             if ( configFile.getName().toLowerCase().endsWith( ".txt" ) )
             {
@@ -67,7 +79,8 @@ public class TestDriver
             
             if ( xFID == null )
                 xFID = UUID.randomUUID().toString();
-            Initializable.xFID.set( xFID ); 
+            Initializable.xFID.set( xFID );
+            KeyWordDriver.instance(xFID).addStepListener( this );
             customConfig.put( "xF-ID", Initializable.xFID.get() );
             
             configReader.readConfiguration( configFile, true, customConfig );
@@ -86,9 +99,14 @@ public class TestDriver
         finally
         {
             if ( CloudRegistry.instance( xFID ).isEmbeddedGrid() )
+            {
                 CloudRegistry.instance( xFID ).shutdown();
+                  
+            }
         }
     }
+    
+    
     
     public static void main( String[] args )
     {
@@ -105,11 +123,80 @@ public class TestDriver
             System.exit( -1 );
         }
         
+        TestDriver tD = new TestDriver();
+        tD.execute( configFile, null );
         
+        System.out.println( "Total Tests: " + ( tD.getPassCount() + tD.getFailCount() ) );
+        System.out.println( "Passed Tests: " + ( tD.getPassCount() ) );
+        System.out.println( "Failed Tests: " + ( tD.getFailCount() ) );
         
-        new TestDriver().execute( configFile, null );
+        if ( !Boolean.getBoolean( "XF_DONT_EXIT" ) )
+        {
+          System.exit( tD.getFailCount() > 0 ? -1 : 0 );
+        }
         
-        
+    }
+
+    private int passCount;
+    private int failCount;
+    
+    
+    
+    public int getPassCount()
+    {
+      return passCount;
+    }
+
+    public void setPassCount( int passCount )
+    {
+      this.passCount = passCount;
+    }
+
+    public int getFailCount()
+    {
+      return failCount;
+    }
+
+    public void setFailCount( int failCount )
+    {
+      this.failCount = failCount;
+    }
+
+    @Override
+    public boolean beforeStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC )
+    {
+      // TODO Auto-generated method stub
+      return true;
+    }
+
+    @Override
+    public void afterStep( WebDriver webDriver, KeyWordStep currentStep, Page pageObject, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, StepStatus stepStatus, SuiteContainer sC, ExecutionContextTest eC )
+    {
+      // TODO Auto-generated method stub
+      
+    }
+
+    @Override
+    public boolean beforeTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC )
+    {
+      return true;
+    }
+
+    @Override
+    public void afterTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC )
+    {
+      if ( stepPass )
+        passCount++;
+      else
+        failCount++;
+      
+    }
+
+    @Override
+    public void afterArtifacts( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC )
+    {
+      // TODO Auto-generated method stub
+      
     }
 
     
