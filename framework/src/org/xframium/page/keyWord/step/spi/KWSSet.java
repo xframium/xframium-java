@@ -22,7 +22,9 @@ package org.xframium.page.keyWord.step.spi;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.xframium.container.SuiteContainer;
 import org.xframium.device.factory.DeviceWebDriver;
 import org.xframium.exception.ScriptException;
@@ -100,6 +102,25 @@ public class KWSSet extends AbstractKeyWordStep
 					
 					elt.setValue( newValue, xFID );
 					break;
+				
+				case DELAYED:
+					Element delayedElement = getElement( pageObject, contextMap, webDriver, dataMap, executionContext );
+					( (WebElement) delayedElement.getNative() ).clear();
+					
+					KeyWordParameter delayedLengthParam = getParameter( "Delay" );
+				    int delayedLength = 5000;
+				    
+				    if ( delayedLengthParam != null )
+				    	delayedLength = Integer.parseInt( getParameterValue( delayedLengthParam, contextMap, dataMap, executionContext.getxFID() ) );
+					
+	                byte[] delayedBuffer = newValue.getBytes();
+	                for ( int i=0; i<delayedBuffer.length; i++ )
+	                {
+	                	( (WebElement) delayedElement.getNative() ).sendKeys( new String( new byte[] { delayedBuffer[ i ] } ) );
+	                    try { Thread.sleep( delayedLength ); } catch( Exception e ) {}
+	                    
+	                }
+	                break;
 					
 				case PERFECTO:
 				    KeyWordParameter delayLengthParam = getParameter( "Delay" );
