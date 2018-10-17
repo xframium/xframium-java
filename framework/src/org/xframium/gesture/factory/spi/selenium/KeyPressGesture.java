@@ -67,7 +67,7 @@ public class KeyPressGesture extends AbstractKeyPressGesture
 				new Actions( webDriver ).sendKeys(keyPressed).perform();
 			
 			
-			new Actions( webDriver ).moveToElement( webElement ).keyDown( Keys.CONTROL ).sendKeys( "A" ).keyUp( Keys.CONTROL ).perform();
+			//new Actions( webDriver ).moveToElement( webElement ).keyDown( Keys.CONTROL ).sendKeys( "A" ).keyUp( Keys.CONTROL ).perform();
 		}
 		return true;
 	}

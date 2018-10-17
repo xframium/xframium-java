@@ -62,7 +62,8 @@ public interface Element
     	DELAYED,
     	PERFECTO,
     	UP_FIRST,
-    	DOWN_FIRST;
+    	DOWN_FIRST,
+    	KEYS;
     }
 	
 	/**
