@@ -100,6 +100,8 @@ public interface DriverFactory
 	 * @param currentDevice the current device
 	 * @return the device web driver
 	 */
+	public DeviceWebDriver createDriver( Device currentDevice, String xFID, boolean swallowException );
+	public DeviceWebDriver createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID, boolean swallowException );
 	public DeviceWebDriver createDriver( Device currentDevice, String xFID );
 	public DeviceWebDriver createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID );
 }

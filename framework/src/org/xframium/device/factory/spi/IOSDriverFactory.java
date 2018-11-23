@@ -54,7 +54,7 @@ public class IOSDriverFactory extends AbstractDriverFactory
 	 * @see com.perfectoMobile.device.factory.AbstractDriverFactory#_createDriver(com.perfectoMobile.device.Device)
 	 */
 	@Override
-	protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID )
+	protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID, boolean swallowException )
 	{
 		DeviceWebDriver webDriver = null;
 		try
@@ -167,6 +167,8 @@ public class IOSDriverFactory extends AbstractDriverFactory
 		{
 		    log.fatal( "Could not connect to " + currentDevice + " (" + e.getMessage() + ")" );
             log.debug( e );
+            if ( !swallowException )
+            	throw new IllegalStateException( "Could not connect to " + currentDevice + " (" + e.getMessage() + ")", e );
 			if ( webDriver != null )
 			{
 				try { webDriver.close(); } catch( Exception e2 ) {}

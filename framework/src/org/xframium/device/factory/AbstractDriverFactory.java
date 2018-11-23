@@ -60,9 +60,10 @@ public abstract class AbstractDriverFactory implements DriverFactory
      *
      * @param currentDevice
      *            the current device
+     * @param swallowException TODO
      * @return the device web driver
      */
-    protected abstract DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID );
+    protected abstract DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID, boolean swallowException );
 
     public CloudActionProvider getCloudActionProvider( CloudDescriptor currentCloud )
     {
@@ -120,12 +121,22 @@ public abstract class AbstractDriverFactory implements DriverFactory
      * @see com.perfectoMobile.device.factory.DriverFactory#createDriver(com.
      * perfectoMobile.device.Device)
      */
+    public DeviceWebDriver createDriver( Device currentDevice, String xFID, boolean swallowException )
+    {
+        return createDriver( currentDevice, CloudRegistry.instance(xFID).getCloud(), xFID, swallowException );
+    }
+    
     public DeviceWebDriver createDriver( Device currentDevice, String xFID )
     {
-        return createDriver( currentDevice, CloudRegistry.instance(xFID).getCloud(), xFID );
+        return createDriver( currentDevice, xFID, true );
     }
     
     public DeviceWebDriver createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID )
+    {
+    	return createDriver( currentDevice, useCloud, xFID, true );
+    }
+    
+    public DeviceWebDriver createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID, boolean swallowException )
     {
         if ( log.isDebugEnabled() )
             log.debug( "Creating Driver for " + getClass().getSimpleName() );
@@ -142,7 +153,7 @@ public abstract class AbstractDriverFactory implements DriverFactory
             }
         }
         
-        DeviceWebDriver webDriver = _createDriver( currentDevice, useCloud, xFID );
+        DeviceWebDriver webDriver = _createDriver( currentDevice, useCloud, xFID, swallowException );
 
 
         if ( webDriver != null )

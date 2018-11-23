@@ -50,7 +50,7 @@ public class WINDOWSDriverFactory extends AbstractDriverFactory
 	 * @see com.perfectoMobile.device.factory.AbstractDriverFactory#_createDriver(com.perfectoMobile.device.Device)
 	 */
 	@Override
-	protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID )
+	protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID, boolean swallowException )
 	{
 		DeviceWebDriver webDriver = null;
 		try

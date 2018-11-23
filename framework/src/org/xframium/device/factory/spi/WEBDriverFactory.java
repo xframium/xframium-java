@@ -55,7 +55,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
 
 
     @Override
-    protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID )
+    protected DeviceWebDriver _createDriver( Device currentDevice, CloudDescriptor useCloud, String xFID, boolean swallowException )
     {
         DeviceWebDriver webDriver = null;
         try
@@ -222,6 +222,7 @@ public class WEBDriverFactory extends AbstractDriverFactory
         {
             log.fatal( "Could not connect to " + currentDevice + " (" + e.getMessage() + ")", e );
             log.debug( e );
+            
             if ( webDriver != null )
             {
                 try
@@ -239,6 +240,10 @@ public class WEBDriverFactory extends AbstractDriverFactory
                 {
                 }
             }
+            
+            System.out.println( "SWALLOW: " + swallowException );
+            if ( !swallowException )
+            	throw new IllegalStateException( "Could not connect to " + currentDevice + " (" + e.getMessage() + ")", e );
             return null;
         }
     }
