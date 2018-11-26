@@ -61,6 +61,7 @@ public class KWSEmail extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-email";
         orMapping = false;
         category = "Utility";
+        featureId = 24;
     }
 
     /*

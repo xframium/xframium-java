@@ -473,86 +473,86 @@ public class KeyWordTest
     {
         boolean stepSuccess = true;
         
-
-        if ( log.isInfoEnabled() )
-            log.info( "*** Executing Test " + name + (linkId != null ? " linked to " + linkId : "") );
-
-        long startTime = System.currentTimeMillis();
-
         
-        String executionId = PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getExecutionId( webDriver );
-        String deviceName = PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getDeviceName( webDriver );
+          if ( log.isInfoEnabled() )
+              log.info( "*** Executing Test " + name + (linkId != null ? " linked to " + linkId : "") );
+  
+          long startTime = System.currentTimeMillis();
+  
+          
+          String executionId = PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getExecutionId( webDriver );
+          String deviceName = PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getDeviceName( webDriver );
+          
+  
+          for ( KeyWordStep step : stepList )
+          {
+              if ( !step.isActive() )
+                  continue;
+              
+              if ( log.isDebugEnabled() )
+                  log.debug( "Executing Step [" + step.getName() + "]" );
+  
+              Page page = null;
+              String siteName = step.getSiteName();
+              if ( siteName == null || siteName.isEmpty() )
+              {
+                  if ( sC != null )
+                      siteName = sC.getSiteName();
+                  else
+                      siteName = PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getSiteName();
+              }
+              
+              if ( step.getPageName() != null )
+              {
+                  page = pageMap.get( siteName + "." + step.getPageName() );
+                  if ( page == null )
+                  {
+                      if ( log.isInfoEnabled() )
+                          log.info( "Creating Page [" + siteName + "." + step.getPageName() + "]" );
+  
+                      page = PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).createPage( KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).getPage(step.getSiteName() != null && step.getSiteName().trim().length() > 0 ? step.getSiteName() : PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getSiteName(), step.getPageName() ), webDriver );
+                      if ( page == null )
+                      {
+                          
+                          executionContext.startStep( new SyntheticStep( step.getPageName(), "PAGE" ), contextMap, dataMap );
+                          executionContext.completeStep( StepStatus.FAILURE, new ObjectConfigurationException( step.getSiteName() == null ? PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getSiteName() : step.getSiteName(), step.getPageName(), null ), null );
+                          
+                          stepSuccess = false;
+                          return false;
+                      }
+                      pageMap.put( siteName + "." + step.getPageName(), page );
+                  }
+              }
+  
+              try
+              {
+                  stepSuccess = step.executeStep( page, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
+              }
+              catch ( FlowException lb )
+              {
+                  throw lb;
+              }
+  
+              if ( !stepSuccess )
+              {
+                  if ( log.isWarnEnabled() )
+                      log.warn( "***** Step [" + step.getName() + "] Failed" );
+  
+                  if ( timed )
+                      PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).addExecutionTiming( executionId, deviceName, getName(), System.currentTimeMillis() - startTime, StepStatus.FAILURE, description, threshold );
+  
+                  stepSuccess = false;
+                  return false;
+  
+              }
+  
+          }
+          if ( timed )
+              PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).addExecutionTiming( executionId, deviceName, getName(), System.currentTimeMillis() - startTime, StepStatus.SUCCESS, description, threshold );
+  
+          return stepSuccess;
         
-
-        for ( KeyWordStep step : stepList )
-        {
-            if ( !step.isActive() )
-                continue;
-            
-            if ( log.isDebugEnabled() )
-                log.debug( "Executing Step [" + step.getName() + "]" );
-
-            Page page = null;
-            String siteName = step.getSiteName();
-            if ( siteName == null || siteName.isEmpty() )
-            {
-                if ( sC != null )
-                    siteName = sC.getSiteName();
-                else
-                    siteName = PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getSiteName();
-            }
-            
-            if ( step.getPageName() != null )
-            {
-                page = pageMap.get( siteName + "." + step.getPageName() );
-                if ( page == null )
-                {
-                    if ( log.isInfoEnabled() )
-                        log.info( "Creating Page [" + siteName + "." + step.getPageName() + "]" );
-
-                    page = PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).createPage( KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).getPage(step.getSiteName() != null && step.getSiteName().trim().length() > 0 ? step.getSiteName() : PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getSiteName(), step.getPageName() ), webDriver );
-                    if ( page == null )
-                    {
-                        
-                        executionContext.startStep( new SyntheticStep( step.getPageName(), "PAGE" ), contextMap, dataMap );
-                        executionContext.completeStep( StepStatus.FAILURE, new ObjectConfigurationException( step.getSiteName() == null ? PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).getSiteName() : step.getSiteName(), step.getPageName(), null ), null );
-                        
-                        stepSuccess = false;
-                        return false;
-                    }
-                    pageMap.put( siteName + "." + step.getPageName(), page );
-                }
-            }
-
-            try
-            {
-                stepSuccess = step.executeStep( page, webDriver, contextMap, dataMap, pageMap, sC, executionContext );
-            }
-            catch ( FlowException lb )
-            {
-                throw lb;
-            }
-
-            if ( !stepSuccess )
-            {
-                if ( log.isWarnEnabled() )
-                    log.warn( "***** Step [" + step.getName() + "] Failed" );
-
-                if ( timed )
-                    PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).addExecutionTiming( executionId, deviceName, getName(), System.currentTimeMillis() - startTime, StepStatus.FAILURE, description, threshold );
-
-                stepSuccess = false;
-                return false;
-
-            }
-
-        }
-        if ( timed )
-            PageManager.instance(( (DeviceWebDriver) webDriver ).getxFID()).addExecutionTiming( executionId, deviceName, getName(), System.currentTimeMillis() - startTime, StepStatus.SUCCESS, description, threshold );
-
         
-        
-        return stepSuccess;
     }
 
     /**

@@ -51,6 +51,7 @@ public class KWSLoop extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-loop";
         orMapping = true;
         category = "Flow Control";
+        featureId = 35;
     }
     
 	/** The Constant DATA_START. */

@@ -73,6 +73,7 @@ public class KWSAttribute extends AbstractKeyWordStep
         kwDescription = "Allows the script to interact with individual attributes of the names element";
         kwHelp = "https://www.xframium.org/keyword.html#kw-attribute";
         category = "Verification";
+        featureId = 7;
     }
     
 	@Override

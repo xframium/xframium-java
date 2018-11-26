@@ -48,6 +48,7 @@ public class KWSDebug extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-debug";
         orMapping = false;
         category = "Utility";
+        featureId = 20;
     }
     
     public enum DEBUG_TYPE

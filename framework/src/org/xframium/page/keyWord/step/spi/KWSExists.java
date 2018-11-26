@@ -55,6 +55,7 @@ public class KWSExists extends AbstractKeyWordStep
         kwDescription = "Allows the script validate that the named element is present in the tree";
         kwHelp = "https://www.xframium.org/keyword.html#kw-exists";
         category = "Verification";
+        featureId = 28;
     }
 
     /*

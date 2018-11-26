@@ -43,6 +43,7 @@ public class KWSMouse extends AbstractKeyWordStep
         kwDescription = "Allows the script to move the pointer to a specific locations and press/release it";
         kwHelp = "https://www.xframium.org/keyword.html#kw-mouse";
         category = "Interaction";
+        featureId = 38;
     }
     
 	/* (non-Javadoc)

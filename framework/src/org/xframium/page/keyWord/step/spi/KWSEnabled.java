@@ -37,6 +37,7 @@ public class KWSEnabled extends AbstractKeyWordStep
         kwDescription = "Allows the script check if the current element is enabled";
         kwHelp = "https://www.xframium.org/keyword.html#kw-enabled";
         category = "Verification";
+        featureId = 25;
     }
     
 	@Override

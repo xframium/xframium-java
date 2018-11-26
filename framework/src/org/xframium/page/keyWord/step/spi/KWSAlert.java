@@ -45,6 +45,7 @@ public class KWSAlert extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-alert";
         orMapping = false;
         category = "Web";
+        featureId = 3;
     }
     
     public enum ALERT_TYPE

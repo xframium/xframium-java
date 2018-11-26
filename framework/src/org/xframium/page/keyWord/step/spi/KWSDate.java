@@ -65,6 +65,7 @@ public class KWSDate extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-date";
         orMapping = false;
         category = "Utility";
+        featureId = 19;
     }
 
     

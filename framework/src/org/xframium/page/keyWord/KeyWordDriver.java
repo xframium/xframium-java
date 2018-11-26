@@ -840,6 +840,8 @@ public class KeyWordDriver
         {
             try
             {
+              
+              
                 if ( !contextMap.containsKey( "XF_TEST_STATUS" ) )
                     contextMap.put( "XF_TEST_STATUS", "UNKNOWN" );
                 if ( testStarted )
@@ -901,6 +903,16 @@ public class KeyWordDriver
         }
 
         return useList.toArray( new String[0] );
+    }
+    
+    public String getProperty( String propertyName )
+    {
+      String returnValue = configProperties.getProperty( propertyName );
+      
+      if ( returnValue == null )
+        returnValue = System.getProperty( propertyName );
+      
+      return returnValue;
     }
 
     public Properties getConfigProperties()

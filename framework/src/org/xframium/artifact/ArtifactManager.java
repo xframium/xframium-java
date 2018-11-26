@@ -50,6 +50,7 @@ import org.xframium.artifact.spi.PerfectoReportingServices;
 import org.xframium.artifact.spi.PerfectoWindTunnel;
 import org.xframium.artifact.spi.PerfectoXMLReport;
 import org.xframium.artifact.spi.SauceLabsReportingServices;
+import org.xframium.artifact.spi.StatisticsArtifact;
 import org.xframium.artifact.spi.TimingArtifact;
 import org.xframium.artifact.spi.VitalsArtifact;
 import org.xframium.artifact.spi.XMLSourceArtifact;
@@ -134,6 +135,9 @@ public class ArtifactManager
         registerArtifact( ArtifactTime.AFTER_ARTIFACTS, ArtifactType.EXECUTION_TEST_HTML.name(), DefaultReportingArtifact.class );
         registerArtifact( ArtifactTime.AFTER_ARTIFACTS, ArtifactType.JIRA_UPDATE_STATUS.name(), JIRAUpdateExecutionArtifact.class );
         registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.ALL_IN_ONE.name(), AllInOneReportArtifact.class );
+        registerArtifact( ArtifactTime.AFTER_TEST, ArtifactType.USAGE_STATS.name(), StatisticsArtifact.class );
+        
+        enableArtifact( ArtifactType.USAGE_STATS.name() );
     }
     
     public void registerArtifact( ArtifactTime artifactTime, String aType, Class artifactImplementation )
@@ -182,7 +186,6 @@ public class ArtifactManager
     public void enableArtifact( String artifactName )
     {
         log.info( "Enabling artifact " + artifactName );
-        
         if  (ArtifactType.EXECUTION_RECORD_HTML.name().equals( artifactName ) )
         {
             for ( String defaultArtifact : DEFAULT_ARTIFACTS )

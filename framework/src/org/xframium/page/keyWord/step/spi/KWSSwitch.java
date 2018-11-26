@@ -48,7 +48,8 @@ public class KWSSwitch extends AbstractKeyWordStep
 		orMapping = false;
 		category = "Flow Control";
 		kwName = "Switch Statement";
-        kwDescription = "Allows the script to execute a numbered step given the condition";
+    kwDescription = "Allows the script to execute a numbered step given the condition";
+    featureId = 49;
 		
 	}
 	/* (non-Javadoc)

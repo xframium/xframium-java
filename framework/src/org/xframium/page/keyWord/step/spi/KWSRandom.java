@@ -43,6 +43,7 @@ public class KWSRandom extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-random";
         category = "Utility";
         orMapping = false;
+        featureId = 40;
     }
     
     public enum DataType

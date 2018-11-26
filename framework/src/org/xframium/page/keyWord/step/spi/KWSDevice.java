@@ -49,6 +49,7 @@ public class KWSDevice extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-device";
         orMapping = false;
         category = "Interaction";
+        featureId = 21;
     }
 	/*
 	 * (non-Javadoc)

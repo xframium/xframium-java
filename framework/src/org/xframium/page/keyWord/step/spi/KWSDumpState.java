@@ -39,6 +39,7 @@ public class KWSDumpState extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-state";
         orMapping = false;
         category = "Verification";
+        featureId = 22;
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)
@@ -52,11 +53,6 @@ public class KWSDumpState extends AbstractKeyWordStep
         
         if ( getContext() != null )
             addContext( getContext(), rawSource, contextMap, executionContext );
-        
-        System.out.println( webDriver.manage().window().getSize() );
-       
-        
-        
         
         return true;
 	}

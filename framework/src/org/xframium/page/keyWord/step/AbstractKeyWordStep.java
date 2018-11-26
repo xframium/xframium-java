@@ -109,7 +109,9 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
         category = "Other";
     }
 
-	private String waitFor = null;
+    protected int featureId;
+    
+	  private String waitFor = null;
     /** The name. */
     private String name;
 
@@ -1184,7 +1186,10 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 //
                 try
                 {
-                    returnValue = _executeStep( pageObject, ((alternateWebDriver != null) ? alternateWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext );
+                  if ( featureId > 0 )
+                    executionContext.addFeature( featureId );
+                  
+                  returnValue = _executeStep( pageObject, ((alternateWebDriver != null) ? alternateWebDriver : webDriver), contextMap, dataMap, pageMap, sC, executionContext );
                 }
                 catch( BubbledFailureException be )
                 {
@@ -1887,7 +1892,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             case PROPERTY:
                 returnValue = System.getProperty( param.getValue(), "" );
                 if ( "".equals(returnValue) )
-                    returnValue = KeyWordDriver.instance( xFID ).getConfigProperties().getProperty( param.getValue() );
+                    returnValue = KeyWordDriver.instance( xFID ).getProperty( param.getValue() );
                 
                 if ( returnValue == null )
                     returnValue = "";
@@ -1982,7 +1987,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
             case PROPERTY:
                 returnValue = System.getProperty( token.getValue(), "" );
                 if ( "".equals(returnValue) )
-                    returnValue = KeyWordDriver.instance( xFID ).getConfigProperties().getProperty( token.getValue() );
+                    returnValue = KeyWordDriver.instance( xFID ).getProperty( token.getValue() );
                 
                 if ( returnValue == null )
                     returnValue = "";
@@ -2385,7 +2390,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
                 String dP = getParameterValue( getParameter( "deviationPercentage" ), contextMap, dataMap, executionContext.getxFID() );
                 if ( dP != null )
-                    deviationPercentage = Integer.parseInt( getParameterValue( getParameterList().get( 2 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
+                    deviationPercentage = Integer.parseInt( dP  );
             }
         }
 
@@ -2462,11 +2467,12 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                         //
                         File newFile = new File( checkPointFolder, checkPointName + "-0000.png" );
                         File previousFile = new File( checkPointFolder, checkPointName + "-0001.png" );
-
+                        
                         if ( newFile.exists() && previousFile.exists() )
                         {
-                            double computedDeviation = (ImageUtility.compareImages( ImageIO.read( newFile ), ImageIO.read( previousFile ) ) * 100);
+                            double computedDeviation = (ImageUtility.compareImages( ImageIO.read( newFile ), ImageIO.read( previousFile ) ) * 100.0);
 
+                            
                             if ( computedDeviation > deviationPercentage )
                                 throw new ScriptException( "Historical image comparison failed.  Expected a maximum difference of [" + deviationPercentage + "] but found [" + computedDeviation + "]" );
                         }

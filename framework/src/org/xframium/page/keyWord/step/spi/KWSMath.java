@@ -46,6 +46,7 @@ public class KWSMath extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-math";
         orMapping = false;
         category = "Utility";
+        featureId = 36;
     }
     /**
      * Format string.

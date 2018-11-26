@@ -45,6 +45,7 @@ public class KWSReport extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-report";
         orMapping = false;
         category = "Utility";
+        featureId = 41;
     }
 	/*
 	 * (non-Javadoc)

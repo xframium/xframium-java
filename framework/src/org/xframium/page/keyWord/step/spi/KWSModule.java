@@ -43,6 +43,7 @@ public class KWSModule extends KWSCall2
         kwHelp = "https://www.xframium.org/keyword.html#kw-module";
         orMapping = false;
         category = "Flow Control";
+        featureId = 37;
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

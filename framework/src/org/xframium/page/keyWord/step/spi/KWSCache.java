@@ -45,6 +45,7 @@ public class KWSCache extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-cache";
         orMapping = false;
         category = "Utility";
+        featureId = 10;
     }
 	/*
 	 * (non-Javadoc)

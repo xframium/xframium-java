@@ -51,6 +51,7 @@ public class KWSApplication extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-device";
         orMapping = false;
         category = "Utility";
+        featureId = 5;
     }
     
     public enum ApplicationAction

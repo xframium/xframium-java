@@ -70,6 +70,7 @@ public class KWSContrastRatio extends AbstractKeyWordStep
         kwDescription = "Allows thte script to analyze the named element using the Imaging 2.0 algorithm and validates its success against the Imaging 2.0 success criteria";
         kwHelp = "https://www.xframium.org/keyword.html#kw-checkcontrast";
         category = "Verification";
+        featureId = 18;
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

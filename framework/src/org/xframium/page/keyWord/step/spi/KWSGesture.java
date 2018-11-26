@@ -50,6 +50,7 @@ public class KWSGesture extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-gesture";
         orMapping = false;
         category = "Interaction";
+        featureId = 33;
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

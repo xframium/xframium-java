@@ -46,6 +46,7 @@ public class KWSCommand extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-command";
         orMapping = false;
         category = "Utility";
+        featureId = 14;
     }
    
 

@@ -46,6 +46,7 @@ public class KWSCompare2 extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-compare";
         orMapping = false;
         category = "Verification";
+        featureId = 15;
     }
     
     public enum CompareType

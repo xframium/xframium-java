@@ -73,6 +73,7 @@ public class KWSCall2 extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-call";
         orMapping = false;
         category = "Flow Control";
+        featureId = 11;
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

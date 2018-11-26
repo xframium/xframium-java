@@ -83,7 +83,7 @@ public enum ArtifactType
     
     GRID_REPORT( 21, "GRID_REPORT", "xFramium GRID Report Source" ),
     GRID_HTML( 24, "GRID_REPORT_HTML", "xFramium GRID Report HTML" ),
-    ADD_TO_CSV( 22, "CSV_REPORT_DATA", "xFramium CSV Report compiled from REPORT steps" ),
+    ADD_TO_CSV( 22, "ADD_TO_CSV", "xFramium CSV Report compiled from REPORT steps" ),
     
     ALM_DEFECT( 23, "ALM_DEFECT", "Creates a defect in HP ALM on failure" ),
     
@@ -104,7 +104,8 @@ public enum ArtifactType
     STATISTICS( 33, "STATISTICS", "Device Statistics" ),
     JIRA_UPDATE_STATUS( 34, "JIRA_UPDATE_STATUS", "Update Execution Staus To JIRA" ),
     ASSETS( 35, "ASSETS", "Cache the xFramium HTML Report assets" ),
-    ALL_IN_ONE( 36, "ALL_IN_ONE", "Creates an self contained single test report for distributions referencing external artifacts" )
+    ALL_IN_ONE( 36, "ALL_IN_ONE", "Creates an self contained single test report for distributions referencing external artifacts" ),
+    USAGE_STATS( 30, "USAGE_STATS", "xFramium Usage" ),
     ;
     
     /** The time. */

@@ -40,6 +40,7 @@ public class KWSFlow extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-flow";
         category = "Flow Control";
         orMapping = false;
+        featureId = 29;
     }
     
     public enum FlowType

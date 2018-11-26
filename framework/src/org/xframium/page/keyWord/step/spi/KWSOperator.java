@@ -44,6 +44,7 @@ public class KWSOperator extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-operator";
         orMapping = false;
         category = "Verification";
+        featureId = 39;
     }
     
     private enum OPERATOR

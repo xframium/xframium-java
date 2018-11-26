@@ -50,6 +50,7 @@ public class KWSAlign extends AbstractKeyWordStep
         kwDescription = "Allows the script to validate the alignment of one or more elements with the top, bottom, let or right of another element";
         kwHelp = "https://www.xframium.org/keyword.html#kw-align";
         category = "Verification";
+        featureId = 4;
     }
     
 

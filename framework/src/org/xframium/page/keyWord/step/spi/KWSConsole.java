@@ -44,6 +44,7 @@ public class KWSConsole extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-console";
         orMapping = false;
         category = "Utility";
+        featureId = 16;
     }
 	/*
 	 * (non-Javadoc)

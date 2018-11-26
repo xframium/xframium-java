@@ -169,6 +169,7 @@ public class KWSAddDevice2 extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-adddevice2";
         orMapping = false;
         category="Flow Control";
+        featureId = 2;
     }
 
 }

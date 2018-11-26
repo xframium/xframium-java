@@ -48,6 +48,7 @@ public class KWSClick extends AbstractKeyWordStep
 		kwDescription = "Allows the script to click on the center of the named element";
 		kwHelp = "https://www.xframium.org/keyword.html#kw-click";
 		category = "Interaction";
+		featureId = 13;
 	}
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

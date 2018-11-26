@@ -91,6 +91,7 @@ public class KWSCheckColor extends AbstractKeyWordStep
         kwDescription = "Allows the script to validate the color at a point in the named element";
         kwHelp = "https://www.xframium.org/keyword.html#kw-checkcolor";
         category = "Verification";
+        featureId = 12;
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

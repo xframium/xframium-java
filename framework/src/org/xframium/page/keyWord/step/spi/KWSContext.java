@@ -110,6 +110,7 @@ public class KWSContext extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-context";
         orMapping = false;
         category="Utility";
+        featureId = 17;
     }
 
 }

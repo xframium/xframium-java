@@ -53,6 +53,7 @@ public class KWSSQL extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-sql";
         orMapping = false;
         category = "Utility";
+        featureId = 47;
     }
 
     private static final String[] JDBC = new String[] { "jdbc.username", "jdbc.password", "jdbc.url", "jdbc.driverClassName" };
@@ -64,7 +65,7 @@ public class KWSSQL extends AbstractKeyWordStep
         if ( connectionName != null )
             useName = connectionName + "." + propertyName;
         
-        return KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).getConfigProperties().getProperty( useName );
+        return KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).getProperty( useName );
     }
 
     /*

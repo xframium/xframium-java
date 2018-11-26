@@ -82,6 +82,7 @@ public class KWSString2 extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-string";
         orMapping = false;
         category = "Utility";
+        featureId = 48;
     }
     
     public enum OperationType

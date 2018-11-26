@@ -58,6 +58,7 @@ public class KWSBrowser extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-browser";
         orMapping = false;
         category = "Web";
+        featureId = 9;
     }
 
     /**
@@ -65,12 +66,24 @@ public class KWSBrowser extends AbstractKeyWordStep
      */
     public enum SwitchType
     {
-        SWITCH_BY_TITLE( 1, "SWITCH_BY_TITLE", "Switch to Window with Title" ), SWITCH_BY_URL( 2, "SWITCH_BY_URL", "Switch to Window with URL" ), SWITCH_NAMED_FRAME( 3, "SWITCH_NAMED_FRAME", "Switch to Named Frame" ), SWITCH_INDEX( 4, "SWITCH_INDEX",
-                "Switch to Indexed frame" ), PARENT_FRAME( 5, "PARENT_FRAME", "Switch to Parent Frame" ), DEFAULT_FRAME( 6, "DEFAULT_FRAME", "Switch to Default Window" ), CLOSE_WINDOW( 7, "CLOSE_WINDOW",
-                        "Close the current window" ), SWITCH_TO_ELEMENT( 8, "SWITCH_TO_ELEMENT", "Switch to the frame by element" ), MAXIMIZE( 9, "MAXIMIZE", "Maximize the current window" ), GET_TITLE( 11, "GET_TITLE",
-                                "Get the title of the current window" ), GET_URL( 12, "GET_URL", "Get the URL of the current window" ), FORWARD( 13, "FORWARD", "Click the forward button" ), BACK( 14, "BACK", "Click the back button" ), REFRESH( 15,
-                                        "REFRESH", "Click the refresh button" ), NAVIGATE( 16, "NAVIGATE", "Navigate to the supplied URL" ), SWITCH_WIN_INDEX( 17, "SWITCH_WIN_INDEX", "Switch to the numbered window" ), DELETE_COOKIE( 18, "DELETE_COOKIE",
-                                                "Delete the named cookie" ), GET_COOKIE( 19, "GET_COOKIE", "Switch to the numbered window" ), ADD_COOKIE( 20, "ADD_COOOKIE", "Switch to the numbered window" ),
+        SWITCH_BY_TITLE( 1, "SWITCH_BY_TITLE", "Switch to Window with Title" ), 
+        SWITCH_BY_URL( 2, "SWITCH_BY_URL", "Switch to Window with URL" ), 
+        SWITCH_NAMED_FRAME( 3, "SWITCH_NAMED_FRAME", "Switch to Named Frame" ), 
+        SWITCH_INDEX( 4, "SWITCH_INDEX", "Switch to Indexed frame" ), 
+        PARENT_FRAME( 5, "PARENT_FRAME", "Switch to Parent Frame" ), 
+        DEFAULT_FRAME( 6, "DEFAULT_FRAME", "Switch to Default Window" ), 
+        CLOSE_WINDOW( 7, "CLOSE_WINDOW", "Close the current window" ), 
+        SWITCH_TO_ELEMENT( 8, "SWITCH_TO_ELEMENT", "Switch to the frame by element" ), 
+        MAXIMIZE( 9, "MAXIMIZE", "Maximize the current window" ), 
+        GET_TITLE( 11, "GET_TITLE", "Get the title of the current window" ), 
+        GET_URL( 12, "GET_URL", "Get the URL of the current window" ), 
+        FORWARD( 13, "FORWARD", "Click the forward button" ), 
+        BACK( 14, "BACK", "Click the back button" ),
+        REFRESH( 15, "REFRESH", "Click the refresh button" ), 
+        NAVIGATE( 16, "NAVIGATE", "Navigate to the supplied URL" ), 
+        SWITCH_WIN_INDEX( 17, "SWITCH_WIN_INDEX", "Switch to the numbered window" ), 
+        DELETE_COOKIE( 18, "DELETE_COOKIE",
+                                                "Delete the named cookie" ), GET_COOKIE( 19, "GET_COOKIE", "Retreive a browser based cookie" ), ADD_COOKIE( 20, "ADD_COOKIE", "Add a browser cookie" ),
         SCROLL_UP( 21, "SCROLL_UP", "Scroll up on a page by the specified number of pixels" ),
         SCROLL_DOWN( 22, "SCROLL_DOWN", "Scroll down on a page by the specified number of pixels" ),
         PAGE_UP( 23, "PAGE_UP", "Scroll up be the specified number of pages" ),
@@ -325,14 +338,14 @@ public class KWSBrowser extends AbstractKeyWordStep
                         else if ( webDriver instanceof NativeDriverProvider && ((NativeDriverProvider) webDriver).getNativeDriver() instanceof RemoteWebDriver )
                             getCookie = ((RemoteWebDriver) ((NativeDriverProvider) webDriver).getNativeDriver()).manage().getCookieNamed( getParameterValue( getParameterList().get( 0 ), contextMap, dataMap, executionContext.getxFID() ) + "" );
 
-                        if ( !validateData( getCookie.getValue() ) )
+                        if ( !validateData( getCookie == null ? null : getCookie.getValue() ) )
                         {
                             throw new IllegalStateException( "Get cookie Expected a format of [" + getValidationType() + "(" + getValidation() + ") for [" + getCookie.getValue() + "]" );
                         }
 
                         if ( getContext() != null )
                         {
-                            addContext( getContext(), getCookie.getValue(), contextMap, executionContext );
+                            addContext( getContext(), getCookie == null ? null : getCookie.getValue(), contextMap, executionContext );
                         }
                     }
 

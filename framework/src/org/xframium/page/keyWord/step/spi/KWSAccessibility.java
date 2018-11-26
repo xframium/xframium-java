@@ -50,6 +50,7 @@ public class KWSAccessibility extends AbstractKeyWordStep
         kwDescription = "Accessibility testing on the current page";
         kwHelp = "https://www.xframium.org/keyword.html#kw-accessibility";
         category = "Utility";
+        featureId = 1;
     }
     
     private static final String[] IGNORED_EXTENSIONS = new String[] { ".pdf", ".jnlp", ".jar", ".exe", ".zip", ".hpi" };

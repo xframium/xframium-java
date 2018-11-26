@@ -40,6 +40,7 @@ public class KWSReturn extends AbstractKeyWordStep
     public KWSReturn()
     {
         orMapping = false;
+        featureId = 42;
     }
 	/* (non-Javadoc)
 	 * @see com.perfectoMobile.page.keyWord.step.AbstractKeyWordStep#_executeStep(com.perfectoMobile.page.Page, org.openqa.selenium.WebDriver, java.util.Map, java.util.Map)

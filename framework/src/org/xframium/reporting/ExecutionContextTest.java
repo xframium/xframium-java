@@ -76,7 +76,27 @@ public class ExecutionContextTest
     
     private int iterationCount = 0;
 
+    private List<Integer> featureList = new ArrayList<Integer>( 50 );
     
+    public void addFeature( int featureId )
+    {
+      featureList.add( featureId );
+    }
+    
+    public String getFeatures()
+    {
+      StringBuilder s = new StringBuilder();
+      
+      for ( int i : featureList )
+        s.append( i ).append( "," );
+      
+      String returnValue = s.toString();
+      
+      if  ( returnValue.length() > 1 )
+        returnValue = returnValue.substring( 0, returnValue.length() - 1 );
+      
+      return returnValue;
+    }
     
     public boolean isInStepListener()
     {

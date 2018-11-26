@@ -430,13 +430,16 @@ public class XMLKeyWordProvider implements KeyWordProvider
 	        
 	        if ( ParameterType.FILE.equals( ptype ))
 	        {
+	            if ( p.getValue() == null )
+	              p.setValue( "" );
+	            
 	            File dataFile = new File( p.getValue() );
 	            if ( dataFile.isFile() )
 	            {
 	                try
 	                {
-                            kp.setValue( readFile( new FileInputStream( dataFile ) ) );
-                            kp.setFileName( dataFile.getAbsolutePath() );
+                        kp.setValue( readFile( new FileInputStream( dataFile ) ) );
+                        kp.setFileName( dataFile.getAbsolutePath() );
 	                }
 	                catch( FileNotFoundException e )
 	                {

@@ -85,8 +85,15 @@ public class WebServiceClientUtil
         try
         {
             Responce result = makeCall( callDetails );
+            if ( result == null )
+              throw new ScriptException( "Payload data wasd null" );
             rtn.put( "_PAYLOAD", result.getPayload() );
             processResult( result, responceDetails, rtn );
+        }
+        catch( ScriptException e )
+        {
+          log.warn( "Web Service Call Failed", e );
+          throw e;
         }
         catch ( Throwable e )
         {

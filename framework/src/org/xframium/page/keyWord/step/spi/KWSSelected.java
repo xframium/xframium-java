@@ -37,6 +37,7 @@ public class KWSSelected extends AbstractKeyWordStep
         kwDescription = "Allows the script check if the current element is selected or checked";
         kwHelp = "https://www.xframium.org/keyword.html#kw-selected";
         category = "Verification";
+        featureId = 44;
     }
     
 	@Override

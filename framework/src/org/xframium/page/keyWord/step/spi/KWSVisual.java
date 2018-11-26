@@ -46,6 +46,7 @@ public class KWSVisual extends AbstractKeyWordStep
         kwHelp = "https://www.xframium.org/keyword.html#kw-visual";
         orMapping = false;
         category = "Verification";
+        featureId = 53;
     }
     
 	public enum VisualType 
