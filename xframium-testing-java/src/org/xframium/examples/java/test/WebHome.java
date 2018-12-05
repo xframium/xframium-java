@@ -354,4 +354,21 @@ public class WebHome extends AbstractJavaTest
     }
     
     
+    public static final String RECENT_DONORS_FOR_DISPLAY =
+        "SELECT cont.ContactID contactId, cont.FirstName firstName, cont.LastName lastName, \n" +
+        "       tx.txId mostRecentTx, tx.txDate mostRecentDate, don.amount mostRecentAmount, don.name honorOf \n" +
+        "FROM transaction tx \n" +
+        "     INNER JOIN contacts cont on cont.ContactID = tx.contactId \n" +
+        "     INNER JOIN donation don on don.txId = tx.txId \n" +
+        "WHERE don.anon = 0 AND tx.txDate > STR_TO_DATE(?,'%d-%m-%Y') \n" +
+        "AND tx.type = 'D' \n" +
+        "ORDER BY tx.txDate DESC \n" +
+        "LIMIT 30";
+    
+    public static void main( String[] args )
+    {
+      System.out.println( RECENT_DONORS_FOR_DISPLAY);
+    }
+    
+    
 }
