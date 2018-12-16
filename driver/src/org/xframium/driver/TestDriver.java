@@ -113,14 +113,14 @@ public class TestDriver implements KeyWordListener
         if ( args.length != 1 )
         {
             System.err.println( "Usage: TestDriver [configurationFile]" );
-            System.exit( -1 );
+            System.exit( 1 );
         }
 
         File configFile = new File( args[0] );
         if ( !configFile.exists() )
         {
             System.err.println( "[" + configFile.getAbsolutePath() + "] could not be located" );
-            System.exit( -1 );
+            System.exit( 1 );
         }
         
         TestDriver tD = new TestDriver();
@@ -132,7 +132,7 @@ public class TestDriver implements KeyWordListener
         
         if ( !Boolean.getBoolean( "XF_DONT_EXIT" ) )
         {
-          System.exit( tD.getFailCount() > 0 ? -1 : 0 );
+          System.exit( tD.getFailCount() > 0 ? 1 : 0 );
         }
         
     }
