@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,7 +45,10 @@ import org.xframium.page.keyWord.KeyWordTest;
 import org.xframium.page.keyWord.step.KeyWordStepFactory;
 
 import cucumber.api.DataTable;
+import cucumber.runtime.ParameterInfo;
 import cucumber.runtime.table.TableConverter;
+import cucumber.runtime.xstream.LocalizedXStreams;
+import cucumber.runtime.xstream.LocalizedXStreams.LocalizedXStream;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.model.Background;
 import gherkin.formatter.model.Examples;
@@ -298,7 +302,10 @@ public class GherkinKeyWordProvider extends AbstractPageDataProvider implements 
   		KeyWordStep step = KeyWordStepFactory.instance().createStep( xStep.getName(), "bdd", true, "GHERKIN", "", false, StepFailure.ERROR, false, null, null, null, 0, "", 0, "", null, null, null, null, false, false, null, null, null, null, null, null, false, null, null, false );
   		if ( xStep.getRows() != null && !xStep.getRows().isEmpty() )
   		{
-  			step.setDataTable( DataTable.create( xStep.getRows() ) );
+  		  LocalizedXStreams lSS = new LocalizedXStreams( getClass().getClassLoader() );
+  		  LocalizedXStream lS = lSS.get( Locale.ENGLISH );
+  		  ParameterInfo pI = new ParameterInfo( DataTable.class, null, null, false, null );
+  			step.setDataTable( new DataTable( xStep.getRows(), new TableConverter( lS, pI ) ) );
   		}
         
       switch( currentSection )

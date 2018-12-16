@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.xframium</groupId>
   <artifactId>xframium-java</artifactId>
-  <version>1.0.20-SNAPSHOT</version>
+  <version>1.0.20</version>
   <name>xframium-java</name>
   <repositories>
     <repository>
@@ -23,7 +23,7 @@
     <repository>
       <id>perfectomobile</id>
       <name>Perfecto mobile</name>
-      <url>http://repository-perfectomobile.forge.cloudbees.com/public</url>
+      <url>https://repo1.perfectomobile.com/public/repositories/maven</url>
     </repository>
   </repositories>
   <distributionManagement>
@@ -163,7 +163,7 @@
     <dependency>
       <groupId>com.perfecto.reporting-sdk</groupId>
       <artifactId>reportium-testng</artifactId>
-      <version>1.1.22</version>
+      <version>2.2.4</version>
       <exclusions>
         <exclusion>
           <groupId>org.seleniumhq.selenium</groupId>
