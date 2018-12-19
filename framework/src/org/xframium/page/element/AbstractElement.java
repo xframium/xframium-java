@@ -43,6 +43,7 @@ import org.xframium.integrations.perfectoMobile.rest.services.Imaging.Resolution
 import org.xframium.page.BY;
 import org.xframium.page.PageManager;
 import org.xframium.page.StepStatus;
+import org.xframium.page.keyWord.KeyWordDriver;
 import org.xframium.reporting.ExecutionContextTest;
 
 // TODO: Auto-generated Javadoc
@@ -538,6 +539,30 @@ public abstract class AbstractElement implements Element
                     log.warn( "Token [" + tokenName + " was null" );
             }
             keyValue = newKey;
+        }
+        try
+        {
+          boolean valueReplaced = false;
+          do
+          {
+            valueReplaced = false;
+            Matcher m = TOKEN_REGEX.matcher( keyValue );
+            while( m.find() )
+            {
+              String propertyValue = KeyWordDriver.instance( getWebDriver().getxFID() ).getProperty( m.group(1) );
+              if ( propertyValue != null )
+              {
+                keyValue = keyValue.replace( "{" + m.group( 1 ) + "}", propertyValue );
+                valueReplaced = true;
+                break;
+              }
+            }
+          }
+          while( valueReplaced );
+        }
+        catch( Exception e )
+        {
+          e.printStackTrace();
         }
         
         return keyValue;

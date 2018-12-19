@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
+
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.xframium.device.factory.DeviceWebDriver;
@@ -41,7 +43,7 @@ import org.xframium.reporting.ExecutionContextTest;
  */
 public interface Element 
 {
-	
+  public static Pattern TOKEN_REGEX = Pattern.compile( "\\{([^\\}]*)\\}" );
 	/** The Constant CONTEXT_ELEMENT. */
 	public static final String CONTEXT_ELEMENT = "_CONTEXT.ELEMENT";
 	

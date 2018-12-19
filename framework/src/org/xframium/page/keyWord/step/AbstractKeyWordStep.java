@@ -206,8 +206,7 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
     
     
    
-
-
+  private static Pattern TOKEN_REGEX = Pattern.compile( "\\{([^\\}]*)\\}" );
 
 	protected String getReportMessage( StepStatus stepStatus, Map<String,Object> contextMap, Map<String, PageData> dataMap, String xFID )
     {
@@ -239,6 +238,31 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
                 returnValue = ( returnValue + "").replace( "{" + token.getName() + "}", getTokenValue( token, contextMap, dataMap, xFID ) );
             }
         }
+    	
+    	try
+    	{
+      	boolean valueReplaced = false;
+      	do
+      	{
+      	  valueReplaced = false;
+        	Matcher m = TOKEN_REGEX.matcher( returnValue );
+        	while( m.find() )
+        	{
+        	  String propertyValue = KeyWordDriver.instance( xFID ).getProperty( m.group(1) );
+        	  if ( propertyValue != null )
+        	  {
+        	    returnValue = returnValue.replace( "{" + m.group( 1 ) + "}", propertyValue );
+        	    valueReplaced = true;
+        	    break;
+        	  }
+        	}
+      	}
+      	while( valueReplaced );
+    	}
+    	catch( Exception e )
+    	{
+    	  
+    	}
     	
     	return returnValue;
     }
@@ -1947,6 +1971,31 @@ public abstract class AbstractKeyWordStep implements KeyWordStep
 
                 returnValue = ( returnValue + "").replace( "{" + token.getName() + "}", getTokenValue( token, contextMap, dataMap, xFID ) );
             }
+        }
+        
+        try
+        {
+          boolean valueReplaced = false;
+          do
+          {
+            valueReplaced = false;
+            Matcher m = TOKEN_REGEX.matcher( returnValue + "" );
+            while( m.find() )
+            {
+              String propertyValue = KeyWordDriver.instance( xFID ).getProperty( m.group(1) );
+              if ( propertyValue != null )
+              {
+                returnValue = ( returnValue + "" ).replace( "{" + m.group( 1 ) + "}", propertyValue );
+                valueReplaced = true;
+                break;
+              }
+            }
+          }
+          while( valueReplaced );
+        }
+        catch( Exception e )
+        {
+          
         }
 
         if ( returnValue == null )
