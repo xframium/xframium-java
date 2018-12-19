@@ -640,16 +640,16 @@ public class ReportingElementAdapter implements Element
         return baseElement.getName();
     }
 
+   
+    
 	@Override
 	public boolean isAllowMultiple() {
-		// TODO Auto-generated method stub
-		return false;
+		return baseElement.isAllowMultiple();
 	}
 
 	@Override
 	public void setAllowMultiple(boolean allowMultiple) {
-		// TODO Auto-generated method stub
-		
+	 baseElement.setAllowMultiple(allowMultiple);
 	}
 
 }

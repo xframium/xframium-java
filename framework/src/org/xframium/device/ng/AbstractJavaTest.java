@@ -53,7 +53,8 @@ public abstract class AbstractJavaTest extends AbstractSeleniumTest
      */
     public AbstractJavaTest()
     {
-        System.setProperty( ElementFactory.WRAPPER_IMPL, ReportingElementAdapter.class.getName() );
+        if ( System.getProperty( ElementFactory.WRAPPER_IMPL ) == null )
+          System.setProperty( ElementFactory.WRAPPER_IMPL, ReportingElementAdapter.class.getName() );
         setXmlMode( false );
     }
     
