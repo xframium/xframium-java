@@ -845,7 +845,7 @@ public class KeyWordDriver
                 if ( !contextMap.containsKey( "XF_TEST_STATUS" ) )
                     contextMap.put( "XF_TEST_STATUS", "UNKNOWN" );
                 if ( testStarted )
-                    KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).notifyAfterTest( webDriver, test, contextMap, dataMap, pageMap, returnValue, sC, executionContext );
+                    KeyWordDriver.instance( ( (DeviceWebDriver) webDriver ).getxFID() ).notifyAfterTest( webDriver, test, contextMap, dataMap, pageMap, contextMap.get( "XF_TEST_STATUS" ).equals( TestStatus.PASSED.name() ), sC, executionContext );
                 
                 for ( String key : dataMap.keySet() )
                 {

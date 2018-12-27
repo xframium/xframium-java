@@ -141,7 +141,6 @@ public class TestDriver implements KeyWordListener
     private int failCount;
     
     
-    
     public int getPassCount()
     {
       return passCount;
@@ -179,23 +178,27 @@ public class TestDriver implements KeyWordListener
     @Override
     public boolean beforeTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, SuiteContainer sC, ExecutionContextTest eC )
     {
+      System.out.println( "BEFORE" );
       return true;
     }
 
     @Override
     public void afterTest( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC )
     {
-      if ( stepPass )
-        passCount++;
-      else
-        failCount++;
+      System.out.println( "AFTER" );
+      
       
     }
 
     @Override
     public void afterArtifacts( WebDriver webDriver, KeyWordTest keyWordTest, Map<String, Object> contextMap, Map<String, PageData> dataMap, Map<String, Page> pageMap, boolean stepPass, SuiteContainer sC, ExecutionContextTest eC )
     {
-      // TODO Auto-generated method stub
+      System.out.println( "AFTER ARTIFACTS" );
+      
+      if ( stepPass )
+        passCount++;
+      else
+        failCount++;
       
     }
 
